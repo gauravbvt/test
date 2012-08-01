@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
+import com.mindalliance.channels.pages.components.social.rfi.AllSurveysPanel;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.QuestionnaireService;
@@ -191,12 +192,14 @@ public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
                 if ( selectedSurvey.launch() ) {
                     change.setSubject( selectedSurvey.getRfiSurvey() );
                     change.setId( RFISurvey.UNKNOWN.getId() );
+                    change.setProperty( AllSurveysPanel.SURVEYS );
                 }
             } else if ( change.isForProperty( "view" ) ) {
                 RFISurvey survey = selectedSurvey.getRfiSurvey();
                 assert survey != null;
                 change.setSubject( survey );
                 change.setId( RFISurvey.UNKNOWN.getId() );
+                change.setProperty( AllSurveysPanel.SURVEYS );
             }
         }
         super.changed( change );

@@ -82,7 +82,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
     private void addRequirementsTable() {
         requirementsTable = new RequirementsTable(
                 "requirements",
-                new PropertyModel<List<Requirement>>( this, "requirements" ),
+                new PropertyModel<List<RequirementWrapper>>( this, "requirementWrappers" ),
                 PAGE_SIZE,
                 this
         );
@@ -147,8 +147,9 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<Requirement> getRequirements() {
-        return (List<Requirement>) CollectionUtils.select(
+    public List<RequirementWrapper> getRequirementWrappers() {
+        List<RequirementWrapper> wrappers = new ArrayList<RequirementWrapper>(  );
+        List<Requirement> requirements =  (List<Requirement>) CollectionUtils.select(
                 getQueryService().list( Requirement.class ),
                 new Predicate() {
                     @Override
@@ -157,6 +158,10 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                     }
                 }
         );
+        for ( Requirement requirement : requirements ) {
+            wrappers.add( new RequirementWrapper( requirement ) );
+        }
+        return wrappers;
     }
 
     private boolean isFilteredOut( Requirement requirement ) {
@@ -189,10 +194,20 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
 
     @Override
     public void changed( Change change ) {
-        if ( change.isForInstanceOf( Requirement.class ) ) {
+        if ( change.isForInstanceOf( RequirementWrapper.class ) && change.isExpanded() ) {
+            RequirementWrapper wrapper = (RequirementWrapper)change.getSubject( getQueryService() );
+            Requirement requirement = wrapper.getRequirement();
+            if ( selectedRequirement != null && requirement.equals( selectedRequirement )) {
+                setSelectedRequirement( null );
+            } else {
+                if (!isLockedByOtherUser( requirement ))
+                    setSelectedRequirement( requirement );
+            }
+        }
+        else if ( change.isForInstanceOf( Requirement.class ) ) {
             Requirement requirement = (Requirement) change.getSubject( getQueryService() );
-            if ( change.isAdded() || change.isExpanded() ) {
-                select(  requirement );
+            if ( change.isAdded() ) {
+                setSelectedRequirement( requirement );
             } else if ( change.isRemoved() ) {
                 releaseAnyLockOn( selectedRequirement );
                 selectedRequirement = null;
@@ -201,10 +216,33 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         super.changed( change );
     }
 
+    private void setSelectedRequirement( Requirement requirement ) {
+        unlockRequirement();
+        selectedRequirement = requirement == null || requirement.isUnknown()
+                ? null
+                : requirement;
+        lockRequirement();
+    }
+
+    private void unlockRequirement() {
+        if ( selectedRequirement != null ) {
+            releaseAnyLockOn( selectedRequirement );
+        }
+    }
+
+    private void lockRequirement() {
+        if ( selectedRequirement != null ) {
+            requestLockOn( selectedRequirement );
+        }
+    }
+
+
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isForInstanceOf( Requirement.class ) ) {
-            if ( change.isAdded() || change.isExpanded() || change.isRemoved() ) {
+        if ( change.isForInstanceOf( RequirementWrapper.class ) && change.isDisplay() ) {
+            updateComponents( target );
+        } else if ( change.isForInstanceOf( Requirement.class ) ) {
+            if ( change.isAdded() ||  change.isRemoved() ) {
                 updateComponents( target );
             } else if ( change.isUpdated() ) {
                 target.add( requirementsTable );
@@ -216,9 +254,72 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         super.updateWith( target, change, updated );
     }
 
-    public void select( Requirement requirement ) {
-        selectedRequirement = requirement.isUnknown() ? null : requirement;
-        if ( selectedRequirement != null ) requestLockOn( selectedRequirement );
+    public class RequirementWrapper implements Identifiable {
+
+        private Requirement requirement;
+
+        public RequirementWrapper( Requirement requirement ) {
+            this.requirement = requirement;
+        }
+
+        @Override
+        public String getClassLabel() {
+            return requirement.getClassLabel();
+        }
+
+        @Override
+        public long getId() {
+            return requirement.getId();
+        }
+
+        @Override
+        public String getDescription() {
+            return requirement.getDescription();
+        }
+
+        @Override
+        public String getTypeName() {
+            return requirement.getTypeName();
+        }
+
+        @Override
+        public boolean isModifiableInProduction() {
+            return false;
+        }
+
+        public Requirement getRequirement() {
+            return requirement;
+        }
+
+        public String getName() {
+            return requirement.getName();
+        }
+
+        public Requirement.AssignmentSpec getCommitterSpec() {
+            return requirement.getCommitterSpec();
+        }
+
+        public Requirement.AssignmentSpec getBeneficiarySpec() {
+            return requirement.getBeneficiarySpec();
+        }
+
+        public String getInformationAndEois() {
+            return requirement.getInformationAndEois();
+        }
+
+        public String getInfoTagsAsString() {
+            return requirement.getInfoTagsAsString();
+        }
+
+        public String getExpandLabel() {
+            return selectedRequirement != null && selectedRequirement.equals( requirement )
+                    ? "Close"
+                    : isLockedByOtherUser( requirement )
+                    ? ( getUserFullName( getLockOwner( requirement ) ) + " editing" )
+                    : "Edit";
+        }
+
+
     }
 
     /**
@@ -226,12 +327,12 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
      */
     private class RequirementsTable extends AbstractTablePanel<Requirement> {
 
-        private final IModel<List<Requirement>> requirementsModel;
+        private final IModel<List<RequirementWrapper>> requirementsModel;
         private final Filterable filterable;
 
         private RequirementsTable(
                 String id,
-                IModel<List<Requirement>> requirementsModel,
+                IModel<List<RequirementWrapper>> requirementsModel,
                 int pageSize,
                 Filterable filterable ) {
             super( id, pageSize );
@@ -264,12 +365,12 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                     "beneficiarySpec.event.name",
                     EMPTY,
                     filterable ) );
-            columns.add( makeAnalysisColumn( "Issues", "unwaivedIssuesCount", "?" ) );
-            columns.add( makeExpandLinkColumn( "", "", "edit" ) );
-            List<Requirement> requirements = requirementsModel.getObject();
+            columns.add( makeAnalysisColumn( "Issues", "requirement", "unwaivedIssuesCount", "?" ) );
+            columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
+            List<RequirementWrapper> requirements = requirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
                     columns,
-                    new SortableBeanProvider<Requirement>( requirements, "name" ),
+                    new SortableBeanProvider<RequirementWrapper>( requirements, "name" ),
                     getPageSize() ) );
         }
     }

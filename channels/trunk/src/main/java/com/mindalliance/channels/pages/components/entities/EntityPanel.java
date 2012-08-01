@@ -3,6 +3,8 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.GeoLocatable;
+import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
@@ -11,9 +13,8 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;
-import com.mindalliance.channels.pages.components.entities.menus.EntityShowMenuPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,6 +22,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -32,20 +35,24 @@ import java.util.Set;
  * Date: Mar 24, 2009
  * Time: 12:37:10 PM
  */
-public class EntityPanel extends AbstractMultiAspectPanel {
+public class EntityPanel extends AbstractFloatingMultiAspectPanel {
 
     /**
      * Network aspect.
      */
     public static final String NETWORK = "network";
     /**
-     * Map aspect.
-     */
-    public static final String MAP = "map";
-    /**
      * Issues aspect.
      */
     public static final String ISSUES = "issues";
+
+    /**
+     * Actionable aspects.
+     */
+    private static final String[] ACTIONABLE_ASPECTS = {DETAILS};
+
+    private static final String[] ASPECTS = { DETAILS, NETWORK, ISSUES };
+
     /**
      * DOM identifier prefix for resizeble diagrams.
      */
@@ -59,13 +66,18 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         super( id, model, expansions, aspect );
     }
 
+    protected Identifiable getTabChangeDefaultSubject() {
+        return getEntity();
+    }
+
+
     /**
      * {@inheritDoc}
      */
     protected String getTitle() {
         return "About "
                 + getAboutString()
-                + getObject().getKindLabel().toLowerCase()
+                + getEntity().getKindLabel().toLowerCase()
                 + ": " + getObject().getName();
     }
 
@@ -87,31 +99,8 @@ public class EntityPanel extends AbstractMultiAspectPanel {
     /**
      * {@inheritDoc}
      */
-    protected String getDefaultAspect() {
-        return DETAILS;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected String getCssClass() {
         return "entity";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected MenuPanel makeShowMenu( String menuId ) {
-        EntityShowMenuPanel showMenu = new EntityShowMenuPanel(
-                menuId,
-                new PropertyModel<ModelEntity>( this, "object" ) );
-        showMenu.setEntityPanel( this );
-        return showMenu;
-    }
-
-    @Override
-    protected boolean isAspectShownEditable() {
-        return getAspectShown().equals( AbstractMultiAspectPanel.DETAILS );
     }
 
     /**
@@ -131,21 +120,12 @@ public class EntityPanel extends AbstractMultiAspectPanel {
             return getEntityDetailsPanel();
         } else if ( aspect.equals( NETWORK ) ) {
             return getEntityNetworkPanel();
-        } else if ( aspect.equals( MAP ) ) {
-            return getEntityMapPanel();
-        } else if ( aspect.equals( ISSUES ) ) {
+        }  else if ( aspect.equals( ISSUES ) ) {
             return getEntityIssuesPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected int getMaxTitleNameLength() {
-        return 30;
     }
 
     private Component getEntityDetailsPanel() {
@@ -216,9 +196,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
         }
     }
 
-    private Component getEntityMapPanel() {
-        return new Label( "aspect", "Under construction" );
-    }
 
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
@@ -226,16 +203,33 @@ public class EntityPanel extends AbstractMultiAspectPanel {
                 new PropertyModel<ModelEntity>( this, "object" ) );
     }
 
+    @Override
+    protected List<String> getAllAspects() {
+        return Arrays.asList( ASPECTS );
+    }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected String getObjectClassName() {
-        ModelEntity entity = getEntity();
-        if ( entity instanceof Actor && ( (Actor) entity ).isSystem() )
-            return "system";
-        else
-            return getObject().getTypeName();
+    @Override
+    protected List<String> getActionableAspects() {
+        return Arrays.asList( ACTIONABLE_ASPECTS );
+    }
+
+    @Override
+    protected String getMapTitle() {
+        return "Location of " + getEntity().getKindLabel() + " " + getEntity().getName();
+    }
+
+    @Override
+    protected List<? extends GeoLocatable> getGeoLocatables() {
+        List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>(  );
+        if ( getEntity() instanceof GeoLocatable ) {
+            geoLocatables.add( (GeoLocatable)getEntity() );
+        }
+        return geoLocatables;
+    }
+
+    @Override
+    protected PathIcon getIssuesPathIcon( String id ) {
+        return null;
     }
 
     /**
@@ -260,10 +254,6 @@ public class EntityPanel extends AbstractMultiAspectPanel {
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isUpdated() && change.isForProperty( "geoLocation" ) ) {
-            addShowMenu();
-            target.add( getShowMenu() );
-        }
         if ( change.isExists() && change.isForInstanceOf( Issue.class ) ) {
             setAspectShown(target, DETAILS);
         }

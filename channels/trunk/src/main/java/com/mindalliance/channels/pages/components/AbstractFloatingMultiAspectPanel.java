@@ -111,16 +111,19 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
 
     protected abstract String getMapTitle();
 
-    protected abstract List<GeoLocatable> getGeoLocatables();
+    protected abstract List<? extends GeoLocatable> getGeoLocatables();
 
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
         releaseAspectShown();
-        Change change = new Change( Change.Type.Collapsed, getObject() );
-        update( target, change );
+        update( target, getClosingChange() );
     }
 
+    // DEFAULT
+    protected Change getClosingChange() {
+        return new Change( Change.Type.Collapsed, getObject() );
+    }
 
     /**
      * Panel initialization.
@@ -139,20 +142,19 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
 
     @Override
     protected Component makeActionMenuOrLabel( String menuId ) {
-        Component menu;
-        if ( !isAspectShownEditable() ) {
-            menu = makeActionMenu( menuId );
-        } else {
+        Component menu = makeActionMenu( menuId );
+        if ( menu != null && isAspectShownEditable() ) {
             LockManager lockManager = getLockManager();
-            if ( lockManager.isLockedByUser( getUser().getUsername(), getObject().getId() ) ) {
-                menu = makeActionMenu( menuId );
-            } else if ( getCommander().isTimedOut( getUser().getUsername() )
-                    || getLockOwner( getObject() ) == null ) {
-                menu = timeOutLabel( menuId );
-            } else if ( getObject().isImmutable() ) {
-                menu = new Label( menuId, new Model<String>( "Immutable" ) );
-            } else {
-                menu = editedByLabel( menuId, getObject(), lockManager.getLockUser( getObject().getId() ) );
+            Identifiable identifiable = getObject();
+            if ( !lockManager.isLockedByUser( getUser().getUsername(), identifiable.getId() ) ) {
+                if ( getCommander().isTimedOut( getUser().getUsername() )
+                        || getLockOwner( identifiable ) == null ) {
+                    menu = timeOutLabel( menuId );
+                } else if ( identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isImmutable() ) {
+                    menu = new Label( menuId, new Model<String>( "Immutable" ) );
+                } else {
+                    menu = editedByLabel( menuId, identifiable, lockManager.getLockUser( getObject().getId() ) );
+                }
             }
         }
         return menu;
@@ -192,16 +194,22 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
 
     @Override
     protected String getTitle() {
-        return "About " + getObject().getKindLabel().toLowerCase() + ": " + getObject().getName();
+        Identifiable identifiable = getObject();
+        if ( identifiable instanceof ModelObject ) {
+            ModelObject mo = (ModelObject) identifiable;
+            return "About " + mo.getKindLabel().toLowerCase() + ": " + mo.getName();
+        } else {
+            return "About" + identifiable.getClassLabel();
+        }
     }
 
     /**
-     * Get the model object  that's viewed.
+     * Get the identifiable that's viewed.
      *
-     * @return a model object
+     * @return an identifiable
      */
-    public ModelObject getObject() {
-        return (ModelObject) getModel().getObject();
+    public Identifiable getObject() {
+        return getModel().getObject();
     }
 
     public String getAspectShown() {
@@ -290,7 +298,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
         return pathIcons;
     }
 
-    private PathIcon getIssuesPathIcon( String id ) {
+    protected PathIcon getIssuesPathIcon( String id ) {
         String titleString;
         Identifiable identifiable = getObject();
         if ( identifiable instanceof ModelObject ) {
@@ -326,9 +334,9 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
         }
     }
 
-    private PathIcon getSurveysPathIcon( String id ) {
+    protected PathIcon getSurveysPathIcon( String id ) {
         final Identifiable identifiable = getObject();
-        if ( identifiable instanceof ModelObject ) {
+        if ( identifiable instanceof ModelObject && !((ModelObject)identifiable).isUnknown() ) {
             AjaxLink surveysLink = new AjaxLink( id ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
@@ -336,15 +344,15 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
                     update( target, change );
                 }
             };
-            surveysLink.add(  new AttributeModifier( "title", "Surveys launched or that could be launched" ) );
+            surveysLink.add( new AttributeModifier( "title", "Surveys launched or that could be launched" ) );
             return new PathIcon( "Surveys", "images/survey_small2.png", surveysLink );
         } else {
             return null;
         }
     }
 
-    private PathIcon getMapPathIcon( String id ) {
-        List<GeoLocatable> geoLocatables = getGeoLocatables();
+    protected PathIcon getMapPathIcon( String id ) {
+        List<? extends GeoLocatable> geoLocatables = getGeoLocatables();
         if ( !geoLocatables.isEmpty() ) {
             BookmarkablePageLink<GeoMapPage> geomapLink = GeoMapPage.makeLink(
                     id,
@@ -366,9 +374,21 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingC
     protected List<Tab> makeTabs() {
         List<Tab> tabs = new ArrayList<Tab>();
         for ( String aspect : getAllAspects() ) {
-            tabs.add( new Tab( aspect, new Change( Change.Type.AspectViewed, getModel().getObject(), aspect ) ) );
+            Change change = new Change( Change.Type.AspectViewed );
+            change.setSubject( getTabChangeDefaultSubject() );
+            change.setId( getTabIdentifiableId() );
+            change.setProperty( aspect );
+            tabs.add( new Tab( aspect, change ) );
         }
         return tabs;
+    }
+
+    protected Identifiable getTabChangeDefaultSubject() {
+        return null;       // DEFAULT
+    }
+
+    protected long getTabIdentifiableId() {
+        return getModel().getObject().getId();
     }
 
 

@@ -68,7 +68,7 @@ public class SegmentEditPanel extends AbstractFloatingMultiAspectPanel {
     }
 
     @Override
-    protected List<GeoLocatable> getGeoLocatables() {
+    protected List<? extends GeoLocatable> getGeoLocatables() {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>();
         Iterator<Part> parts = getSegment().parts();
         while ( parts.hasNext() ) {

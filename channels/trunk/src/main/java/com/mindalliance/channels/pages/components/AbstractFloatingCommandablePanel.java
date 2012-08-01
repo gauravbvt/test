@@ -34,11 +34,6 @@ import java.util.Set;
 public abstract class AbstractFloatingCommandablePanel extends AbstractCommandablePanel {
 
     /**
-     * Expected screen resolution.
-     */
-    static protected double DPI = 96.0;
-
-    /**
      * Pad top on move.
      */
     static protected final int PAD_TOP = 68;
@@ -110,7 +105,6 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
     private static final int MINIMIZED_TITLE_SIZE = 27;
     private static final int MINIMIZED_HEIGHT = 38;
     private WebMarkupContainer moveBar;
-    private Label titleLabel;
 
     public AbstractFloatingCommandablePanel( String id ) {
         this( id, null, null );
@@ -161,7 +155,7 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
      * Add title to floating panel.
      */
     protected void addTitle() {
-        titleLabel = new Label( "title", new Model<String>( getAdjustedTitle() ) );
+        Label titleLabel = new Label( "title", new Model<String>( getAdjustedTitle() ) );
         titleLabel.setOutputMarkupId( true );
         moveBar.addOrReplace( titleLabel );
     }
@@ -232,6 +226,10 @@ public abstract class AbstractFloatingCommandablePanel extends AbstractCommandab
 
      protected void addActionsMenu() {
         actionsMenu = makeActionMenuOrLabel( "actionMenu" );
+        if ( actionsMenu == null ) {
+            actionsMenu = new Label("actionMenu", "");
+            actionsMenu.setVisible( false );
+        }
         actionsMenu.setOutputMarkupId( true );
         header.addOrReplace( actionsMenu );
     }

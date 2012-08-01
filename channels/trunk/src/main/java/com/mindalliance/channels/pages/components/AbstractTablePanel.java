@@ -236,6 +236,27 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
+    protected AbstractColumn<T> makeAnalysisColumn( String name,
+                                                    final String property,
+                                                    final String methodName,
+                                                    final String defaultText,
+                                                    final Object... extras ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                T object = property == null
+                        ? model.getObject()
+                        : (T)ChannelsUtils.getProperty( model.getObject(), property, null );
+                String text = "" + callAnalyst( methodName, object, extras );
+                String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
+            }
+        };
+    }
+
+
     private Object callAnalyst( String methodName, Object argument, Object[] extras ) {
         try {
             Analyst delegate = getAnalyst();

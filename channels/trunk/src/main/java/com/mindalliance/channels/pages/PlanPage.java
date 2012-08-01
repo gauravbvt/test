@@ -45,9 +45,9 @@ import com.mindalliance.channels.pages.components.plan.floating.PlanClassificati
 import com.mindalliance.channels.pages.components.plan.floating.PlanEvaluationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEventsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanIndexFloatingPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanOrganizationsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanOrganizationsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanParticipationFloatingPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanRequirementsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanRequirementsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanVersionsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ProtocolsMapFloatingPanel;
@@ -68,7 +68,7 @@ import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
-import com.mindalliance.channels.pages.components.social.rfi.DataCollectionPanel;
+import com.mindalliance.channels.pages.components.social.rfi.AllSurveysPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.model.Feedback;
@@ -531,7 +531,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         // scoping
         addRequirementsPanel();
         addAllEventsPanel();
-        addAllOrganizationsPanel();
+        addAllOrganizationsPanel( null );
         addAllSegmentsPanel();
         addAllClassificationsPanel();
         // improving
@@ -891,33 +891,41 @@ public final class PlanPage extends AbstractChannelsWebPage {
             allSurveyPanel.setOutputMarkupId( true );
             makeVisible( allSurveyPanel, false );
         } else {
-            if ( change == null || !change.hasQualifier( "tab" ) )
-                allSurveyPanel = new DataCollectionPanel(
+            if ( change == null )
+                allSurveyPanel = new AllSurveysPanel(
                         "dataCollection",
                         new Model<RFISurvey>( rfiSurvey ) );
             else
-                allSurveyPanel = new DataCollectionPanel(
+                allSurveyPanel = new AllSurveysPanel(
                         "dataCollection",
                         new Model<RFISurvey>( rfiSurvey ),
-                        (String) change.getQualifier( "tab" ) );
+                        change.getProperty() );
         }
         form.addOrReplace( allSurveyPanel );
     }
 
     private void addRequirementsPanel() {
-        addRequirementsPanel( null );
+        addRequirementsPanel( null, null );
     }
 
-    private void addRequirementsPanel( Requirement requirement ) {
+    private void addRequirementsPanel( Requirement requirement, Change change ) {
         if ( !expansions.contains( Requirement.UNKNOWN.getId() ) ) {
             planRequirementsPanel = new Label( "requirements", "" );
             planRequirementsPanel.setOutputMarkupId( true );
             makeVisible( planRequirementsPanel, false );
         } else {
-            planRequirementsPanel = new PlanRequirementsFloatingPanel(
+            if ( change == null ) {
+            planRequirementsPanel = new PlanRequirementsPanel(
                     "requirements",
                     new Model<Requirement>( requirement ),
                     getReadOnlyExpansions() );
+            } else {
+                planRequirementsPanel = new PlanRequirementsPanel(
+                        "requirements",
+                        new Model<Requirement>( requirement ),
+                        getReadOnlyExpansions(),
+                        change.getProperty() );
+            }
         }
         form.addOrReplace( planRequirementsPanel );
     }
@@ -935,15 +943,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( allEventsPanel );
     }
 
-    private void addAllOrganizationsPanel() {
+    private void addAllOrganizationsPanel( Change change ) {
         if ( !expansions.contains( Channels.ALL_ORGANIZATIONS ) ) {
             allOrganizationsPanel = new Label( "allOrganizations", "" );
             allOrganizationsPanel.setOutputMarkupId( true );
             makeVisible( allOrganizationsPanel, false );
         } else {
-            allOrganizationsPanel = new PlanOrganizationsFloatingPanel(
+            allOrganizationsPanel = change == null
+            ? new PlanOrganizationsPanel(
                     "allOrganizations",
-                    new Model<Organization>( Organization.UNKNOWN ) );
+                    new Model<Organization>( Organization.UNKNOWN ) )
+            : new PlanOrganizationsPanel(
+                    "allOrganizations",
+                    new Model<Organization>( Organization.UNKNOWN ),
+                    change.getProperty() );
         }
         form.addOrReplace( allOrganizationsPanel );
     }
@@ -2637,10 +2650,10 @@ PopupSettings.RESIZABLE |
             }
             if ( viewedRequirement == null )
                 viewedRequirement = Requirement.UNKNOWN;
-            addRequirementsPanel( viewedRequirement );
+            addRequirementsPanel( viewedRequirement, change );
             target.add( planRequirementsPanel );
-        } else if ( planRequirementsPanel instanceof PlanRequirementsFloatingPanel ) {
-            ( (PlanRequirementsFloatingPanel) planRequirementsPanel ).refresh( target,
+        } else if ( planRequirementsPanel instanceof PlanRequirementsPanel ) {
+            ( (PlanRequirementsPanel) planRequirementsPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( Requirement.UNKNOWN ) );
@@ -2666,10 +2679,10 @@ PopupSettings.RESIZABLE |
         if ( change.isRefresh() ||
                 id == Channels.ALL_ORGANIZATIONS
                         && change.isDisplay() ) {
-            addAllOrganizationsPanel();
+            addAllOrganizationsPanel( change );
             target.add( allOrganizationsPanel );
-        } else if ( allOrganizationsPanel instanceof PlanOrganizationsFloatingPanel ) {
-            ( (PlanOrganizationsFloatingPanel) allOrganizationsPanel ).refresh( target,
+        } else if ( allOrganizationsPanel instanceof PlanOrganizationsPanel ) {
+            ( (PlanOrganizationsPanel) allOrganizationsPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( Organization.UNKNOWN ) );
@@ -2823,8 +2836,8 @@ PopupSettings.RESIZABLE |
                     : rfiSurvey;
             addDataCollectionPanel( viewedRFISurvey, change );
             target.add( allSurveyPanel );
-        } else if ( allSurveyPanel instanceof DataCollectionPanel ) {
-            ( (DataCollectionPanel) allSurveyPanel ).refresh( target,
+        } else if ( allSurveyPanel instanceof AllSurveysPanel ) {
+            ( (AllSurveysPanel) allSurveyPanel ).refresh( target,
                     change,
                     updated,
                     getAspectShown( RFISurvey.UNKNOWN ) );

@@ -48,7 +48,7 @@ public class PlanEditPanel extends AbstractFloatingMultiAspectPanel {
     }
 
     @Override
-    protected List<GeoLocatable> getGeoLocatables() {
+    protected List<? extends GeoLocatable> getGeoLocatables() {
         List<GeoLocatable> geoLocatables = new ArrayList<GeoLocatable>(  );
         Place planLocale = getPlan().getLocale();
         if ( planLocale != null && planLocale.isActual() && !planLocale.isUnknown() ) {
