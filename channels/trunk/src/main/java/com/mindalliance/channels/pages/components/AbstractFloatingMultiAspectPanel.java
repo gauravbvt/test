@@ -384,7 +384,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
     }
 
     protected Identifiable getTabChangeDefaultSubject() {
-        return null;       // DEFAULT
+        return getObject();       // DEFAULT
     }
 
     protected long getTabIdentifiableId() {
