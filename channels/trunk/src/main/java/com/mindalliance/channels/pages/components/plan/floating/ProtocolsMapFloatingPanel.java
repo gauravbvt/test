@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.plan.floating;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,7 +17,7 @@ import org.apache.wicket.model.IModel;
  * Date: 7/4/12
  * Time: 5:35 PM
  */
-public class ProtocolsMapFloatingPanel extends FloatingCommandablePanel {
+public class ProtocolsMapFloatingPanel extends AbstractFloatingCommandablePanel {
 
     private PlanProcedureMapPanel protocolsMapPanel;
 

@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -27,7 +27,7 @@ import java.util.Set;
  * Date: Oct 28, 2009
  * Time: 1:25:24 PM
  */
-public class PartAssignmentsPanel extends FloatingCommandablePanel {
+public class PartAssignmentsPanel extends AbstractFloatingCommandablePanel {
 
     /**
      * Min width on resize.

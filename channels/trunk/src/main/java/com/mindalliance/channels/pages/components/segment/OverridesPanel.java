@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -28,7 +28,7 @@ import java.util.Set;
  * Date: 2/19/11
  * Time: 1:10 PM
  */
-public class OverridesPanel  extends FloatingCommandablePanel {
+public class OverridesPanel  extends AbstractFloatingCommandablePanel {
 
     /**
       * Min width on resize.

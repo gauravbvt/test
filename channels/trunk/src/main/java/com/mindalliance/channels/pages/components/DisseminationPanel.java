@@ -41,7 +41,7 @@ import java.util.Set;
  * Date: Oct 10, 2010
  * Time: 5:27:56 PM
  */
-public class DisseminationPanel extends FloatingCommandablePanel {
+public class DisseminationPanel extends AbstractFloatingCommandablePanel {
 
     /**
      * Min width on resize.

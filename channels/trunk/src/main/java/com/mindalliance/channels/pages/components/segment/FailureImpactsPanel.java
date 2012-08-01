@@ -6,8 +6,8 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.diagrams.FailureImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -38,7 +38,7 @@ import java.util.Set;
  * Date: Jan 14, 2010
  * Time: 8:40:48 PM
  */
-public class FailureImpactsPanel extends FloatingCommandablePanel {
+public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
 
     /**
      * Min width on resize.

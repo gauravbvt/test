@@ -32,7 +32,7 @@ import java.util.Set;
 /**
  * Multi-aspect panel.
  */
-public abstract class AbstractMultiAspectPanel extends FloatingCommandablePanel implements Releaseable {
+public abstract class AbstractMultiAspectPanel extends AbstractFloatingCommandablePanel implements Releaseable {
 
     /**
      * Min width on resize.

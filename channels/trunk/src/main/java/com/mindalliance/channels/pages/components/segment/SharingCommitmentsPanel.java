@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -22,7 +22,7 @@ import java.util.Set;
  * Date: Oct 28, 2009
  * Time: 1:29:01 PM
  */
-public class SharingCommitmentsPanel extends FloatingCommandablePanel {
+public class SharingCommitmentsPanel extends AbstractFloatingCommandablePanel {
 
     /**
      * Min width on resize.

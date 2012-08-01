@@ -35,7 +35,7 @@ import java.util.Set;
  * Date: 4/12/12
  * Time: 12:29 PM
  */
-public class ModelObjectSurveysPanel extends FloatingCommandablePanel {
+public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
 
     /**
      * Min width on resize.

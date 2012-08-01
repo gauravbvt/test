@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.support;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -13,7 +13,7 @@ import org.apache.wicket.model.IModel;
  * Date: May 3, 2010
  * Time: 7:22:38 PM
  */
-public class FlowLegendPanel extends FloatingCommandablePanel {
+public class FlowLegendPanel extends AbstractFloatingCommandablePanel {
 
      /**
      * Min width on resize.

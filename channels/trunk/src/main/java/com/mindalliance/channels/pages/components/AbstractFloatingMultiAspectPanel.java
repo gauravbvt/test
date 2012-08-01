@@ -33,7 +33,7 @@ import java.util.Set;
  * Date: 7/26/12
  * Time: 1:58 PM
  */
-public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingCommandablePanel implements Releaseable {
+public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingTabbedCommandablePanel implements Releaseable {
 
     /**
      * Details aspect.

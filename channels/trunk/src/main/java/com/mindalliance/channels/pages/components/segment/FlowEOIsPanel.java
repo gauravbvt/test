@@ -13,8 +13,8 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -46,7 +46,7 @@ import java.util.Set;
  * Date: Nov 5, 2009
  * Time: 9:01:12 AM
  */
-public class FlowEOIsPanel extends FloatingCommandablePanel {
+public class FlowEOIsPanel extends AbstractFloatingCommandablePanel {
 
     /**
      * Min width on resize.

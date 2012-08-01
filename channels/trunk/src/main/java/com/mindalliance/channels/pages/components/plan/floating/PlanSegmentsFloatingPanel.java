@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.pages.components.FloatingCommandablePanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.plan.PlanSegmentsMapPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,7 +20,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * Date: 7/4/12
  * Time: 4:46 PM
  */
-public class PlanSegmentsFloatingPanel extends FloatingCommandablePanel {
+public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel {
 
     @SpringBean
     private ImagingService imagingService;
