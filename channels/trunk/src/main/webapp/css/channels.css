@@ -1764,7 +1764,8 @@ div.import-dialog {
 
 /* ----- Floating Panels ----- */
 
-div.float-bar {
+div.float-bar,
+div.fp-header {
     height: 36px;
     width: 100%;
     background: url('../images/float-bar-bg.png') repeat-x #c3d9ff;
@@ -1772,7 +1773,8 @@ div.float-bar {
     cursor: move;
 }
 
-div.float-bar-title {
+div.float-bar-title,
+div.fp-title {
     background: url("../images/float-bar-logo.png") no-repeat scroll 9px 9px transparent;
     color: #333333;
     float: left;
@@ -1784,17 +1786,19 @@ div.float-bar-title {
     text-transform: capitalize;
 }
 
-div.float-bar-close {
-    position: absolute;
-    float: right;
-    right: 7px;
-    top: 7px;
-}
-
-div.float-bar-minimize {
+div.float-bar-minimize,
+div.fp-minimize {
     position: absolute;
     float: right;
     right: 36px;
+    top: 7px;
+}
+
+div.float-bar-close,
+div.fp-close {
+    position: absolute;
+    float: right;
+    right: 7px;
     top: 7px;
 }
 
@@ -1812,58 +1816,90 @@ div.float-header > h1 {
     font-size: 18px;
     font-weight: bold;
     color: #333333;
-    /*float:left; Temporarily Disabled */
 }
 
-div.float-header > span.menubar {
+div.fp-tabcont {
+    background:url(../images/fpanel-tab-bg.png) repeat-x;
+    height: 54px;
+    width: 100%;
+}
+
+div.fp-tabs {
+    float:left;
+    height:54px;
+    padding:0 0 0 5px;
+}
+
+div.fp-tabs a {
+    font-size:12px;
+    text-transform:uppercase;
+    height:54px;
+    display:block;
+    float:left;
+    padding:0;
+    color:#999999;
+    text-decoration:none;
+    letter-spacing:0.1em;
+    font-weight: bold;
+}
+
+div.fp-tabs a.active {
+    background:url(../images/hover.png) no-repeat bottom;
+    color:#000000;
+}
+
+div.fp-tabs a:hover {
+    color:#000000;
+}
+
+div.fp-tabs a span {
+    border-right: 1px solid #D6D6D6;
+    display: block;
+    height: 29px;
+    padding: 13px 15px 0;
+}
+
+div.fp-tabs a span.last {
+    border-right:none;
+}
+
+div.fp-menu {
+    float:right;
+    padding: 12px 0 0;
+}
+
+div.fp-menu a {
+    text-decoration:none;
+}
+
+div.fp-icon-menu {
     float: right;
+    height: 42px;
+    padding: 0 10px 0 0;
 }
 
-/*
-
-div.float-header > span.menubar span.dropmenu {
-   background: url('../images/bullet-arrow-bottom.png') no-repeat scroll 90% 56% #D1D3D4;
-   border:1px solid #BCBEC0;
-   padding-right: 13px;
-   padding-left: 2px;
-   margin-right: 5px;
+div.fp-icon-menu a {
+    border-left: 1px solid #D6D6D6;
+    color: #666666;
+    display: block;
+    float: left;
+    font-size: 10px;
+    height: 30px;
+    margin: 0 5px;
+    padding: 12px 0 0 10px;
+    text-transform: uppercase;
 }
 
-div.float-header > span.menubar span.dropmenu:hover {
-   background: url( '../images/bullet-arrow-bottom-high.png' ) no-repeat scroll 90% 56% #e6e6e6;
-	border:1px solid #C7C8CA;
-	color:#000000;
+div.fp-icon-menu a:hover {
+	color: #333333;
 }
 
-*/
-
-/*
-
-div.float-header .close,
-div.header .close {
-    background: none repeat scroll 0 0 #D1D3D4;
-    border: 1px solid #BCBEC0;
-    color: #333333;
-    float: right;
-    padding: 0;
-    text-transform: lowercase;
-    padding: 1px 4px 0 4px;
-    font-size: 8pt;
-    line-height: 100%;
-    height: 13px;
-    font-weight: normal;
+div.fp-icon-menu a img {
+	vertical-align: middle;
 }
 
-div.float-header .close:hover,
-div.header .close:hover {
-    border: 1px solid #C7C8CA;
-    color: #000000;
-    background: #e6e6e6;
-}
-
-*/
-
-div.float-resize {
+div.float-resize,
+div.fp-resize {
     position: absolute;
     bottom: 3px;
     right: 3px;
@@ -3627,98 +3663,3 @@ div.feedback-new-message input:hover {
     padding-right: 10px;
     padding-left: 2px;
 }
-
-/* NEW FLOATING PANEL */
-div.floating-panel {
-
-}
-
-div.fp-header {
-    background:url(../images/fpanel-tab-bg.png) repeat-x;
-    height: 54px;
-    width: 100%;
-}
-
-div.fp-tabs {
-    float:left;
-    height:54px;
-    padding:0 0 0 5px;
-}
-
-div.fp-tabs a {
-    font-size:12px;
-    text-transform:uppercase;
-    height:54px;
-    display:block;
-    float:left;
-    padding:0;
-    color:#999999;
-    text-decoration:none;
-    letter-spacing:0.1em;
-    font-weight: bold;
-}
-
-div.fp-tabs a.active {
-    background:url(../images/hover.png) no-repeat bottom;
-    color:#000000;
-}
-
-div.fp-tabs a:hover {
-    color:#000000;
-}
-
-
-div.fp-tabs a span {
-    border-right: 1px solid #D6D6D6;
-    display: block;
-    height: 29px;
-    padding: 13px 15px 0;
-}
-
-div.fp-tabs a span.last {
-    border-right:none;
-}
-
-div.fp-menu {
-    float:right;
-    padding: 12px 0 0;
-}
-
-div.fp-menu a {
-    text-decoration:none;
-}
-
-div.fp-icon-menu {
-    float: right;
-    height: 42px;
-    padding: 0 10px 0 0;
-}
-
-div.fp-icon-menu a {
-    border-left: 1px solid #D6D6D6;
-    color: #666666;
-    display: block;
-    float: left;
-    font-size: 10px;
-    height: 30px;
-    margin: 0 5px;
-    padding: 12px 0 0 10px;
-    text-transform: uppercase;
-}
-
-div.fp-icon-menu a:hover {
-	color: #333333;
-}
-
-div.fp-icon-menu a img {
-	vertical-align: middle;
-}
-
-/*div.fp-content {
-    float:left;
-    width:570px;
-    border:2px solid #999999;
-    border-top:none;
-    background:#f6f6f6;
-    padding:15px;
-}*/

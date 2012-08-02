@@ -8,24 +8,23 @@
 <body>
 
 <wicket:panel>
-    <div class="floating-panel floating">
-        <div class="float-bar" wicket:id="moveBar">
-            <div class="float-bar-title">
+    <div class="floating">
+        <div class="fp-header" wicket:id="moveBar">
+            <div class="fp-title">
                 <span wicket:id="title">A title</span>
             </div>
-            <div class="float-bar-minimize">
+            <div class="fp-minimize">
                 <a wicket:id="minimize" href="#">
                     <img wicket:id="minimizeIcon"  src="images/float-bar-minimize.png" border="0"/>
                 </a>
             </div>
-            <div class="float-bar-close">
+            <div class="fp-close">
                 <a wicket:id="close" href="#">
                     <img src="images/float-bar-close.png" border="0"/>
                 </a>
             </div>
         </div>
-        <div wicket:id="header" class="fp-header">
-
+        <div wicket:id="header" class="fp-tabcont">
             <div class="fp-tabs">
                 <span wicket:id="tabs">
                     <a wicket:id="tabLink" class="active" href="#"> <!-- class = "active" when selected -->
@@ -33,7 +32,6 @@
                     </a>
                 </span>
             </div>
-
             <div class="fp-icon-menu">
                 <span wicket:id="pathIcons">
                     <a wicket:id="pathIconLink" class="button-icon">
@@ -42,13 +40,11 @@
                     </a>
                 </span>
             </div>
-
             <div class="fp-menu">
                 <span class="menubar">
                     <span class="menuitem" wicket:id="actionMenu">[action menu]</span>
                 </span>
             </div>
-
 <!--
             <div class="fp-pathway-icon-cont">
                 <div class="fp-pathway">
@@ -56,13 +52,13 @@
                 </div>
             </div>
  -->
-
         </div>
+
         <div wicket:id="fp-content" class="fp-content">
             <wicket:child/>
         </div>
 
-        <div class="float-resize" wicket:id="resizer">
+        <div class="fp-resize" wicket:id="resizer">
             <img src="images/resize-icon.png" border="0"/>
         </div>
     </div>
