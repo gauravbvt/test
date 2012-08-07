@@ -18,7 +18,7 @@ import java.util.List;
 public class UploadedImage extends ChannelsDynamicImageResource {
 
 
-    static final List<String> IMAGE_EXTENSIONS = Arrays.asList( "png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "svg" );
+    static public final List<String> IMAGE_EXTENSIONS = Arrays.asList( "png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "svg" );
 
     public UploadedImage() {
         super();

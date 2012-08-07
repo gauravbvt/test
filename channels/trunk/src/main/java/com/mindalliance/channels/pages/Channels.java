@@ -28,6 +28,7 @@ import com.mindalliance.channels.pages.png.PlanMapPng;
 import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
+import com.mindalliance.channels.pages.png.UploadedReference;
 import com.mindalliance.channels.pages.procedures.AssignmentReportPage;
 import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
 import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
@@ -241,7 +242,7 @@ public class Channels extends WebApplication
         mountPage( "help", HelpPage.class );
         mountPage( "staticProtocols", StaticProtocols.class );
 
-        mountResource( "uploads/${name}", new PngReference( UploadedImage.class, userDao, planManager ) );
+        mountResource( "uploads/${name}", new UploadedReference(  ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );
         mountResource( "segment.png", new PngReference( FlowMapPng.class ) );
         mountResource( "plan.png", new PngReference( PlanMapPng.class ) );
