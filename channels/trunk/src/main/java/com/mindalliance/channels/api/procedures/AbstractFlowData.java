@@ -234,4 +234,10 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                     : intent + " about";
         }
     }
+
+    public String getId() {
+        return Long.toString( flow.getId() );
+    }
+
+
 }

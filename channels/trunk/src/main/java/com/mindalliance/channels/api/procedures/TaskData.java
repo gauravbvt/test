@@ -28,7 +28,7 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"name", "category", "communicatedLocation", "location", "instructions", "teamContacts", "goals", "failureImpact", "documentation"} )
+@XmlType( propOrder = {"id", "name", "category", "communicatedLocation", "location", "instructions", "teamContacts", "goals", "failureImpact", "documentation"} )
 public class TaskData extends AbstractProcedureElementData {
 
     private String failureImpact;
@@ -113,6 +113,10 @@ public class TaskData extends AbstractProcedureElementData {
         documentation = new DocumentationData( serverUrl, getPart() );
     }
 
+    @XmlElement
+    public String getId() {
+        return Long.toString( getPart().getId() );
+    }
 
     @XmlElement
     public String getName() {

@@ -216,9 +216,6 @@ public class ChannelsServiceImpl implements ChannelsService {
                     plan,
                     user.getUserInfo(),
                     planService );
-            if ( participations.isEmpty() ) {
-                throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
-            }
             return new ProceduresData(
                     serverUrl,
                     plan,
