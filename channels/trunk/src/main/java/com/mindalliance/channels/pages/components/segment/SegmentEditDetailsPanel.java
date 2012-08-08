@@ -24,6 +24,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -112,7 +113,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, Channels.ALL_TAGS ) );
+                update( target, new Change( Change.Type.Expanded, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );

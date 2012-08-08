@@ -541,7 +541,8 @@ Note that all profile attributes are optional.]]>
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -590,7 +591,8 @@ Note that all profile attributes are optional.]]>
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -658,7 +660,8 @@ Note that all profile attributes are optional.]]>
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -696,8 +699,9 @@ Note that all profile attributes are optional.]]>
                 <script>
                     <action>Open plan's who's who</action>
                     <change>
-                        <subjectId>-16</subjectId>
-                        <type>Expanded</type>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Who's who</property>
                     </change>
                 </script>
             </step>
@@ -707,7 +711,8 @@ Note that all profile attributes are optional.]]>
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -751,7 +756,8 @@ Note that all profile attributes are optional.]]>
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -790,7 +796,8 @@ Note that all profile attributes are optional.]]>
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -921,8 +928,9 @@ Taxonomies are defined implictly by categorizing individual entities. Taxonomies
                 <script>
                     <action>View taxonomies</action>
                     <change>
-                        <subjectId>-15</subjectId>
-                        <type>Expanded</type>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Taxonomies</property>
                     </change>
                 </script>
             </step>
@@ -1173,7 +1181,8 @@ The index can be filtered by kind of element (role, agent, event etc.), by tags,
                     <action>Open the index</action>
                     <change>
                         <subjectId>-13</subjectId>
-                        <type>Expanded</type>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
                     </change>
                 </script>
             </step>
@@ -1190,8 +1199,9 @@ The table can be indexed by the name of the agent or by attributes of employment
                 <script>
                     <action>Open the plan's who's who</action>
                     <change>
-                        <subjectId>-16</subjectId>
-                        <type>Expanded</type>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Who's who</property>
                     </change>
                 </script>
             </step>
@@ -1208,8 +1218,9 @@ A table with all documents attached in the plan can be found in the plan's ''bib
                 <script>
                     <action>Open the plan's bibliography</action>
                     <change>
-                        <subjectId>-17</subjectId>
-                        <type>Expanded</type>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>All documents</property>
                     </change>
                 </script>
             </step>
@@ -1226,8 +1237,9 @@ The list of all tags used in the plan can be looked up to see what has been mark
                 <script>
                     <action>Open the tag index</action>
                     <change>
-                        <subjectId>-14</subjectId>
-                        <type>Expanded</type>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Tags</property>
                     </change>
                 </script>
             </step>
@@ -1247,8 +1259,9 @@ Taxonomies can be visualized to verify that they are correct.
                 <script>
                     <action>View taxonomies</action>
                     <change>
-                        <subjectId>-15</subjectId>
-                        <type>Expanded</type>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Taxonomies</property>
                     </change>
                 </script>
             </step>

@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -73,10 +74,10 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, Channels.ALL_TAGS ) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
             }
         };
-        tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
+        tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
         add( tagsLink );
         TagsPanel tagsPanel = new TagsPanel( "infoTags", new Model<Taggable>( getRequirement() ), "infoTags" );
         add( tagsPanel );

@@ -89,10 +89,7 @@ public class Channels extends WebApplication
     public static final long ALL_ISSUES = -10;
     public static final long PLAN_VERSIONS = -11;
     public static final long PLAN_PARTICIPATION = -12;
-    public static final long PLAN_INDEX = -13;
-    public static final long ALL_TAGS = -14;
-    public static final long ALL_TYPES = -15;
-    public static final long WHOS_WHO = -16;
+    public static final long PLAN_SEARCHING = -13;
     public static final long BIBLIOGRAPHY = -17;
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;

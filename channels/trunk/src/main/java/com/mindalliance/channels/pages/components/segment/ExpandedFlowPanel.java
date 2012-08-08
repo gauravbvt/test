@@ -30,6 +30,7 @@ import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.DelayPanel;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -316,10 +317,10 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, Channels.ALL_TAGS ) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
             }
         };
-        tagsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
+        tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
         tagsContainer.add( tagsLink );
         TagsPanel tagsPanel = new TagsPanel( "tags", new Model<Taggable>( getFlow() ) );
         tagsContainer.add( tagsPanel );
@@ -345,7 +346,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         if ( intent != null ) {
             intentChoice.add( new AttributeModifier(
                     "title",
-                    true,
                     new Model<String>( intent.getHint() ) ) );
         }
         intentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {

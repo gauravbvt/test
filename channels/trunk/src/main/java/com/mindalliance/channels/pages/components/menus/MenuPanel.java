@@ -338,6 +338,20 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                 } );
     }
 
+    protected LinkMenuItem showAspect( final long id, final String aspect ) {
+
+        return new LinkMenuItem( "menuItem",
+                new Model<String>( aspect ),
+                new AjaxFallbackLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        Change change = new Change( Change.Type.AspectViewed, id, aspect );
+                        update( target, change );
+                    }
+                } );
+    }
+
+
 
 
     /**

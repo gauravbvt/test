@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
@@ -14,7 +13,6 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
-import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +37,8 @@ public class PlanIndexPanel extends AbstractIndexPanel {
                     PLACES, ORGANIZATIONS, ROLES, REQUIREMENTS, SEGMENTS, TASKS};
 
 
-    public PlanIndexPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-        super( id, model, expansions );
+    public PlanIndexPanel( String id,  Set<Long> expansions ) {
+        super( id, null, expansions );
     }
 
     /**

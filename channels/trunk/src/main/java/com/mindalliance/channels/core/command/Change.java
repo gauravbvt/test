@@ -204,6 +204,13 @@ public class Change implements Serializable {
         this.id = id;
     }
 
+    public Change( Type type, Long id, String property ) {
+        this.type = type;
+        this.id = id;
+        this.property = property;
+    }
+
+
     public boolean isByIdOnly() {
         return id != null && identifiableRef == null;
     }

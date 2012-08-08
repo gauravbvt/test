@@ -27,7 +27,6 @@ import org.apache.wicket.model.PropertyModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Plan who's who panel.
@@ -83,8 +82,8 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
      */
     private WhosWhoTable whosWhoTable;
 
-    public PlanWhosWhoPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
-        super( id, model, expansions );
+    public PlanWhosWhoPanel( String id ) {
+        super( id, null, null );
         init();
     }
 

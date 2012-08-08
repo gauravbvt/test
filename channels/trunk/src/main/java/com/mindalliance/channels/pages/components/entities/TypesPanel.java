@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -73,7 +74,7 @@ public class TypesPanel extends AbstractCommandablePanel {
     private void addTypologiesLink( WebMarkupContainer typesDiv ) {
         AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "typologies" ) {
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, Channels.ALL_TYPES ) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAXONOMIES) );
             }
         };
         classificationsLink.add( new AttributeModifier( "class", new Model<String>( "window" ) ) );
