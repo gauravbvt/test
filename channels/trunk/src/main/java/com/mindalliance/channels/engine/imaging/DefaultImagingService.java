@@ -204,9 +204,15 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             File iconFile = getIconFile( modelObject, ".png" );
             if ( iconFile.delete() )
                 LOG.debug( "Deleted {}", iconFile );
+            iconFile = getIconFile( modelObject, "_squared.png" );
+            if ( iconFile.delete() )
+                LOG.debug( "Deleted {}", iconFile );
 
             for ( int i = 1; i < ICON_HEIGHTS.length; i++ ) {
                 File file = getIconFile( modelObject, i + ".png" );
+                if ( file.delete() )
+                    LOG.debug( "Deleted {}", file );
+                file = getIconFile( modelObject, i + "_negated.png" );
                 if ( file.delete() )
                     LOG.debug( "Deleted {}", file );
             }

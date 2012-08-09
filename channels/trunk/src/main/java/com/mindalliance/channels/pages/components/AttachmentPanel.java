@@ -57,6 +57,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * The name of the attachment.
      */
     private String name;
+    /**
+     * Attachment type choice.
+     */
+    private DropDownChoice<Type> typeChoice;
 
     /**
      * Available attachment kind. Each kind should have a corresponding field.
@@ -164,7 +168,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     protected void onBeforeRender() {
         super.onBeforeRender();
         adjustFields();
-        makeVisible( submit, false );
+        submit.setEnabled( false );
     }
 
     private void addSubmit() {
@@ -184,7 +188,6 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     }
 
     private void adjustFields() {
-        makeVisible( submit, false );
         makeVisible( uploadField, Kind.File.equals( kind ) );
         makeVisible( urlField, Kind.URL.equals( kind ) );
         makeVisible( controlsContainer, isLockedByUserIfNeeded( getAttachee() ) );
@@ -198,6 +201,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         target.add( urlField );
         target.add( submit );
         target.add( attachmentsContainer );
+        addTypeChoice();
+        target.add( typeChoice );
     }
 
     private void addUrlField() {
@@ -245,7 +250,6 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         uploadField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                makeVisible( submit, true );
                 submit.setEnabled( true );
                 target.add( submit );
             }
@@ -254,7 +258,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     }
 
     private void addTypeChoice() {
-        DropDownChoice<Attachment.Type> typeChoice = new DropDownChoice<Attachment.Type>( "type",
+        typeChoice = new DropDownChoice<Attachment.Type>( "type",
                 new PropertyModel<Attachment.Type>( this, "selectedType" ),
                 getAttachee().getAttachmentTypes( attachablePath ),
                 new IChoiceRenderer<Attachment.Type>() {
@@ -273,7 +277,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 // Do nothing
             }
         } );
-        controlsContainer.add( typeChoice );
+        typeChoice.setOutputMarkupId( true );
+        controlsContainer.addOrReplace( typeChoice );
     }
 
     private void addAttachmentList() {
@@ -364,7 +369,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 Kind k = (Kind) getComponent().getDefaultModelObject();
                 makeVisible( uploadField, Kind.File.equals( k ) );
                 makeVisible( urlField, Kind.URL.equals( k ) );
-                makeVisible( submit, Kind.File.equals( kind ) );
+                submit.setEnabled( Kind.File.equals( kind ) );
                 target.add( AttachmentPanel.this );
             }
         } );

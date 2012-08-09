@@ -202,7 +202,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
             int[] size = imagingService.getImageSize( getPlan(), url );
             int height = size[1];
             if ( height > MAX_IMAGE_HEIGHT ) {
-                image.add( new AttributeModifier( "height", true, new Model<String>( "" + MAX_IMAGE_HEIGHT ) ) );
+                image.add( new AttributeModifier( "height", new Model<String>( "" + MAX_IMAGE_HEIGHT ) ) );
             }
         }
         makeVisible( image, getEntity().hasImage() );
