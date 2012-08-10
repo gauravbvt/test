@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-theme="b">
+        <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-direction="reverse">Back</a>
+        <h1 wicket:id="title">Messages</h1>
+        <a wicket:id="home" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
+    </div>
+
+    <div data-role="content" data-theme="c">
+        <div wicket:id="empty">
+            <p>(No messages)</p>
+        </div>
+        <ul data-role="listview">
+            <div wicket:id="incoming">
+                <li data-role="list-divider">Incoming requests</li>
+                <li wicket:id="pending"><span wicket:id="step">a request</span></li>
+            </div>
+            <div wicket:id="rejected">
+                <li data-role="list-divider">Rejected steps</li>
+                <li wicket:id="pending"><span wicket:id="step">a step</span></li>
+            </div>
+            <div wicket:id="unconfirmed">
+                <li data-role="list-divider">Unconfirmed steps</li>
+                <li wicket:id="pending"><span wicket:id="step">a step</span></li>
+            </div>
+            <div wicket:id="incomplete">
+                <li data-role="list-divider">Incomplete steps</li>
+                <li wicket:id="pending"><span wicket:id="step">a step</span></li>
+            </div>
+            <div wicket:id="outgoing">
+                <li data-role="list-divider">Outgoing requests</li>
+                <li wicket:id="pending"><span wicket:id="step">a request</span></li>
+            </div>
+        </ul>
+    </div>
+</wicket:extend>
+</body>
+</html>
+        

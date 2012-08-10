@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <a wicket:id="cancel" data-inline="true" data-role="button" data-icon="back">Back</a>
+        <h1 wicket:id="hTitle">Forwarding</h1>
+    </div>
+    <div data-role="content">
+        <p class="error" wicket:id="feedback">(Error messages would go here</p>
+        <div>
+            <h3>The following message was received from <span wicket:id="req.sender">Jane Doe</span>
+                :</h3>
+            <img class="left-icon" wicket:id="photo"/>
+            <div wicket:id="req.description" class="quote">
+                <p>Hi,</p>
+                <p>Can you sent me the weekly meeting summary?</p>
+            </div>
+        </div>
+
+        <form id="replyForm" wicket:id="form">
+            <ul wicket:id="formList" id="formList" data-role="listview" data-inset="true">
+                <li data-role="fieldcontain">
+                    <div wicket:id="answerType">
+                        <fieldset data-role="controlgroup" data-type="horizontal">
+                            <legend>Reply:</legend>
+                            <input wicket:id="typeYes" type="radio" id="reply-a"/>
+                            <label for="reply-a">Yes</label>
+
+                            <input wicket:id="typeNo" type="radio" id="reply-b"/>
+                            <label for="reply-b">No</label>
+
+                            <input wicket:id="typeMaybe" type="radio" id="reply-c"/>
+                            <label for="reply-c">Maybe</label>
+                        </fieldset>
+                    </div>
+                </li>
+
+                <div wicket:id="yesDiv">
+                    <li data-role="fieldcontain">
+                        <label for="npt">Add in a new play named:</label>
+                        <input wicket:id="newPlay" id="npt" type="text">
+                    </li>
+
+                    <li data-role="fieldcontain">
+                        <label for="play">Add to play:</label>
+                        <select id="play" wicket:id="existingPlay">
+                            <wicket:container wicket:id="plays">
+                                <option wicket:id="option">(A play)</option>
+                            </wicket:container>
+                        </select>
+                    </li>
+                </div>
+
+                <li data-role="fieldcontain" wicket:id="noDiv">
+                    <label for="reason">Reason:</label>
+                    <textarea wicket:id="nAckReason" id="reason" rows="4" cols="20"></textarea>
+                </li>
+
+                <div wicket:id="maybeDiv">
+                    <li data-role="fieldcontain">
+                        <label for="rt">Refer to:</label>
+                        <input data-role="search" wicket:id="referral" id="rt" type="text">
+                    </li>
+
+                    <li data-role="fieldcontain">
+                        <label for="note">Note:</label>
+                        <textarea wicket:id="referralNote"  id="note" rows="4" cols="20"></textarea>
+                    </li>
+                </div>
+            </ul>
+            <input data-inline="true" data-icon="check" type="submit" value="Submit">
+        </form>
+    </div>
+</wicket:extend>
+</body>
+</html>

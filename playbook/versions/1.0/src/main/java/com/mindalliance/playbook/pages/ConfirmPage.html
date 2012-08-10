@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-role="button" data-icon="back" data-inline="true" >Back</a>
+        <h1 wicket:id="hTitle">1. Call John and ask about status</h1>
+    </div>
+    <div data-role="content">
+        <p>The following message will be sent to <span wicket:id="collaboration.with.fullName">other user</span>:</p>
+        <form wicket:id="form">
+            <label data-role="fieldcontain"><span wicket:id="action">Calling me</span> when
+                <input wicket:id="shortDescription" type="text" placeholder="(Short description)"/>
+            </label>
+            <textarea wicket:id="description" placeholder="(Details)">John,
+Please confirm that you agree that I will call you using your office phone every week to discuss our status in the context of the weekly meeting.</textarea>
+
+            <input wicket:id="forwardable" id="forwardable" type="checkbox"/>
+            <label for="forwardable">Allow <span wicket:id="collaboration.with.givenName">other user</span> to
+                forward my request to another user.</label>
+            <!--<div data-role="fieldcontain" data-inset="true">-->
+            <!--</div>-->
+            
+            <div>
+                <input type="submit" data-role="button" data-icon="check" data-inline="true" 
+                       value="Request Confirmation"/>
+            </div>
+        </form>
+    </div>
+    
+</wicket:extend>
+</body>
+</html>

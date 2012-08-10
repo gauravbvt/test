@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-theme="b">
+        <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true"
+           data-icon="arrow-l" data-direction="reverse">Back</a>
+        <h1 wicket:id="title">Plays</h1>
+        <a wicket:id="home" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
+    </div>
+
+    <div data-role="content"data-theme="c">
+
+        <div class="search-plays" data-role="fieldcontain">
+            <form wicket:id="form">
+                <label for="search" class="ui-hidden-accessible">Search:</label>
+                <input wicket:id="search" name="search" data-type="search" type="text"
+                       placeholder="Search plays..."/>
+            </form>
+        </div>
+        
+        <ul wicket:id="list" data-role="listview">
+            <li data-role="list-divider">Plays</li>
+            <li wicket:id="filteredPlays">
+                <a wicket:id="editlink" href="#">
+                    <h3 wicket:id="title" class="ui-li-heading">Fire evacuation</h3>
+                    <p wicket:id="tags" class="ui-li-aside">Work, Emergency</p>
+                    <p wicket:id="desc" class="ui-li-desc">(Description)</p>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="bottom-bar" data-role="navbar">
+            <ul>
+                <li><a wicket:id="addPlay" data-icon="add" data-role="button">Add</a></li>
+            </ul>            
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>
+        

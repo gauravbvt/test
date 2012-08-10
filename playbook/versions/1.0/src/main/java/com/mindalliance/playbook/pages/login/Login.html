@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <img src="images/logo.png" align="left" alt="(logo)"/>
+
+        <h1>Playbook - Login</h1>
+    </div>
+
+    <div data-role="content">
+        <div wicket:id="error" class="error">
+            <p>The connection to the provider was refused.</p>
+        </div>
+
+        <ul>
+            <li>Sign-in using one of the following services:
+                <form wicket:id="fb" action="social/signin/facebook" method="post">
+                    <input type="hidden" name="scope"
+                           value="email,user_location,user_work_history,friends_work_history,friends_location" />
+                    <input type="submit" data-icon="pb-facebook" data-inline="true" value="Facebook"/>
+                </form>
+                <form wicket:id="tw" action="social/signin/twitter" method="post">
+                    <input type="submit" data-icon="pb-twitter" data-inline="true" value="Twitter"/>
+                </form>
+                <form wicket:id="li" action="social/signin/linkedin" method="post">
+                    <input type="submit" data-icon="pb-linkedin" data-inline="true" value="LinkedIn"/>
+                </form>
+                <form wicket:id="goo" action="social/signin/google" method="post">
+                    <input type="hidden" name="scope" 
+                           value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www.google.com/m8/feeds" />
+                    <input type="submit" data-icon="pb-google" data-inline="true" value="Google"/>
+                </form>
+            </li>
+        </ul>
+    </div>
+
+</wicket:extend>
+</body>
+</html>

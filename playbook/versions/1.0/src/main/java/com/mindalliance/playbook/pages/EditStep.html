@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <form id="stepForm" wicket:id="form">
+        <div data-role="header" data-theme="b">
+            <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-role="button" data-inline="true">Back</a>
+            <h1><span wicket:id="hTitle">1. Call John and ask about status</span></h1>
+            <a wicket:id="home" data-role="button" data-direction="reverse" data-icon="home" 
+               data-iconpos="notext">Home</a>
+        </div>
+
+        <div data-role="content" data-theme="c">
+            <p wicket:id="feedback" class="error">(Error messages go here)</p>
+
+            <p>
+                <label for="title" class="ui-hidden-accessible">Title:</label>
+                <input wicket:id="step.title" id="title" type="text" value="Call John and ask about status"
+                       placeholder="Untitled">
+            </p>
+            <p>
+                <label for="descr" class="ui-hidden-accessible">Description:</label>
+                <textarea wicket:id="step.description" id="descr" rows="3" cols="40"
+                          placeholder="Enter a description...">Daily discussion</textarea>
+            </p>
+
+            <div wicket:id="stepType">
+                <fieldset id="steptype" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <input wicket:id="typeTask" type="radio" id="steptype-a"/>
+                    <label for="steptype-a">Task</label>
+
+                    <input wicket:id="typeSend" type="radio" id="steptype-b"/>
+                    <label for="steptype-b">Send</label>
+
+                    <input wicket:id="typeReceive" type="radio" id="steptype-c"/>
+                    <label for="steptype-c">Receive</label>
+
+                    <input wicket:id="typePlay" type="radio" id="steptype-d"/>
+                    <label for="steptype-d">Play</label>
+                </fieldset>
+            </div>
+
+            <div wicket:id="detailsDiv">
+                <div wicket:id="details"></div>
+            </div>
+
+            <div>
+                <input type="button" wicket:id="delete" data-icon="delete" data-role="button" data-inline="true" 
+                       value="Delete"/>
+                <input type="button" wicket:id="confirm" data-icon="forward" data-role="button" data-inline="true" 
+                       value="Confirm"/>
+            </div>
+        </div>
+    </form>
+</wicket:extend>
+</body>
+</html>

@@ -1,0 +1,141 @@
+.ui-icon-pb-linkedin {
+    background-image: url("../images/linkedin.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+.ui-icon-pb-facebook {
+    background-image: url("../images/facebook.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+.ui-icon-pb-twitter {
+    background-image: url("../images/twitter.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+.ui-icon-pb-google {
+    background-image: url("../images/google.png");
+    background-color: transparent;
+    border-radius: 0;
+}
+
+.ui-input-text {
+    display: block !important;
+    width: 100% !important;
+}
+
+.ui-field-contain .ui-input-search {
+    display: block !important;
+    width: auto !important;
+}
+.m-twitter {
+    background: url("../images/twitter.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-facebook {
+    background: url("../images/facebook.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-google {
+    background: url("../images/google.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-linkedin {
+    background: url("../images/linkedin.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-email {
+    background: url("../images/mail.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-skype {
+    background: url("../images/skype.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-im {
+    background: url("../images/talk.png") no-repeat transparent;
+    padding-left: 20px;
+}
+
+.m-address {
+    background: url("../images/geo.png") no-repeat transparent;
+    padding-left: 20px;    
+}
+
+.inactive {
+    color: gray;
+}
+
+.left-icon {
+    float: left;
+    margin: 0 1em 1em 0;
+}
+
+.right {
+    float: right;
+}
+
+div.error, ul.feedbackPanel {
+    color: red;
+    margin: 0 2em 2em;
+}
+
+span.late {
+    color: red !important;
+}
+
+div.quote {
+    padding: 0;
+    white-space: pre-wrap;
+    margin-bottom: 1.5em;
+}
+
+h3.ui-li-heading {
+    margin-top: 0;
+}
+
+div.contact div.details {
+    display: block;
+    float: left;
+    margin: 0 5px 5px;    
+}
+
+div.details h3 {
+    margin: 0;
+}
+
+div.details .job {
+    margin-top: 0;    
+}
+
+div.bottom-bar {
+    margin: 30px 0 0;
+}
+div.search-plays {
+    margin: 0 0 30px;
+}
+
+.contact-popup {
+    z-index: 1000;
+    background-color: white;
+    border: 2px inset gray;
+}
+
+#contact-autocomplete li.selected {
+    background-color: #f5deb3;
+}
+
+#replyForm {
+    display: block;
+    clear: both;
+}
+
+#steptype .ui-btn-inner {
+    padding: 0.55em 1.2em 0.5em ;
+}

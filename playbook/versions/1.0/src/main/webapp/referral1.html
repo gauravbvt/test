@@ -1,0 +1,96 @@
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Referral request</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript">
+        // do not handle links via ajax by default
+        $(document).bind("mobileinit", function () { $.mobile.ajaxEnabled = false; });
+    </script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <link rel="stylesheet" href="css/refinements.css">
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+</head>
+<body>
+    <div data-role="page">
+        <div data-role="header" data-theme="b">
+            <h1>Referral request for: Email weekly summary</h1>
+        </div>
+        <div data-role="content" data-theme="c">
+            <div>
+                <h3>The following message was received from John Drummond:</h3>
+                <div class="quote">
+                    <p>Hi,</p>
+                    <p>Got this request for the weekly summary. Can you take care of it?</p>
+                </div>
+            </div>
+            
+            <ul data-role="listview" data-inset="true">
+                <li><a>
+                    <img src="images/claire_waters.jpeg"/>                
+                    <h3>From: Claire Waters</h3>
+                    <p></p>
+                    <p>Can you send me the weekly meeting summary?</p>
+                </a></li>
+            </ul>
+
+            <form>
+                <div data-role="fieldcontain">
+                    <input checked="checked" name="type" type="radio" id="newplay"/> 
+                    <label for="newplay">Yes. </label>
+
+                    <div data-role="fieldcontain">
+                        <label for="npt">Add in a new play named:</label>
+                        <input id="npt" type="text">
+                    </div>                    
+                </div>
+                <div data-role="fieldcontain">
+                    <input name="type" type="radio" id="addplay"/> 
+                    <label for="addplay">Yes. </label>
+                    <div data-role="fieldcontain">
+                        <label for="add">Add to play:</label>
+                        <select id="add">
+                            <option>Fire evacuation</option>
+                            <option>Monthly investor report</option>
+                            <option>Take out trash</option>
+                            <option>Weekly meeting</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <input name="type" type="radio" id="refer"/> 
+                    <label for="refer">Maybe. </label>
+                    <div data-role="fieldcontain">
+                        <label for="rt">Refer to:</label>
+                        <input id="rt" type="text">
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="note">Note:</label>
+                        <textarea id="note" rows="4" cols="20"></textarea>
+                    </div>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <input name="type" type="radio" id="no"/> 
+                    <label for="no">No. </label>
+                    <div data-role="fieldcontain">
+                        <label for="reason">Reason:</label>
+                        <textarea id="reason" rows="4" cols="20"></textarea>
+                    </div>
+                </div>
+         
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

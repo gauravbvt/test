@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+    <div data-role="header" data-position="fixed">
+        <img src="images/logo.png" align="left" alt="(logo)">
+
+        <h1>Playbook - Password</h1>
+    </div>
+
+    <div data-role="content">
+        <p> Enter your email address below. A password reset link will be mail to you.
+            Follow it to change your password.</p>
+
+        <p class="error" wicket:id="feedback">feedback messages will be put here</p>
+
+        <form wicket:id="form" method="post">
+            <div data-role="fieldcontain">
+                <label for="email">Email:</label>
+                <input autofocus="autofocus" wicket:id="userId" id="email" name="email" type="text"/>
+            </div>
+
+            <div data-role="fieldcontain">
+                <label for="captcha">Verify the text in the box below:</label>
+                <input autocomplete="off" wicket:id="captcha" id="captcha" name="j_captcha" type="text"/>
+                <img class="captcha" width="300" height="100" src="jcaptcha.jpg" alt="Captcha!">
+            </div>
+
+            <input type="submit" value="Request Password Change"/>
+        </form>
+    </div>
+</wicket:extend>
+</body>
+</html>

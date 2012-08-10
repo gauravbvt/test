@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2011. Mind-Alliance Systems LLC.
+  ~ All rights reserved.
+  ~ CONFIDENTIAL
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+<wicket:extend>
+        <div data-role="header" data-theme="b">
+            <a href="javascript:history.go(-1)"  onMouseOver="self.status=document.referrer;return true" data-icon="arrow-l" data-direction="reverse">Back</a>
+            <h1>Settings</h1>
+            <a wicket:id="home" href="#" data-role="button" data-direction="reverse" data-icon="home" data-iconpos="notext">Home</a>
+        </div>
+        <div data-role="content"data-theme="c">
+            <form wicket:id="form" method="post" action="#">
+                <div class="contact" wicket:id="playbook.me">
+                    (My contact info)
+                </div>
+                
+                <div data-role="fieldcontain">
+                    <label for="byTag">View by tags</label>
+                    <input wicket:id="viewByTags" id="byTag" name="byTag" type="checkbox"/>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <label for="showInactive">Show inactive items</label>
+                    <input wicket:id="showInactive" id="showInactive" name="showInactive" type="checkbox"/>
+                </div>
+                
+                <div data-role="fieldcontain">
+                    <label for="contactUpload">Upload contacts:</label>
+                    <input wicket:id="contactUpload" id="contactUpload" name="contactUpload" type="file"/>
+                    <span>(<span wicket:id="contacts.size">0</span> contacts on file)</span>
+                </div>
+                                
+                <div>
+                    <input data-inline="true" type="submit" value="Save"/>
+                    <a data-role="button" data-inline="true" href="logout">Logout
+                        <span wicket:id="owner.fullName">userId</span></a>
+                </div>
+                
+            </form>
+
+            <div>
+                <p>You can add more provider accounts to Playbook by using the following buttons:</p>
+                <ul data-role="listview" data-inset="true">
+                    <li><form action="social/signin/facebook" method="post">
+                        <input type="hidden" name="scope"
+                               value="email,user_location,user_work_history,friends_work_history,friends_location" />
+                        <input type="submit" data-icon="pb-facebook" value="Facebook"/>
+                    </form></li>
+                    <li><form action="social/signin/linkedin" method="post">
+                        <input type="submit" data-icon="pb-linkedin" value="LinkedIn"/>
+                    </form></li>
+                    <li><form action="social/signin/twitter" method="post">
+                        <input type="submit" data-icon="pb-twitter" value="Twitter"/>
+                    </form></li>
+                    <li><form action="social/signin/google" method="post">
+                        <input type="hidden" name="scope"
+                               value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www.google.com/m8/feeds" />
+                        <input type="submit" data-icon="pb-google" value="Google"/>
+                    </form></li>
+                </ul>              
+                
+            </div>
+
+        </div>
+</wicket:extend>
+</body>
+</html>
+        
