@@ -298,6 +298,12 @@ div.protocols-contents div.triggered h5 span.scenario {
 	text-decoration: underline;
 }
 
+div.protocols-contents div.triggered h5 span.impact {
+    font-size: 10px;
+    display: block;
+}
+
+
 div.protocols-contents div.contact {
 	background: none repeat scroll 0 0 #E8E8E8;
 	border-left: 5px solid #CCCCCC;

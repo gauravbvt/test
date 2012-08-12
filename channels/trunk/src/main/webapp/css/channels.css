@@ -542,6 +542,7 @@ div.feedback-options ul li ul li a span,
 span.menuitem ul li ul li a span {
 	background: none;
 	padding-right: 0;
+    white-space: nowrap; /* Added by JF */
 }
 
 div.feedback-options a:hover,
@@ -3028,7 +3029,7 @@ div.section-content > div.flow > div > img {
 
 #social div.social-list span.menubar {
     float: right;
-    padding: 6px 0 0 0;
+    padding: 6px 0 0 6px;    /* modified by JF */
     position: relative;
 }
 
@@ -3131,7 +3132,7 @@ div.section-content > div.flow > div > img {
 }
 
 #social div.social-list.presence div.employed.joining span.menubar {
-    padding: 3px 0 0 0;
+    padding: 6px 0 6px 6px; /* modified by JF */
 }
 
 #social div.social-list.presence div.employed.joining div.time {

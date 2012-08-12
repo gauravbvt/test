@@ -22,9 +22,21 @@ public class UserMessagePanel extends UserStatementPanel {
             int index,
             boolean showProfile,
             Updatable updatable ) {
-        super( id, userMessageModel, index, showProfile, updatable );
+        this( id, userMessageModel, showReceived, index, showProfile, true, updatable );
+    }
+
+    public UserMessagePanel(
+            String id,
+            IModel<UserMessage> userMessageModel,
+            boolean showReceived,
+            int index,
+            boolean showProfile,
+            boolean allowMessageDelete,
+            Updatable updatable ) {
+        super( id, userMessageModel, index, showProfile, allowMessageDelete, updatable );
         this.showReceived = showReceived;
     }
+
 
     protected String getPersistentPlanObjectUsername() {
         return showReceived

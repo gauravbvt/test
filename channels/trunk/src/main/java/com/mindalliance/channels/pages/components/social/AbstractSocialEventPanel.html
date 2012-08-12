@@ -10,36 +10,46 @@
     <div wicket:id="socialItem">
         <!-- class = "joining", "leaving", "doing", "undoing", "redoing", "broadcast" or "private" -->
 
-		<table border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<td valign="top" class="photo-cont">
-		            <img class="photo" wicket:id="pic" width="32" height="32" src="#" alt="Picture">
-				</td>
-				<td valign="top">
-					<table border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td class="name-title-icon-menu">
-					            <span class="name" wicket:id="name">name</span>
-            					<img wicket:id="icon" src="images/bullet-green.png" class="present" alt="present">
-						        <span class="menubar">
-    						         <span wicket:id="menu" class="menuitem">[planner action menu]</span>
-        						</span>
-							</td>
-						</tr>
-						<tr>
-							<td class="jobtitle">
-	           					<span class="titles" wicket:id="titles">job titles</span>
-							</td>
-						</tr>
-						<tr>
-							<td class="info-container">
-					            <wicket:child/>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
+        <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top" class="photo-cont">
+                    <table>
+                        <tr>
+                            <td>
+                                <img class="photo" wicket:id="pic" width="32" height="32" src="#" alt="Picture">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="menubar">
+                                    <span wicket:id="menu" class="menuitem">[planner action menu]</span>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td valign="top">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="name-title-icon-menu">
+                                <span class="name" wicket:id="name">name</span>
+                                <img wicket:id="icon" src="images/bullet-green.png" class="present" alt="present">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="jobtitle">
+                                <span class="titles" wicket:id="titles">job titles</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="info-container">
+                                <wicket:child/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </div>
 </wicket:panel>
 </body>

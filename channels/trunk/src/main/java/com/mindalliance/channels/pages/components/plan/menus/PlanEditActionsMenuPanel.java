@@ -4,8 +4,10 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.menus.ActionMenuPanel;
 import com.mindalliance.channels.pages.components.menus.CommandWrapper;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -28,6 +30,16 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
         super( id, model, null );
     }
 
+    @Override
+    public List<LinkMenuItem> getMenuItems() {
+        List<LinkMenuItem> menuItems = super.getMenuItems();
+        Plan plan = getPlan();
+        if ( !isLockedByUser( plan ) && getLockOwner( plan ) != null ) {
+            menuItems.add( editedByLinkMenuItem( "menuItem", plan, getLockOwner( plan ) ) );
+        }
+        return menuItems;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -48,7 +60,7 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
                 }
             } );
         }
-        return commandWrappers;
+         return commandWrappers;
     }
 
 }

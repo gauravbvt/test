@@ -60,6 +60,10 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         add( new Label(
                 "information",
                 flowData.getInformation().getName() ) );
+        String impact = getCommitmentImpact();
+        Label impactLabel = new Label( "impact", impact );
+        add(  impactLabel );
+        impactLabel.setVisible( !impact.isEmpty() );
     }
 
     private String getModeText() {
@@ -69,27 +73,32 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                     : "You can ask for";
         } else {
             return flowData.isNotification()
-                    ? getToNotifyLabel()
+                    ? "Notify of"
                     : "When asked, provide";
         }
     }
 
 
-    private String getToNotifyLabel() {
-        NotificationData notificationData = (NotificationData) flowData;
-        StringBuilder sb = new StringBuilder();
-        String impactOnConsuming = notificationData.getImpactOnConsumingTask();
-        if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
-            sb.append( "To trigger" );
-        else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
-            sb.append( "To terminate" );
-        else if ( impactOnConsuming.equalsIgnoreCase( "critical" ) )
-            sb.append( "To make possible the" );
-        else sb.append( "To help the" );
-        sb.append( " execution of task \"" );
-        sb.append( notificationData.getConsumingTask().getLabel() );
-        sb.append( "\", notify of" );
-        return sb.toString();
+    private String getCommitmentImpact() {
+        if ( !received && flowData.isNotification() ) {
+            NotificationData notificationData = (NotificationData) flowData;
+            StringBuilder sb = new StringBuilder();
+            sb.append( "(it will " );
+            String impactOnConsuming = notificationData.getImpactOnConsumingTask();
+            if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
+                sb.append( "trigger" );
+            else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
+                sb.append( "terminate" );
+            else if ( impactOnConsuming.equalsIgnoreCase( "critical" ) )
+                sb.append( "make possible the" );
+            else sb.append( "help the" );
+            sb.append( " execution of task \"" );
+            sb.append( notificationData.getConsumingTask().getLabel() );
+            sb.append( "\")" );
+            return sb.toString();
+        } else {
+            return "";
+        }
     }
 
     private void addContacts() {

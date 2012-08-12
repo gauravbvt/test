@@ -33,6 +33,7 @@ public class SocialItemMenuPanel extends MenuPanel {
     private String username;
     private IModel<? extends PersistentPlanObject> poModel;
     private boolean showProfile;
+    private boolean allowMessageDelete = true;
     private Updatable updatable;
     private IModel<ChannelsUserInfo> userInfoIModelModel;
 
@@ -43,11 +44,23 @@ public class SocialItemMenuPanel extends MenuPanel {
             IModel<? extends PersistentPlanObject> poModel,
             boolean showProfile,
             Updatable updatable ) {
+        this(id, userInfoIModelModel, username, poModel, showProfile, true, updatable );
+    }
+
+    public SocialItemMenuPanel(
+            String id,
+            IModel<ChannelsUserInfo> userInfoIModelModel,
+            String username,
+            IModel<? extends PersistentPlanObject> poModel,
+            boolean showProfile,
+            boolean allowMessageDelete,
+            Updatable updatable ) {
         super( id, "more", userInfoIModelModel );
         this.userInfoIModelModel = userInfoIModelModel;
         this.username = username;
         this.poModel = poModel;
         this.showProfile = showProfile;
+        this.allowMessageDelete = allowMessageDelete;
         this.updatable = updatable;
         doInit();
     }
@@ -93,7 +106,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         final PersistentPlanObject po = getPersistentObject();
         if ( po != null && po instanceof UserMessage ) {
             UserMessage message = (UserMessage) po;
-            if ( message.getFromUsername().equals( currentUsername ) ) {
+            if ( allowMessageDelete && message.getFromUsername().equals( currentUsername ) ) {
                 Link deleteLink = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, po, SocialPanel.DELETE_MESSAGE );

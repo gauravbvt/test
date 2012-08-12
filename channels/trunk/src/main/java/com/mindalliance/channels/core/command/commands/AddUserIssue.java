@@ -41,7 +41,7 @@ public class AddUserIssue extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "add new issue";
+        return "new issue";
     }
 
     @Override

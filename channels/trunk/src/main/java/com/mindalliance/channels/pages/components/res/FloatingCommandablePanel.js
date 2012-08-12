@@ -57,6 +57,7 @@ Floater.minimizeNormalize = function( minimizeId, padBottom, minimizedHeight, mi
         element.style.backgroundColor = NormalStates[element.id].backgroundColor;
         element.style.border = NormalStates[element.id].border;
         element.style.width = NormalStates[element.id].width + "px";
+        element.style.zIndex = NormalStates[element.id].zIndex;
         var top = parseInt( element.style.top );
         var bottom = parseInt( element.style.bottom );
         var minimizedTop;
@@ -76,6 +77,7 @@ Floater.minimizeNormalize = function( minimizeId, padBottom, minimizedHeight, mi
         NormalStates[element.id].backgroundColor = element.style.backgroundColor;
         NormalStates[element.id].border = element.style.border;
         NormalStates[element.id].width = parseInt( element.style.width );
+        NormalStates[element.id].zIndex = element.style.zIndex;
         element.style.backgroundColor = "transparent";
         element.style.border = "0";
         element.style.width = "250px";

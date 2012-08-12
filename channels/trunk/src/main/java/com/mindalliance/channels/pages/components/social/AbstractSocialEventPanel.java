@@ -55,6 +55,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     private int index;
     private IModel<? extends PersistentPlanObject> poModel;
+    private boolean allowMessageDelete;
     private Updatable updatable;
 
     private Label nameLabel;
@@ -70,10 +71,22 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             IModel<? extends PersistentPlanObject> poModel,
             boolean showProfile,
             Updatable updatable ) {
+        this( id, index, poModel, showProfile, true, updatable );
+    }
+
+
+    public AbstractSocialEventPanel(
+            String id,
+            int index,
+            IModel<? extends PersistentPlanObject> poModel,
+            boolean showProfile,
+            boolean allowMessageDelete,
+            Updatable updatable ) {
         super( id );
         this.index = index;
         this.poModel = poModel;
         this.showProfile = showProfile;
+        this.allowMessageDelete = allowMessageDelete;
         this.updatable = updatable;
     }
 
@@ -125,6 +138,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 getUsername(),
                 poModel,
                 showProfile,
+                allowMessageDelete,
                 updatable );
         menu.setVisible( !menu.isEmpty() && isPlanner() );
         socialItemContainer.add( menu );

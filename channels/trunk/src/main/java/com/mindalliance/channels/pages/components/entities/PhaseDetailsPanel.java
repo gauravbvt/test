@@ -74,6 +74,7 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
                 update( target, new Change( Change.Type.Updated, getPhase() ) );
             }
         } );
+        timingChoices.setEnabled( isLockedByUser( getPhase() ) );
         moDetailsDiv.add( timingChoices );
     }
 

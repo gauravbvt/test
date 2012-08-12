@@ -27,6 +27,23 @@ abstract public class UserStatementPanel extends AbstractSocialEventPanel {
             IModel<? extends UserStatement> userStatementModel,
             int index,
             boolean showProfile,
+            boolean allowMessageDelete,
+            Updatable updatable ) {
+        super( id,
+                index,
+                userStatementModel,
+                showProfile,
+                allowMessageDelete,
+                updatable );
+        this.userStatementModel = userStatementModel;
+        init();
+    }
+
+    public UserStatementPanel(
+            String id,
+            IModel<? extends UserStatement> userStatementModel,
+            int index,
+            boolean showProfile,
             Updatable updatable ) {
         super( id,
                 index,

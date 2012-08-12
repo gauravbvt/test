@@ -661,9 +661,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         timingContainer.add( new ModelObjectLink( "event-link",
                 new PropertyModel<Event>( this, "part.segment.event" ),
                 new PropertyModel<String>( this, "part.segment.event.name" ) ) );
-        timingContainer.add( new ModelObjectLink( "phase-link",
-                new PropertyModel<Event>( this, "part.segment.phase" ),
-                new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
+        timingContainer.add( new Label( "event-timing", new PropertyModel<String>( this, "eventTiming"  ) ) );
         ongoingCheckBox =
                 new CheckBox( "ongoing", new PropertyModel<Boolean>( this, "ongoing" ) );
         timingContainer.add( ongoingCheckBox );
@@ -699,6 +697,14 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private Phase getPhase() {
         return getPart().getSegment().getPhase();
+    }
+
+    public String getEventTiming() {
+        return getPhase().isPreEvent()
+                ? "possibility"
+                : getPhase().isConcurrent()
+                ? "start"
+                :"end";
     }
 
     private String getEventEndingEffect() {

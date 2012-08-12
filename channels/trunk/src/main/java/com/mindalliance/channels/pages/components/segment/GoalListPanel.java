@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
@@ -126,7 +127,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 : "completing phase \"" + phase.getName() + "\" of " )
                 + "event \"" + eventName + "\"";
         WebMarkupContainer atEndHeader = new WebMarkupContainer( "atEnd" );
-        atEndHeader.add( new AttributeModifier( "title", true, new Model<String>( atEndTitle ) ) );
+        atEndHeader.add( new AttributeModifier( "title", new Model<String>( atEndTitle ) ) );
         return atEndHeader;
     }
 
@@ -153,7 +154,6 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 addShowMoreCell( item );
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( cssClasses( item, count ) ) ) );
 
             }
@@ -254,15 +254,23 @@ public class GoalListPanel extends AbstractCommandablePanel {
 
     private void addOrganizationCell( final ListItem<GoalWrapper> item ) {
         final GoalWrapper wrapper = item.getModelObject();
-        final List<String> choices = getQueryService().findAllEntityNames( Organization.class );
-        EntityReferencePanel<Organization> orgRefField = new EntityReferencePanel<Organization>(
-                "organization",
-                new Model<GoalWrapper>( wrapper ),
-                choices,
-                "organization",
-                Organization.class );
-        orgRefField.enable( wrapper.isMarkedForCreation() && isLockedByUser( getSegment() ) );
-        item.add( orgRefField );
+        if ( !wrapper.isMarkedForCreation() ) {
+            ModelObjectLink orgLink = new ModelObjectLink(
+                    "organization",
+                    new PropertyModel<Organization>( wrapper, "organization" ),
+                    new PropertyModel<String>( wrapper, "organization.name" ) );
+            item.add( orgLink );
+        } else {
+            final List<String> choices = getQueryService().findAllEntityNames( Organization.class );
+            EntityReferencePanel<Organization> orgRefField = new EntityReferencePanel<Organization>(
+                    "organization",
+                    new Model<GoalWrapper>( wrapper ),
+                    choices,
+                    "organization",
+                    Organization.class );
+            orgRefField.enable( isLockedByUser( getSegment() ) );
+            item.add( orgRefField );
+        }
     }
 
     private void addEndsWithSegment( ListItem<GoalWrapper> item ) {

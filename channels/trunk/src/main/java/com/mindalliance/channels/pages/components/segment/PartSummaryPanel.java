@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -109,9 +110,17 @@ public class PartSummaryPanel extends AbstractUpdatablePanel {
                 || part.isTerminatesEventPhase() ) {
             sb.append( " The task" );
             StringBuilder sb1 = new StringBuilder();
+            Phase phase = part.getSegment().getPhase();
             if ( part.isStartsWithSegment() ) {
-                sb1.append( " starts with \"" );
-                sb1.append( part.getSegment().getPhaseEventTitle().toLowerCase() );
+                sb1.append( " is triggered by witnessing the " );
+                String timing =  phase.isPreEvent()
+                        ? "possibility"
+                        : phase.isConcurrent()
+                        ? "start"
+                        : "end";
+                sb1.append( timing );
+                sb1.append( " of event \"" );
+                sb1.append( part.getSegment().getEvent().getName() );
                 sb1.append( "\"" );
             }
             if ( part.isOngoing() ) {

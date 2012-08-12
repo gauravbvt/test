@@ -202,6 +202,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                         true,
                         item.getIndex(),
                         showProfile,
+                        false, // don't allow message deletion
                         FeedbackDiscussionPanel.this
                 ) );
             }

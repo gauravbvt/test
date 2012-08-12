@@ -39,7 +39,7 @@ public class AddIntermediate extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "add intermediate";
+        return "intermediate";
     }
 
     @Override

@@ -84,17 +84,9 @@
     <tr wicket:id="timingContainer">
         <th class="area" align="right"><label>Timing:</label></th>
         <td>
-            <span class="timing">
-                <input type="checkbox" wicket:id="self-terminating"/>Usually completes after <span
-                    wicket:id="completion-time">[Delay panel]</span>
-            </span>
-            <span class="timing">
-                <input type="checkbox" wicket:id="repeating"/>Repeats every <span
-                    wicket:id="repeats-every">[Delay panel]</span>
-            </span>
-            <span class="timing">
-                <input type="checkbox" wicket:id="startsWithSegment"/>Starts with phase
-                <a wicket:id="phase-link" href="#">phase</a>
+             <span class="timing">
+                <input type="checkbox" wicket:id="startsWithSegment"/>Triggered by witnessing the
+                <span wicket:id="event-timing" href="#">beginning</span>
                 of event
                 <a wicket:id="event-link" href="#">event</a>
              </span>
@@ -110,6 +102,14 @@
                     <span wicket:id="end-event-effect">of event</span>
                     <a wicket:id="end-event-link" href="#">event</a>
                 </span>
+            </span>
+           <span class="timing">
+                <input type="checkbox" wicket:id="self-terminating"/>Usually completes after <span
+                    wicket:id="completion-time">[Delay panel]</span>
+            </span>
+            <span class="timing">
+                <input type="checkbox" wicket:id="repeating"/>Repeats every <span
+                    wicket:id="repeats-every">[Delay panel]</span>
             </span>
         </td>
     </tr>

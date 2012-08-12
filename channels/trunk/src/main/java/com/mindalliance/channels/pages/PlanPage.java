@@ -2090,6 +2090,7 @@ PopupSettings.RESIZABLE |
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( target == null || change == null || updated == null ) return;   // protect against showing a panel "in other tab or page"
         // Hide message panel on changed message ( not null )
         String message = change.getMessage();
         if ( message != null ) {
