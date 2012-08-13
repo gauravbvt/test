@@ -3027,7 +3027,7 @@ div.section-content > div.flow > div > img {
 }
 
 #social div.social-list span.menubar {
-    float: right;
+    float: left;  /* modified by JF */
     padding: 6px 0 0 6px;    /* modified by JF */
     position: relative;
 }
