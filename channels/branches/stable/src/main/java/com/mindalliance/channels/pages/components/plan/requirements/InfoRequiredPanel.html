@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <th align="right"><label>Info name:</label></th>
+            <td><input width="40" wicket:id="information" type="text"/></td>
+        </tr>
+        <tr>
+            <th align="right"><label>
+                Info <a wicket:id="tagsLink" href="#" title="Click to see all tags">tags:</a>
+            </label></th>
+            <td><span wicket:id="infoTags">[Tags panel]</span></td>
+        </tr>
+        <tr wicket:id="eoisContainer">
+            <th align="right" valign="top">Elements:</th>
+            <td>
+                <ul>
+                    <li wicket:id="eois">
+                        <span wicket:id="eoiName">eoi</span>
+                        <img wicket:id="deleteEoi" src="images/delete.png" alt="Delete eoi" title="Delete">
+                    </li>
+                </ul>
+                <input wicket:id="addEoi" type="text"/>
+            </td>
+        </tr>
+    </table>
+ </wicket:panel>
+</body>
+</html>

@@ -1,0 +1,133 @@
+/* Issues report */
+
+/*
+
+@media all
+{
+  .page-break  { display:none; }
+}
+
+@media print
+{
+  .page-break  { display:block; page-break-before:always; }
+}
+
+/* ----- Typography ----- */
+
+div.issues-contents p {
+	padding:5px 0 5px 10px;
+}
+
+div.issues-contents ul {
+	padding:5px 0 5px 35px;
+}
+
+div.issues-contents li {
+	line-height: 150%;
+	padding: 0 0 4px;
+}
+
+div.issues-contents h1.subtitle {
+	font-size: 28px;
+	padding: 30px 0 10px;
+	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	line-height: 150%;
+}
+
+div.issues-contents h2.description {
+	font-size: 20px;
+	font-weight: normal;
+	line-height: 150%;
+	padding: 0 50px 25px 50px;
+	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div.issues-contents div#summary h2,
+div.issues-contents div#issuesMetrics h2 {
+	background: #CCCCCC;
+	border-bottom: 2px solid #999999;
+	border-top: 2px solid #999999;
+	font-size: 18px;
+	font-weight: bold;
+	margin: 40px 0 10px;
+	padding: 5px 0 5px 10px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	text-transform:capitalize;
+}
+
+
+/* ----- Tables ----- */
+
+div.issues-contents table {
+	border-collapse:collapse;
+	border-bottom:1px solid #999999;
+}
+
+div.issues-contents table td,
+div.issues-contents table th {
+	padding: 5px 5px 5px 10px;
+}
+
+div.issues-contents table th {
+	white-space: nowrap;
+}
+
+div.issues-contents table tbody tr {
+	border: 1px solid #999999;
+}
+
+div.issues-contents table.issues-metrics,
+div.issues-contents table.data-table {
+	width: 100%;
+}
+
+div.issues-contents table.issues-metrics thead tr,
+div.issues-contents table.data-table thead tr {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border: 1px solid #999999;
+}
+
+div.issues-contents table.issues-metrics tr.parent,
+div.issues-contents table.data-table tr.parent {
+	font-weight: bold;
+	background: #e8e8e8;
+	font-size:11px;
+}
+
+div.issues-contents table.issues-metrics tr.child,
+div.issues-contents table.data-table tr.child {
+	background: #F3F3F3;
+	font-weight:normal;
+	font-size:11px;
+}
+
+div.issues-contents table.issues-severity {
+	width: 97%;
+	font-size:11px;
+	margin:10px 0;
+}
+
+div.issues-contents table.issues-severity td,
+div.issues-contents table.issues-severity th {
+	text-align: center;
+	border:1px solid #CCCCCC;
+}
+
+
+/* ----- Other - Structural ----- */
+
+div.issues-contents div.no-issues {
+	margin-left: 20px;
+	font-style: italic;
+}
+
+div.issues-contents div#disclaimer {
+	border-top: 1px solid #CCCCCC;
+	color: #666666;
+	font-size: 11px;
+	margin: 20px 0 0 0;
+	padding: 20px 0 0 0;
+	text-align: center;
+}

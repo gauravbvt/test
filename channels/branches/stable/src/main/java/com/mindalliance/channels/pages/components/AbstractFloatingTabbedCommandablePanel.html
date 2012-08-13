@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+
+<wicket:panel>
+    <div class="floating">
+        <div class="fp-header" wicket:id="moveBar">
+            <div class="fp-title">
+                <span wicket:id="title">A title</span>
+            </div>
+            <div class="fp-minimize">
+                <a wicket:id="minimize" href="#">
+                    <img wicket:id="minimizeIcon"  src="images/float-bar-minimize.png" border="0"/>
+                </a>
+            </div>
+            <div class="fp-close">
+                <a wicket:id="close" href="#">
+                    <img src="images/float-bar-close.png" border="0"/>
+                </a>
+            </div>
+        </div>
+        <div wicket:id="header" class="fp-tabcont">
+            <div class="fp-tabs">
+                <span wicket:id="tabs">
+                    <a wicket:id="tabLink" class="active" href="#"> <!-- class = "active" when selected -->
+                        <span wicket:id="tabName">Details</span>
+                    </a>
+                </span>
+            </div>
+            <div class="fp-icon-menu">
+                <span wicket:id="pathIcons">
+                    <a wicket:id="pathIconLink" class="button-icon">
+                        <img wicket:id="pathIconImage" alt="issues" src="images/warning2.png"> <!-- set alt and src-->
+                        <span wicket:id="pathIconName">Issues</span>
+                    </a>
+                </span>
+            </div>
+            <div class="fp-menu">
+                <span class="menubar">
+                    <span class="menuitem" wicket:id="actionMenu">[action menu]</span>
+                </span>
+            </div>
+<!--
+            <div class="fp-pathway-icon-cont">
+                <div class="fp-pathway">
+                    <span wicket:id="explanation">About Plan Segment</span>
+                </div>
+            </div>
+ -->
+        </div>
+
+        <div wicket:id="fp-content" class="fp-content">
+            <wicket:child/>
+        </div>
+
+        <div class="fp-resize" wicket:id="resizer">
+            <img src="images/resize-icon.png" border="0"/>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

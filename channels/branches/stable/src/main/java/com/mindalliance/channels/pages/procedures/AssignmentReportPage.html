@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title wicket:id="pageTitle">[Title]</title>
+    <link rel="stylesheet" href="css/procedures.css" type="text/css">
+</head>
+
+<body>
+<div id="container">
+<div class="selector">
+    <h1 wicket:id="reportTitle">Report Title</h1>
+    <ul>
+        <li class="logout"><wicket:link><a href="logout">Sign out</a></wicket:link></li>
+    </ul>
+</div>
+
+<div id="breadcrumbs">
+    <ul>
+        <li><a wicket:id="top-link">Top</a></li>
+        <li><a wicket:id="event-link"><span wicket:id="assignment.part.segment.event.name">Event</span></a></li>
+        <li><a wicket:id="phase-link"><span wicket:id="assignment.part.segment.phase.name">Phase</span></a></li>
+        <li><a wicket:id="type-link"><span wicket:id="type">Information Notified</span></a></li>
+        <li class="last" wicket:id="assignment.part.task"><span>(Current)</span></li>
+    </ul>
+</div>
+ <span wicket:id="assignment">[assignment report panel]</span>
+
+<p id="notice">Confidential. Copyright &copy; <span wicket:id="year">2010</span> <span wicket:id="client">Mind-Alliance Systems LLC</span>.</p>
+</div>
+</body>
+</html>

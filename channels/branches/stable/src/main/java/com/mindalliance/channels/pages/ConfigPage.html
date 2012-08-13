@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title>Channels - Configuration</title>
+    <link rel="stylesheet" href="css/admin.css" type="text/css">
+</head>
+<body>
+
+<div id="top">
+    <div id="header">
+        <div class="admin-header">
+			<div class="headerlogo">
+				<div class="headertext">
+		            <h1>Channels</h1>
+					<h3>Configuration</h3>
+				</div>
+			</div>
+			<div class="headermenu">
+	            <div id="nav">
+					<ul>
+						<li>
+							<a href="logout">Sign out <span wicket:id="loggedUser">user</span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+        </div>
+    </div>
+    <div id="contents">
+        <form action="" wicket:id="config">
+            <table>
+                <tr>
+                    <th><label for="home">Home:</label></th>
+                    <td><input id="home" type="text" wicket:id="home"></td>
+                </tr>
+                <tr>
+                    <th><label for="dot">Path to dot executable:</label></th>
+                    <td><input id="dot" type="text" wicket:id="dotPath"></td>
+                </tr>
+                <tr>
+                    <th><label for="mhost">SMTP host:</label></th>
+                    <td><input id="mhost" type="text" wicket:id="mail.host"></td>
+                </tr>
+                <tr>
+                    <th><label for="mport">SMTP port:</label></th>
+                    <td><input id="mport" type="text" wicket:id="mail.port"></td>
+                </tr>
+                <tr>
+                    <th><label for="mprot">SMTP protocol:</label></th>
+                    <td><input id="mprot" type="text" wicket:id="mail.protocol"></td>
+                </tr>
+                <tr>
+                    <th><label for="muser">SMTP user:</label></th>
+                    <td><input id="muser" type="text" wicket:id="mail.user"></td>
+                </tr>
+                <tr>
+                    <th><label for="mpwd">SMTP password:</label></th>
+                    <td><input id="mpwd" type="text" wicket:id="mail.password"></td>
+                </tr>
+            </table>
+			<div class="submit">
+				<input type="submit" value="Submit" class="submit" name="Submit"/>
+			</div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

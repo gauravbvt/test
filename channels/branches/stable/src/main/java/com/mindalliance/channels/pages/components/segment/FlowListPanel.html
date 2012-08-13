@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+<div wicket:id="title" class="section-title">
+    <h3>
+		<span wicket:id="title">Flows</span>
+	</h3>
+    <a wicket:id="new" href="#" class="add-flow">
+        <span wicket:id="addFlow">Add receive</span>
+    </a>
+    <span class="menubar top">
+        <span class="menuitem" wicket:id="flowShowMenu">[show menu]</span>
+        <span class="menuitem" wicket:id="flowActionsMenu">[actions menu]</span>
+     </span>
+</div>
+
+<div wicket:id="flows-div" class="section-content">
+    <div class="flow" wicket:id="flows">
+        <div wicket:id="flow">[flow panel]</div>
+    </div>
+</div>
+</wicket:panel>
+</body>
+</html>

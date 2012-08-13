@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div id="nav">
+        <form wicket:id="form" action="../" method="GET">
+            <ul>
+
+                <li wicket:id="switch-plan"><label>Plan:
+                    <select wicket:id="plan-sel" name="plan">
+                        <option>Some plan</option>
+                    </select></label>
+                </li>
+                <li wicket:id="org-select">
+                    Organization: <select name="1" wicket:id="organization">
+                    <option>* all *</option>
+                </select>
+                </li>
+                <li wicket:id="actor-select">
+                    Agent: <select name="1" wicket:id="actor">
+                    <option>* all *</option>
+                </select>
+                </li>
+
+                <!--
+                            <li wicket:id="optionals">
+                                <label><input wicket:id="showingIssues" type="checkbox">&nbsp;Show issues</label>
+                            </li>
+                -->
+                <li id="apply"><input type="submit" value="Apply"></li>
+                <script type="text/javascript">
+                    document.getElementById( 'apply' ).style.display = 'none';
+                </script>
+
+            </ul>
+        </form>
+    </div>
+</wicket:panel>
+</body>
+</html>

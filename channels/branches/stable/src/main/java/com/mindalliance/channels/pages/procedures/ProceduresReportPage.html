@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<head>
+    <title wicket:id="pageTitle">[Title]</title>
+    <link rel="stylesheet" href="css/procedures.css" type="text/css">
+</head>
+
+<body>
+<div id="container">
+    <span wicket:id="selector">(Report selector panel)</span>
+    <div class="selector">
+        <img class="logo" wicket:id="channelsHome" src="images/logo_home.png" alt="Home" title="Home" style="border:0"/>
+        <h1 wicket:id="reportTitle">Report Title</h1>
+        <ul>
+            <li class="plans" wicket:id="switch-plan"><label>Plan:
+                    <select wicket:id="plan-sel" name="plan">
+                        <option>Some plan</option>
+                    </select></label></li>
+            <li class="logout">
+                <wicket:link><a href="logout">Sign out</a></wicket:link>
+            </li>
+        </ul>
+    </div>
+    <div id="breadcrumbs">
+        <ul>
+            <li><a wicket:id="top-link">Top</a></li>
+            <li wicket:id="breadcrumbs"><span wicket:id="crumb"><span wicket:id="text">(Link up)</span></span></li>
+            <li class="last" wicket:id="selector.actor.name"><span>(Current)</span></li>
+        </ul>
+    </div>
+    <span wicket:id="assignments">[Assignments report panel]</span>
+    <p id="notice">Confidential.<!-- Copyright &copy; <span wicket:id="year">2010</span>--> <span wicket:id="client">Mind-Alliance Systems LLC</span> .</p>
+</div>
+</body>
+</html>

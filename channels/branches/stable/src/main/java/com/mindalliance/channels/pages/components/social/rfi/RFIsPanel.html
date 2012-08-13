@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+	<div class="filters">
+	Show
+	<select wicket:id="recipients">
+		<option>every one</option>
+		<option>participants only</option>
+		<option>non-participants only</option>
+	</select>
+	</div>
+
+    <div wicket:id="participation">[survey participation table]</div>
+    <div class="filters large" wicket:id="actions">
+        <div class="filters-group">
+           Action on
+           <span wicket:id="selectionCount"> 20 </span>
+           <span wicket:id="userOrUsers">users</span>
+           out of
+           <span wicket:id="userCount">140</span>:
+           <input wicket:id="hasDeadline" type="checkbox"/> with deadline
+           <span wicket:id="deadlineContainer"> in <input wicket:id="deadline" type="text" class="no-expand"/> days </span>
+        </div>
+        <input wicket:id="sendRFI" type="button" value="Request or update participation..."/>
+        <input wicket:id="nag" type="button" value="Nag..."/>
+    </div>
+</wicket:panel>
+</body>
+</html>

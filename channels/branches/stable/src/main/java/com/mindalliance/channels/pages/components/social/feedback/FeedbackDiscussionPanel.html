@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <td class="feedback-new-message-cont">
+                <div class="feedback-new-message">
+                    <textarea wicket:id="reply" rows="3" cols ="60">text</textarea>
+                    <input wicket:id="replyButton" type="button" value="Send reply"/>
+                    <input wicket:id="replyAndEmailButton" type="button" value="Send and email reply"/>
+                    <input wicket:id="resetButton" type="button" value="Reset"/>
+                </div>
+            </td>
+            <td class="feedback-messages-cont" rowspan="2">
+                <div class="feedback-messages">
+                    <div wicket:id="replies">
+                        <div wicket:id="reply">
+                            <span wicket:id="message">[user message panel]</span>
+                        </div>
+                    </div>
+                    <div wicket:id="feedback">[feedback statement]</div>
+                </div>
+
+            </td>
+        </tr>
+        <tr wicket:id="resolvedContainer">
+            <td class="resolved">
+                <input wicket:id="resolvedButton" type="button" value="Resolved"/>
+            </td>
+        </tr>
+    </table>
+ </wicket:panel>
+</body>
+</html>

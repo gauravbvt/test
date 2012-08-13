@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+
+<body>
+    <table>
+        <tr>
+            <wicket:panel>
+					<th align="right" valign="top">&nbsp;</th>
+					<td wicket:id="container" class="grouped">
+						<span wicket:id="attachments-container">
+							<ul class="attach list">
+                        <li wicket:id="attachments">
+                            <a wicket:id="attachment" href="#">attachment</a>
+                            <ul class="menu">
+                                <li>
+	                                <a wicket:id="copy" href="#">Copy</a>
+                                </li>
+                                <li>
+	                                <a wicket:id="delete" href="#">Delete</a>
+                                </li>
+                            </ul>
+                        </li>
+							</ul>
+						</span>
+						<ul class="attach">
+							<li class="controls">
+                        <span wicket:id="controls">
+                            Attach: <select wicket:id="type">
+                            <option>Reference</option>
+                        </select> Named <input wicket:id="name" type="text"/>
+                            <br>
+                            <span wicket:id="radios">
+                            </span>
+                            <label class="attach-ctl"><input class="file" type="file" wicket:id="upload"
+                                                             value="Upload"></label>
+                            <input type="text" wicket:id="url" value="url">
+                            <input type="button" value="Attach" wicket:id="submit">
+                        </span>
+							</li>
+						</ul>
+                </td>
+            </wicket:panel>
+        </tr>
+    </table>
+</body>
+</html>

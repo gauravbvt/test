@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN"
+        "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<head>
+    <title wicket:id="title">Actor</title>
+    <link rel="stylesheet" href="css/playbook.css" type="text/css">
+    <link rel="stylesheet" href="css/iPhone.css"   type="text/css" media="only screen and (max-device-width: 480px)">
+</head>
+
+<body>
+<div id="top">
+    <div id="header">
+        <div>
+            <div id="nav">
+                <ul>
+                    <li><a wicket:id="top">Playbook</a></li>
+                    <li><a href="logout">Logout</a></li>
+                </ul>
+                <hr>
+            </div>
+            <h1><span wicket:id="header">Actor</span>&rsquo;<span wicket:id="ess">s</span> <span wicket:id="planName">plan</span> playbook</h1>
+        </div>
+    </div>
+
+    <div id="contents">
+        <div class="events" wicket:id="events">
+            <p><span wicket:id="event-name">event</span>:</p>
+            <ul>
+                <li wicket:id="parts"><a wicket:id="part" href="#"><span
+                        wicket:id="task-name">Task name</span></a></li>
+            </ul>
+        </div>
+
+        <div class="notifications" wicket:id="sources">
+            <p>From <span wicket:id="spec">someone</span>:</p>
+            <img width="48" wicket:id="pic" align="left" src="" alt="someone">
+            <ul>
+                <li wicket:id="flows">
+                    <a wicket:id="flow" href="#"><span wicket:id="flow-name">Flow name</span></a>
+                    (<span wicket:id="cause">just because</span>)
+                    <ul wicket:id="parts-list">
+                        <li wicket:id="parts"><a wicket:id="part" href="#"><span
+                                wicket:id="task-name">Task name</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+            <p></p>
+        </div>
+        <p class="notice">Confidential. Copyright &copy; 2010 Mind-Alliance Systems LLC.</p>
+    </div>
+</div>
+</body>
+</html>

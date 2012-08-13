@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+
+    <display-name>channels</display-name>
+
+    <filter>
+        <filter-name>Request Log</filter-name>
+        <filter-class>org.springframework.web.filter.Log4jNestedDiagnosticContextFilter
+        </filter-class>
+        <init-param>
+            <param-name>includeClientInfo</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>Request Log</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+   <filter>
+        <filter-name>hibernate</filter-name>
+        <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>hibernate</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>Wicket</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+            <param-name>applicationFactoryClassName</param-name>
+            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>Wicket</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/static/403.html</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/static/404.html</location>
+    </error-page>
+
+    <context-param>
+        <param-name>configuration</param-name>
+        <param-value>deployment</param-value>
+    </context-param>
+
+<!-- Removed to avoid duplication because Enunciate inserts it -->
+ <!--   <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+-->
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <listener>
+      <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+
+</web-app>

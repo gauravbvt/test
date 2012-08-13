@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <tr wicket:id="withinContainer">
+        <th align="right">
+            <label for="within"><a wicket:id="within-link" href=""
+                                               title="Containing place's details">Is directly within</a>:</label>
+        </th>
+        <td>
+            <input type="text" size="40" id="within" wicket:id="within" value="" title="The place if any this is a part of">
+        </td>
+    </tr>
+    <tr wicket:id="streetContainer">
+        <th align="right">Street address:</th>
+        <td><input type="text" size="40" wicket:id="streetAddress" value="" title="Street number and name"></td>
+    </tr>
+    <tr wicket:id="codeContainer">
+        <th align="right">Postal code:</th>
+        <td><input type="text" size="40" wicket:id="postalCode" value=""></td>
+    </tr>
+    <tr wicket:id="geonameContainer">
+        <th align="right">City, county, state and/or country:</th>
+        <td><input type="text" size="40" wicket:id="geoname" value="" title="City, county, state and/or country"></td>
+    </tr>
+    <tr wicket:id="geoLocationsContainer">
+        <th align="right">&nbsp;
+            
+        </th>
+        <td>
+            <span>
+                <ul>
+                    <li wicket:id="geoLocations"><span wicket:id="geoLocation">[geolocations panel]</span></li>
+                </ul>
+            </span>
+        </td>
+    </tr>
+    <tr wicket:id="containedInConstraint">
+        <th align="right">Places of this type are inside:</th>
+        <td>
+            <span wicket:id="mustBeContainedIn">[place reference panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="containsConstraint">
+        <th align="right">Places of this type contain:</th>
+        <td>
+            <span wicket:id="mustContain">[place reference panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="placesWithinContainer">
+        <td colspan="2">
+            <h3>
+                <span wicket:id="placesWithinTitle">Places within this one</span>
+                <span wicket:id="geomapLink">[geomap link panel]</span>
+				<div>&nbsp;</div>    
+            </h3>
+			<div class="filters">
+                <span wicket:id="nameRanges">[name range panel]</span>
+			</div>
+            <div>
+                <span wicket:id="placesWithin">[places within panel]</span>
+            </div>
+        </td>
+    </tr>
+</wicket:extend>
+</body>
+</html>

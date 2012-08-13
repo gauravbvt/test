@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <span wicket:id="menubar" class="menubar">
+         <span wicket:id="issueActionsMenu" class="menuitem">[issue actions menu]</span>
+    </span>
+    <span wicket:id="summary">
+        <span wicket:id="issue-label" class="issue">Issue.</span>
+        <span wicket:id="issue-suggestion" class="suggest">Suggestion.</span>
+    </span>
+    <table class="issuepanel-options">
+        <tr>
+            <td align="left" nowrap="nowrap">
+                <span wicket:id="waived-container">
+                    <input wicket:id="waived" type="checkbox" title="Waive this kind of issue"/>&#160;Waive it
+                </span>
+            </td>
+            <td align="right" nowrap="nowrap">
+                <span wicket:id="surveyLinkContainer">
+                    <a wicket:id="surveyLink" href="#" class="menubar">
+                        <span wicket:id="surveyAction">New survey</span>
+                    </a>
+                </span>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

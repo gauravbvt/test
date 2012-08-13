@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+	<div class="filters">
+    	Index
+    	<select wicket:id="indexed">
+    	    <option>All</option>
+    	</select>
+    	Filter on <input wicket:id="name" type="checkbox"/> name
+        <input wicket:id="tags" type="checkbox"/> tags
+        <input class="filter" wicket:id="filter" type="text" size="30"/>
+    	<span wicket:id="nameRanges">[name range panel]</span>
+	</div>
+    <div>
+        <table wicket:id="indices" class="indices-table">
+            <tr>
+                <td>
+                    <ul class="index">
+                        <li wicket:id="indices1">
+                            <span wicket:id="indexEntry">[index entry]</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="index">
+                        <li wicket:id="indices2">
+                            <span wicket:id="indexEntry">[index entry]</span>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="index">
+                        <li wicket:id="indices3">
+                            <span wicket:id="indexEntry">[index entry]</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</wicket:panel>
+</body>
+</html>

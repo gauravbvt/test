@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <div class="commitments">
+        <div class="float-header">
+            <h1>
+                Sharing commitments
+            </h1>
+        </div>
+        <div class="aspect">
+            <table>
+                <tr>
+                    <td>
+                        <h3 class="large">
+							<span>
+							Information from task &quot;<span wicket:id="fromTask">task 1</span>&quot;
+                            will be shared for use in task &quot;<span wicket:id="toTask">task 2</span>&quot;
+							</span>
+                        </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span wicket:id="commitments">[commitments panel]</span>
+                    </td>
+                </tr>
+             </table>
+        </div>
+    </div>
+</wicket:extend>
+</body>
+</html>

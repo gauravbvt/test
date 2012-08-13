@@ -1,0 +1,46 @@
+.stretch {
+    position: static;
+}
+.header {
+	position: absolute;
+	z-index: 1000;
+}
+div.zoom {
+	position: absolute;
+}
+#contents { 
+	z-index: 100;
+}
+.section-content {
+	z-index: 100;
+}
+span.menubar {
+	z-index: 101;
+}
+div.section-title {
+	position: static;
+}
+.issues div.section-title {
+	position: relative;
+}
+.header .menubar .dropmenu ul {
+	top: 1.7em;
+}
+#receives span.menubar {
+	position: relative;
+}
+ol {
+	padding-left: 1.8em;
+}
+#idff th {
+	vertical-align: top;
+}
+
+.menubar .dropmenu ul {
+    margin: 0 -1px 0 0;
+}
+/*
+.aspect table.data-table {
+	width:97.8%;
+}
+*/

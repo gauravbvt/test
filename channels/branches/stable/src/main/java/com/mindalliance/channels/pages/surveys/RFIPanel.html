@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="rfi-container" wicket:id="rfiContainer">
+        <div class="rfi-header" wicket:id="header">
+            <h3 wicket:id="name">
+                <div wicket:id="nameParts">
+                    <span wicket:id="namePart">What risks are caused by event "IED explosion"?</span>
+                </div>
+            </h3>
+            <div wicket:id="sentBy">Jane Doe</div>
+            <div wicket:id="deadline">Due in 3 days</div>
+            <div wicket:id="completion">75% done: Provided 3 out of 4 required answers, 0 out 2 optional answers</div>
+            <div wicket:id="forwardedTo">email addresses</div>
+        </div>
+        <div class="answers" wicket:id="answers"> [answersSets panel]</div>
+        <div class="decline-forward-container">
+	        <input wicket:id="decline" type="button" value="Decline survey"/>
+	        <input wicket:id="forward" type="button" value="Forward survey"/>
+	     </div>
+        <span wicket:id="cantForward">This survey can not be forwarded</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+
+    <span class="menubar">
+         <span wicket:id="issueActionsMenu" class="menuitem">[issue actions menu]</span>
+    </span>
+
+    <span wicket:id="summary" class="pointer">
+        <span wicket:id="issue-label" class="issue">Issue.</span>
+        <span wicket:id="issue-suggestion" class="suggest">Suggestion.</span>
+    </span>
+    Reported by <span wicket:id="reported-by"> Joe</span>
+    <div>
+        <table class="issue-details" summary="Issue details">
+            <tr>
+                <th class="area" align="right"><label>Issue:</label></th>
+                <td><textarea wicket:id="description" cols="30" rows="3">Sky is falling</textarea></td>
+            </tr>
+            <tr>
+                <th class="area" align="right"><label>Type:</label></th>
+                <td><select wicket:id="type">
+                    <option title="Something's incorrect">Validity</option>
+                    <option title="Something's missing">Completeness</option>
+                    <option title="Something's failure prone">Robustness</option>
+                </select></td>
+            </tr>
+            <tr>
+                <th class="area" align="right"><label>Tags:</label></th>
+                <td><span wicket:id="tags">[Tags panel]</span></td>
+            </tr>
+            <tr>
+                <th class="area" align="right"><label>Severity:</label></th>
+                <td><select wicket:id="severity">
+                    <option>Minor</option>
+                    <option>Major</option>
+                    <option>Severe</option>
+                </select></td>
+            </tr>
+            <tr>
+                <th class="area" align="right" valign="top"><label>Suggestion:</label></th>
+                <td><textarea wicket:id="remediation" cols="30" rows="3">Run!</textarea></td>
+            </tr>
+            <tr wicket:id="attachments">
+                <th align="right" valign="top">Attachments:</th>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</wicket:panel>
+</body>
+</html>

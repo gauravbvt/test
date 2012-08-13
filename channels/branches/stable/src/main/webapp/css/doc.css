@@ -1,0 +1,163 @@
+html {
+	background:#ffffff;
+	margin:0 50px;
+}
+
+body {
+	font-size: 75%;
+	color: #222;
+	background: #F6F6F6;
+	font-family: Arial, Helvetica, sans-serif;
+	margin:0 0 50px 0;
+	padding:0;
+	border:1px solid #cccccc;
+	border-top:none;
+}
+
+* {
+	margin:0;
+	padding:0;
+}
+
+hr { display:none; }
+
+div.navheader {
+	border-bottom:1px solid #cccccc;
+	background:#C3D9FF;
+}
+
+div.navheader table {
+	margin:0;
+	padding:25px 0 5px 0 ;
+	background:url("../images/header-logo-help.png") no-repeat 15px 10px;
+}
+
+div.book, div.chapter, div.section { padding:50px; }
+
+div.section > div.section { padding:0; }
+
+div.chapter div.section { padding:0; }
+
+div.author { display:none; }
+
+div.toc {
+	border-top:1px solid #999999;
+	border-bottom:1px solid #999999;
+	margin-bottom:20px;
+	padding:15px 0 0 0;
+}
+
+div.toc p b { font-size:1.25em; }
+
+div.navfooter {
+	background:#E8E8E8;
+	border-top:1px solid #cccccc;
+}
+
+img {
+	margin-bottom:1em;
+	padding:0.7em;
+	background:#E8E8E8;
+	border:1px solid #999999;
+}
+
+.emphasis, .glossterm { border-bottom:1px dashed #222222; color:#000; }
+
+
+/* ----- Headings ----- */
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+	color: #111;
+	font-family: Georgia, Times, "Times New Roman", serif;
+}
+
+h1 {
+	font-size: 3em;
+	line-height: 1em;
+	margin-bottom: 0.5em;
+}
+
+h2 {
+	font-size: 2em;
+	margin-bottom: 0.75em;
+}
+
+h3 {
+	font-size: 1.5em;
+	line-height: 1em;
+	margin:0.5em 0 0.7em 0;
+	padding:0 0 0.3em 0;
+	border-bottom:1px solid #999999;
+}
+
+h4 {
+	font-size: 1.2em;
+	line-height: 1.25em;
+	margin-bottom: 1.25em;
+    font-weight: bold;
+}
+
+h5 {
+	font-size: 1em;
+	font-weight: bold;
+	margin-bottom: 1.5em;
+}
+
+h6 {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+
+/* ----- Text Elements ----- */
+
+p {
+	margin: 0 0 1em;
+	line-height:1.5em;
+	font-size:1.2em;
+}
+
+a:focus, 
+a:hover		{ color: #000; }
+a			{ color: #000; text-decoration: none; }
+
+blockquote 	{ margin: 1.5em; color: #666; font-style: italic; }
+strong 		{ font-weight: bold; }
+em,dfn		{ font-style: italic; }
+dfn			{ font-weight: bold; }
+sup, sub	{ line-height: 0; }
+
+abbr, 
+acronym 	{ border-bottom: 1px dotted #666; }
+address		{ margin: 0 0 1.5em; font-style: italic; }
+del			{ color:#666; }
+
+pre			{ margin: 1.5em 0; white-space: pre; }
+pre,code,tt	{ font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+
+
+/* ----- Lists ----- */
+
+li ul, 
+li ol		{ margin:0 1.5em; }
+ul, ol		{ margin: 0 1.5em 1.5em 1.5em; }
+
+ul			{ list-style-type: disc; }
+ol			{ list-style-type: decimal; }
+
+dl			{ margin: 0 0 1.5em 0; }
+dl dt		{ font-weight: bold; margin-bottom:0.5em; }
+dd			{ margin-left: 1.5em;}
+
+
+/* ----- Tables ------ */
+
+table			{ margin-bottom: 1.4em; width:100%; }
+th				{ font-weight: bold; }
+thead th		{ background: #c3d9ff; }
+th,td,caption	{ padding: 4px 10px 4px 5px; }
+tr.even td		{ background: #e5ecf9; }
+tfoot			{ font-style: italic; }
+caption			{ background: #eee; }
+

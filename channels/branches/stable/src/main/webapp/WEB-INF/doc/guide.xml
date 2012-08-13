@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="guide.xsd">
+    <name>Guide</name>
+    <description>Select a section (Scoping, for example) and then a topic to see
+* a brief explanation with links into the full documentation,
+* shortcuts into Channels,
+* follow-up topics.
+    </description>
+    <group id="about-channels">
+        <name>About Channels</name>
+        <activity id="channels">
+            <name>Designing collaboration plans</name>
+            <step>
+                <description>Planners use Channels to design collaboration plans from which robust collaboration protocols are generated.
+                    
+A collaboration plan models how various types of organizations share or ought to share information to collaboratively prevent, respond to, or recover from a number of anticipated events that test their missions.
+                    
+Channels continuously examines these ''collaboration models'' for gaps and brittleness, and suggests options for remediation.
+                    
+Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex collaboration plans.               
+                
+Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration protocols.
+                </description>           
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02.html this]</description>
+            </step>
+        </activity>
+        <activity id="protocols">
+            <name>Generating collaboration protocols</name>
+            <step>
+                <description>Channels computes personalized collaboration protocols from a collaboration plan and serves them to plan participants on demand.
+                    
+As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's protocols.
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02.html this]</description>
+            </step>
+        </activity>
+        <activity>
+            <name>Development team</name>
+            <step>
+                <description>
+* Jean-François Cloutier
+* Denis Ranger
+* Romit Chatterjee
+* Priyanka Gurav (AFourTech)
+* Mahesh Kulkarni (AFourTech)
+                </description>
+            </step>
+        </activity>
+        <activity id="attributions">
+            <name>Attributions</name>
+            <step>
+                <description>Channels is built using these open source code libraries:
+                    
+* AOPAlliance [http://aopalliance.sourceforge.net/]
+* Apache Commons [http://commons.apache.org/]
+* Apache Lucene [http://lucene.apache.org/core/]
+* Apache Velocity [http://velocity.apache.org/]
+* Apache Wicket [http://wicket.apache.org/]
+* AspectJ [http://www.eclipse.org/aspectj/]
+* Bliki wiki [http://code.google.com/p/gwtwiki/]
+* EhCache [http://ehcache.org/]
+* Enunciate [http://enunciate.codehaus.org/]
+* Geonames [http://www.geonames.org/]
+* GraphViz [http://www.graphviz.org/]
+* Hibernate [http://www.hibernate.org/]
+* H2 [http://www.h2database.com/html/main.html]
+* Jamon [http://jamonapi.sourceforge.net/]
+* JWNL [http://sourceforge.net/projects/jwordnet/]
+* SLF4J [http://www.slf4j.org/]
+* JQWicket [http://code.google.com/p/jqwicket/]
+* Spring Framework [http://www.springsource.org/spring-framework/]
+* WordNet [http://wordnet.princeton.edu/]
+* XStream [http://xstream.codehaus.org/]
+
+Our thanks and admiration to all who contributed to these libraires.
+                </description>
+            </step>
+        </activity>
+    </group>
+    <group id="concepts">
+        <name>Key concepts</name>
+        <activity id="plan">
+            <name>Collaboration plan</name>
+            <step>
+                <description>A collaboration plan is the combination of
+# a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
+# an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
+Applying an environment to a collaboration model produces visualizations, analytics, diagnostics, reports and collaboration protocols.
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s11.html this]</description>
+            </step>
+        </activity>
+        <activity id="event">
+            <name>Event</name>
+            <step>
+                <description>An event is a transient change in the world that introduces risks and/or opportunities for organizations. 
+
+Risks and events should not be confused. An event can introduce risks to one organization while creating opportunities for another. 
+
+From the point of view of the plan, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s14s06.html this]</description>
+            </step>
+        </activity>
+        <activity id="phase">
+            <name>Phase</name>
+            <step>
+                <description>A phase is a named time period relative to the occurrence of events. A phase is either the time before, during or after events.
+
+A collaboration plan can elect to address what happens before, during or after of events, or a combination thereof.
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s14s07.html this]</description>
+            </step>
+        </activity>
+        <activity id="scenario">
+            <name>Scenario</name>
+            <step>
+                <description>The term ''scenario'' is used in collaboration planning to mean one phase of one event, possibly in the context of other past or current events.                
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s06.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s12.html this]</description>
+            </step>
+        </activity>
+        <activity id="goal">
+            <name>Goal</name>
+            <step>
+                <description>A goal is either a risk to, or an opportunity for, an organization that is introduced by the onset or conclusion of an event.
+                    
+Goals are achieved by carrying out tasks, or when an event terminates.                
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch01s12s06.html this]</description>
+            </step>
+        </activity>
+        <activity id="segment">
+            <name>Segment</name>
+            <step>
+                <description>Collaboration plans are composed of one or more or more segments. Each segment addresses a list of organizational goals for one scenario.
+
+No two segments should address identical goals in identical scenarios.
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s06.html this]</description>
+            </step>
+        </activity>
+        <activity id="information">
+            <name>Information</name>
+            <step>
+                <description>Information is what is shared by collaborating agents (people or systems) via communication channels.
+                    
+Information is named and can be described by a list of essential elements.
+
+An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s16.html this]</description>
+            </step>
+        </activity>
+        <activity id="task">
+            <name>Task</name>
+            <step>
+                <description>A task is an action or decision taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13.html#d0e454 this]</description>
+            </step>
+        </activity>
+        <activity id="need">
+            <name>Information need</name>
+            <step>
+                <description>Specification of information needed to execute a task, plus requirements on its delivery.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13s03.html this]</description>
+            </step>
+        </activity>
+        <activity id="capability">
+            <name>Information capability</name>
+            <step>
+                <description>Specification of information acquired by or for the execution of a task, plus how it could be (further) shared.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13s04.html this]</description>
+            </step>
+        </activity>
+        <activity id="flow">
+            <name>Information sharing flow</name>
+            <step>
+                <description>Or flow, for short. How agents carrying out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s13s02.html this]</description>
+            </step>
+        </activity>
+        <activity id="assignment">
+            <name>Task assignment</name>
+            <step>
+                <description>The list of agents assigned to a task because their profiles match the definition of the task.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s17s02.html this]</description>
+            </step>
+        </activity>
+        <activity id="commitment">
+            <name>Information sharing commitment</name>
+            <step>
+                <description>The commitment by one agent to share information acquired doing a task with another agent who needs it to successfully do some other task.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s17s03.html this]</description>
+            </step>
+        </activity>
+        <activity id="issue">
+            <name>Issue</name>
+            <step>
+                <description>A problem with the plan that is either detected automatically by Channels or, upon review, by planners. An issue is either one of
+* validity (something is inherently wrong in the plan)
+* completeness (something is obviously missing from the plan)
+* robustness (something is making the plan likely to fail)</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s04.html this]</description>
+            </step>
+        </activity>
+    </group>
+    <group id="scoping">
+        <name>Scoping the plan</name>
+        <activity id="events">
+            <name>Name all events</name>
+            <step>
+                <description><![CDATA[Name the '''events''' within the scope of the plan and identify those that are ''incidents''  &ndash; <small>events that are not caused by planned tasks.</small> &ndash;]]>
+            </description>
+                <script>
+                    <action>Open all events</action>
+                    <change>
+                        <subjectId>-3</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Note that events can also be named anywhere they are used to define another plan element. When they are, they are automatically added to the scope of the plan.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch01s12s03.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s05s04.html this]</description>
+            </step>
+            <next group="scoping" activity="phases"/>
+            <next group="profiling" activity="profiling-event"/>
+        </activity>
+        <activity id="phases">
+            <name>Name all phases</name>
+            <step>
+                <description><![CDATA[Name the '''phases''' within the scope of the collaboration plan. Channels will now expect to see at least one segment for each combination of phase and event in scope.
+The list is part of the plan's ''details''.]]></description>
+                <script>
+                    <action>Edit list of phases in scope</action>
+                    <change>
+                        <subjectPath>plan</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s02.html this]</description>
+            </step>
+            <next group="scoping" activity="add-define-segment"/>
+            <next group="scoping" activity="organizations"/>
+            <next group="profiling" activity="profiling-phase"/>
+        </activity>
+        <activity id="organizations">
+            <name>Identify participating organizations</name>
+            <step>
+                <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents assigned to tasks</small>. &ndash; .]]></description>
+                <script>
+                    <action>Edit the list of participating organizations</action>
+                    <change>
+                        <subjectId>-4</subjectId>
+                        <type>Expanded</type>
+                        <property>All organizations</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s06.html this]</description>
+            </step>
+            <next group="scoping" activity="requirements"/>
+            <next group="profiling" activity="profiling-organization"/>
+        </activity>
+        <activity id="requirements">
+            <name>Define requirements</name>
+            <step>
+                <description><![CDATA[Specify the information sharing commitments between organizations that the collaboration plan is required to generate.]]></description>
+                <script>
+                    <action>Access requirement definitions</action>
+                    <change>
+                        <subjectPath>guide.unknownRequirement</subjectPath>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s03.html this]</description>
+            </step>
+        </activity>
+        <activity id="add-define-segment">
+            <name>Add and define a segment</name>
+            <step>
+                <description><![CDATA[From the top action menu, add new segment, then name it and identify the ''scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
+                <script>
+                    <action>Define a segment</action>
+                    <change>
+                        <subjectPath>planPage.segment</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s05s08.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s12.html this]</description>
+            </step>
+            <next group="scoping" activity="segment-goals"/>
+        </activity>
+        <activity id="segment-goals">
+            <name>Define a segment's goals</name>
+            <step>
+                <description><![CDATA[Define a small number of goals the segment is meant to address. For each goal
+* set the type of goal,
+* the organization, type or actual, whose goal it is,
+* the severity/importance of the risk to be mitigated or gain to be achieved.
+Naming the goal is optional.]]></description>
+                <script>
+                    <action>Set segment goals</action>
+                    <change>
+                        <subjectPath>planPage.segment</subjectPath>
+                        <type>Expanded</type>
+                        <property>goals</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s12.html this]</description>
+            </step>
+        </activity>
+        <activity id="classifications">
+            <name>Define secrecy classifications</name>
+            <step>
+                <description><![CDATA[Define a secrecy classification system to be used in setting
+* an agent's clearances,
+* the security of a transmission medium,
+* the classification level of shared elements of information.]]></description>
+                <script>
+                    <action>Define classifications</action>
+                    <change>
+                        <subjectId>-6</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s05.html this]</description>
+            </step>
+        </activity>
+    </group>
+    <group id="info-sharing">
+        <name>Specifying info sharing</name>
+        <activity id="add-task">
+            <name>Add a task</name>
+            <step>
+                <description>Add new task to a segment by clicking ''ADD'' in the  Task panel or by selecting ''add new task'' from the top Actions menu.
+The newly created task is intially empty and presented as ''someone doing something''.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s06s02.html this]</description>
+            </step>
+            <next group="info-sharing" activity="define-task"/>
+        </activity>
+        <activity id="define-task">
+            <name>Define a task</name>
+            <step>
+                <description>Define a task by
+* naming it
+* identifying where it is to be executed
+* profiling who is to be assigned to it
+* what goals it directly achieves
+* and more
+Note that as little and as much as wanted can be put into a task's definition.
+                </description>
+                <script>
+                    <action>Open the task form</action>
+                    <change>
+                        <subjectPath>planPage.part</subjectPath>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s10.html#d0e2225 this]</description>
+            </step>
+            <next group="info-sharing" activity="add-need"/>
+            <next group="info-sharing" activity="add-capability"/>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="add-need">
+            <name>Add info need to task</name>
+            <step>
+                <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the Receives panel. An info need specifies information that agents assigned to the task need to receive to
+ * trigger the task
+ * enable it to succeed (critical)
+ * terminate the task (useful)
+ * improve its execution
+                </description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s06s03.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-capability"/>
+            <next group="info-sharing" activity="define-flow"/>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="add-capability">
+            <name>Add info capability to task</name>
+            <step>
+                <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the Sends panel. An info capability specifies info agents assigned to a task expect to acquire and be able to share with others.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s06s04.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-need"/>
+            <next group="info-sharing" activity="define-flow"/>
+            <next group="info-sharing" activity="connect-with-flow"/>
+        </activity>
+        <activity id="define-flow">
+            <name>Define a send or receive</name>
+            <step>
+                <description>Specify an info need, capability or sharing by
+* naming the information
+* listing its elements
+* indicating whether it is ''pushed'' or ''pulled'
+* the communication channels to use
+* timeliness constraints
+* and more
+                </description>
+                <script>
+                    <action>Open the send/receive form</action>
+                    <change>
+                        <subjectPath>guide.anyFlow</subjectPath>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s10s02.html this]</description>
+            </step>
+            <next group="info-sharing" activity="connect-with-flow"/>
+            <next group="profiling" activity="profiling-medium"/>
+        </activity>
+        <activity id="connect-with-flow">
+            <name>Connect tasks with info sharing</name>
+            <step>
+                <description>An information sharing flow connect a tasks that ''produces'' information with a tasks that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info need of another.
+A sharing flow is created by connecting an info need or a capability to a task. The flow appears in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
+                </description>
+                <script>
+                    <action>Open the send/receive form</action>
+                    <change>
+                        <subjectPath>guide.anyFlow</subjectPath>
+                        <type>Expanded</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s06s05.html this]</description>
+            </step>
+            <next group="info-sharing" activity="add-task"/>
+        </activity>
+    </group>
+    <group id="profiling">
+        <name>Defining the plan's environment</name>
+        <activity id="profiling-event">
+            <name>Profile an event</name>
+            <step>
+                <description><![CDATA[Define an event (always a type, never an actual event) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with event types
+* locating where it would happen
+* stating whether the event can terminate on its own
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open an event profile</action>
+                    <change>
+                        <subjectPath>guide.anyEvent</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>All events are listed in '''All events''' </description>
+                <script>
+                    <action>Open all events</action>
+                    <change>
+                        <subjectId>-3</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Events can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s13s06.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s07s02.html this]</description>
+            </step>
+            <next group="profiling" activity="profiling-phase"/>
+            <next group="profiling" activity="profiling-place"/>
+            <next group="scoping" activity="events"/>
+        </activity>
+        <activity id="profiling-phase">
+            <name>Profile a event phase</name>
+            <step>
+                <description><![CDATA[Define a phase (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* specifying if it is a pre-, co- or post-event phase
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open a phase profile</action>
+                    <change>
+                        <subjectPath>guide.anyPhase</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>All phases are listed in the plan's '''details'''. </description>
+                <script>
+                    <action>Open plan details</action>
+                    <change>
+                        <subjectPath>plan</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Phases can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s07s03.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s07.html this]</description>
+            </step>
+            <next group="profiling" activity="profiling-phase"/>
+            <next group="scoping" activity="events"/>
+        </activity>
+        <activity id="profiling-organization">
+            <name>Profile an organization</name>
+            <step>
+                <description><![CDATA[Define an actual or type of organization by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with organization types
+* If an actual organization, by
+** naming the parent organization
+** listing the agents it employs
+** listing sharing agreements with other organizations
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open an organization profile</action>
+                    <change>
+                        <subjectPath>guide.anyActualOrganization</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s07s05.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s02.html this]</description>
+            </step>
+            <next group="profiling" activity="profiling-agent"/>
+            <next group="scoping" activity="requirements"/>
+        </activity>
+        <activity id="profiling-role">
+            <name>Profile a role</name>
+            <step>
+                <description><![CDATA[Define a role (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open a role profile</action>
+                    <change>
+                        <subjectPath>guide.anyRole</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+             <step>
+                <description>Roles can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s07s06.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13.html#d0e3198 this]</description>
+            </step>
+        </activity>
+        <activity id="profiling-agent">
+            <name>Profile an agent</name>
+            <step>
+                <description><![CDATA[Define an actual or type of agent by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with agent types
+* If an actual agent, by
+** declaring it a person or system
+** setting clearances, languages, availability
+** setting constraints on users participating as this agent
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open an agent profile</action>
+                    <change>
+                        <subjectPath>guide.anyActualAgent</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Agents can be found in the plan's ''who's who''.</description>
+                <script>
+                    <action>Open plan's who's who</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Who's who</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Agents can also be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s07s07.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s03.html this]</description>
+            </step>
+            <next group="profiling" activity="profiling-organization"/>
+            <next group="user-participation" activity="participation"/>
+        </activity>
+        <activity id="profiling-place">
+            <name>Profile a place</name>
+            <step>
+                <description><![CDATA[Define an actual or type of place by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with place types (such as 'city', 'building' etc.)
+* if an actual place, by
+** naming what place it is within
+** giving a street address and postal code
+** identifying its geographical area
+* if a type of place, by
+** setting the place (type or actual) it must be in
+** the place it must contain
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open a place profile</action>
+                    <change>
+                        <subjectPath>guide.anyActualPlace</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Places can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s07s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s04.html this]</description>
+            </step>
+        </activity>
+        <activity id="profiling-medium">
+            <name>Profile a transmission medium</name>
+            <step>
+                <description><![CDATA[Define a transmission medium (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* stating whether it is unicast, multicast or broadcast
+* naming the other media this one can delegate to
+* naming its level of security
+* giving the pattern the media's ''addresses'' must conform to
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open a transmission medium profile</action>
+                    <change>
+                        <subjectPath>guide.anyMedium</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+             <step>
+                <description>Transmission media can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s07s08.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s13s05.html this]</description>
+            </step>
+        </activity>
+    </group>
+    <group id="improving">
+        <name>Improving the plan</name>
+        <activity id="all-issues">
+            <name>Resolve issues</name>
+            <step>
+                <description>An obvious way of improving a collaboration plan is to resolve issues detected by Channels or by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
+                <script>
+                    <action>Open the All Issues table</action>
+                    <change>
+                        <subjectId>-10</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Metrics on all issues found in a plan provides a sense of the current quality of the collaboration plan.</description>
+                <script>
+                    <action>See plan evaluation</action>
+                    <change>
+                        <subjectId>-9</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>If the resolution of an issue is not self-evident and requires input from stakeholders, a survey (with questionnaire) can be created about resolving the issue.</description>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s07.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s21.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s11s15.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s03s03s05.html this]</description>
+            </step>
+            <next group="user-participation" activity="launch-remediation-survey"/>
+        </activity>
+        <activity id="moving-tasks">
+            <name>Move tasks across segments</name>
+            <step>
+                <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To shrink a bloated segment, a new segment is usually created and tasks are moved to it.</description>
+                <script>
+                    <action>Transfer tasks</action>
+                    <change>
+                        <subjectId>-7</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch03s08s02.html this]</description>
+            </step>
+            <next group="scoping" activity="add-define-segment"/>
+        </activity>
+        <activity id="tune-task-flow-definition">
+            <name>Adjust assignments and commitments</name>
+            <step>
+                <description>Collaboration protocols are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
+                    
+A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
+                
+Which agents are assigned to a task is determined by
+* how a task specifies the agents assignable to it
+* what agents are in the plan's environments and how they are profiled
+* how the agents are employed (role, jurisdiction, organization)
+* how the taxonomies of role, agent, organization etc. are defined
+</description>
+                <script>
+                    <action>See a task's assignments</action>
+                    <change>
+                        <subjectPath>planPage.part</subjectPath>
+                        <type>AspectViewed</type>
+                        <property>assignments</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Exactly what sharing commitments are generated for a flow depends on
+* what agents are assigned to the producing task and consuming task connected by the flow
+* what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
+* whether an overriding flow prohibits a pairing of agents
+</description>
+                <script>
+                    <action>See a flow's sharing commitments</action>
+                    <change>
+                        <subjectPath>guide.anySharingFlow</subjectPath>
+                        <type>AspectViewed</type>
+                        <property>commitments</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s15.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s11s08.html this]</description>
+            </step>
+            <next group="improving" activity="verify-procedures"/>
+        </activity>
+        <activity id="verify-taxonomy">
+            <name>Verify an entity taxonomy</name>
+            <step>
+                <description> Roles, agents, organizations, places, events etc. (entities) can be categorized.
+Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
+
+How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that are defined in terms of these entities.
+
+The meaning of a plan boils down to the task assignments and consequent sharing commitments (protocols) that are implied by the collaboration plan. 
+Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the protocols computed from a plan and thus its meaning.
+                
+Taxonomies are defined implictly by categorizing individual entities. Taxonomies can be visualized to verify that they are correct.
+                </description>
+                <script>
+                    <action>View taxonomies</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Taxonomies</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s13.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s03.html this]</description>
+            </step>
+            <next group="improving" activity="verify-procedures"/>
+        </activity>
+        <activity id="verify-procedures">
+            <name>Verify assignments and commitments</name>
+            <step>
+                <description>The ''flow map'', which is central to the plan editor, shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments.
+
+The ''protocols map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
+                
+The map is focused on one agent or one organization (as an aggregate of agents). It shows the commitments that involved that egent or organizations.
+
+The other parties to the commitments can be aggregated by role, organization type or not at all.
+                </description>
+                <script>
+                    <action>See protocols map</action>
+                    <change>
+                        <subjectId>-8</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s08.html this]</description>
+            </step>
+            <next group="improving" activity="tune-task-flow-definition"/>
+            <next group="improving" activity="verify-taxonomy"/>
+        </activity>
+    </group>
+    <group id="user-participation">
+        <name>User participation</name>
+        <activity id="compose-questionnaire">
+            <name>Compose a questionnaire</name>
+            <step>
+                <description>Planners can enlist the help of stakeholders via surveys. A survey is a questionnaire about elements of the plan or the plan as a whole.
+
+Planners compose questionnaires by adding, ordering, editing etc. statements and questions. Questions can be marked as required or optional.
+
+A questionnaire applies to the plan as a whole or to one kind of plan element (plan questionnaire, task questionnaires, event questionnaires etc.)
+
+Questionnaires can be activated and deactivated. They can be extended while they are being used in surveys. 
+</description>
+                <script>
+                    <action>See the questionnaires</action>
+                    <change>
+                        <subjectPath>guide.unknownRFISurvey</subjectPath>
+                        <type>Expanded</type>
+                        <qualifier>
+                            <name>tab</name>
+                            <value>Questionnaires</value>
+                        </qualifier>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s19s02.html this]</description>
+            </step>
+            <next group="user-participation" activity="launch-survey"/>
+        </activity>
+        <activity id="launch-survey">
+            <name>Launch a survey</name>
+            <step>
+                <description>A survey is launched on the plan or on a plan element by applying a questionnaire to it.
+                    </description>
+                <script>
+                    <action>View launched and launch-able surveys on a task</action>
+                    <change>
+                        <subjectPath>planPage.part</subjectPath>
+                        <type>AspectViewed</type>
+                        <property>surveys</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Once a survey is launched, it can be managed by
+* inviting users to participate
+* looking at the answers from survey participants
+* deactivating or reactivating the survey
+* editing the survey's questionnaire
+                </description>
+                <script>
+                    <action>See all launched surveys</action>
+                    <change>
+                        <subjectPath>guide.unknownRFISurvey</subjectPath>
+                        <type>Expanded</type>
+                        <qualifier>
+                            <name>tab</name>
+                            <value>Surveys</value>
+                        </qualifier>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s14.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
+            </step>
+            <next group="user-participation" activity="add-survey-participants"/>
+            <next group="user-participation" activity="compose-questionnaire"/>
+        </activity>
+        <activity id="launch-remediation-survey">
+            <name>Launch an issue remediation survey</name>
+            <step>
+                <description>Surveys can be launched on an issue that was detected. The questionnaire is automatically generated based on the remediation options. 
+
+The questionnaire can be modified and extended while the survey is ongoing. 
+
+An issue remediation survey is automatically deactivated when the issue disappears.
+
+Note that the issue remediation questionnaires are by default not shown in the list of all questionnaires; a checkbox must be checked to see them.
+                </description>
+                <script>
+                    <action>See all remediation questionnaires</action>
+                     <change>
+                        <subjectPath>guide.unknownRFISurvey</subjectPath>
+                        <type>Expanded</type>
+                        <qualifier>
+                            <name>tab</name>
+                            <value>Questionnaires</value>
+                        </qualifier>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s14.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
+            </step>
+            <next group="user-participation" activity="add-survey-participants"/>
+            <next group="user-participation" activity="compose-questionnaire"/>
+        </activity>
+        <activity id="add-survey-participants">
+            <name>Invite participation to a survey</name>
+            <step>
+                <description>Once a survey is launched, users can be invited to a survey. Users can be given a deadline to answer the required questions in the survey.
+After the deadline has passed, the survey is considered late. Late participants can be ''nagged'' (nags are sent by email).
+
+A participant can
+*accept the invitation by answering questions, 
+*decline the invitation
+*forward the survey to others (if planners marked the survey as forwardable).
+
+Note that anyone who is forwarded a survey and who is not yet a user of Channels is automatically given a login, password and limited access to the plan as a participant.
+                </description>
+                <script>
+                    <action>See all launched surveys</action>
+                    <change>
+                        <subjectPath>guide.unknownRFISurvey</subjectPath>
+                        <type>Expanded</type>
+                        <qualifier>
+                            <name>tab</name>
+                            <value>Surveys</value>
+                        </qualifier>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
+            </step>
+            <next group="user-participation" activity="survey-results"/>
+        </activity>
+        <activity id="survey-results">
+            <name>Lookup the results of a survey</name>
+            <step>
+                <description>As participants in a survey answer the questionnaire, results are compiled and made available to the planners.
+
+Results can be viewed by opening the survey and selecting the ''results'' tabs.</description>
+                <script>
+                    <action>See all launched surveys</action>
+                      <change>
+                        <subjectPath>guide.unknownRFISurvey</subjectPath>
+                        <type>Expanded</type>
+                        <qualifier>
+                            <name>tab</name>
+                            <value>Surveys</value>
+                        </qualifier>
+                    </change>
+              </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
+            </step>
+            <next group="user-participation" activity="add-survey-participants"/>
+        </activity>
+        <activity id="feedback">
+            <name>Manage user feedback</name>
+            <step>
+                <description>Users can ask questions, report problems and make suggestions via a feedback widget that appears in their home page, their protocols etc.
+
+Planners can see this feedback and reply to it. The user can then reply back etc. or mark the question, problem or suggestion as resolved.              
+                </description>
+                <script>
+                    <action>Open feedback manager</action>
+                    <change>
+                        <subjectPath>unknownFeedback</subjectPath>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s20.html this]</description>
+            </step>
+        </activity>
+        <activity id="participation">
+            <name>Set user participation</name>
+            <step>
+                <description><![CDATA[Associate a user with one or more agents and add contact information specific to the user's participation as that agent.
+
+Note that users that self-associate with agents that have been defined as "open participation".]]></description>
+                <script>
+                    <action>Set user participation as agents</action>
+                    <change>
+                        <subjectId>-12</subjectId>
+                        <type>Expanded</type>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s16.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch02s04s04s02.html this]</description>
+            </step>
+        </activity>
+    </group>
+    <group id="searching">
+        <name>Searching in the plan</name>
+        <activity id="search-by-name">
+            <name>Search anything by name</name>
+            <step>
+                <description>Every element of a plan that has a name can be found from the index.
+                    
+The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial name.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s12.html this]</description>
+            </step>
+        </activity>
+        <activity id="whos-who">
+            <name>Search for agents</name>
+            <step>
+                <description>Every employement of every agent is aggregated in the ''who's who'' table.
+
+The table can be indexed by the name of the agent or by attributes of employment (organization, role, location of employer).</description>
+                <script>
+                    <action>Open the plan's who's who</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Who's who</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s09.html this]</description>
+            </step>
+        </activity>
+        <activity id="documents">
+            <name>Search for documents</name>
+            <step>
+                <description>Documents of various types (policy, reference, picture etc.) can be attached to the plan and any element in it. 
+                    
+A table with all documents attached in the plan can be found in the plan's ''bibliography''.</description>
+                <script>
+                    <action>Open the plan's bibliography</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>All documents</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s11.html this]</description>
+            </step>
+        </activity>
+        <activity id="tags">
+            <name>Search by tags</name>
+            <step>
+                <description>The plan and every element in it can be tagged. 
+                    
+The list of all tags used in the plan can be looked up to see what has been marked by any given tag.</description>
+                <script>
+                    <action>Open the tag index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Tags</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s14.html this]</description>
+            </step>
+        </activity>
+        <activity id="taxonomies">
+            <name>Looking up a taxonomy</name>
+            <step>
+                <description> The entity types used to categorize roles, agents, organizations, places, events etc. (entities) can themselves be categorized to create taxonomies.
+                    
+Changes to a taxonomy can have profound impacts on the protocols that are generated by the plan. 
+                   
+Taxonomies can be visualized to verify that they are correct.
+                </description>
+                <script>
+                    <action>View taxonomies</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Taxonomies</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s11s13.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s04.html this]</description>
+            </step>
+            <step>
+                <description>See also [${helpUrl}/ch03s08s03.html this]</description>
+            </step>
+            <next group="improving" activity="verify-procedures"/>
+        </activity>
+        <activity id="references">
+            <name>Cross-reference plan elements</name>
+            <step>
+                <description>Whenever a plan element is referenced by name in the definition of another, there will also be a link to get to the referenced element's definition.
+                    
+Also, most forms used to define an element of the plan contain a table listing all and linking to all other elements that reference it in their definitions.
+
+For example, at the bottom of in the profile of a role is an index of all other elements that reference the role or that match the role.</description>
+                <script>
+                    <action>Open the a role profile to see its references</action>
+                    <change>
+                        <subjectPath>guide.anyRole</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>For more information, see [${helpUrl}/ch02s06s13.html this]</description>
+            </step>
+        </activity>
+    </group>
+
+</guide>

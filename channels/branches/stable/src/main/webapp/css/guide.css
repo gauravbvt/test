@@ -1,0 +1,183 @@
+div.guide-title-cont {
+    background: none repeat scroll 0 0 #E4EEFE;
+    border-bottom: 1px solid #7794C7;
+    color: #333333;
+    float: left;
+    height: 38px;
+    width: 100%;
+}
+
+#guide .title {
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 100%;
+    margin: 0;
+    padding: 12px 0 0 10px;
+    text-transform: uppercase;
+}
+
+#guide .closer {
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 100%;
+    margin: 0;
+    padding: 12px 0 10px;
+    text-transform: uppercase;
+}
+
+#guide h3 {
+    background: none repeat scroll 0 0 #f6f6f6;
+    border-top: none;
+    border-right: none;
+    border-bottom: 1px solid #999999;
+    border-left: none;
+    border-radius: 0 0 0 0;
+    font-size: 10px;
+    line-height: 100%;
+    margin: 0;
+}
+
+#guide span.ui-icon {
+	float: right;
+	left: 0;
+	margin: 7px 7px 0 0;
+	position: relative;
+	top: 0;
+}
+
+#guide h3 a {
+	background: #e8e8e8;
+	padding: 10px;
+	font-size: 11px;
+	letter-spacing: 0;
+}
+
+#guide h3 a:hover {
+	background: #dddddd;
+	color: #000000;
+}
+
+#guide h3.ui-state-active a {
+	background: #dddddd;
+}
+
+#guide .activityName {
+    line-height: 2;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+#guide .activities {
+    overflow: hidden;
+}
+
+#guide > div.doc {
+	display: none;
+}
+
+#guide div ul li div.doc {
+    background-color: PapayaWhip;
+    font-size: 10px;
+    padding: 5px 10px 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+#guide div ul li div.doc a:hover {
+	background: none;
+}
+
+#guide div ul li div.doc p {
+	padding: 0;
+	margin: 5px 0 10px;
+	line-height: 150%;
+}
+
+#guide div ul li div.doc p i {
+	font-style: italic;
+	border-bottom: 1px dotted #666666;
+}
+
+#guide div ul li div.doc ol,
+#guide div ul li div.doc ul {
+    margin: 0;
+    padding: 5px 5px 0 30px;
+    list-style: disc outside none;
+}
+
+#guide div ul li div.doc ol li,
+#guide div ul li div.doc ul li {
+	padding: 0 0 10px;
+}
+
+#guide div ul li a,
+#guide .doc a {
+	border: medium none;
+	display: inline;
+	font-weight: bold;
+	padding: 0;
+	text-decoration: underline;
+}
+
+#guide div ul li a {
+	border-bottom: 1px solid #BCBEC0;
+	display: block;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+#guide div ul li a:hover {
+	background: #e8e8e8;
+}
+
+#guide .doc a.window,
+#guide .doc a.window:hover {
+    background-color: PapayaWhip;
+    background-position: right center;
+    border: medium none;
+    padding: 0 14px 0 0;
+    background: url("../images/link.window.png") no-repeat right;
+}
+
+#guide .nextActivities {
+    border-top: 1px solid orange;
+    font-weight: bold;
+    padding: 10px 0 0;
+}
+
+#guide .ui-accordion.ui-widget.ui-helper-reset.ui-accordion-icons {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    top: 3em;
+    width: 100%;
+}
+
+#guide .ui-accordion .ui-accordion-content {
+    padding: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    margin: 0;
+    position: relative;
+    top: 0;
+    display: none;
+    zoom: 1;
+    border-radius: 0 0 0 0;
+    background: #F6F6F6;
+}
+
+/*
+#guide .ui-accordion .ui-accordion-content-active {
+	background: #e8e8e8;
+}
+*/
+
+#guide div ul li .ui-widget-content a {
+    text-decoration: underline;
+}
+
+
