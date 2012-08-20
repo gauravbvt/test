@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <elements>
 <guide>Guide</guide>
+<organizationsInScope>Organizations in scope</organizationsInScope>
 <elements>Elements</elements>
 <allEventsInThePlan>All events in the plan</allEventsInThePlan>
 <undoRemoveRequirement>Undo remove requirement</undoRemoveRequirement>
