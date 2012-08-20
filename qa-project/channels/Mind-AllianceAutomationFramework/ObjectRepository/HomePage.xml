@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <elements>
+<xPathSwithPlan>/html/body/form/div[2]/div[2]/div/ul/li[2]/a/span</xPathSwithPlan>
 <xPathLogoutHomePage>/html/body/form/div[2]/div/div/div/a</xPathLogoutHomePage>
 <xPathAssignmentsAndCommitmentsSignout>/html/body/div/span[2]/div/ul/li[3]/a</xPathAssignmentsAndCommitmentsSignout>
 <xPathAllParticipantsSignout>/html/body/div/div/ul/li/a</xPathAllParticipantsSignout>

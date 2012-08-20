@@ -1,5 +1,7 @@
 <?xml version="1.0"?>	
 <elements>
+<xPathScopingPopUpMenu>/html/body/form/div[32]/div/div[2]/span[3]/span/ul/li/a/span</xPathScopingPopUpMenu>
+<xPathClosePlanMap>/html/body/form/div[17]/div/div/div[3]/a/img</xPathClosePlanMap>
 <xPathLogoutPlanPage>/html/body/form/div[32]/div/div/a</xPathLogoutPlanPage>
 <xPathGuidePanelIcon>/html/body/form/span/span[2]/div/div/a/img</xPathGuidePanelIcon>
 <xPathDeleteQuestionButton>//div[@class='surveys']/div[@class='aspect']/div[@class='tabpanel']/div[@class='tab-panel']/div[@class='questionnaire-cont']/span/span/table[@class='question-cont']/tbody/tr[4]/td[2]/input[3]</xPathDeleteQuestionButton>
@@ -34,7 +36,7 @@
 <xPathAboutPlanActionMenu>//span[@class='menubar']/span[2]/span/span</xPathAboutPlanActionMenu>
 <xPathAllSegmentShowMenu>//div[4]/div/span/div/div/div/span/span/span/span</xPathAllSegmentShowMenu>
 <xPathTaskMoverDetail>//div[5]/div/span/div/div[2]/h3/span</xPathTaskMoverDetail>
-<xPathDeleteOrgs>//div[4]/div/span/div/div[2]/div/div[2]/span/a/span</xPathDeleteOrgs>
+<xPathDeleteOrgs>//div[16]/div/span/div/div[2]/div/div/div[2]/span/a/span</xPathDeleteOrgs>
 <xPathDefaultTask>//span/div/div[3]/div[@class='part-header']/div[@class='section-content']/table/tbody/tr/td[@class='pointer']/span[@class='summary minor']/span</xPathDefaultTask>
 <xPathTaskShowMenu>//div[@class='section-title']/span[@class='menubar']/span/span/span</xPathTaskShowMenu>
 <xPathTaskActionsMenu>//div[@class='section-title']/span[@class='menubar']/span[2]/span/span</xPathTaskActionsMenu>
