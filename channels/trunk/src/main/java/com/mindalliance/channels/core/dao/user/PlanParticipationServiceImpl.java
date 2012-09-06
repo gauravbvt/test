@@ -163,6 +163,16 @@ public class PlanParticipationServiceImpl
     }
 
     @Override
+    @Transactional
+    public void deleteAllParticipations( Plan plan, ChannelsUserInfo userInfo, String username ) {
+        // QueryService is null b/c agent-exists validation of participation not wanted.
+        for ( PlanParticipation participation : getParticipations(  plan, userInfo, null ) ) {
+            removeParticipation( username, plan, participation );
+        }
+    }
+
+
+    @Override
     @Transactional( readOnly = true )
     public boolean references( Plan plan, ModelObject mo, QueryService queryService ) {
         return mo instanceof Actor && !getParticipations( plan, (Actor) mo, queryService ).isEmpty();
@@ -175,7 +185,8 @@ public class PlanParticipationServiceImpl
         for ( PlanParticipation planParticipation : planParticipations ) {
             try {
                 if ( planParticipation.getParticipant() != null ) {
-                    queryService.find( Actor.class, planParticipation.getActorId() ); // exception if not found
+                    if ( queryService != null)
+                        queryService.find( Actor.class, planParticipation.getActorId() ); // exception if not found
                     results.add( planParticipation );
                 }
             } catch ( NotFoundException e ) {

@@ -48,4 +48,12 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
     List<Actor> findOpenActors( final ChannelsUser user, final QueryService queryService );
 
     boolean isParticipationAvailable( Actor actor, ChannelsUser user, QueryService queryService );
+
+    /**
+     * Delete all participations by a user.
+     * @param plan a plan
+     * @param userInfo a user info for which participation is to terminated
+     * @param username user deleting the participations
+     */
+    void deleteAllParticipations( Plan plan, ChannelsUserInfo userInfo, String username );
 }

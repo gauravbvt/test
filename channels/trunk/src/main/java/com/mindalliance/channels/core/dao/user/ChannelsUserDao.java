@@ -26,7 +26,7 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
     ChannelsUser createUser( String username, String email ) throws DuplicateKeyException;
 
     @Secured( "ROLE_ADMIN" )
-    void deleteUser( ChannelsUser user );
+    void deleteUser( String username, ChannelsUser user, PlanManager planManager );
 
     /**
      * Get user by email.

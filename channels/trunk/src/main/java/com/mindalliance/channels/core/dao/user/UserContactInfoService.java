@@ -41,4 +41,9 @@ public interface UserContactInfoService extends GenericSqlService<UserContactInf
      */
     void removeChannel( ChannelsUserInfo userInfo, Channel channel );
 
+    /**
+     * Remove all user's contact info.
+     * @param userInfo a user info
+     */
+    void removeAllChannels( ChannelsUserInfo userInfo );
 }

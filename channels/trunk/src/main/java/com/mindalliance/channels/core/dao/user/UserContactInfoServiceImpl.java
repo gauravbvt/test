@@ -37,7 +37,11 @@ public class UserContactInfoServiceImpl
         criteria.add( Restrictions.eq( "user", channelsUserInfo ) );
         for ( UserContactInfo contactInfo : (List<UserContactInfo>) criteria.list() ) {
             try {
-                TransmissionMedium medium = queryService.find( TransmissionMedium.class, contactInfo.getTransmissionMediumId() );
+                TransmissionMedium medium = TransmissionMedium.getUNKNOWN();
+                if ( queryService != null ) {
+                    // check if medium still valid
+                    medium = queryService.find( TransmissionMedium.class, contactInfo.getTransmissionMediumId() );
+                }
                 channels.add( new Channel( medium, contactInfo.getAddress() ) );
             } catch ( NotFoundException e ) {
                 // ignore
@@ -76,14 +80,26 @@ public class UserContactInfoServiceImpl
         }
     }
 
+    @Override
+    @Transactional
+    public void removeAllChannels( ChannelsUserInfo userInfo ) {
+        for ( Channel channel : findChannels( userInfo, null ) ) {
+            // null = don't do validation of channel media
+            removeChannel( userInfo, channel );
+        }
+    }
+
     @SuppressWarnings( "unchecked" )
     private UserContactInfo findContactInfo( ChannelsUserInfo user, Channel channel ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "user", user ) );
-        criteria.add( Restrictions.eq( "transmissionMediumId", channel.getMedium().getId() ) );
-        criteria.add(Restrictions.eq( "address", channel.getAddress() ) );
-        List<UserContactInfo> results = (List<UserContactInfo>)criteria.list();
+        if ( !channel.getMedium().isUnknown() ) {
+            // unknow medium = wild card
+            criteria.add( Restrictions.eq( "transmissionMediumId", channel.getMedium().getId() ) );
+            criteria.add( Restrictions.eq( "address", channel.getAddress() ) );
+        }
+        List<UserContactInfo> results = (List<UserContactInfo>) criteria.list();
         if ( !results.isEmpty() ) {
             return results.get( 0 );
         } else {

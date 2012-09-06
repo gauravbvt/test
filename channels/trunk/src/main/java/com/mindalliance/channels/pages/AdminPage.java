@@ -299,7 +299,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private void submit() {
         for ( ChannelsUser u : toDelete ) {
             getPlanManager().setAuthorities( u, null, null );
-            userDao.deleteUser( u );
+            userDao.deleteUser( ChannelsUser.current().getUsername(), u, getPlanManager() );
         }
         if ( !toDelete.isEmpty() ) {
             toDelete.clear();
