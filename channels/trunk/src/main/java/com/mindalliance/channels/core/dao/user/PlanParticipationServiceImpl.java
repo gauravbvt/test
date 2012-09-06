@@ -55,7 +55,8 @@ public class PlanParticipationServiceImpl
             QueryService queryService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        if ( plan != null )  // null means wild card
+            criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
 //        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "participant", userInfo ) );
         criteria.addOrder( Order.desc( "created" ) );
@@ -142,6 +143,7 @@ public class PlanParticipationServiceImpl
     public void removeParticipation( String username, Plan plan, PlanParticipation participation ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
+        if ( plan != null )  // null = wild card -- to be used only when deleting all participation of a user
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
         //       criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "participant", participation.getParticipant() ) );
@@ -164,10 +166,10 @@ public class PlanParticipationServiceImpl
 
     @Override
     @Transactional
-    public void deleteAllParticipations( Plan plan, ChannelsUserInfo userInfo, String username ) {
+    public void deleteAllParticipations( ChannelsUserInfo userInfo, String username ) {
         // QueryService is null b/c agent-exists validation of participation not wanted.
-        for ( PlanParticipation participation : getParticipations(  plan, userInfo, null ) ) {
-            removeParticipation( username, plan, participation );
+        for ( PlanParticipation participation : getParticipations(  null, userInfo, null ) ) {
+            removeParticipation( username, null, participation );
         }
     }
 
