@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<elements>
+<show>Show</show>
+<aboutPlanSegment>About Plan Segment</aboutPlanSegment>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+</elements>

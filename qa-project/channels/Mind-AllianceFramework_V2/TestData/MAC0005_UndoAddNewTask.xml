@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForUndoAddTask>Segment For Undo Add Task</segmentForUndoAddTask>
+<addNewTask>Add New Task</addNewTask>
+<taskName>Task 1</taskName>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<undoUpdateTask>Undo Update Task</undoUpdateTask>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+</elements>

@@ -1,0 +1,134 @@
+package com.mindalliance.pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
+import com.mindalliance.configuration.ElementController;
+import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.UIActions;
+import com.mindalliance.configuration.UIAutomationException;
+
+/**
+ * ChannelsAdmin class contains all the methods for components related to Channels Setting page.
+ * Example "Create plan", "Delete Plan".
+ * @author Afour
+ *
+ */
+
+/**
+ * @author Afour
+ *
+ */
+public class ChannelsAdmin {
+	String fileName = "ChannelsAdmin.xml";
+	String xPath=null;
+	String className=null;
+	ElementController elementController= new ElementController();
+	DataController dataController=new DataController();
+	
+	/**
+	 * Enters plan name in 'Plan name' text box.
+	 * @return void
+	 * @throws UIAutomationException 
+	 */
+	
+	public void enterPlanName(String planName,String authorName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
+		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
+		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
+		UIActions.enterValueInTextBox(planName);
+		
+		elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
+		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		UIActions.enterValueInTextBox(authorName);
+			
+		
+		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
+		xPath=dataController.getPageDataElements(fileName,"Submit","Xpath");
+		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
+	}
+	
+	/**
+	 * Selects the plan from the drop down
+	 * @return void
+	 * @throws UIAutomationException
+	 */
+	public void selectPlan(String planName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Select Plan",GlobalVariables.configuration.getAttrSearchList(),"Select Plan");
+		xPath=dataController.getPageDataElements(fileName,"Select Plan","Xpath");
+		Select categoryDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(categoryDropDownList);
+		UIActions.selectByText(planName);
+	}
+	
+
+	/**
+	 * Delete the plan
+	 * @return void
+	 * @throws UIAutomationException
+	 */
+	public void deletePlan(String planName) throws UIAutomationException{
+		String headingOfWindowInXML=null;
+		selectPlan(planName);
+		
+		elementController.requireElementSmart(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
+		UIActions.click(fileName,"Delete Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Plan");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Plan", "Title");
+		UIActions.assertAlert(headingOfWindowInXML);
+	}
+	
+	public void addUser(String userName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
+		UIActions.click(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
+		UIActions.enterValueInTextBox(userName);
+		
+		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
+		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
+			
+		// Assertion: Verify that "User 1" is added
+	}
+	
+	public void deleteUser(String userName,String email) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
+		UIActions.click(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
+		
+		for (int i = 0; i <= 5; i++){
+			UIActions.enterKey(Keys.BACK_SPACE);
+		}
+		UIActions.enterValueInTextBox(email);
+		UIActions.enterKey(Keys.TAB);
+		getUser(userName);
+	
+		elementController.requireElementSmart(fileName,"Delete User Submit",GlobalVariables.configuration.getAttrSearchList(), "Delete User Submit");
+		UIActions.click(fileName,"Delete User Submit",GlobalVariables.configuration.getAttrSearchList(), "Delete User Submit");
+			
+	}
+	
+	
+	public void getUser(String userName) throws UIAutomationException{
+		// get list
+		int countUsers = 1 ;
+		String firstXPath=dataController.getPageDataElements(fileName, "First XPath", "Xpath");
+		String secondXPath=dataController.getPageDataElements(fileName, "Second XPath", "Xpath");
+		elementController.requireElementSmart(fileName,"Table Of Users",GlobalVariables.configuration.getAttrSearchList(), "Table Of Users");
+	
+		List<WebElement> trs = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+		List<WebElement> tds;
+		for(WebElement tr: trs){
+			tds = tr.findElements(By.tagName("td"));
+			for(WebElement td: tds){				
+				if(td.getText().contains(userName)){
+					GlobalVariables.configuration.getWebDriver().findElement(By.xpath(firstXPath+ (countUsers) + secondXPath)).click();
+				}
+			}
+			countUsers++;
+		}
+	}
+}

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Elements>
+
+	<Element>
+			<GivenName>Login Page Title</GivenName>
+			<Title>Channels - Sign in</Title>
+	</Element>
+	
+	<Element>
+			<GivenName>Help Page Title</GivenName>
+			<Title>Channels - Help</Title>
+	</Element>
+	
+	<Element>
+			<GivenName>Plan Page Title</GivenName>
+			<Title>Channels:</Title>
+	</Element>
+	
+	<Element>
+			<GivenName>Send Feedback On Help Title</GivenName>
+			<Title>Send Feedback</Title>
+	</Element>
+	
+	
+ 	<Element>
+ 		<GivenName>Send Feedback</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Send Feedback</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Send Feedback On Help</GivenName>
+ 		<Xpath>/html/body/span/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	
+ 	 	
+ 	<Element>
+ 		<GivenName>Help</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/a[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Help</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+
+	<Element>
+ 		<GivenName>Help On Plan Page</GivenName>
+ 		<Xpath>/html/body/form/div[28]/div/div/a[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Help</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+	
+ 	<Element>
+ 		<GivenName>Sign Out</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sign Out</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Sign Out Admin</GivenName>
+ 		<Xpath>/html/body/div/div/a[2]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sigh Out Admin</LinkText>
+    	<ClassName>logout</ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Sign Out Plan</GivenName>
+ 		<Xpath>/html/body/form/div[28]/div/div/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sigh Out Plan</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Home Image Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+ 	
+</Elements>

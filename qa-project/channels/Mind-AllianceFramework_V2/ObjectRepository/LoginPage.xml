@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Elements>
+
+	<Element>
+		<GivenName>Home Page Title</GivenName>
+		<Title>Channels - Collaboration Planning</Title>
+	</Element>
+	<Element>
+    	<GivenName>submitButton</GivenName>
+    	<Xpath>/html/body/div/div[2]/form/div[6]/input</Xpath>
+    	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>username</GivenName>
+ 		<Xpath>/html/body/div/div[2]/form/div[2]/input</Xpath>
+ 		<Name>j_username</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>password</GivenName>
+ 		<Xpath>/html/body/div/div[2]/form/div[4]/input</Xpath>
+ 		<Name>j_password</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+ 	
+</Elements>

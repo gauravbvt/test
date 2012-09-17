@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<elements>
+	<Element>
+		<GivenName>Plan Page Title</GivenName>
+		<Title>Channels: ACME Emergency Communication Plan v.1(dev)</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Login Page Title</GivenName>
+		<Title>Channels - Sign in</Title>
+	</Element>
+	<Element>
+		<GivenName>Messages Tab Text</GivenName>
+		<Name>Messages</Name>
+	</Element>
+	<Element>
+		<GivenName>Calendar Tab Text</GivenName>
+		<Name>Calendar</Name>
+	</Element>
+	<Element>
+		<GivenName>About Me Tab Text</GivenName>
+		<Name>About Me</Name>
+	</Element>
+	<Element>
+		<GivenName>Admin Page Title</GivenName>
+		<Title>Channels - Administration</Title>
+	</Element>
+	<Element>
+		<GivenName>Show Received Text</GivenName>
+		<Name>show received</Name>
+	</Element>
+	<Element>
+		<GivenName>Hide Broadcasts Name</GivenName>
+		<Name>hide broadcasts</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Show All Messages Name</GivenName>
+		<Name>show all messages</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Collaboration Plan</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Collaboration Plan</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Issues Report Link</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[2]/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+ 		<GivenName>Channels Admin Link</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[7]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Channels Settings</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Messages In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[3]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Calender In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[4]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>About Me In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Show Sent In Social Panel</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+		<GivenName>Hide Broadcasts In Social Panel</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Show All Messages In Social Panel</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Issues Report Heading</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+ 	
+	
+ 	
+ 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+</elements>

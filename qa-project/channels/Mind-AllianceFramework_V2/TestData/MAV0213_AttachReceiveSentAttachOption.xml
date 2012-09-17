@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<elements>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<showSimpleFormText>SHOW SIMPLE FORM</showSimpleFormText>
+<showAdvancedFormText>SHOW ADVANCED FORM</showAdvancedFormText>
+<unspecified>Unspecified</unspecified>
+<flag>False</flag>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<reference>Reference</reference>
+<policy>Policy</policy>
+
+
+<actionsInReceivesPanel>Actions In Receives Panel</actionsInReceivesPanel>
+<actionsInSendsPanel>Actions In Sends Panel</actionsInSendsPanel>
+<newIssueInReceivesPanel>New Issue In Receives Panel</newIssueInReceivesPanel>
+<newIssueInSendsPanel>New Issue In Sends Panel</newIssueInSendsPanel>
+</elements>

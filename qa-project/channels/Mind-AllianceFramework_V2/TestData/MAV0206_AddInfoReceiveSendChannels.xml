@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<elements>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<showInTask>Show In Task Panel</showInTask>
+<details>Details In Task Panel</details>
+<title>Channels - Sign in</title>
+<showSimpleFormText>SHOW SIMPLE FORM</showSimpleFormText>
+<showAdvancedFormText>SHOW ADVANCED FORM</showAdvancedFormText>
+<unspecified>Unspecified</unspecified>
+<flag>False</flag>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+
+<cell>Cell</cell>
+<conferenceCall>Conference call</conferenceCall>
+<courier>Courier</courier>
+<email>Email</email>
+<faceToFace>Face to face</faceToFace>
+<fax>Fax</fax>
+<IM>IM</IM>
+<landline>Landline</landline>
+<mail>Mail</mail>
+<meeting>Meeting</meeting>
+<notificationSystem>Notification system</notificationSystem>
+<onlineChat>Online chat</onlineChat>
+<pager>Pager</pager>
+<PASystem>PA System</PASystem>
+<phone>Phone</phone>
+<radio>Radio</radio>
+<television>Television</television>
+<twoWayRadio>Two way radio</twoWayRadio>
+<newMedium>New medium</newMedium>
+
+</elements>

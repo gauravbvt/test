@@ -1,0 +1,2077 @@
+<?xml version="1.0"?>
+<elements>
+	
+	<Element>
+		<GivenName>About Plan Window Title</GivenName>
+		<Title>About Plan:</Title>
+	</Element>
+	<Element>
+		<GivenName>Presence Name</GivenName>
+		<Name>Presence</Name>
+	</Element>
+	<Element>
+		<GivenName>Ongoing Text</GivenName>
+		<Name>ongoing</Name>
+	</Element>
+	<Element>
+		<GivenName>Can End Event Text</GivenName>
+		<Name>can end</Name>
+	</Element>
+	<Element>
+		<GivenName>Activities Name</GivenName>
+		<Name>Activities</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Messages Name</GivenName>
+		<Name>Messages</Name>
+	</Element>
+	<Element>
+		<GivenName>To In Message Panel</GivenName>
+		<Name>To:</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Alert Window Title Of Cut Task</GivenName>
+		<Title>Are you sure?</Title>
+	</Element>
+	<Element>
+		<GivenName>Alert Window Title Of Goal</GivenName>
+		<Title>Delete goal?</Title>
+	</Element>
+	<Element>
+		<GivenName>About Plan Segment Window Title</GivenName>
+		<Title>About Plan Segment:</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Events In Scope Window Title</GivenName>
+		<Title>Events In Scope</Title>
+	</Element>
+
+	<Element>
+		<GivenName>Show All Users Name</GivenName>
+		<Name>show all users</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Hide Inactive Users Name</GivenName>
+		<Name>hide inactive users</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Hide My Activities Name</GivenName>
+		<Name>hide my activites</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Show All Activities Name</GivenName>
+		<Name>show all activites</Name>
+	</Element>
+	<Element>
+		<GivenName>Hide Broadcasts Name</GivenName>
+		<Name>hide broadcasts</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Show All Messages Name</GivenName>
+		<Name>show all messages</Name>
+	</Element>
+	<Element>
+		<GivenName>Show Sent Name</GivenName>
+		<Name>show sent</Name>
+	</Element>
+	<Element>
+		<GivenName>Show Received Name</GivenName>
+		<Name>show received</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Classification Systems Window Title</GivenName>
+		<Title>Classification Systems</Title>
+	</Element>
+
+	<Element>
+		<GivenName>Organization In Scope Window Title</GivenName>
+		<Title>Organizations In Scope</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Who's Who Window Title</GivenName>
+		<Title>WHO'S WHO</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>All Issues Window Title</GivenName>
+		<Title>All Issues</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Index Window Title</GivenName>
+		<Title>INDEX</Title>
+	</Element>
+
+	<Element>
+		<GivenName>Tags Window Title</GivenName>
+		<Title>TAGS</Title>
+	</Element>
+
+	<Element>
+		<GivenName>Plan Evaluation Window Title</GivenName>
+		<Title>Plan Evaluation</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Goals Window Title</GivenName>
+		<Title>GOALS</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Organization Tab Window Title</GivenName>
+		<Title>ORGANIZATIONS</Title>
+	</Element>
+	<Element>
+		<GivenName>Plan Map Window Title</GivenName>
+		<Title>Plan Map</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>All Surveys Window Title</GivenName>
+		<Title>Surveys And Questionnaires</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Task Mover Window Title</GivenName>
+		<Title>Task Mover</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In About Plan Segment</GivenName>
+		<Name>Actions</Name>
+	</Element>
+	<Element>
+		<GivenName>Actions Menu In Task Panel</GivenName>
+		<Name>Actions</Name>
+	</Element>
+	<Element>
+		<GivenName>New Issue Actual Text</GivenName>
+		<Name>(Minor) (No description)</Name>
+	</Element>
+	
+	<Element>
+		<GivenName>New Task Header Actual Text</GivenName>
+		<Name></Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Assignments Actual Text</GivenName>
+		<Title>Doing Unnamed Task - Assignments</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Failure Impacts Actual Text</GivenName>
+		<Title>Failure Impacts</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Dissemination Actual Text</GivenName>
+		<Title>Information Dissemination For Task</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Alert Window Title Of Remove Segment</GivenName>
+		<Title>Are you sure?</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>About Event Unnamed Title Actual Text</GivenName>
+		<Title>About Event:</Title>
+	</Element>
+	<Element>
+		<GivenName>About In Messages Actual Text</GivenName>
+		<Name>About:</Name>
+	</Element>
+	<Element>
+		<GivenName>Flow Copied Actual Text</GivenName>
+		<Name>Flow copied</Name>
+	</Element>
+	<Element>
+		<GivenName>Need Copied Actual Text</GivenName>
+		<Name>Need copied</Name>
+	</Element>
+	<Element>
+		<GivenName>Strench Up Forms</GivenName>
+		<Xpath>/html/body/form/span/div/div/span[6]/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Presence</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Presence</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Presence</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Show All Users</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Presence</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Hide Inactive Users</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Presence</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Activities</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div/ul/li[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Presence</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Hide My Activities</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Show All Activities</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Notifier</GivenName>
+		<Xpath>/html/body/div[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Messages</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div/ul/li[3]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Tags In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Tags Link In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Task Is Dropdown In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[3]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Causes Event In Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/td/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Usually Completes After In Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Usually Completes After Textbox</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Usually Completes After Dropdown</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Repeats Every In Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Repeats Every Textbox</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Repeats Every Dropdown</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Is ongoing In Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Header In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Can End Event In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Goals Link In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/th/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Goals Dropdown In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span/table/tbody/tr/td/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Attach Dropdown In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/li/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Attach Dropdown In Send Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/li/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Attach Dropdown In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/li/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Verify Goal Added In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Uncheck Checkbox Of Goal In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span/table/tbody/tr/td[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Doing Unnamed Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[2]/div/span/map/area</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Can End Event Unnamed Link In Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/span/a[2]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>About Event Unnamed Title</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Hide Broadcasts</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Show All Messages</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>To in Messages</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div[4]/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Show Sent</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Show Received</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Actions</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[2]/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Actions</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Move Tasks In Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[2]/div[3]/span/span/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Show</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Show</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Scoping</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Scoping</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Searching</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Searching</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Participations</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Searching</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Improving</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Searching</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>About Plan</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>About Plan</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>About Plan Title</GivenName>
+		<Xpath>/html/body/form/div[4]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>fp-title</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Plan Map</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Plan Map</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Plan Map Title</GivenName>
+		<Xpath>/html/body/form/div[17]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Plan Map</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/ul/li[5]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>About Plan Segment</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+		<Element>
+		<GivenName>About Plan Segment Title</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>fp-title</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Add New Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[8]/span/a/span</Xpath>
+		<Name>Add new segment</Name>
+		<Id></Id>
+		<PartialLinkText>Add new segment</PartialLinkText>
+		<LinkText>Add new segment</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>New Issue</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>New Issue Text</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/span/ol/li[3]/span/span[2]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+		
+	<Element>
+		<GivenName>Remove This Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[9]/span/a/span</Xpath>
+		<Name>Remove this segment</Name>
+		<Id></Id>
+		<PartialLinkText>Remove this segment</PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+
+	<Element>
+ 		<GivenName>Segment Name</GivenName>
+ 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr/td/input</Xpath>
+ 		<Name>sg-editor:fp-content:mo:aspect:name</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Segment Window</GivenName>
+ 		<Xpath>/html/body/form/div[5]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close About Plan Window</GivenName>
+ 		<Xpath>/html/body/form/div[4]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
+ 		<GivenName>Close About Event: Unnamed Window</GivenName>
+ 		<Xpath>/html/body/form/div[3]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close About Plan Segment Window</GivenName>
+ 		<Xpath>/html/body/form/div[5]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Events Window</GivenName>
+ 		<Xpath>/html/body/form/div[15]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Classification Window</GivenName>
+ 		<Xpath>/html/body/form/div[18]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Organization Window</GivenName>
+ 		<Xpath>/html/body/form/div[16]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Searching Window</GivenName>
+ 		<Xpath>/html/body/form/div[27]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close All Issues Window</GivenName>
+ 		<Xpath>/html/body/form/div[22]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Plan Evaluation Window</GivenName>
+ 		<Xpath>/html/body/form/div[21]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close User As Agent Window</GivenName>
+ 		<Xpath>/html/body/form/div[24]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Plan Versions Window</GivenName>
+ 		<Xpath>/html/body/form/div[23]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Task Mover Window</GivenName>
+ 		<Xpath>/html/body/form/div[19]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close All Surveys Window</GivenName>
+ 		<Xpath>/html/body/form/div[25]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Assignment Window</GivenName>
+ 		<Xpath>/html/body/form/div[6]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Failure Impacts Window</GivenName>
+ 		<Xpath>/html/body/form/div[9]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+
+	<Element>
+ 		<GivenName>Close Dissemination Window</GivenName>
+ 		<Xpath>/html/body/form/div[10]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Element Of Information Window</GivenName>
+ 		<Xpath>/html/body/form/div[8]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+	
+ 	<Element>
+		<GivenName>Undo Update Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Update Segment</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Undo Add New Issue</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Undo Remove Goal</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Update Segment</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Redo Add New Issue</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	
+	
+	<Element>
+		<GivenName>Undo Remove This Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Undo Update Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Undo Cut Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Paste Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Close Plan Map Window</GivenName>
+		<Xpath>/html/body/form/div[17]/div/div/div[3]/a/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>>Close Plan Map Window</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Goals Tab</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Goals</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Organizations Tab</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[2]/div/span[3]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Goals</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Category in goal</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Organization in goal dropdown</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Goal Name</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Acheived at end</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[5]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Verify goal added</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Delete goal</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[7]/a/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Undo Remove Goal</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>First xPath for table</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Second xPath for table</GivenName>
+		<Xpath>/td[4]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Add New Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Add New Task Header</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>part-header</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Add New Sends Header</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Add New Receives Header</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/h3/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/h3/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Textbox of Task</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr/td/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Issue In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/ul/li/ul/li[9]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>New Issue Text In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Description Of New Issue In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr/td/textarea</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Type Dropdown In New Issue Text In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[2]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Severity Dropdown In New Issue Text In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[4]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Attach Dropdown In New Issue Text In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Show In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Hide Details In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Details In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Show Advanced Simple Form In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Show Advanced Simple Form In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/span[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Show Advanced Simple Form In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Type Dropdown In New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[2]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Type Dropdown In New Issue In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[2]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Attach Dropdown In New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Attach Dropdown In New Issue In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Severity Dropdown In New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[4]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Severity Dropdown In New Issue In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[4]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Assignments</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Failure Impacts</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+		
+	<Element>
+		<GivenName>Failure Impacts Title</GivenName>
+		<Xpath>/html/body/form/div[9]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Dissemination</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+		
+	<Element>
+		<GivenName>Dissemination Title</GivenName>
+		<Xpath>/html/body/form/div[10]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Assignments Title</GivenName>
+		<Xpath>/html/body/form/div[6]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Cut Task</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Cut Task</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Paste Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Add In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Add In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Show In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Actions In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Actions In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Copy Flow In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Flow Copied Message</GivenName>
+		<Xpath>/html/body/div[2]/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Copy Need</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Need Copied Message</GivenName>
+		<Xpath>/html/body/div[2]/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Send Message In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>About In Messages Text</GivenName>
+		<Xpath>/html/body/form/span/span/div/div/div[2]/div[4]/div[2]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Information In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr/td/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Tags In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[2]/th/label/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Information In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr/td/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Intent Dropdown In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[3]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Tags In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[2]/th/label/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>From Dropdown In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Intent Dropdown In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[3]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Element Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[4]/th/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Notification In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Instructions In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[12]/td/textarea</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Reply That In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>But Only If In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[8]/td/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>But Only If Dropdown In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[8]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Channels Dropdown In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Within Count In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[10]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Within Dropdown In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[10]/td/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Within Dropdown In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[10]/td/span/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Within Count In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[10]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Element Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[4]/th/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Notification In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Instructions In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[11]/td/textarea</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Reply That In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>But Only If In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>But Only If Dropdown In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Channels Dropdown In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>From Task Name In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>New Issue In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>New Issue Text In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>New Issue Text In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Remove Info Need In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Remove Info Sharing Capability In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Hide Planners</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Events In Scope</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Events In Scope Title</GivenName>
+		<Xpath>/html/body/form/div[15]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>float-bar-title</ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Classification Systems</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Classification Systems Title</GivenName>
+		<Xpath>/html/body/form/div[18]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>float-bar-title</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Organizations In Scope</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Organizations In Scope Title</GivenName>
+		<Xpath>/html/body/form/div[16]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>fp-title</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Who's Who</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Who's Who Title</GivenName>
+		<Xpath>/html/body/form/div[27]/div/div[2]/div/span[4]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Index</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Index Title</GivenName>
+		<Xpath>/html/body/form/div[27]/div/div[2]/div/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Tags</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Tags Title</GivenName>
+		<Xpath>/html/body/form/div[27]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All Issues</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All Issues Title</GivenName>
+		<Xpath>/html/body/form/div[22]/div/div/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>float-header</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Task Mover</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	
+	<Element>
+		<GivenName>Task Mover Title</GivenName>
+		<Xpath>/html/body/form/div[19]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Plan Evaluation</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Plan Versions</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/ul/li[5]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Plan Evaluation Title</GivenName>
+		<Xpath>/html/body/form/div[21]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Users As Agents</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[4]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All Surveys</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[4]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All Surveys Title</GivenName>
+		<Xpath>/html/body/form/div[25]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+	
+</elements>
