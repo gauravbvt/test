@@ -10,9 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 /**
- * Creates the appropriate browser instance and set the Webdriver 
- * of browser.
- * @return void
+ * Creates the appropriate browser instance and set the Webdriver of browser.
  */
 
 public class BrowserController{
@@ -21,8 +19,6 @@ public class BrowserController{
 	/**
 	 * Initialize the browser by passing parameter (browser)
 	 * @param  browser		Mozilla Firefox / Chrome / Internet Explorer
-	 * @return 
-	 * @return void
 	 * @throws UIAutomationException 
 	*/
 	@SuppressWarnings("deprecation")
@@ -66,12 +62,11 @@ public class BrowserController{
 		}
 		
 	}		
-    
     /**
-	 * Enters URL with parameter
-	 * @param  URL  
-	 * @return void
-	 * @throws UIAutomationException
+     * Enters URL with parameter
+     * @param URL
+     * @param title
+     * @throws UIAutomationException
      */
     public void enterURL(String URL,String title) throws UIAutomationException{
     	GlobalVariables.configuration.getWebDriver().get(URL);

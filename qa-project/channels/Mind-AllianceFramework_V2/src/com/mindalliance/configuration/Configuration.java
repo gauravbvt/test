@@ -142,7 +142,6 @@ public class Configuration {
 	
 	/**
 	 * Gets the object of HashTable consisting of configuration data
-	 *  
 	 * @return configData 
 	 */
 	public Hashtable<String,String> getConfigData(){

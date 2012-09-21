@@ -84,10 +84,8 @@ public class ElementController {
 	
 	/**
 	 * Finds element on a page by passing parameters ( xpath / id ) and corresponding value
-	 *
 	 * @param  findBy		id / xpath / linktext / partiallinktext / name
 	 * @param  value     	Value of id / xpath / linktext / partiallinktext / name
-	 * @return void
 	 * @throws UIAutomationException 
 	 */
 
@@ -164,10 +162,8 @@ public class ElementController {
 
 	/**
 	 * Waits for a particular element to be visible/enable
-	 * 
 	 * @param  locator	Element to search for visibility
 	 * @param  pageNo 	Page number to search for visibility
-	 * 
 	 * @return Object of WebElement if it is enabled else throws ElementNotVisibleException exception
 	 */
 	public static ExpectedCondition<WebElement> visibilityOfElementLocated(final By locator, final int pageNo)
@@ -188,7 +184,6 @@ public class ElementController {
 	
     /**
      * Searches an element with 'elementName' in the application
-     * 
      * @param fileName  	The name of xml file from which to search an element
      * @param givenName 	The GivenName in xml file
      * @param elementName 	The name of the element to be searched
@@ -245,11 +240,9 @@ public class ElementController {
        
 	/**
 	 * Finds element on a page by passing parameters ( xpath / id ) and corresponding value
-	 *
 	 * @param  findBy		id / xpath / linktext / partiallinktext / name
 	 * @param  value     	Value of id / xpath / linktext / partiallinktext / name
 	 * @param  elementName 	Name of element to be searched for
-	 * @return void
 	 * @throws UIAutomationException 
 	 */
 	public void findElementBy(final String findBy,final String value,String elementName) throws UIAutomationException{

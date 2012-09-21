@@ -209,11 +209,8 @@ public class UIActions {
 	/** 
 	 * Verifies alert text begins with alertPrefix and accepts if it is. 
 	 * If not starting with alertPrefix, assertion fails with assertMessage.
-	 * 
 	 * @param assertMessage		Message for assertion
 	 * @param alertPrefix		String value to be asserted against Alert Dialog box text
-	 * 
-	 * @return void
 	 */
 	public static void assertAlert(String assertMessage) {
 		int alertWaitTimeoutSeconds = Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
