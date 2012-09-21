@@ -9,7 +9,7 @@ import com.mindalliance.configuration.UIAutomationException;
 /**
  * HeaderController.java class contains all the methods for components with common header.
  * Example "Send Feedback button","Help button", "Sign out button"
- * @author Afour
+ * @author afour
  *
  */
 public class HeaderController {
@@ -19,8 +19,6 @@ public class HeaderController {
 	
 	/**
 	 * 'signOut' method clicks on 'Sign out' button
-	 * @param   void
-	 * @return  Void
 	 * @throws UIAutomationException 
      */
    
@@ -35,8 +33,6 @@ public class HeaderController {
 	
 	/**
 	 * 'sendfeedback' method clicks on 'Send Feedback' button
-	 * @param   void
-	 * @return  Void
 	 * @throws UIAutomationException 
 	 */
 	public void sendFeedback() throws UIAutomationException, InterruptedException{
@@ -46,8 +42,6 @@ public class HeaderController {
 	
 	/**
 	 * 'sendFeedbackOnHelp' method clicks on 'Send Feedback' button
-	 * @param   void
-	 * @return  Void
 	 * @throws UIAutomationException 
 	 */
 	public void sendFeedbackOnHelp() throws UIAutomationException{
@@ -66,8 +60,6 @@ public class HeaderController {
 	
 	/**
 	 * 'Sign out Admin' method clicks on 'Sign out' button on 'Plan' page
-	 * @param  void
-	 * @return  void
 	 * @throws UIAutomationException 
     */
 	public void signOutPlan() throws UIAutomationException{
@@ -85,8 +77,6 @@ public class HeaderController {
 	
 	/**
 	 * 'Sign out Admin' method clicks on 'Sign out' button on 'Admin' page
-	 * @param  void
-	 * @return  void
 	 * @throws UIAutomationException 
 	 */
 	public void signOutAdmin() throws UIAutomationException{
@@ -99,8 +89,6 @@ public class HeaderController {
 	}
 	/**
 	 * 'helpPage' method clicks on 'Help' button
-	 * @param   void
-	 * @return  void
 	 * @throws UIAutomationException 
 	*/
 	public void helpOnHomePage() throws UIAutomationException{
@@ -109,11 +97,9 @@ public class HeaderController {
 	}
 	/**
 	 * 'helpPage' method clicks on 'Help' button
-	 * @param   void
-	 * @return  void
 	 * @throws UIAutomationException 
 	*/
-	public void helpOnPlanPage() throws UIAutomationException{
+	public void clickHelpOnPlanPage() throws UIAutomationException{
 	 
 		elementController.requireElementSmart(fileName, "Help On Plan Page", GlobalVariables.configuration.getAttrSearchList(), "Help On Plan Page");
 	    UIActions.click(fileName, "Help On Plan Page", GlobalVariables.configuration.getAttrSearchList(), "Help On Plan Page");
@@ -127,7 +113,10 @@ public class HeaderController {
 	    String titleOfHelpPage=dataController.getPageDataElements(fileName, "Help Page Title", "Title");
     	UIActions.waitForTitle(titleOfHelpPage,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
   	}	
-	
+	/**
+	 * Switch to plan page from any other page
+	 * @throws UIAutomationException
+	 */
 	public void switchToPlanPage() throws UIAutomationException{		
 	String titleOfPlanPageInXML=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
 	   String titleOfPlanPageInPage=null;
@@ -143,7 +132,6 @@ public class HeaderController {
 	
 	/**
 	 * 'clickHomeImageLink' method clicks on 'Home Image' Link
-	 * @return void
 	 * @throws UIAutomationException 
 	 */
 	public void clickHomeImageLink(String title) throws UIAutomationException{

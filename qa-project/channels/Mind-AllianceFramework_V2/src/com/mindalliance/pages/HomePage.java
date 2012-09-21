@@ -18,7 +18,6 @@ public class HomePage {
 	DataController dataController=new DataController();
 	/**
 	 * 'clickCollaborationPlanLink' method clicks on 'Collaboration Plan' Link
-	 * @return void
 	 * @throws UIAutomationException 
 	*/
 	public void clickCollaborationPlanLink() throws UIAutomationException{
@@ -29,14 +28,11 @@ public class HomePage {
     	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 		
-		// Close Plan Map window
-		PlanPage pc=new PlanPage();
-		pc.closePlanMap();
+		
 	}
 	
 	/**
 	 * 'clickChannelsAdminLink' method clicks on 'Channels Settings' Link
-	 * @return void
 	 * @throws UIAutomationException 
 	 */
 	public void clickChannelsAdminLink() throws UIAutomationException{
@@ -49,7 +45,6 @@ public class HomePage {
 	}	
 	/**
 	 * 'clickIssuesReportLink' method clicks on 'Issues Report' Link
-	 * @return void
 	 * @throws UIAutomationException 
 	 */
 	public void clickIssuesReportLink(String heading) throws UIAutomationException{

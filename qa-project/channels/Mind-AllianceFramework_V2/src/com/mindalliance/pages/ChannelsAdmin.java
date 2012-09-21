@@ -21,10 +21,6 @@ import com.mindalliance.configuration.UIAutomationException;
  *
  */
 
-/**
- * @author Afour
- *
- */
 public class ChannelsAdmin {
 	String fileName = "ChannelsAdmin.xml";
 	String xPath=null;
@@ -34,7 +30,6 @@ public class ChannelsAdmin {
 	
 	/**
 	 * Enters plan name in 'Plan name' text box.
-	 * @return void
 	 * @throws UIAutomationException 
 	 */
 	
@@ -57,7 +52,6 @@ public class ChannelsAdmin {
 	
 	/**
 	 * Selects the plan from the drop down
-	 * @return void
 	 * @throws UIAutomationException
 	 */
 	public void selectPlan(String planName) throws UIAutomationException{
@@ -71,7 +65,6 @@ public class ChannelsAdmin {
 
 	/**
 	 * Delete the plan
-	 * @return void
 	 * @throws UIAutomationException
 	 */
 	public void deletePlan(String planName) throws UIAutomationException{
@@ -84,6 +77,11 @@ public class ChannelsAdmin {
 		UIActions.assertAlert(headingOfWindowInXML);
 	}
 	
+	/**
+	 * Add user to plan
+	 * @param userName
+	 * @throws UIAutomationException
+	 */
 	public void addUser(String userName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.click(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
@@ -95,6 +93,12 @@ public class ChannelsAdmin {
 		// Assertion: Verify that "User 1" is added
 	}
 	
+	/**
+	 * Delete user from plan
+	 * @param userName
+	 * @param email
+	 * @throws UIAutomationException
+	 */
 	public void deleteUser(String userName,String email) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
 		UIActions.click(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
@@ -111,9 +115,13 @@ public class ChannelsAdmin {
 			
 	}
 	
-	
+	/**
+	 * Gets username from list of usernname
+	 * @param userName
+	 * @throws UIAutomationException
+	 */
 	public void getUser(String userName) throws UIAutomationException{
-		// get list
+		// get list of user
 		int countUsers = 1 ;
 		String firstXPath=dataController.getPageDataElements(fileName, "First XPath", "Xpath");
 		String secondXPath=dataController.getPageDataElements(fileName, "Second XPath", "Xpath");
