@@ -32,7 +32,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * TestCase ID: MAV0017_viewAllIssueForm
  * Summary: Verify that form with heading "All Issues" gets loaded on the About Plan window 
- * @author AFour
+ * @author afour
  *
  */
 public class MAV0017_viewAllIssueForm extends TestCase{
@@ -75,9 +75,12 @@ public class MAV0017_viewAllIssueForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-							
-			// Click on 'All Issues' under 'Improving' pop up menu
+		
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+
+			// Click on 'All Issues' under 'Improving' pop up menu
 			planPage.clickPopupMenu(testData.get("Improving"));
 			planPage.clickSubmenu(testData.get("AllIssues"));
 							
@@ -100,6 +103,11 @@ public class MAV0017_viewAllIssueForm extends TestCase{
 			Assert.fail(ue.getErrorMessage());
 		}
 	}
+	
+	/**
+	 * loads test data
+	 * @throws UIAutomationException
+	 */
 	public void loadTestData() throws UIAutomationException
 	{
 		try{

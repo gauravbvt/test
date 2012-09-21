@@ -29,7 +29,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * TestCase ID: MAV0011_viewAllSecrecyclassificationsForm
  * Summary: Verify that form with heading "Secrecy Classifications" gets loaded on the About Plan window
- * @author: AFour
+ * @author afour
  *
  */
 
@@ -73,9 +73,12 @@ public class MAV0011_viewAllSecrecyclassificationsForm extends TestCase{
 			//Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 								
 			//Click on 'Classification Systems' under 'Scoping' popup menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("ClassificationSystems"));
 					
@@ -102,8 +105,6 @@ public class MAV0011_viewAllSecrecyclassificationsForm extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0011_viewAllSecrecyclassificationsForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -98,8 +98,6 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	}
 	/**
      * Loads Test Data for MAP0003_AddNewUserToPlan.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

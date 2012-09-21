@@ -33,8 +33,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0030_viewMapWindow
  * Summary: Verify that form with map details gets loaded on the new browser window
- * @author: AFour
- *
+ * @author afour
  */
 
 public class MAV0030_viewMapWindow extends TestCase{
@@ -78,9 +77,12 @@ public class MAV0030_viewMapWindow extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 						
 			// Click on 'Plan Map' under 'Show' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("PlanMap"));
 					
@@ -107,8 +109,6 @@ public class MAV0030_viewMapWindow extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0030_viewMapWindow.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

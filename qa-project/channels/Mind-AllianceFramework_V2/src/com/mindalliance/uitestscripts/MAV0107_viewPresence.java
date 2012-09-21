@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0107_viewPresence 
  * Summary: Verify that presence is present tab on home page
- * @author: AFour
+ * @author afour
  */
 public class MAV0107_viewPresence extends TestCase{
 
@@ -73,10 +73,13 @@ public class MAV0107_viewPresence extends TestCase{
 								
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 			
 			// Click on 'Presence' tab under 'Collaboration Panel'
-			PlanPage planPage=new PlanPage();
 			planPage.clickPresenceTab();
 			
 			// Click on 'Show All User' link
@@ -100,8 +103,6 @@ public class MAV0107_viewPresence extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0107_viewPresence.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

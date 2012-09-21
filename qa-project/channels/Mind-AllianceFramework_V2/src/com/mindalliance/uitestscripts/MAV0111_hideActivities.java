@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0111_hideActivities 
  * Summary: Verify that in Activities tab by clicking on 'hide activities' activities gets hidden
- * @author: AFour
+ * @author afour
  */
 public class MAV0111_hideActivities extends TestCase{
 
@@ -75,8 +75,11 @@ public class MAV0111_hideActivities extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Activities' tab under 'Collaboration Panel'
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Activities' tab under 'Collaboration Panel'
 			planPage.clickActivitiesTab();
 						
 			// Click on 'hide my activites' link
@@ -100,8 +103,6 @@ public class MAV0111_hideActivities extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0111_hideActivities.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

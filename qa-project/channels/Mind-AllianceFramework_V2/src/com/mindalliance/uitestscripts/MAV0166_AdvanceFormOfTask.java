@@ -72,8 +72,11 @@ public class MAV0166_AdvanceFormOfTask extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'strench Up forms' icon 
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'strench Up forms' icon 
 			planPage.clickStrenchUpForm();
 		
 			// Click on 'Hide details' under 'Show' pop up under 'Task' panel
@@ -102,8 +105,6 @@ public class MAV0166_AdvanceFormOfTask extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0166_AdvanceFormOfTask.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

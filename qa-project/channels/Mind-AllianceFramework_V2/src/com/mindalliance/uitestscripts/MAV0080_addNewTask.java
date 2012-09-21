@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0080_addNewTask
  * Summary: Verify that "Task" page loaded 
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0080_addNewTask extends TestCase{
@@ -76,8 +76,11 @@ public class MAV0080_addNewTask extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Add New Task'under 'Actions' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add New Task'under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));		
 										
@@ -100,8 +103,6 @@ public class MAV0080_addNewTask extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0080_addNewTask.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

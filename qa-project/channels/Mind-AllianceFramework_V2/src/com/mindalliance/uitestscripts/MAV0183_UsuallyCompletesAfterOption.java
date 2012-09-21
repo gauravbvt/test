@@ -68,10 +68,13 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 			
 			// Click on 'strench Up forms' icon 
-			PlanPage planPage=new PlanPage();
 			planPage.clickStrenchUpForm();
 		
 			// Click on 'Details' under 'Show' pop up under 'Task' panel
@@ -103,8 +106,6 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0183_UsuallyCompletesAfterOption.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

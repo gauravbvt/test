@@ -30,7 +30,7 @@ import com.mindalliance.pages.LoginPage;
 /**
  * TestCase Id: MAV0004_viewAdminHome
  * Summary: Verify that the Channels Administration Page renders with title 'Channels Settings' 
- * @author AFour
+ * @author afour
  *
  */
 public class MAV0004_viewAdminHome extends TestCase{
@@ -91,8 +91,6 @@ public class MAV0004_viewAdminHome extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0004_viewAdminHome.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

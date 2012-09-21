@@ -32,7 +32,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Test case ID: MAC0002_UndoRemoveThisSegment
  * 	   Summary: Verify that user is able to undo the removed segment
- * @author AFour
+ * @author afour
  * 
  */
 public class MAC0002_UndoRemoveThisSegment extends TestCase{
@@ -75,9 +75,12 @@ public class MAC0002_UndoRemoveThisSegment extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click Actions pop up menu and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 							
@@ -114,8 +117,6 @@ public class MAC0002_UndoRemoveThisSegment extends TestCase{
 
 	/**
      * Loads Test Data for MAC0002_UndoRemoveThisSegment.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

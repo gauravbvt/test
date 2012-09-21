@@ -75,8 +75,6 @@ public class MAV0002_viewHomePage extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0002_viewHomePage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0021_viewAllEvaluationForm
  * Summary: Verify that form with heading "Evaluation" gets loaded on the About Plan window
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0021_viewAllEvaluationForm extends TestCase{
@@ -75,9 +75,12 @@ public class MAV0021_viewAllEvaluationForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 				
 			// Click on 'Plan Evaluation' under 'Improving' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Improving"));
 			planPage.clickSubmenu(testData.get("PlanEvaluation"));
 			
@@ -102,8 +105,6 @@ public class MAV0021_viewAllEvaluationForm extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0021_viewAllEvaluationForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0083_addAssignment
  * Summary: Verify that assignment window is displayed
- * @author: AFour
+ * @author afour
  *
  */
 
@@ -76,8 +76,11 @@ public class MAV0083_addAssignment extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Add New Task'under 'Actions' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add New Task'under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));		
 					
@@ -107,8 +110,6 @@ public class MAV0083_addAssignment extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0083_addAssignment.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

@@ -69,8 +69,11 @@ public class MAV0173_AddInfoReceive extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
-			// Click on 'Add' button under 'Receives' panel
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add' button under 'Receives' panel
 			planPage.clickAddInReceivesPanel();
 			
 			// Click on 'Remove Info Need' under 'Actions' pop up menu
@@ -99,8 +102,6 @@ public class MAV0173_AddInfoReceive extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0173_AddInfoReceive.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

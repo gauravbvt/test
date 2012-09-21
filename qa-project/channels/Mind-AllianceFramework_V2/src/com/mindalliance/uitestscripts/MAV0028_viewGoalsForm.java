@@ -32,8 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0028_viewGoalsForm
  * Summary: Verify that form with heading "Goals" gets loaded on the About Plan Segment window 
- * @author: AFour
- *
+ * @author afour
  */
 
 public class MAV0028_viewGoalsForm extends TestCase {
@@ -78,8 +77,11 @@ public class MAV0028_viewGoalsForm extends TestCase {
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'About Plan Segment' under 'Show' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'About Plan Segment' under 'Show' pop up menu
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
 					
@@ -109,8 +111,6 @@ public class MAV0028_viewGoalsForm extends TestCase {
 	
 	/**
      * Loads Test Data for MAV0028_viewGoalsForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

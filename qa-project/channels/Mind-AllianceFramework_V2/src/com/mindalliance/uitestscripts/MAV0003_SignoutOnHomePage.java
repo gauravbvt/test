@@ -30,7 +30,7 @@ import com.mindalliance.pages.LoginPage;
 /**
  * Test Case Id: MAV0003_logoutOnPlanPage
  * Summary: Verify that the page with title 'Channels Information Sharing Planning' renders
- * @author : AfourTech
+ * @author afour
  *
  */
 public class MAV0003_SignoutOnHomePage extends TestCase{
@@ -88,8 +88,6 @@ public class MAV0003_SignoutOnHomePage extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0003_SignoutOnHomePage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0098_removeSegmentUnderAction 
  * Summary: Verify that task mover window gets displayed
- * @author: AFour
+ * @author afour
  */
 public class MAV0100_moveTaskUnderAction extends TestCase{
 
@@ -75,9 +75,12 @@ public class MAV0100_moveTaskUnderAction extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click Actions pop up menu and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));	
 									
@@ -114,8 +117,6 @@ public class MAV0100_moveTaskUnderAction extends TestCase{
 
 	/**
      * Loads Test Data for MAV0100_moveTaskUnderAction.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

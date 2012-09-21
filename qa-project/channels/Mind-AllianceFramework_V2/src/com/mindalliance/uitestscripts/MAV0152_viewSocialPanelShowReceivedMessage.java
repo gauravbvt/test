@@ -91,8 +91,6 @@ public class MAV0152_viewSocialPanelShowReceivedMessage extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0152_viewSocialPanelShowReceivedMessage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

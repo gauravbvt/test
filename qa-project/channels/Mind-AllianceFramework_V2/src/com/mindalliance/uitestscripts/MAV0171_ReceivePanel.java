@@ -69,8 +69,11 @@ public class MAV0171_ReceivePanel extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Check 'Receives' panel is present 
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Check 'Receives' panel is present 
 			planPage.checkReceivesPanel(testData.get("receives"));
 					
 			// Sign Out from 'Plan' page
@@ -93,8 +96,6 @@ public class MAV0171_ReceivePanel extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0171_ReceivePanel.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

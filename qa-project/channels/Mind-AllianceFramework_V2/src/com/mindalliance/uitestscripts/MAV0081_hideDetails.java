@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0081_hideDetails
  * Summary: Verify that task information gets hidden
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0081_hideDetails extends TestCase{
@@ -75,8 +75,11 @@ public class MAV0081_hideDetails extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Add New Task'under 'Actions' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add New Task'under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));		
 		
@@ -103,8 +106,6 @@ public class MAV0081_hideDetails extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0081_hideDetails.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

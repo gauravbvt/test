@@ -78,9 +78,12 @@ public class MAV0035_closeSurveysWindow extends TestCase {
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 				
 			// Click on 'All Surveys' under 'Participations' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Participations"));
 			planPage.clickSubmenu(testData.get("AllSurveys"));
 			
@@ -105,8 +108,6 @@ public class MAV0035_closeSurveysWindow extends TestCase {
 	}
 	/**
      * Loads Test Data for MAV0035_closeSurveysWindow
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

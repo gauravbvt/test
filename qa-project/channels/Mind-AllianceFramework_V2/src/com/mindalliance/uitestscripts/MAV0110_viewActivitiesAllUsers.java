@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0110_viewActivitiesAllUsers 
  * Summary: Verify that in Activities tab is present on home page
- * @author: AFour
+ * @author afour
  */
 public class MAV0110_viewActivitiesAllUsers extends TestCase{
 	public Hashtable<String, String> testData;
@@ -73,8 +73,11 @@ public class MAV0110_viewActivitiesAllUsers extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Activities' tab under 'Collaboration Panel'
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Activities' tab under 'Collaboration Panel'
 			planPage.clickActivitiesTab();
 						
 			// Click on 'hide my activites' link
@@ -98,8 +101,6 @@ public class MAV0110_viewActivitiesAllUsers extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0110_viewActivitiesAllUsers.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

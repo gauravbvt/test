@@ -70,8 +70,11 @@ public class MAV0113_viewMessages extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Messages' tab under 'Collaboration Panel'
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Messages' tab under 'Collaboration Panel'
 			planPage.clickMessagesTab();
 					
 			//Sign Out from 'Plan' page
@@ -92,8 +95,6 @@ public class MAV0113_viewMessages extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0113_viewMessages.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

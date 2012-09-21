@@ -25,6 +25,7 @@ import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
+import com.mindalliance.pages.PlanPage;
 
 import junit.framework.TestCase;
 
@@ -32,8 +33,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0103_viewHelpFormWithFeedback
  * Summary: Verify that Help Window with Feedback gets opened
- * @author: AFour
- *
+ * @author afour
  */
 public class MAV0103_viewHelpFormWithFeedback extends TestCase{
 
@@ -78,9 +78,13 @@ public class MAV0103_viewHelpFormWithFeedback extends TestCase{
 		    HomePage homePage=new HomePage();
 		    homePage.clickCollaborationPlanLink();
 		    
+		    // Close Plan Map window
+ 			PlanPage planPage=new PlanPage();
+ 			planPage.closePlanMap();
+		    
 		    // Click on 'Help' button
 		    HeaderController headerController=new HeaderController();
-		    headerController.helpOnPlanPage();
+		    headerController.clickHelpOnPlanPage();
 		    
 		    // Click on 'Send Feedback' button on 'Help' page
 		    headerController.sendFeedbackOnHelp();
@@ -106,8 +110,6 @@ public class MAV0103_viewHelpFormWithFeedback extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0103_viewHelpFormWithFeedback.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

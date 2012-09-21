@@ -70,8 +70,12 @@ public class MAV0189_GoalsLink extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-						
+			
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+						
+			// Add new segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -117,8 +121,6 @@ public class MAV0189_GoalsLink extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0189_GoalsLink.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

@@ -71,8 +71,11 @@ public class MAV0201_AddInfoReceiveSendIntent extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Add New Segment
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Add New Segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -126,8 +129,6 @@ public class MAV0201_AddInfoReceiveSendIntent extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0201_AddInfoReceiveSendIntent.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

@@ -33,8 +33,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0066_viewAllSegmentsActionList
  * Summary: Verify that Actions gets Hovered
- * @author: AFour
- *
+ * @author afour
  */
 public class MAV0066_viewAllSegmentsActionList extends TestCase{
 	public Hashtable<String, String> testData;
@@ -76,9 +75,12 @@ public class MAV0066_viewAllSegmentsActionList extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 				
 			// Click on 'About Plan Segment' under 'Show' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
 						
@@ -108,8 +110,6 @@ public class MAV0066_viewAllSegmentsActionList extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0066_viewAllSegmentsActionList.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

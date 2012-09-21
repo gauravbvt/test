@@ -32,8 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0025_closeAboutPlanWindow
  * Summary: Verify that window with title "About Plan:<Plan Name>" gets closed 
- * @author: AFour
- *
+ * @author afour
  */
 
 public class MAV0025_closeAboutPlanWindow extends TestCase{
@@ -77,9 +76,12 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 						
 			// Click on 'About Plan' under 'Show' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlan"));
 						
@@ -106,8 +108,6 @@ public class MAV0025_closeAboutPlanWindow extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0025_closeAboutPlanWindow.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

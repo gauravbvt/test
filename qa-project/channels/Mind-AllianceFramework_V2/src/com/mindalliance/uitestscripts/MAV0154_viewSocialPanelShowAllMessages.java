@@ -91,8 +91,6 @@ public class MAV0154_viewSocialPanelShowAllMessages extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0154_viewSocialPanelShowAllMessages.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

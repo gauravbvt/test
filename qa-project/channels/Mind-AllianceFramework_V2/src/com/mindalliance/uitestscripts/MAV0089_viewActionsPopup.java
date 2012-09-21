@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0089_viewActionsPopup
  * Summary: Verify that Action gets Hovered
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0089_viewActionsPopup extends TestCase{
@@ -73,10 +73,13 @@ public class MAV0089_viewActionsPopup extends TestCase{
 			
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 			
 			// Click on 'Add New Task'under 'Actions' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));	
 					
@@ -102,8 +105,6 @@ public class MAV0089_viewActionsPopup extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0089_viewActionsPopup.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

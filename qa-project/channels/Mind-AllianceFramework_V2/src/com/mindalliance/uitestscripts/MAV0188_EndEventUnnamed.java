@@ -69,8 +69,12 @@ public class MAV0188_EndEventUnnamed extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-						
+			
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+						
+			// Add new segement
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -113,8 +117,6 @@ public class MAV0188_EndEventUnnamed extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0188_EndEventUnnamed.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

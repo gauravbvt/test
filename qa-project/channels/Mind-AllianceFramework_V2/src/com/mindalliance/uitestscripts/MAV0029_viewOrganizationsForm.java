@@ -32,8 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0029_viewOrganizationsForm
  * Summary: Verify that form with heading "Organizations" gets loaded on the About Plan Segment window 
- * @author: AFour
- *
+ * @author afour
  */
 
 public class MAV0029_viewOrganizationsForm extends TestCase {
@@ -79,8 +78,11 @@ public class MAV0029_viewOrganizationsForm extends TestCase {
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'About Plan Segment' under 'Show' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'About Plan Segment' under 'Show' pop up menu
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
 			
@@ -110,8 +112,6 @@ public class MAV0029_viewOrganizationsForm extends TestCase {
 	
 	/**
      * Loads Test Data for MAV0029_viewOrganizationsForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

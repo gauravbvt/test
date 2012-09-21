@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0086_closeFailureImpact
  * Summary: Verify that failure impact window is displayed and closed
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0086_closeFailureImpact extends TestCase{
@@ -77,8 +77,11 @@ public class MAV0086_closeFailureImpact extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Add New Task'under 'Actions' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add New Task'under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));		
 					
@@ -108,8 +111,6 @@ public class MAV0086_closeFailureImpact extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0086_closeFailureImpact.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

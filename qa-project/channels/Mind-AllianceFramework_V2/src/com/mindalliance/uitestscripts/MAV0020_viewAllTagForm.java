@@ -32,8 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0020_viewAllTagForm 
  * Summary: Verify that form with heading "All tags" gets loaded on the About Plan window
- * @author: AFour
- *
+ * @author afour
  */
 public class MAV0020_viewAllTagForm extends TestCase{
 	public Hashtable<String, String> testData;
@@ -76,8 +75,11 @@ public class MAV0020_viewAllTagForm extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on Index' under 'Searching' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on Index' under 'Searching' pop up menu
 			planPage.clickPopupMenu(testData.get("Searching"));
 			planPage.clickSubmenu(testData.get("Tags"));
 	
@@ -103,8 +105,6 @@ public class MAV0020_viewAllTagForm extends TestCase{
 
 	/**
      * Loads Test Data for MAV0020_viewAllTagForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

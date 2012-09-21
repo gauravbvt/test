@@ -32,8 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0082_TaskDetails
  * Summary: Verify that task information gets displayed
- * @author: AFour
- *
+ * @author afour
  */
 public class MAV0082_TaskDetails extends TestCase{
 public Hashtable<String, String> testData;
@@ -76,8 +75,11 @@ public Hashtable<String, String> testData;
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Add New Task'under 'Actions' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add New Task'under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));		
 			
@@ -103,8 +105,6 @@ public Hashtable<String, String> testData;
 	
 	/**
      * Loads Test Data for MAV0082_TaskDetails.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

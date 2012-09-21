@@ -96,8 +96,6 @@ public class MAP0001_AddPlan extends TestCase {
 	}
 	/**
      * Loads Test Data for MAP0001_AddPlan.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

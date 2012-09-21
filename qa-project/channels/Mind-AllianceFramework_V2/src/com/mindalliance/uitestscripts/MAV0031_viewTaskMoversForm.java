@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0031_viewTaskMoversForm
  * Summary: Verify that form with heading "Task Mover" gets loaded on the About Plan Segment window   
- * @author: AFour
+ * @author afour
  *
  */
 
@@ -77,9 +77,12 @@ public class MAV0031_viewTaskMoversForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 							
 			// Click on 'Task Mover' under 'Improving' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Improving"));
 			planPage.clickSubmenu(testData.get("TaskMover"));
 								
@@ -102,6 +105,11 @@ public class MAV0031_viewTaskMoversForm extends TestCase{
 			Assert.fail(ue.getErrorMessage());
 		}
 	}
+	
+	/**
+	 * Loads test data
+	 * @throws UIAutomationException
+	 */
 	public void loadTestData() throws UIAutomationException
 	{
 		try{

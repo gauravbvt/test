@@ -72,8 +72,11 @@ public class MAV0172_SendPanel extends TestCase {
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Check 'Sends' panel is present 
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Check 'Sends' panel is present 
 			planPage.checkSendsPanel(testData.get("Sends"));
 					
 			// Sign Out from 'Plan' page
@@ -96,8 +99,6 @@ public class MAV0172_SendPanel extends TestCase {
 	
 	/**
      * Loads Test Data for MAV0172_SendPanel.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

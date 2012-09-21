@@ -70,8 +70,11 @@ public class MAV0114_hideBroadcasts extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Messages' tab under 'Collaboration Panel'
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Messages' tab under 'Collaboration Panel'
 			planPage.clickMessagesTab();
 			
 			// Click on 'hide broadcast' link and 'show all messages' link
@@ -95,8 +98,6 @@ public class MAV0114_hideBroadcasts extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0114_hideBroadcasts.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -71,8 +71,11 @@ public class MAV0125_copyFlow extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
-			// Click on 'Add' button under 'Receives' panel
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add' button under 'Receives' panel
 			planPage.clickAddInReceivesPanel();
 			
 			// Enter Information Name
@@ -107,8 +110,6 @@ public class MAV0125_copyFlow extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0125_copyFlow.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

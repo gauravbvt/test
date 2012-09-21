@@ -70,9 +70,12 @@ public class MAV0067_closeAllSegmentWindow extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 				
 			// Click on 'About Plan Segment' under 'Show' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
 						
@@ -99,8 +102,6 @@ public class MAV0067_closeAllSegmentWindow extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0067_closeAllSegmentWindow.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

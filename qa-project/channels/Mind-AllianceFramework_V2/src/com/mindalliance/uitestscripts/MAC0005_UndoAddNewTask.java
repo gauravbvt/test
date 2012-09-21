@@ -32,7 +32,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Testcase ID: MAC0005_UndoAddNewTask
  * 	   Summary: Verify that user is able to undo the added task
- * @author AFour
+ * @author afour
  * 
  */
 public class MAC0005_UndoAddNewTask extends TestCase {
@@ -75,9 +75,12 @@ public class MAC0005_UndoAddNewTask extends TestCase {
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 						
 			// Click on 'Add New Segment' under 'Actions' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 						
@@ -121,8 +124,6 @@ public class MAC0005_UndoAddNewTask extends TestCase {
 	
 	/**
      * Loads Test Data for MAC0005_UndoAddNewTask.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0126_copyNeed
  * Summary: Verify that message "Need  copied" is displayed on the heading section of "Plan" page
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0126_copyNeed extends TestCase{
@@ -76,8 +76,11 @@ public class MAV0126_copyNeed extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
-			// Click on 'Add' button under 'Receives' panel
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add' button under 'Receives' panel
 			planPage.clickAddInReceivesPanel();
 			 
 			// Click on 'Copy Need' under 'Actions' pop up menu
@@ -103,8 +106,6 @@ public class MAV0126_copyNeed extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0126_copyNeed.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

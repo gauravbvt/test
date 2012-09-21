@@ -33,7 +33,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0101_closeTaskMover
  * Summary: Verify that About Plan Segment Window gets closed.
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0101_closeTaskMover extends TestCase{
@@ -76,9 +76,12 @@ public class MAV0101_closeTaskMover extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click Actions pop up menu and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));	
 									
@@ -115,8 +118,6 @@ public class MAV0101_closeTaskMover extends TestCase{
 
 	/**
      * Loads Test Data for MAV0101_closeTaskMover.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

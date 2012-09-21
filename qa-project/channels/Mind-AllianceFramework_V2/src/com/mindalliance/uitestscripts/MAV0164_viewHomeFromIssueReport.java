@@ -90,8 +90,6 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0164_viewHomeFromIssueReport.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

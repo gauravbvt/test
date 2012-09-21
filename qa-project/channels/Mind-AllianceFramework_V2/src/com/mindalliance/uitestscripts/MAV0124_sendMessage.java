@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0124_sendMessage
  * Summary: Verify that "Messages" tab opens on the right side of pane
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0124_sendMessage extends TestCase{
@@ -75,8 +75,11 @@ public class MAV0124_sendMessage extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
-			// Click on 'Add' button under 'Receives' panel
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add' button under 'Receives' panel
 			planPage.clickAddInReceivesPanel();
 			
 			// Click on 'Send Message' under 'Show' pop up of 'Receives' panel
@@ -102,8 +105,6 @@ public class MAV0124_sendMessage extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0124_sendMessage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

@@ -32,7 +32,7 @@ import com.mindalliance.pages.LoginPage;
 /**
  * Test case ID: MAP0005_DeletePlan
  * 	   Summary: Verify that admin is able to delete the plan added
- * @author AFour
+ * @author afour
  * 
  */
 
@@ -102,8 +102,6 @@ public class MAP0005_DeletePlan extends TestCase {
 	}
 	/**
      * Loads Test Data for MAP0005_DeletePlan.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

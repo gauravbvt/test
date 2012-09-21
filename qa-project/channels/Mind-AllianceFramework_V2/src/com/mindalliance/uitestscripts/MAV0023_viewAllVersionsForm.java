@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0023_viewAllVersionsForm
  * Summary:  Verify that form with heading "Versions" gets loaded on the About Plan window
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0023_viewAllVersionsForm extends TestCase{
@@ -75,9 +75,12 @@ public Hashtable<String, String> testData;
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-				
-			// Click on 'Plan Version' under 'Improving' pop up menu
+			
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+	
+			// Click on 'Plan Version' under 'Improving' pop up menu
 			planPage.clickPopupMenu(testData.get("Improving"));
 			planPage.clickSubmenu(testData.get("PlanVersion"));
 		
@@ -100,6 +103,10 @@ public Hashtable<String, String> testData;
 			Assert.fail(ue.getErrorMessage());
 		}
 	}
+	/**
+	 * Loads test data
+	 * @throws UIAutomationException
+	 */
 	public void loadTestData() throws UIAutomationException
 	{
 		try{

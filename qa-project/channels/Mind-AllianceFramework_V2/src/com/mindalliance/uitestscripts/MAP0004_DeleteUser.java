@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * Test case ID: MAP0004_DeleteUser
  * 	   Summary: Verify that admin is able to delete added user
- * @author AFour
+ * @author afour
  * 
  */
 public class MAP0004_DeleteUser extends TestCase{
@@ -100,8 +100,6 @@ public class MAP0004_DeleteUser extends TestCase{
 	}
 	/**
      * Loads Test Data for MAP0004_DeleteUser.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

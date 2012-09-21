@@ -32,7 +32,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Test Case Id: MAV0008_hidePlannerInfo
  * Summary: Verify that Planner's information on the right pane gets hidden
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0008_hidePlannerInfo extends TestCase{
@@ -101,8 +101,6 @@ public class MAV0008_hidePlannerInfo extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0008_hidePlannerInfo.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

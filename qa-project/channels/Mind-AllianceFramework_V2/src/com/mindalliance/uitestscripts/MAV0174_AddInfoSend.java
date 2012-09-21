@@ -71,19 +71,17 @@ public class MAV0174_AddInfoSend extends TestCase {
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
-			// Click on 'Add' button under 'Sends' panel
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add' button under 'Sends' panel
 			planPage.clickAddInSendsPanel();
-		
-			// Assertion: Verify Info Sahring Capability is added
-			
-			
+					
 			// Click on 'Remove Info Sharing Capability' under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoSharingCapabilityInSendsPanel"));	
-			
-			// Assertion: Verify Info Sharing Capability is removed 
-			
+							
 			// Sign Out from 'Home' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
@@ -103,8 +101,6 @@ public class MAV0174_AddInfoSend extends TestCase {
 	
 	/**
      * Loads Test Data for MAV0174_AddInfoSend.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

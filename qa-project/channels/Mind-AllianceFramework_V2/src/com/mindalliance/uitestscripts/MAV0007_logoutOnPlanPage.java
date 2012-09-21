@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 /**
  * Test Case Id: MAV0007_logoutOnPlanPage
  * Summary: Verify that the page with title "Channels Information Sharing Planning" renders
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0007_logoutOnPlanPage extends TestCase{
@@ -92,8 +92,6 @@ public class MAV0007_logoutOnPlanPage extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0007_logoutOnPlanPage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

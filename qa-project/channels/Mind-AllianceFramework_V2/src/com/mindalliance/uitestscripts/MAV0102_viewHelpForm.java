@@ -25,6 +25,7 @@ import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
+import com.mindalliance.pages.PlanPage;
 
 import junit.framework.TestCase;
 
@@ -32,7 +33,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0101_closeTaskMover
  * Summary: Verify that Help Window gets Opened
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0102_viewHelpForm extends TestCase{
@@ -77,9 +78,13 @@ public class MAV0102_viewHelpForm extends TestCase{
 		    HomePage homePage=new HomePage();
 		    homePage.clickCollaborationPlanLink();
 		    
+		    // Close Plan Map window
+ 			PlanPage planPage=new PlanPage();
+ 			planPage.closePlanMap();
+		    
 		    // Click on 'Help' button
 		    HeaderController headerController=new HeaderController();
-		    headerController.helpOnPlanPage();
+		    headerController.clickHelpOnPlanPage();
 		    
 		    headerController.switchToPlanPage();
 		   
@@ -101,8 +106,6 @@ public class MAV0102_viewHelpForm extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0102_viewHelpForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

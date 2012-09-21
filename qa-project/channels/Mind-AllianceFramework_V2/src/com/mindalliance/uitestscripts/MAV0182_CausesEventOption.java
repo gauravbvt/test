@@ -71,8 +71,11 @@ public class MAV0182_CausesEventOption extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click Actions pop up menu and Add New Segment
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click Actions pop up menu and Add New Segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -118,8 +121,6 @@ public class MAV0182_CausesEventOption extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0182_CausesEventOption.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

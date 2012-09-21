@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0109_hideInactiveUsers 
  * Summary: Verify that in presence tab users hidden by clicking on 'hide inactive user' respectively
- * @author: AFour
+ * @author afour
  */
 public class MAV0109_hideInactiveUsers extends TestCase{
 	public Hashtable<String, String> testData;
@@ -74,8 +74,11 @@ public class MAV0109_hideInactiveUsers extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Presence' tab under 'Collaboration Panel'
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Presence' tab under 'Collaboration Panel'
 			planPage.clickPresenceTab();
 			
 			// Click on 'Show All User' link and 'hide inactive user link'
@@ -99,8 +102,6 @@ public class MAV0109_hideInactiveUsers extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0109_hideInactiveUsers.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

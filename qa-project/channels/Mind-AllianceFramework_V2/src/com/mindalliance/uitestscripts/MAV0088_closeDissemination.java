@@ -31,7 +31,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * TestCase Id: MAV0088_closeDissemination
  * Summary: Verify that dissiminaton window is displayed and closed
- * @author: AFour
+ * @author afour
  */
 public class MAV0088_closeDissemination extends TestCase{
 
@@ -75,8 +75,11 @@ public class MAV0088_closeDissemination extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Add New Task'under 'Actions' pop up menu
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Add New Task'under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));	
 						
@@ -106,8 +109,6 @@ public class MAV0088_closeDissemination extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0088_closeDissemination.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

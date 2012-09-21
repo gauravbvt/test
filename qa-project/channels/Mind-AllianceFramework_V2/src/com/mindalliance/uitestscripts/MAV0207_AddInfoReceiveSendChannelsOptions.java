@@ -71,8 +71,11 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Add New Segment
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Add New Segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -141,8 +144,6 @@ public class MAV0207_AddInfoReceiveSendChannelsOptions extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0207_AddInfoReceiveSendChannelsOptions.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

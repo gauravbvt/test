@@ -83,8 +83,6 @@ public class MAV0157_viewSocialPanelCalender extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0157_viewSocialPanelCalender.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

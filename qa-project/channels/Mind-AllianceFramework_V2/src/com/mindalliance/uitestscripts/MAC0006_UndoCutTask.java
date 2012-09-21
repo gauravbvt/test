@@ -32,7 +32,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Testcase ID: MAC0006_UndoCutTask
  * 	   Summary: Verify that user is able to undo the task which was cut
- * @author AFour
+ * @author afour
  * 
  */
 public class MAC0006_UndoCutTask extends TestCase {
@@ -77,9 +77,12 @@ public class MAC0006_UndoCutTask extends TestCase {
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click on Actions pop up and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 						
@@ -130,8 +133,6 @@ public class MAC0006_UndoCutTask extends TestCase {
 	
 	/**
      * Loads Test Data for MAC0006_UndoCutTask.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

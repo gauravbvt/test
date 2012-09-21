@@ -32,11 +32,10 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0010_viewAllEventForm
  * Summary: Verify that form with heading "All Events" gets loaded on the About Plan window
- * @author: AFour
+ * @author afour
  *
  */
-public class MAV0010_viewAllEventForm extends TestCase
-{
+public class MAV0010_viewAllEventForm extends TestCase{
 	public Hashtable<String, String> testData;
 	
 	@Before
@@ -76,9 +75,12 @@ public class MAV0010_viewAllEventForm extends TestCase
 		    // Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 							
 			// Click on 'Events Ijn Scope' under 'Scoping' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("EventsInScope"));
 						
@@ -105,8 +107,6 @@ public class MAV0010_viewAllEventForm extends TestCase
 	
 	/**
      * Loads Test Data for MAV0010_viewAllEventForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

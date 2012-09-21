@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0098_removeSegmentUnderAction 
  * Summary: Verify that segment is added, removed
- * @author: AFour
+ * @author afour
  */
 public class MAV0098_removeSegmentUnderAction extends TestCase{
 
@@ -73,10 +73,13 @@ public class MAV0098_removeSegmentUnderAction extends TestCase{
 					
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click Actions pop up menu and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));	
 		
@@ -106,8 +109,6 @@ public class MAV0098_removeSegmentUnderAction extends TestCase{
 
 	/**
      * Loads Test Data for MAV0098_removeSegmentUnderAction.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

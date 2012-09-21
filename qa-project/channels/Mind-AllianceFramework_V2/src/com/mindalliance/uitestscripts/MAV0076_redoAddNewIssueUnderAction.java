@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 /**
  * Test case ID: MAV0076_redoAddNewIssueUnderAction
  * 	   Summary: Verify that user is able to redo add new issue
- * @author AFour
+ * @author afour
  * 
  */
 
@@ -78,10 +78,13 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
 				
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click Actions pop up menu and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewIssue"));
 				
@@ -113,8 +116,6 @@ public class MAV0076_redoAddNewIssueUnderAction extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0076_redoAddNewIssueUnderAction.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

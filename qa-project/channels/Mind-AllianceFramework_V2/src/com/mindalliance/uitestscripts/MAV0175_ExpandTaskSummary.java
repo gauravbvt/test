@@ -70,14 +70,15 @@ public Hashtable<String, String> testData;
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click on 'Details' under 'Show' pop up menu of task
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("ShowInTask"));
 			planPage.clickSubmenu(testData.get("Details"));	
 			
-			// Assertion: Verify details are present 
-									
 			//Sign Out from 'Home' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
@@ -97,8 +98,6 @@ public Hashtable<String, String> testData;
 	
 	/**
      * Loads Test Data for MAV0175_ExpandTaskSummary.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

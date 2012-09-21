@@ -32,8 +32,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Testcase ID: MAC0007_UndoPasteTaskUsingCut
  * 	   Summary: Verify that user is able to undo the task which was pasted using cut command
- * @author AFour
- * 
+ * @author afour 
  */
 public class MAC0007_UndoPasteTaskUsingCut extends TestCase {
 	public Hashtable<String, String> testData;
@@ -75,9 +74,12 @@ public class MAC0007_UndoPasteTaskUsingCut extends TestCase {
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click on Actions pop up and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 								
@@ -149,8 +151,6 @@ public class MAC0007_UndoPasteTaskUsingCut extends TestCase {
 	
 	/**
      * Loads Test Data for MAC0007_UndoPasteTaskUsingCut.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

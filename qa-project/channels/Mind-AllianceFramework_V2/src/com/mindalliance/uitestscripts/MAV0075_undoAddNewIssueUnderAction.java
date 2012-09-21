@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * Test case ID: MAV0075_undoAddNewIssueUnderAction
  * 	   Summary: Verify that user is able to undo add new issue
- * @author AFour
+ * @author afour
  * 
  */
 public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
@@ -74,10 +74,13 @@ public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
 				
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click 'New Issue' under 'Actions' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewIssue"));
 			
@@ -108,8 +111,6 @@ public class MAV0075_undoAddNewIssueUnderAction extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0075_undoAddNewIssueUnderAction.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -65,8 +65,11 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Add New Segment
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Add New Segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -83,7 +86,7 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 			planPage.clickShowAdvancedFormInSendsPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
 			
 			// Click on 'Elements' in sends panel
-			planPage.clickElementInSendsPanel();
+			planPage.clickElementInSendsPanel(testData.get("HeadingOfEOIWindow"));
 			
 			// Close EOI window
 			planPage.closeEOIWindow();
@@ -95,7 +98,7 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 			planPage.clickShowAdvancedFormInReceivesPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
 						
 			// Click on 'Elements' in receives panel
-			planPage.clickElementInReceivesPanel();
+			planPage.clickElementInReceivesPanel(testData.get("HeadingOfEOIWindow"));
 			
 			// Close EOI window 
 			planPage.closeEOIWindow();
@@ -123,8 +126,6 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0202_AddInfoReceiveSendElementsLink.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{
@@ -152,6 +153,8 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 			this.testData.put("RemoveThisSegment",oXmlEleMAV0202_AddInfoReceiveSendElementsLink.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("SendsInformation",oXmlEleMAV0202_AddInfoReceiveSendElementsLink.getElementsByTagName("sendsInformation").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ReceivesInformation",oXmlEleMAV0202_AddInfoReceiveSendElementsLink.getElementsByTagName("receivesInformation").item(0).getChildNodes().item(0).getNodeValue());
+			
+			this.testData.put("HeadingOfEOIWindow",oXmlEleMAV0202_AddInfoReceiveSendElementsLink.getElementsByTagName("headingOfEOIWindow").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAV0202_AddInfoReceiveSendElementsLink not found.");

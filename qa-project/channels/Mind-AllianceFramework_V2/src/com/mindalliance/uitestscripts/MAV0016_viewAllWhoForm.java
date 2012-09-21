@@ -32,8 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0016_viewAllWhoForm
  * Summary: Verify that form with heading "Who's who" gets loaded on the About Plan window
- * @author: AFour
- *
+ * @author afour
  */
 public class MAV0016_viewAllWhoForm extends TestCase{
 	public Hashtable<String, String> testData;
@@ -75,9 +74,12 @@ public class MAV0016_viewAllWhoForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-							
-			// Click on 'Who's Who' under 'Searching' pop up menu
+				
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Who's Who' under 'Searching' pop up menu
 			planPage.clickPopupMenu(testData.get("Searching"));
 			planPage.clickSubmenu(testData.get("Who's Who"));
 			
@@ -100,6 +102,10 @@ public class MAV0016_viewAllWhoForm extends TestCase{
 			Assert.fail(ue.getErrorMessage());
 		}
 	}
+	/**
+	 * load test data
+	 * @throws UIAutomationException
+	 */
 	public void loadTestData() throws UIAutomationException
 	{
 		try{

@@ -33,7 +33,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Test case ID: MAC0003_UndoAddGoal
  * 	   Summary: Verify that user is able to undo the added goal
- * @author AFour
+ * @author afour
  * 
  */
 public class MAC0003_UndoAddGoal extends TestCase {
@@ -77,8 +77,11 @@ public class MAC0003_UndoAddGoal extends TestCase {
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
-			// Click Actions pop up menu and Add New Segment
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click Actions pop up menu and Add New Segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 		
@@ -122,8 +125,6 @@ public class MAC0003_UndoAddGoal extends TestCase {
 	
 	/**
      * Loads Test Data for MAC0003_UndoAddGoal.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

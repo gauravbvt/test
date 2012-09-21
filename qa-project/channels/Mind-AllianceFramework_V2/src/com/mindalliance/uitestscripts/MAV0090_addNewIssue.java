@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0090_addNewIssue
  * Summary: Verify that issue is added
- * @author: AFour
+ * @author afour
  */
 
 public class MAV0090_addNewIssue extends TestCase{
@@ -73,9 +73,12 @@ public class MAV0090_addNewIssue extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click 'New Issue' under 'Actions' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewIssue"));	
 			
@@ -102,8 +105,6 @@ public class MAV0090_addNewIssue extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0090_addNewIssue.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0087_Dissimination
  * Summary: Verify that dissiminaton window is displayed
- * @author: AFour
+ * @author afour
  */
 public class MAV0087_Dissimination extends TestCase{
 	public Hashtable<String, String> testData;
@@ -73,10 +73,13 @@ public class MAV0087_Dissimination extends TestCase{
 			
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 			
 			// Click on 'Add New Task'under 'Actions' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));	
 						
@@ -106,8 +109,6 @@ public class MAV0087_Dissimination extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0087_Dissimination.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

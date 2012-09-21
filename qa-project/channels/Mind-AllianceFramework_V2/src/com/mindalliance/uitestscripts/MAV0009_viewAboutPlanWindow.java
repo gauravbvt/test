@@ -33,7 +33,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Test Case Id: MAV0009_viewAboutPlanWindow
  * Summary: "Verify that window with title 'About Plan:<Plan Name>' gets loaded";
- * @author: AFour
+ * @author afour
  */
 public class MAV0009_viewAboutPlanWindow extends TestCase{
 	public Hashtable<String, String> testData;
@@ -75,9 +75,12 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-						
-			// Click on 'About Plan' under 'Show' pop up menu
+					
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+
+			// Click on 'About Plan' under 'Show' pop up menu
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlan"));
 							
@@ -104,8 +107,6 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0009_viewAboutPlanWindow.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

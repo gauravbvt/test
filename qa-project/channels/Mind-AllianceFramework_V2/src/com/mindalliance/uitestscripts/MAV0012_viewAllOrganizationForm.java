@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0012_viewAllOrganizationForm
  * Summary: Verify that form with heading "All Organizations" gets loaded on the About Plan window
- * @author AFour
+ * @author afour
  *
  */
 public class MAV0012_viewAllOrganizationForm extends TestCase{
@@ -74,9 +74,12 @@ public class MAV0012_viewAllOrganizationForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-							
-			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
+						
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("OrganizationsInScope"));
 			
@@ -104,8 +107,6 @@ public class MAV0012_viewAllOrganizationForm extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0012_viewAllOrganizationForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

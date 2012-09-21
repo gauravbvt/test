@@ -32,11 +32,12 @@ import com.mindalliance.pages.PlanPage;
  * Testcase ID: MAC0001_UndoAddSegment
  * 	   Summary: Verify that user is able to undo the added segment
  * 		  Note: No 'undo add new segment' option. TicketNo.49
- * @author AFour
+ * @author afour
  * 
  */
 public class MAC0001_UndoAddSegment extends TestCase {
 	public Hashtable<String, String> testData;
+	String fileName = "PlanPage.xml";
 	
 	@Before
 	protected void setUp(){
@@ -73,20 +74,31 @@ public class MAC0001_UndoAddSegment extends TestCase {
 				
 			// Plan Page
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickCollaborationPlanLink();
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 					
 			// Click Actions pop up menu and Add New Segment
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			
+						
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForUndoAddSegment"));
-				
+			
+//			// Verify segment is added with segment name 'untitled'
+//			ElementController elementController=new ElementController();
+//			elementController.requireElementSmart(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
+//			String segmentName=UIActions.getText(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
+//			if(!testData.get("Untitled").equals(segmentName)){
+//				throw new UIAutomationException("New segment not added.");
+//			}
+			
 			// Close Segment window
 			planPage.closeSegmentWindow();
 			
-			// Click on 'Undo Update Segment
+			// Click on 'Undo Update Segment'
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoUpdateSegment"));
 						
@@ -114,8 +126,6 @@ public class MAC0001_UndoAddSegment extends TestCase {
 	
 	/**
      * Loads Test Data for MAC0001_UndoAddSegment.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -141,6 +151,7 @@ public class MAC0001_UndoAddSegment extends TestCase {
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0001_UndoAddSegment.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ChannelsURL",oXmlEleMAC0001_UndoAddSegment.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Title",oXmlEleMAC0001_UndoAddSegment.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Untitled",oXmlEleMAC0001_UndoAddSegment.getElementsByTagName("untitled").item(0).getChildNodes().item(0).getNodeValue());
 			
 		}
 		catch(SAXException se){

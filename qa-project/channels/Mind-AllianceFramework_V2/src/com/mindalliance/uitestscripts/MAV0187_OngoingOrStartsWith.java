@@ -70,8 +70,12 @@ public class MAV0187_OngoingOrStartsWith extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-						
+			
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+						
+			// add new segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			
@@ -114,8 +118,6 @@ public class MAV0187_OngoingOrStartsWith extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0187_OngoingOrStartsWith.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

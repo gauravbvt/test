@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * Test Case Id: MAV0005_logoutOnAdminPage
  * Summary: Verify that user is able to Logout from Admin Page
- * @author : AfourTech
+ * @author afour
  *
  */
 public class MAV0005_logoutOnAdminPage extends TestCase{
@@ -93,8 +93,6 @@ public class MAV0005_logoutOnAdminPage extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0005_logoutOnAdminPage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

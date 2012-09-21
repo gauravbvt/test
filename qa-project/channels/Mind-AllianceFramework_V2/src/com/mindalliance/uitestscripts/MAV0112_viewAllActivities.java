@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0112_viewAllActivities 
  * Summary: Verify that in Activities tab by clicking 'show all activities' all activities gets displayed
- * @author: AFour
+ * @author afour
  */
 public class MAV0112_viewAllActivities extends TestCase{
 	public Hashtable<String, String> testData;
@@ -74,8 +74,11 @@ public class MAV0112_viewAllActivities extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
 			
-			// Click on 'Activities' tab under 'Collaboration Panel'
+			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
+			
+			// Click on 'Activities' tab under 'Collaboration Panel'
 			planPage.clickActivitiesTab();
 						
 			// Click on 'hide my activites' link
@@ -99,8 +102,6 @@ public class MAV0112_viewAllActivities extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0112_viewAllActivities.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

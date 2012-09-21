@@ -31,7 +31,7 @@ import com.mindalliance.pages.LoginPage;
 /**
  * TestCase Id: MAV0006_redirectToPlanPage
  * Summary: Verify that the "Plan" page renders
- * @author: AFour
+ * @author afour
  *
  */
 public class MAV0006_redirectToPlanPage extends TestCase{
@@ -93,8 +93,6 @@ public class MAV0006_redirectToPlanPage extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0006_redirectToPlanPage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

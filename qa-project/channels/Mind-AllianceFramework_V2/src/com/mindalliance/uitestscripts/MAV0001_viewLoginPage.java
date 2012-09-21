@@ -75,8 +75,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0001_viewLoginPage.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

@@ -32,9 +32,8 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0022_viewAllParticipationsForm
  * Summary: Verify that form with heading "Participations" gets loaded on the About Plan window
- * @author: AFour
- *
- */
+ * @author afour
+*/
 
 public class MAV0022_viewAllParticipationsForm extends TestCase{
 	public Hashtable<String, String> testData;
@@ -76,9 +75,12 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 				
 			// Click on 'User As Agent' under 'Participations' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Participations"));
 			planPage.clickSubmenu(testData.get("UserAsAgents"));
 			
@@ -103,8 +105,6 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 	}
 	/**
      * Loads Test Data for MAV0022_viewAllParticipationsForm
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException

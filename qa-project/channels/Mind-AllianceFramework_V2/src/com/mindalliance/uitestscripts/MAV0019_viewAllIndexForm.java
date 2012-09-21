@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * TestCase ID: MAV0019_viewAllIndexForm
  * Summary: Verify that form with heading "Index" gets loaded on the About Plan window
- * @author AFour
+ * @author afour
  *
  */
 public class MAV0019_viewAllIndexForm extends TestCase{
@@ -75,9 +75,12 @@ public class MAV0019_viewAllIndexForm extends TestCase{
 			// Plan Page
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			
+			// Close Plan Map window
+			PlanPage planPage=new PlanPage();
+			planPage.closePlanMap();
 							
 			// Click on Index' under 'Searching' pop up menu
-			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Searching"));
 			planPage.clickSubmenu(testData.get("Index"));
 			
@@ -105,8 +108,6 @@ public class MAV0019_viewAllIndexForm extends TestCase{
 	
 	/**
      * Loads Test Data for MAV0019_viewAllIndexForm.
-     * @return void
-     * @param  void
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
