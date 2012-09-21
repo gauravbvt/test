@@ -10,6 +10,10 @@
 		<Name>Presence</Name>
 	</Element>
 	<Element>
+		<GivenName>Plan Requirements Actual Text</GivenName>
+		<Name>Information Sharing Requirements</Name>
+	</Element>
+	<Element>
 		<GivenName>Ongoing Text</GivenName>
 		<Name>ongoing</Name>
 	</Element>
@@ -182,7 +186,10 @@
 		<GivenName>Alert Window Title Of Remove Segment</GivenName>
 		<Title>Are you sure?</Title>
 	</Element>
-	
+	<Element>
+		<GivenName>Alert Window Title Of Remove Requirement</GivenName>
+		<Title>Remove requirement?</Title>
+	</Element>
 	<Element>
 		<GivenName>About Event Unnamed Title Actual Text</GivenName>
 		<Title>About Event:</Title>
@@ -198,6 +205,10 @@
 	<Element>
 		<GivenName>Need Copied Actual Text</GivenName>
 		<Name>Need copied</Name>
+	</Element>
+	<Element>
+		<GivenName>Capability Copied Actual Text</GivenName>
+		<Name>Capability copied</Name>
 	</Element>
 	<Element>
 		<GivenName>Strench Up Forms</GivenName>
@@ -218,13 +229,109 @@
 		<LinkText>Presence</LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Remove Expectation</GivenName>
+		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>CLOSE EDIT In Plan Requirement</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/div/span/table/tbody/tr/td[8]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Situation Dropdown In Plan Requirement</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/span/div/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Plan Requirements Text</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div/div/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Plan Requirements</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Definitions Tab In Plan Requirements</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[2]/div/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Satisfactions Tab In Plan Requirements</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>New Button In Definitions Tab In Plan Requirements</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/div/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Remove Requirement In Plan Requirements</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/div/a[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Requirement Definitions In Plan Requirements</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>req-defs</ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Show All Users</GivenName>
 		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Presence</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
@@ -243,13 +350,31 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Presence</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>Hide My Activities</GivenName>
 		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Organization Name Textbox In Organizations In Scope</GivenName>
+		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/fieldset/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Organization Table In Organizations In Scope</GivenName>
+		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -762,6 +887,25 @@
  	</Element>
  	
  	<Element>
+ 		<GivenName>Close Requirements Window</GivenName>
+ 		<Xpath>/html/body/form/div[14]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Actual Organization Window</GivenName>
+ 		<Xpath>/html/body/form/div[3]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
  		<GivenName>Close About Plan Window</GivenName>
  		<Xpath>/html/body/form/div[4]/div/div/div[3]/a/img</Xpath>
  		<Name></Name>
@@ -929,7 +1073,15 @@
     	<LinkText></LinkText>
     	<ClassName></ClassName>
  	</Element>
-	
+	<Element>
+ 		<GivenName>Element Of Information Window Heading</GivenName>
+ 		<Xpath>/html/body/form/div[8]/div/span/div/div/h1</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
  	<Element>
 		<GivenName>Undo Update Segment</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
@@ -939,7 +1091,15 @@
 		<LinkText>Undo Update Segment</LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>Description In Actual Organization</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[3]/td/textarea</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Undo Add New Issue</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
@@ -1017,8 +1177,8 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>>Close Plan Map Window</LinkText>
-		<ClassName></ClassName>
+		<LinkText>></LinkText>
+		<ClassName>float-bar-close</ClassName>
 	</Element>
 	
 	<Element>
@@ -1206,17 +1366,17 @@
 	</Element>
 	<Element>
 		<GivenName>Issue In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/ul/li/ul/li[9]/span/a/span</Xpath>
+		<Xpath></Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<LinkText>New Issue</LinkText>
+		<ClassName>dropmenu</ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>New Issue Text In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol</Xpath>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1273,6 +1433,25 @@
 	<Element>
 		<GivenName>Hide Details In Task Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Hide Details In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Hide Details In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1479,7 +1658,15 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>Show In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Actions In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/a/span</Xpath>
@@ -1535,6 +1722,15 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
+		<GivenName>Capability Copied Message</GivenName>
+		<Xpath>/html/body/div[2]/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
 		<GivenName>Send Message In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
@@ -1543,7 +1739,15 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>Send Message In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>About In Messages Text</GivenName>
 		<Xpath>/html/body/form/span/span/div/div/div[2]/div[4]/div[2]/span</Xpath>
@@ -1830,6 +2034,15 @@
 	<Element>
 		<GivenName>Remove Info Sharing Capability In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Copy Capability In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
