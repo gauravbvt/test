@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<addNewSegment>Add New Segment</addNewSegment>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<show>Show</show>
+<segmentForAddInfoRecieveShowPopUpMenu>Segment For Add Info Receive Show Pop Up Menu</segmentForAddInfoRecieveShowPopUpMenu>
+</elements>

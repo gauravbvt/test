@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<addNewSegment>Add New Segment</addNewSegment>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<segmentForaddInfoSentShowhideDetails>Segment For Add Info Sent Show Hide Details</segmentForaddInfoSentShowhideDetails>
+
+
+<showInSendsPanel>Show In Sends Panel</showInSendsPanel>
+<hideDetailsInSendsPanel>Hide Details In Sends Panel</hideDetailsInSendsPanel>
+</elements>
