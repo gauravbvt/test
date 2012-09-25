@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForUndoPasteTaskUsingCopy>Segment For Undo Paste Task Using Copy</segmentForUndoPasteTaskUsingCopy>
+<addNewTask>Add New Task</addNewTask>
+<taskName>Task 1</taskName>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<undoPasteTask>Undo Paste Task</undoPasteTask>
+<actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
+<copyTaskInActionsInTaskPanel>Copy Task</copyTaskInActionsInTaskPanel>
+<otherSegmentForUndoPasteTask>Other Segment For Undo Paste Task</otherSegmentForUndoPasteTask>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<pasteTask>Paste Task</pasteTask>
+<undoPasteTask>Undo Paste Task</undoPasteTask>
+</elements>

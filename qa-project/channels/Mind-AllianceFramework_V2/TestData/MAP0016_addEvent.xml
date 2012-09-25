@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForAddEvent>Segment For Add Event</segmentForAddEvent>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<show>Show</show>
+<aboutPlanSegment>About Plan Segment</aboutPlanSegment>
+<after>After</after>
+<low>Low</low>
+<event>Event For Add Event</event>
+</elements>
