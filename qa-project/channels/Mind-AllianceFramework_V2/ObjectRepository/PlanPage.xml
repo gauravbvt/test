@@ -6,6 +6,10 @@
 		<Title>About Plan:</Title>
 	</Element>
 	<Element>
+		<GivenName>Delete Phase Window Title</GivenName>
+		<Title>Delete phase?</Title>
+	</Element>
+	<Element>
 		<GivenName>Presence Name</GivenName>
 		<Name>Presence</Name>
 	</Element>
@@ -38,6 +42,10 @@
 	<Element>
 		<GivenName>Alert Window Title Of Cut Task</GivenName>
 		<Title>Are you sure?</Title>
+	</Element>
+	<Element>
+		<GivenName>Alert Window Title Of Delete Event</GivenName>
+		<Title>Remove from segment context?</Title>
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Goal</GivenName>
@@ -207,6 +215,10 @@
 		<Name>Need copied</Name>
 	</Element>
 	<Element>
+		<GivenName>Task Copied Actual Text</GivenName>
+		<Name>Task copied</Name>
+	</Element>
+	<Element>
 		<GivenName>Capability Copied Actual Text</GivenName>
 		<Name>Capability copied</Name>
 	</Element>
@@ -229,7 +241,33 @@
 		<LinkText>Presence</LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>Actual Phase In About Plan</GivenName>
+		<Xpath>/html/body/form/div[4]/div/div[3]/div/div/table/tbody/tr[5]/td/span/div/ul/li/span/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Close Actual Phase Window</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div/div[3]/a/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Phase Description</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[3]/td/textarea</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Remove Expectation</GivenName>
 		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/span/a/span</Xpath>
@@ -251,6 +289,15 @@
 	<Element>
 		<GivenName>Situation Dropdown In Plan Requirement</GivenName>
 		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/span/div/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Any Event Dropdown In Plan Requirement</GivenName>
+		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/span/div/select[2]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -317,12 +364,12 @@
 	</Element>
 	<Element>
 		<GivenName>Requirement Definitions In Plan Requirements</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/div/div/h3</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id192</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>req-defs</ClassName>
+		<ClassName>req</ClassName>
 	</Element>
 	
 	<Element>
@@ -366,17 +413,72 @@
 	<Element>
 		<GivenName>Organization Name Textbox In Organizations In Scope</GivenName>
 		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/fieldset/input</Xpath>
-		<Name></Name>
-		<Id></Id>
+		<Name>allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newInvolved</Name>
+		<Id>id182</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Organization Table In Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr</Xpath>
+		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/div[2]/div[2]/table/tbody</Xpath>
 		<Name></Name>
 		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>indices-table</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Agent In Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[2]/span/input</Xpath>
+		<Name></Name>
+		<Id>id1af</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Title In Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[3]/input</Xpath>
+		<Name></Name>
+		<Id>id1b0</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Role In Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[4]/span/input</Xpath>
+		<Name></Name>
+		<Id>id305</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Jurisdiction In Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[5]/span/input</Xpath>
+		<Name></Name>
+		<Id>id306</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Supervisor In Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[6]/span/input</Xpath>
+		<Name></Name>
+		<Id>id307</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Checkbox Of Agent  Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td/input</Xpath>
+		<Name></Name>
+		<Id>id1fa</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -415,6 +517,51 @@
 	<Element>
 		<GivenName>Tags In Task Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Location In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[4]/td/span/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Actor In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[5]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Role In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[6]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Organization In Task Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[8]/td/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Task Mover Table</GivenName>
+		<Xpath>/html/body/form/div[19]/div/span/div/div[2]/div/span/table/tbody</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -688,10 +835,10 @@
 		<GivenName>Actions</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/a/span</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id6c</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>Actions</LinkText>
-		<ClassName></ClassName>
+		<ClassName>menubar</ClassName>
 	</Element>
 	
 	<Element>
@@ -1092,6 +1239,60 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
+		<GivenName>Undo Remove Flow</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Duplicate Flow In Receives Panel</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Duplicate Flow</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Duplicate Flow</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Update Segment</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Remove Flow In Receives Panel</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Remove Flow</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Add Information Need</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Add Information Capability</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
 		<GivenName>Description In Actual Organization</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[3]/td/textarea</Xpath>
 		<Name></Name>
@@ -1162,6 +1363,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Undo Paste Task</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
@@ -1366,7 +1568,7 @@
 	</Element>
 	<Element>
 		<GivenName>Issue In Task Panel</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/ul/li/ul/li[8]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1620,6 +1822,15 @@
 		<LinkText>Cut Task</LinkText>
 		<ClassName>dropmenu</ClassName>
 	</Element>
+	<Element>
+		<GivenName>Copy Task</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Copy Task</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
 	
 	<Element>
 		<GivenName>Paste Task</GivenName>
@@ -1714,6 +1925,15 @@
 	</Element>
 	<Element>
 		<GivenName>Need Copied Message</GivenName>
+		<Xpath>/html/body/div[2]/div</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Task Copied Message</GivenName>
 		<Xpath>/html/body/div[2]/div</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -1996,6 +2216,133 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
+		<GivenName>Segment Dropdown On Plan Page</GivenName>
+		<Xpath>/html/body/form/div[29]/div/ul/li[3]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>plan</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Actual Segment Dropdown On Plan Page</GivenName>
+		<Xpath>/html/body/form/div[29]/div/ul/li[3]/ul</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Actual Segment Dropdown On Plan Page Second Xpath</GivenName>
+		<Xpath>/li</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Context Dropdown In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Event In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Event Table In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Segment Frame In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Attach File Name Textbox In About Plan Segment</GivenName>
+		<Xpath></Xpath>
+		<Name>sg-editor:fp-content:mo:aspect:attachments:container:controls:name</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Attach File Upload Button In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[5]/td/ul/li/span/label/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Attach File Submit Button In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[5]/td/ul/li/span/input[3]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Delete Event In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table/tbody/tr/td[2]/a/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>First Xpath For Delete Event</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table/tbody/tr[</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Second Xpath For Delete Event</GivenName>
+		<Xpath>]/td[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Between Level Dropdown In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div[2]/select[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>New Issue In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
@@ -2079,7 +2426,51 @@
 		<ClassName>float-bar-title</ClassName>
 	</Element>
 	
-	
+	<Element>
+		<GivenName>Event In Event In Scope Text</GivenName>
+		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table/tbody/tr[2]/td/input</Xpath>
+		<Name></Name>
+		<Id>id189</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Checkbox Of Event In Event In Scope</GivenName>
+		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table/tbody/tr[2]/td[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Phase In About Plan</GivenName>
+		<Xpath>/html/body/form/div[4]/div/div[3]/div/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Delete Phase In About Plan</GivenName>
+		<Xpath>/html/body/form/div[4]/div/div[3]/div/div/table/tbody/tr[5]/td/span/div/ul/li/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Table Of Events In Event In Scope</GivenName>
+		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Classification Systems</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
@@ -2104,7 +2495,7 @@
 		<GivenName>Organizations In Scope</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>link</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -2112,12 +2503,12 @@
 	
 	<Element>
 		<GivenName>Organizations In Scope Title</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div/div/span</Xpath>
+		<Xpath>/html/body/form/div[16]/div/div</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id185</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>fp-title</ClassName>
+		<ClassName>fp-header</ClassName>
 	</Element>
 	
 	<Element>
