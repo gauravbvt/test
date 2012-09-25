@@ -56,7 +56,15 @@ public class UIActions {
 		}
 		
 	}
-	
+	/**
+	 * Checks element is enable
+	 * @param fileName
+	 * @param elementName
+	 * @param findBys
+	 * @param notFound
+	 * @return
+	 * @throws UIAutomationException
+	 */
 	public static boolean checkEnable(String fileName,String elementName,ArrayList<?> findBys, String notFound) throws UIAutomationException{
 		ElementController elementController=new ElementController();
 		elementController.requireElementSmart(fileName, elementName, GlobalVariables.configuration.getAttrSearchList(), elementName);
@@ -67,21 +75,22 @@ public class UIActions {
 	/**
 	 * Enters value in the specified text box. The text box element is obtained from
 	 * the configuration object.
-	 *
 	 * @param  value	String value to be entered in the text box
-	 * 
-	 * @return void
-	 */
-	public static void enterValueInTextBox(String value){
+	*/
+	public static void enterValueInTextBox(String value,String fileName,String elementName,ArrayList<?> findBys, String notFound) throws UIAutomationException{
+		ElementController elementController=new ElementController();
+		elementController.requireElementSmart(fileName, elementName, GlobalVariables.configuration.getAttrSearchList(), elementName);
 		GlobalVariables.configuration.getWebElement().sendKeys(value);
 	}
 	/**
 	 * Clears the text box by deleting the previous value in the text box. 
-	 *
 	 * @return void
+	 * @throws UIAutomationException 
 	 */	
-	public static void clearTextBox(String fileName,String elementName,ArrayList<?> findBys, String notFound){
-		 GlobalVariables.configuration.getWebElement().clear();
+	public static void clearTextBox(String fileName,String elementName,ArrayList<?> findBys, String notFound) throws UIAutomationException{
+		ElementController elementController=new ElementController();
+		elementController.requireElementSmart(fileName, elementName, GlobalVariables.configuration.getAttrSearchList(), elementName);
+		GlobalVariables.configuration.getWebElement().clear();
 	}
 	
 	/**
@@ -117,7 +126,10 @@ public class UIActions {
 	public static Set<String> getHandles(){
 		return GlobalVariables.configuration.getWebDriver().getWindowHandles();
 	}
-	
+	/**
+	 * Switch to new window
+	 * @param handle
+	 */
 	public static void switchToNewwindow(String handle){
 		GlobalVariables.configuration.getWebDriver().switchTo().window(handle);
 	}
@@ -148,13 +160,14 @@ public class UIActions {
 				Configuration.getConfigurationObject().getSelect().selectByIndex(option);
 				optionsList.get(option).click();
 				optionsList.get(option).click();
+				
 				enterKey(Keys.ENTER);				
 				break;
 			}
 		}
 	}
 	/**
-	 * 
+	 * Selects value from dropdown
 	 * @param text
 	 * @throws UIAutomationException
 	 */
@@ -244,6 +257,11 @@ public class UIActions {
 		GlobalVariables.configuration.getWebElement().sendKeys(keyName);
 		}
 	
+	public static void enterKey(Keys keyName,String fileName,String elementName,ArrayList<?> findBys, String notFound) throws UIAutomationException{
+		ElementController elementController=new ElementController();
+		elementController.requireElementSmart(fileName, elementName, GlobalVariables.configuration.getAttrSearchList(), elementName);
+		GlobalVariables.configuration.getWebElement().sendKeys(keyName);
+		}
 	/**
 	 * Waits for page Title
 	 * @param titleSuffix 		A portion of the title of the next page to be loaded to determine that the page has been loaded.
