@@ -31,11 +31,11 @@ public class LoginPage {
 	
 		// Enter Username
 		elementController.requireElementSmart(fileName,"username",GlobalVariables.configuration.getAttrSearchList(),"Textfield Username ");
-		UIActions.enterValueInTextBox(userName);
+		UIActions.enterValueInTextBox(userName,fileName,"username",GlobalVariables.configuration.getAttrSearchList(),"Textfield Username ");
 		
 		// Enter Password
 		elementController.requireElementSmart(fileName,"password",GlobalVariables.configuration.getAttrSearchList(),"Textfield Password");
-		UIActions.enterValueInTextBox(passWord);
+		UIActions.enterValueInTextBox(passWord,fileName,"password",GlobalVariables.configuration.getAttrSearchList(),"Textfield Password");
 		
 		// Click on 'Sign In' 
 		elementController.requireElementSmart(fileName,"submitButton",GlobalVariables.configuration.getAttrSearchList(), "Login button");

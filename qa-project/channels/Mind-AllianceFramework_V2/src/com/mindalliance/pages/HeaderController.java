@@ -88,15 +88,15 @@ public class HeaderController {
     	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	/**
-	 * 'helpPage' method clicks on 'Help' button
+	 * clicks on 'Help' button in home page
 	 * @throws UIAutomationException 
 	*/
-	public void helpOnHomePage() throws UIAutomationException{
+	public void clickHelpOnHomePage() throws UIAutomationException{
 	    elementController.requireElementSmart(fileName, "Help", GlobalVariables.configuration.getAttrSearchList(), "Help Button");
 	    UIActions.click(fileName, "Help", GlobalVariables.configuration.getAttrSearchList(), "Help Button");
 	}
 	/**
-	 * 'helpPage' method clicks on 'Help' button
+	 * clicks on 'Help' button in plan page
 	 * @throws UIAutomationException 
 	*/
 	public void clickHelpOnPlanPage() throws UIAutomationException{

@@ -1,12 +1,17 @@
 package com.mindalliance.pages;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
+import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
@@ -418,8 +423,20 @@ public class PlanPage {
 		UIActions.assertAlert(headingOfWindowInXML);
 					
 		break;
+	case "Copy Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		
-					
+		// Assertion : Verify 'Task copied' message pop up is displayed
+		elementController.requireElementSmart(fileName, "Task Copied Message", GlobalVariables.configuration.getAttrSearchList(),"Task Copied Message");
+		headingOfWindowInPage=UIActions.getText(fileName, "Task Copied Message", GlobalVariables.configuration.getAttrSearchList(),"Task Copied Message");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Task Copied Actual Text", "Name");
+		if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
+			throw new UIAutomationException("'"+headingOfWindowInXML+"' not found");
+		}
+		break;	
+	
+		
 	case "Remove This Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -734,6 +751,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		
+		
 //		// Assertion : Verify 'Task Mover' window is present 
 //		elementController.requireElementSmart(fileName, "Task Mover Title", GlobalVariables.configuration.getAttrSearchList(),"Task Mover Title");
 //		headingOfWindowInPage=UIActions.getText();
@@ -747,6 +765,10 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		
+		try{
+			Thread.sleep(2000);
+		}
+		catch (Exception e) {}
 		// Assertion : Verify 'Task Mover' window is present 
 		elementController.requireElementSmart(fileName, "Task Mover Title", GlobalVariables.configuration.getAttrSearchList(),"Task Mover Title");
 		headingOfWindowInPage=UIActions.getText(fileName, "Task Mover Title", GlobalVariables.configuration.getAttrSearchList(),"Task Mover Title");
@@ -836,6 +858,11 @@ public class PlanPage {
 		catch(Exception e){}
 		UIActions.assertAlert(headingOfWindowInXML);
 		break;	
+		
+	case "Duplicate Flow In Receives Panel":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;	
 	case "Copy Capability In Sends Panel":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -880,6 +907,18 @@ public class PlanPage {
 			throw new UIAutomationException("'"+headingOfWindowInXML+"' not found");
 		}
 		break;
+	case "Remove Flow In Receives Panel":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		try{
+			Thread.sleep(3000);
+		}
+		catch (Exception e) {}
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Cut Task", "Title");
+		UIActions.assertAlert(headingOfWindowInXML);
+		
+	
+		break;
 	case "Hide Details In Sends Panel":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -888,8 +927,26 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;	
+	case "Undo Add Information Need":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;		
+	case "Undo Add Information Capability":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;	
+	case "Undo Remove Flow":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		// Assertion: verify flow is present when
 		
-	
+		
+		break;	
+	case "Undo Duplicate Flow":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;		
+		
 	default:
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -906,8 +963,65 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
 		UIActions.click(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
 		UIActions.clearTextBox(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
-		UIActions.enterValueInTextBox(segmentName);
+		UIActions.enterValueInTextBox(segmentName,fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
 		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enters location name in task panel
+	 * @param locationName
+	 * @throws UIAutomationException
+	 */
+	public void enterLocationInTask(String locationName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Location In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Location In Task Panel");
+		UIActions.click(fileName,"Location In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Location In Task Panel");
+		UIActions.enterValueInTextBox(locationName,fileName,"Location In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Location In Task Panel");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enters Agent name in task panel
+	 * @param agentName
+	 * @throws UIAutomationException
+	 */
+	public void enterAgentInTask(String agentName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Actor In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Actor In Task Panel");
+		UIActions.click(fileName,"Actor In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Actor In Task Panel");
+		UIActions.enterValueInTextBox(agentName,fileName,"Actor In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Actor In Task Panel");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enter Role name in task panel 
+	 * @param roleName
+	 * @throws UIAutomationException
+	 */
+	public void enterRoleInTask(String roleName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Role In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Role In Task Panel");
+		UIActions.click(fileName,"Role In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Role In Task Panel");
+		UIActions.enterValueInTextBox(roleName,fileName,"Role In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Role In Task Panel");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Organization name in task panel
+	 * @param roleName
+	 * @throws UIAutomationException
+	 */
+	public void enterOrganizationInTask(String orgName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Organization In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Organization In Task Panel");
+		UIActions.click(fileName,"Organization In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Organization In Task Panel");
+		UIActions.enterValueInTextBox(orgName,fileName,"Organization In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Organization In Task Panel");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Verify Task name is present in Task mover window
+	 * @param taskName
+	 * @throws UIAutomationException
+	 */
+	public void verifyTaskNameInTaskMover(String taskName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+		String taskNamesInPage=UIActions.getText(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+	
+		if(!taskNamesInPage.contains(taskName)){
+			throw new UIAutomationException("Task '"+taskName+"' is not created.");
+		}
 	}
 	/**
 	 * Enter description in issue' description textbox
@@ -918,7 +1032,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Description Of New Issue In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Description Of New Issue In Task Panel");
 		UIActions.click(fileName,"Description Of New Issue In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Description Of New Issue In Task Panel");
 		UIActions.clearTextBox(fileName,"Description Of New Issue In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Description Of New Issue In Task Panel");
-		UIActions.enterValueInTextBox(description);
+		UIActions.enterValueInTextBox(description,fileName,"Description Of New Issue In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Description Of New Issue In Task Panel");
 		UIActions.enterKey(Keys.TAB);
 		
 		// Verify 
@@ -932,7 +1046,7 @@ public class PlanPage {
 	public void enterOrganizationName(String organizationName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Organization Name Textbox In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Name Textbox In Organizations In Scope");
 		UIActions.click(fileName,"Organization Name Textbox In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Name Textbox In Organizations In Scope");
-		UIActions.enterValueInTextBox(organizationName);
+		UIActions.enterValueInTextBox(organizationName,fileName,"Organization Name Textbox In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Name Textbox In Organizations In Scope");
 		UIActions.enterKey(Keys.ENTER);
 		
 		// Verify organization is added
@@ -944,7 +1058,89 @@ public class PlanPage {
 		}
 		
 	}
-	
+	/**
+	 * Clicks on 'Organization entered
+	 * @param orgName
+	 * @throws UIAutomationException
+	 */
+	public void clickOnOrganizationEntered(String orgName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
+
+		List<WebElement> trs = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+		List<WebElement> tds;
+		for(WebElement tr: trs){
+			tds = tr.findElements(By.tagName("td"));
+			for(WebElement td: tds){				
+				if(td.getText().contains(orgName)){
+					GlobalVariables.configuration.getWebDriver().findElement(By.linkText(td.getText())).click();
+					break;
+				}
+			}
+		}
+	}
+	/**
+	 * Enter agent name in organization in scope
+	 * @param agentName
+	 * @throws UIAutomationException
+	 */
+	public void enterAgentInOrganizationInScope(String agentName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Agent In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Agent In Organization In Scope");
+		UIActions.click(fileName,"Agent In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Agent In Organization In Scope");
+		UIActions.enterValueInTextBox(agentName,fileName,"Agent In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Agent In Organization In Scope");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enter title name in organization in scope
+	 * @param titleName
+	 * @throws UIAutomationException
+	 */
+	public void enterTitleInOrganizationInScope(String titleName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Title In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Title In Organization In Scope");
+		UIActions.click(fileName,"Title In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Title In Organization In Scope");
+		UIActions.enterValueInTextBox(titleName,fileName,"Title In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Title In Organization In Scope");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enter role in organization in scope
+	 * @param roleName
+	 * @throws UIAutomationException
+	 */
+	public void enterRoleInOrganizationInScope(String roleName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Role In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Role In Organization In Scope");
+		UIActions.click(fileName,"Role In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Role In Organization In Scope");
+		UIActions.enterValueInTextBox(roleName,fileName,"Role In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Role In Organization In Scope");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enter jurisdiction in organization in scope
+	 * @param jurisdictionName
+	 * @throws UIAutomationException
+	 */
+	public void enterJurisdictionInOrganizationInScope(String jurisdictionName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Jurisdiction In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Jurisdiction In Organization In Scope");
+		UIActions.click(fileName,"Jurisdiction In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Jurisdiction In Organization In Scope");
+		UIActions.enterValueInTextBox(jurisdictionName,fileName,"Jurisdiction In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Jurisdiction In Organization In Scope");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Enter supervisor in organization in scope
+	 * @param supervisorName
+	 * @throws UIAutomationException
+	 */
+	public void enterSupervisorInOrganizationInScope(String supervisorName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Supervisor In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Supervisor In Organization In Scope");
+		UIActions.click(fileName,"Supervisor In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Supervisor In Organization In Scope");
+		UIActions.enterValueInTextBox(supervisorName,fileName,"Supervisor In Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Supervisor In Organization In Scope");
+		UIActions.enterKey(Keys.TAB);
+	}
+	/**
+	 * Check checkbox of Agent in organization in scope
+	 * @throws UIAutomationException
+	 */
+	public void checkCheckboxOfAgentInOrganizationInScope() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Checkbox Of Agent  Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Agent  Organization In Scope");
+		UIActions.click(fileName,"Checkbox Of Agent  Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Agent  Organization In Scope");
+	}
 	
 	/**
 	 * Enter Task name in segment name textbox
@@ -954,10 +1150,8 @@ public class PlanPage {
 	public void enterTaskName(String taskName) throws UIAutomationException	{
 		elementController.requireElementSmart(fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Task Name");
 		UIActions.click(fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Task Name");
-		for (int i = 0; i <= 18; i++){
-			UIActions.enterKey(Keys.BACK_SPACE);
-		}
-		UIActions.enterValueInTextBox(taskName);
+		UIActions.clearTextBox(fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Task Name");
+		UIActions.enterValueInTextBox(taskName,fileName,"Textbox of Task",GlobalVariables.configuration.getAttrSearchList(), "Task Name");
 		UIActions.enterKey(Keys.TAB);
 	}
 	/**
@@ -968,7 +1162,7 @@ public class PlanPage {
 	public void enterInformationNameInReceivesPanel(String informationName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
 		UIActions.click(fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
-		UIActions.enterValueInTextBox(informationName);
+		UIActions.enterValueInTextBox(informationName,fileName,"Information In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Receives Panel");
 		UIActions.enterKey(Keys.TAB);
 		
 		try{
@@ -992,7 +1186,7 @@ public class PlanPage {
 	public void enterInformationNameInSendsPanel(String informationName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.click(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
-		UIActions.enterValueInTextBox(informationName);
+		UIActions.enterValueInTextBox(informationName,fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.enterKey(Keys.TAB);
 		try{
 			Thread.sleep(1000);
@@ -1018,7 +1212,33 @@ public class PlanPage {
 		
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
-		UIActions.selectByText(other);
+		UIActions.selectByTextAndClick(other);
+	}
+	/**
+	 * Select option from context dropdown
+	 * @param context
+	 * @throws UIAutomationException
+	 */
+	public void selectFromContextDropdown(String context) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Context Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Context Dropdown In About Plan Segment");
+		UIActions.click(fileName,"Context Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Context Dropdown In About Plan Segment");
+		
+		Select contextDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(contextDropDownList);
+		UIActions.selectByTextAndClick(context);
+	}
+	/**
+	 * Select option from between dropdown
+	 * @param between
+	 * @throws UIAutomationException
+	 */
+	public void selectFromBetweenDropdown(String between) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Between Level Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Between Level Dropdown In About Plan Segment");
+		UIActions.click(fileName,"Between Level Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Between Level Dropdown In About Plan Segment");
+		
+		Select contextDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(contextDropDownList);
+		UIActions.selectByText(between);
 	}
 	
 	/**
@@ -1029,14 +1249,25 @@ public class PlanPage {
 	public void enterFromTaskName(String fromTaskName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"From Task Name In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receives Panel");
 		UIActions.click(fileName,"From Task Name In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receives Panel");
+		
 		for (int i = 0; i <= 17; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
 		}
-		
-		UIActions.enterValueInTextBox(fromTaskName);
+		UIActions.enterValueInTextBox(fromTaskName,fileName,"From Task Name In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receives Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
 	
+	/**
+	 * Enter event in about plan window
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void enterEventInAboutPlanSegment(String eventName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+		UIActions.click(fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+		UIActions.enterValueInTextBox(eventName,fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+		UIActions.enterKey(Keys.TAB,fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+	}
 	/**
 	 * Enter value of Tag in 'Tags' textbox
 	 * @param tagName
@@ -1045,7 +1276,7 @@ public class PlanPage {
 	public void enterValueInTagsInTask(String tagName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Tags In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Tags In Task Panel");
 		UIActions.click(fileName,"Tags In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Tags In Task Panel");
-		UIActions.enterValueInTextBox(tagName);
+		UIActions.enterValueInTextBox(tagName,fileName,"Tags In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Tags In Task Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
 	
@@ -1057,13 +1288,85 @@ public class PlanPage {
 	public void enterValueInCausesEventInTask(String eventName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Causes Event In Task",GlobalVariables.configuration.getAttrSearchList(), "Causes Event In Task");
 		UIActions.click(fileName,"Causes Event In Task",GlobalVariables.configuration.getAttrSearchList(), "Causes Event In Task");
-		UIActions.enterValueInTextBox(eventName);
+		UIActions.enterValueInTextBox(eventName,fileName,"Causes Event In Task",GlobalVariables.configuration.getAttrSearchList(), "Causes Event In Task");
 		UIActions.enterKey(Keys.TAB);
 		
 		// Verify event is added
 		
 	}
+	/**
+	 * Enter value in phase
+	 * @param phaseName
+	 * @throws UIAutomationException
+	 */
+	public void enterValueInPhaseInAboutPlan(String phaseName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Phase In About Plan");
+		UIActions.click(fileName,"Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Phase In About Plan");
+		UIActions.enterValueInTextBox(phaseName,fileName,"Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Phase In About Plan");
+		UIActions.enterKey(Keys.TAB);
+		
+	}
+	/**
+	 * Click on phase added
+	 * @param phaseName
+	 * @throws UIAutomationException
+	 */
+	public void clickOnPhaseInAboutPlan() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
+		UIActions.click(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
+	}
+	/**
+	 * Enter value in description of phase
+	 * @param phaseDescription
+	 * @throws UIAutomationException
+	 */
+	public void enterValueInPhaseDescriptionInAboutPlan(String phaseDescription) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Phase Description",GlobalVariables.configuration.getAttrSearchList(), "Phase Description");
+		UIActions.click(fileName,"Phase Description",GlobalVariables.configuration.getAttrSearchList(), "Phase Description");
+		UIActions.enterValueInTextBox(phaseDescription,fileName,"Phase Description",GlobalVariables.configuration.getAttrSearchList(), "Phase Description");
+		UIActions.enterKey(Keys.TAB);
+		
+	}
 	
+	/**
+	 * delete phase
+	 * @throws UIAutomationException
+	 */
+	 public void deletePhase() throws UIAutomationException{
+	
+		elementController.requireElementSmart(fileName,"Delete Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Phase In About Plan");
+		UIActions.click(fileName,"Delete Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Phase In About Plan");
+	
+		String questionInXML=dataController.getPageDataElements(fileName, "Delete Phase Window Title", "Title");
+		try{
+			Thread.sleep(1000);
+			}
+			catch(Exception e){}
+		UIActions.assertAlert(questionInXML);
+}
+	/**
+	 * Enter value of event in event textbox
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void enterValueInEventInEventInScope(String eventName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
+		UIActions.click(fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
+		UIActions.enterValueInTextBox(eventName,fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
+		UIActions.enterKey(Keys.TAB);
+		
+		// Check checkbox of event
+		elementController.requireElementSmart(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
+		UIActions.click(fileName,"Checkbox Of Event In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox Of Event In Event In Scope");
+		
+		// Verify event is added
+		elementController.requireElementSmart(fileName,"Table Of Events In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Table Of Events In Event In Scope");
+		String eventsInPage=UIActions.getText(fileName,"Table Of Events In Event In Scope",GlobalVariables.configuration.getAttrSearchList(), "Table Of Events In Event In Scope");
+		
+		if(!eventsInPage.contains(eventName)){
+			throw new UIAutomationException("Event "+eventName+" is not added.");
+		}
+	}
 	/**
 	 * Delete Tag value in textbox
 	 * @throws UIAutomationException
@@ -1071,6 +1374,7 @@ public class PlanPage {
 	public void removeValueInTagsInTask() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Tags In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Tags In Task Panel");
 		UIActions.click(fileName,"Tags In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Tags In Task Panel");
+		
 		for (int i = 0; i <= 3; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
 		}
@@ -1190,6 +1494,26 @@ public class PlanPage {
 	public void closeActualOrganizationWindow() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Close Actual Organization Window",GlobalVariables.configuration.getAttrSearchList(), "Close Actual Organization Window");
 		UIActions.click(fileName,"Close Actual Organization Window",GlobalVariables.configuration.getAttrSearchList(), "Close Actual Organization Window");
+		
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		
+	}
+	/**
+	 * Close actual phase window
+	 * @throws UIAutomationException
+	 */
+	public void closeActualPhaseWindow() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Close Actual Phase Window",GlobalVariables.configuration.getAttrSearchList(), "Close Actual Phase Window");
+		UIActions.click(fileName,"Close Actual Phase Window",GlobalVariables.configuration.getAttrSearchList(), "Close Actual Phase Window");
+		
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		
 	}
 	
 	
@@ -1236,6 +1560,10 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Remove Expectation",GlobalVariables.configuration.getAttrSearchList(), "Remove Expectation");
 		UIActions.click(fileName,"Remove Expectation",GlobalVariables.configuration.getAttrSearchList(), "Remove Expectation");
 		
+		try{
+			Thread.sleep(2000);
+		}
+		catch(Exception e){}
 		// Assertion: verify organization is removed
 		elementController.requireElementSmart(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
 		List<WebElement> tds1 = GlobalVariables.configuration.getWebElement().findElements(By.tagName("li"));
@@ -1246,6 +1574,19 @@ public class PlanPage {
 		}
 		
 	}
+	/**
+	 * Verify event is deleted
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void verifyEventIsDeleted(String eventName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Segment Frame In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Segment Frame In About Plan Segment");
+		String eventNamesInPage=UIActions.getText(fileName,"Segment Frame In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Segment Frame In About Plan Segment");
+		if(eventNamesInPage.equals(eventName)){
+			throw new UIAutomationException( "'"+eventName +"' not deleted.");
+		}
+	}
+	
 	/**
 	 * Click on 'Definitions' tab in plan requirements
 	 * @param tabName
@@ -1327,6 +1668,27 @@ public class PlanPage {
 		
 	}
 	
+	/**
+	 * Select option from Any Event dropdown list
+	 * @param optionName
+	 * @throws UIAutomationException
+	 */
+	public void selectOptionFromAnyEventDropdownInPlanRequirement(String optionName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Any Event Dropdown In Plan Requirement",GlobalVariables.configuration.getAttrSearchList(), "Any Event Dropdown In Plan Requirement");
+		UIActions.click(fileName,"Any Event Dropdown In Plan Requirement",GlobalVariables.configuration.getAttrSearchList(), "Any Event Dropdown In Plan Requirement");
+		
+		Select anyEventDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(anyEventDropDownList);
+		UIActions.selectByText(optionName);
+		
+		// Assertion: verify optionname is selected from dropdown
+		elementController.requireElementSmart(fileName,"Any Event Dropdown In Plan Requirement",GlobalVariables.configuration.getAttrSearchList(), "Any Event Dropdown In Plan Requirement");
+		String optionInDropdown=UIActions.getText(fileName,"Any Event Dropdown In Plan Requirement",GlobalVariables.configuration.getAttrSearchList(), "Any Event Dropdown In Plan Requirement");
+		if(!optionInDropdown.contains(optionName)){
+			throw new UIAutomationException("Option not selected.");
+		}
+		
+	}
 	
 	/**
 	 * Clicks on 'CLOSE' button in plan requirement
@@ -2005,7 +2367,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		UIActions.click(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		UIActions.enterValueInTextBox(goalName);
+		UIActions.enterValueInTextBox(goalName,fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		
 		// Achive at end
 		elementController.requireElementSmart(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
@@ -2094,6 +2456,110 @@ public class PlanPage {
 		
 	}
 	
+	/**
+	 * Verify segment is added
+	 * @param segmentName
+	 * @throws UIAutomationException
+	 */
+	public void verifySegmentInDropdown(String segmentName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Segment Dropdown On Plan Page");
+		
+		// Assertion: Verify segment is added
+		elementController.requireElementSmart(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Segment Dropdown On Plan Page");
+		String segmentDropdown=UIActions.getText(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(), "Segment Dropdown On Plan Page");
+		
+		if(!(segmentDropdown.contains(segmentName))){
+			throw new UIAutomationException("Segment '"+segmentName+"' not added.");
+		}
+	}
+	/**
+	 * Verify event is added in about plan segment
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void verifyEventAddedInAboutPlanSegment(String eventName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Event Table In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Event Table In About Plan Segment");
+		
+		// Assertion: Verify event is added
+		elementController.requireElementSmart(fileName,"Event Table In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Event Table In About Plan Segment");
+		String allEventNames=UIActions.getText(fileName,"Event Table In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event Table In About Plan Segment");
+		
+		if(!(allEventNames.contains(eventName))){
+			throw new UIAutomationException("Event '"+eventName+"' not added.");
+		}
+	}
+	/**
+	 * Delete event from segment
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void deleteEvent(String eventName) throws UIAutomationException{
+		getEvent(eventName);
+		
+		elementController.requireElementSmart(fileName,"Delete Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Delete Event In About Plan Segment");
+		UIActions.click(fileName,"Delete Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Delete Event In About Plan Segment");
+		
+		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Event", "Title");
+		UIActions.assertAlert(headingOfWindowInXML);
+		
+	}
+	/**
+	 * Gets list of events
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void getEvent(String eventName) throws UIAutomationException{
+		// get list of events
+		int countEvent = 1 ;
+		String firstXPath=dataController.getPageDataElements(fileName, "First Xpath For Delete Event", "Xpath");
+		String secondXPath=dataController.getPageDataElements(fileName, "Second Xpath For Delete Event", "Xpath");
+		elementController.requireElementSmart(fileName,"Event Table In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event Table In About Plan Segment");
+	
+		List<WebElement> trs = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+		List<WebElement> tds;
+		for(WebElement tr: trs){
+			tds = tr.findElements(By.tagName("td"));
+			for(WebElement td: tds){				
+				if(td.getText().equals(eventName)){
+					GlobalVariables.configuration.getWebDriver().findElement(By.xpath(firstXPath+ (countEvent) + secondXPath)).click();
+				}
+			}
+			countEvent++;
+		}
+	}
+	public void verifySegmentIsDeleted(String segmentName) throws UIAutomationException{
+//		elementController.requireElementSmart(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Segment Dropdown On Plan Page");
+//	    String xpath=dataController.getPageDataElements(fileName, "Segment Dropdown On Plan Page", "Xpath");
+//	
+//	    Actions builder1 = new Actions(GlobalVariables.configuration.getWebDriver());
+//		builder1.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xpath))).build().perform();
+//	    
+//		// Assertion: verify segment is removed
+//		int count=elementController.getXPathCount(xpath);
+//		String firstXPath=dataController.getPageDataElements(fileName, "Actual Segment Dropdown On Plan Page", "Xpath");
+//		String secondXPath=dataController.getPageDataElements(fileName, "Actual Segment Dropdown On Plan Page Second Xpath", "Xpath");
+//		int countUsers=0;
+//		elementController.requireElementSmart(fileName,"Actual Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Actual Segment Dropdown On Plan Page");
+//		List<WebElement> trs = GlobalVariables.configuration.getWebElement().findElements(By.tagName("li"));
+//		List<WebElement> tds;
+//		for(WebElement tr: trs){
+//			tds = tr.findElements(By.tagName("ul"));
+//			for(WebElement td: tds){				
+//				if(td.getText().contains(segmentName)){
+//					GlobalVariables.configuration.getWebDriver().findElement(By.xpath(firstXPath + secondXPath +"["+countUsers+"]")).click();
+//				}
+//			}
+//			countUsers++;
+//		}
+		
+//		// Assertion: Verify reference,policy,mandatin policy,prohibiting policy is present
+//		elementController.requireElementSmart(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Segment Dropdown On Plan Page");
+//		String segmentDropdown=UIActions.getText(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(), "Segment Dropdown On Plan Page");
+//		
+//		if(!(segmentDropdown.contains(segmentName))){
+//			throw new UIAutomationException("Segment '"+segmentName+"' not added.");
+//		}
+	}
 	/**
 	 * Verify attach dropdown in sends panel
 	 * @param reference
@@ -2536,10 +3002,20 @@ public class PlanPage {
 		UIActions.click(fileName,"Within Count In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Sends Panel");
 		
 		UIActions.clearTextBox(fileName,"Within Count In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Sends Panel");
-		UIActions.enterValueInTextBox(number);
+		UIActions.enterValueInTextBox(number,fileName,"Within Count In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Sends Panel");
 		
 	}
-	
+	/**
+	 * Enter File name to be attached
+	 * @param fileName
+	 * @throws UIAutomationException
+	 */
+	public void enterAttachFileNameInSegment(String fileName1) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Attach File Name Textbox In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Name Textbox In About Plan Segment");
+		UIActions.click(fileName,"Attach File Name Textbox In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Name Textbox In About Plan Segment");
+		UIActions.enterValueInTextBox(fileName1,fileName,"Attach File Name Textbox In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Name Textbox In About Plan Segment");
+		
+	}
 	/**
 	 * Enters value in description textbox in actual organization
 	 * @param description
@@ -2549,7 +3025,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Description In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Description In Actual Organization");
 		UIActions.click(fileName,"Description In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Description In Actual Organization");
 		
-		UIActions.enterValueInTextBox(description);
+		UIActions.enterValueInTextBox(description,fileName,"Description In Actual Organization",GlobalVariables.configuration.getAttrSearchList(),"Description In Actual Organization");
 		UIActions.enterKey(Keys.TAB);
 		
 	}
@@ -2590,7 +3066,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Within Count In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Receives Panel");
 		UIActions.click(fileName,"Within Count In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Receives Panel");
 		UIActions.clearTextBox(fileName,"Within Count In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Receives Panel");
-		UIActions.enterValueInTextBox(number);
+		UIActions.enterValueInTextBox(number,fileName,"Within Count In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Receives Panel");
 		
 	}
 	/**
@@ -2756,6 +3232,34 @@ public class PlanPage {
 			throw new UIAutomationException("Reply That radio button can not be clicked.");
 		}
 	
+	}
+	
+	public void clickBrowseInAttachFileInAboutPlanSegment() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Attach File Upload Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Upload Button In About Plan Segment");
+		UIActions.click(fileName,"Attach File Upload Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Upload Button In About Plan Segment");
+		GlobalVariables.configuration.getWebElement().sendKeys("D:\\Channels\\Mind-AllianceFramework_V2\\TestData\\CAP.txt");		
+	}
+	
+//	public void enterFileNameInAttachFileInAboutPlanSegment(String fileName) throws UIAutomationException{
+//		String path=getPath(fileName);
+//		GlobalVariables.configuration.getWebElement().sendKeys(path);
+//	}
+	
+	public String getPath(String fileName) throws UIAutomationException{
+		try{
+			File currentDir=new File(".");
+			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
+			path=path+fileName;
+			return path;
+		}
+		catch (IOException ie) {
+			throw new UIAutomationException("File MAP0018_attachFile.xml not found.");
+		}
+	}
+	public void clickSubmitInAttachFileInAboutPlanSegment() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Attach File Submit Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Submit Button In About Plan Segment");
+		UIActions.click(fileName,"Attach File Submit Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Submit Button In About Plan Segment");
+		
 	}
 	/**
 	 * Verify by clicking on 'Elements' link 'EOI' window opens

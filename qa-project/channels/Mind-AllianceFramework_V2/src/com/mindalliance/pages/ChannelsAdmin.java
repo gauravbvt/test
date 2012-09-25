@@ -37,12 +37,12 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
 		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		UIActions.enterValueInTextBox(planName);
+		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		
 		elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 		xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
 		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		UIActions.enterValueInTextBox(authorName);
+		UIActions.enterValueInTextBox(authorName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 			
 		
 		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
@@ -85,7 +85,7 @@ public class ChannelsAdmin {
 	public void addUser(String userName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		UIActions.click(fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
-		UIActions.enterValueInTextBox(userName);
+		UIActions.enterValueInTextBox(userName,fileName,"User Name",GlobalVariables.configuration.getAttrSearchList(), "User Name");
 		
 		elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
 		UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
@@ -103,10 +103,8 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
 		UIActions.click(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
 		
-		for (int i = 0; i <= 5; i++){
-			UIActions.enterKey(Keys.BACK_SPACE);
-		}
-		UIActions.enterValueInTextBox(email);
+		UIActions.clearTextBox(fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
+		UIActions.enterValueInTextBox(email,fileName,"Email Of User",GlobalVariables.configuration.getAttrSearchList(), "Email Of User");
 		UIActions.enterKey(Keys.TAB);
 		getUser(userName);
 	
@@ -139,4 +137,6 @@ public class ChannelsAdmin {
 			countUsers++;
 		}
 	}
+	
+	
 }
