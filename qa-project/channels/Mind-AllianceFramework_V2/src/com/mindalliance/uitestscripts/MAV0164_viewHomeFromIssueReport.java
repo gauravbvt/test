@@ -73,7 +73,7 @@ public class MAV0164_viewHomeFromIssueReport extends TestCase{
 			HeaderController headerController=new HeaderController();
 			headerController.clickHomeImageLink(testData.get("homePageTitle"));
 						
-			//Sign Out from 'Issue Summary Report' page
+			//Sign Out from 'Plan' page
 			headerController.signOut();
 
 		} catch (UIAutomationException ue) {
