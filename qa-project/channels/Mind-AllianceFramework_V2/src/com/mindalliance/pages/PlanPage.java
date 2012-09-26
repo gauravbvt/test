@@ -4,14 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
-import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
@@ -646,6 +643,11 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;	
+	case "Redo Update Segment":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;		
+		
 	case "Undo Paste Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1697,11 +1699,6 @@ public class PlanPage {
 	public void clickCloseInPlanRequirement() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"CLOSE EDIT In Plan Requirement",GlobalVariables.configuration.getAttrSearchList(), "CLOSE EDIT In Plan Requirement");
 		UIActions.click(fileName,"CLOSE EDIT In Plan Requirement",GlobalVariables.configuration.getAttrSearchList(), "CLOSE EDIT In Plan Requirement");
-	
-//		String tabNameInPage=UIActions.getText(fileName,"Satisfactions Tab In Plan Requirements",GlobalVariables.configuration.getAttrSearchList(), "Satisfactions Tab In Plan Requirements");
-//		if(!tabNameInPage.equals(tabName)){
-//			throw new UIAutomationException( "'"+tabName +"' not found");
-//		}
 	}
 	/**
 	 * Clicks on 'EDIT' button in plan requirement
@@ -2470,6 +2467,35 @@ public class PlanPage {
 		
 		if(!(segmentDropdown.contains(segmentName))){
 			throw new UIAutomationException("Segment '"+segmentName+"' not added.");
+		}
+	}
+	/**
+	 * Verify changes made to the segment are redone 
+	 * @param segmentName
+	 * @throws UIAutomationException
+	 */
+	public void verifyChangesInSegmentRedone(String segmentName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Segment Dropdown On Plan Page");
+		
+		// Assertion: Verify changes done to segment is redone
+		elementController.requireElementSmart(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(),"Segment Dropdown On Plan Page");
+		String segmentDropdown=UIActions.getText(fileName,"Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(), "Segment Dropdown On Plan Page");
+		
+		if(!(segmentDropdown.contains(segmentName))){
+			throw new UIAutomationException("Segment '"+segmentName+"' not added.");
+		}
+	}
+	/**
+	 * Verify goal is removed
+	 * @param goalName
+	 * @throws UIAutomationException
+	 */
+	public void verifyGoalRemoved(String goalName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
+		boolean categryEnabled=UIActions.checkEnable(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
+
+		if(!categryEnabled){
+			throw new UIAutomationException("Goal '"+goalName+"' is not removed.");
 		}
 	}
 	/**
