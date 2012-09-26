@@ -568,6 +568,16 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Goals Table</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Tags Link In Task Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</Xpath>
@@ -1236,6 +1246,15 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>Undo Update Segment</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Update Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo Update Segment</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>

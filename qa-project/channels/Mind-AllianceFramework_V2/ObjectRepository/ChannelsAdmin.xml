@@ -7,7 +7,7 @@
  	
  	<Element>
  		<GivenName>Plan Name</GivenName>
- 		<Xpath>/html/body/div/div[2]/div/form/table/tbody/tr/td[2]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'newPlanUri')]</Xpath>
  		<Name>newPlanUri</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -17,7 +17,7 @@
  	
  	<Element>
  		<GivenName>Owner Name</GivenName>
- 		<Xpath>/html/body/div/div[2]/div/form/table/tbody/tr[2]/td[2]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'newPlanClient')]</Xpath>
  		<Name>newPlanClient</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -27,7 +27,7 @@
  	
  	<Element>
  		<GivenName>Submit</GivenName>
- 		<Xpath>/html/body/div/div[2]/div/form/table/tbody/tr[3]/td[2]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'Submit')]</Xpath>
  		<Name>Submit</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -37,8 +37,8 @@
  	
 	<Element>
     	<GivenName>Select Plan</GivenName>
-    	<Xpath>/html/body/div/div[2]/div/form/table[2]/tbody/tr/td[2]/select</Xpath>
-    	<Name>plan-sel</Name>
+    	<Xpath>//select[contains(@name,'plan-sel')]</Xpath>
+      	<Name>plan-sel</Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
@@ -47,11 +47,11 @@
  	
  	<Element>
     	<GivenName>Delete Plan</GivenName>
-    	<Xpath>/html/body/div/div[2]/div/form/table[2]/tbody/tr[2]/td[2]/a[2]</Xpath>
+    	<Xpath></Xpath>
     	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
-    	<LinkText></LinkText>
+    	<LinkText>Delete Plan</LinkText>
     	<ClassName>button</ClassName>
  	</Element>
  	
@@ -67,8 +67,8 @@
  	
  	<Element>
     	<GivenName>Delete User</GivenName>
-    	<Xpath>/html/body/div/div[2]/div/form/table[6]/tbody/tr[2]/td[12]/input</Xpath>
-       	<Name></Name>
+    	<Xpath>//input[contains(@name'item:0:group:delete')]</Xpath>
+    	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
@@ -87,7 +87,7 @@
  	 	
  	<Element>
     	<GivenName>Email Of User</GivenName>
-    	<Xpath>/html/body/div/div[2]/div/form/table[6]/tbody/tr/td[3]/input</Xpath>
+    	<Xpath>//input[contains(@name,'item:0:group:email')]</Xpath>
        	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -127,7 +127,7 @@
   	
  	<Element>
     	<GivenName>Delete User Submit</GivenName>
-    	<Xpath>/html/body/div/div[2]/div/form/div[3]/input</Xpath>
+    	<Xpath>//input[contains(@name,'Submit')]</Xpath>
        	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>

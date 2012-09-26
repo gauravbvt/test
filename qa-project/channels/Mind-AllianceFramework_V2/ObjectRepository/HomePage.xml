@@ -41,11 +41,11 @@
 	
 	<Element>
 		<GivenName>Collaboration Plan</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+		<Xpath></Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Collaboration Plan</LinkText>
+		<LinkText>COLLABORATION PLAN</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
@@ -59,16 +59,16 @@
 	</Element>
 	<Element>
  		<GivenName>Channels Admin Link</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[7]/a/span</Xpath>
+ 		<Xpath></Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
-    	<LinkText>Channels Settings</LinkText>
+    	<LinkText>CHANNELS SETTINGS</LinkText>
     	<ClassName></ClassName>
  	</Element>
  	<Element>
  		<GivenName>Messages In Social Panel</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[3]/a/span</Xpath>
+ 		<Xpath>//li[contains(@class,'tab2')]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -76,7 +76,7 @@
     	<ClassName></ClassName>
  	</Element>
  	<Element>
- 		<GivenName>Calender In Social Panel</GivenName>
+ 		<GivenName>Calender In Social Panel</GivenName>tab3 last
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li[4]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
@@ -86,7 +86,7 @@
  	</Element>
  	<Element>
  		<GivenName>About Me In Social Panel</GivenName>
- 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/span/div/div/div/ul/li/a/span</Xpath>
+ 		<Xpath>//li[contains(@class,'tab0 selected')]/a/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -125,7 +125,7 @@
 	
 	<Element>
 		<GivenName>Issues Report Heading</GivenName>
-		<Xpath>/html/body/form/div[2]/div[3]</Xpath>
+		<Xpath>//div[contains(@class,'issues-contents')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>

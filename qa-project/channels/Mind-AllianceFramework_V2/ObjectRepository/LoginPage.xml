@@ -5,9 +5,10 @@
 		<GivenName>Home Page Title</GivenName>
 		<Title>Channels - Collaboration Planning</Title>
 	</Element>
+	
 	<Element>
     	<GivenName>submitButton</GivenName>
-    	<Xpath>/html/body/div/div[2]/form/div[6]/input</Xpath>
+    	<Xpath>//input[contains(@value,'Sign In')]</Xpath>
     	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -17,7 +18,7 @@
  	
  	<Element>
  		<GivenName>username</GivenName>
- 		<Xpath>/html/body/div/div[2]/form/div[2]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'j_username')]</Xpath>
  		<Name>j_username</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -27,7 +28,7 @@
  	
  	<Element>
  		<GivenName>password</GivenName>
- 		<Xpath>/html/body/div/div[2]/form/div[4]/input</Xpath>
+ 		<Xpath>//input[contains(@name,'j_password')]</Xpath>
  		<Name>j_password</Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>

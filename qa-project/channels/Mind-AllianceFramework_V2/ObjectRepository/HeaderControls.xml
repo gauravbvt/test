@@ -24,7 +24,7 @@
 	
  	<Element>
  		<GivenName>Send Feedback</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/span/div/a/span</Xpath>
+ 		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -34,7 +34,7 @@
  	
  	<Element>
  		<GivenName>Send Feedback On Help</GivenName>
- 		<Xpath>/html/body/span/div/a/span</Xpath>
+ 		<Xpath>//a[contains(@class,'feedback-button')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -46,7 +46,7 @@
  	 	
  	<Element>
  		<GivenName>Help</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/a[2]</Xpath>
+ 		<Xpath>//a[contains(@class,'help')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -56,7 +56,7 @@
 
 	<Element>
  		<GivenName>Help On Plan Page</GivenName>
- 		<Xpath>/html/body/form/div[28]/div/div/a[2]</Xpath>
+ 		<Xpath>//a[contains(@class,'help')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -66,7 +66,7 @@
 	
  	<Element>
  		<GivenName>Sign Out</GivenName>
- 		<Xpath>/html/body/form/div[2]/div/div/div/a</Xpath>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -76,7 +76,7 @@
  	
  	<Element>
  		<GivenName>Sign Out Admin</GivenName>
- 		<Xpath>/html/body/div/div/a[2]</Xpath>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -86,7 +86,7 @@
  	
  	<Element>
  		<GivenName>Sign Out Plan</GivenName>
- 		<Xpath>/html/body/form/div[28]/div/div/a</Xpath>
+ 		<Xpath>//a[contains(@class,'logout')]</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
