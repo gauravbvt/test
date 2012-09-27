@@ -42,7 +42,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractDiagramPanel.class );
 
-    private static final String[] STANDARD_ARGS = { "graph", "vertex", "edge", "width", "height" };
+    private static final String[] STANDARD_ARGS = {"graph", "vertex", "edge", "width", "height"};
 
     public static final String TICKET_PARM = "ticket";
 
@@ -130,21 +130,21 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
                             else if ( vertexId != null ) {
                                 int[] scroll = calculateVertexScroll( vertexId, width, height );
                                 onSelectVertex( graphId,
-                                                vertexId,
-                                                getDomIdentifier(),
-                                                scroll[0],
-                                                scroll[1],
-                                                extras,
-                                                target );
+                                        vertexId,
+                                        getDomIdentifier(),
+                                        scroll[0],
+                                        scroll[1],
+                                        extras,
+                                        target );
                             } else {
                                 int[] scroll = calculateEdgeScroll( imageMapHolder, edgeId, width, height );
                                 onSelectEdge( graphId,
-                                              edgeId,
-                                              getDomIdentifier(),
-                                              scroll[0],
-                                              scroll[1],
-                                              extras,
-                                              target );
+                                        edgeId,
+                                        getDomIdentifier(),
+                                        scroll[0],
+                                        scroll[1],
+                                        extras,
+                                        target );
                             }
                         }
                     }
@@ -164,8 +164,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             }
 
             @Override
-            protected void onRender(  ) {
-                super.onRender(  );
+            protected void onRender() {
+                super.onRender();
                 if ( isWithImageMap() ) {
                     try {
                         LOG.debug( "Rendering image map " );
@@ -191,43 +191,51 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     }
 
     private int[] calculateVertexScroll( String vertexId, String swidth, String sheight ) {
-        int[] scroll = new int[2];
+        int[] scroll = {0, 0};
         String imageMap = imageMapHolder.toString();
         String s = "<area.*?vertex=" + vertexId + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
         Pattern pattern = Pattern.compile( s );
         Matcher matcher = pattern.matcher( imageMap );
         if ( matcher.find() ) {
-            int x1 = Integer.parseInt( matcher.group( 1 ) );
-            int y1 = Integer.parseInt( matcher.group( 2 ) );
-            int x2 = Integer.parseInt( matcher.group( 3 ) );
-            int y2 = Integer.parseInt( matcher.group( 4 ) );
-            int centerX = x2 - ( ( x2 - x1 ) / 2 );
-            int centerY = y2 - ( ( y2 - y1 ) / 2 );
-            int width = Integer.parseInt( swidth );
-            int height = Integer.parseInt( sheight );
-            scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
-            scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
+            try {
+                int x1 = Integer.parseInt( matcher.group( 1 ) );
+                int y1 = Integer.parseInt( matcher.group( 2 ) );
+                int x2 = Integer.parseInt( matcher.group( 3 ) );
+                int y2 = Integer.parseInt( matcher.group( 4 ) );
+                int centerX = x2 - ( ( x2 - x1 ) / 2 );
+                int centerY = y2 - ( ( y2 - y1 ) / 2 );
+                int width = Integer.parseInt( swidth );
+                int height = Integer.parseInt( sheight );
+                scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
+                scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
+            } catch ( NumberFormatException exc ) {
+                LOG.warn( "Failed to scroll to vertex: " + exc.getMessage() );
+            }
         }
         return scroll;
     }
 
     private int[] calculateEdgeScroll( StringBuilder imageMapHolder, String edgeId, String swidth, String sheight ) {
-        int[] scroll = new int[2];
+        int[] scroll = {0, 0};
         String imageMap = imageMapHolder.toString();
         String s = "<area.*?edge=" + edgeId + "&.*?coords=\"(\\d+),(\\d+),(\\d+),(\\d+)\"";
         Pattern pattern = Pattern.compile( s );
         Matcher matcher = pattern.matcher( imageMap );
         if ( matcher.find() ) {
-            int x1 = Integer.parseInt( matcher.group( 1 ) );
-            int y1 = Integer.parseInt( matcher.group( 2 ) );
-            int x2 = Integer.parseInt( matcher.group( 3 ) );
-            int y2 = Integer.parseInt( matcher.group( 4 ) );
-            int centerX = x2 - ( ( x2 - x1 ) / 2 );
-            int centerY = y2 - ( ( y2 - y1 ) / 2 );
-            int width = Integer.parseInt( swidth );
-            int height = Integer.parseInt( sheight );
-            scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
-            scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
+            try {
+                int x1 = Integer.parseInt( matcher.group( 1 ) );
+                int y1 = Integer.parseInt( matcher.group( 2 ) );
+                int x2 = Integer.parseInt( matcher.group( 3 ) );
+                int y2 = Integer.parseInt( matcher.group( 4 ) );
+                int centerX = x2 - ( ( x2 - x1 ) / 2 );
+                int centerY = y2 - ( ( y2 - y1 ) / 2 );
+                int width = Integer.parseInt( swidth );
+                int height = Integer.parseInt( sheight );
+                scroll[1] = Math.max( 0, centerX - ( width / 2 ) );
+                scroll[0] = Math.max( 0, centerY - ( height / 2 ) );
+            } catch ( NumberFormatException exc ) {
+                LOG.warn( "Failed to scroll to edge: " + exc.getMessage() );
+            }
         }
         return scroll;
     }
@@ -293,12 +301,12 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Graph selected event.
      *
-     * @param graphId a string
+     * @param graphId       a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
-     * @param scrollTop where to scroll to top
-     * @param scrollLeft where to scroll to left
-     * @param extras a map of string to string
-     * @param target an ajax request target
+     * @param scrollTop     where to scroll to top
+     * @param scrollLeft    where to scroll to left
+     * @param extras        a map of string to string
+     * @param target        an ajax request target
      */
     protected abstract void onSelectGraph( String graphId, String domIdentifier, int scrollTop, int scrollLeft,
                                            Map<String, String> extras, AjaxRequestTarget target );
@@ -306,13 +314,13 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Vertex selected event.
      *
-     * @param graphId a string
-     * @param vertexId a string
+     * @param graphId       a string
+     * @param vertexId      a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
-     * @param scrollTop where to scroll to top
-     * @param scrollLeft where to scroll to left
-     * @param extras a map of string to string
-     * @param target an ajax request target
+     * @param scrollTop     where to scroll to top
+     * @param scrollLeft    where to scroll to left
+     * @param extras        a map of string to string
+     * @param target        an ajax request target
      */
     protected abstract void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop,
                                             int scrollLeft, Map<String, String> extras, AjaxRequestTarget target );
@@ -320,13 +328,13 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
     /**
      * Edge selected event.
      *
-     * @param graphId a string
-     * @param edgeId a string
+     * @param graphId       a string
+     * @param edgeId        a string
      * @param domIdentifier -- dom identifier of diagram container - can be null
-     * @param scrollTop where to scroll to top
-     * @param scrollLeft where to scroll to left
-     * @param extras a map of string to string
-     * @param target an ajax request target
+     * @param scrollTop     where to scroll to top
+     * @param scrollLeft    where to scroll to left
+     * @param extras        a map of string to string
+     * @param target        an ajax request target
      */
     protected abstract void onSelectEdge( String graphId, String edgeId, String domIdentifier, int scrollTop,
                                           int scrollLeft, Map<String, String> extras, AjaxRequestTarget target );
@@ -335,8 +343,8 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
      * Append javascript to cause scrolling.
      *
      * @param domIdentifier a CSS path to a dom element
-     * @param scrollTop an int
-     * @param scrollLeft an int
+     * @param scrollTop     an int
+     * @param scrollLeft    an int
      * @return a script that will cause scrolling
      */
     protected String scroll( String domIdentifier, int scrollTop, int scrollLeft ) {
@@ -344,7 +352,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
         if ( domIdentifier != null ) {
             // Timeout needed to let document fully update.
             script = "{ setTimeout(\"$('" + domIdentifier + "').scrollTop(" + scrollTop + ").scrollLeft(" + scrollLeft
-                     + ")\", 500) }";
+                    + ")\", 500) }";
         }
         return script;
     }

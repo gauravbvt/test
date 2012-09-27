@@ -446,6 +446,10 @@ public class Plan extends ModelObject {
         this.template = template;
     }
 
+    public boolean isVisibleToUsers() {
+        return isTemplate() && isProduction();
+    }
+
     /**
      * Add event.
      *

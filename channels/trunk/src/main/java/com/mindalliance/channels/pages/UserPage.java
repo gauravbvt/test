@@ -207,7 +207,7 @@ public class UserPage extends AbstractChannelsBasicPage {
                 // Goto model
                 new WebMarkupContainer( "model" )
                         .add( gotoModelLink )
-                        .setVisible( planner || plan.isTemplate() )
+                        .setVisible( planner || plan.isVisibleToUsers() )
                         .setOutputMarkupId( true ),
                 // Goto guidelines
                 new WebMarkupContainer( "guidelines" )
