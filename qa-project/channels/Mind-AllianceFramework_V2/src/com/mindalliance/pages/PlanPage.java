@@ -1865,7 +1865,7 @@ public class PlanPage {
 		catch(Exception e){}
 		
 		
-		// Assertion: Verify by clicking on 'Is ongoing'  
+		// Assertion: Verify by clicking on 'Is ongoing' ,text 'is ongoing' is displayed in header in task panel  
 		elementController.requireElementSmart(fileName,"Header In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Header In Task Panel");
 		String textInPage=UIActions.getText(fileName,"Header In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Header In Task Panel");
 		String textInXml=dataController.getPageDataElements(fileName, "Ongoing Text", "Name");
