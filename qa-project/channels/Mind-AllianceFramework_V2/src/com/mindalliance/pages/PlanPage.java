@@ -3250,7 +3250,18 @@ public class PlanPage {
 	public void clickReplyThatInReceivesPanel() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Reply That In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Reply That In Receives Panel");
 		UIActions.click(fileName,"Reply That In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Reply That In Receives Panel");
-			
+
+		//		elementController.requireElementSmart(fileName, elementName, findBys, notFound)
+//		String radioButtonxPath = dataController.getPageDataElements(fileName, "Reply That In Receives Panel", "Xpath");
+//		if(radioButtonxPath.startsWith("[")){
+//			radioButtonxPath = radioButtonxPath.substring(1, radioButtonxPath.length()-1);
+//		}
+//		
+//		else
+//		{
+//			throw new UIAutomationException("Reply That Radio Buttons not found");
+//		}
+	
 		// Assertion: verify instruction textbox should be disabled
 		elementController.requireElementSmart(fileName,"Instructions In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Instructions In Receives Panel");
 		boolean textboxIsEnabled=UIActions.checkEnable(fileName,"Instructions In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Instructions In Receives Panel");
@@ -3259,7 +3270,10 @@ public class PlanPage {
 		}
 	
 	}
-	
+	/**
+	 * Click on browse button
+	 * @throws UIAutomationException
+	 */
 	public void clickBrowseInAttachFileInAboutPlanSegment() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Attach File Upload Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Upload Button In About Plan Segment");
 		UIActions.click(fileName,"Attach File Upload Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Upload Button In About Plan Segment");
@@ -3270,7 +3284,12 @@ public class PlanPage {
 //		String path=getPath(fileName);
 //		GlobalVariables.configuration.getWebElement().sendKeys(path);
 //	}
-	
+	/**
+	 * Gets file path
+	 * @param fileName
+	 * @return
+	 * @throws UIAutomationException
+	 */
 	public String getPath(String fileName) throws UIAutomationException{
 		try{
 			File currentDir=new File(".");
@@ -3282,6 +3301,10 @@ public class PlanPage {
 			throw new UIAutomationException("File MAP0018_attachFile.xml not found.");
 		}
 	}
+	/**
+	 * Click on 'Submit' in attach button
+	 * @throws UIAutomationException
+	 */
 	public void clickSubmitInAttachFileInAboutPlanSegment() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Attach File Submit Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Submit Button In About Plan Segment");
 		UIActions.click(fileName,"Attach File Submit Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Submit Button In About Plan Segment");
