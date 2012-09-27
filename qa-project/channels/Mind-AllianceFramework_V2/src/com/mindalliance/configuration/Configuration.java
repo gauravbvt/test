@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -28,6 +29,7 @@ public class Configuration {
 	private int difference=0;
 	private Hashtable<String,String> configData=null;
 	DataController dataController=new DataController();
+	private List<WebElement> webElements;
 	
 	/**
 	 * Creates the singleton instance of the Configuration class.
@@ -50,6 +52,7 @@ public class Configuration {
 		
 		return webElement;
 	}
+	
 
 	/**
 	 * Registers the WebElement object to perform various operations such as click , clear , sendKeys on HTML element in a page.
@@ -59,7 +62,23 @@ public class Configuration {
 		this.webElement = webElement;
 	}
 	
+	/**
+	 * Registers the webElement List object to perform various operations
+	 * @param WebElements the webElement list to set
+	 */
+	public void setWebElements(java.util.List<WebElement> webElements) 
+	{		
+		this.webElements = webElements;
+	}
 	
+	/**
+	 * Gets the WebElement List that Represents HTML elements in a page.
+	 * @return the WebElement List 
+	 */
+	public List<WebElement> getWebElements() 
+	{
+		return webElements;
+	}
 	/**
 	 * Gets the WebDriver object which is used to launch the web browser.
 	 * @return the webDriver object
