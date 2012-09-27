@@ -228,13 +228,13 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Presence</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>Presence</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div</Xpath>
+		<Xpath>//li[contains(@class,'tab0 selected')]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -366,10 +366,10 @@
 		<GivenName>Requirement Definitions In Plan Requirements</GivenName>
 		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/div/div/h3</Xpath>
 		<Name></Name>
-		<Id>id192</Id>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>req</ClassName>
+		<ClassName>req-defs</ClassName>
 	</Element>
 	
 	<Element>
@@ -1025,12 +1025,8 @@
 
 	<Element>
  		<GivenName>Segment Name</GivenName>
- 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr/td/input</Xpath>
+ 		<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:name')]</Xpath>
  		<Name>sg-editor:fp-content:mo:aspect:name</Name>
- 		<Id></Id>
-    	<PartialLinkText></PartialLinkText>
-    	<LinkText></LinkText>
-    	<ClassName></ClassName>
  	</Element>
  	
  	<Element>
@@ -1281,7 +1277,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Undo Update Segment</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
@@ -2145,22 +2141,14 @@
 	
 	<Element>
 		<GivenName>Within Dropdown In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[10]/td/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:timing:max-delay:delay-unit')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:timing:max-delay:delay-unit</Name>
 	</Element>
 	
 	<Element>
 		<GivenName>Within Count In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[10]/td/span/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'segment:receives:flows-div:flows:0:flow:timing:max-delay:delay-amount')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:timing:max-delay:delay-amount</Name>
 	</Element>
 	<Element>
 		<GivenName>Element Receives Panel</GivenName>
@@ -2182,13 +2170,10 @@
 	</Element>
 	<Element>
 		<GivenName>Instructions In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[11]/td/textarea</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//textarea[contains(@name,'segment:receives:flows-div:flows:0:flow:description')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:description</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>Reply That In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label[2]/input</Xpath>
@@ -2198,41 +2183,30 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>But Only If In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'segment:receives:flows-div:flows:0:flow:restrictionContainer:restricted')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:restrictionContainer:restricted</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>But Only If Dropdown In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:restrictionContainer:restriction')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:restrictionContainer:restriction</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>Channels Dropdown In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[9]/td/ol/li/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:channel-row:channels:editable-container:channels:0:medium</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>From Task Name In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@class,'node-secondchoice')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input</Name>
+		<ClassName>node-secondchoice</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Segment Dropdown On Plan Page</GivenName>
@@ -2263,21 +2237,13 @@
 	</Element>
 	<Element>
 		<GivenName>Context Dropdown In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div[2]/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing')]</Xpath>
+		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing</Name>
 	</Element>
 	<Element>
 		<GivenName>Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div[2]/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:event')]</Xpath>
+		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:event</Name>
 	</Element>
 	<Element>
 		<GivenName>Event Table In About Plan Segment</GivenName>
@@ -2353,12 +2319,8 @@
 	</Element>
 	<Element>
 		<GivenName>Between Level Dropdown In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div[2]/select[2]</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:level')]</Xpath>
+		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:level</Name>
 	</Element>
 	
 	<Element>
@@ -2447,30 +2409,18 @@
 	
 	<Element>
 		<GivenName>Event In Event In Scope Text</GivenName>
-		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table/tbody/tr[2]/td/input</Xpath>
-		<Name></Name>
-		<Id>id189</Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input')]</Xpath>
+		<Name>allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input</Name>
 	</Element>
 	<Element>
 		<GivenName>Checkbox Of Event In Event In Scope</GivenName>
-		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table/tbody/tr[2]/td[2]/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:confirmed')]</Xpath>
+		<Name>allEvents:content:events:incidents:eventsDiv:event:1:confirmed</Name>
 	</Element>
 	<Element>
 		<GivenName>Phase In About Plan</GivenName>
-		<Xpath>/html/body/form/div[4]/div/div[3]/div/div/table/tbody/tr[5]/td/span/div/ul/li[2]/span/input</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//input[contains(@name,'plan:fp-content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input')]</Xpath>
+		<Name>plan:fp-content:mo:aspect:phases:phasesDiv:phase:1:name-container:name-input</Name>
 	</Element>
 	<Element>
 		<GivenName>Delete Phase In About Plan</GivenName>
