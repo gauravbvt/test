@@ -86,7 +86,7 @@ public class MAV0089_viewActionsPopup extends TestCase{
 			// Click on 'Actions' pop up under 'Task' panel
 			planPage.clickActionsInTask();
 					
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

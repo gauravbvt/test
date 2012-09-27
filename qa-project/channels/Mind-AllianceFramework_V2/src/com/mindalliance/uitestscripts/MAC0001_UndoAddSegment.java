@@ -86,15 +86,7 @@ public class MAC0001_UndoAddSegment extends TestCase {
 						
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForUndoAddSegment"));
-			
-//			// Verify segment is added with segment name 'untitled'
-//			ElementController elementController=new ElementController();
-//			elementController.requireElementSmart(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
-//			String segmentName=UIActions.getText(fileName,"Segment Name",GlobalVariables.configuration.getAttrSearchList(), "Segment Name");
-//			if(!testData.get("Untitled").equals(segmentName)){
-//				throw new UIAutomationException("New segment not added.");
-//			}
-			
+		
 			// Close Segment window
 			planPage.closeSegmentWindow();
 			

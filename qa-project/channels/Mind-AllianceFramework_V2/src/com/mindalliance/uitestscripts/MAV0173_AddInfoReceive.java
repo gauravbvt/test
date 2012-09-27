@@ -79,11 +79,8 @@ public class MAV0173_AddInfoReceive extends TestCase{
 			// Click on 'Remove Info Need' under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoNeedInReceivesPanel"));	
-			
-			// Verify 'Info need is removed
-			
-			
-			// Sign Out from 'Home' page
+						
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

@@ -82,16 +82,16 @@ public class MAP0004_DeleteUser extends TestCase{
 			// Delete user
 			channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
 			
-			// Sign Out from 'Home' page
+			// Sign Out from 'Admin' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 		} 
 		catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAP0004_DeleteUser");
 		
-			//Sign out from plan page
+			//Sign out from Admin page
 			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
+			headerController.signOutAdmin();
 			
 			//Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();

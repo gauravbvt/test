@@ -84,7 +84,7 @@ public class MAV0080_addNewTask extends TestCase{
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));		
 										
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

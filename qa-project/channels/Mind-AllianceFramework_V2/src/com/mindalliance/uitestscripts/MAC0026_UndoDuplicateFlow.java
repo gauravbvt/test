@@ -111,8 +111,7 @@ public class MAC0026_UndoDuplicateFlow extends TestCase{
 			// Click on Remove this segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			
-			
+					
 			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();

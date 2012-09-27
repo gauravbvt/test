@@ -80,7 +80,7 @@ public class MAV0004_viewAdminHome extends TestCase{
 		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAV0004_viewAdminHome");
 	
-			// Sign out from plan page
+			// Sign out from Admin page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 			

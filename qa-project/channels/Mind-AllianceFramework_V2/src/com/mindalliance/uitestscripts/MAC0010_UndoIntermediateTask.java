@@ -107,20 +107,11 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Enter From Task name
 			planPage.enterFromTaskName(testData.get("FromTaskNameInRecevesPanel"));
 			
-//			// Click on 'Duplicate flow' under 'Actions' pop up menu
-//			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
-//			planPage.clickSubmenu(testData.get("DuplicateFlowInReceivesPanel"));	
-//			
-//			// Click on 'Undo Intermediate" in actions pop up menu
-//			planPage.clickPopupMenu(testData.get("Actions"));
-//			planPage.clickSubmenu(testData.get("UndoIntermediate"));
-			
 			// Click on Remove this segment
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			
-			
-			// Sign Out from 'Home' page
+						
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}
@@ -196,10 +187,6 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 		}
 	}
 
-
-	
-	
-	
 //	public MAC0010_UndoIntermediateTask() {
 //		try {
 //			GlobalVariables.sTestCaseId = "MAC0010_UndoIntermediateTask";

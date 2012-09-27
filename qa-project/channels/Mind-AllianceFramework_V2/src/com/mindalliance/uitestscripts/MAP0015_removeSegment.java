@@ -35,8 +35,6 @@ import junit.framework.TestCase;
  * @author afour
  */
 public class MAP0015_removeSegment extends TestCase {
-
-
 	public Hashtable<String, String> testData;
 	String fileName = "PlanPage.xml";
 	

@@ -80,14 +80,14 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			channelsAdmin.addUser(testData.get("User"));
 			channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
 			
-			//Sign Out from 'Home' page
+			//Sign Out from 'Admin' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 		} 
 		catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAP0003_AddNewUserToPlan");
 			
-			//Sign out from plan page
+			//Sign out from Admin page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 			

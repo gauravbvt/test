@@ -88,8 +88,7 @@ public class MAV0203_NotificationOption extends TestCase{
 			planPage.clickShowAdvancedFormInSendsPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
 			
 			// Click on radio button of notification in sends panel
-			planPage.clickNotificationInSendsPanel();
-			
+			planPage.clickNotificationInSendsPanel();			
 			
 			// Click on 'Add' in receives panel
 			planPage.clickAddInReceivesPanel();

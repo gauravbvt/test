@@ -90,8 +90,8 @@ public class MAV0125_copyFlow extends TestCase{
 			// Click on 'Copy Flow' under 'Actions' in 'Receives' panel
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("CopyFlowInReceivesPanel"));	
-					
-			// Sign Out from 'Home' page
+								
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}
@@ -135,7 +135,6 @@ public class MAV0125_copyFlow extends TestCase{
 			this.testData.put("OtherTaskName",oXmlEleMAV0125_copyFlow.getElementsByTagName("otherTaskName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ActionsInReceivesPanel",oXmlEleMAV0125_copyFlow.getElementsByTagName("actionsInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("CopyFlowInReceivesPanel",oXmlEleMAV0125_copyFlow.getElementsByTagName("copyFlowInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
-		 	
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAV0125_copyFlow not found.");

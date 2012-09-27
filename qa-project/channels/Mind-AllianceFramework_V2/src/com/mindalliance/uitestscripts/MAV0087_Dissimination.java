@@ -90,7 +90,7 @@ public class MAV0087_Dissimination extends TestCase{
 			// Close 'Dissemination' window
 			planPage.closeDisseminationWindow();
 			
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

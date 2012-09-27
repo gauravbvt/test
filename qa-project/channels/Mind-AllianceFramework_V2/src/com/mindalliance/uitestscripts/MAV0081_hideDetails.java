@@ -87,7 +87,7 @@ public class MAV0081_hideDetails extends TestCase{
 			planPage.clickPopupMenu(testData.get("ShowInTask"));
 			planPage.clickSubmenu(testData.get("HideDetails"));		
 							
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

@@ -86,7 +86,7 @@ public Hashtable<String, String> testData;
 			// Click on 'Hide Details'
 			planPage.clickShowInTaskPanel(testData.get("HideDetails"));
 							
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

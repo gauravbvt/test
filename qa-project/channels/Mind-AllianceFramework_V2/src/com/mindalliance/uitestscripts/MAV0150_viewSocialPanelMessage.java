@@ -70,7 +70,7 @@ public class MAV0150_viewSocialPanelMessage extends TestCase{
 			HomePage homePage=new HomePage();
 			homePage.clickMessagesTabInSocialPanel();
 					
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOut();
 		} catch (UIAutomationException ue) {

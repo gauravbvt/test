@@ -108,7 +108,7 @@ public class MAC0023_UndoAddInfoNeed extends TestCase {
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
 							
 				
-			// Sign Out from 'Home' page
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

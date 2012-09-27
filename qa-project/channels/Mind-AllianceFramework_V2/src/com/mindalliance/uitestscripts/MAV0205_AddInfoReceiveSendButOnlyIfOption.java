@@ -30,8 +30,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class MAV0205_AddInfoReceiveSendButOnlyIfOption extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

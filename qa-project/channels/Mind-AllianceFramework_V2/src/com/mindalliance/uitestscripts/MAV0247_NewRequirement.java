@@ -84,6 +84,9 @@ public class MAV0247_NewRequirement extends TestCase{
 			
 			// Click on 'New' button in requirement definition
 			planPage.clickNewButtonInPlanRequirement(testData.get("RequirementDefinitions"));
+			
+			// Remove requirement
+			planPage.clickRemoveRequirementInPlanRequirement();
 						
 			// Close Requirements window
 			planPage.closeRequirementWindow();

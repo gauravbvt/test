@@ -84,16 +84,16 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Delete Plan
 			channelsAdmin.deletePlan(testData.get("PlanName"));
 			
-			// Sign Out from 'Home' page
+			// Sign Out from 'Admin' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 		} 
 		catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAP0005_DeletePlan");
 	
-			// Sign out from plan page
+			// Sign out from Admin page
 			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
+			headerController.signOutAdmin();
 			
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();

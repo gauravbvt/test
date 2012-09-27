@@ -91,7 +91,7 @@ public class MAV0083_addAssignment extends TestCase{
 			// Close on 'Assignments' window
 			planPage.closeAssignmentWindow();			
 			
-			//Sign Out from 'Home' page
+			//Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

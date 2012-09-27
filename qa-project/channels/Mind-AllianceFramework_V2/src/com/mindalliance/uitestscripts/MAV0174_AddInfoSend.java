@@ -82,7 +82,7 @@ public class MAV0174_AddInfoSend extends TestCase {
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoSharingCapabilityInSendsPanel"));	
 							
-			// Sign Out from 'Home' page
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

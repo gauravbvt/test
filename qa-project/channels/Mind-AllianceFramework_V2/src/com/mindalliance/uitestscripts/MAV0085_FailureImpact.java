@@ -92,7 +92,7 @@ public class MAV0085_FailureImpact extends TestCase{
 			// Close 'Failure Impacts' window
 			planPage.closeFailureImpactsWindow();
 			
-			// Sign Out from 'Home' page
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

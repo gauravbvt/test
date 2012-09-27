@@ -98,7 +98,7 @@ public class MAC0002_UndoRemoveThisSegment extends TestCase{
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoRemoveThisSegment"));
 								
-			// Sign Out from 'Home' page
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 

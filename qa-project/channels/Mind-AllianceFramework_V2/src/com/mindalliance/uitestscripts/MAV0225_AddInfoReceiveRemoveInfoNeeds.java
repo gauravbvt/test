@@ -100,7 +100,7 @@ public class MAV0225_AddInfoReceiveRemoveInfoNeeds extends TestCase{
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
 							
 				
-			// Sign Out from 'Home' page
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}

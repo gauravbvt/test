@@ -35,8 +35,6 @@ import junit.framework.TestCase;
  *
  */
 public class MAP0012_addPhase extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

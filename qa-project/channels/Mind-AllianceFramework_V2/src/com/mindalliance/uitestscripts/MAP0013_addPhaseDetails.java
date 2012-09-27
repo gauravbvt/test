@@ -78,17 +78,7 @@ public class MAP0013_addPhaseDetails extends TestCase{
 			// Close Plan Map window
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
-			
-			// Click on 'Add New Segment' under 'Actions' pop up menu
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			
-			// Enter segment name
-			planPage.enterSegmentName(testData.get("SegmentForAddPhase"));
-			
-			// Close segment window
-			planPage.closeSegmentWindow();
-						
+												
 			// Click on 'About Plan' under 'Show' pop up menu
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlan"));
@@ -98,20 +88,19 @@ public class MAP0013_addPhaseDetails extends TestCase{
 			
 			// click on phase created
 			planPage.clickOnPhaseInAboutPlan();
-			
+									
 			// Enter phase description
 			planPage.enterValueInPhaseDescriptionInAboutPlan(testData.get("PhaseDescription"));
 			
 			// Close phase window
 			planPage.closeActualPhaseWindow();
-				
+			
+			// delete phase
+			planPage.deletePhase();
+			
 			// Close About Plan Window
 			planPage.closeAboutPlanWindow();
-			
-			//Click on Remove this segment
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-				
+						
 			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();

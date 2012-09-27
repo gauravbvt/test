@@ -82,7 +82,7 @@ public class MAV0005_logoutOnAdminPage extends TestCase{
 		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAV0005_logoutOnAdminPage");
 	
-			// Sign out from plan page
+			// Sign out from Admin page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 			

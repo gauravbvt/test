@@ -92,7 +92,7 @@ public class MAV0029_viewOrganizationsForm extends TestCase {
 			// Close 'About Plan Segment' window
 			planPage.closeAboutPlanSegmentWindow();
 							
-			// Sign Out from 'Home' page
+			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 

@@ -78,16 +78,16 @@ public class MAP0001_AddPlan extends TestCase {
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
 			channelsAdmin.deletePlan(testData.get("PlanName"));
 					
-			// Sign Out from 'Home' page
+			// Sign Out from 'Admin' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 		} 
 		catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAP0001_AddPlan");
 		
-			// Sign out from plan page
+			// Sign out from Admin page
 			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
+			headerController.signOutAdmin();
 			
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
