@@ -29,10 +29,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0172_SendPanel 
+ * Summary: Verify Sends panel is present on plan page
+ * @author afour
+ *
+ */
 public class MAV0172_SendPanel extends TestCase {
-
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

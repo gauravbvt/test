@@ -29,10 +29,15 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ *  TestCase Id: MAV0169_SimpleFormOfSendInfo 
+ * Summary: Verify by clicking on 'Show Simple Form' link in sends panel,
+ * link text changes to 'Show Advanced Form' link text 
+ * @author afour
+ *
+ */
 
 public class MAV0169_SimpleFormOfSendInfo extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

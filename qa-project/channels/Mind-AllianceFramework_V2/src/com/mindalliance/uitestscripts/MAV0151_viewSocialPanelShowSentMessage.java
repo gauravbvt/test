@@ -28,6 +28,12 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * TestCase Id: MAV0151_viewSocialPanelShowSentMessage 
+ * Summary: Verify by clicking on 'show sent' in Messages tab in 'Social panel' sent messages should be displayed
+ * @author afour
+ *
+ */
 public class MAV0151_viewSocialPanelShowSentMessage extends TestCase{
 	public Hashtable<String, String> testData;
 	

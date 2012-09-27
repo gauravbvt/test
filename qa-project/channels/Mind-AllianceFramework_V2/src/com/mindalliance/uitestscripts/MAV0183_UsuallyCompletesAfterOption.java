@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0183_UsuallyCompletesAfterOption 
+ * Summary: Verify option gets selected when clicked on 'Usually completes after'
+ * @author afour
+ *
+ */
 public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 	public Hashtable<String, String> testData;
 	

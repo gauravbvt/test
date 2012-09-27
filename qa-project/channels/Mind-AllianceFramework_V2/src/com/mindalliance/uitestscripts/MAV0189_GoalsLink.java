@@ -28,7 +28,12 @@ import com.mindalliance.pages.PlanPage;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
+/**
+ * TestCase Id: MAV0189_GoalsLink 
+ * Summary: Verify when clicked on 'Goals' link in task panel goals window opens
+ * @author afour
+ *
+ */
 public class MAV0189_GoalsLink extends TestCase{
 
 	public Hashtable<String, String> testData;

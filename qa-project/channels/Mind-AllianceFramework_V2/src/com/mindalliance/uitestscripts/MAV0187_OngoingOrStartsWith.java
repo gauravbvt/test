@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0187_OngoingOrStartsWith 
+ * Summary: Verify when Checked checkbox for 'Is ongoing' in task panel' task status should be changed to 'Is ongoing'
+ * @author afour
+ *
+ */
 public class MAV0187_OngoingOrStartsWith extends TestCase{
 
 	public Hashtable<String, String> testData;

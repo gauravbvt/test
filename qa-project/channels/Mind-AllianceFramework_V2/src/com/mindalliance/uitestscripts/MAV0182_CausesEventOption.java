@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0182_CausesEventOption 
+ * Summary: Verify event entered in Causes event textbox in task panel
+ * @author afour
+ *
+ */
 public class MAV0182_CausesEventOption extends TestCase{
 
 	public Hashtable<String, String> testData;

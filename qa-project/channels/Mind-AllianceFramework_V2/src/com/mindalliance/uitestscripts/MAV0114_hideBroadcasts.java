@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0114_hideBroadcasts 
+ * Summary: Verify when click on 'hide broadcasts' link messages should gets hidden
+ * @author afour
+ *
+ */
 public class MAV0114_hideBroadcasts extends TestCase{
 	public Hashtable<String, String> testData;
 	

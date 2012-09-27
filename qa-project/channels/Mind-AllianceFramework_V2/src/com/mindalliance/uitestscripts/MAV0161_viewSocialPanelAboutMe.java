@@ -28,6 +28,12 @@ import com.mindalliance.pages.LoginPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ *  TestCase Id: MAV0161_viewSocialPanelAboutMe 
+ * Summary: Verify by clicking on 'About Me' in 'Social panel', User information should gets displayed
+ * @author afour
+ *
+ */
 public class MAV0161_viewSocialPanelAboutMe extends TestCase{
 
 	public Hashtable<String, String> testData;

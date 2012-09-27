@@ -28,9 +28,14 @@ import com.mindalliance.pages.LoginPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0154_viewSocialPanelShowAllMessages 
+ * Summary: Verify by clicking on 'show all messages' in Messages tab
+ * in 'Social panel', messages should gets displayed
+ * @author afour
+ *
+ */
 public class MAV0154_viewSocialPanelShowAllMessages extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

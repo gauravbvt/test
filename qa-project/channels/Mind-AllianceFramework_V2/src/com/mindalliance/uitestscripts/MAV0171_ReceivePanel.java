@@ -27,9 +27,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0171_ReceivePanel 
+ * Summary: Verify Receives panel is present on plan page
+ * @author afour
+ *
+ */
 public class MAV0171_ReceivePanel extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

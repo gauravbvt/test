@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0184_RepeatsEvery 
+ * Summary: Verify option gets selected from dropdown when clicked on 'Repeats every'
+ * @author afour
+ *
+ */
 public class MAV0184_RepeatsEvery extends TestCase{
 
 	public Hashtable<String, String> testData;

@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0178_TaskTagsLink 
+ * Summary: Verify tag gets added and by clicking on it tags window opens
+ * @author afour
+ */
+
 public class MAV0178_TaskTagsLink extends TestCase{
 
 	public Hashtable<String, String> testData;

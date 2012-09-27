@@ -29,6 +29,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0167_SimpleFormOfReceiveInfo 
+ * Summary: Verify by clicking on 'Show Simple Form' link in receives panel,
+ * link text changes to 'Show Advanced Form' link text 
+ * @author afour
+ *
+ */
 public class MAV0167_SimpleFormOfReceiveInfo extends TestCase{
 
 	public Hashtable<String, String> testData;

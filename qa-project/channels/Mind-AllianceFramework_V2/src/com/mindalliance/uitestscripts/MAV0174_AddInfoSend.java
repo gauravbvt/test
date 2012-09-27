@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0174_AddInfoSend 
+ * Summary: Verify by clicking on 'Add' in Sends panel info sharing capability gets added.
+ * @author afour
+ *
+ */
 public class MAV0174_AddInfoSend extends TestCase {
 
 	public Hashtable<String, String> testData;

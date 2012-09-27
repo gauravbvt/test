@@ -24,6 +24,12 @@ import com.mindalliance.pages.LoginPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0162_viewIssueSummaryReport 
+ * Summary: Verify by clicking on 'Issues Summary Report' issues summary report gets displayed
+ * @author afour
+ *
+ */
 public class MAV0162_viewIssueSummaryReport extends TestCase{
 
 	public Hashtable<String, String> testData;

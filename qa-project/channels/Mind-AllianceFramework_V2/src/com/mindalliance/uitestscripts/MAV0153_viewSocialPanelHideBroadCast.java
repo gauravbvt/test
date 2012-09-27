@@ -28,6 +28,12 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * TestCase Id: MAV0153_viewSocialPanelHideBroadCast 
+ * Summary: Verify by clicking on 'hide broadcast' in Messages tab in 'Social panel', messages should gets hidden
+ * @author afour
+ *
+ */
 public class MAV0153_viewSocialPanelHideBroadCast extends TestCase{
 
 	public Hashtable<String, String> testData;

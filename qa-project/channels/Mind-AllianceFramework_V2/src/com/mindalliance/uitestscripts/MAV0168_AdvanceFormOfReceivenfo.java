@@ -29,6 +29,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ *  TestCase Id: MAV0168_AdvanceFormOfReceivenfo 
+ * Summary: Verify by clicking on 'Show Advanced Form' link in receives panel,
+ * link text changes to 'Show Simple Form' link text 
+ * @author afour
+ *
+ */
 public class MAV0168_AdvanceFormOfReceivenfo extends TestCase{
 
 

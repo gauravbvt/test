@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0175_ExpandTaskSummary 
+ * Summary: Verify by clicking on 'details' option in Task panel summary gets expanded
+ * @author afour
+ *
+ */
 public class MAV0175_ExpandTaskSummary extends TestCase{
 
 public Hashtable<String, String> testData;

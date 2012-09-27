@@ -28,6 +28,12 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * TestCase Id: MAV0150_viewSocialPanelMessage 
+ * Summary: Verify by clicking on 'Message' tab in social panel messages should be displayed
+ * @author afour
+ *
+ */
 public class MAV0150_viewSocialPanelMessage extends TestCase{
 
 	public Hashtable<String, String> testData;

@@ -24,7 +24,12 @@ import com.mindalliance.pages.LoginPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-
+/**
+ *  TestCase Id: MAV0157_viewSocialPanelCalender 
+ * Summary: Verify by clicking on 'calender' in 'Social panel', calender should gets displayed
+ * @author afour
+ *
+ */
 public class MAV0157_viewSocialPanelCalender extends TestCase{
 	public Hashtable<String, String> testData;
 	

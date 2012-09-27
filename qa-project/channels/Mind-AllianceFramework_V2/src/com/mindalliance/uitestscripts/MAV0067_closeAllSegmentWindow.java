@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase ID: MAV0067_closeAllSegmentWindow
+ * Summary: Verify that All segment window is closed  
+ * @author afour
+ *
+ */
 public class MAV0067_closeAllSegmentWindow extends TestCase{
 
 	public Hashtable<String, String> testData;

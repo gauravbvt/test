@@ -29,9 +29,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0186_EventUnnamed 
+ * Summary: Verify when Clicked on 'Unnamed' link in 'can end event unnamed' about event window gets displayed
+ * @author afour
+ *
+ */
 public class MAV0186_EventUnnamed extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

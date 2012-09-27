@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0125_copyFlow 
+ * Summary: Verify flow gets copied when click on 'Copy flow'
+ * @author afour
+ *
+ */
 public class MAV0125_copyFlow extends TestCase{
 
 	public Hashtable<String, String> testData;

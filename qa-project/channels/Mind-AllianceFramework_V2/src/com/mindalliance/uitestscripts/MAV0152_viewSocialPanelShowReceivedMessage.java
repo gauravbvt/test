@@ -28,6 +28,12 @@ import com.mindalliance.pages.LoginPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ *  TestCase Id: MAV0152_viewSocialPanelShowReceivedMessage 
+ * Summary: Verify by clicking on 'show receive' in Messages tab in 'Social panel', received messages should be displayed
+ * @author afour
+ *
+ */
 public class MAV0152_viewSocialPanelShowReceivedMessage extends TestCase{
 
 	public Hashtable<String, String> testData;

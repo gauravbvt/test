@@ -25,7 +25,6 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-
 public class MAV0197_TaskIssueSeverityOption extends TestCase{
 
 

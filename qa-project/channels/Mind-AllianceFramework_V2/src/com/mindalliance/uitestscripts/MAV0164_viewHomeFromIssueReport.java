@@ -28,6 +28,12 @@ import com.mindalliance.pages.LoginPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0164_viewHomeFromIssueReport 
+ * Summary: Verify by clicking on 'Home' icon on 'Issues Summary Report', home page gets displayed 
+ * @author afour
+ *
+ */
 public class MAV0164_viewHomeFromIssueReport extends TestCase{
 	public Hashtable<String, String> testData;
 	

@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0117_showReceived 
+ * Summary: Verify when click on 'show received ' link received messages should gets displayed
+ * @author afour
+ *
+ */
 public class MAV0117_showReceived extends TestCase{
 
 

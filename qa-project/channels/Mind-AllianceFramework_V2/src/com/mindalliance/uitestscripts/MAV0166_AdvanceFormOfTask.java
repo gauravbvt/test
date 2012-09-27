@@ -29,9 +29,14 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0166_AdvanceFormOfTask 
+ * Summary: Verify by clicking on 'Show Simple Form' link in task panel,
+ * link text changes to 'Show Advanced Form' link text 
+ * @author afour
+ *
+ */
 public class MAV0166_AdvanceFormOfTask extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0115_showAllMessages 
+ * Summary: Verify when click on 'shaow all messages' link messages should gets displayed
+ * @author afour
+ *
+ */
 public class MAV0115_showAllMessages extends TestCase{
 
 	public Hashtable<String, String> testData;

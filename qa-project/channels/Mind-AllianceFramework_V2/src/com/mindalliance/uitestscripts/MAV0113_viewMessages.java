@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0113_viewMessages 
+ * Summary: Verify when click on 'Messages' tab messages should be displayed
+ * @author afour
+ *
+ */
 public class MAV0113_viewMessages extends TestCase{
 	public Hashtable<String, String> testData;
 	

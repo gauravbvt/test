@@ -29,9 +29,14 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0176_ShowOrHideTaskDetails 
+ * Summary: Verify by clicking on 'details' and 'hide details' details in Task panel 
+ * should be displayed and hidden respectively
+ * @author afour
+ *
+ */
 public class MAV0176_ShowOrHideTaskDetails extends TestCase{
-
-
 public Hashtable<String, String> testData;
 	
 	@Before

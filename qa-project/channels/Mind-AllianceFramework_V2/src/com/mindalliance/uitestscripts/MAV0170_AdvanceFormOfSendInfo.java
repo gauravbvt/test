@@ -29,6 +29,13 @@ import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
 
+/**
+ *  TestCase Id: MAV0170_AdvanceFormOfSendInfo 
+ * Summary: Verify by clicking on 'Show Advanced Form' link in sends panel,
+ * link text changes to 'Show Simple Form' link text 
+ * @author afour
+ *
+ */
 public class MAV0170_AdvanceFormOfSendInfo extends TestCase {
 	public Hashtable<String, String> testData;
 	
