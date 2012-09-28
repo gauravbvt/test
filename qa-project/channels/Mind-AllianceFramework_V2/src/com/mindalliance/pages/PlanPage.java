@@ -647,7 +647,10 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;		
-		
+	case "Redo Remove Goal":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;			
 	case "Undo Paste Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1890,7 +1893,7 @@ public class PlanPage {
 		catch(Exception e){}
 		
 		
-		// Assertion: Verify by clicking on 'Can end event'  
+		// Assertion: Verify by clicking on 'Can end event' text 'Can end event' is displayed in header  
 		elementController.requireElementSmart(fileName,"Header In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Header In Task Panel");
 		String textInPage=UIActions.getText(fileName,"Header In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Header In Task Panel");
 		String textInXml=dataController.getPageDataElements(fileName, "Can End Event Text", "Name");
@@ -2690,7 +2693,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Severity Dropdown In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Severity Dropdown In New Issue In Sends Panel");
 		UIActions.click(fileName,"Severity Dropdown In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Severity Dropdown In New Issue In Sends Panel");
 							
-		// Assertion: Verify minor,major,severe,extreme
+		// Assertion: Verify minor,major,severe,extreme are present in 'Severity' dropdown
 		elementController.requireElementSmart(fileName,"Severity Dropdown In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Severity Dropdown In New Issue In Sends Panel");
 		String severityDropdown=UIActions.getText(fileName,"Severity Dropdown In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Severity Dropdown In New Issue In Sends Panel");
 		
