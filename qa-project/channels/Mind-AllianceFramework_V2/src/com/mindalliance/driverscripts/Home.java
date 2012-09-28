@@ -35,8 +35,7 @@ public class Home {
 		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
 		suite.addTestSuite(MAC0003_UndoAddGoal.class);
 		suite.addTestSuite(MAC0004_UndoRemoveGoal.class);
-		suite.addTestSuite(MAC0005_UndoAddNewTask.class);
-	
+		suite.addTestSuite(MAC0005_UndoAddNewTask.class);	
 		
 		
 		suite.addTestSuite(MAV0001_viewLoginPage.class);
@@ -249,6 +248,11 @@ public class Home {
 		suite.addTestSuite(MAC0021_CopyTask.class);
 		suite.addTestSuite(MAC0031_RedoAddSegment.class);
 		suite.addTestSuite(MAP0023_removeGoal.class);	
+		
+		//9/27/2012
+		suite.addTestSuite(MAC0033_RedoAddGoal.class);
+		suite.addTestSuite(MAC0034_RedoRemoveGoal.class);
+		
 		return suite;
 	}
 	
