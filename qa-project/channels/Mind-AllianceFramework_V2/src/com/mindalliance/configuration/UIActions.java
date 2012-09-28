@@ -26,13 +26,18 @@ public class UIActions {
 	/**
 	 *  Clicks on a particular page element. The page element is obtained from
 	 *  the configuration object.
-	 *
-	 * @return void
 	 */
 	public static void click(){
 		GlobalVariables.configuration.getWebElement().click();
 	}
-
+	/**
+	 * Clicks on particular page element
+	 * @param fileName
+	 * @param elementName
+	 * @param findBys
+	 * @param notFound
+	 * @throws UIAutomationException
+	 */
 	public static void click(String fileName,String elementName,ArrayList<?> findBys, String notFound) throws UIAutomationException{
 		int count =0;
 		int timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSecondsForClick"));
