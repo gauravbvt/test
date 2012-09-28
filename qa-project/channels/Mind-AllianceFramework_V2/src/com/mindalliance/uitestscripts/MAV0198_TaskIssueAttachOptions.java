@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0198_TaskIssueAttachOptions 
+ * Summary: Verify reference, policy are present in attach options in Issue in task
+ * @author afour
+ *
+ */
 public class MAV0198_TaskIssueAttachOptions extends TestCase{
 	public Hashtable<String, String> testData;
 	

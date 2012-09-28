@@ -25,6 +25,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0197_TaskIssueSeverityOption 
+ * Summary: Verify minor,major,severe,extreme are present in 'Severity' dropdown in Issues in task panel
+ * @author afour
+ *
+ */
 public class MAV0197_TaskIssueSeverityOption extends TestCase{
 
 

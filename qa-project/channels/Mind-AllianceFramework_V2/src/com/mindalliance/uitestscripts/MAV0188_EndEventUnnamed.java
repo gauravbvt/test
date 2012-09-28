@@ -29,6 +29,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0188_EndEventUnnamed 
+ * Summary: Verify when Clicked on 'Can Event Unnamed' checkbox
+ * task can ends with responding while unnamed
+ * @author afour
+ *
+ */
 public class MAV0188_EndEventUnnamed extends TestCase{
 	public Hashtable<String, String> testData;
 	

@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0199_AddInfoReceiveSendInformation 
+ * Summary: Verify information is enetered in add info sent and add info receive panel
+ * @author afour
+ *
+ */
 public class MAV0199_AddInfoReceiveSendInformation extends TestCase{
 	public Hashtable<String, String> testData;
 	

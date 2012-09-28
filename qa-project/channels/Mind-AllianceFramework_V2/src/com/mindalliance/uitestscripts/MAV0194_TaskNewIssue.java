@@ -27,8 +27,13 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0194_TaskNewIssue 
+ * Summary: Verify new issue is added in task panel
+ * @author afour
+ *
+ */
 public class MAV0194_TaskNewIssue extends TestCase{
-
 	public Hashtable<String, String> testData;
 	
 	@Before

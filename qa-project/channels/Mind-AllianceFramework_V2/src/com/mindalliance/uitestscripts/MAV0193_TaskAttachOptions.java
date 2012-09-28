@@ -28,10 +28,14 @@ import com.mindalliance.pages.PlanPage;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+/**
+ * TestCase Id: MAV0193_TaskAttachOptions 
+ * Summary: Verify reference,policy,mandatin policy,prohibiting policy options are present
+ * @author afour
+ *
+ */
 
 public class MAV0193_TaskAttachOptions extends TestCase{
-
-
 	public Hashtable<String, String> testData;
 	
 	@Before

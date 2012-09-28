@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 
 /**
  * TestCase Id: MAV0191_GoalsOptionUnchecked 
- * Summary: Verify when clicked on 'Goals'
+ * Summary: Verify when unchecked 'Goals' checkbox goal is removed from task panel
  * @author afour
  *
  */

@@ -29,6 +29,12 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * TestCase Id: MAV0196_TaskIssueTypeOption 
+ * Summary: Verify validity,completeness,robustness are present in type dropdown in Issues in task panel
+ * @author afour
+ *
+ */
 public class MAV0196_TaskIssueTypeOption extends TestCase{
 
 	public Hashtable<String, String> testData;
