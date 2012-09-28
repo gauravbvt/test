@@ -1,15 +1,26 @@
 package com.mindalliance.configuration;
 
+import java.awt.Color;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.JList;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.io.FileUtils;
+import org.jopendocument.dom.spreadsheet.Sheet;
+import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.internal.selenesedriver.TakeScreenshot;
 
+import com.csvreader.CsvReader;
 import com.mindalliance.configuration.Configuration.TraceLevel;
 
 /**
@@ -18,6 +29,48 @@ import com.mindalliance.configuration.Configuration.TraceLevel;
  * @author AFourTech
  */
 public class Reporting extends TakeScreenshot {
+	
+	public static int totalNoOfTestCasesPassed = 0;
+	public static int totalNoOfTestCasesFailed = 0;
+	int index = 0;
+	public JList jListExecute;
+	public String logDirectoryName;
+	public String logDirectoryPath;
+	public String errorLogSubDirectoryPath;
+	public String reportDirectoryName;
+	public String reportSrcDirectoryPath;
+	public String reportDstDirectoryPath;
+	public String testDataDirectoryPath;
+	public String blank = "";
+	public String passed = "PASS";
+	public String failed = "FAIL";
+	public String verifyError;
+	public String notRun = "NOT RUN";
+	public String automatesYes = "YES";
+	int testCasesAutomated = 0;
+	int testCasesPassed = 0;
+	int testCasesFailed = 0;
+	CsvReader products;
+	CsvReader csvTestCase;
+	String sSummary;
+	String csvResult;
+	String csvScriptException;
+	String csvErrorReport;
+	String arrayOfTestCaseId[] = new String[600];
+	String arrayOftestCaseSummary[] = new String[600];
+	String arrayOftestCaseResult[] = new String[600];
+	String testName;
+	public int noOfViewTestCasesExecuted=0;
+	public int noOfPlanTestCasesExecuted=0;
+	public int noOfCommandTestCasesExecuted=0;
+	public int noOfViewTestCasesPassed=0;
+	public int noOfPlanTestCasesPassed=0;
+	public int noOfCommandTestCasesPassed=0;
+	public int noOfViewTestCasesFailed=0;
+	public int noOfPlanTestCasesFailed=0;
+	public int noOfCommandTestCasesFailed=0;
+	public String startDateTime;
+	public String endDateTime;
 	
 	static DateFormat dateFormatGMT = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 	/**
@@ -56,4 +109,925 @@ public class Reporting extends TakeScreenshot {
 			System.out.println(message);
 		}
 	}
+	
+	public void updateTestCaseExecutionResult() {
+		try {
+			testCasesPassed = 0;
+			testCasesFailed = 0;
+			for (int i = 0; i < jListExecute.getModel().getSize() ; i++)	{
+				testName = jListExecute.getModel().getElementAt(i).toString();
+				if (testName != blank) {
+				   // Call readCsvFile
+					String sResult = readCsvFile(testName);
+					if (sResult == failed) {
+					    // Call generateAutomationReportInHtml()
+					    generateAutomationReportInHtml(testName);
+					    testCasesFailed ++;
+					    arrayOfTestCaseId[index] = testName;
+					    arrayOftestCaseResult[index++] = failed;
+				    }
+				    else if (sResult == passed) {
+					    // Call generateAutomationReportInHtml()
+					    generateAutomationReportInHtml(testName);
+					    testCasesPassed ++;
+					    arrayOfTestCaseId[index] = testName;
+					    arrayOftestCaseResult[index++] = passed;
+				    }
+			    }
+			}
+		}
+		catch(Exception e) {
+			System.out.println("\nError in updateTestCaseExecutionResult() function.\n");
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateTestCaseSheetResult() {
+		try {
+			int cnt=0;
+			File file,outputFile;
+			do {
+				cnt++;
+				if(cnt==1)
+					 file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+				else 
+					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+				Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
+			
+				// Update View, Plan & Command Sheets
+				for (int i = 0; i < jListExecute.getModel().getSize() ; i++)	{
+					testName = jListExecute.getModel().getElementAt(i).toString();
+
+					// Call readCsvFile
+					String sResult = readCsvFile(testName);
+				
+					if(testName.contains("MAV")) { 
+						sheet = sheet.getSpreadSheet().getSheet(1);
+						// No Of Test Cases Passed & Failed of Views
+						if(sResult.equals(passed))
+							noOfViewTestCasesPassed++;
+						else
+							noOfViewTestCasesFailed++;
+
+					}
+					else if(testName.contains("MAP")) {
+						sheet = sheet.getSpreadSheet().getSheet(2);
+						// No Of Test Cases Passed & Failed of Plans				
+						if(sResult.equals(passed))
+							noOfPlanTestCasesPassed++;
+						else
+							noOfPlanTestCasesFailed++;
+					}
+					else if(testName.contains("MAC")) {
+						sheet = sheet.getSpreadSheet().getSheet(3);
+						// No Of Test Cases Passed & Failed of Commands
+						if(sResult.equals(passed))
+							noOfCommandTestCasesPassed++;
+						else
+							noOfCommandTestCasesFailed++;
+					}
+					
+					for(int j=1;j<sheet.getRowCount();j++) {
+						if(testName.equals(sheet.getValueAt(0,j).toString())) {
+							if (sResult == failed) {
+								sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("J"+(j+1)).setValue(failed);
+								sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("K"+(j+1)).setValue(csvScriptException);
+								sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("L"+(j+1)).setValue(csvErrorReport);
+							}
+							else if (sResult == passed) {	
+								sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.ORANGE);
+								sheet.getCellAt("J"+(j+1)).setValue(passed);
+							}
+						}
+					}
+				}
+				
+				// Update Summary Sheet
+				sheet=sheet.getSpreadSheet().getSheet(0);
+				// No. Of Test Cases Executed of Views, Plans & Commands
+				sheet.getCellAt("G8").setValue(noOfViewTestCasesExecuted);
+				sheet.getCellAt("G9").setValue(noOfPlanTestCasesExecuted);
+				sheet.getCellAt("G10").setValue(noOfCommandTestCasesExecuted);
+				// No. Of Test Cases Passed of Views, Plans & Commands			
+				sheet.getCellAt("H8").setValue(noOfViewTestCasesPassed);
+				sheet.getCellAt("H9").setValue(noOfPlanTestCasesPassed);
+				sheet.getCellAt("H10").setValue(noOfCommandTestCasesPassed);
+				// No. Of Test Cases Failed of Views, Plans & Commands
+				sheet.getCellAt("I8").setValue(noOfViewTestCasesFailed);
+				sheet.getCellAt("I9").setValue(noOfPlanTestCasesFailed);
+				sheet.getCellAt("I10").setValue(noOfCommandTestCasesFailed);
+
+				if(cnt==1)
+					outputFile = new File(reportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
+				else
+					outputFile = new File(reportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet_V2.ods");
+				sheet.getSpreadSheet().saveAs(outputFile);
+				
+				// Set Pass/Fail Count to 0.
+				noOfViewTestCasesPassed=0;
+				noOfPlanTestCasesPassed=0;
+				noOfCommandTestCasesPassed=0;
+				noOfViewTestCasesFailed=0;
+				noOfPlanTestCasesFailed=0;
+				noOfCommandTestCasesFailed=0;
+				
+			}while(cnt!=2);
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in UpdateTestCaseSheetResult Function.");
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateTestCaseSheetResultForFunctionalTestCases() {
+		try {
+			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
+			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
+			
+			// Update Test Case Sheet
+			for(int i = 1; i < 18 ; i++) {
+				sheet=sheet.getSpreadSheet().getSheet(i);
+				for(int j=1;j<sheet.getRowCount();j++) {
+					sheet.getCellAt("I"+j).setValue("");
+					sheet.getCellAt("L"+j).setValue("");
+					sheet.getCellAt("M"+j).setValue("");
+					sheet.getCellAt("N"+j).setValue("");
+					sheet.getCellAt("O"+j).setValue("");
+					sheet.getCellAt("P"+j).setValue("");
+					sheet.getCellAt("Q"+j).setValue("");
+					sheet.getCellAt("R"+j).setValue("");
+					sheet.getCellAt("S"+j).setValue("");
+					sheet.getCellAt("T"+j).setValue("");
+				}
+				sheet.getCellAt("I1").setValue("RESULT");
+				sheet.getCellAt("L1").setValue("SCRIPT EXCEPTION");
+				sheet.getCellAt("R1").setValue("ERROR");
+			}
+			for (int i = 0; i < jListExecute.getModel().getSize() ; i++)	{
+				testName = jListExecute.getModel().getElementAt(i).toString();
+				if(testName.contains("CL")) 
+					sheet = sheet.getSpreadSheet().getSheet(1);
+				else if(testName.contains("HP"))
+					sheet = sheet.getSpreadSheet().getSheet(2);
+				else if(testName.contains("CA"))
+					sheet = sheet.getSpreadSheet().getSheet(3);
+				else if(testName.contains("DC"))
+					sheet = sheet.getSpreadSheet().getSheet(6);
+				else if(testName.contains("CC"))
+					sheet = sheet.getSpreadSheet().getSheet(7);
+				else if(testName.contains("CP"))
+					sheet = sheet.getSpreadSheet().getSheet(8);
+				else if(testName.contains("PS"))
+					sheet = sheet.getSpreadSheet().getSheet(9);
+				else if(testName.contains("TF"))
+					sheet = sheet.getSpreadSheet().getSheet(10);
+				else if(testName.contains("TE"))
+					sheet = sheet.getSpreadSheet().getSheet(11);
+				else if(testName.contains("IF"))
+					sheet = sheet.getSpreadSheet().getSheet(12);
+				else if(testName.contains("PP"))
+					sheet = sheet.getSpreadSheet().getSheet(13);
+				else if(testName.contains("PE"))
+					sheet = sheet.getSpreadSheet().getSheet(14);
+				else if(testName.contains("LF"))
+					sheet = sheet.getSpreadSheet().getSheet(15);
+				else if(testName.contains("SG"))
+					sheet = sheet.getSpreadSheet().getSheet(16);
+				else if(testName.contains("IS"))
+					sheet = sheet.getSpreadSheet().getSheet(17);
+
+				// Call readCsvFile
+				String sResult = readCsvFile(testName);
+				for(int j=1;j<sheet.getRowCount();j++) {
+					if(testName.equals(sheet.getValueAt(0,j).toString())) {
+						if (sResult == failed) {
+							sheet.getCellAt("I"+(j+1)).setBackgroundColor(Color.CYAN);
+							sheet.getCellAt("I"+(j+1)).setValue(failed);
+							sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
+							sheet.getCellAt("L"+(j+1)).setValue(csvScriptException);
+							sheet.getCellAt("R"+(j+1)).setBackgroundColor(Color.CYAN);
+							sheet.getCellAt("R"+(j+1)).setValue(csvErrorReport);					   
+				   		}
+				   		else if (sResult == passed) {
+				   			sheet.getCellAt("I"+(j+1)).setBackgroundColor(Color.ORANGE);
+				    		sheet.getCellAt("I"+(j+1)).setValue(passed);
+				   		}
+						break;
+					}
+				}
+			}
+			File outputFile = new File(reportDstDirectoryPath + "\\FunctionalTestCase.ods");
+			sheet.getSpreadSheet().saveAs(outputFile);
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in UpdateTestCaseSheetResultForFunctionalTestCases Function.");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Read TestCaseId for Automation UI (i.e. Home.java)
+	 * @param sheetNumber
+	 * @return
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 */
+	public String[] readTestCaseId(int sheetNumber)	{
+		try {
+			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+			// TestCase sheet: Tree_Navigation_Views
+			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
+			String[] arrayOfTestCaseId = new String[600];
+			testName = null;
+			index=0;
+			for (int i = 2; i <= sheet.getRowCount() ; i++){
+				testName = sheet.getCellAt("A"+i).getValue().toString();
+				if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
+					arrayOfTestCaseId[index] = testName;
+					index++;
+				}
+			}
+			if(sheetNumber==1||sheetNumber==2||sheetNumber==3) {
+				file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+				sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
+				for (int i = 2; i <= sheet.getRowCount() ; i++) {
+					testName = sheet.getCellAt("A"+i).getValue().toString();
+					if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
+						arrayOfTestCaseId[index] = testName;
+						index++;
+					}
+				}
+			}
+			sheet.detach();
+			return arrayOfTestCaseId;
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in readTestCaseId() function. \n");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Read Result Csv File
+	 * @throws IOException
+	 */
+	public String readCsvFile(String sTestCaseId) {
+		try {
+			csvResult = passed;
+			csvScriptException = blank;
+			csvErrorReport = blank;
+			CsvReader csvTestCase = new CsvReader(logDirectoryPath + "\\Results.csv");
+			csvTestCase.readHeaders();
+			while (csvTestCase.readRecord()) {
+				if (sTestCaseId.equals(csvTestCase.get("TestCaseId")) && csvTestCase.get("Result").equals(failed)) {
+					csvResult = csvTestCase.get("Result");
+					csvScriptException = csvTestCase.get("ScriptException");
+					csvErrorReport = csvTestCase.get("ErrorReport");
+				}
+			}
+			csvTestCase.close();
+			if (csvResult.equals(failed))
+				return failed;
+			else if(csvResult.equals(passed))
+				return passed;
+			else
+				return notRun;
+		}
+		catch(Exception e) {
+			System.out.println("\nError in readCsvFile() Function.\n");
+			e.printStackTrace();
+			return "Error";
+		}
+	}
+		
+	/**
+	 * Generate AutomationReport in Ods
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 */
+	public void generateAutomationReport() {
+		try {
+			// Update Test Case Execution Result
+			updateTestCaseExecutionResult();
+			
+			// Update Test Case Sheet Execution Result
+			updateTestCaseSheetResult();
+			
+			// No. of Test Cases Passed and Failed
+			totalNoOfTestCasesPassed = testCasesPassed;
+			totalNoOfTestCasesFailed = testCasesFailed;
+			
+			// Test Case Index
+			generateTestCaseIndex();
+			
+			// Test Case Summary
+			generateTestCaseSummary();
+			
+			// Final Test Pass Report
+			generateFinalTestPassReport();
+			
+			// Failure Report
+			generateFailureReport();
+			
+			System.out.println("Report generated successfully");
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in generateAutomationReport() function.\n");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Generate Final TestPass Report
+	 * @throws XMLStreamException
+	 * @throws IOException
+	 */
+	private void generateFinalTestPassReport() {
+		try {
+			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\index.htm");
+			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+
+			xml.writeStartDocument();
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("Mind-Alliance Automation TestPass Report: " + reportDirectoryName);
+					xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeStartElement("frameset");
+					xml.writeAttribute("rows", "25%,*");
+					xml.writeAttribute("border", "0");
+					xml.writeStartElement("frame");
+						xml.writeAttribute("src","TestPassSummary.htm");
+					xml.writeEndElement();
+					xml.writeStartElement("frameset");
+						xml.writeAttribute("cols", "35%,*");
+						xml.writeStartElement("frame");
+							xml.writeAttribute("src", "TestCaseList.htm");
+						xml.writeEndElement();
+						xml.writeStartElement("frame");
+							xml.writeAttribute("name", "targetframe");
+						xml.writeEndElement();
+					xml.writeEndElement();
+				xml.writeEndElement();
+			xml.writeEndElement();
+			xml.writeEndDocument();
+			xml.close();
+			destination.close();
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in generateFinalTestPassReport() function. \n");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 *  Generate TestCase Summary
+	 * @throws XMLStreamException
+	 * @throws IOException
+	 */
+	private void generateTestCaseSummary() {
+		try {
+			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestPassSummary.htm");
+			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+
+			xml.writeStartDocument();
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("TestCaseId Summary");
+					xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeStartElement("body");
+					xml.writeStartElement("table");
+						xml.writeAttribute("border","0");
+						xml.writeAttribute("cellpadding","0");
+						xml.writeAttribute("cellspacing","0");
+						xml.writeAttribute("width","100%");
+						xml.writeStartElement("tr");
+							xml.writeAttribute("bgColor","#DDDDDD");
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeCharacters("Start Datetime: " + startDateTime);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("End Datetime: " + endDateTime);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Browser: " + GlobalVariables.configuration.getConfigData().get("Browser"));
+									xml.writeEmptyElement("br");
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeStartElement("img");
+										xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
+										xml.writeAttribute("style","border-style: none");
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeCharacters("Number of TestCases Executed: " + (totalNoOfTestCasesPassed + totalNoOfTestCasesFailed));	
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+					xml.writeEndElement();
+				xml.writeEndElement();
+			xml.writeEndElement();
+			xml.writeEndDocument();
+			xml.close();
+			destination.close();
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in generateTestCaseSummary() function. \n");
+			e.printStackTrace();
+		}
+	}
+
+	private void generateFailureReport() {
+		try {
+			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseFailureList.htm");
+			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+
+			xml.writeStartDocument();
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("Mind-alliance Failure Report");
+					xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeStartElement("body");
+					xml.writeStartElement("table");
+						xml.writeAttribute("border","0");
+						xml.writeAttribute("cellpadding","0");
+						xml.writeAttribute("cellspacing","0");
+						xml.writeAttribute("width","100%");
+						xml.writeStartElement("caption");
+							xml.writeStartElement("strong");
+								xml.writeCharacters("Mind-Alliance Test scripts Failure Report");
+							xml.writeEndElement();
+							xml.writeStartElement("tr");
+								xml.writeAttribute("bgColor","#DDDDDD");
+								xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeCharacters("Start Datetime: " + startDateTime);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("End Datetime: " + endDateTime);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Browser: " + GlobalVariables.configuration.getConfigData().get("Browser"));
+									xml.writeEmptyElement("br");
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeStartElement("img");
+										xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
+										xml.writeAttribute("style","border-style: solid");
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeCharacters("Number of TestCases Executed: " + (totalNoOfTestCasesPassed + totalNoOfTestCasesFailed));
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Passed: " + totalNoOfTestCasesPassed);
+									xml.writeEmptyElement("br");
+									xml.writeCharacters("Number of TestCases Failed: " + totalNoOfTestCasesFailed);
+									xml.writeEmptyElement("br");
+
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+//					xml.writeEndElement();
+				xml.writeEndElement();
+			xml.writeEndElement();
+			xml.writeEndDocument();
+			
+			xml.writeStartDocument();
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("TestCaseId Index");
+					xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeStartElement("body");
+					xml.writeEmptyElement("br");
+					xml.writeStartElement("table");
+						xml.writeAttribute("border", "0");
+						xml.writeAttribute("width","100%");
+						xml.writeStartElement("th");
+							xml.writeStartElement("tr");
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("strong");
+										xml.writeCharacters("TestCaseId");
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("center");
+										xml.writeStartElement("strong");
+											xml.writeCharacters("Result");
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("center");
+										xml.writeStartElement("strong");
+											xml.writeCharacters("Script Exception");
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("center");
+										xml.writeStartElement("strong");
+											xml.writeCharacters("Error Report");
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+			for (int i = 0; i < jListExecute.getModel().getSize() ;i++) {
+				if(jListExecute.getModel().getElementAt(i) != null) {
+					csvTestCase = new CsvReader(logDirectoryPath + "\\Results.csv");
+					csvTestCase.readHeaders();
+					while(csvTestCase.readRecord()) {
+						if(csvTestCase.get("TestCaseId").equals(jListExecute.getModel().getElementAt(i).toString())) {
+							if(csvTestCase.get("ScriptException")!= blank || csvTestCase.get("ErrorReport")!= blank) { 
+						xml.writeStartElement("tr");
+							xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+							xml.writeAttribute("bgColor","#DDDDDD");
+							xml.writeAttribute("padding","");
+							xml.writeStartElement("td");
+								xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+								xml.writeStartElement("left");
+									xml.writeCharacters(jListExecute.getModel().getElementAt(i).toString());
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+								xml.writeStartElement("center");
+									xml.writeStartElement("font");
+									if(arrayOftestCaseResult[i].equals(passed))
+										xml.writeAttribute("color", "GREEN");
+									else
+										xml.writeAttribute("color", "RED");
+										xml.writeCharacters(arrayOftestCaseResult[i]);
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+								xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+								xml.writeStartElement("center");
+							if(csvTestCase.get("ScriptException")!= blank) {
+									xml.writeCharacters(csvTestCase.get("ScriptException"));
+								xml.writeEndElement();
+							}
+							if(csvTestCase.get("ErrorReport")!= blank) {
+								xml.writeStartElement("td");
+									xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+									xml.writeStartElement("center");
+										xml.writeCharacters(csvTestCase.get("ErrorReport"));
+									xml.writeEndElement();
+								xml.writeEndElement();
+							}
+							else {
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#DDDDDD");
+									xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+								xml.writeEndElement();
+							}
+							xml.writeEndElement();
+						xml.writeEndElement();
+							}
+						}
+					}
+					csvTestCase.close();
+				}
+			}
+			xml.writeEndElement();
+			xml.writeEndElement();
+			xml.writeEndElement();
+			xml.writeEndDocument();
+			xml.close();
+			destination.close();
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in generateFailureReport() function.\n");
+			e.printStackTrace();
+		}
+	}		
+
+/**
+	 * Generate TestCase Index
+	 * @throws XMLStreamException
+	 * @throws IOException
+	 */
+	private void generateTestCaseIndex() {
+		try	{
+			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseList.htm");
+			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+
+			xml.writeStartDocument();
+			xml.writeStartElement("html");
+				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+				xml.writeStartElement("head");
+					xml.writeStartElement("title");
+						xml.writeCharacters("TestCaseId Index");
+					xml.writeEndElement();
+				xml.writeEndElement();
+				xml.writeStartElement("body");
+					xml.writeStartElement("table");
+						xml.writeAttribute("border", "0");
+						xml.writeAttribute("width","100%");
+						xml.writeStartElement("th");
+							xml.writeStartElement("tr");
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("strong");
+										xml.writeCharacters("TestCaseId");
+									xml.writeEndElement();
+								xml.writeEndElement();
+								xml.writeStartElement("td");
+									xml.writeAttribute("bgColor","#BBBBBB");
+									xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+									xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+									xml.writeStartElement("center");
+										xml.writeStartElement("strong");
+											xml.writeCharacters("Result");
+										xml.writeEndElement();
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+				for (int i = 0; i < jListExecute.getModel().getSize() ; i++) {
+					if(jListExecute.getModel().getElementAt(i) != null) {
+						xml.writeStartElement("tr");
+							xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+							xml.writeAttribute("bgColor","#DDDDDD");
+							xml.writeAttribute("padding","");
+							xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+							xml.writeStartElement("td");
+								xml.writeStartElement("a");
+									xml.writeAttribute("href", jListExecute.getModel().getElementAt(i) + ".htm");
+									xml.writeAttribute("target", "targetframe");
+									xml.writeCharacters(jListExecute.getModel().getElementAt(i).toString());
+								xml.writeEndElement();
+							xml.writeEndElement();
+							xml.writeStartElement("td");
+								xml.writeStartElement("center");
+									xml.writeStartElement("font");
+									if (arrayOftestCaseResult[i].equals(passed))
+										xml.writeAttribute("color", "GREEN");
+									else
+										xml.writeAttribute("color", "RED");
+										xml.writeCharacters(arrayOftestCaseResult[i]);
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+					}
+				}
+					xml.writeEndElement();
+				xml.writeEndElement();
+			xml.writeEndDocument();
+			xml.close();
+			destination.close();
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in generateTestCaseIndex() function. \n");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Generate AutomationReport in HTML
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 */
+	public void generateAutomationReportInHtml(String testName) {
+	try {
+		csvTestCase = new CsvReader(logDirectoryPath + "\\Results.csv");
+		OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\" + testName + ".htm");
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
+
+		xml.writeStartDocument();
+		xml.writeStartElement("html");
+			xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
+			xml.writeStartElement("head");
+		 		xml.writeStartElement("title");
+		 			xml.writeCharacters("TestCaseId: " + testName);
+		 		xml.writeEndElement();
+		 	xml.writeEndElement();
+		 	xml.writeStartElement("body");
+		 		xml.writeCharacters("TestCase Id: " + testName);
+		 		xml.writeStartElement("table");
+		 			xml.writeAttribute("border", "0");
+		 			xml.writeAttribute("width","100%");
+		 			xml.writeStartElement("th");
+		 				xml.writeStartElement("tr");
+		 					xml.writeStartElement("td");
+		 						xml.writeAttribute("bgColor","#BBBBBB");
+		 						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+		 						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+		 						xml.writeStartElement("center");
+		 							xml.writeStartElement("strong");
+		 								xml.writeCharacters("Step No");
+		 							xml.writeEndElement();
+		 						xml.writeEndElement();
+		 					xml.writeEndElement();
+		 					xml.writeStartElement("td");
+		 						xml.writeAttribute("bgColor","#BBBBBB");
+		 						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+		 						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+		 						xml.writeStartElement("center");
+		 							xml.writeStartElement("strong");
+		 								xml.writeCharacters("Description");
+		 							xml.writeEndElement();
+		 						xml.writeEndElement();
+		 					xml.writeEndElement();
+		 					xml.writeStartElement("td");
+		 						xml.writeAttribute("bgColor","#BBBBBB");
+		 						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+		 						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+		 						xml.writeStartElement("center");
+		 							xml.writeStartElement("strong");
+		 								xml.writeCharacters("Result");
+		 							xml.writeEndElement();
+		 						xml.writeEndElement();
+		 					xml.writeEndElement();
+		 					xml.writeStartElement("td");
+		 						xml.writeAttribute("bgColor","#BBBBBB");
+		 						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+		 						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+		 						xml.writeStartElement("center");
+		 							xml.writeStartElement("strong");
+		 								xml.writeCharacters("Script Exception");
+		 							xml.writeEndElement();
+		 						xml.writeEndElement();
+		 					xml.writeEndElement();
+		 					xml.writeStartElement("td");
+		 						xml.writeAttribute("bgColor","#BBBBBB");
+		 						xml.writeAttribute("onMouseover", "this.bgColor='#DDDDDD'");
+		 						xml.writeAttribute("onMouseout", "this.bgColor='#BBBBBB'");
+		 						xml.writeStartElement("center");
+									xml.writeStartElement("strong");
+										xml.writeCharacters("Error Report");
+									xml.writeEndElement();
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+					xml.writeEndElement();
+			csvTestCase.readHeaders();
+			while(csvTestCase.readRecord()) {
+				if(testName.equals(csvTestCase.get("TestCaseId"))) {
+					xml.writeStartElement("tr");
+						xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
+						xml.writeAttribute("bgColor","#DDDDDD");
+						xml.writeAttribute("padding","");
+						xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
+						xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
+						xml.writeStartElement("td");
+							xml.writeStartElement("center");
+								xml.writeCharacters(csvTestCase.get("VerificationStepNo"));
+							xml.writeEndElement();
+						xml.writeEndElement();
+						xml.writeStartElement("td");
+							xml.writeCharacters(csvTestCase.get("Description"));
+						xml.writeEndElement();
+						xml.writeStartElement("td");
+							xml.writeStartElement("center");
+								xml.writeStartElement("font");
+								if(csvTestCase.get("Result").equals(passed))
+									xml.writeAttribute("color", "GREEN");
+								else
+									xml.writeAttribute("color", "RED");
+									xml.writeCharacters(csvTestCase.get("Result"));
+								xml.writeEndElement();
+							xml.writeEndElement();
+						xml.writeEndElement();
+					if (csvTestCase.get("ScriptException") != blank) {
+						xml.writeStartElement("td");
+							xml.writeCharacters(csvTestCase.get("ScriptException"));
+					}
+					else {
+							xml.writeStartElement("td");
+					}
+						xml.writeEndElement();
+					if (csvTestCase.get("ErrorReport") != blank) {
+						xml.writeStartElement("td");
+							xml.writeCharacters(csvTestCase.get("ErrorReport"));
+					}
+					else {
+						xml.writeStartElement("td");
+					}
+						xml.writeEndElement();
+					xml.writeEndElement();
+				}
+			}
+				xml.writeEndElement();
+			xml.writeEndElement();
+		xml.writeEndElement();
+		xml.writeEndDocument();
+		xml.close();
+		destination.close();
+		csvTestCase.close();
+	}
+	catch(Exception e) {
+		System.out.println("\nError in generateAutomationReportInHtml() function. \n");
+		e.printStackTrace();
+	}
+	}
+
+	public String[] readTestCaseIdForFunctional(int sheetNumber) {
+		try {
+			File file1 = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
+			// TestCase sheet: Tree_Navigation_Views
+			Sheet sheet1 = SpreadSheet.createFromFile(file1).getSheet(sheetNumber);
+			String[] arrayOfTestCaseId = new String[600];
+			testName = null;
+			index=0;
+			for (int i = 2; i <= sheet1.getRowCount() ; i++){
+				testName = sheet1.getCellAt("A"+i).getValue().toString();
+				if (sheet1.getCellAt("J"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
+					arrayOfTestCaseId[index] = testName;
+					index++;
+				}
+			}
+			sheet1.detach();
+			return arrayOfTestCaseId;
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in readTestCaseIdForFunctional() function.\n");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public void generateAutomationReportForFunctionalTestCases() {
+		try {
+			// Update Test Case Execution Result
+			updateTestCaseExecutionResult();
+			
+			// Update Test Case Sheet Execution Result
+			updateTestCaseSheetResultForFunctionalTestCases();
+			
+			// No. of Test Cases Passed and Failed
+			totalNoOfTestCasesPassed = testCasesPassed;
+			totalNoOfTestCasesFailed = testCasesFailed;
+			
+			// Test Case Index
+			generateTestCaseIndex();
+			
+			// Test Case Summary
+			generateTestCaseSummary();
+			
+			// Final Test Pass Report
+			generateFinalTestPassReport();
+			
+			// Failure Report
+			generateFailureReport();
+			
+			System.out.println("Report generated successfully");
+		}
+		catch(Exception e) {
+			System.out.println("\nError Occured in generateAutomationReportForFunctionalTestCases() function.");
+			e.printStackTrace();
+		}
+	}
+	
 }
