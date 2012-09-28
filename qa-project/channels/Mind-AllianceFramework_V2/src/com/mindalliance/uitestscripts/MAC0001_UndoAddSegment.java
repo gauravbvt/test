@@ -31,7 +31,7 @@ import com.mindalliance.pages.PlanPage;
 /**
  * Testcase ID: MAC0001_UndoAddSegment
  * 	   Summary: Verify that user is able to undo the added segment
- * 		  Note: No 'undo add new segment' option. TicketNo.49
+ * 		  Note: No 'undo add new segment' option.
  * @author afour
  * 
  */
