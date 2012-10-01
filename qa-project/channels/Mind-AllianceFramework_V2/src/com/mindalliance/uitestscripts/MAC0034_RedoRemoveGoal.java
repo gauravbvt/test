@@ -156,7 +156,6 @@ public class MAC0034_RedoRemoveGoal extends TestCase {
 	        this.testData.put("AboutPlanSegment",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("GoalsTab",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("goalsTab").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Organization",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("organization").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UndoUpdateSegment",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("undoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RedoRemoveGoal",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("redoRemoveGoal").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RemoveThisSegment",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("UndoRemoveGoal",oXmlEleMAC0034_RedoRemoveGoal.getElementsByTagName("undoRemoveGoal").item(0).getChildNodes().item(0).getNodeValue());

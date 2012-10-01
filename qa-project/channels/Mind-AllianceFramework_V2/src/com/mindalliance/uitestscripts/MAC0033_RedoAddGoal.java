@@ -159,7 +159,7 @@ public class MAC0033_RedoAddGoal extends TestCase {
 	     	this.testData.put("Title",oXmlEleMAC0033_RedoAddGoal.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("SelectgoalFromList",oXmlEleMAC0033_RedoAddGoal.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("Type",oXmlEleMAC0033_RedoAddGoal.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
-	     	 this.testData.put("RedoUpdateSegment",oXmlEleMAC0033_RedoAddGoal.getElementsByTagName("redoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
+	     	this.testData.put("RedoUpdateSegment",oXmlEleMAC0033_RedoAddGoal.getElementsByTagName("redoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAC0033_RedoAddGoal not found.");
