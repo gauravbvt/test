@@ -151,9 +151,7 @@ public class MAP0023_removeGoal extends TestCase {
 	        this.testData.put("AboutPlanSegment",oXmlEleMAP0023_removeGoal.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("GoalsTab",oXmlEleMAP0023_removeGoal.getElementsByTagName("goalsTab").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Organization",oXmlEleMAP0023_removeGoal.getElementsByTagName("organization").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UndoUpdateSegment",oXmlEleMAP0023_removeGoal.getElementsByTagName("undoUpdateSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RemoveThisSegment",oXmlEleMAP0023_removeGoal.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UndoRemoveGoal",oXmlEleMAP0023_removeGoal.getElementsByTagName("undoRemoveGoal").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleMAP0023_removeGoal.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("Title",oXmlEleMAP0023_removeGoal.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	     	this.testData.put("SelectgoalFromList",oXmlEleMAP0023_removeGoal.getElementsByTagName("selectgoalFromList").item(0).getChildNodes().item(0).getNodeValue());

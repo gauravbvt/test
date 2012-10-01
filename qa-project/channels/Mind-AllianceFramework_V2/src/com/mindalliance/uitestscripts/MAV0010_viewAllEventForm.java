@@ -80,7 +80,7 @@ public class MAV0010_viewAllEventForm extends TestCase{
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
 							
-			// Click on 'Events Ijn Scope' under 'Scoping' pop up menu
+			// Click on 'Events In Scope' under 'Scoping' pop up menu
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("EventsInScope"));
 						
