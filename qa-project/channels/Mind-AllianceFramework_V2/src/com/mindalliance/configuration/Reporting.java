@@ -337,7 +337,12 @@ public class Reporting extends TakeScreenshot {
 	 */
 	public String[] readTestCaseId(int sheetNumber)	{
 		try {
-			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+			File currentDir=new File(".");
+			
+			String path= currentDir.getCanonicalPath().toString() + "\\TestCases\\";
+			File file=new File(path+"Mind-AllianceTestCaseSheet.ods");
+			
+//			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
 			String[] arrayOfTestCaseId = new String[600];
@@ -351,7 +356,8 @@ public class Reporting extends TakeScreenshot {
 				}
 			}
 			if(sheetNumber==1||sheetNumber==2||sheetNumber==3) {
-				file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+				String sheetPath=currentDir.getCanonicalPath().toString() + "\\TestCases\\";
+				file = new File(sheetPath + "Mind-AllianceTestCaseSheet.ods");
 				sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
 				for (int i = 2; i <= sheet.getRowCount() ; i++) {
 					testName = sheet.getCellAt("A"+i).getValue().toString();
