@@ -37,6 +37,17 @@ public class PlanPage {
 	public void closeAboutPlanWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close About Plan Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Window");
 			UIActions.click(fileName,"Close About Plan Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Window");
+			
+			// Assertion: Verify About plan window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close About Plan Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("About plan window can not be closed.");
+			}
 	}
 	/**
 	 * 'closeAboutEventUnnamedWindow' method close the About Plan window
@@ -46,6 +57,17 @@ public class PlanPage {
 	public void closeAboutEventUnnamedWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close About Event: Unnamed Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Event: Unnamed Window");
 			UIActions.click(fileName,"Close About Event: Unnamed Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Event: Unnamed Window");
+			
+			// Assertion: Verify About event window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close About Event: Unnamed Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("About event window can not be closed.");
+			}
 	}
 	/**
 	 * 'closePlanMap' method close the Plan Map window
@@ -55,6 +77,17 @@ public class PlanPage {
 	public void closePlanMap() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Plan Map Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
 			UIActions.click(fileName,"Close Plan Map Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
+			
+			// Assertion: Verify plan map window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Plan Map Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Plan map window can not be closed.");
+			}
 			
 	}
 	
@@ -66,6 +99,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Close Assignment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
 		UIActions.click(fileName,"Close Assignment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
 		
+		// Assertion: Verify Assignment window is closed
 		try{
 			Thread.sleep(1000);
 		}
@@ -86,6 +120,8 @@ public class PlanPage {
 			elementController.requireElementSmart(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
 			xPath=dataController.getPageDataElements(fileName,"Close Segment Window", "Xpath");
 			UIActions.click(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
+		
+			// Asertion: Verify segment window is closed
 			try{
 				Thread.sleep(2000);
 			}
@@ -104,6 +140,18 @@ public class PlanPage {
 	public void closeEventsWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
 			UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
+			
+			// Assertion: Verify Event window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Events Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Events window can not be closed.");
+			}
+			
 	}
 	/**
 	 * Close requirement window
@@ -112,6 +160,17 @@ public class PlanPage {
 	public void closeRequirementWindow() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Close Requirements Window",GlobalVariables.configuration.getAttrSearchList(), "Close Requirements Window");
 		UIActions.click(fileName,"Close Requirements Window",GlobalVariables.configuration.getAttrSearchList(), "Close Requirements Window");
+		
+		// Assertion: Verify Requirement window is closed
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		xPath=dataController.getPageDataElements(fileName,"Close Requirements Window", "Xpath");
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("Requirement window can not be closed.");
+		}
 }
 	/**
 	 * 'closeClassificationWindow' method close the Classification window
@@ -121,6 +180,17 @@ public class PlanPage {
 	public void closeClassificationWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Classification Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
 			UIActions.click(fileName,"Close Classification Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
+			
+			// Assertion: Verify Classification window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Classification Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Classification window can not be closed.");
+			}
 	}
 	
 	/**
@@ -131,6 +201,17 @@ public class PlanPage {
 	public void closeOrganiztionWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Organization Window",GlobalVariables.configuration.getAttrSearchList(), "Close Organization Window");
 			UIActions.click(fileName,"Close Organization Window",GlobalVariables.configuration.getAttrSearchList(), "Close Organization Window");
+			
+			// Assertion: Verify Organization window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Organization Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Organization window can not be closed.");
+			}
 	}
 	
 	/**
@@ -141,6 +222,17 @@ public class PlanPage {
 	public void closeSearchingWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Searching Window",GlobalVariables.configuration.getAttrSearchList(), "Close Searching Window");
 			UIActions.click(fileName,"Close Searching Window",GlobalVariables.configuration.getAttrSearchList(), "Close Searching Window");
+			
+			// Assertion: Verify Searching window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Searching Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Searching window can not be closed.");
+			}
 	}
 	
 	/**
@@ -151,6 +243,17 @@ public class PlanPage {
 	public void closeAllIssuesWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close All Issues Window",GlobalVariables.configuration.getAttrSearchList(), "Close All Issues Window");
 			UIActions.click(fileName,"Close All Issues Window",GlobalVariables.configuration.getAttrSearchList(), "Close All Issues Window");
+			
+			// Assertion: Verify All issues window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close All Issues Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("All issues window can not be closed.");
+			}
 	}
 	
 	/**
@@ -161,6 +264,17 @@ public class PlanPage {
 	public void closePlanEvaluationWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Plan Evaluation Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan Evaluation Window");
 			UIActions.click(fileName,"Close Plan Evaluation Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan Evaluation Window");
+			
+			// Assertion: Verify Plan Evaluation window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Plan Evaluation Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Plan Evaluation window can not be closed.");
+			}
 	}
 	
 
@@ -172,6 +286,17 @@ public class PlanPage {
 	public void closeUserAsAgentWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close User As Agent Window",GlobalVariables.configuration.getAttrSearchList(), "Close User As Agent Window");
 			UIActions.click(fileName,"Close User As Agent Window",GlobalVariables.configuration.getAttrSearchList(), "Close User As Agent Window");
+			
+			// Assertion: Verify User As Agents window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close User As Agent Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("User As Agents window can not be closed.");
+			}
 	}
 	
 	/**
@@ -182,6 +307,17 @@ public class PlanPage {
 	public void closePlanVersionsWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Plan Versions Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan Versions Window");
 			UIActions.click(fileName,"Close Plan Versions Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan Versions Window");
+			
+			// Assertion: Verify Plan Versions window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Plan Versions Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("Plan Versions window can not be closed.");
+			}
 	}
 	/**
 	 * 'closeAboutPlanSegmentWindow' method close 'About Plan Segment' window
@@ -191,6 +327,17 @@ public class PlanPage {
 	public void closeAboutPlanSegmentWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close About Plan Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Segment Window");
 			UIActions.click(fileName,"Close About Plan Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Segment Window");
+			
+			// Assertion: Verify Plan Versions window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close About Plan Segment Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("About Plan Segment window can not be closed.");
+			}
 	}
 	
 	/**
@@ -200,6 +347,17 @@ public class PlanPage {
 	public void closeEOIWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Element Of Information Window",GlobalVariables.configuration.getAttrSearchList(), "Close Element Of Information Window");
 			UIActions.click(fileName,"Close Element Of Information Window",GlobalVariables.configuration.getAttrSearchList(), "Close Element Of Information Window");
+			
+			// Assertion: Verify EOI window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close Element Of Information Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("EOI window can not be closed.");
+			}
 	}
 	/**
 	 * 'closeTaskMoverWindow' method close 'About Plan Segment' window
@@ -227,6 +385,17 @@ public class PlanPage {
 	public void closeAllSurveysWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close All Surveys Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Segment Window");
 			UIActions.click(fileName,"Close All Surveys Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Segment Window");
+			
+			// Assertion: Verify All Surveys window is closed
+			try{
+				Thread.sleep(1000);
+			}
+			catch(Exception e){}
+			xPath=dataController.getPageDataElements(fileName,"Close All Surveys Window", "Xpath");
+			List<WebElement> webElemets=UIActions.getElements(xPath);
+			if(!webElemets.isEmpty()){
+				throw new UIAutomationException("All Surveys window can not be closed.");
+			}
 	}
 
 	/**
@@ -642,6 +811,11 @@ public class PlanPage {
 	case "Undo Update Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		try{
+			Thread.sleep(1000);
+		}
+		catch (Exception e) {}
+		
 		break;	
 	case "Redo Update Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -650,7 +824,15 @@ public class PlanPage {
 	case "Redo Remove Goal":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		break;			
+		break;	
+	case "Redo Add New Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;	
+	case "Redo Cut Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;	
 	case "Undo Paste Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1028,6 +1210,20 @@ public class PlanPage {
 			throw new UIAutomationException("Task '"+taskName+"' is not created.");
 		}
 	}
+	/**
+	 * Verify task is removed
+	 * @param taskName
+	 * @throws UIAutomationException
+	 */
+	public void verifyTaskIsRemoved(String taskName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+		String taskNamesInPage=UIActions.getText(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+	
+		if(taskNamesInPage.contains(taskName)){
+			throw new UIAutomationException("Task '"+taskName+"' is not removed.");
+		}
+	}
+	
 	/**
 	 * Enter description in issue' description textbox
 	 * @param description
