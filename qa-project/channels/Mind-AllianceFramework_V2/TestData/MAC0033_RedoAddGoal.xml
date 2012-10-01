@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<show>Show</show>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForRedoaddgoal>Segment For Undo add goal</segmentForRedoaddgoal>
+<aboutPlanSegment>About Plan Segment</aboutPlanSegment>
+<goalsTab>Goals</goalsTab>
+<addGoal>Add Goal</addGoal>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<undoUpdateSegment>Undo Update Segment</undoUpdateSegment>
+<redoUpdateSegment>Redo Update Segment</redoUpdateSegment>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<selectgoalFromList>Financial - Asset devaluation</selectgoalFromList>
+<type>Actual</type>
+</elements>
