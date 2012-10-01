@@ -1245,6 +1245,42 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
+		<GivenName>Undo Add New Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Add New Task</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Add New Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo Add New Task</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Cut Task</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo Cut Task</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Table In Task Mover</GivenName>
+		<Xpath>//table[contains(@class,'data-table')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>data-table</ClassName>
+	</Element>
+	<Element>
 		<GivenName>Redo Update Segment</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
@@ -1341,7 +1377,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Undo Update Segment</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
