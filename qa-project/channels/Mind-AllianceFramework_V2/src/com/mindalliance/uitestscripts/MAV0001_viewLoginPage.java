@@ -1,5 +1,6 @@
 package com.mindalliance.uitestscripts;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -7,6 +8,7 @@ import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
 
@@ -22,7 +24,8 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
-import com.mindalliance.configuration.Reporting;
+import com.mindalliance.configuration.LogFunctions;
+import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 /**
  * Test Case ID: MAV0001_viewLoginPage
@@ -32,6 +35,12 @@ import com.mindalliance.configuration.UIAutomationException;
  */
 public class MAV0001_viewLoginPage extends TestCase{
 	public Hashtable<String, String> testData;
+//	public String testCaseId="MAV0001_viewLoginPage";
+//	public String description=null;
+//	public int stepNo=0;
+//	public String passed="Pass";
+//	public String failed="FAIL";
+//	public String blank=""; 
 	
 	
 	/*
@@ -41,10 +50,12 @@ public class MAV0001_viewLoginPage extends TestCase{
 	 */
 	
 	@Before
-	protected void setUp(){
+	protected void setUp(){	
 		try{
+			
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
+			
 				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
@@ -58,6 +69,12 @@ public class MAV0001_viewLoginPage extends TestCase{
 			// Loads Test Data
 			loadTestData();
 			
+//			// Write log		
+//			String startTime=LogFunctions.getDateTime();
+//			GlobalVariables.configuration.setStartTime(startTime);
+//			description = "Testcase: " + testCaseId + " execution started";
+//			GlobalVariables.configuration.createResultFiles();
+//			LogFunctions.writeLogs(description);
 			
 		}
 		catch(UIAutomationException ue){
@@ -73,9 +90,15 @@ public class MAV0001_viewLoginPage extends TestCase{
 
 		// Enter URL		
 		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+//		description="URL Entered";
+//		stepNo++;
+//		LogFunctions.writeLogs(description);
+//		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 		
 		// Quits the Browser
 		GlobalVariables.configuration.getWebDriver().quit();
+		
+//   	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
 	 }
 	
 	/**
@@ -121,13 +144,17 @@ public class MAV0001_viewLoginPage extends TestCase{
 	@After
 	protected void tearDown(){
 		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
+			GlobalVariables.configuration.getWebDriver().quit();			
+			
 		}
+//		String endTime=LogFunctions.getDateTime();
+//		GlobalVariables.configuration.setStartTime(endTime);
 	}
 	
-	public static void main(String args[]){	
-		Reporting reporting=new Reporting();
-		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);
-		reporting.generateAutomationReport();
-	}
+//	public static void main(String args[]) throws IOException, XMLStreamException{	
+//		Reporting1 reporting=new Reporting1();
+//		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);
+//		
+//		reporting.generateAutomationReport();
+//	}
 }
