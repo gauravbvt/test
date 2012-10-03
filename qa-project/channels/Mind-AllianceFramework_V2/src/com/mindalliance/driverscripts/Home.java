@@ -253,11 +253,15 @@ public class Home {
 		suite.addTestSuite(MAC0033_RedoAddGoal.class);
 		suite.addTestSuite(MAC0034_RedoRemoveGoal.class);
 		
-		// 10/1/2012
+		//10/1 /2012
 		suite.addTestSuite(MAC0035_RedoAddNewTask.class);
 		suite.addTestSuite(MAC0036_RedoCutTask.class);
+
+		//10/3/2012
+		suite.addTestSuite(MAC0037_RedoPasteTaskUsingCut.class);
+		suite.addTestSuite(MAC0038_RedoPasteTaskUsingCopy.class);
 		
 		return suite;
 	}
-	
 }
+
