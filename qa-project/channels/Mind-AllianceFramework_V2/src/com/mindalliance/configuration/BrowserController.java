@@ -63,6 +63,8 @@ public class BrowserController{
 		}
 		
 	}
+	
+	@SuppressWarnings("deprecation")
 	public void initializeDriver(String browser) throws UIAutomationException	{
 //		String browser="Mozilla Firefox";
 //		String browser=GlobalVariables.configuration.getConfigData().get("Browser");

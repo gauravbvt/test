@@ -418,7 +418,7 @@ public class Reporting extends TakeScreenshot {
 	public void generateAutomationReport() {
 		try {
 //			// Update Test Case Execution Result
-//			updateTestCaseExecutionResult();
+			updateTestCaseExecutionResult();
 //			
 //			// Update Test Case Sheet Execution Result
 //			updateTestCaseSheetResult();
