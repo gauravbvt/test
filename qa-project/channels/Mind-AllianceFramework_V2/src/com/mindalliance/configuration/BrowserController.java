@@ -62,6 +62,48 @@ public class BrowserController{
 			throw new UIAutomationException("Driver's .exe not found in lib folder.");
 		}
 		
+	}
+	public void initializeDriver(String browser) throws UIAutomationException	{
+//		String browser="Mozilla Firefox";
+//		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
+		try{
+			switch (browser) {
+			case "Mozilla Firefox":
+				driver = new FirefoxDriver(DesiredCapabilities.firefox());
+//		      	GlobalVariables.configuration.setWebDriver(driver);
+		    	
+		    	//Maximize the Browser
+				driver.manage().window().maximize();
+//		    	GlobalVariables.configuration.getWebDriver().manage().window().maximize();
+				break;
+			case "Internet Explorer":
+				driver=null;
+	            DesiredCapabilities.internetExplorer().setJavascriptEnabled(true);       
+	            String IEDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"IEDriverServer.exe";
+	            System.setProperty("webdriver.ie.driver", IEDriverPath);
+	            driver = new InternetExplorerDriver(DesiredCapabilities.internetExplorer());
+	            GlobalVariables.configuration.setWebDriver(driver);
+				break;
+			case "Chrome":
+			   driver=null;
+	 	       String chromeDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"chromedriver.exe";
+	 	       System.setProperty("webdriver.chrome.driver", chromeDriverPath); 
+	 	       DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+	 	       capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
+	 	       driver=new ChromeDriver(capabilities);
+	 	       GlobalVariables.configuration.setWebDriver(driver);
+	 	       break;
+			default:
+				break;
+			}
+		}
+		catch(IOException io){
+			throw new UIAutomationException("Driver's .exe not found in lib folder.");
+		}
+		catch (IllegalStateException ie) {
+			throw new UIAutomationException("Driver's .exe not found in lib folder.");
+		}
+		
 	}		
     /**
      * Enters URL with parameter
