@@ -22,6 +22,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 /**
  * Test Case ID: MAV0001_viewLoginPage
@@ -31,6 +32,8 @@ import com.mindalliance.configuration.UIAutomationException;
  */
 public class MAV0001_viewLoginPage extends TestCase{
 	public Hashtable<String, String> testData;
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -54,6 +57,8 @@ public class MAV0001_viewLoginPage extends TestCase{
 			
 			// Loads Test Data
 			loadTestData();
+			
+			
 		}
 		catch(UIAutomationException ue){
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
@@ -118,5 +123,11 @@ public class MAV0001_viewLoginPage extends TestCase{
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
 		}
+	}
+	
+	public static void main(String args[]){	
+		Reporting reporting=new Reporting();
+		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);
+		reporting.generateAutomationReport();
 	}
 }
