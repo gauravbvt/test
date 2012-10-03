@@ -417,11 +417,11 @@ public class Reporting extends TakeScreenshot {
 	 */
 	public void generateAutomationReport() {
 		try {
-			// Update Test Case Execution Result
-			updateTestCaseExecutionResult();
-			
-			// Update Test Case Sheet Execution Result
-			updateTestCaseSheetResult();
+//			// Update Test Case Execution Result
+//			updateTestCaseExecutionResult();
+//			
+//			// Update Test Case Sheet Execution Result
+//			updateTestCaseSheetResult();
 			
 			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;
@@ -434,10 +434,10 @@ public class Reporting extends TakeScreenshot {
 			generateTestCaseSummary();
 			
 			// Final Test Pass Report
-			generateFinalTestPassReport();
-			
-			// Failure Report
-			generateFailureReport();
+//			generateFinalTestPassReport();
+//			
+//			// Failure Report
+//			generateFailureReport();
 			
 			System.out.println("Report generated successfully");
 		}
@@ -500,7 +500,8 @@ public class Reporting extends TakeScreenshot {
 	 */
 	private void generateTestCaseSummary() {
 		try {
-			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestPassSummary.htm");
+			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\TestPassSummary.htm");
+//			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestPassSummary.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -760,7 +761,9 @@ public class Reporting extends TakeScreenshot {
 	 */
 	private void generateTestCaseIndex() {
 		try	{
-			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseList.htm");
+			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\TestCaseList.htm");
+			
+//			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
