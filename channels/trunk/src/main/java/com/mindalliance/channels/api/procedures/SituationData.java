@@ -73,7 +73,7 @@ public class SituationData extends AbstractProcedureElementData {
         EventPhase eventPhase = getAssignment().getEventPhase();
         sb.append( prefix );
         if ( prefix != null && !prefix.isEmpty() ) sb.append( " " );
-        sb.append( eventPhase.getEvent().getName() );
+        sb.append( "\"").append( eventPhase.getEvent().getName() ).append( "\"" );
         if ( suffix != null && !suffix.isEmpty() ) sb.append( " " );
         sb.append( suffix );
         List<EventTimingData> eventTimingDataList = getContext();
@@ -95,10 +95,10 @@ public class SituationData extends AbstractProcedureElementData {
         EventPhase eventPhase = getAssignment().getEventPhase();
         Phase phase = eventPhase.getPhase();
         String prefix = phase.isPreEvent()
-                ? "before"
+                ? "before event"
                 : phase.isConcurrent()
-                ? "during"
-                : "after";
+                ? "during event"
+                : "after event";
         return getLabel( prefix, "" );
     }
 }

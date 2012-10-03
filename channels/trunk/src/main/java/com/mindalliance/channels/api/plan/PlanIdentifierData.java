@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Web Service data element for the identity of a plan.
@@ -63,4 +64,7 @@ public class PlanIdentifierData  implements Serializable {
         return DATE_FORMAT.format( plan.getWhenVersioned() );
     }
 
+    public String getTimeNow() {
+        return DATE_FORMAT.format( new Date() );
+    }
 }

@@ -87,7 +87,7 @@ public class SubProcedureLinkPanel extends AbstractDataPanel {
         link.add(  new AttributeModifier( "href", "#" + getSubOrFollowUpTask().getAnchor() ) );
         add( link );
         link.add( new Label( "taskName",
-                "Do task \"" + getSubOrFollowUpTask().getLabel() + "\"" ) );
+                "I do task \"" + getSubOrFollowUpTask().getLabel() + "\"" ) );
 
     }
 

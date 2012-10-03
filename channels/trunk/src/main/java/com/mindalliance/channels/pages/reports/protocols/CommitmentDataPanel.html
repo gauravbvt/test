@@ -11,13 +11,13 @@
 <body>
 <wicket:panel>
     <h5 class="notify">
-        <span wicket:id="mode">Notify of</span>
+        <span wicket:id="mode">To notify of</span>
         <span wicket:id="intent">alarm</span>
         <span class="information" wicket:id="information">information</span>
         <span class="impact" wicket:id="impact">impact</span>
     </h5>
     <div class="contactsContainer" wicket:id="contactsContainer">
-        <label wicket:id="anyAll">Contact any of...</label>
+        <label wicket:id="anyAll">I contact any of...</label>
         <div wicket:id="contacts">  <!-- repeated -->
             <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
         </div>
@@ -30,13 +30,13 @@
         <label wicket:id="when">When</label>
         <div wicket:id="maxDelay">Within 10 minutes</div>
     </div>
-    <div class="onFailure" wicket:id="onFailure">BUT ONLY IF you failed to execute the task</div>
+    <div class="onFailure" wicket:id="onFailure">BUT ONLY IF I failed to execute the task</div>
     <div class="eoisContainer" wicket:id="eoisContainer">
         <label wicket:id="eoisLabel">Include elements</label>
 	     <span wicket:id="eois">[eoi panel]</span>
     </div>
     <div class="allInstructions" wicket:id="allInstructions">
-        <label>Instructions</label>
+        <label>Reminder</label>
 		  <ul>
             <li wicket:id="communicatedContext">DO NOT mention the beginning of IED attack</li>
             <li wicket:id="receiptConfirmation">Request confirmation of receipt</li>

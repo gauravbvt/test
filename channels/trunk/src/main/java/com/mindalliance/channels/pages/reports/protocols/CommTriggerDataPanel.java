@@ -31,8 +31,8 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         add( new Label(
                 "header",
                 getTriggerData().isOnNotificationFromOther()
-                        ? "When notified of"
-                        : "When asked for"
+                        ? "When I am notified of"
+                        : "When I am asked for"
         ) );
         addIntent();
         addInformation();
@@ -41,13 +41,13 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         addContacts();
     }
 
-     private void addCommunicatedContext() {
+    private void addCommunicatedContext() {
         SituationData communicatedContext = getTriggerData().getSituation();
         Label commContextLabel = new Label(
                 "communicatedContext",
                 communicatedContext == null
                         ? ""
-                        : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() )  );
+                        : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) );
         commContextLabel.setVisible( communicatedContext != null );
         add( commContextLabel );
     }
@@ -56,13 +56,13 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         String intent = getInformationIntent();
         add( new Label(
                 "intent",
-                intent) );
+                intent ) );
     }
 
     private void addInformation() {
         add( new Label(
                 "information",
-                getInformationData().getName() ) );
+                "\"" + getInformationData().getName() + "\"" ) );
     }
 
     private void addEois() {
@@ -87,6 +87,8 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
         WebMarkupContainer contactsContainer = new WebMarkupContainer( "contactsContainer" );
         contactsContainer.setVisible( !contacts.isEmpty() );
         add( contactsContainer );
+        String anyOf = contacts.size() > 1 ? "by any of" : "by";
+        contactsContainer.add( new Label( "anyOf", anyOf ) );
         ListView<ContactData> contactsListView = new ListView<ContactData>(
                 "contacts",
                 contacts

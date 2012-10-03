@@ -173,7 +173,8 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 .add( new Label( "planName", planIdentifierData.getName() ) )
                 .add( new Label( "userOrAgentName", getParticipantName() ) )
                 .add( new Label( "planVersion", Integer.toString( planIdentifierData.getVersion() ) ) )
-                .add( new Label( "planDate",  planIdentifierData.getDateVersioned() ) );
+                .add( new Label( "planDate",  planIdentifierData.getDateVersioned() ) )
+                .add( new Label( "time", planIdentifierData.getTimeNow() ) );
     }
 
     private String getParticipantName() {

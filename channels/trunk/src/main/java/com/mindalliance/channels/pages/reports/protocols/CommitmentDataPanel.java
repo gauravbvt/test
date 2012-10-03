@@ -59,7 +59,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 "intent", intent ) );
         add( new Label(
                 "information",
-                flowData.getInformation().getName() ) );
+                "\"" + flowData.getInformation().getName() + "\"" ) );
         String impact = getCommitmentImpact();
         Label impactLabel = new Label( "impact", impact );
         add(  impactLabel );
@@ -69,12 +69,12 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private String getModeText() {
         if ( received ) {
             return flowData.isNotification()
-                    ? "Expect to be notified of"
-                    : "You can ask for";
+                    ? "I expect to be notified of"
+                    : "I can ask for";
         } else {
             return flowData.isNotification()
-                    ? "Notify of"
-                    : "When asked, provide";
+                    ? "I send notification of"
+                    : "When asked, I provide";
         }
     }
 
@@ -132,15 +132,15 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private String getContactsText() {
         List<ContactData> contacts = flowData.getContacts();
         if ( received ) {
-            return contacts.size() == 1 ? "Your source is" : "Your sources are";
+            return contacts.size() == 1 ? "My source is" : "My sources are";
         } else {
             if ( flowData.isNotification() ) {
                 if ( contacts.size() == 1 ) {
-                    return "Contact";
+                    return "I contact";
                 } else {
                     return flowData.getContactAll()
-                            ? "Contact all of"
-                            : "Contact one of";
+                            ? "I contact all of"
+                            : "I contact one of";
                 }
             } else {
                 return "To";
@@ -156,11 +156,11 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 "when",
                 received
                         ? flowData.isNotification()
-                        ? "Expect to receive a notification"
-                        : "Expect an answer"
+                        ? "I can expect to receive a notification"
+                        : "I can expect an answer"
                         : flowData.isNotification()
-                        ? "Notify"
-                        : "Answer" );
+                        ? "I send notification"
+                        : "I answer" );
         maxDelayContainer.add( whenLabel );
         Label delayLabel = new Label(
                 "maxDelay", makeDelayLabel( timeDelay ) );
@@ -184,7 +184,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         Label failureLabel = new Label(
                 "onFailure",
                 flowData.getTaskFailed()
-                        ? "BUT ONLY IF you failed to execute the task"
+                        ? "BUT ONLY IF I failed to execute the task"
                         : ""
         );
         failureLabel.setVisible( flowData.getTaskFailed() && !( received && flowData.isNotification() ) );
@@ -205,12 +205,12 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private String getEoisLabel() {
         if ( received ) {
             return flowData.isNotification()
-                    ? "Expect these elements"
-                    : "Request these elements";
+                    ? "I can expect these elements"
+                    : "I can request these elements";
         } else {
             return flowData.isNotification()
-                    ? "Include these elements"
-                    : "Answer with these elements";
+                    ? "I must include these elements"
+                    : "I must answer with these elements";
         }
     }
 
@@ -222,15 +222,15 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         Label communicatedContextLabel = new Label(
                 "communicatedContext",
                 contextCommunicated
-                        ? ( "Mention " + communicableContext )
-                        : ( " Do NOT mention " + communicableContext )
+                        ? ( "I must mention the context \"" + communicableContext + "\"" )
+                        : ( " I must NOT mention the context \"" + communicableContext + "\"" )
         );
         instructionContainer.add( communicatedContextLabel );
         boolean receiptConfirmation = flowData.getReceiptConfirmationRequested();
         Label receiptLabel = new Label(
                 "receiptConfirmation",
                 receiptConfirmation
-                        ? "Request confirmation of receipt"
+                        ? "I request confirmation of receipt"
                         : ""
         );
         receiptLabel.setVisible( receiptConfirmation );

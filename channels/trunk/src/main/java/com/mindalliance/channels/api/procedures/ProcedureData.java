@@ -397,13 +397,13 @@ public class ProcedureData implements Serializable {
     public String getLabel() {
         StringBuilder sb = new StringBuilder();
         if ( isOngoing() ) {
-            sb.append( "You constantly do task \"" );
+            sb.append( "I constantly do task \"" );
         } else if ( isTriggeredByDiscovery() ) {
-            sb.append( "Follow up with task \"" );
+            sb.append( "I follow up with task \"" );
         } else if ( isTriggeredByResearch() ) {
-            sb.append( "To find what you need, do task \"" );
+            sb.append( "To find what you need, I do task \"" );
         } else {
-            sb.append( "Do task \"" );
+            sb.append( "I do task \"" );
         }
         sb.append( getAssignment().getLabel() );
         return sb.toString();
@@ -420,13 +420,13 @@ public class ProcedureData implements Serializable {
     public String getTaskLabel() {
         StringBuilder sb = new StringBuilder();
         if ( isOngoing() ) {
-            sb.append( "You constantly do task \"" );
+            sb.append( "I constantly do task \"" );
         } else if ( isTriggeredByDiscovery() ) {
-            sb.append( "Follow up with task \"" );
+            sb.append( "I follow up with task \"" );
         } else if ( isTriggeredByResearch() ) {
-            sb.append( "To find what you need, do task \"" );
+            sb.append( "To find what I need, I do task \"" );
         } else {
-            sb.append( "Do task \"" );
+            sb.append( "I do task \"" );
         }
         sb.append( getAssignment().getTask().getName() );
         sb.append( "\"" );
