@@ -32,7 +32,7 @@ public class Reporting extends TakeScreenshot {
 	
 	public static int totalNoOfTestCasesPassed = 0;
 	public static int totalNoOfTestCasesFailed = 0;
-	int index = 0;
+//	int index = 0;
 	public JList jListExecute;
 	public String logDirectoryName;
 	public String logDirectoryPath;
@@ -112,10 +112,11 @@ public class Reporting extends TakeScreenshot {
 	
 	public void updateTestCaseExecutionResult() {
 		try {
+			int index = 0;
 			testCasesPassed = 0;
 			testCasesFailed = 0;
-			for (int i = 0; i < jListExecute.getModel().getSize() ; i++)	{
-				testName = jListExecute.getModel().getElementAt(i).toString();
+			for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ; i++)	{
+				testName = GlobalVariables.configuration.getList().getModel().getElementAt(i).toString();
 				if (testName != blank) {
 				   // Call readCsvFile
 					String sResult = readCsvFile(testName);
@@ -124,14 +125,20 @@ public class Reporting extends TakeScreenshot {
 					    generateAutomationReportInHtml(testName);
 					    testCasesFailed ++;
 					    arrayOfTestCaseId[index] = testName;
+					    GlobalVariables.configuration.setArrayOfTestCaseId(arrayOfTestCaseId);
+					    
+					    
 					    arrayOftestCaseResult[index++] = failed;
+					    GlobalVariables.configuration.setArrayOftestCaseResult(arrayOftestCaseResult);
 				    }
 				    else if (sResult == passed) {
 					    // Call generateAutomationReportInHtml()
 					    generateAutomationReportInHtml(testName);
 					    testCasesPassed ++;
 					    arrayOfTestCaseId[index] = testName;
+					    GlobalVariables.configuration.setArrayOfTestCaseId(arrayOfTestCaseId);
 					    arrayOftestCaseResult[index++] = passed;
+					    GlobalVariables.configuration.setArrayOftestCaseResult(arrayOftestCaseResult);
 				    }
 			    }
 			}
@@ -155,8 +162,8 @@ public class Reporting extends TakeScreenshot {
 				Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
 			
 				// Update View, Plan & Command Sheets
-				for (int i = 0; i < jListExecute.getModel().getSize() ; i++)	{
-					testName = jListExecute.getModel().getElementAt(i).toString();
+				for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ; i++)	{
+					testName = GlobalVariables.configuration.getList().getModel().getElementAt(i).toString();
 
 					// Call readCsvFile
 					String sResult = readCsvFile(testName);
@@ -221,9 +228,9 @@ public class Reporting extends TakeScreenshot {
 				sheet.getCellAt("I10").setValue(noOfCommandTestCasesFailed);
 
 				if(cnt==1)
-					outputFile = new File(reportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet.ods");
+					outputFile = new File(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\Mind-AllianceTestCaseSheet.ods");
 				else
-					outputFile = new File(reportDstDirectoryPath + "\\Mind-AllianceTestCaseSheet_V2.ods");
+					outputFile = new File(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\Mind-AllianceTestCaseSheet_V2.ods");
 				sheet.getSpreadSheet().saveAs(outputFile);
 				
 				// Set Pass/Fail Count to 0.
@@ -266,8 +273,8 @@ public class Reporting extends TakeScreenshot {
 				sheet.getCellAt("L1").setValue("SCRIPT EXCEPTION");
 				sheet.getCellAt("R1").setValue("ERROR");
 			}
-			for (int i = 0; i < jListExecute.getModel().getSize() ; i++)	{
-				testName = jListExecute.getModel().getElementAt(i).toString();
+			for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ; i++)	{
+				testName = GlobalVariables.configuration.getList().getModel().getElementAt(i).toString();
 				if(testName.contains("CL")) 
 					sheet = sheet.getSpreadSheet().getSheet(1);
 				else if(testName.contains("HP"))
@@ -319,7 +326,7 @@ public class Reporting extends TakeScreenshot {
 					}
 				}
 			}
-			File outputFile = new File(reportDstDirectoryPath + "\\FunctionalTestCase.ods");
+			File outputFile = new File(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\FunctionalTestCase.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
 		}
 		catch(Exception e) {
@@ -336,6 +343,7 @@ public class Reporting extends TakeScreenshot {
 	 * @throws XMLStreamException
 	 */
 	public String[] readTestCaseId(int sheetNumber)	{
+		int index = 0;
 		try {
 			File currentDir=new File(".");
 			
@@ -386,7 +394,7 @@ public class Reporting extends TakeScreenshot {
 			csvResult = passed;
 			csvScriptException = blank;
 			csvErrorReport = blank;
-			CsvReader csvTestCase = new CsvReader(logDirectoryPath + "\\Results.csv");
+			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
 			csvTestCase.readHeaders();
 			while (csvTestCase.readRecord()) {
 				if (sTestCaseId.equals(csvTestCase.get("TestCaseId")) && csvTestCase.get("Result").equals(failed)) {
@@ -421,7 +429,7 @@ public class Reporting extends TakeScreenshot {
 			updateTestCaseExecutionResult();
 //			
 //			// Update Test Case Sheet Execution Result
-//			updateTestCaseSheetResult();
+			updateTestCaseSheetResult();
 			
 			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;
@@ -434,10 +442,10 @@ public class Reporting extends TakeScreenshot {
 			generateTestCaseSummary();
 			
 			// Final Test Pass Report
-//			generateFinalTestPassReport();
+			generateFinalTestPassReport();
 //			
 //			// Failure Report
-//			generateFailureReport();
+			generateFailureReport();
 			
 			System.out.println("Report generated successfully");
 		}
@@ -454,7 +462,7 @@ public class Reporting extends TakeScreenshot {
 	 */
 	private void generateFinalTestPassReport() {
 		try {
-			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\index.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\index.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -500,7 +508,7 @@ public class Reporting extends TakeScreenshot {
 	 */
 	private void generateTestCaseSummary() {
 		try {
-			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\TestPassSummary.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath()+"\\TestPassSummary.htm");
 //			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestPassSummary.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
@@ -564,7 +572,7 @@ public class Reporting extends TakeScreenshot {
 
 	private void generateFailureReport() {
 		try {
-			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseFailureList.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\TestCaseFailureList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -678,12 +686,12 @@ public class Reporting extends TakeScreenshot {
 								xml.writeEndElement();
 							xml.writeEndElement();
 						xml.writeEndElement();
-			for (int i = 0; i < jListExecute.getModel().getSize() ;i++) {
-				if(jListExecute.getModel().getElementAt(i) != null) {
-					csvTestCase = new CsvReader(logDirectoryPath + "\\Results.csv");
+			for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ;i++) {
+				if(GlobalVariables.configuration.getList().getModel().getElementAt(i) != null) {
+					csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
 					csvTestCase.readHeaders();
 					while(csvTestCase.readRecord()) {
-						if(csvTestCase.get("TestCaseId").equals(jListExecute.getModel().getElementAt(i).toString())) {
+						if(csvTestCase.get("TestCaseId").equals(GlobalVariables.configuration.getList().getModel().getElementAt(i).toString())) {
 							if(csvTestCase.get("ScriptException")!= blank || csvTestCase.get("ErrorReport")!= blank) { 
 						xml.writeStartElement("tr");
 							xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
@@ -693,7 +701,7 @@ public class Reporting extends TakeScreenshot {
 								xml.writeAttribute("onMouseover", "this.bgColor='#EEEEEE'");
 								xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 								xml.writeStartElement("left");
-									xml.writeCharacters(jListExecute.getModel().getElementAt(i).toString());
+									xml.writeCharacters(GlobalVariables.configuration.getList().getModel().getElementAt(i).toString());
 								xml.writeEndElement();
 							xml.writeEndElement();
 							xml.writeStartElement("td");
@@ -760,8 +768,11 @@ public class Reporting extends TakeScreenshot {
 	 * @throws IOException
 	 */
 	private void generateTestCaseIndex() {
+		
+		String arrayOftestCaseResult[] = new String[600];
+		
 		try	{
-			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\TestCaseList.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath()+"\\TestCaseList.htm");
 			
 //			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -801,8 +812,8 @@ public class Reporting extends TakeScreenshot {
 								xml.writeEndElement();
 							xml.writeEndElement();
 						xml.writeEndElement();
-				for (int i = 0; i < jListExecute.getModel().getSize() ; i++) {
-					if(jListExecute.getModel().getElementAt(i) != null) {
+				for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ; i++) {
+					if(GlobalVariables.configuration.getList().getModel().getElementAt(i) != null) {
 						xml.writeStartElement("tr");
 							xml.writeAttribute("style","WIDTH:235;BORDER:0;OVERFLOW-Y:scroll;WORD-WRAP:BREAK-WORD;OVERFLOW-X:hidden;padding:  2px 0px 2px 5px");
 							xml.writeAttribute("bgColor","#DDDDDD");
@@ -811,14 +822,19 @@ public class Reporting extends TakeScreenshot {
 							xml.writeAttribute("onMouseout", "this.bgColor='#DDDDDD'");
 							xml.writeStartElement("td");
 								xml.writeStartElement("a");
-									xml.writeAttribute("href", jListExecute.getModel().getElementAt(i) + ".htm");
+									xml.writeAttribute("href", GlobalVariables.configuration.getList().getModel().getElementAt(i) + ".htm");
 									xml.writeAttribute("target", "targetframe");
-									xml.writeCharacters(jListExecute.getModel().getElementAt(i).toString());
+									xml.writeCharacters(GlobalVariables.configuration.getList().getModel().getElementAt(i).toString());
 								xml.writeEndElement();
 							xml.writeEndElement();
 							xml.writeStartElement("td");
 								xml.writeStartElement("center");
 									xml.writeStartElement("font");
+									
+									//////////////////
+									arrayOftestCaseResult=GlobalVariables.configuration.getArrayOftestCaseResult();
+									////////////////
+									
 									if (arrayOftestCaseResult[i].equals(passed))
 										xml.writeAttribute("color", "GREEN");
 									else
@@ -849,8 +865,8 @@ public class Reporting extends TakeScreenshot {
 	 */
 	public void generateAutomationReportInHtml(String testName) {
 	try {
-		csvTestCase = new CsvReader(logDirectoryPath + "\\Results.csv");
-		OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\" + testName + ".htm");
+		csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
+		OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\" + testName + ".htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -983,6 +999,7 @@ public class Reporting extends TakeScreenshot {
 	}
 
 	public String[] readTestCaseIdForFunctional(int sheetNumber) {
+		int index = 0;
 		try {
 			File file1 = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
 			// TestCase sheet: Tree_Navigation_Views
@@ -1013,7 +1030,7 @@ public class Reporting extends TakeScreenshot {
 			updateTestCaseExecutionResult();
 			
 			// Update Test Case Sheet Execution Result
-			updateTestCaseSheetResultForFunctionalTestCases();
+//			updateTestCaseSheetResultForFunctionalTestCases();
 			
 			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;

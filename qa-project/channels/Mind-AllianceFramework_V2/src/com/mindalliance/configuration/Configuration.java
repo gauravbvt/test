@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.swing.JList;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.openqa.selenium.WebDriver;
@@ -35,7 +37,27 @@ public class Configuration {
 	private Hashtable<String,String> configData=null;
 	DataController dataController=new DataController();
 	private List<WebElement> webElements;
+	public int count=0;
+	public JList<String> list;
 	
+	public JList<String> getList() {
+		return list;
+	}
+
+	public void setList(JList<String> list) {
+		this.list = list;
+	}
+	
+	
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	String logFile;
 	String resultCsvFile;
 	String reportDirectoryName;
@@ -45,6 +67,25 @@ public class Configuration {
 	String logDirectoryPath;
 	String errorLogSubDirectoryPath;
 	Date currentDate;
+	String arrayOfTestCaseId[] = new String[600];
+	
+	public String[] getArrayOfTestCaseId() {
+		return arrayOfTestCaseId;
+	}
+
+	public void setArrayOfTestCaseId(String[] arrayOfTestCaseId) {
+		this.arrayOfTestCaseId = arrayOfTestCaseId;
+	}
+
+	public String[] getArrayOftestCaseResult() {
+		return arrayOftestCaseResult;
+	}
+
+	public void setArrayOftestCaseResult(String[] arrayOftestCaseResult) {
+		this.arrayOftestCaseResult = arrayOftestCaseResult;
+	}
+
+	String arrayOftestCaseResult[] = new String[600];
 	
 	
 	
@@ -248,9 +289,6 @@ public class Configuration {
 	public void setErrorLogSubDirectoryPath(String errorLogSubDirectoryPath) {
 		this.errorLogSubDirectoryPath = errorLogSubDirectoryPath;
 	}
-
-	
-	
 	
 	public Date getCurrentDate() {
 		return currentDate;
@@ -346,8 +384,6 @@ public class Configuration {
 			
 			// Set date
 			GlobalVariables.configuration.setCurrentDate(currentDate);
-			
-			
 			
 			// Create Report Directory
 			reportDirectoryName = dateFormat.format(currentDate);

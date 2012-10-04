@@ -72,7 +72,7 @@ public class BrowserController{
 			switch (browser) {
 			case "Mozilla Firefox":
 				driver = new FirefoxDriver(DesiredCapabilities.firefox());
-//		      	GlobalVariables.configuration.setWebDriver(driver);
+		      	GlobalVariables.configuration.setWebDriver(driver);
 		    	
 		    	//Maximize the Browser
 				driver.manage().window().maximize();

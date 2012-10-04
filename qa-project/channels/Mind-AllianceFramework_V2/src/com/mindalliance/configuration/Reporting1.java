@@ -278,7 +278,7 @@ public class Reporting1 {
 		xml.writeEmptyElement("br");
 		xml.writeCharacters("End Datetime: " + GlobalVariables.configuration.getEndtime());
 		xml.writeEmptyElement("br");
-		xml.writeCharacters("Browser: Mozilla" );
+		xml.writeCharacters("Browser: "+GlobalVariables.configuration.getConfigData().get("Browser"));
 		xml.writeEmptyElement("br");
 		xml.writeEndElement();
 		xml.writeEndElement();
