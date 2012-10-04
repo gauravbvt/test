@@ -1,6 +1,5 @@
 package com.mindalliance.uitestscripts;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -25,8 +24,8 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
-import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
+
 /**
  * Test Case ID: MAV0001_viewLoginPage
  * Summary: Verify that the "Channels Login Page" renders
@@ -35,12 +34,12 @@ import com.mindalliance.configuration.UIAutomationException;
  */
 public class MAV0001_viewLoginPage extends TestCase{
 	public Hashtable<String, String> testData;
-//	public String testCaseId="MAV0001_viewLoginPage";
-//	public String description=null;
-//	public int stepNo=0;
-//	public String passed="Pass";
-//	public String failed="FAIL";
-//	public String blank=""; 
+	public String testCaseId="MAV0001_viewLoginPage";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
 	
 	
 	/*
@@ -62,19 +61,30 @@ public class MAV0001_viewLoginPage extends TestCase{
 				new ElementController();
 			}
 			
+			// Write log		
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
+			description = "Testcase: " + testCaseId + " execution started";
+			Configuration.createResultFiles();
+			LogFunctions.writeLogs(description);
+						
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
+//			browserController.initializeDriver();
+			browserController.initializeDriver("Mozilla Firefox");
+			
+			
+			// Write log
+			description="Browser initialized";
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Loads Test Data
 			loadTestData();
-			
-//			// Write log		
-//			String startTime=LogFunctions.getDateTime();
-//			GlobalVariables.configuration.setStartTime(startTime);
-//			description = "Testcase: " + testCaseId + " execution started";
-//			GlobalVariables.configuration.createResultFiles();
-//			LogFunctions.writeLogs(description);
+		
+			// Enter URL		
+			testMAV0001_viewLoginPage();
+			tearDown();
 			
 		}
 		catch(UIAutomationException ue){
@@ -90,15 +100,20 @@ public class MAV0001_viewLoginPage extends TestCase{
 
 		// Enter URL		
 		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-//		description="URL Entered";
-//		stepNo++;
-//		LogFunctions.writeLogs(description);
-//		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+		// Write log
+		description="URL Entered";
+		stepNo++;
+		LogFunctions.writeLogs(description);
+		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 		
 		// Quits the Browser
 		GlobalVariables.configuration.getWebDriver().quit();
-		
-//   	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
+		// Write log
+		description="Quited browser";
+		stepNo++;
+		LogFunctions.writeLogs(description);
+		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
 	 }
 	
 	/**
@@ -147,14 +162,11 @@ public class MAV0001_viewLoginPage extends TestCase{
 			GlobalVariables.configuration.getWebDriver().quit();			
 			
 		}
-//		String endTime=LogFunctions.getDateTime();
-//		GlobalVariables.configuration.setStartTime(endTime);
+		String endTime=LogFunctions.getDateTime();
+		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
-//	public static void main(String args[]) throws IOException, XMLStreamException{	
-//		Reporting1 reporting=new Reporting1();
-//		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);
-//		
-//		reporting.generateAutomationReport();
+//	public static void main(String args[]) throws IOException, XMLStreamException{		
+//		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);		
 //	}
 }
