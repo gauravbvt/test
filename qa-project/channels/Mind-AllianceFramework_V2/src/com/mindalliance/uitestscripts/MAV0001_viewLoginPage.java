@@ -63,9 +63,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 				new ElementController();
 			}
 			
-			// Loads Test Data
-			loadTestData();
-			
+			DataController.createResultFiles();
 			// Write log		
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
@@ -84,6 +82,8 @@ public class MAV0001_viewLoginPage extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
+			// Loads Test Data
+			loadTestData();
 			
 		
 			// Enter URL		
@@ -131,7 +131,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 	{
 		try{
 			
-			DataController.createResultFiles();
+	
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			

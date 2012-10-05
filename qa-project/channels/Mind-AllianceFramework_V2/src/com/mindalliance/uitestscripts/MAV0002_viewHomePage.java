@@ -56,6 +56,8 @@ public class MAV0002_viewHomePage extends TestCase{
 				new ElementController();
 			}
 			
+			DataController.createResultFiles();
+			
 			// Write log		
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
@@ -126,6 +128,8 @@ public class MAV0002_viewHomePage extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
+			
+			
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
