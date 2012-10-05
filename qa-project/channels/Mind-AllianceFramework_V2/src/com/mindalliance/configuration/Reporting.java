@@ -425,10 +425,10 @@ public class Reporting extends TakeScreenshot {
 	 */
 	public void generateAutomationReport() {
 		try {
-//			// Update Test Case Execution Result
+			// Update Test Case Execution Result
 			updateTestCaseExecutionResult();
-//			
-//			// Update Test Case Sheet Execution Result
+			
+			// Update Test Case Sheet Execution Result
 			updateTestCaseSheetResult();
 			
 			// No. of Test Cases Passed and Failed
