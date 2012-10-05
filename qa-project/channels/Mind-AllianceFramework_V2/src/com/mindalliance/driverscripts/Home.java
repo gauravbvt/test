@@ -38,8 +38,8 @@ public class Home {
 		suite.addTestSuite(MAC0005_UndoAddNewTask.class);	
 		
 		
-		suite.addTestSuite(MAV0001_viewLoginPage.class);
-		suite.addTestSuite(MAV0002_viewHomePage.class);
+//		suite.addTestSuite(MAV0001_viewLoginPage.class);
+//		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
 		suite.addTestSuite(MAV0004_viewAdminHome.class);
 		suite.addTestSuite(MAV0006_redirectToPlanPage.class);

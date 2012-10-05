@@ -38,6 +38,7 @@ import org.dyno.visual.swing.layouts.Leading;
 import org.dyno.visual.swing.layouts.Trailing;
 
 import com.mindalliance.configuration.BrowserController;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
@@ -483,7 +484,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 		try {
 			Class<?> cls;
 			cnt = 0;
-						
+					
+//			DataController.createResultFiles();
+			
 			// Set progressBar Values
 			jProgressBarStatus.setMinimum(0);
 			jProgressBarStatus.setMaximum(noOfSelectedTestCases);
