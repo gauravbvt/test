@@ -119,13 +119,13 @@ public class DataController {
 			
 			reportSrcDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods";
 			reportDstDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Reports\\" + reportDirectoryName;
-			
+//			
 			
 			
 			// Set
 			GlobalVariables.configuration.setReportDirectoryName(reportDirectoryName);
 			GlobalVariables.configuration.setReportDstDirectoryPath(reportDstDirectoryPath);
-			
+//			
 			
 			File Dir = new File(reportDstDirectoryPath);
 			if (!Dir.exists())
