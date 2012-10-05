@@ -6,7 +6,6 @@ import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.TimeDelayData;
-import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -230,7 +229,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         Label receiptLabel = new Label(
                 "receiptConfirmation",
                 receiptConfirmation
-                        ? "I request confirmation of receipt"
+                        ? "I need to request confirmation of receipt"
                         : ""
         );
         receiptLabel.setVisible( receiptConfirmation );
@@ -247,7 +246,6 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     }
 
     private void addDocumentation() {
-        Flow flow = flowData.flow();
         DocumentationPanel docPanel = new DocumentationPanel( "documentation", flowData.getDocumentation(), getFinder() );
         docPanel.setVisible( flowData.getDocumentation().hasReportableDocuments() );
         add( docPanel );

@@ -33,7 +33,7 @@ public interface ChannelsService {
 
     @GET
     @Path( "plans" )
-    @Produces( MediaType.APPLICATION_XML )
+    @Produces( MediaType.APPLICATION_XML )      // @Produces( MediaType.APPLICATION_JSON )
     /**
      * Get summaries of all plan versions visible to the authenticated user.
      * @return plan summaries

@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.procedures.ElementOfInformationData;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -41,7 +43,7 @@ public class EoisPanel extends AbstractDataPanel {
             protected void populateItem( ListItem<ElementOfInformationData> item ) {
                 ElementOfInformationData eoiData = item.getModelObject();
                 // name
-                item.add(  new Label( "name", eoiData.getName() ) );
+                item.add( new Label( "name", eoiData.getName() ) );
                 // classifications
                 WebMarkupContainer classificationsContainer = new WebMarkupContainer( "classificationContainer" );
                 item.add( classificationsContainer );
@@ -51,8 +53,15 @@ public class EoisPanel extends AbstractDataPanel {
                         eoiData.getClassificationsLabel()
                 );
                 classificationsContainer.add( securityClassificationsLabel );
-                // Description
-                Label descriptionLabel = new Label( "description", eoiData.getDescription() );
+                // Description / question answered
+                String description = eoiData.getDescription();
+                description = StringEscapeUtils.escapeXml( description == null ? "" : description );
+                Label descriptionLabel = new Label( "description", description );
+                descriptionLabel.add(  new AttributeModifier(
+                        "class",
+                        description.endsWith( "?" )
+                                ? "eoi-question"
+                                : "eoi-description" ) );
                 descriptionLabel.setVisible( eoiData.getDescription() != null
                         && !eoiData.getDescription().isEmpty() );
                 item.add( descriptionLabel );

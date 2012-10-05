@@ -56,9 +56,10 @@ public class ElementOfInformationData  implements Serializable {
 
     @XmlElement
     public String getDescription() {
-        return eoi.getDescription().isEmpty()
+        String description = eoi.getDescription();
+        return description.isEmpty()
                 ? null
-                : StringEscapeUtils.escapeXml( eoi.getDescription() );
+                : description;
     }
 
     public String getClassificationsLabel() {

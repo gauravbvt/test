@@ -418,3 +418,24 @@ border: medium none;
 div.documentation li, div.documentation-top li {
     list-style: none;
 }
+
+.eoi-question, .eoi-description {
+   font-style: italic;
+    font-size: smaller;
+}
+
+.eoi-question:before {
+    content: "(Answers: "
+}
+
+.eoi-question:after {
+    content: ")"
+}
+
+.eoi-description:before {
+    content: "("
+}
+
+.eoi-description:after {
+    content: ")"
+}
