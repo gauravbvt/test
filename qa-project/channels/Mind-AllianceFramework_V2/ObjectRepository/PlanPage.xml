@@ -1245,6 +1245,15 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
+		<GivenName>Undo Duplicate Task</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Duplicate Task</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
 		<GivenName>Undo Add New Task</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
@@ -1889,6 +1898,16 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>Cut Task</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Duplicate Task</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Duplicate Task</LinkText>
 		<ClassName>dropmenu</ClassName>
 	</Element>
 	<Element>
