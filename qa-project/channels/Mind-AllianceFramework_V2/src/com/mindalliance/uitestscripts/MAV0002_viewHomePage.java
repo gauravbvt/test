@@ -20,9 +20,11 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
+import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -43,7 +45,7 @@ public class MAV0002_viewHomePage extends TestCase{
 	public String failed="FAIL";
 	public String blank=""; 
 	@Before
-	protected void setUp(){
+	protected void setUp() throws IOException, XMLStreamException{
 		try{
 				if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
@@ -58,7 +60,7 @@ public class MAV0002_viewHomePage extends TestCase{
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
 			description = "Testcase: " + testCaseId + " execution started";
-			Configuration.createResultFiles();
+			DataController.createResultFiles();
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
@@ -77,7 +79,10 @@ public class MAV0002_viewHomePage extends TestCase{
 		
 			// Enter URL		
 			testMAV0002_viewHomePage();
+//			Reporting1.generateAutomationReport();
 			tearDown();
+			
+			
 		}
 		catch(UIAutomationException ue){
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
@@ -164,8 +169,10 @@ public class MAV0002_viewHomePage extends TestCase{
 		String endTime=LogFunctions.getDateTime();
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
-//	public static void main(String args[]) throws IOException, XMLStreamException{	
-//		org.junit.runner.JUnitCore.runClasses(MAV0002_viewHomePage.class);
-////		Reporting1.generateAutomationReport();
-//	}
+	public static void main(String args[]) throws IOException, XMLStreamException{	
+		org.junit.runner.JUnitCore.runClasses(MAV0002_viewHomePage.class);
+		Reporting1 rp=new Reporting1();
+		Reporting1.generateAutomationReport();
+//		Reporting1.generateAutomationReport();
+	}
 }

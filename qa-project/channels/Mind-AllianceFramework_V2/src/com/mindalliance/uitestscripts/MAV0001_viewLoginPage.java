@@ -21,9 +21,11 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
+import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 
 /**
@@ -49,7 +51,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 	 */
 	
 	@Before
-	protected void setUp(){	
+	protected void setUp() throws IOException, XMLStreamException{	
 		try{
 			
 			if (GlobalVariables.configuration == null){
@@ -61,11 +63,14 @@ public class MAV0001_viewLoginPage extends TestCase{
 				new ElementController();
 			}
 			
+			// Loads Test Data
+			loadTestData();
+			
 			// Write log		
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
 			description = "Testcase: " + testCaseId + " execution started";
-			Configuration.createResultFiles();
+			
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
@@ -79,12 +84,14 @@ public class MAV0001_viewLoginPage extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Loads Test Data
-			loadTestData();
+			
 		
 			// Enter URL		
 			testMAV0001_viewLoginPage();
+//			Reporting1.generateAutomationReport();
 			tearDown();
+			
+			
 			
 		}
 		catch(UIAutomationException ue){
@@ -123,6 +130,8 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
+			
+			DataController.createResultFiles();
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -166,7 +175,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
-//	public static void main(String args[]) throws IOException, XMLStreamException{		
-//		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);		
-//	}
+	public static void main(String args[]) throws IOException, XMLStreamException{		
+		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);		
+	}
 }
