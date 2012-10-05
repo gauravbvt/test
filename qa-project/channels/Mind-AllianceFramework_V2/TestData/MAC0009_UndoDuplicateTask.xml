@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<elements>
+<actions>Actions</actions>
+<addNewSegment>Add New Segment</addNewSegment>
+<segmentForUndoDuplicateTask>Segment For Undo Duplicate Task</segmentForUndoDuplicateTask>
+<addNewTask>Add New Task</addNewTask>
+<taskName>Task 1</taskName>
+<removeThisSegment>Remove This Segment</removeThisSegment>
+<duplicateTask>Duplicate Task</duplicateTask>
+<undoDuplicateTask>Undo Duplicate Task</undoDuplicateTask>
+<actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
+<channelsURL>http://192.168.4.127:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<actionsInSegment>Actions In Segment</actionsInSegment>
+<moveTasksInSegment>Move Tasks In Segment</moveTasksInSegment>
+<show>Show</show>
+<aboutPlanSegment>About Plan Segment</aboutPlanSegment>
+</elements>
