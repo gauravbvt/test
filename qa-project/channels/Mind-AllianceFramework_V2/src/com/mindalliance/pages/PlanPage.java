@@ -602,7 +602,10 @@ public class PlanPage {
 		}
 		break;	
 	
-		
+	case "Duplicate Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;		
 	case "Remove This Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -817,10 +820,14 @@ public class PlanPage {
 		catch (Exception e) {}
 		
 		break;	
+	case "Undo Duplicate Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;	
 	case "Redo Update Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		break;		
+		break;	
 	case "Redo Remove Goal":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1213,6 +1220,36 @@ public class PlanPage {
 		if(!taskNamesInPage.contains(taskName)){
 			throw new UIAutomationException("Task '"+taskName+"' is not created.");
 		}
+	}
+	public void verifyTaskIsDuplicated(String taskName) throws UIAutomationException{
+		int count=0;
+		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+		
+		// Assertion: Verify organization is present
+			List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+			for (WebElement li: tds){
+				if (li.getText().contains(taskName)){
+					count++;
+				}
+			}
+			if(!(count==2)){
+				throw new UIAutomationException("Task '"+taskName+"' can not be duplicated.");
+			}
+	}
+	public void verifyTaskIsNotDuplicated(String taskName) throws UIAutomationException{
+		int count=0;
+		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+		
+		// Assertion: Verify organization is present
+			List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+			for (WebElement li: tds){
+				if (li.getText().contains(taskName)){
+					count++;
+				}
+			}
+			if(!(count==1)){
+				throw new UIAutomationException("Duplicated task can not be undone.");
+			}
 	}
 	/**
 	 * Verify task is removed
