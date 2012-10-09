@@ -39,8 +39,8 @@ public class Reporting extends TakeScreenshot {
 	public String reportDstDirectoryPath;
 	public String testDataDirectoryPath;
 	public String blank = "";
-	public String passed = "PASS";
-	public String failed = "FAIL";
+	public String passed = "Pass";
+	public String failed = "Fail";
 	public String verifyError;
 	public String notRun = "NOT RUN";
 	public String automatesYes = "YES";
@@ -123,7 +123,6 @@ public class Reporting extends TakeScreenshot {
 					    testCasesFailed ++;
 					    arrayOfTestCaseId[index] = testName;
 					    GlobalVariables.configuration.setArrayOfTestCaseId(arrayOfTestCaseId);
-					    
 					    
 					    arrayOftestCaseResult[index++] = failed;
 					    GlobalVariables.configuration.setArrayOftestCaseResult(arrayOftestCaseResult);
@@ -440,8 +439,8 @@ public class Reporting extends TakeScreenshot {
 			
 			// Final Test Pass Report
 			generateFinalTestPassReport();
-//			
-//			// Failure Report
+			
+			// Failure Report
 			generateFailureReport();
 			
 			System.out.println("Report generated successfully");
@@ -828,10 +827,8 @@ public class Reporting extends TakeScreenshot {
 								xml.writeStartElement("center");
 									xml.writeStartElement("font");
 									
-									//////////////////
 									arrayOftestCaseResult=GlobalVariables.configuration.getArrayOftestCaseResult();
-									////////////////
-									
+																	
 									if (arrayOftestCaseResult[i].equals(passed))
 										xml.writeAttribute("color", "GREEN");
 									else
@@ -1052,5 +1049,6 @@ public class Reporting extends TakeScreenshot {
 			e.printStackTrace();
 		}
 	}
+	
 	
 }

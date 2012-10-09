@@ -106,26 +106,22 @@ public class DataController {
 						
 			// Get Current Date
 			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-			Date currentDate = null;
-			currentDate = new Date();
+			Date currentDate = new Date();
 			
 			// Set date
 			GlobalVariables.configuration.setCurrentDate(currentDate);
 			
 			// Create Report Directory
 			reportDirectoryName = dateFormat.format(currentDate);
-//			reportSrcDirectoryPath="D:\\Channels\\Mind-AllianceFramework_V2\\TestCases\\Mind-AllianceTestCaseSheet.ods";
-//			reportDstDirectoryPath="D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\"+reportDirectoryName;
+			reportSrcDirectoryPath="D:\\Channels\\Mind-AllianceFramework_V2\\TestCases\\Mind-AllianceTestCaseSheet.ods";
+			reportDstDirectoryPath="D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\"+reportDirectoryName;
 			
-			reportSrcDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods";
-			reportDstDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Reports\\" + reportDirectoryName;
-//			
-			
+//			reportSrcDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods";
+//			reportDstDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Reports\\" + reportDirectoryName;
 			
 			// Set
 			GlobalVariables.configuration.setReportDirectoryName(reportDirectoryName);
 			GlobalVariables.configuration.setReportDstDirectoryPath(reportDstDirectoryPath);
-//			
 			
 			File Dir = new File(reportDstDirectoryPath);
 			if (!Dir.exists())
@@ -133,8 +129,8 @@ public class DataController {
 			
 			// Create Log Directory
 			logDirectoryName = dateFormat.format(currentDate);
-//			logDirectoryPath="D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\"+logDirectoryName;
-			logDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Logs\\" + logDirectoryName;
+			logDirectoryPath="D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\"+logDirectoryName;
+//			logDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Logs\\" + logDirectoryName;
 		
 			// Set Log directory
 			GlobalVariables.configuration.setLogDirectoryName(logDirectoryName);
@@ -172,4 +168,62 @@ public class DataController {
 			e.printStackTrace();
 		}
 	}
+    
+//    public static void createResultFiles() {
+//		try {
+//			String logFile;
+//			String resultCsvFile;
+//			String reportDirectoryName;
+//			String reportSrcDirectoryPath;
+//			String reportDstDirectoryPath;
+//			String logDirectoryName;
+//			String logDirectoryPath;
+//			String errorLogSubDirectoryPath;
+//
+//			// Get Current Date
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+//			GlobalVariables.configuration.setCurrentDate(new Date());
+//			// Create Report Directory
+//			reportDirectoryName = dateFormat.format(GlobalVariables.configuration.getCurrentDate());
+//			reportSrcDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods";
+//			reportDstDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Reports\\" + reportDirectoryName;
+//			GlobalVariables.configuration.setReportDstDirectoryPath(reportDstDirectoryPath);
+//			File Dir = new File(reportDstDirectoryPath);
+//			if (!Dir.exists())
+//				Dir.mkdir();
+//			// Create Log Directory
+//			logDirectoryName = dateFormat.format(GlobalVariables.configuration.getCurrentDate());
+//			logDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Logs\\" + logDirectoryName;
+//			GlobalVariables.configuration.setLogDirectoryPath(logDirectoryPath);
+//			
+//			
+//			Dir = new File(logDirectoryPath); 
+//			if (!Dir.exists())
+//				Dir.mkdir();
+//			// Create Errors sub-directory
+//			errorLogSubDirectoryPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\Logs\\" + logDirectoryName + "\\Errors";
+//			Dir = new File(errorLogSubDirectoryPath);
+//			if (!Dir.exists())
+//				Dir.mkdir();
+//			
+//			
+//			// Logs Files
+//			resultCsvFile =logDirectoryPath + "\\Results.csv";
+//			GlobalVariables.configuration.setResultCsvFile(resultCsvFile);
+//			
+//			logFile = logDirectoryPath + "\\Logs.logs";
+//			GlobalVariables.configuration.setLogFile(logFile);
+//			
+//			FileWriter fileWriter = new FileWriter(resultCsvFile, true);
+//			BufferedWriter oBWriter = new BufferedWriter(fileWriter);
+//			oBWriter.write("TestCaseId,VerificationStepNo,Description,Result,ScriptException,ErrorReport");
+//			oBWriter.newLine();
+//			oBWriter.flush();
+//			oBWriter.close();
+//		}
+//		catch(Exception e) {
+//			System.out.println("\nError occured in CreateResultFiles Function.");
+//			e.printStackTrace();
+//		}
+//	}
 }
