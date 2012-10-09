@@ -485,7 +485,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 			Class<?> cls;
 			cnt = 0;
 					
-//			DataController.createResultFiles();
+			DataController.createResultFiles();
 			
 			// Set progressBar Values
 			jProgressBarStatus.setMinimum(0);
@@ -517,7 +517,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					String className="com.mindalliance.uitestscripts."+testCaseId;
 					Class myClass = classLoader.loadClass(className);
 					Object instance = myClass.newInstance();
-					org.junit.runner.JUnitCore.runClasses(instance.getClass());
+//					org.junit.runner.JUnitCore.runClasses(instance.getClass());
 							
 					//Update progressBar
 					cnt = cnt + 1;

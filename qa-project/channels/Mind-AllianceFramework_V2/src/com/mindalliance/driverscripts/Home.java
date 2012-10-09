@@ -269,6 +269,11 @@ public class Home {
 		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
 		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 		
+		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
+		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
+		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
+		
+		
 		return suite;
 	}
 }
