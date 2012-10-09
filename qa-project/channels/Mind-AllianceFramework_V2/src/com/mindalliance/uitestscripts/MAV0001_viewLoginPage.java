@@ -25,6 +25,7 @@ import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
+import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 
@@ -43,6 +44,11 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public String failed="FAIL";
 	public String blank=""; 	
 	
+	public MAV0001_viewLoginPage() throws IOException, XMLStreamException, UIAutomationException{
+		setUp();
+		testMAV0001_viewLoginPage();
+		tearDown();
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -59,13 +65,15 @@ public class MAV0001_viewLoginPage extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-			
-			DataController.createResultFiles();
+//			DataController.createResultFiles();	
+			// Loads Test Data
+			loadTestData();
+//			DataController.createResultFiles();
 			// Write log		
-			String startTime=LogFunctions.getDateTime();
-			GlobalVariables.configuration.setStartTime(startTime);
 			description = "Testcase: " + testCaseId + " execution started";
 			LogFunctions.writeLogs(description);
+			// Write log		
+
 						
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
@@ -76,8 +84,8 @@ public class MAV0001_viewLoginPage extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Loads Test Data
-			loadTestData();
+//			// Loads Test Data
+//			loadTestData();
 		}
 		catch(UIAutomationException ue){
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
@@ -113,6 +121,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
+//			DataController.createResultFiles();
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -156,9 +167,10 @@ public class MAV0001_viewLoginPage extends TestCase{
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
-	public static void main(String args[]) throws UIAutomationException{		
-		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);	
-		Reporting1.generateAutomationReport();
-		
-	}
+//	public static void main(String args[]) throws UIAutomationException{
+//		Reporting reporting=new Reporting();
+//		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);	
+//		reporting.generateAutomationReport();
+//		
+//	}
 }
