@@ -97,6 +97,10 @@ public class MAC0002_UndoRemoveThisSegment extends TestCase{
 			// Click on 'Undo Remove This Segment'
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoRemoveThisSegment"));
+			
+			// Click on 'Redo remove this segment'
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("RedoRemoveThisSegment"));				
 								
 			// Sign Out from 'Plan' page
 			HeaderController headerController=new HeaderController();
@@ -142,6 +146,7 @@ public class MAC0002_UndoRemoveThisSegment extends TestCase{
 	       	this.testData.put("SegmentForUndoremovethissegment",oXmlEleMAC0002_UndoRemoveThisSegment.getElementsByTagName("segmentForUndoremovethissegment").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("ChannelsURL",oXmlEleMAC0002_UndoRemoveThisSegment.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("Title",oXmlEleMAC0002_UndoRemoveThisSegment.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	       	this.testData.put("RedoRemoveThisSegment",oXmlEleMAC0002_UndoRemoveThisSegment.getElementsByTagName("redoRemoveThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAC0002_UndoRemoveThisSegment can not be parsed.");

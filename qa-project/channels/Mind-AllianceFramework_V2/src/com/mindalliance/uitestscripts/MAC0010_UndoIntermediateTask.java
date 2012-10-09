@@ -35,9 +35,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
-public class MAC0010_UndoIntermediateTask extends TestCase {
-
-	
+public class MAC0010_UndoIntermediateTask extends TestCase {	
 	public Hashtable<String, String> testData;
 	
 	@Before
@@ -92,20 +90,66 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Close Segment window
 			planPage.closeSegmentWindow();
 			
+			// Click on default task 
+			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
+			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
+			
+			planPage.enterTaskName(testData.get("TaskName"));
+			
+						
 			// click on 'strench up forms' icon
 			planPage.clickStrenchUpForm();
 			
-			// Click on 'Add' button under 'Receives' panel
-			planPage.clickAddInReceivesPanel();
+			// Click on 'Add' button under 'Sends' panel
+			planPage.clickAddInSendsPanel();
 			
 			// Enter Information Name
-			planPage.enterInformationNameInReceivesPanel(testData.get("InformationInRecievesPanel"));
+			planPage.enterInformationNameInSendsPanel(testData.get("InformationInSendsPanel"));
 			
 			// Select 'Other..' option form 'From Task:' dropdown list
-			planPage.selectFrom(testData.get("OtherTaskName"));
+			planPage.selectFromInSends(testData.get("OtherTaskName"));
 			
 			// Enter From Task name
-			planPage.enterFromTaskName(testData.get("FromTaskNameInRecevesPanel"));
+			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
+			
+			// Click on Strench up form
+			planPage.clickStrenchUpForm();
+			
+			// Click on 'Intermediate' under 'Actions' pop up menu in sends panel
+			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
+			planPage.clickSubmenu(testData.get("Intermediate"));
+			
+			// Verify intermediate task should gets added to the segment
+			// Click on 'About Plan segment' under 'Show' pop up menu
+			planPage.clickPopupMenu(testData.get("Show"));
+			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+			// Open Task Mover
+			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+			// Verify Task is added
+			planPage.verifyTaskNameInTaskMover(testData.get("IntermediateTaskName"));
+			// Close Task Mover window
+			planPage.closeTaskMoverWindow();
+			// Close Segment window
+			planPage.closeSegmentWindow();
+			
+			// Undo add intermediate
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("UndoIntermediate"));		
+			
+			// Verify intermediate task should gets removed from segment
+			// Click on 'About Plan segment' under 'Show' pop up menu
+			planPage.clickPopupMenu(testData.get("Show"));
+			planPage.clickSubmenu(testData.get("AboutPlanSegment"));			
+			// Open Task Mover
+			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));			
+			// Verify Task is added
+			planPage.verifyTaskIsRemoved(testData.get("IntermediateTaskName"));		
+			// Close Task Mover window
+			planPage.closeTaskMoverWindow();			
+			// Close Segment window
+			planPage.closeSegmentWindow();	
 			
 			// Click on Remove this segment
 			planPage.clickPopupMenu(testData.get("Actions"));
@@ -150,17 +194,26 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 	               	
 	        this.testData.put("ChannelsURL",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("InformationInRecievesPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("informationInRecievesPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("FromTaskNameInRecevesPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("fromTaskNameInRecevesPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("InformationInSendsPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("informationInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("FromTaskNameInSendsPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("fromTaskNameInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("OtherTaskName",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("otherTaskName").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("ActionsInReceivesPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("actionsInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Intermediate",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("intermediate").item(0).getChildNodes().item(0).getNodeValue());
 		 	
 			this.testData.put("Actions",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("ActionsInSendsPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("actionsInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("AddNewSegment",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("SegmentForUndoIntermediateTask",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("segmentForUndoIntermediateTask").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("UndoIntermediate",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("undoIntermediate").item(0).getChildNodes().item(0).getNodeValue());
+			
+			this.testData.put("ActionsInSegment",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("actionsInSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("MoveTasksInSegment",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("moveTasksInSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Show",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("AboutPlanSegment",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("IntermediateTaskName",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("intermediateTaskName").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("TaskName",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("taskName").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("ShowInTaskPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("showInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("DetailsInTaskPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("detailsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
 		 	
 		}
 		catch(SAXException se){
@@ -186,287 +239,4 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
-
-//	public MAC0010_UndoIntermediateTask() {
-//		try {
-//			GlobalVariables.sTestCaseId = "MAC0010_UndoIntermediateTask";
-//			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
-//			LogFunctions.writeLogs(GlobalVariables.sDescription);
-//			System.out.println(GlobalVariables.sDescription);
-//			// Call login()
-//			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-//				if (GlobalVariables.bIsSuccess) {
-//					
-//					// Click on 'Information Sharing Model' link
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-//					GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					
-//					// Click on 'Add new segment' option under 'Actions' pop up menu
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "New segment added";
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//			
-//					// Enter the details
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "New segment updated";
-//					GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
-//					for (int i = 0; i <= 8; i++)
-//						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Undo Intermediate"));
-//					// Click on 'done' button
-//					GlobalVariables.oDriver.findElement(By.className("close")).click();
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//
-//					// Update the Information of the default task
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Task updated";
-//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathDoingSomeThingLink"))).click();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(5000);
-//					GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-//					for (int i = 0; i <= 15; i++)
-//						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Sender"));
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(5000);
-//					GlobalVariables.oElement.sendKeys(Keys.TAB);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(5000);
-//					// Click on hide details from action pop-menu bar
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//			
-//					// Add info sends flow
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Send Flow added";
-////					GlobalVariables.oDriver.findElement(By.linkText("Add info sent")).click();
-//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoSend"))).click();
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(2000);
-//					
-//					// Create Flow between respective nodes
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Flow created between nodes";
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:name"));
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("This is a Flow"));
-//					GlobalVariables.oElement.sendKeys(Keys.TAB);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(2000);
-//					// To
-//					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice")).click();
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:firstChoice"));
-//					GlobalVariables.oElement.sendKeys("Other...");
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(2000);
-//					GlobalVariables.oElement.sendKeys(Keys.ENTER);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(2000);
-//					// Enter Task Name of Sender
-//					GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:sends:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
-//					for (int i = 0; i <= 17 ; i++)
-//						GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-//					GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Task Receiver"));
-//					GlobalVariables.oElement.sendKeys(Keys.TAB);
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(5000);
-//					
-//					// Create Intermediate Flow
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Intermediate Flow created";
-//					// Click on legend for maximize the graph
-//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathSendInfoActionMenu"),GlobalVariables.viewElements.get("addIntermediate"));
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					// Click on Legend to minimize the information flow details
-//					GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					// Click on 'About plan segment' option under 'Show' pop up menu
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlanSegment"));
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(5000);
-//					// Click on 'task mover' option under 'Shows' pop up menu
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathAbtPlanSegShowMenu"),GlobalVariables.viewElements.get("taskMover"));
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					// ASSERTION: When clicked on 'Add intermediate' option, the task should be created between the selected task and its respective other task
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
-//					List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-//					GlobalVariables.bIsSuccess = Boolean.FALSE;
-//					for (WebElement td: tds){
-//						GlobalVariables.sStrCheck=td.getText();
-//						if (td.getText().equals("doing something")){
-//							GlobalVariables.bIsSuccess = Boolean.TRUE;
-//							break;
-//						}
-//					}
-//					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//								GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					}
-//					else
-//				    {
-//						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.sStrCheck;
-//				    	// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				    }
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					
-//					// Click on 'Undo add intermediate' option under 'Actions' pop up menu
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Undo add intermediate done";
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoAddIntermediate"));
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					// ASSERTION: When clicked on 'Undo add intermediate' option, the intermediate task should be removed
-//					GlobalVariables.bIsSuccess = Boolean.FALSE;
-//					GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.className("data-table"));
-//					tds = GlobalVariables.oElement.findElements(By.tagName("td"));
-//					for (WebElement td: tds){
-//						GlobalVariables.sStrCheck=td.getText();
-//						if (td.getText().equals("")){
-//							GlobalVariables.bIsSuccess = Boolean.TRUE;
-//							break;
-//						}
-//					}
-//					if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					}
-//					else
-//				    {
-//						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'doing something' "+" Actual " + GlobalVariables.sStrCheck;
-//				    	// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//				    }
-//					GlobalVariables.oDriver.findElement(By.className("close")).click();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//					Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(1000);
-//					alert.accept();
-//					// WebElement Synchronization
-//					Thread.currentThread();
-//					Thread.sleep(3000);
-//					
-//					// Call logout()
-//					GlobalVariables.iStepNo++ ;
-//					GlobalVariables.sDescription = "Logout is successful";
-//					ApplicationFunctionLibrary.logout();
-//					// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					
-//					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-//					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-//				}
-//				else{
-//					LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//					System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//					
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sBlank);
-//					System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
-//					GlobalVariables.oDriver.quit();
-//				}
-//		} 
-//		catch (Exception e) {
-//			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-//				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-//				System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
-//				ApplicationFunctionLibrary.logout();
-//			}
-//			else {
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						e.getMessage(),GlobalVariables.sBlank);
-//				System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
-//				ApplicationFunctionLibrary.logout();	
-//			}
-//			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//		}
-//	}
-//	public static void main(String args[]) {
-//		try {
-//			GenericFunctionLibrary.initializeTestData();
-//			GenericFunctionLibrary.loadObjectRepository();
-//			new MAC0010_UndoIntermediateTask();
-//			GenericFunctionLibrary.tearDownTestData();
-//			ReportFunctions.generateAutomationReport();
-//		} 
-//		catch (Exception oException) {
-//			// TODO Auto-generated catch block
-//			oException.printStackTrace();
-//			System.out.println("Unable to undo intermediate task"+ReportFunctions.getScreenShot("Undo intermediate task failed"));
-//		}
-//	}
 }
