@@ -41,8 +41,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public int stepNo=1;
 	public String passed="Pass";
 	public String failed="FAIL";
-	public String blank=""; 
-	
+	public String blank=""; 	
 	
 	/*
 	 * (non-Javadoc)
@@ -56,8 +55,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 			
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-			
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
@@ -68,14 +65,11 @@ public class MAV0001_viewLoginPage extends TestCase{
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
 			description = "Testcase: " + testCaseId + " execution started";
-			
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
-//			browserController.initializeDriver();
-			browserController.initializeDriver("Mozilla Firefox");
-			
+			browserController.initializeDriver(GlobalVariables.configuration.getConfigData().get("Browser"));
 			
 			// Write log
 			description="Browser initialized";
@@ -84,26 +78,15 @@ public class MAV0001_viewLoginPage extends TestCase{
 			
 			// Loads Test Data
 			loadTestData();
-			
-		
-			// Enter URL		
-			testMAV0001_viewLoginPage();
-//			Reporting1.generateAutomationReport();
-			tearDown();
-			
-			
-			
 		}
 		catch(UIAutomationException ue){
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
 		}
-		
 	}
 	
 	@Test
 	public void testMAV0001_viewLoginPage() throws UIAutomationException{
-	     // Enter URL of Channels
-		BrowserController browserController=new BrowserController();
+	   	BrowserController browserController=new BrowserController();
 
 		// Enter URL		
 		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
@@ -130,8 +113,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
-			
-	
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -175,7 +156,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
-	public static void main(String args[]) throws IOException, XMLStreamException{		
-		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);		
+	public static void main(String args[]) throws UIAutomationException{		
+		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);	
+		Reporting1.generateAutomationReport();
+		
 	}
 }

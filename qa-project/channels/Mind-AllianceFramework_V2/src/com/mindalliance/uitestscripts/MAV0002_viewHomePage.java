@@ -24,7 +24,6 @@ import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
-import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -49,8 +48,6 @@ public class MAV0002_viewHomePage extends TestCase{
 		try{
 				if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-			
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
@@ -62,15 +59,11 @@ public class MAV0002_viewHomePage extends TestCase{
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
 			description = "Testcase: " + testCaseId + " execution started";
-			DataController.createResultFiles();
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
-	//		browserController.initializeDriver();
-			browserController.initializeDriver("Mozilla Firefox");
-			
-			
+			browserController.initializeDriver("Mozilla Firefox");			
 			// Write log
 			description="Browser initialized";
 			LogFunctions.writeLogs(description);
@@ -78,13 +71,7 @@ public class MAV0002_viewHomePage extends TestCase{
 			
 			// Loads Test Data
 			loadTestData();
-		
-			// Enter URL		
-			testMAV0002_viewHomePage();
-//			Reporting1.generateAutomationReport();
-			tearDown();
-			
-			
+	
 		}
 		catch(UIAutomationException ue){
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
@@ -110,8 +97,7 @@ public class MAV0002_viewHomePage extends TestCase{
 			stepNo++;
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
-		    
-
+	
 			// Sign Out from 'Home' page
 			HeaderController headerController=new HeaderController();
 			headerController.signOut();
@@ -173,10 +159,8 @@ public class MAV0002_viewHomePage extends TestCase{
 		String endTime=LogFunctions.getDateTime();
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
-	public static void main(String args[]) throws IOException, XMLStreamException{	
+	public static void main(String args[]) throws UIAutomationException{	
 		org.junit.runner.JUnitCore.runClasses(MAV0002_viewHomePage.class);
-		Reporting1 rp=new Reporting1();
 		Reporting1.generateAutomationReport();
-//		Reporting1.generateAutomationReport();
 	}
 }
