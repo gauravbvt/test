@@ -2,8 +2,9 @@
 <elements>
 <channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
-<informationInRecievesPanel>Receiver</informationInRecievesPanel>
-<fromTaskNameInRecevesPanel>Sender</fromTaskNameInRecevesPanel>
+<informationInSendsPanel>This Is A Flow</informationInSendsPanel>
+<taskName>Task Sender</taskName>
+<fromTaskNameInSendsPanel>Task Receiver</fromTaskNameInSendsPanel>
 <otherTaskName>Other...</otherTaskName>
 <actionsInReceivesPanel>Actions In Receives Panel</actionsInReceivesPanel>
 <duplicateFlowInReceivesPanel>Duplicate Flow In Receives Panel</duplicateFlowInReceivesPanel>
@@ -14,4 +15,14 @@
 <segmentForUndoIntermediateTask>Segment For Undo Intermediate Task</segmentForUndoIntermediateTask>
 <intermediate>Intermediate</intermediate>
 <undoIntermediate>Undo Intermediate</undoIntermediate>
+<actionsInSendsPanel>Actions In Sends Panel</actionsInSendsPanel>
+
+<actionsInSegment>Actions In Segment</actionsInSegment>
+<moveTasksInSegment>Move Tasks In Segment</moveTasksInSegment>
+<show>Show</show>
+<aboutPlanSegment>About Plan Segment</aboutPlanSegment>
+<intermediateTaskName>doing unnamed task</intermediateTaskName>
+<hideDetails>Hide Details In Task Panel</hideDetails>
+<showInTaskPanel>Show In Task Panel</showInTaskPanel>
+<detailsInTaskPanel>Details In Task Panel</detailsInTaskPanel>
 </elements>
