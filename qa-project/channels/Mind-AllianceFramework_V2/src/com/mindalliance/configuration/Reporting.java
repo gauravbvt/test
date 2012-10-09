@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JList;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -32,8 +31,6 @@ public class Reporting extends TakeScreenshot {
 	
 	public static int totalNoOfTestCasesPassed = 0;
 	public static int totalNoOfTestCasesFailed = 0;
-//	int index = 0;
-	public JList jListExecute;
 	public String logDirectoryName;
 	public String logDirectoryPath;
 	public String errorLogSubDirectoryPath;

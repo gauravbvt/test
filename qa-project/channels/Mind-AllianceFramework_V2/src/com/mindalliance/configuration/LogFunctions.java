@@ -15,23 +15,17 @@ public class LogFunctions {
 	 * @return
 	 */
 	public static String getDateTime() {
-		try {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
-			return dateFormat.format(date);
-		}
-		catch(Exception e) {
-			System.out.println("\nError Occured in GetDateTime Function.");
-			e.printStackTrace();
-			return null;
-		}
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		return dateFormat.format(date);
 	} 
 	
 	/**
 	 * File Logger
 	 * @param logString
+	 * @throws UIAutomationException 
 	 */
-	public static void writeLogs(String sLog) {	
+	public static void writeLogs(String sLog) throws UIAutomationException {	
 		try {			
 			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getLogFile(), true);
 			BufferedWriter out = new BufferedWriter(fileWriter);
@@ -40,8 +34,8 @@ public class LogFunctions {
 		    out.flush();
 		    out.close();
 		}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
+		catch (IOException e) {
+			throw new UIAutomationException("Can not write log to logfile");
 		}
 	}
 	
@@ -52,10 +46,11 @@ public class LogFunctions {
 	 * @param description
 	 * @param result
 	 * @param comment
+	 * @throws UIAutomationException 
 	 */
 	public static void writeResults(String sTestCaseId, int iVerifyStepNo, String sDescription, String sResult,
-			String sScriptException, String sErrorReport) {
-		try {
+		String sScriptException, String sErrorReport) throws UIAutomationException {
+		try{
 			if (sScriptException.contains(",")) {
 				sScriptException = sScriptException.replaceAll(",", "|");
 				sScriptException = sScriptException.replaceAll("\n", " ");
@@ -68,15 +63,18 @@ public class LogFunctions {
 			out.flush();
 			out.close();
 		}
-		catch (IOException e) {
+		catch(IOException ie){
+			throw new UIAutomationException("Can not write result to result file.");
 		}
 	}
+
 	
 	/**
 	 * Error File Logger
 	 * @param logString
+	 * @throws UIAutomationException 
 	 */
-	public static void writeErrorLogs(String sLog) {
+	public static void writeErrorLogs(String sLog) throws UIAutomationException {
 		try {
 			String testCaseId="";
 			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getErrorLogSubDirectoryPath() + "\\" +testCaseId + ".logs", true);
@@ -87,6 +85,7 @@ public class LogFunctions {
 		    out.close();
 		}
 		catch (IOException e) {
+			throw new UIAutomationException("Can not write error logs to error log file.");
 		}
 	}	
 }
