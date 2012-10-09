@@ -261,6 +261,14 @@ public class Home {
 		suite.addTestSuite(MAC0037_RedoPasteTaskUsingCut.class);
 		suite.addTestSuite(MAC0038_RedoPasteTaskUsingCopy.class);
 		
+		suite.addTestSuite(MAC0009_UndoDuplicateTask.class);
+		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
+		
+		
+		suite.addTestSuite(MAC0040_RedoIntermediateTask.class);
+		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
+		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
+		
 		return suite;
 	}
 }

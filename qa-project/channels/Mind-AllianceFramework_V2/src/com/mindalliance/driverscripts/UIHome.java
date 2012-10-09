@@ -516,8 +516,8 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					ClassLoader classLoader=ClassLoader.getSystemClassLoader();
 					String className="com.mindalliance.uitestscripts."+testCaseId;
 					Class myClass = classLoader.loadClass(className);
-					Object whatInstance = myClass.newInstance();
-					org.junit.runner.JUnitCore.runClasses(whatInstance.getClass());
+					Object instance = myClass.newInstance();
+					org.junit.runner.JUnitCore.runClasses(instance.getClass());
 							
 					//Update progressBar
 					cnt = cnt + 1;
@@ -530,6 +530,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 				}
 			}
 			
+			jLabelEndDateTime.setText("End DateTime: "+ LogFunctions.getDateTime());
+			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
+			
 			// Convert vector to array of string and then to Jlist
 			String[] arrayOfTestCases=new String[arrayOfTestCaseId.size()];
 			int i=0;
@@ -538,7 +541,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 			}					
 			
 			JList<String> jlist=new JList<String>(arrayOfTestCases);
-			GlobalVariables.configuration.setList(jlist);					
+			GlobalVariables.configuration.setList(jlist);				
 			
  		
 			reporting.generateAutomationReport();
