@@ -605,7 +605,12 @@ public class PlanPage {
 	case "Duplicate Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		break;		
+		break;	
+
+	case "Disintermediate":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;	
 	case "Remove This Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -823,11 +828,19 @@ public class PlanPage {
 	case "Undo Duplicate Task":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		break;	
+		break;
+	case "Undo Move Tasks":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;
 	case "Redo Update Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
-		break;	
+		break;
+	case "Redo Remove This Segment":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;
 	case "Redo Remove Goal":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -845,6 +858,10 @@ public class PlanPage {
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;	
 	case "Undo Paste Task":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;
+	case "Undo Intermediate":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;
@@ -1152,6 +1169,57 @@ public class PlanPage {
 		}
 	}	
 	
+	
+	public void verifyDisintermediate(String undoDisintermediate) throws UIAutomationException{
+		// Verify Task is disintermediated
+		elementController.requireElementSmart(fileName,"Actions", GlobalVariables.configuration.getAttrSearchList(), "Actions");
+		String xPathForPopup=dataController.getPageDataElements(fileName, "Actions", "Xpath");
+		UIActions.click(fileName,"Actions", GlobalVariables.configuration.getAttrSearchList(), "Actions");
+					
+		Actions builder1 = new Actions(GlobalVariables.configuration.getWebDriver());
+		builder1.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
+		
+		List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("li"));
+		for (WebElement li: tds){
+			if (li.getText().contains(undoDisintermediate)){
+				UIActions.click();
+				break;
+			}
+		}
+	}
+	public void verifyUndoDisintermediate(String redoDisintermediate) throws UIAutomationException{
+		// Verify Task is disintermediated
+		elementController.requireElementSmart(fileName,"Actions", GlobalVariables.configuration.getAttrSearchList(), "Actions");
+		String xPathForPopup=dataController.getPageDataElements(fileName, "Actions", "Xpath");
+		UIActions.click(fileName,"Actions", GlobalVariables.configuration.getAttrSearchList(), "Actions");
+					
+		Actions builder1 = new Actions(GlobalVariables.configuration.getWebDriver());
+		builder1.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
+		
+		List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("li"));
+		for (WebElement li: tds){
+			if (li.getText().contains(redoDisintermediate)){
+				UIActions.click();
+				break;
+			}
+		}
+	}
+	public void verifyRedoDisintermediate(String undoDisintermediate) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Actions", GlobalVariables.configuration.getAttrSearchList(), "Actions");
+		String xPathForPopup=dataController.getPageDataElements(fileName, "Actions", "Xpath");
+		UIActions.click(fileName,"Actions", GlobalVariables.configuration.getAttrSearchList(), "Actions");
+					
+		Actions builder1 = new Actions(GlobalVariables.configuration.getWebDriver());
+		builder1.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
+		
+		List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("li"));
+		for (WebElement li: tds){
+			if (li.getText().contains(undoDisintermediate)){
+				UIActions.click();
+				break;
+			}
+		}
+	}
 	/**
 	 * Enter segment name in segment name textbox
 	 * @param segmentName
@@ -1221,11 +1289,77 @@ public class PlanPage {
 			throw new UIAutomationException("Task '"+taskName+"' is not created.");
 		}
 	}
+	/**
+	 * Click on 'Task Name' in task mover window
+	 * @param taskName
+	 * @throws UIAutomationException
+	 */
+	public void clickOnTaskNameInTaskMover(String taskName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+		List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+			for (WebElement li: tds){
+				if (li.getText().contains(taskName)){
+					UIActions.click();
+					break;
+				}
+			}
+			
+	}
+	/**
+	 * Check checkbox of task in task mover
+	 * @param taskName
+	 * @throws UIAutomationException
+	 */
+	public void clickOnCheckboxOfTaskNameInTaskMover(String taskName) throws UIAutomationException{
+			// get list of task
+			int countTasks = 1 ;
+			String firstXPath=dataController.getPageDataElements(fileName, "First XPath", "Xpath");
+			String secondXPath=dataController.getPageDataElements(fileName, "Second XPath", "Xpath");
+			elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
+		
+			List<WebElement> trs = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+			List<WebElement> tds;
+			for(WebElement tr: trs){
+				tds = tr.findElements(By.tagName("td"));
+				for(WebElement td: tds){				
+					if(td.getText().contains(taskName)){
+						GlobalVariables.configuration.getWebDriver().findElement(By.xpath(firstXPath+ (countTasks) + secondXPath)).click();
+					}
+				}
+				countTasks++;
+			}
+	}
+	
+	public void selectSegmentFromList(String segmentName) throws UIAutomationException{
+		
+	
+//				/html/body/form/div[29]/div/ul/li[3]/ul/li/a
+//				/html/body/form/div[29]/div/ul/li[3]/ul/li[2]/a
+				
+//				elementController.requireElementSmart(fileName,"Actual Segment Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(), "Actual Segment Dropdown On Plan Page");
+//				elementController.requireElementSmart(fileName,"Segments In Dropdown On Plan Page",GlobalVariables.configuration.getAttrSearchList(), "Segments In Dropdown On Plan Page");
+//				List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("ul"));
+//				List<WebElement> tds1 = GlobalVariables.configuration.getWebElement().findElements(By.tagName("li"));
+//				for (WebElement li: tds1){
+//					if (li.getText().contains(segmentName)){
+//						UIActions.click();
+//						break;
+//					}
+//				}
+				
+				
+	}
+	
+	/**
+	 * Verify task is duplicated
+	 * @param taskName
+	 * @throws UIAutomationException
+	 */
 	public void verifyTaskIsDuplicated(String taskName) throws UIAutomationException{
 		int count=0;
 		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
 		
-		// Assertion: Verify organization is present
+		// Assertion: Verify task is present
 			List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
 			for (WebElement li: tds){
 				if (li.getText().contains(taskName)){
@@ -1236,6 +1370,11 @@ public class PlanPage {
 				throw new UIAutomationException("Task '"+taskName+"' can not be duplicated.");
 			}
 	}
+	/**
+	 * Verify task iss not duplicated
+	 * @param taskName
+	 * @throws UIAutomationException
+	 */
 	public void verifyTaskIsNotDuplicated(String taskName) throws UIAutomationException{
 		int count=0;
 		elementController.requireElementSmart(fileName,"Task Mover Table",GlobalVariables.configuration.getAttrSearchList(), "Task Mover Table");
@@ -1429,6 +1568,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.click(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.enterValueInTextBox(informationName,fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
+		elementController.requireElementSmart(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.enterKey(Keys.TAB);
 		try{
 			Thread.sleep(1000);
@@ -1455,6 +1595,32 @@ public class PlanPage {
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
 		UIActions.selectByTextAndClick(other);
+	}
+	/**
+	 * Select from dropdownlist in sends panel
+	 * @param other
+	 * @throws UIAutomationException
+	 */
+	public void selectFromInSends(String other) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"From Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Sends Panel");
+		UIActions.click(fileName,"From Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Sends Panel");
+		
+		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(fromDropDownList);
+		UIActions.selectByTextAndClick(other);
+	}
+	/**
+	 * Select segment from dropdown list in task mover
+	 * @param segmentName
+	 * @throws UIAutomationException
+	 */
+	public void selectSegmentInTaskMover(String segmentName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Move to Segment Dropdown In Task Mover",GlobalVariables.configuration.getAttrSearchList(),"Move to Segment Dropdown In Task Mover");
+		UIActions.click(fileName,"Move to Segment Dropdown In Task Mover",GlobalVariables.configuration.getAttrSearchList(),"Move to Segment Dropdown In Task Mover");
+		
+		Select segmentDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(segmentDropDownList);
+		UIActions.selectByTextAndClick(segmentName);
 	}
 	/**
 	 * Select option from context dropdown
@@ -1556,6 +1722,10 @@ public class PlanPage {
 	public void clickOnPhaseInAboutPlan() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
 		UIActions.click(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
+	}
+	public void clickOnMoveInTaskMover() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Move Button In Task Mover",GlobalVariables.configuration.getAttrSearchList(), "Move Button In Task Mover");
+		UIActions.click(fileName,"Move Button In Task Mover",GlobalVariables.configuration.getAttrSearchList(), "Move Button In Task Mover");
 	}
 	/**
 	 * Enter value in description of phase
@@ -1781,6 +1951,10 @@ public class PlanPage {
 		if(!popUpNameInPage.equals(popUpNameInXml)){
 			throw new UIAutomationException( "'"+popUpNameInXml +"' not found");
 		}
+	}
+	public void clickOnIntermediateTask(String intermediateTaskName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Intermediate Actual Task",GlobalVariables.configuration.getAttrSearchList(), "Intermediate Actual Task");
+		UIActions.click(fileName,"Intermediate Actual Task",GlobalVariables.configuration.getAttrSearchList(), "Intermediate Actual Task");
 	}
 	
 	/**
@@ -2488,6 +2662,74 @@ public class PlanPage {
 			throw new UIAutomationException( "'"+textInXML +"' not found");
 		}
 		
+	}
+	public void clickQuestionnaireTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"QUESTIONNAIRES",GlobalVariables.configuration.getAttrSearchList(), "QUESTIONNAIRES");
+		UIActions.click(fileName,"QUESTIONNAIRES",GlobalVariables.configuration.getAttrSearchList(), "QUESTIONNAIRES");
+		elementController.requireElementSmart(fileName,"QUESTIONNAIRES",GlobalVariables.configuration.getAttrSearchList(), "QUESTIONNAIRES");
+		String tabTextInPage=UIActions.getText(fileName,"QUESTIONNAIRES",GlobalVariables.configuration.getAttrSearchList(), "QUESTIONNAIRES");
+		String tabTextInXML=dataController.getPageDataElements(fileName,"Questionnaire Name" , "Name");
+		if(!tabTextInPage.contains(tabTextInXML)){
+			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
+		}
+	}
+	
+	/**
+	 * Click on New button in questionnaire
+	 * @throws UIAutomationException
+	 */
+	public void clickAddNewQuestionnaire() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Add New Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Add New Questionnaire");
+		UIActions.click(fileName,"Add New Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Add New Questionnaire");
+	}
+	/**
+	 * Update questionnaire name
+	 * @param questionnaireName
+	 * @throws UIAutomationException
+	 */
+	public void enterQuestionnaireName(String questionnaireName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+		UIActions.click(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+		
+		for (int i = 0; i <= 7; i++){
+			UIActions.enterKey(Keys.BACK_SPACE);
+		}
+		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+		UIActions.enterValueInTextBox(questionnaireName,fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+		
+	}
+	/**
+	 * Delete Questionnaire
+	 * @throws UIAutomationException
+	 */
+	public void deleteQuestionnaire() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Delete Querstionnaire",GlobalVariables.configuration.getAttrSearchList(), "Delete Querstionnaire");
+		UIActions.click(fileName,"Delete Querstionnaire",GlobalVariables.configuration.getAttrSearchList(), "Delete Querstionnaire");
+		
+		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Questionnaire", "Title");
+		UIActions.assertAlert(headingOfWindowInXML);
+	}
+	/**
+	 * Verify questionnaire is added
+	 * @param questionnaireName
+	 * @throws UIAutomationException
+	 */
+	public void verifyQuestionnaireIsAdded(String questionnaireName) throws UIAutomationException{
+		boolean present=false;
+		elementController.requireElementSmart(fileName,"Questionnaire Table",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Table");
+		
+		// Assertion: Verify questionnaire is present
+			List<WebElement> tds = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+			for (WebElement li: tds){
+				if (li.getText().contains(questionnaireName)){
+					present=true;
+					break;
+				}
+			}
+			if(present==false){
+				throw new UIAutomationException("Questionnaire '"+questionnaireName+"' is not present.");
+			}
+			
 	}
 	/**
 	 * Clicks on 'hide broadcasts' and 'show all messages'
@@ -3217,7 +3459,26 @@ public class PlanPage {
 		Configuration.getConfigurationObject().setSelect(butOnlyDropDownList);
 		UIActions.selectByText(option);
 	}
-	
+	/**
+	 * Select option from survey about dropdown list
+	 * @param option
+	 * @throws UIAutomationException
+	 */
+	public void selectOptionFromQuestionnaireFromSurveysAbout(String option) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Dropdown Of Surveys About Questionnaire");
+		UIActions.click(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Dropdown Of Surveys About Questionnaire");
+		
+		elementController.requireElementSmart(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(),"Dropdown Of Surveys About Questionnaire");
+		Select surveysAboutDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(surveysAboutDropDownList);
+		UIActions.selectByText(option);
+		
+		// Verify option is selected
+		String surveyAboutDropdown=UIActions.getText(fileName,"Dropdown Of Surveys About Questionnaire",GlobalVariables.configuration.getAttrSearchList(), "Dropdown Of Surveys About Questionnaire");
+		if(!surveyAboutDropdown.contains(option)){
+			throw new UIAutomationException("Option '"+option+"' can not be selected.");
+		}
+	}
 	/**
 	 * Select option from Channels dropdown in sends panel
 	 * @param option
