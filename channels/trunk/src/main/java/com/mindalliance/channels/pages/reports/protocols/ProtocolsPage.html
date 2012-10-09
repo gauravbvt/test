@@ -14,12 +14,12 @@
     <div class="directory-link">
         <a href="#directory">Your contacts directory</a>
     </div>
+    <h1>
+        My collaboration protocols
+        <br />
+        for <span wicket:id="planName">Plan name</span>
+    </h1>
     <div class="about" wicket:id="about">  <!--class="about"-->  <!-- class about hides this div -->
-        <h1>
-            My collaboration protocols
-            <br />
-            for <span wicket:id="planName">Plan name</span>
-        </h1>
         <h4>Version <span wicket:id="planVersion">12</span></h4>
         <h4>Last updated
             <span wicket:id="planDate">December 25, 2012</span>
@@ -69,11 +69,11 @@
             <div wicket:id="commSections">  <!-- repeated -->
                 <h6 wicket:id="letter">A</h6>
                 <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
-                    <b>When</b> <span wicket:id="contact">[contact link panel]</span>
 
                     <ul class="askedYou" wicket:id="askedYou">
                          <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
-                             Asks me for
+                             When <span wicket:id="contact">[contact link panel]</span>
+                             asks me for
                             <span wicket:id="request" class="info">a request</span>
                             <span wicket:id="communicatedContext">context</span>
                             <ul>
@@ -83,9 +83,11 @@
 	                         </ul>
                         </li>
                     </ul>
+
                     <ul class="notifiedYou" wicket:id="notifiedYou">
                         <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
-                            Notifies me of
+                            When <span wicket:id="contact">[contact link panel]</span>
+                            notifies me of
                             <span wicket:id="notification" class="info">a notification</span>
                             <span class="communicatedContext" wicket:id="communicatedContext">context</span>
                             <ul>

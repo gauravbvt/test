@@ -167,10 +167,10 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private void addAboutProtocols() {
         PlanIdentifierData planIdentifierData = proceduresData.getPlanIdentifier();
+        getContainer().add( new Label( "planName", planIdentifierData.getName() ) );
         aboutContainer = new WebMarkupContainer( "about" );
         getContainer().add( aboutContainer );
         aboutContainer
-                .add( new Label( "planName", planIdentifierData.getName() ) )
                 .add( new Label( "userOrAgentName", getParticipantName() ) )
                 .add( new Label( "planVersion", Integer.toString( planIdentifierData.getVersion() ) ) )
                 .add( new Label( "planDate",  planIdentifierData.getDateVersioned() ) )
@@ -298,27 +298,26 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
                 ContactData contactData = item.getModelObject();
-                item.add( new ContactLinkPanel( "contact", contactData, finder ) );
                 // requests
                 Map<TriggerData, List<ProcedureData>> triggeringRequests =
                         finder.getTriggeringRequestsFrom( contactData );
                 WebMarkupContainer requestsFromInterlocutor = new WebMarkupContainer( "askedYou" );
                 item.add( requestsFromInterlocutor );
                 requestsFromInterlocutor.setVisible( !triggeringRequests.isEmpty() );
-                requestsFromInterlocutor.add( makeInterlocutorRequestsListView( triggeringRequests ) );
+                requestsFromInterlocutor.add( makeInterlocutorRequestsListView( triggeringRequests, contactData ) );
                 // notifications
                 Map<TriggerData, List<ProcedureData>> triggeringNotifications =
                         finder.getTriggeringNotificationsFrom( contactData );
                 WebMarkupContainer notificationsFromInterlocutor = new WebMarkupContainer( "notifiedYou" );
                 item.add( notificationsFromInterlocutor );
                 notificationsFromInterlocutor.setVisible( !triggeringNotifications.isEmpty() );
-                notificationsFromInterlocutor.add( makeInterlocutorNotificationsListView( triggeringNotifications ) );
+                notificationsFromInterlocutor.add( makeInterlocutorNotificationsListView( triggeringNotifications, contactData ) );
             }
         };
     }
 
     private ListView<TriggerData> makeInterlocutorRequestsListView(
-            final Map<TriggerData, List<ProcedureData>> triggeringRequests ) {
+            final Map<TriggerData, List<ProcedureData>> triggeringRequests, final ContactData contactData ) {
         List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringRequests.keySet() );
         Collections.sort(
                 sortedTriggers,
@@ -334,6 +333,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         ) {
             @Override
             protected void populateItem( ListItem<TriggerData> item ) {
+                item.add( new ContactLinkPanel( "contact", contactData, finder ) );
                 TriggerData triggerData = item.getModelObject();
                 item.add( new Label( "request", triggerData.getLabel() ) );
                 SituationData communicatedContext = triggerData.getSituation();
@@ -351,7 +351,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private ListView<TriggerData> makeInterlocutorNotificationsListView(
-            final Map<TriggerData, List<ProcedureData>> triggeringNotifications ) {
+            final Map<TriggerData, List<ProcedureData>> triggeringNotifications, final ContactData contactData ) {
         List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringNotifications.keySet() );
         Collections.sort(
                 sortedTriggers,
@@ -368,6 +368,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<TriggerData> item ) {
                 TriggerData triggerData = item.getModelObject();
+                item.add( new ContactLinkPanel( "contact", contactData, finder ) );
                 item.add( new Label( "notification", triggerData.getLabel() ) );
                 SituationData communicatedContext = triggerData.getSituation();
                 Label commContextLabel = new Label(

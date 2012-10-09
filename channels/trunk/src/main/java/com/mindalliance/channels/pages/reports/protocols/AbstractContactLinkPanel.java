@@ -50,7 +50,7 @@ public class AbstractContactLinkPanel extends AbstractDataPanel {
     private void addContactLink() {
         WebMarkupContainer contactLink = makeAnchorLink( "contactLink", "#" + contactData.anchor() );
         contactLink.add( new Label( "contactName", contactData.getContactName() ) );
-        contactLink.add( new Label("contactJob", contactData.getContactJob() ) );
+       // contactLink.add( new Label("contactJob", contactData.getContactJob() ) );
         add( contactLink );
     }
 
