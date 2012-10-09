@@ -35,6 +35,10 @@
 		<Name>Messages</Name>
 	</Element>
 	<Element>
+		<GivenName>Questionnaire Name</GivenName>
+		<Name>QUESTIONNAIRES</Name>
+	</Element>
+	<Element>
 		<GivenName>To In Message Panel</GivenName>
 		<Name>To:</Name>
 	</Element>
@@ -42,6 +46,10 @@
 	<Element>
 		<GivenName>Alert Window Title Of Cut Task</GivenName>
 		<Title>Are you sure?</Title>
+	</Element>
+	<Element>
+		<GivenName>Alert Window Title Of Delete Questionnaire</GivenName>
+		<Title>Delete this questionnaire?</Title>
 	</Element>
 	<Element>
 		<GivenName>Alert Window Title Of Delete Event</GivenName>
@@ -231,7 +239,42 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>Add New Questionnaire</GivenName>
+		<Xpath>//input[contains(@class,'add-new-questionnaire')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>add-new-questionnaire</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Questionnaire Name Textbox</GivenName>
+		<Xpath>//input[contains(@name,'dataCollection:fp-content:mo:aspect:questionnaire:questionnaireManager:name')]</Xpath>
+		<Name>dataCollection:fp-content:mo:aspect:questionnaire:questionnaireManager:name</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Dropdown Of Surveys About Questionnaire</GivenName>
+		<Xpath>//select[contains(@name,'dataCollection:fp-content:mo:aspect:questionnaire:questionnaireManager:about')]</Xpath>
+		<Name>dataCollection:fp-content:mo:aspect:questionnaire:questionnaireManager:about</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Questionnaire Table</GivenName>
+		<Xpath>//table[contains(@class,'data-table')]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>data-table</ClassName>
+	</Element>
 	<Element>
 		<GivenName>Presence</GivenName>
 		<Xpath>//li[contains(@class,'tab0 selected')]/a/span</Xpath>
@@ -1084,7 +1127,7 @@
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
-    	<ClassName></ClassName>
+    	<ClassName>fp-close</ClassName>
  	</Element>
  	
  	<Element>
@@ -1272,6 +1315,24 @@
 		<ClassName></ClassName>
 	</Element>
 	<Element>
+		<GivenName>Redo Remove This Segment</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo Remove This Segment</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Disintermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo Disintermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
 		<GivenName>Redo Paste Task</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
@@ -1299,6 +1360,40 @@
 		<ClassName>data-table</ClassName>
 	</Element>
 	<Element>
+		<GivenName>Move to Segment Dropdown In Task Mover</GivenName>
+		<Xpath>//select[contains(@name,'taskMover:content:mover:destinationSegment')]</Xpath>
+		<Name>taskMover:content:mover:destinationSegment</Name>
+	</Element>
+	<Element>
+		<GivenName>Move Button In Task Mover</GivenName>
+		<Xpath>/html/body/form/div[19]/div/span/div/div[2]/div/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+    	<GivenName>First XPath </GivenName>
+       	<Xpath>/html/body/form/div[19]/div/span/div/div[2]/div/span/table/tbody/tr[</Xpath>
+       	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+    	<GivenName>Second XPath</GivenName>
+    	<Xpath>]/td/span/input</Xpath>
+       	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+	
+	<Element>
 		<GivenName>Redo Update Segment</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
@@ -1324,6 +1419,34 @@
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Disintermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Disintermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Move Tasks</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Move Tasks</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Intermediate Actual Task</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id>node2</Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>picture</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Duplicate Flow In Receives Panel</GivenName>
@@ -1360,6 +1483,44 @@
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Intermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Intermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Disintermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Undo Disintermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Intermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo Intermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Intermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Intermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Undo Add Information Capability</GivenName>
@@ -1919,7 +2080,15 @@
 		<LinkText>Copy Task</LinkText>
 		<ClassName>dropmenu</ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>Disintermediate</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Disintermediate</LinkText>
+		<ClassName>dropmenu</ClassName>
+	</Element>
 	<Element>
 		<GivenName>Paste Task</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
@@ -2093,6 +2262,16 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	<Element>
+		<GivenName>From Dropdown In Sends Panel</GivenName>
+		<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:other:firstChoice')]</Xpath>
+		<Name>segment:sends:flows-div:flows:0:flow:other:firstChoice</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Intent Dropdown In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[3]/td/select</Xpath>
@@ -2292,7 +2471,7 @@
 	</Element>
 	<Element>
 		<GivenName>Actual Segment Dropdown On Plan Page</GivenName>
-		<Xpath>/html/body/form/div[29]/div/ul/li[3]/ul</Xpath>
+		<Xpath>/html/body/form/div[29]/div/ul/li[3]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2705,7 +2884,24 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	
+	<Element>
+		<GivenName>QUESTIONNAIRES</GivenName>
+		<Xpath>/html/body/form/div[25]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>QUESTIONNAIRES</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Delete Querstionnaire</GivenName>
+		<Xpath>/html/body/form/div[25]/div/div[3]/div/div/div[3]/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>All Surveys Title</GivenName>
 		<Xpath>/html/body/form/div[25]/div/div/div/span</Xpath>
