@@ -515,8 +515,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					//Execute current TestCaseId
 					ClassLoader classLoader=ClassLoader.getSystemClassLoader();
 					String className="com.mindalliance.uitestscripts."+testCaseId;
-					Class myClass = classLoader.loadClass(className);
-					Object instance = myClass.newInstance();
+					cls = classLoader.loadClass(className);
+//					Object instance = myClass.newInstance();
+					cls.newInstance();
 //					org.junit.runner.JUnitCore.runClasses(instance.getClass());
 							
 					//Update progressBar
@@ -612,7 +613,8 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					clearTestPlanResult();
 			}
 			else if ("reports".equals(e.getActionCommand())) { // when clicked on 'Reports' button
-					File file = new File(GlobalVariables.configuration.getReportDstDirectoryPath()+"//index.htm");
+				File file = new File("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport"+"\\index.htm");
+//					File file = new File(GlobalVariables.configuration.getReportDstDirectoryPath()+"//index.htm");
 					Desktop.getDesktop().open(file);
 			}
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
