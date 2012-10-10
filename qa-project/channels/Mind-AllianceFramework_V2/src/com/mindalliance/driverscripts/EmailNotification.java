@@ -167,7 +167,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFiledSMTPServer == null) {
 			jTextFiledSMTPServer = new JTextField();
 			jTextFiledSMTPServer.setPreferredSize(jTextFiledSMTPServer.getPreferredSize());
-			jTextFiledSMTPServer.setText("smtp.afourtech.com");
+			jTextFiledSMTPServer.setText("smtp.gmail.com");
 			jTextFiledSMTPServer.addActionListener(this);
 		}
 		return jTextFiledSMTPServer;
@@ -177,7 +177,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFieldUserName == null) {
 			jTextFieldUserName = new JTextField();
 			jTextFieldUserName.setPreferredSize(jTextFieldUserName.getPreferredSize());
-			jTextFieldUserName.setText("shrilekha.teke@afourtech.com");
+			jTextFieldUserName.setText("piugurav0069@gmail.com");
 			jTextFieldUserName.addActionListener(this);
 		}
 		return jTextFieldUserName;
@@ -275,7 +275,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			System.exit(0);
 		}
 		if("save".equals(e.getActionCommand())){
-			String[] to={"shrilekha.teke@afourtech.com"};
+			String[] to={"piugurav0069@gmail.com"};
 			String[] cc={};
 			//This is for google
 			EmailNotification.sendMail(jTextFieldUserName.getText(),jTextFieldPassword.getText(),jTextFiledSMTPServer.getText(),jTextSMTPPort.getText(),"true","true",true,"javax.net.ssl.SSLSocketFactory","false",to,cc,"Mind-Alliance UI Automation Report");
@@ -330,7 +330,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
             // create the second message part
             MimeBodyPart mbp2 = new MimeBodyPart();
             // attach the file to the message
-            FileDataSource fds = new FileDataSource(reportDstDirectoryPath + "\\index.htm");  
+            FileDataSource fds = new FileDataSource("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\index.htm");  
             mbp2.setDataHandler(new DataHandler(fds));
             // create the Multipart and add its parts to it
             Multipart mp = new MimeMultipart();
@@ -338,7 +338,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
             // set the Date: header
             msg.setSentDate(new Date());            
             // add the Multipart to the message
-            msg.setContent(mp);
+            msg.setContent(mp,"text/html; charset=utf-8");
             
             Transport transport = session.getTransport("smtp");
             transport.connect(host, userName, passWord);

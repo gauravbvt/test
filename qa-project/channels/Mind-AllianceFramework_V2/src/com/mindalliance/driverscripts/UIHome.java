@@ -617,6 +617,10 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 //					File file = new File(GlobalVariables.configuration.getReportDstDirectoryPath()+"//index.htm");
 					Desktop.getDesktop().open(file);
 			}
+			else if("message".equals(e.getActionCommand())){
+				@SuppressWarnings("unused")
+			    EmailNotification emi=new EmailNotification();
+			}
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
 				System.exit(0);
 			}
