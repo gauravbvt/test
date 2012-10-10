@@ -16,30 +16,39 @@
     </div>
     <h1>
         My collaboration protocols
-        <br />
         for <span wicket:id="planName">Plan name</span>
     </h1>
+    <div class="plandetails-cont">
     <div class="about" wicket:id="about">  <!--class="about"-->  <!-- class about hides this div -->
-        <h4>Version <span wicket:id="planVersion">12</span></h4>
-        <h4>Last updated
-            <span wicket:id="planDate">December 25, 2012</span>
-        </h4>
-        <h4>Prepared for
-            <span wicket:id="userOrAgentName">John Doe</span> on <span wicket:id="time">now</span>
-        </h4>
-
+        <h4>About</h4>
+        <table cellspacing="10">
+            <tr>
+                <td width="40%">Version:</td>
+                <td><span wicket:id="planVersion">12</span></td>
+            </tr>
+            <tr>
+                <td>Last updated:</td>
+                <td><span wicket:id="planDate">December 25, 2012</span></td>
+            </tr>
+            <tr>
+                <td>Prepared for:</td>
+                <td><span wicket:id="userOrAgentName">John Doe</span> on <span wicket:id="time">now</span></td>
+            </tr>
+        </table>
     </div>
     <div class="participation">
-        <h4>
-            I participate as <br />
-					<span class="participationList" wicket:id="participationList"> <!-- repeated -->
-						<span wicket:id="employment">Employment</span>
-					</span>
-        </h4>
+        <h4>Participation</h4>
+        <p>I participate as
+				<span class="participationList" wicket:id="participationList"> <!-- repeated -->
+					<span wicket:id="employment">Employment</span>
+				</span>
+        </p>
     </div>
     <div class="documentation-top" wicket:id="documentation">
         [documentation panel]
     </div>
+    </div>
+
     <div wicket:id="finder">
         <h2>What is expected of me?</h2>
         <!-- Table of content -->

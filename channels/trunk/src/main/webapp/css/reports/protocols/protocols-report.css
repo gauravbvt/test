@@ -4,6 +4,17 @@ div.protocols-contents {
 	padding: 10px;
 }
 
+div.plandetails-cont {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #6b8abe;
+    clear: right;
+    float: right;
+    margin: 120px 0 0 10px;
+    position: relative;
+    width: 250px;
+    border-top: none;
+}
+
 div.protocols-contents a {
 	color: #333333;
 	font-weight: bold;
@@ -11,13 +22,12 @@ div.protocols-contents a {
 }
 
 div.protocols-contents h1 {
-	color: #333333;
-	font-family: Georgia;
-	font-size: 34px;
-	letter-spacing: -1px;
-	text-align: center;
-	padding: 20px 0 15px;
-	font-weight: normal;
+    color: #333333;
+    font-family: Arial;
+    font-size: 36px;
+    font-weight: normal;
+    letter-spacing: -1px;
+    padding: 25px 0 0;
 }
 
 div.protocols-contents h1 span {
@@ -27,8 +37,7 @@ div.protocols-contents h1 span {
 div.protocols-contents h2 {
 	border-bottom: 2px solid #666666;
 	color: #333333;
-	font-family: Georgia;
-	font-size: 28px;
+	font-size: 24px;
 	font-weight: normal;
 	letter-spacing: 0;
 	margin: 50px 0 10px;
@@ -37,14 +46,11 @@ div.protocols-contents h2 {
 }
 
 div.protocols-contents h3 {
-	color: #000000;
-	font-family: Arial;
-	font-size: 16px;
-	font-weight: bold;
-	letter-spacing: 1px;
-	padding: 40px 0 10px;
-	text-decoration: underline;
-	text-transform: uppercase;
+    color: #333333;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 30px 0 10px;
 }
 
 div.protocols-content div.communications-toc h3 {
@@ -58,14 +64,16 @@ div.protocols-contents h4 {
 }
 
 div.protocols-contents div.about h4,
-div.protocols-contents div.participation h4 {
-	border: medium none;
-	font-size: 14px;
-	font-weight: bold;
-	line-height: 150%;
-	padding: 5px 0 0;
-	text-align: center;
-	text-transform: uppercase;
+div.protocols-contents div.participation h4,
+div.protocols-contents div.documentation-top h4 {
+    background: none repeat scroll 0 0 #c3d9ff;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 150%;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #6b8abe;
+    border-top: 1px solid #6b8abe;
 }
 
 div.protocols-contents h4.taskName {
@@ -102,6 +110,7 @@ div.protocols-contents h6 {
 	font-weight: bold;
 	padding: 2px 5px;
 	text-align: right;
+	display: none;
 }
 
 div.protocols-contents label {
@@ -113,20 +122,28 @@ div.protocols-contents label {
 	text-transform: uppercase;
 }
 
-div.protocols-contents div.about {
-	padding: 20px 0;
-	display: block;
-}
-
+div.protocols-contents div.about,
 div.protocols-contents div.participation {
-	padding: 0 0 20px 0;
 	display: block;
+	padding: 0 0 0 0;
 }
 
+div.protocols-contents div.about table td {
+	vertical-align: top;
+}
+
+div.protocols-contents div.participation p {
+    display: block;
+    padding: 10px;
+    line-height: 150%;
+}
+
+
+/*
 div.protocols-contents span.communicatedContext {
 	font-weight: bold;
 }
-
+*/
 div.protocols-contents div.orgContact label,
 div.protocols-contents div.employeeContacts label {
 	display: block;
@@ -238,6 +255,7 @@ div.protocols-contents ul.notifiedYou li,
 div.protocols-contents div.observations-toc ul li,
 div.protocols-contents div.ongoing-toc ul li {
 	margin: 5px 0 0 25px;
+	line-height: 150%;
 }
 
 div.protocols-contents ul.askedYou li ul,
@@ -252,10 +270,24 @@ div.protocols-contents ul.askedYou li ul li,
 div.protocols-contents ul.notifiedYou li ul li,
 div.protocols-contents div.observations-toc ul li ul li {
 	margin: 5px 0 10px 25px;
+	line-height: 150%;
 }
 
 div.protocols-contents div.interlocutors {
 	padding: 0 0 10px;
+}
+
+div.protocols-contents div.interlocutors ul li,
+div.protocols-contents div.observations-toc ul li {
+	font-weight: bold;
+}
+
+div.protocols-contents div.interlocutors ul li ul li a,
+div.protocols-contents div.observations-toc ul li ul li a {
+	font-weight: normal;
+}
+
+div.protocols-contents div.interlocutors a {
 }
 
 div.protocols-contents div.interlocutors h4 {
@@ -315,9 +347,8 @@ div.protocols-contents div.contact label {
 	padding-top: 10px;
 }
 
-div.protocols-contents span.info {
-	font-weight: bold;
-	text-decoration: underline;
+div.protocols-contents a.contact-link {
+	border-bottom: 1px dotted #000000;
 }
 
 div.protocols-contents span.addressesContainer {
@@ -400,8 +431,12 @@ div.protocols-contents div.failureImpact-small span {
 	font-weight: bold;
 }
 
-div.documentation-top {
-	text-align: center;
+div.documentation-top ul {
+	padding: 10px 10px 0;
+}
+
+div.documentation-top ul li {
+	padding: 0 0 10px;
 }
 
 div.documentation-top label {
@@ -415,9 +450,6 @@ border: medium none;
 }
 
 /* added by JF */
-div.documentation li, div.documentation-top li {
-    list-style: none;
-}
 
 .eoi-question, .eoi-description {
    font-style: italic;
