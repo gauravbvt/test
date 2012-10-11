@@ -22,6 +22,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.ChannelsAdmin;
@@ -37,9 +38,26 @@ import com.mindalliance.pages.LoginPage;
  */
 public class MAP0003_AddNewUserToPlan extends TestCase{
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAP0003_AddNewUserToPlan";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
 	
+	public MAP0003_AddNewUserToPlan() throws UIAutomationException{
+		setUp();
+		testMAP0003_AddNewUserToPlan();
+		tearDown();
+	}
+	
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
@@ -48,15 +66,28 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 				new ElementController();
 			}
 			
+			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
+			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
 			// Creates Browser instance
+			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Loads Test Data
-			loadTestData();
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
@@ -64,23 +95,33 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	public void testMAP0003_AddNewUserToPlan() throws UIAutomationException{
 		try {
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			    
 			// Login page
+			stepNo++;
+			description="Login Sucessful";
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 						
 			// Click on Channels Admin
+		    stepNo++;
+			description="Channels Admin Page";
 			HomePage homePage=new HomePage();
 			homePage.clickChannelsAdminLink();
 				
 			// Add user
+			stepNo++;
+			description="User created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));
 			channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
 			
 			//Sign Out from 'Admin' page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 		} 
@@ -88,6 +129,8 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			Reporting.getScreenShot("MAP0003_AddNewUserToPlan");
 			
 			//Sign out from Admin page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 			

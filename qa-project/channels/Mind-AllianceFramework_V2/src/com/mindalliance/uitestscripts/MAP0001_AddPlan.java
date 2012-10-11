@@ -22,6 +22,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.ChannelsAdmin;
@@ -36,8 +37,26 @@ import com.mindalliance.pages.LoginPage;
  */
 public class MAP0001_AddPlan extends TestCase {
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAP0001_AddPlan";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
+	
+	public MAP0001_AddPlan() throws UIAutomationException{
+		setUp();
+		testMAP0001_AddPlan();
+		tearDown();
+	}
+	
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
@@ -46,54 +65,120 @@ public class MAP0001_AddPlan extends TestCase {
 				new ElementController();
 			}
 			
+			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
+			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
 			// Creates Browser instance
+			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Loads Test Data
-			loadTestData();
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
+//			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
+	/**
+	 * This method will add plan to the Channels and verify if the plan is added
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAP0001_AddPlan() throws UIAutomationException{
 		try {
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			
 			// Login page
+			stepNo++;
+			description="Login Successful";
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-								
+		    // Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			
 			// Click on Channels Admin
+			stepNo++;
+			description="Channels Admin Page";
 			HomePage homePage=new HomePage();
 			homePage.clickChannelsAdminLink();
-				
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			
 			// Enter Plan name
+			stepNo++;
+			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
 			channelsAdmin.deletePlan(testData.get("PlanName"));
-					
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+						
 			// Sign Out from 'Admin' page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 		} 
 		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAP0001_AddPlan");
+			Reporting.getScreenShot(testCaseId);
 		
 			// Sign out from Admin page
+			stepNo++;
+			description="Signout";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
-			
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+						
 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+	}
+	
 	/**
      * Loads Test Data for MAP0001_AddPlan.
      * @throws UIAutomationException
@@ -101,6 +186,8 @@ public class MAP0001_AddPlan extends TestCase {
 	public void loadTestData() throws UIAutomationException
 	{		
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -131,18 +218,5 @@ public class MAP0001_AddPlan extends TestCase {
 			throw new UIAutomationException("File MAP0001_AddPlan can not be parsed.");
 		}
 			
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
 	}
 }
