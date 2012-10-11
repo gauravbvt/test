@@ -40,17 +40,18 @@ div.protocols-contents h2 {
 	font-size: 24px;
 	font-weight: normal;
 	letter-spacing: 0;
-	margin: 50px 0 10px;
+	margin: 50px 0 40px;
 	text-align: left;
 	text-transform: capitalize;
 }
 
 div.protocols-contents h3 {
     color: #333333;
+    display: block;
     font-family: Arial;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
-    padding: 30px 0 10px;
+    padding: 10px 0;
 }
 
 div.protocols-content div.communications-toc h3 {
@@ -77,24 +78,21 @@ div.protocols-contents div.documentation-top h4 {
 }
 
 div.protocols-contents h4.taskName {
-	border-bottom: 1px dotted #000000;
-	display: inline;
-	font-family: Georgia;
-	font-size: 22px;
-	font-style: oblique;
-	font-weight: normal;
-	line-height: 150%;
-	text-transform: none;	
+    border-bottom: 5px solid #CCCCCC;
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 150%;
+    margin: 0 0 10px;
+    padding: 15px 0 10px;
+    text-transform: uppercase;
 }
 
 div.protocols-contents h5 {
 	color: #333333;
-	display: block;
-	font-size: 12px;
-	font-weight: normal;
-	letter-spacing: 1px;
+	font-size: 13px;
+	font-weight: bold;
 	padding: 7px 0 5px;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	line-height: 150%;
 }
 
@@ -301,33 +299,30 @@ div.protocols-contents div.communications-toc h3 {
 
 div.protocols-contents div.triggered div.procedures,
 div.protocols-contents div.ongoingProcedures {
-	border-left: 5px solid #E8E8E8;
-	margin: 40px 0;
-	padding: 10px 0 15px 25px;
+    border-left: 5px solid #CCCCCC;
+    margin: 0 0 40px;
+    padding: 0 0 15px 25px;
 }
 
 div.protocols-contents div.triggered div.trigger {
-	border-left: 5px solid #999999;
-	margin: 40px 0;
-	padding: 5px 0 15px 25px;
+    background: none repeat scroll 0 0 #C3D9FF;
+    border-left: 5px solid #6B8ABE;
+    padding: 0 0 0 25px;
 }
 
 div.protocols-contents div.triggered div.trigger h3 {
-line-height: 150%;
-    padding: 20px 0;
+
 }
 
 div.protocols-contents div.triggered h5.notify {
-	border-top: 5px solid #E8E8E8;
 	font-size: 16px;
-	margin-top: 30px;
 	padding-top: 30px;
 }
 
 div.protocols-contents div.triggered h5 span.information,
 div.protocols-contents div.triggered h5 span.situation,
 div.protocols-contents div.triggered h5 span.scenario {
-	text-decoration: underline;
+
 }
 
 div.protocols-contents div.triggered h5 span.impact {
@@ -351,6 +346,21 @@ div.protocols-contents a.contact-link {
 	border-bottom: 1px dotted #000000;
 }
 
+div.protocols-contents div.work-contact,
+div.protocols-contents div.personal-contact {
+    padding: 10px 0 0;
+}
+
+div.protocols-contents div.work-contact span.label,
+div.protocols-contents div.personal-contact span.label {
+    margin: 0 13px 0 0;
+    text-transform: uppercase;
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 div.protocols-contents span.addressesContainer {
 	font-size: 12px;
 	text-transform: uppercase;
@@ -364,6 +374,10 @@ div.protocols-contents span.addresses {
 
 div.protocols-contents span.addresses:last-child {
 	border-right: none;
+}
+
+div.protocols-contents span.addresses a {
+	font-weight: normal;
 }
 
 div.protocols-contents div.maxDelayContainer,
