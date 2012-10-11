@@ -126,19 +126,41 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			headerController.signOutAdmin();
 		} 
 		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAP0003_AddNewUserToPlan");
+			Reporting.getScreenShot(testCaseId);
 			
-			//Sign out from Admin page
+			// Sign out from Admin page
 			stepNo++;
-			description="SignOut Successful";
+			description="Signout";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
-			
-			//Quits the Browser
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+						
+			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+	}
+	
 	/**
      * Loads Test Data for MAP0003_AddNewUserToPlan.
      * @throws UIAutomationException
@@ -146,6 +168,8 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -175,16 +199,5 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
 }
