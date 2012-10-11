@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
@@ -31,6 +32,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private Level failureSeverity;
     private List<Employment> allEmployments;
     private DocumentationData documentation;
+    private List<MediumData> mediumDataList;
 
     public AbstractFlowData() {
         // required
@@ -52,7 +54,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     protected void initOtherData( PlanService planService ) {
         initFailureSeverity( planService );
+        initMediumDataList( serverUrl, planService );
         documentation = new DocumentationData( serverUrl, getSharing() );
+    }
+
+    private void initMediumDataList( String serverUrl, PlanService planService ) {
+        mediumDataList = new ArrayList<MediumData>(  );
+        for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
+            mediumDataList.add( new MediumData( serverUrl, medium, planService.getPlan() ) );
+        }
     }
 
     private void initFailureSeverity( PlanService planService ) {
@@ -115,6 +125,11 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         }
         return media;
     }
+
+    public List<MediumData> mediumDataList() {
+        return mediumDataList;
+    }
+
 
     public boolean getTaskFailed() {
         return getSharing().isIfTaskFails();

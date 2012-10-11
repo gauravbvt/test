@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.ElementOfInformationData;
@@ -42,6 +43,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         addHeader();
         addFailureImpact();
         addContacts();
+        addPreferredMedia();
         addMaxDelay();
         addOnFailure();
         addEois();
@@ -61,7 +63,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 "\"" + flowData.getInformation().getName() + "\"" ) );
         String impact = getCommitmentImpact();
         Label impactLabel = new Label( "impact", impact );
-        add(  impactLabel );
+        add( impactLabel );
         impactLabel.setVisible( !impact.isEmpty() );
     }
 
@@ -120,8 +122,6 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 item.add( new ContactLinkPanel(
                         "contact",
                         contactData,
-                        getWorkChannels( contactData ),
-                        getPersonalChannels( contactData ),
                         getFinder() ) );
             }
         };
@@ -145,6 +145,27 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 return "To";
             }
         }
+    }
+
+    private void addPreferredMedia() {
+        List<MediumData> mediumDataList = flowData.mediumDataList();
+        WebMarkupContainer mediaContainer = new WebMarkupContainer( "mediaContainer" );
+        add( mediaContainer );
+        mediaContainer.add( new Label(
+                "via",
+                mediumDataList.size() > 1
+                        ? "via (in order of preference)"
+                        : "via"
+        ) );
+        ListView<MediumData> mediaListView = new ListView<MediumData>( "medium", mediumDataList ) {
+            @Override
+            protected void populateItem( ListItem<MediumData> item ) {
+                MediumData mediumData = item.getModelObject();
+                item.add( new Label( "mediumName", mediumData.getName() ) );
+            }
+        };
+        mediaContainer.add( mediaListView );
+        mediaContainer.setVisible( !mediumDataList.isEmpty() );
     }
 
     private void addMaxDelay() {

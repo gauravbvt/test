@@ -173,7 +173,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         aboutContainer
                 .add( new Label( "userOrAgentName", getParticipantName() ) )
                 .add( new Label( "planVersion", Integer.toString( planIdentifierData.getVersion() ) ) )
-                .add( new Label( "planDate",  planIdentifierData.getDateVersioned() ) )
+                .add( new Label( "planDate", planIdentifierData.getDateVersioned() ) )
                 .add( new Label( "time", planIdentifierData.getTimeNow() ) );
     }
 
@@ -470,8 +470,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<TriggerData> item ) {
                 TriggerData trigger = item.getModelObject();
-                item.add( makeTriggerDataPanel( "trigger", trigger ) );
-                item.add( makeProcedurePanels( "procedures", procedureDataMap.get( trigger ) ) );
+                item.add( makeProcedurePanels( "procedures", procedureDataMap.get( trigger ), trigger ) );
             }
         }
         );
@@ -509,21 +508,46 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<ObservationData> item ) {
                 ObservationData observationData = item.getModelObject();
-                item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
-                item.add( makeProcedurePanels( "procedures", procedureDataMap.get( observationData ) ) );
+                item.add(
+                        makeProcedurePanels(
+                                "procedures",
+                                procedureDataMap.get( observationData ),
+                                observationData )
+                         );
             }
         }
         );
         return procsContainer;
     }
 
-    private ListView<ProcedureData> makeProcedurePanels( String id, List<ProcedureData> procedureDataList ) {
+    private ListView<ProcedureData> makeProcedurePanels(
+            String id,
+            List<ProcedureData> procedureDataList,
+            final ObservationData observationData ) {
         return new ListView<ProcedureData>(
                 id,
                 procedureDataList
         ) {
             @Override
             protected void populateItem( ListItem<ProcedureData> item ) {
+                item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
+                ProcedureData procedureData = item.getModelObject();
+                item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
+            }
+        };
+    }
+
+    private ListView<ProcedureData> makeProcedurePanels(
+            String id,
+            List<ProcedureData> procedureDataList,
+            final TriggerData triggerData ) {
+        return new ListView<ProcedureData>(
+                id,
+                procedureDataList
+        ) {
+            @Override
+            protected void populateItem( ListItem<ProcedureData> item ) {
+                item.add( makeTriggerDataPanel( "trigger", triggerData ) );
                 ProcedureData procedureData = item.getModelObject();
                 item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
             }
@@ -567,7 +591,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     //////////////
-
 
 
     public <T extends ModelObject> T find( Class<T> moClass, long moId ) {
