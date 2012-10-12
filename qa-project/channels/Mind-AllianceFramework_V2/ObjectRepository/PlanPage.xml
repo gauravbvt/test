@@ -304,8 +304,8 @@
 	</Element>
 	<Element>
 		<GivenName>Phase Description</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[3]/td/textarea</Xpath>
-		<Name></Name>
+		<Xpath>//textarea[contains(@name,'entity:fp-content:mo:aspect:mo-details:description')]</Xpath>
+		<Name>entity:fp-content:mo:aspect:mo-details:description</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -331,8 +331,8 @@
 	</Element>
 	<Element>
 		<GivenName>Situation Dropdown In Plan Requirement</GivenName>
-		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/span/div/select</Xpath>
-		<Name></Name>
+		<Xpath>//select[contains(@name,'requirements:fp-content:mo:aspect:timing')]</Xpath>
+		<Name>requirements:fp-content:mo:aspect:timing</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -340,8 +340,8 @@
 	</Element>
 	<Element>
 		<GivenName>Any Event Dropdown In Plan Requirement</GivenName>
-		<Xpath>/html/body/form/div[14]/div/div[3]/div/div/span/div/select[2]</Xpath>
-		<Name></Name>
+		<Xpath>//select[contains(@name,'requirements:fp-content:mo:aspect:event')]</Xpath>
+		<Name>requirements:fp-content:mo:aspect:event</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -632,8 +632,8 @@
 	</Element>
 	<Element>
 		<GivenName>Task Is Dropdown In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[3]/td/select</Xpath>
-		<Name></Name>
+		<Xpath>//select[contains(@name,'segment:part:classificationContainer:category')]</Xpath>
+		<Name>segment:part:classificationContainer:category</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -668,12 +668,8 @@
 	</Element>
 	<Element>
 		<GivenName>Usually Completes After Dropdown</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-unit')]</Xpath>
+		<Name>segment:part:timingContainer:completion-time:delay-unit</Name>
 	</Element>
 	<Element>
 		<GivenName>Repeats Every In Task</GivenName>
@@ -695,12 +691,8 @@
 	</Element>
 	<Element>
 		<GivenName>Repeats Every Dropdown</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:part:timingContainer:repeats-every:delay-unit')]</Xpath>
+		<Name>segment:part:timingContainer:repeats-every:delay-unit</Name>
 	</Element>
 	
 	<Element>
@@ -743,31 +735,19 @@
 	
 	<Element>
 		<GivenName>Goals Dropdown In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span/table/tbody/tr/td/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:part:goals:goals:0:goal:goalChoice')]</Xpath>
+		<Name>segment:part:goals:goals:0:goal:goalChoice</Name>
 	</Element>
 	
 	<Element>
 		<GivenName>Attach Dropdown In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[14]/td/ul/li/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:part:attachments:container:controls:type')]</Xpath>
+		<Name>segment:part:attachments:container:controls:type</Name>
 	</Element>
 	<Element>
 		<GivenName>Attach Dropdown In Send Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[13]/td/ul/li/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
+		<Name>segment:sends:flows-div:flows:0:flow:attachments:container:controls:type</Name>
 	</Element>
 	<Element>
 		<GivenName>New Issue In Sends Panel</GivenName>
@@ -781,13 +761,9 @@
 	
 	<Element>
 		<GivenName>Attach Dropdown In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[12]/td/ul/li/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
+		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:attachments:container:controls:type</Name>
+ 	</Element>
 	
 	<Element>
 		<GivenName>Verify Goal Added In Task Panel</GivenName>
@@ -1644,22 +1620,14 @@
 	
 	<Element>
 		<GivenName>Category in goal</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[2]/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category')]</Xpath>
+		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category</Name>
 	</Element>
 	
 	<Element>
 		<GivenName>Organization in goal dropdown</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType')]</Xpath>
+		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType</Name>
 	</Element>
 	
 	<Element>
@@ -1836,21 +1804,13 @@
 	</Element>
 	<Element>
 		<GivenName>Type Dropdown In New Issue Text In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[2]/td/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:part:issues:issues-container:issues:0:issue:type')]</Xpath>
+		<Name>segment:part:issues:issues-container:issues:0:issue:type</Name>
 	</Element>
 	<Element>
 		<GivenName>Severity Dropdown In New Issue Text In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[4]/td/select</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<Xpath>//select[contains(@name,'segment:part:issues:issues-container:issues:0:issue:severity')]</Xpath>
+		<Name>segment:part:issues:issues-container:issues:0:issue:severity</Name>
 	</Element>
 	<Element>
 		<GivenName>Attach Dropdown In New Issue Text In Task Panel</GivenName>
@@ -1910,7 +1870,7 @@
 	</Element>
 	<Element>
 		<GivenName>Show Advanced Simple Form In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span[2]</Xpath>
+		<Xpath>//span[contains(@class,'simple-advanced')]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
