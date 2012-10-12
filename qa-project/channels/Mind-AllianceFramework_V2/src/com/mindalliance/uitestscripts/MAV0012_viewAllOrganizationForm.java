@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -36,74 +37,160 @@ import junit.framework.TestCase;
  */
 public class MAV0012_viewAllOrganizationForm extends TestCase{
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAV0012_viewAllOrganizationForm";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="Fail";
+	public String blank=""; 
+	public String exception="";
 	
+	public MAV0012_viewAllOrganizationForm() throws UIAutomationException{
+		setUp();
+		testMAV0012_viewAllOrganizationForm();
+		tearDown();
+	}
+	
+	/**
+	 * This method will initialize the setup required for every test case
+	 * @throws UIAutomationException 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
 			
-			//Creates Browser instance
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
-			
 			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
+			// Write log			
+			LogFunctions.writeLogs(description);
+						
+			// Creates Browser instance
+			description="Browser initialized";
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver("Mozilla Firefox");			
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
-		catch(UIAutomationException ue)	{
+		catch(UIAutomationException ue){
+			stepNo++;
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			
 		}
 	}
 	
+	/**
+	 * This method verifies by clicking on 'Organization In Scope' link under 'Scoping' pop up menu 'Organization In Scope' window opens
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAV0012_viewAllOrganizationForm() throws UIAutomationException{
 		try {
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);			
 			    
 			// Login page
+			stepNo++;
+			description="Login successful";	
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-							
+		    // Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+										
 			// Plan Page
+			stepNo++;
+			description="Navigated to plan page";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					
 						
 			// Close Plan Map window
+			stepNo++;
+			description="Plan Map window closed";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
 			
 			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
+			stepNo++;
+			description="Organization In Scope window opened";
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("OrganizationsInScope"));
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
+						
 			
 			// Close Organization Window
+			stepNo++;
+			description="Organization In Scope window closed";
 			planPage.closeOrganiztionWindow();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);				
 								
 			// Sign Out from 'Plan' page
+			stepNo++;
+			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-
-		} catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAV0012_viewAllOrganizationForm");
-		
-			// Sign out from plan page
-			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 			
+		} catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+			
+			// Sign out from plan page
+			stepNo++;
+			HeaderController headerController=new HeaderController();
+			headerController.signOutPlan();
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+				
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
-			Assert.fail(ue.getErrorMessage());
+			Assert.fail(ue.getErrorMessage());	
 		}
 	}
 	
-
+	/**
+	 * (non-Javadoc)
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	*/	
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+		String endTime=LogFunctions.getDateTime();
+		GlobalVariables.configuration.setEndtime(endTime);
+	}
 	
 	/**
      * Loads Test Data for MAV0012_viewAllOrganizationForm.
@@ -112,6 +199,9 @@ public class MAV0012_viewAllOrganizationForm extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
+			
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -140,16 +230,5 @@ public class MAV0012_viewAllOrganizationForm extends TestCase{
 			throw new UIAutomationException("File MAV0012_viewAllOrganizationForm.xml can not be parsed.");
 		}
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
 }

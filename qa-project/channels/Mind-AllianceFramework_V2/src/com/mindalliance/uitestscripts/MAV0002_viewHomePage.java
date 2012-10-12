@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
 
@@ -20,12 +19,10 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
-import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
-import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
@@ -42,75 +39,119 @@ public class MAV0002_viewHomePage extends TestCase{
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
-	public String failed="FAIL";
+	public String failed="Fail";
 	public String blank=""; 
+	public String exception="";
 	
-	public MAV0002_viewHomePage() throws IOException, XMLStreamException, UIAutomationException {
+	public MAV0002_viewHomePage() throws UIAutomationException {
 		setUp();
 		testMAV0002_viewHomePage();
 		tearDown();
 	}
+	
+	/**
+	 * This method will initialize the setup required for every test case
+	 * @throws UIAutomationException 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp() throws IOException, XMLStreamException{
+	protected void setUp() throws UIAutomationException{
 		try{
-				if (GlobalVariables.configuration == null){
+			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			
 			// Loads Test Data
-			loadTestData();
-//			DataController.createResultFiles();
-			// Write log		
 			description = "Testcase: " + testCaseId + " execution started";
+			loadTestData();
+			// Write log			
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
+			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver("Mozilla Firefox");			
-			// Write log
-			description="Browser initialized";
+			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			
-	
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			
 		}
 	}
-	
+	/**
+	 * This method verify that home page is displayed after login to the Channels
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAV0002_viewHomePage() throws UIAutomationException{
+		try{
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			
 			// Write log
-			description="URL Entered";
-			stepNo++;
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 			    
 			// Login page
+			stepNo++;
+			description="Login successful";
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-		    description="Login successful";
-			stepNo++;
+		    // Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 	
 			// Sign Out from 'Home' page
+			stepNo++;
+			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOut();
-			description="Logout successful";
-			stepNo++;
+			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+		}
+		catch(UIAutomationException ue){
+			Reporting.getScreenShot(testCaseId);
+			
+			// Sign out from home page
+			stepNo++;
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);	
+			// Quits the Browser
+			GlobalVariables.configuration.getWebDriver().quit();
+			Assert.fail(ue.getErrorMessage());			
+			
+		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#tearDown()
+	 */
 	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+		String endTime=LogFunctions.getDateTime();
+		GlobalVariables.configuration.setEndtime(endTime);
+	}
 	/**
      * Loads Test Data for MAV0002_viewHomePage.
      * @throws UIAutomationException
@@ -121,7 +162,6 @@ public class MAV0002_viewHomePage extends TestCase{
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
 			
-			DataController.createResultFiles();
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -149,25 +189,4 @@ public class MAV0002_viewHomePage extends TestCase{
 			throw new UIAutomationException("File MAV0002_viewHomePage can not be parsed.");
 		}
 	}
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
-	}
-//	public static void main(String args[]) throws UIAutomationException{	
-//		org.junit.runner.JUnitCore.runClasses(MAV0002_viewHomePage.class);
-//		Reporting reporting=new Reporting();
-//		reporting.generateAutomationReport();
-//	}
 }

@@ -7,7 +7,6 @@ import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
 
@@ -21,12 +20,9 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
-import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
-import com.mindalliance.configuration.Reporting;
-import com.mindalliance.configuration.Reporting1;
 import com.mindalliance.configuration.UIAutomationException;
 
 /**
@@ -41,22 +37,23 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
-	public String failed="FAIL";
+	public String failed="Fail";
 	public String blank=""; 	
+	public String exception="";
 	
-	public MAV0001_viewLoginPage() throws IOException, XMLStreamException, UIAutomationException{
+	public MAV0001_viewLoginPage() throws UIAutomationException{
 		setUp();
 		testMAV0001_viewLoginPage();
 		tearDown();
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/**
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	
 	@Before
-	protected void setUp() throws IOException, XMLStreamException{	
+	protected void setUp() throws UIAutomationException{	
 		try{
 			
 			if (GlobalVariables.configuration == null){
@@ -65,54 +62,69 @@ public class MAV0001_viewLoginPage extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-//			DataController.createResultFiles();	
-			// Loads Test Data
-			loadTestData();
-//			DataController.createResultFiles();
-			// Write log		
-			description = "Testcase: " + testCaseId + " execution started";
-			LogFunctions.writeLogs(description);
-			// Write log		
 
-						
+			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
+			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+			
 			// Creates Browser instance
+			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver(GlobalVariables.configuration.getConfigData().get("Browser"));
-			
-			// Write log
-			description="Browser initialized";
+			// Write log		
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-//			// Loads Test Data
-//			loadTestData();
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			
 		}
 	}
 	
+	/**
+	 * This method verify that login page is displayed after entering th URL of Channels
+	 * @throws UIAutomationException
+	 */
 	@Test
-	public void testMAV0001_viewLoginPage() throws UIAutomationException{
-	   	BrowserController browserController=new BrowserController();
-
-		// Enter URL		
+	public void testMAV0001_viewLoginPage() throws UIAutomationException{	
+		// Enter URL	
+		stepNo++;
+		description="URL Entered";
+		BrowserController browserController=new BrowserController();
 		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 		// Write log
-		description="URL Entered";
-		stepNo++;
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 		
 		// Quits the Browser
+		stepNo++;
+		description="Browser closed";
 		GlobalVariables.configuration.getWebDriver().quit();
 		// Write log
-		description="Quited browser";
-		stepNo++;
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
 	 }
+	
+	/*
+	 * (non-Javadoc)
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();			
+			
+		}
+		String endTime=LogFunctions.getDateTime();
+		GlobalVariables.configuration.setEndtime(endTime);
+	}
 	
 	/**
      * Loads Test Data for MAV0001_viewLoginPage.
@@ -121,7 +133,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
-//			DataController.createResultFiles();
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
@@ -150,27 +161,4 @@ public class MAV0001_viewLoginPage extends TestCase{
 			throw new UIAutomationException("File MAV0001_viewLoginPage.xml can not be parsed.");
 		}
 	}
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();			
-			
-		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
-	}
-	
-//	public static void main(String args[]) throws UIAutomationException{
-//		Reporting reporting=new Reporting();
-//		org.junit.runner.JUnitCore.runClasses(MAV0001_viewLoginPage.class);	
-//		reporting.generateAutomationReport();
-//		
-//	}
 }
