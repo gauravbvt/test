@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.internal.selenesedriver.FindElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.configuration.Configuration;
@@ -625,6 +626,17 @@ public class PlanPage {
 	case "Hide Planners":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+	
+		// Verify planner info gets hidden
+//		xPath=dataController.getPageDataElements(fileName,"Presence", "Xpath");
+//		boolean found=UIActions.findElementBy(xPath);
+//		if(found==true){
+//			throw new UIAutomationException("Planners info can not be hidden.");
+//		}
+//		List<WebElement> webElemets1=UIActions.getElements(xPath);
+//		if(!webElemets1.isEmpty()){
+//			
+//		}
 		break;
 		
 	case "About Plan":
@@ -1719,6 +1731,7 @@ public class PlanPage {
 	 * @param phaseName
 	 * @throws UIAutomationException
 	 */
+	
 	public void clickOnPhaseInAboutPlan() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
 		UIActions.click(fileName,"Actual Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Actual Phase In About Plan");
@@ -2696,7 +2709,7 @@ public class PlanPage {
 		}
 		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		UIActions.enterValueInTextBox(questionnaireName,fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
-		
+		UIActions.enterKey(Keys.ENTER);
 	}
 	/**
 	 * Delete Questionnaire
