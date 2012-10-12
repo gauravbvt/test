@@ -1,0 +1,188 @@
+2012-07-19 16:30:48,945 - Log4JLogChute initialized using file 'velocity.log'
+2012-07-19 16:30:48,945 - Velocity was not initialized! Calling init()...
+2012-07-19 16:30:48,945 - Starting Jakarta Velocity v1.5-SNAPSHOT (compiled: 2006-07-21 06:25:35)
+2012-07-19 16:30:48,945 - Default Properties File: org/apache/velocity/runtime/defaults/velocity.properties
+2012-07-19 16:30:48,945 - Trying to use logger class org.apache.velocity.runtime.log.AvalonLogChute
+2012-07-19 16:30:48,947 - Couldn't find class org.apache.velocity.runtime.log.AvalonLogChute or necessary supporting classes in classpath.
+java.lang.NoClassDefFoundError: org/apache/log/format/Formatter
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:247)
+	at org.apache.velocity.util.ClassUtils.getClass(ClassUtils.java:58)
+	at org.apache.velocity.util.ClassUtils.getNewInstance(ClassUtils.java:87)
+	at org.apache.velocity.runtime.log.LogManager.createLogChute(LogManager.java:144)
+	at org.apache.velocity.runtime.log.LogManager.updateLog(LogManager.java:202)
+	at org.apache.velocity.runtime.RuntimeInstance.initializeLog(RuntimeInstance.java:682)
+	at org.apache.velocity.runtime.RuntimeInstance.init(RuntimeInstance.java:232)
+	at org.apache.velocity.runtime.RuntimeInstance.parse(RuntimeInstance.java:943)
+	at org.apache.velocity.runtime.RuntimeInstance.parse(RuntimeInstance.java:924)
+	at org.apache.velocity.runtime.RuntimeSingleton.parse(RuntimeSingleton.java:244)
+	at org.apache.velocity.app.Velocity.evaluate(Velocity.java:254)
+	at org.apache.velocity.app.Velocity.evaluate(Velocity.java:183)
+	at com.mindalliance.channels.core.util.ChannelsUtils.convertTemplate(ChannelsUtils.java:700)
+	at com.mindalliance.channels.core.util.ChannelsUtils.convertTemplate(ChannelsUtils.java:687)
+	at com.mindalliance.channels.pages.components.guide.PlanningGuidePanel.wikimediaToHtml(PlanningGuidePanel.java:298)
+	at com.mindalliance.channels.pages.components.guide.PlanningGuidePanel.getDescriptionLabel(PlanningGuidePanel.java:290)
+	at com.mindalliance.channels.pages.components.guide.PlanningGuidePanel.access$1000(PlanningGuidePanel.java:63)
+	at com.mindalliance.channels.pages.components.guide.PlanningGuidePanel$3.populateItem(PlanningGuidePanel.java:211)
+	at org.apache.wicket.markup.html.list.ListView.onPopulate(ListView.java:524)
+	at org.apache.wicket.markup.repeater.AbstractRepeater.onBeforeRender(AbstractRepeater.java:119)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.markup.repeater.AbstractRepeater.onBeforeRender(AbstractRepeater.java:139)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.markup.repeater.AbstractRepeater.onBeforeRender(AbstractRepeater.java:139)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.markup.html.form.Form.onBeforeRender(Form.java:1644)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.MarkupContainer.onBeforeRenderChildren(MarkupContainer.java:1785)
+	at org.apache.wicket.Component.onBeforeRender(Component.java:3826)
+	at org.apache.wicket.Page.onBeforeRender(Page.java:829)
+	at org.apache.wicket.Component.internalBeforeRender(Component.java:981)
+	at org.apache.wicket.Component.beforeRender(Component.java:1015)
+	at org.apache.wicket.Component.internalPrepareForRender(Component.java:2200)
+	at org.apache.wicket.Page.internalPrepareForRender(Page.java:280)
+	at org.apache.wicket.Component.render(Component.java:2282)
+	at org.apache.wicket.Page.renderPage(Page.java:1041)
+	at org.apache.wicket.request.handler.render.WebPageRenderer.renderPage(WebPageRenderer.java:105)
+	at org.apache.wicket.request.handler.render.WebPageRenderer.respond(WebPageRenderer.java:224)
+	at org.apache.wicket.request.handler.RenderPageRequestHandler.respond(RenderPageRequestHandler.java:167)
+	at org.apache.wicket.request.cycle.RequestCycle$HandlerExecutor.respond(RequestCycle.java:781)
+	at org.apache.wicket.request.RequestHandlerStack.execute(RequestHandlerStack.java:64)
+	at org.apache.wicket.request.cycle.RequestCycle.execute(RequestCycle.java:255)
+	at org.apache.wicket.request.cycle.RequestCycle.processRequest(RequestCycle.java:212)
+	at org.apache.wicket.request.cycle.RequestCycle.processRequestAndDetach(RequestCycle.java:283)
+	at org.apache.wicket.protocol.http.WicketFilter.processRequest(WicketFilter.java:162)
+	at org.apache.wicket.protocol.http.WicketFilter.doFilter(WicketFilter.java:218)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:311)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:116)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:83)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:113)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:113)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter.doFilter(RememberMeAuthenticationFilter.java:146)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:54)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:45)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilter(BasicAuthenticationFilter.java:150)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:182)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:87)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(ConcurrentSessionFilter.java:125)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:323)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:173)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:346)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:259)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1212)
+	at org.springframework.orm.hibernate4.support.OpenSessionInViewFilter.doFilterInternal(OpenSessionInViewFilter.java:119)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1212)
+	at org.springframework.web.filter.AbstractRequestLoggingFilter.doFilterInternal(AbstractRequestLoggingFilter.java:193)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1212)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:399)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:766)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:450)
+	at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230)
+	at org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:326)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.java:928)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:549)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:212)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:410)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: java.lang.ClassNotFoundException: org.apache.log.format.Formatter
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:306)
+	at org.codehaus.classworlds.RealmClassLoader.loadClassDirect(RealmClassLoader.java:195)
+	at org.codehaus.classworlds.DefaultClassRealm.loadClass(DefaultClassRealm.java:255)
+	at org.codehaus.classworlds.DefaultClassRealm.loadClass(DefaultClassRealm.java:274)
+	at org.codehaus.classworlds.RealmClassLoader.loadClass(RealmClassLoader.java:214)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at org.mortbay.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:401)
+	at org.mortbay.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:363)
+	... 138 more
+2012-07-19 16:30:48,950 - Trying to use logger class org.apache.velocity.runtime.log.Log4JLogChute
+2012-07-19 16:30:48,950 - Using logger class org.apache.velocity.runtime.log.Log4JLogChute
+2012-07-19 16:30:48,950 - Default ResourceManager initializing. (class org.apache.velocity.runtime.resource.ResourceManagerImpl)
+2012-07-19 16:30:48,950 - ResourceLoader instantiated: org.apache.velocity.runtime.resource.loader.FileResourceLoader
+2012-07-19 16:30:48,950 - FileResourceLoader : adding path '.'
+2012-07-19 16:30:48,950 - ResourceCache: initialized (class org.apache.velocity.runtime.resource.ResourceCacheImpl)
+2012-07-19 16:30:48,950 - Loaded System Directive: org.apache.velocity.runtime.directive.Literal
+2012-07-19 16:30:48,950 - Loaded System Directive: org.apache.velocity.runtime.directive.Macro
+2012-07-19 16:30:48,950 - Loaded System Directive: org.apache.velocity.runtime.directive.Parse
+2012-07-19 16:30:48,950 - Loaded System Directive: org.apache.velocity.runtime.directive.Include
+2012-07-19 16:30:48,950 - Loaded System Directive: org.apache.velocity.runtime.directive.Foreach
+2012-07-19 16:30:48,951 - Created '20' parsers.
+2012-07-19 16:30:48,951 - Velocimacro : "velocimacro.library" is not set.  Trying default library: VM_global_library.vm
+2012-07-19 16:30:48,951 - Velocimacro : Default library not found.
+2012-07-19 16:30:48,951 - Velocimacro : allowInline = true : VMs can be defined inline in templates
+2012-07-19 16:30:48,951 - Velocimacro : allowInlineToOverride = false : VMs defined inline may NOT replace previous VM definitions
+2012-07-19 16:30:48,951 - Velocimacro : allowInlineLocal = false : VMs defined inline will be global in scope if allowed.
+2012-07-19 16:30:48,951 - Velocimacro : autoload off : VM system will not automatically reload global library macros
+2012-07-19 16:33:33,699 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,699 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,712 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,710 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,709 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,709 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,709 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,708 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,707 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,707 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,705 - Created new parser (pool exhausted).  Consider increasing pool size.
+2012-07-19 16:33:33,705 - Created new parser (pool exhausted).  Consider increasing pool size.

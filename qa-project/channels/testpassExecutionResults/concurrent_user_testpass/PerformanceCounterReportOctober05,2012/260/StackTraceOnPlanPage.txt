@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Internal Error</title>
+    <link rel="stylesheet" href="css/general.css" type="text/css">
+<script type="text/javascript" src="./wicket/resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event-ver-B0439F858745C84EA46792F9AC42B6CF.js"></script>
+<script type="text/javascript" src="./wicket/resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax-ver-5E70DA6C8E626D7430DFD94051CFF863.js"></script>
+<script type="text/javascript" id="wicket-ajax-base-url">
+/*<![CDATA[*/
+Wicket.Ajax.baseUrl="plan?plan=mindalliance_com_channels_plans_acme&amp;v=1";
+/*]]>*/
+</script>
+</head>
+<body class="message">
+<div id="top-error">
+    <span class="pointer" title="Click to go back to the Home page" id="id273" onclick="var wcall=wicketAjaxGet(&#039;./wicket/page?5-1.IBehaviorListener.0-error~header&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;id273&#039;) != null;}.bind(this));">
+    <div id="header">
+        <div>
+            <h1>Server Error</h1>
+
+            <h2>Channels encountered a server error</h2>
+        </div>
+    </div>
+    </span>
+
+    <div id="contents">
+        <p>Oops. Something went very wrong. We apologize.</p>
+
+        <p>We've already been alerted of the problem and will do our best to fix it ASAP.</p>
+
+        <p>You may want to try <a href=" javascript:history.go(-1)">going back to Channels</a></p>
+
+        <div id="stackTrace" style="display:none;">
+            <h2> Error report </h2>
+            <code>
+                <span>org.apache.wicket.WicketRuntimeException: Can&#039;t instantiate page using
+constructor &#039;public
+com.mindalliance.channels.pages.PlanPage(org.apache.wicket.request.mapper.parame
+ter.PageParameters)&#039; and argument &#039;plan=[mindalliance_com_channels_plans_acme],
+v=[1]&#039;. Might be it doesn&#039;t exist, may be it is not visible (public).
+	at
+org.apache.wicket.session.DefaultPageFactory.newPage(DefaultPageFactory.java:196
+)
+	at
+org.apache.wicket.session.DefaultPageFactory.newPage(DefaultPageFactory.java:99)
+
+	at
+org.apache.wicket.session.DefaultPageFactory.newPage(DefaultPageFactory.java:47)
+
+	at
+org.apache.wicket.DefaultMapperContext.newPageInstance(DefaultMapperContext.java
+:107)
+	at
+org.apache.wicket.request.handler.PageProvider.resolvePageInstance(PageProvider.
+java:264)
+	at
+org.apache.wicket.request.handler.PageProvider.getPageInstance(PageProvider.java
+:165)
+	at
+org.apache.wicket.request.handler.render.PageRenderer.getPage(PageRenderer.java:
+78)
+	at
+org.apache.wicket.request.handler.render.WebPageRenderer.renderPage(WebPageRende
+rer.java:105)
+	at
+org.apache.wicket.request.handler.render.WebPageRenderer.respond(WebPageRenderer
+.java:224)
+	at
+org.apache.wicket.request.handler.RenderPageRequestHandler.respond(RenderPageReq
+uestHandler.java:167)
+	at
+org.apache.wicket.request.cycle.RequestCycle$HandlerExecutor.respond(RequestCycl
+e.java:784)
+	at
+org.apache.wicket.request.RequestHandlerStack.execute(RequestHandlerStack.java:6
+4)
+	at
+org.apache.wicket.request.cycle.RequestCycle.execute(RequestCycle.java:255)
+	at
+org.apache.wicket.request.cycle.RequestCycle.processRequest(RequestCycle.java:21
+2)
+	at
+org.apache.wicket.request.cycle.RequestCycle.processRequestAndDetach(RequestCycl
+e.java:283)
+	at
+org.apache.wicket.protocol.http.WicketFilter.processRequest(WicketFilter.java:18
+8)
+	at
+org.apache.wicket.protocol.http.WicketFilter.doFilter(WicketFilter.java:244)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:311)
+	at
+org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invo
+ke(FilterSecurityInterceptor.java:116)
+	at
+org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFi
+lter(FilterSecurityInterceptor.java:83)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(Exce
+ptionTranslationFilter.java:113)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.session.SessionManagementFilter.doFilter(Sessio
+nManagementFilter.java:101)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.AnonymousAuthenticationFilter.do
+Filter(AnonymousAuthenticationFilter.java:113)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.rememberme.RememberMeAuthenticat
+ionFilter.doFilter(RememberMeAuthenticationFilter.java:146)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFil
+ter.doFilter(SecurityContextHolderAwareRequestFilter.java:54)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(R
+equestCacheAwareFilter.java:45)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.www.BasicAuthenticationFilter.do
+Filter(BasicAuthenticationFilter.java:150)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.AbstractAuthenticationProcessing
+Filter.doFilter(AbstractAuthenticationProcessingFilter.java:182)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(Log
+outFilter.java:105)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilt
+er(SecurityContextPersistenceFilter.java:87)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(Concur
+rentSessionFilter.java:125)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java
+:173)
+	at
+org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFi
+lterProxy.java:346)
+	at
+org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterPr
+oxy.java:259)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.springframework.orm.hibernate4.support.OpenSessionInViewFilter.doFilterInter
+nal(OpenSessionInViewFilter.java:119)
+	at
+org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilte
+r.java:76)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.springframework.web.filter.AbstractRequestLoggingFilter.doFilterInternal(Abs
+tractRequestLoggingFilter.java:193)
+	at
+org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilte
+r.java:76)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:399)
+	at
+org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at
+org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at
+org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:766)
+	at
+org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:450)
+	at
+org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollecti
+on.java:230)
+	at
+org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	
+at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at
+org.mortbay.jetty.Server.handle(Server.java:326)
+	at
+org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at
+org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.ja
+va:928)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:549)
+	at
+org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:212)
+	at
+org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at
+org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:410)
+	at
+org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Ca
+used by: java.lang.reflect.InvocationTargetException
+	at
+sun.reflect.GeneratedConstructorAccessor116.newInstance(Unknown Source)
+	at
+sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorA
+ccessorImpl.java:27)
+	at
+java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at
+org.apache.wicket.session.DefaultPageFactory.newPage(DefaultPageFactory.java:173
+)
+	... 69 more
+Caused by:
+org.springframework.beans.factory.BeanCreationException: Error creating bean
+with name &#039;diagramFactory&#039; defined in class path resource
+[applicationContext.xml]: Initialization of bean failed; nested exception is
+java.lang.NullPointerException
+	at
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doC
+reateBean(AbstractAutowireCapableBeanFactory.java:527)
+	at
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.cre
+ateBean(AbstractAutowireCapableBeanFactory.java:456)
+	at
+org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(Abstract
+BeanFactory.java:313)
+	at
+org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBe
+anFactory.java:197)
+	at
+org.springframework.context.support.AbstractApplicationContext.getBean(AbstractA
+pplicationContext.java:1097)
+	at
+org.apache.wicket.spring.SpringBeanLocator.lookupSpringBean(SpringBeanLocator.ja
+va:190)
+	at
+org.apache.wicket.spring.SpringBeanLocator.locateProxyTarget(SpringBeanLocator.j
+ava:132)
+	at
+org.apache.wicket.proxy.LazyInitProxyFactory$JdkHandler.invoke(LazyInitProxyFact
+ory.java:412)
+	at org.apache.wicket.proxy.$Proxy63.getGraphRenderer(Unknown
+Source)
+	at
+com.mindalliance.channels.graph.diagrams.PlanMapDiagram.render(PlanMapDiagram.ja
+va:82)
+	at
+com.mindalliance.channels.graph.AbstractDiagram.makeImageMap(AbstractDiagram.jav
+a:70)
+	at
+com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel.createM
+apHolder(AbstractDiagramPanel.java:245)
+	at
+com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel.init(Ab
+stractDiagramPanel.java:108)
+	at
+com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel.&lt;init&gt;(P
+lanMapDiagramPanel.java:105)
+	at
+com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel.&lt;init&gt;(P
+lanMapDiagramPanel.java:83)
+	at
+com.mindalliance.channels.pages.components.plan.PlanSegmentsMapPanel.addPlanMapD
+iagramPanel(PlanSegmentsMapPanel.java:222)
+	at
+com.mindalliance.channels.pages.components.plan.PlanSegmentsMapPanel.init(PlanSe
+gmentsMapPanel.java:126)
+	at
+com.mindalliance.channels.pages.components.plan.PlanSegmentsMapPanel.&lt;init&gt;(Plan
+SegmentsMapPanel.java:114)
+	at
+com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPan
+el.addPlanSegmentsPanel(PlanSegmentsFloatingPanel.java:67)
+	at
+com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPan
+el.init(PlanSegmentsFloatingPanel.java:40)
+	at
+com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPan
+el.&lt;init&gt;(PlanSegmentsFloatingPanel.java:32)
+	at
+com.mindalliance.channels.pages.PlanPage.addAllSegmentsPanel(PlanPage.java:957)
+
+	at
+com.mindalliance.channels.pages.PlanPage.addFloatingPanels(PlanPage.java:526)
+	a
+t com.mindalliance.channels.pages.PlanPage.addForm(PlanPage.java:481)
+	at
+com.mindalliance.channels.pages.PlanPage.addBody(PlanPage.java:466)
+	at
+com.mindalliance.channels.pages.PlanPage.init(PlanPage.java:455)
+	at
+com.mindalliance.channels.pages.PlanPage.&lt;init&gt;(PlanPage.java:398)
+	... 73
+more
+Caused by: java.lang.NullPointerException
+	at
+org.aspectj.weaver.reflect.Java15ReflectionBasedReferenceTypeDelegate.getTypeVar
+iables(Java15ReflectionBasedReferenceTypeDelegate.java:164)
+	at
+org.aspectj.weaver.ReferenceType.getTypeVariables(ReferenceType.java:809)
+	at
+org.aspectj.weaver.ReferenceType.getTypesForMemberParameterization(ReferenceType
+.java:797)
+	at
+org.aspectj.weaver.ReferenceType.getDeclaredInterfaces(ReferenceType.java:648)
+	
+at org.aspectj.weaver.ResolvedType$2.get(ResolvedType.java:304)
+	at
+org.aspectj.weaver.ResolvedType$2.get(ResolvedType.java:300)
+	at
+org.aspectj.weaver.ResolvedType$SuperInterfaceWalker.hasNext(ResolvedType.java:2
+171)
+	at org.aspectj.weaver.Iterators$6.hasNext(Iterators.java:288)
+	at
+org.aspectj.weaver.patterns.KindedPointcut.fastMatch(KindedPointcut.java:128)
+	a
+t
+org.aspectj.weaver.internal.tools.PointcutExpressionImpl.couldMatchJoinPointsInT
+ype(PointcutExpressionImpl.java:82)
+	at
+org.springframework.aop.aspectj.AspectJExpressionPointcut.matches(AspectJExpress
+ionPointcut.java:249)
+	at
+org.springframework.aop.support.AopUtils.canApply(AopUtils.java:209)
+	at
+org.springframework.aop.support.AopUtils.canApply(AopUtils.java:263)
+	at
+org.springframework.aop.support.AopUtils.findAdvisorsThatCanApply(AopUtils.java:
+295)
+	at
+org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator.find
+AdvisorsThatCanApply(AbstractAdvisorAutoProxyCreator.java:117)
+	at
+org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator.find
+EligibleAdvisors(AbstractAdvisorAutoProxyCreator.java:87)
+	at
+org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator.getA
+dvicesAndAdvisorsForBean(AbstractAdvisorAutoProxyCreator.java:68)
+	at
+org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator.wrapIfNeces
+sary(AbstractAutoProxyCreator.java:359)
+	at
+org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator.postProcess
+AfterInitialization(AbstractAutoProxyCreator.java:322)
+	at
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.app
+lyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:
+407)
+	at
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.ini
+tializeBean(AbstractAutowireCapableBeanFactory.java:1461)
+	at
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doC
+reateBean(AbstractAutowireCapableBeanFactory.java:519)
+	... 99 more
+</span>
+            </code>
+        </div>
+    </div>
+</div>
+</body>
+</html>
