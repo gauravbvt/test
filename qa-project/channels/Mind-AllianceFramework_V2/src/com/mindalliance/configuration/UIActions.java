@@ -289,6 +289,9 @@ public class UIActions {
 				catch(Exception e){}				
 				cnt++;
 	            Thread.sleep(500);
+	            if(cnt==pageLoadTimeout){
+	            	throw new UIAutomationException("Page with the title '"+titleSuffix+"' not found.");
+	            }
 				
 			}while(cnt < pageLoadTimeout);
 			System.out.println("URL " + titleSuffix + " load time: " + Reporting.actionTime(startTimeMilliSecs));
@@ -301,6 +304,10 @@ public class UIActions {
 	public static String getTitle(){
 		return GlobalVariables.configuration.getWebDriver().getTitle();
 		
+	}
+	public static boolean findElementBy(String xPath){
+		WebElement e=GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPath));
+		return e.isDisplayed();
 	}
 
 }
