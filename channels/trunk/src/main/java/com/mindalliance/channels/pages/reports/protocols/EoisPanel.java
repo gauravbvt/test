@@ -45,30 +45,30 @@ public class EoisPanel extends AbstractDataPanel {
                 // name
                 item.add( new Label( "name", eoiData.getName() ) );
                 // classifications
-                WebMarkupContainer classificationsContainer = new WebMarkupContainer( "classificationContainer" );
-                item.add( classificationsContainer );
-                classificationsContainer.setVisible( !eoiData.getClassifications().isEmpty() );
+                String classificationString = eoiData.getClassificationsLabel();
                 Label securityClassificationsLabel = new Label(
                         "classifications",
-                        eoiData.getClassificationsLabel()
+                        classificationString.isEmpty() ? "--" : classificationString
                 );
-                classificationsContainer.add( securityClassificationsLabel );
+                item.add( securityClassificationsLabel );
                 // Description / question answered
                 String description = eoiData.getDescription();
                 description = StringEscapeUtils.escapeXml( description == null ? "" : description );
-                Label descriptionLabel = new Label( "description", description );
-                descriptionLabel.add(  new AttributeModifier(
+                Label descriptionLabel = new Label(
+                        "description",
+                        description.isEmpty() ? "--" : description );
+                descriptionLabel.add( new AttributeModifier(
                         "class",
                         description.endsWith( "?" )
                                 ? "eoi-question"
                                 : "eoi-description" ) );
-                descriptionLabel.setVisible( eoiData.getDescription() != null
-                        && !eoiData.getDescription().isEmpty() );
                 item.add( descriptionLabel );
                 // Handling
-                Label handlingLabel = new Label( "handling", eoiData.getSpecialHandling() );
-                handlingLabel.setVisible( eoiData.getSpecialHandling() != null
-                        && !eoiData.getSpecialHandling().isEmpty() );
+                String specialHandling = eoiData.getSpecialHandling();
+                Label handlingLabel = new Label(
+                        "handling",
+                        specialHandling == null || specialHandling.isEmpty() ? "--" : specialHandling
+                         );
                 item.add( handlingLabel );
             }
         };

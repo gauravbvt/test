@@ -10,19 +10,24 @@
 </head>
 <body>
 <wicket:panel>
-    <ul wicket:id="allEois">
-        <li wicket:id="eois"> <!-- repeated -->
-            <span class="name" wicket:id="name">content</span>
-            <span class="description" wicket:id="description">Question answered</span>
-            <ul wicket:id="classificationContainer">
-                <li>Classified:</li>
+    <table wicket:id="allEois">
+        <tr>
+            <th>Name</th>
+            <th>About</th>
+            <th>Secrecy</th>
+            <th>Handling</th>
+        </tr>
+        <tr wicket:id="eois"> <!-- repeated -->
+            <td class="name" wicket:id="name">content</td>
+            <td class="description" wicket:id="description">Question answered</td>
+            <td>
                 <ul>
                 	 <li wicket:id="classifications">[classifications]</li>
                 </ul>
-            </ul>
-            <span class="handling" wicket:id="handling">handling instructions</span>
-        </li>
-    </ul>
+            </td>
+            <td class="handling" wicket:id="handling">handling instructions</td>
+        </tr>
+    </table>
 </wicket:panel>
 </body>
 </html>

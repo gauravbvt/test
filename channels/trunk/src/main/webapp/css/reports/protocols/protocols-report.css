@@ -524,17 +524,6 @@ border: medium none;
 }
 
 .eoi-question:before {
-    content: "(Answers: "
+    content: "Answers: "
 }
 
-.eoi-question:after {
-    content: ")"
-}
-
-.eoi-description:before {
-    content: "("
-}
-
-.eoi-description:after {
-    content: ")"
-}
