@@ -235,6 +235,7 @@ div.protocols-contents div.documentation {
 
 div.protocols-contents ul {
 	margin: 5px 0 5px 20px;
+	list-style: none;
 }
 
 div.protocols-contents ul li {
@@ -257,7 +258,7 @@ div.protocols-contents ul.askedYou,
 div.protocols-contents ul.notifiedYou,
 div.protocols-contents div.observations-toc ul,
 div.protocols-contents div.ongoing-toc ul {
-	list-style: square outside none;
+	list-style: none outside none;
 	margin: 0;
 }
 
@@ -272,7 +273,7 @@ div.protocols-contents div.ongoing-toc ul li {
 div.protocols-contents ul.askedYou li ul,
 div.protocols-contents ul.notifiedYou li ul,
 div.protocols-contents div.observations-toc ul li ul {
-	list-style: circle outside none;
+	list-style: none outside none;
 	padding: 5px 0 0;
 	margin: 0;
 }
