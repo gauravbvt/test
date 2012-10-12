@@ -241,6 +241,10 @@ div.protocols-contents ul li {
 	padding: 0 0 5px;
 }
 
+div.protocols-contents div.contacts-container ul li {
+	padding: 0 0 10px 0;
+}
+
 div.protocols-contents ul li ul li {
 	padding:0;  
 }
@@ -295,6 +299,7 @@ div.protocols-contents div.observations-toc ul li ul li a {
 }
 
 div.protocols-contents div.interlocutors a {
+    font-weight: bold;
 }
 
 div.protocols-contents div.interlocutors h4 {
@@ -331,8 +336,14 @@ div.protocols-contents div.triggered div.trigger h3 {
 }
 
 div.protocols-contents div.triggered h5.notify {
-	font-size: 16px;
-	padding-top: 30px;
+    background: none repeat scroll 0 0 #999999;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+    color: #FFFFFF;
+    font-size: 16px;
+    margin: 30px 0 10px;
+    padding: 5px 10px;
+    text-transform: uppercase;
 }
 
 div.protocols-contents div.triggered h5 span.information,
@@ -341,11 +352,16 @@ div.protocols-contents div.triggered h5 span.scenario {
 
 }
 
-div.protocols-contents div.triggered h5 span.impact {
-    color: #666666;
+div.protocols-contents span.impact {
+    background: none repeat scroll 0 0 #CCCCCC;
+    border-bottom: 1px solid #666666;
+    border-top: 1px solid #666666;
+    color: #333333;
     display: block;
-    font-size: 12px;
+    font-size: 11px;
+    padding: 5px 7px;
     text-transform: uppercase;
+    margin: 0 0 10px;
 }
 
 
@@ -362,6 +378,7 @@ div.protocols-contents div.contact label {
 
 div.protocols-contents a.contact-link {
 	border-bottom: 1px dotted #000000;
+	font-weight: normal;
 }
 
 div.protocols-contents div.work-contact,
@@ -409,7 +426,9 @@ div.protocols-contents div.location,
 div.protocols-contents div.goals,
 div.protocols-contents div.teammates,
 div.protocols-contents div.failureImpact,
-div.protocols-contents div.research-followup-task {
+div.protocols-contents div.research-followup-task,
+div.protocols-contents div.contacts-container,
+div.protocols-contents div.media-container {
 	padding: 15px 0 10px;
 }
 
@@ -432,8 +451,19 @@ div.protocols-contents div.contactsContainer {
 }
 
 div.protocols-contents div.contactsContainer-direct {
-	padding: 15px 0 0 0;
+    font-size: 12px;
+    line-height: 150%;
+    margin-right: 20px;
+    padding: 0 0 12px;
 }
+
+div.protocols-contents div.contactsContainer-direct span.anyOf {
+	text-transform: capitalize;	
+}
+
+div.protocols-contents div.contactsContainer-direct a.contact-link {
+
+ }
 
 div.protocols-contents div.failureImpact-small {
 	background: none repeat scroll 0 0 #E8E8E8;
