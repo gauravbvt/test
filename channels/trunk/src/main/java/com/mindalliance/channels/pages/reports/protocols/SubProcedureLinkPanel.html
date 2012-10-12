@@ -10,21 +10,26 @@
 </head>
 <body>
 <wicket:panel>
-    <div>
-        <h5>
+    <div class="research-followup-task">
+        <label>
             <span wicket:id="header">When  discovering</span>
             <span wicket:id="information">some information</span>
-        </h5>
-        <div wicket:id="eoisContainer">
-            <label>with elements...</label>
-            <div wicket:id="eois"> <!-- repeated -->
-                <div wicket:id="content">content</div>
-            </div>
-        </div>
+        </label>
+        <label class="eois-cont" wicket:id="eoisContainer">
+        (With elements: 
+            <span wicket:id="eois"> <!-- repeated -->
+                <span wicket:id="content">content</span>,
+            </span>
+        )
+        </label>
+        <ul>
+            <li>
+                <a wicket:id="link" href="#">
+                    <span wicket:id="taskName">I do task "something"</span>
+                </a>
+            </li>
+        </ul>
     </div>
-    <a wicket:id="link" href="#">
-        <span wicket:id="taskName">I do task "something"</span>
-    </a>
 </wicket:panel>
 </body>
 </html>

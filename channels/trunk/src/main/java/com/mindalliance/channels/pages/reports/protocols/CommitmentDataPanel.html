@@ -23,10 +23,12 @@
         </div>
     </div>
     <div wicket:id="mediaContainer">
-        <span wicket:id="via"> Via </span>
-        <div wicket:id="medium">  <!-- repeated -->
-            <div wicket:id="mediumName">medium</div>
-        </div>
+        <label wicket:id="via"> Via </label>
+        <ul>
+            <li wicket:id="medium">  <!-- repeated -->
+                <span wicket:id="mediumName">medium</span>
+            </li>
+        </ul>
     </div>
     <div class="failureImpact-small" wicket:id="failureImpact">Failure to share this information could have
         <span wicket:id="severity">extreme</span>

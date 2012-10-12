@@ -120,6 +120,10 @@ div.protocols-contents label {
 	text-transform: uppercase;
 }
 
+div.protocols-contents label.eois-cont {
+	color: #666666;
+}
+
 div.protocols-contents div.about,
 div.protocols-contents div.participation {
 	display: block;
@@ -164,10 +168,15 @@ div.protocols-contents h4 span.participationList span {
 	border-bottom: 2px solid #333333;
 }
 
+div.protocols-contents div.org-contacts {
+	float: left;
+	margin: 0 0 40px;
+}
+
 div.protocols-contents div.employeeContacts {
 	border-left: 5px solid #CCCCCC;
 	float: left;
-	margin: 20px 0 0;
+	margin: 0;
 	padding: 12px 15px 15px;
 	width: 711px;
 }
@@ -176,13 +185,13 @@ div.protocols-contents div.orgContact {
 background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
     float: left;
-    margin: 70px 0 0;
     padding: 12px 15px 15px;
     width: 711px;
 }
 
 div.protocols-contents div.orgContact h3 {
 	padding: 5px 0 10px;
+	font-size: 16px;
 }
 
 div.protocols-contents div.directory-link {
@@ -293,8 +302,15 @@ div.protocols-contents div.interlocutors h4 {
 	padding: 15px 0 0;
 }
 
+div.protocols-contents div.ongoing-toc h3,
+div.protocols-contents div.observations-toc h3,
 div.protocols-contents div.communications-toc h3 {
 	padding: 30px 0 20px 0;
+   font-size: 16px;
+}
+
+div.protocols-contents div.ongoing-toc h3 {
+	padding-top: 0;
 }
 
 div.protocols-contents div.triggered div.procedures,
@@ -326,8 +342,10 @@ div.protocols-contents div.triggered h5 span.scenario {
 }
 
 div.protocols-contents div.triggered h5 span.impact {
-    font-size: 10px;
+    color: #666666;
     display: block;
+    font-size: 12px;
+    text-transform: uppercase;
 }
 
 
@@ -390,10 +408,14 @@ div.protocols-contents div.category,
 div.protocols-contents div.location,
 div.protocols-contents div.goals,
 div.protocols-contents div.teammates,
-div.protocols-contents div.failureImpact {
+div.protocols-contents div.failureImpact,
+div.protocols-contents div.research-followup-task {
 	padding: 15px 0 10px;
 }
 
+div.protocols-contents div.research-followup-task a {
+	font-weight: normal;
+}
 
 div.protocols-contents div.bypassContactsContainer {
 	padding: 5px 0 0 5px;
