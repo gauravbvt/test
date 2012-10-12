@@ -18,8 +18,7 @@ public class Home {
 	public static Test suite() throws UIAutomationException{	  
 		GlobalVariables.configuration= Configuration.getConfigurationObject();
 		new ElementController();
-		TestSuite suite = new TestSuite("Mind-Alliance API Testing Framework");
-		
+		TestSuite suite = new TestSuite("Mind-Alliance API Testing Framework");	
 			
 		suite.addTestSuite(MAP0001_AddPlan.class);
 		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
@@ -40,40 +39,40 @@ public class Home {
 		
 //		suite.addTestSuite(MAV0001_viewLoginPage.class);
 //		suite.addTestSuite(MAV0002_viewHomePage.class);
-		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
-		suite.addTestSuite(MAV0004_viewAdminHome.class);
-		suite.addTestSuite(MAV0006_redirectToPlanPage.class);
-		suite.addTestSuite(MAV0008_hidePlannerInfo.class);
-		suite.addTestSuite(MAV0009_viewAboutPlanWindow.class);
-		suite.addTestSuite(MAV0010_viewAllEventForm.class);
-		suite.addTestSuite(MAV0011_viewAllSecrecyclassificationsForm.class);
-		suite.addTestSuite(MAV0012_viewAllOrganizationForm.class);
-	
-		// Date: 28/8/2012
-		suite.addTestSuite(MAV0016_viewAllWhoForm.class);
-		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
-		suite.addTestSuite(MAV0019_viewAllIndexForm.class);
-		suite.addTestSuite(MAV0020_viewAllTagForm.class);
-				
-		// Date:29/8/2012
-		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
-		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
-		suite.addTestSuite(MAV0023_viewAllVersionsForm.class);
-		suite.addTestSuite(MAV0025_closeAboutPlanWindow.class);
-		suite.addTestSuite(MAV0026_viewAboutPlanSegmentWindow.class);
+//		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
+//		suite.addTestSuite(MAV0004_viewAdminHome.class);
+//		suite.addTestSuite(MAV0006_redirectToPlanPage.class);
+//		suite.addTestSuite(MAV0008_hidePlannerInfo.class);
+//		suite.addTestSuite(MAV0009_viewAboutPlanWindow.class);
+//		suite.addTestSuite(MAV0010_viewAllEventForm.class);
+//		suite.addTestSuite(MAV0011_viewAllSecrecyclassificationsForm.class);
+//		suite.addTestSuite(MAV0012_viewAllOrganizationForm.class);
+//	
+//		// Date: 28/8/2012
+//		suite.addTestSuite(MAV0016_viewAllWhoForm.class);
+//		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
+//		suite.addTestSuite(MAV0019_viewAllIndexForm.class);
+//		suite.addTestSuite(MAV0020_viewAllTagForm.class);
+//				
+//		// Date:29/8/2012
+//		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
+//		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
+//		suite.addTestSuite(MAV0023_viewAllVersionsForm.class);
+//		suite.addTestSuite(MAV0025_closeAboutPlanWindow.class);
+//		suite.addTestSuite(MAV0026_viewAboutPlanSegmentWindow.class);
 		
 		// Date :30/8/2012
-		suite.addTestSuite(MAV0028_viewGoalsForm.class);
-		suite.addTestSuite(MAV0029_viewOrganizationsForm.class);
+//		suite.addTestSuite(MAV0028_viewGoalsForm.class);
+//		suite.addTestSuite(MAV0029_viewOrganizationsForm.class);
 			
 		// date :31/8/2012
-		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);
-		suite.addTestSuite(MAV0007_logoutOnPlanPage.class);
-		suite.addTestSuite(MAV0030_viewMapWindow.class);
-		suite.addTestSuite(MAV0031_viewTaskMoversForm.class);
-		suite.addTestSuite(MAV0033_closeAboutPlanSegmentWindow.class);
-		suite.addTestSuite(MAV0034_viewSurveryWindow.class);
-		suite.addTestSuite(MAV0035_closeSurveysWindow.class);
+//		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);
+//		suite.addTestSuite(MAV0007_logoutOnPlanPage.class);
+//		suite.addTestSuite(MAV0030_viewMapWindow.class);
+//		suite.addTestSuite(MAV0031_viewTaskMoversForm.class);
+//		suite.addTestSuite(MAV0033_closeAboutPlanSegmentWindow.class);
+//		suite.addTestSuite(MAV0034_viewSurveryWindow.class);
+//		suite.addTestSuite(MAV0035_closeSurveysWindow.class);
 
 		// date :3/9/2012
 		suite.addTestSuite(MAV0066_viewAllSegmentsActionList.class);
@@ -272,7 +271,6 @@ public class Home {
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
 		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
-		
 		
 		return suite;
 	}
