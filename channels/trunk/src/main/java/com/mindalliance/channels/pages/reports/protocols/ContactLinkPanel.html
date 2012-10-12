@@ -23,10 +23,12 @@
         <span wicket:id="addresses">contact addresses panel</span>
     </div>
     <div class="bypassContactsContainer" wicket:id="bypassContactsContainer">
-        <label wicket:id="bypassLabel">If unreachable, notify all of</label>
-        <div wicket:id="bypassContacts">  <!-- repeated -->
-            <div class="contact" wicket:id="bypassContact">[contact link panel with channels]</div>
-        </div>
+        <label wicket:id="bypassLabel">If unreachable, I notify all of</label>
+        <ul>
+            <li wicket:id="bypassContacts">  <!-- repeated -->
+                <span class="contact" wicket:id="bypassContact">[contact link panel with channels]</span>
+            </li>
+        </ul>
     </div>
 
 </wicket:panel>

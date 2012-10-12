@@ -75,8 +75,8 @@ public class ContactLinkPanel extends AbstractContactLinkPanel {
         StringBuilder sb = new StringBuilder(  );
         sb.append( "If unreachable, " );
         sb.append( getContactData().forNotification()
-                ? "notify "
-                : "ask "
+                ? "I notify "
+                : "I ask "
         );
         if ( bypassContacts.size() > 1) {
            sb.append( getContactData().bypassToAll()

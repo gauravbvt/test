@@ -6,6 +6,7 @@ import com.mindalliance.channels.api.procedures.InformationData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -84,6 +85,7 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
 
     private void addContacts() {
         List<ContactData> contacts = getContacts();
+        final int lastIndex = contacts.size() - 1;
         WebMarkupContainer contactsContainer = new WebMarkupContainer( "contactsContainer" );
         contactsContainer.setVisible( !contacts.isEmpty() );
         add( contactsContainer );
@@ -96,6 +98,9 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
                 item.add( new ContactLinkPanel( "contact", item.getModelObject(), getFinder() ) );
+                if (item.getIndex() != lastIndex ) {
+                    item.add( new AttributeModifier( "class", "notLast") );
+                }
             }
         };
         contactsContainer.add( contactsListView );

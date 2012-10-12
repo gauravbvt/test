@@ -18,9 +18,11 @@
     </h5>
     <div class="contactsContainer" wicket:id="contactsContainer">
         <label wicket:id="anyAll">I contact any of...</label>
-        <div wicket:id="contacts">  <!-- repeated -->
-            <div class="contact" wicket:id="contact">[contact link panel with channels]</div>
-        </div>
+        <ul>
+            <li wicket:id="contacts">  <!-- repeated -->
+                <span class="contact" wicket:id="contact">[contact link panel with channels]</span>
+            </li>
+        </ul>
     </div>
     <div wicket:id="mediaContainer">
         <label wicket:id="via"> Via </label>
