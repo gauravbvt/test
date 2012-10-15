@@ -145,19 +145,6 @@ public class MAP0005_DeletePlan extends TestCase {
   
 			// Sign Out from 'Admin' page
 			stepNo++;
-			description="SignOt Successful";
-			HeaderController headerController=new HeaderController();
-			headerController.signOutAdmin();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-  
-		} 
-		catch (UIAutomationException ue) {
-			Reporting.getScreenShot(testCaseId);
-	
-			// Sign out from Admin page
-			stepNo++;
 			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
@@ -165,15 +152,26 @@ public class MAP0005_DeletePlan extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
   
-			// Quits the Browser
+		} catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+		
+			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOutAdmin();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
+ 			// Quits the Browser
 			stepNo++;
 			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
 			// Write log
- 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-  
 		}
 	}
 	

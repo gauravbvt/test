@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -35,101 +36,196 @@ import junit.framework.TestCase;
  *
  */
 public class MAP0018_attachFile extends TestCase{
-
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAP0018_attachFile";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
 	
+	public MAP0018_attachFile() throws UIAutomationException{
+		setUp();
+		testMAP0018_attachFile();
+		tearDown();
+	}
+	
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
 			
+			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
+			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
 			// Creates Browser instance
+			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Loads Test Data
-			loadTestData();
-		}
-		catch(UIAutomationException ue){
+		}catch(UIAutomationException ue){
+			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
 	@Test
 	public void testMAP0018_attachFile() throws UIAutomationException {
 		try{
-		    // Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
+			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Login page
-		    LoginPage loginPage = new LoginPage();
+			stepNo++;
+			description="Login Successful";
+			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-			
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 							
 			// Plan Page
+		    stepNo++;
+			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
 			// Close Plan Map window
+			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
-						
-			// Click on 'Add New Segment' under 'Actions' pop up menu
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+ 			// Click on 'Add New Segment' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-						
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForAttachFile"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Segment window
+ 			stepNo++;
+			description="Closed About Plan Segment Window";
 			planPage.closeSegmentWindow();
-				
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 				
 			// Click on 'About Plan Segment' under 'Show' pop up menu
+ 			stepNo++;
+			description="About Plan Segment";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			
-			// Attach file to segment
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Enter file name
+ 			stepNo++;
+			description="Attach File";
 			planPage.enterAttachFileNameInSegment(testData.get("FileName1"));
-			
 			// Click on 'Browse' button
-			planPage.clickBrowseInAttachFileInAboutPlanSegment();
-			
-//			// Enter value in open dialog box
-//			planPage.enterFileNameInAttachFileInAboutPlanSegment(testData.get("FileName"));
-			
+			planPage.clickBrowseInAttachFileInAboutPlanSegment();		
 			// Click on 'Submit' button
 			planPage.clickSubmitInAttachFileInAboutPlanSegment();
-			
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			//Click on Remove this segment
+ 			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-								
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 								
 			//Sign Out from 'Plan' page
+ 			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-		}
-		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAP0018_attachFile");
-					
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+		} catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+		
 			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+		}
+	}
+
+	/*
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
 	
@@ -139,6 +235,8 @@ public class MAP0018_attachFile extends TestCase{
      */
 	public void loadTestData() throws UIAutomationException{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -173,234 +271,4 @@ public class MAP0018_attachFile extends TestCase{
 			throw new UIAutomationException("File MAP0018_attachFile can not be parsed.");
 		}
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
-
-//	public MAP0018_attachFile() {
-//		try {
-//			GlobalVariables.sTestCaseId = "MAP0018_attachFile";
-//			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
-//			LogFunctions.writeLogs(GlobalVariables.sDescription);
-//			System.out.println(GlobalVariables.sDescription);
-//			// Call login()
-//			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-//			if (GlobalVariables.bIsSuccess) {
-//					
-//				// Select  the plan from 'Switch to Plan' drop down, located on the top right corner
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Switch to plan";
-//				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("switch-plan:plan-sel")));
-//				List <WebElement> options = GlobalVariables.oDropDown.getOptions();
-//			    for(WebElement option : options) {
-//			    	if(GlobalVariables.testData.get("Automation Test Plan v.1 (dev)").equals(option.getText())){
-//			    			option.setSelected();
-//			    			break;
-//			    	}
-//			    }
-//			    // Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);	
-//				
-//				// Click on 'Information Sharing Model' link
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-//				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//			    
-//				// Click on 'Add new segment' option under 'Actions' pop up menu
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="Segment Added";
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewSegment"));
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//				
-//				// Details of Segment
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="Details of Segment enetered";
-//				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name")).click();
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:name"));
-//				for (int i = 0; i <= 8; i++)
-//					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-//				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Segment For Attach File"));
-//				GlobalVariables.oDriver.findElement(By.className("close")).click();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//				
-//				// Select the Segment from 'Select Plan Segment' drop down, located on the top right corner
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Select Plan Segment";
-//				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
-//				options = GlobalVariables.oDropDown.getOptions();
-//			    for(WebElement option : options) {
-//			    	if(GlobalVariables.testData.get("Segment For Attach File").equals(option.getText())){
-//			    			option.setSelected();
-//			    			break;
-//			    	}
-//			    }
-//			    // Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//				
-//				// Add 'About plan segment' under Show pop-up menu
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="About plan segment";
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathShowPopUpMenu"),GlobalVariables.viewElements.get("aboutPlanSegment"));
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//				// Attach file to segment
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="Attach File";
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:name"));
-//				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("AttachmentFileName"));
-//				GlobalVariables .oElement=GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:upload"));
-//				GlobalVariables.oElement.sendKeys(GlobalVariables.sTestDataDirectoryPath + "CAP.txt");
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				GlobalVariables.oDriver.findElement(By.name("sg-editor:content:mo:aspect:attachments:container:controls:submit")).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				// Assertion: verify that file is attached
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.xpath("//a[contains(@href,'uploads/CAP.txt')]"));
-//				List<WebElement> tds = GlobalVariables.oElement.findElements(By.tagName("li"));
-//				for (WebElement li: tds){
-//					if (li.getText().equals(GlobalVariables.testData.get("AttachmentFileName"))){
-//						// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//								GlobalVariables.sBlank, GlobalVariables.sBlank);
-//						break;
-//					}
-//					else{
-//						GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'This is File 1' "+" Actual "+li.getText();
-//				    	// Write Results
-//						LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//						LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//								GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//						break;
-//				    }
-//				}
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//				// Click on done
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="File is Attahced";
-//				GlobalVariables.oDriver.findElement(By.className("close")).click();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);				
-//				// Click on 'Remove this segment' under 'Actions' pop up menu
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//				
-//				// Call logout()
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Logout is successful";
-//				ApplicationFunctionLibrary.logout();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-//				
-//				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-//				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-//			}
-//			else{
-//				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//				
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				System.out.println("Unable to Attach File" + ReportFunctions.getScreenShot("Attach File failed"));
-//				GlobalVariables.oDriver.quit();
-//			}
-//		} 
-//		catch (Exception e) {
-//			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-//				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-//				System.out.println("Unable to Attach File"+ReportFunctions.getScreenShot("Attach File failed"));
-//				ApplicationFunctionLibrary.logout();
-//			}
-//			else {
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						e.getMessage(),GlobalVariables.sBlank);
-//				System.out.println("Unable to Attach File"+ReportFunctions.getScreenShot("Attach File failed"));
-//				ApplicationFunctionLibrary.logout();	
-//			}
-//			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//		}
-//	}
-//    public static void main(String args[]) {
-//		try {
-//			GenericFunctionLibrary.initializeTestData();
-//			GenericFunctionLibrary.loadObjectRepository();
-//			new MAP0018_attachFile();
-//			GenericFunctionLibrary.tearDownTestData();
-//			ReportFunctions.generateAutomationReport();
-//		} 
-//		catch (Exception oException) {
-//			// TODO Auto-generated catch block
-//			oException.printStackTrace();
-//			System.out.println("Unable to Attach File"+ReportFunctions.getScreenShot("Attach File failed"));
-//		}
-//	}
 }

@@ -50,6 +50,7 @@ public class MAP0006_addOrganizations extends TestCase{
 		testMAP0006_addOrganizations();
 		tearDown();
 	}
+	
 	/*
 	 * This method will initilize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
@@ -89,49 +90,103 @@ public class MAP0006_addOrganizations extends TestCase{
 		}
 	}
 	
+	/**
+	 * This method adds organization to the plan and verify if the organization is added
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAP0006_addOrganizations() throws UIAutomationException{
 		try {
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Login page
-		    LoginPage loginPage = new LoginPage();
+ 			stepNo++;
+			description="Login Successful";
+			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-							
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 							
 			// Plan Page
+ 			stepNo++;
+			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-						
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
 			// Close Plan Map window
+ 			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
+ 			stepNo++;
+			description="Organization in Scope";
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("OrganizationsInScope"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Enter organization name
+ 			stepNo++;
+			description="Organization Created";
 			planPage.enterOrganizationName(testData.get("Organization1"));
-						
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Organization Window
+ 			stepNo++;
+			description="Close Organization";
 			planPage.closeOrganiztionWindow();
-								
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 								
 			// Sign Out from 'Plan' page
+ 			stepNo++;
+			description="Signout Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 		} catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAP0006_addOrganizations");
+			Reporting.getScreenShot(testCaseId);
 		
 			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 	}
 	
