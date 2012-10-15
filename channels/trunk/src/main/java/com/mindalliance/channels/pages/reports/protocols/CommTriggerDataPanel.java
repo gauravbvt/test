@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -67,20 +68,21 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
     }
 
     private void addEois() {
+        int count = getEois().size();
         WebMarkupContainer eoisContainer = new WebMarkupContainer( "eoisContainer" );
-        eoisContainer.setVisible( !getEois().isEmpty() );
+        eoisContainer.setVisible( count > 0 );
         add( eoisContainer );
-        ListView<ElementOfInformationData> eoisListView = new ListView<ElementOfInformationData>(
-                "eois",
-                getEois()
-        ) {
-            @Override
-            protected void populateItem( ListItem<ElementOfInformationData> item ) {
-                ElementOfInformationData eoiData = item.getModelObject();
-                item.add( new Label( "content", eoiData.getName() ) );
-            }
-        };
-        eoisContainer.add( eoisListView );
+        eoisContainer.add( new Label( "eois", asCSVs( getEois() ) ));
+    }
+
+    private String asCSVs( List<ElementOfInformationData> eois ) {
+        StringBuilder sb = new StringBuilder(  );
+        Iterator<ElementOfInformationData> iter = eois.iterator();
+        while( iter.hasNext() ) {
+            sb.append( ChannelsUtils.smartUncapitalize( iter.next().getName() ) );
+            if ( iter.hasNext() ) sb.append( ", " );
+        }
+        return sb.toString();
     }
 
     private void addContacts() {
