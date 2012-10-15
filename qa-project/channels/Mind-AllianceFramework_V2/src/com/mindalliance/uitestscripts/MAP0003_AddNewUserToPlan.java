@@ -91,6 +91,10 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 		}
 	}
 	
+	/**
+	 * This method adds new user to the plan and verify if the user is added
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAP0003_AddNewUserToPlan() throws UIAutomationException{
 		try {
@@ -99,31 +103,47 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+						
 			// Login page
 			stepNo++;
 			description="Login Sucessful";
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-						
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+		 			
 			// Click on Channels Admin
 		    stepNo++;
 			description="Channels Admin Page";
 			HomePage homePage=new HomePage();
 			homePage.clickChannelsAdminLink();
-				
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	
 			// Add user
 			stepNo++;
 			description="User created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));
 			channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
 			//Sign Out from 'Admin' page
 			stepNo++;
 			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
 		} 
 		catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
@@ -149,8 +169,7 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	}
 	
 	/*
-	 * (non-Javadoc)
-	 * 
+	 * This method will perform cleanup actions
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	

@@ -167,7 +167,6 @@ public class MAP0001_AddPlan extends TestCase {
 	}
 	
 	/*
-	 * (non-Javadoc)
 	 * This method will perform cleanup actions
 	 * @see junit.framework.TestCase#tearDown()
 	 */

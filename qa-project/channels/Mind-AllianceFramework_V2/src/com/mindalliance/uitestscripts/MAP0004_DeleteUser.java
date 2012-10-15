@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.ChannelsAdmin;
@@ -37,9 +38,26 @@ import junit.framework.TestCase;
  */
 public class MAP0004_DeleteUser extends TestCase{
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAP0004_DeleteUser";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
 	
+	public MAP0004_DeleteUser() throws UIAutomationException{
+		setUp();
+		testMAP0004_DeleteUser();
+		tearDown();
+	}
+
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
@@ -48,56 +66,128 @@ public class MAP0004_DeleteUser extends TestCase{
 				new ElementController();
 			}
 			
+			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
+			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
 			// Creates Browser instance
+			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Loads Test Data
-			loadTestData();
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
+	/**
+	 * This method adds user to the plan, delets the user and verify if the user is delete
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAP0004_DeleteUser() throws UIAutomationException{
 		try {
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+  
 			// Login page
+ 			stepNo++;
+			description="URL Entered";
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-							
-			// Click on Channels Admin
-			HomePage homePage=new HomePage();
-			homePage.clickChannelsAdminLink();
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 				
+			// Click on Channels Admin
+ 			stepNo++;
+			description="URL Entered";
+		    HomePage homePage=new HomePage();
+			homePage.clickChannelsAdminLink();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	
 			// Add user
-			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
-			channelsAdmin.addUser(testData.get("User"));
-					
+ 			stepNo++;
+			description="URL Entered";
+		    ChannelsAdmin channelsAdmin=new ChannelsAdmin();
+			channelsAdmin.addUser(testData.get("User"));	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	
 			// Delete user
-			channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
-			
+			stepNo++;
+			description="URL Entered";
+		    channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
 			// Sign Out from 'Admin' page
-			HeaderController headerController=new HeaderController();
+ 			stepNo++;
+			description="URL Entered";
+		    HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
 		} 
 		catch (UIAutomationException ue) {
 			Reporting.getScreenShot("MAP0004_DeleteUser");
 		
 			//Sign out from Admin page
-			HeaderController headerController=new HeaderController();
+			stepNo++;
+			description="URL Entered";
+		    HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	
 			//Quits the Browser
-			GlobalVariables.configuration.getWebDriver().quit();
+ 			stepNo++;
+			description="Browser Closed";
+		    GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+	
 		}
 	}
+	
+	/*
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+	}
+	
 	/**
      * Loads Test Data for MAP0004_DeleteUser.
      * @throws UIAutomationException
@@ -105,6 +195,8 @@ public class MAP0004_DeleteUser extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -134,16 +226,4 @@ public class MAP0004_DeleteUser extends TestCase{
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
 }
