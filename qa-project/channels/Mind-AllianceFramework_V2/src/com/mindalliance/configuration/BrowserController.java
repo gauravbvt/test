@@ -14,7 +14,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 
 public class BrowserController{
-	public WebDriver driver=null;
+	public static WebDriver driver=null;
+	public static String browserName=null;
 				
 	/**
 	 * Initialize the browser by passing parameter (browser)
@@ -66,16 +67,66 @@ public class BrowserController{
 	
 	@SuppressWarnings("deprecation")
 	public void initializeDriver(String browser) throws UIAutomationException	{
+		browserName=browser;
 //		String browser="Mozilla Firefox";
 //		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
-		try{
+//		try{
+//			switch (browser) {
+//			case "Mozilla Firefox":
+//				driver = new FirefoxDriver(DesiredCapabilities.firefox());
+////		      	GlobalVariables.configuration.setWebDriver(driver);
+//		    	
+//		    	//Maximize the Browser
+//				driver.manage().window().maximize();
+////		    	GlobalVariables.configuration.getWebDriver().manage().window().maximize();
+//				break;
+//			case "Internet Explorer":
+//				driver=null;
+//	            DesiredCapabilities.internetExplorer().setJavascriptEnabled(true);       
+//	            String IEDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"IEDriverServer.exe";
+//	            System.setProperty("webdriver.ie.driver", IEDriverPath);
+//	            driver = new InternetExplorerDriver(DesiredCapabilities.internetExplorer());
+////	            GlobalVariables.configuration.setWebDriver(driver);
+//				break;
+//			case "Chrome":
+//			   driver=null;
+//	 	       String chromeDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"chromedriver.exe";
+//	 	       System.setProperty("webdriver.chrome.driver", chromeDriverPath); 
+//	 	       DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+//	 	       capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
+//	 	       driver=new ChromeDriver(capabilities);
+////	 	       GlobalVariables.configuration.setWebDriver(driver);
+//	 	       break;
+//			default:
+//				break;
+//			}
+//		}
+//		catch(IOException io){
+//			throw new UIAutomationException("Driver's .exe not found in lib folder.");
+//		}
+//		catch (IllegalStateException ie) {
+//			throw new UIAutomationException("Driver's .exe not found in lib folder.");
+//		}
+		
+	}		
+    /**
+     * Enters URL with parameter
+     * @param URL
+     * @param title
+     * @throws UIAutomationException
+     */
+    public void enterURL(String URL,String title,String browser) throws UIAutomationException{
+    	//GlobalVariables.configuration.getWebDriver().get(URL);
+    	try{
 			switch (browser) {
 			case "Mozilla Firefox":
 				driver = new FirefoxDriver(DesiredCapabilities.firefox());
-		      	GlobalVariables.configuration.setWebDriver(driver);
+//		      	GlobalVariables.configuration.setWebDriver(driver);
 		    	
 		    	//Maximize the Browser
 				driver.manage().window().maximize();
+				driver.get(URL);
+				
 //		    	GlobalVariables.configuration.getWebDriver().manage().window().maximize();
 				break;
 			case "Internet Explorer":
@@ -84,7 +135,8 @@ public class BrowserController{
 	            String IEDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"IEDriverServer.exe";
 	            System.setProperty("webdriver.ie.driver", IEDriverPath);
 	            driver = new InternetExplorerDriver(DesiredCapabilities.internetExplorer());
-	            GlobalVariables.configuration.setWebDriver(driver);
+	        	driver.get(URL);
+//	            GlobalVariables.configuration.setWebDriver(driver);
 				break;
 			case "Chrome":
 			   driver=null;
@@ -93,7 +145,8 @@ public class BrowserController{
 	 	       DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 	 	       capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
 	 	       driver=new ChromeDriver(capabilities);
-	 	       GlobalVariables.configuration.setWebDriver(driver);
+	 	       driver.get(URL);
+//	 	       GlobalVariables.configuration.setWebDriver(driver);
 	 	       break;
 			default:
 				break;
@@ -105,19 +158,9 @@ public class BrowserController{
 		catch (IllegalStateException ie) {
 			throw new UIAutomationException("Driver's .exe not found in lib folder.");
 		}
-		
-	}		
-    /**
-     * Enters URL with parameter
-     * @param URL
-     * @param title
-     * @throws UIAutomationException
-     */
-    public void enterURL(String URL,String title) throws UIAutomationException{
-    	GlobalVariables.configuration.getWebDriver().get(URL);
     	
     	// Assertion : Check Title of Page
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),driver);
     }
      
 }

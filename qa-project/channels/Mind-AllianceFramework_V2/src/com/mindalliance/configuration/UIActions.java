@@ -274,14 +274,14 @@ public class UIActions {
 	 * @throws UIAutomationException 
 	 * 
 	 */
-	public static void waitForTitle(final String titleSuffix, long pageLoadTimeout) throws UIAutomationException
+	public static void waitForTitle(final String titleSuffix, long pageLoadTimeout,WebDriver driver) throws UIAutomationException
 	{
 		long startTimeMilliSecs = System.currentTimeMillis(); 
 		try{			
 			int cnt	=	0;
 			do{	
 				try{
-					String title	=	GlobalVariables.configuration.getWebDriver().getTitle();
+					String title	=	driver.getTitle();
 					if(title.contains(titleSuffix)){
 						break;
 					}
@@ -299,6 +299,11 @@ public class UIActions {
 			throw new UIAutomationException("Unable to click to open new page");
 		}	
 		
+	}
+	
+	public static WebDriver setDriver(String browser){
+		WebDriver wd=BrowserController.driver;
+		return wd;
 	}
 	
 	public static String getTitle(){
