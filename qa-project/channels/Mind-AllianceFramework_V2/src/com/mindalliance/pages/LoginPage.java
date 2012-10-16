@@ -20,8 +20,6 @@ public class LoginPage {
 	ElementController elementController= new ElementController();
 	DataController dataController=new DataController();
 
-
-	
 	/**
 	 * 'Login' method enters Username & Paasword and login to the Channels
 	 * @param  userName, passWord
