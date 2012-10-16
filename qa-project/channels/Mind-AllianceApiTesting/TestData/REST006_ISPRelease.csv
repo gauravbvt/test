@@ -1,0 +1,8 @@
+api,http://192.168.4.127:8080/channels/rest/isp/plan/mindalliance_com_channels_plans_railsec/release
+username,admin
+password,admin
+uri,mindalliance_com_channels_plans_railsec
+name,Rail Security
+version,13
+release,production
+dateVersioned,Jul 7 2011 23:35 IST
