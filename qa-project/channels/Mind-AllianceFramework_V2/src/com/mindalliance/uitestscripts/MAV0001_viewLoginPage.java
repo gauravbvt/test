@@ -10,10 +10,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -23,6 +25,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
+import com.mindalliance.configuration.UIActions;
 import com.mindalliance.configuration.UIAutomationException;
 
 /**
@@ -40,6 +43,10 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public String failed="Fail";
 	public String blank=""; 	
 	public String exception="";
+	public String browser="";
+	public WebDriver wd=null;
+	
+	
 	
 	public MAV0001_viewLoginPage() throws UIAutomationException{
 		setUp();
@@ -56,6 +63,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 	protected void setUp() throws UIAutomationException{	
 		try{
 			
+
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
 			}
@@ -72,7 +80,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 			// Creates Browser instance
 			description="Browser initialized";
 			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver(GlobalVariables.configuration.getConfigData().get("Browser"));
+			browser=browserController.browserName;
+			
+//			browserController.initializeDriver(GlobalVariables.configuration.getConfigData().get("Browser"));
 			// Write log		
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -97,7 +107,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 		stepNo++;
 		description="URL Entered";
 		BrowserController browserController=new BrowserController();
-		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -105,7 +115,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 		// Quits the Browser
 		stepNo++;
 		description="Browser closed";
-		GlobalVariables.configuration.getWebDriver().quit();
+		wd=UIActions.setDriver(browser);
+		wd.quit();
+//		GlobalVariables.configuration.getWebDriver().quit();
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -118,10 +130,13 @@ public class MAV0001_viewLoginPage extends TestCase{
 	 */
 	@After
 	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();			
-			
-		}
+		wd=UIActions.setDriver(browser);
+		wd.quit();
+		
+//		if(GlobalVariables.configuration.getWebDriver()!=null){
+//			GlobalVariables.configuration.getWebDriver().quit();			
+//			
+//		}
 		String endTime=LogFunctions.getDateTime();
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
