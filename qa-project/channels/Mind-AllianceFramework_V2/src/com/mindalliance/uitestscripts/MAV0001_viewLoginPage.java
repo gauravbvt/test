@@ -10,7 +10,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang.ObjectUtils.Null;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,8 +45,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public String browser="";
 	public WebDriver wd=null;
 	
-	
-	
 	public MAV0001_viewLoginPage() throws UIAutomationException{
 		setUp();
 		testMAV0001_viewLoginPage();
@@ -62,8 +59,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 	@Before
 	protected void setUp() throws UIAutomationException{	
 		try{
-			
-
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
 			}
@@ -79,10 +74,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 			
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browser=browserController.browserName;
-			
-//			browserController.initializeDriver(GlobalVariables.configuration.getConfigData().get("Browser"));
+			browser=BrowserController.browserName;
 			// Write log		
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -93,7 +85,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
-			
 		}
 	}
 	
@@ -117,7 +108,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 		description="Browser closed";
 		wd=UIActions.setDriver(browser);
 		wd.quit();
-//		GlobalVariables.configuration.getWebDriver().quit();
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -131,12 +121,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 	@After
 	protected void tearDown(){
 		wd=UIActions.setDriver(browser);
-		wd.quit();
-		
-//		if(GlobalVariables.configuration.getWebDriver()!=null){
-//			GlobalVariables.configuration.getWebDriver().quit();			
-//			
-//		}
+		if(wd!=null){
+			wd.quit();
+		}
 		String endTime=LogFunctions.getDateTime();
 		GlobalVariables.configuration.setEndtime(endTime);
 	}
@@ -150,6 +137,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 		try{
 			String startTime=LogFunctions.getDateTime();
 			GlobalVariables.configuration.setStartTime(startTime);
+			
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
