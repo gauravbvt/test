@@ -28,6 +28,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
@@ -413,13 +414,19 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 	}
 	
 	Reporting reporting= new Reporting();
+	
 	private JList getJList0() {
-		int index=arrayOfTestCaseId.length;
+		int actualLength=0;
+		
 		try {
 			jListView = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = reporting.readTestCaseId(1);
-			for (int i=0;i<index;i++)
+			for(int j=0;j<arrayOfTestCaseId.length;j++){
+				if(arrayOfTestCaseId[j]!=null)
+					actualLength++;
+			}
+			for (int i=0;i<actualLength;i++)
 			{
 				listModel.addElement(arrayOfTestCaseId[i]);
 			}
@@ -433,14 +440,21 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 		}
 		return jListView;
 	}
+	
 	private JList getJList1() {
-		int index=arrayOfTestCaseId.length;
+		int actualLength=0;
 		try {
 			jListPlan = new JList();
 			DefaultListModel listModel = new DefaultListModel();
 			arrayOfTestCaseId = reporting.readTestCaseId(2);
-			for (int i = 0; i <index ; i++ ) 
+			
+			for(int j=0;j<arrayOfTestCaseId.length;j++){
+				if(arrayOfTestCaseId[j]!=null)
+					actualLength++;
+			}
+			for (int i = 0; i <actualLength ; i++ ) 
 				listModel.addElement(arrayOfTestCaseId[i]);
+			
 			jListPlan.setModel(listModel);
 			jListPlan.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			return jListPlan;
@@ -452,13 +466,16 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 		return jListPlan;
 	}
 	private JList getJList2() {
-		int index=arrayOfTestCaseId.length;
+		int actualLength=0;
 		try {
 			jListCommand = new JList();
 			DefaultListModel listModel = new DefaultListModel();
-			arrayOfTestCaseId = null;
 			arrayOfTestCaseId = reporting.readTestCaseId(3);
-			for (int i = 0; i <index; i++)
+			for(int j=0;j<arrayOfTestCaseId.length;j++){
+				if(arrayOfTestCaseId[j]!=null)
+					actualLength++;
+			}
+			for (int i = 0; i <actualLength; i++)
 				listModel.addElement(arrayOfTestCaseId[i]);
 			jListCommand.setModel(listModel);
 			jListCommand.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -474,8 +491,6 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 	// Execute from package
 	public void executeTestCases(Vector<Object> arrayOfTestCaseId) {
 		int totalExecute;
-		
-	
 		try {
 			
 			// Select browser from Combo box
@@ -500,12 +515,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
             jLabelStatus.setSize(jLabelStatus.getPreferredSize());
 			jLabelStatus.paintImmediately(jLabelStatus.getVisibleRect());
 			
-			
 			// Set startDateTime label
 			jLabelStartDateTime.setText("Start DateTime: " + LogFunctions.getDateTime());
 			jLabelStartDateTime.setSize(jLabelStartDateTime.getPreferredSize());
-			
-	
 			
 			// Execution of selected TestCases
 			for (Object testCaseId: arrayOfTestCaseId) {
@@ -522,9 +534,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					//Execute current TestCaseId
 					ClassLoader classLoader=ClassLoader.getSystemClassLoader();
 					String className="com.mindalliance.uitestscripts."+testCaseId;
-					
 					cls = classLoader.loadClass(className);
-			
 					cls.newInstance();
 							
 					//Update progressBar
