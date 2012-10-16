@@ -33,6 +33,7 @@ import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 import org.dyno.visual.swing.layouts.Trailing;
 
+import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -476,6 +477,12 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 		
 	
 		try {
+			
+			// Select browser from Combo box
+			String browser=jComboBoxBrowser.getSelectedItem().toString();
+			BrowserController browserController=new BrowserController();
+			browserController.initializeDriver(browser);
+			
 			String log_folder="D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs";
 			File log_file=new File(log_folder);
 			deleteFolder(log_file);
@@ -515,7 +522,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					//Execute current TestCaseId
 					ClassLoader classLoader=ClassLoader.getSystemClassLoader();
 					String className="com.mindalliance.uitestscripts."+testCaseId;
+					
 					cls = classLoader.loadClass(className);
+			
 					cls.newInstance();
 							
 					//Update progressBar

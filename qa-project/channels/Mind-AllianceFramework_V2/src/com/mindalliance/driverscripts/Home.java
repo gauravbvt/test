@@ -20,15 +20,15 @@ public class Home {
 		new ElementController();
 		TestSuite suite = new TestSuite("Mind-Alliance API Testing Framework");	
 			
-		suite.addTestSuite(MAP0001_AddPlan.class);
-		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
-		suite.addTestSuite(MAP0004_DeleteUser.class);
-		suite.addTestSuite(MAP0005_DeletePlan.class);
-		
-		// date:9/20/2012
-		suite.addTestSuite(MAP0006_addOrganizations.class);
-		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
-		suite.addTestSuite(MAP0008_removeExpectation.class);
+//		suite.addTestSuite(MAP0001_AddPlan.class);
+//		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
+//		suite.addTestSuite(MAP0004_DeleteUser.class);
+//		suite.addTestSuite(MAP0005_DeletePlan.class);
+//		
+//		// date:9/20/2012
+//		suite.addTestSuite(MAP0006_addOrganizations.class);
+//		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
+//		suite.addTestSuite(MAP0008_removeExpectation.class);
 	
 		suite.addTestSuite(MAC0001_UndoAddSegment.class);
 		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
@@ -75,23 +75,23 @@ public class Home {
 //		suite.addTestSuite(MAV0035_closeSurveysWindow.class);
 
 		// date :3/9/2012
-		suite.addTestSuite(MAV0066_viewAllSegmentsActionList.class);
-		suite.addTestSuite(MAV0067_closeAllSegmentWindow.class);
-		suite.addTestSuite(MAV0075_undoAddNewIssueUnderAction.class);
-		suite.addTestSuite(MAV0076_redoAddNewIssueUnderAction.class);
-		suite.addTestSuite(MAV0080_addNewTask.class);
-		
-		// date : 9/4/2012
-		suite.addTestSuite(MAV0081_hideDetails.class);
-		suite.addTestSuite(MAV0082_TaskDetails.class);
-		suite.addTestSuite(MAV0083_addAssignment.class);
-		suite.addTestSuite(MAV0084_closeAssignment.class);
-		suite.addTestSuite(MAV0085_FailureImpact.class);
-		suite.addTestSuite(MAV0086_closeFailureImpact.class);
-		suite.addTestSuite(MAV0087_Dissimination.class);
-		suite.addTestSuite(MAV0088_closeDissemination.class);
-		suite.addTestSuite(MAV0089_viewActionsPopup.class);
-		suite.addTestSuite(MAV0090_addNewIssue.class);
+//		suite.addTestSuite(MAV0066_viewAllSegmentsActionList.class);
+//		suite.addTestSuite(MAV0067_closeAllSegmentWindow.class);
+//		suite.addTestSuite(MAV0075_undoAddNewIssueUnderAction.class);
+//		suite.addTestSuite(MAV0076_redoAddNewIssueUnderAction.class);
+//		suite.addTestSuite(MAV0080_addNewTask.class);
+//		
+//		// date : 9/4/2012
+//		suite.addTestSuite(MAV0081_hideDetails.class);
+//		suite.addTestSuite(MAV0082_TaskDetails.class);
+//		suite.addTestSuite(MAV0083_addAssignment.class);
+//		suite.addTestSuite(MAV0084_closeAssignment.class);
+//		suite.addTestSuite(MAV0085_FailureImpact.class);
+//		suite.addTestSuite(MAV0086_closeFailureImpact.class);
+//		suite.addTestSuite(MAV0087_Dissimination.class);
+//		suite.addTestSuite(MAV0088_closeDissemination.class);
+//		suite.addTestSuite(MAV0089_viewActionsPopup.class);
+//		suite.addTestSuite(MAV0090_addNewIssue.class);
 		suite.addTestSuite(MAV0091_closeNewIssue.class);
 
 		// date :9/5/2012
@@ -230,23 +230,23 @@ public class Home {
 		suite.addTestSuite(MAC0026_UndoDuplicateFlow.class);
 			
 		// date:9/24/2012
-		suite.addTestSuite(MAP0009_addTask.class);
-		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
-		suite.addTestSuite(MAP0011_addEventToPlan.class);
-		suite.addTestSuite(MAP0012_addPhase.class);
-		suite.addTestSuite(MAP0013_addPhaseDetails.class);
+//		suite.addTestSuite(MAP0009_addTask.class);
+//		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
+//		suite.addTestSuite(MAP0011_addEventToPlan.class);
+//		suite.addTestSuite(MAP0012_addPhase.class);
+//		suite.addTestSuite(MAP0013_addPhaseDetails.class);
 		
 		// 9/25/2012
-		suite.addTestSuite(MAP0014_addSegment.class);
-		suite.addTestSuite(MAP0015_removeSegment.class);
-		suite.addTestSuite(MAP0016_addEvent.class);
-		suite.addTestSuite(MAP0017_deleteEvent.class);
-		suite.addTestSuite(MAP0022_addGoal.class);
+//		suite.addTestSuite(MAP0014_addSegment.class);
+//		suite.addTestSuite(MAP0015_removeSegment.class);
+//		suite.addTestSuite(MAP0016_addEvent.class);
+//		suite.addTestSuite(MAP0017_deleteEvent.class);
+//		suite.addTestSuite(MAP0022_addGoal.class);
 		
 		// 9/26/2012
 		suite.addTestSuite(MAC0021_CopyTask.class);
 		suite.addTestSuite(MAC0031_RedoAddSegment.class);
-		suite.addTestSuite(MAP0023_removeGoal.class);	
+//		suite.addTestSuite(MAP0023_removeGoal.class);	
 		
 		//9/27/2012
 		suite.addTestSuite(MAC0033_RedoAddGoal.class);
@@ -268,9 +268,9 @@ public class Home {
 		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
 		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 		
-		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
-		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
+//		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
+//		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
+//		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
 		
 		return suite;
 	}
