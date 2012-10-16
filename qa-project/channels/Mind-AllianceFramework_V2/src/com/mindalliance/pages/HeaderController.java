@@ -17,6 +17,7 @@ public class HeaderController {
 	ElementController elementController= new ElementController();
 	DataController dataController=new DataController();
 	
+	
 	/**
 	 * 'signOut' method clicks on 'Sign out' button
 	 * @throws UIAutomationException 
@@ -28,7 +29,7 @@ public class HeaderController {
 		
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Login Page Title", "Title");
-    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
