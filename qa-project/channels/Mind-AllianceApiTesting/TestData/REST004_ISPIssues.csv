@@ -4,7 +4,7 @@ password,admin
 uri,mindalliance_com_channels_plans_acme
 responseType,xml
 versionNumber,5
-release,development
+release,production
 aboutId,1
 aboutType,plan
 aboutName,Rail Security

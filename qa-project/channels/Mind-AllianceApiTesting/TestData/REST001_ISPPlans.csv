@@ -1,10 +1,10 @@
-api,http://192.168.4.127:8081/channels/rest/isp/plans
+api,http://192.168.4.127:8080/channels/rest/isp
 username,admin
 password,admin
 uri,mindalliance_com_channels_plans_railsec
-version,4
+version,13
 name,Rail Security
 release,development
-dateVersioned,2011/07/07 23:35:12 IST
+dateVersioned,Jul 7 2011 23:35 IST
 fullName,Administrator
 email,admin@gmail.com
