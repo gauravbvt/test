@@ -274,14 +274,14 @@ public class UIActions {
 	 * @throws UIAutomationException 
 	 * 
 	 */
-	public static void waitForTitle(final String titleSuffix, long pageLoadTimeout,WebDriver driver) throws UIAutomationException
+	public static void waitForTitle(final String titleSuffix, long pageLoadTimeout) throws UIAutomationException
 	{
 		long startTimeMilliSecs = System.currentTimeMillis(); 
 		try{			
 			int cnt	=	0;
 			do{	
 				try{
-					String title	=	driver.getTitle();
+					String title	=	GlobalVariables.configuration.getWebDriver().getTitle();
 					if(title.contains(titleSuffix)){
 						break;
 					}

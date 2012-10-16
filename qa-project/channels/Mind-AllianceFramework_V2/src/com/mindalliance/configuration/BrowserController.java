@@ -80,6 +80,7 @@ public class BrowserController{
 			switch (browser) {
 			case "Mozilla Firefox":
 				driver = new FirefoxDriver(DesiredCapabilities.firefox());
+				GlobalVariables.configuration.setWebDriver(driver);
 				//Maximize the Browser
 				driver.manage().window().maximize();
 				driver.get(URL);
@@ -90,7 +91,8 @@ public class BrowserController{
 	            String IEDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"IEDriverServer.exe";
 	            System.setProperty("webdriver.ie.driver", IEDriverPath);
 	            driver = new InternetExplorerDriver(DesiredCapabilities.internetExplorer());
-	        	driver.get(URL);
+	        	GlobalVariables.configuration.setWebDriver(driver);
+	            driver.get(URL);
 	        	break;
 			case "Chrome":
 			   driver=null;
@@ -99,6 +101,7 @@ public class BrowserController{
 	 	       DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 	 	       capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
 	 	       driver=new ChromeDriver(capabilities);
+	 	       GlobalVariables.configuration.setWebDriver(driver);
 	 	       driver.get(URL);
 	 	       break;
 			default:
@@ -113,7 +116,7 @@ public class BrowserController{
 		}
     	
     	// Assertion : Check Title of Page
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),driver);
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
     }
      
 }

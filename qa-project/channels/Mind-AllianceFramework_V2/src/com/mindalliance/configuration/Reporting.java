@@ -538,7 +538,7 @@ public class Reporting extends TakeScreenshot {
 									xml.writeEmptyElement("br");
 									xml.writeCharacters("End Datetime: " + GlobalVariables.configuration.getEndtime());
 									xml.writeEmptyElement("br");
-									xml.writeCharacters("Browser: " + GlobalVariables.configuration.getConfigData().get("Browser"));
+									xml.writeCharacters("Browser: " + BrowserController.browserName);
 									xml.writeEmptyElement("br");
 								xml.writeEndElement();
 							xml.writeEndElement();
