@@ -1,4 +1,5 @@
 package com.mindalliance.pages;
+import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
@@ -26,7 +27,7 @@ public class HomePage {
 				
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
 		
 		
 	}
@@ -41,7 +42,7 @@ public class HomePage {
 		
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Admin Page Title", "Title");
-    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
 	}	
 	/**
 	 * 'clickIssuesReportLink' method clicks on 'Issues Report' Link

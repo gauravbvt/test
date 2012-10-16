@@ -2,6 +2,7 @@ package com.mindalliance.pages;
 
 import java.util.Hashtable;
 
+import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
@@ -44,6 +45,6 @@ public class LoginPage {
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Home Page Title", "Title");
     	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
-    	UIActions.waitForTitle(title,timeout);
+    	UIActions.waitForTitle(title,timeout,BrowserController.driver);
 		}
 	}
