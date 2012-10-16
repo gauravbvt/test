@@ -548,6 +548,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 				}
 			}
 			
+			GlobalVariables.configuration.setEndtime(LogFunctions.getDateTime());
 			jLabelEndDateTime.setText("End DateTime: "+ LogFunctions.getDateTime());
 			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
 			
@@ -564,6 +565,8 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 			String folder="D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport";
 			File file1=new File(folder);
 			deleteFolder(file1);
+			
+			
 			
 			reporting.generateAutomationReport();
 			// Enable Logs and Reports button
