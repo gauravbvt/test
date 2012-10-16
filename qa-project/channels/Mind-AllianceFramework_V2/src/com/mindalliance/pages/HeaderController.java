@@ -30,7 +30,7 @@ public class HeaderController {
 		
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Login Page Title", "Title");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class HeaderController {
 		UIActions.click(fileName, "Sign Out Plan", GlobalVariables.configuration.getAttrSearchList(), "Sign out plan Button");
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Login Page Title", "Title");
-    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class HeaderController {
 	    
 	    // Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Login Page Title", "Title");
-    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
 	/**
 	 * clicks on 'Help' button in home page
@@ -113,7 +113,7 @@ public class HeaderController {
 	    
 	    // Assertion : Check Title of Page
 	    String titleOfHelpPage=dataController.getPageDataElements(fileName, "Help Page Title", "Title");
-    	UIActions.waitForTitle(titleOfHelpPage,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+    	UIActions.waitForTitle(titleOfHelpPage,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
   	}	
 	/**
 	 * Switch to plan page from any other page
@@ -141,6 +141,6 @@ public class HeaderController {
 		UIActions.click(fileName,"Home Image Link",GlobalVariables.configuration.getAttrSearchList(), "Home Image Link");
 		
 		// Assertion : Check Heading of Page
-		UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+		UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}	
 }

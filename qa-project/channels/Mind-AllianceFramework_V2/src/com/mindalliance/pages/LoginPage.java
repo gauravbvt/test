@@ -19,7 +19,7 @@ public class LoginPage {
 	public Hashtable<String, String> LoginPage;
 	ElementController elementController= new ElementController();
 	DataController dataController=new DataController();
-
+	
 	/**
 	 * 'Login' method enters Username & Paasword and login to the Channels
 	 * @param  userName, passWord
@@ -43,6 +43,6 @@ public class LoginPage {
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Home Page Title", "Title");
     	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
-    	UIActions.waitForTitle(title,timeout,BrowserController.driver);
+    	UIActions.waitForTitle(title,timeout);
 		}
 	}

@@ -27,7 +27,7 @@ public class HomePage {
 				
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
-       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 		
 		
 	}
@@ -42,7 +42,7 @@ public class HomePage {
 		
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Admin Page Title", "Title");
-    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")),BrowserController.driver);
+    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}	
 	/**
 	 * 'clickIssuesReportLink' method clicks on 'Issues Report' Link
