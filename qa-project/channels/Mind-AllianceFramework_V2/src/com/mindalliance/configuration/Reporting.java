@@ -344,11 +344,9 @@ public class Reporting extends TakeScreenshot {
 		int index = 0;
 		try {
 			File currentDir=new File(".");
-			
 			String path= currentDir.getCanonicalPath().toString() + "\\TestCases\\";
 			File file=new File(path+"Mind-AllianceTestCaseSheet.ods");
 			
-//			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
 			String[] arrayOfTestCaseId = new String[600];
@@ -356,23 +354,26 @@ public class Reporting extends TakeScreenshot {
 			index=0;
 			for (int i = 2; i <= sheet.getRowCount() ; i++){
 				testName = sheet.getCellAt("A"+i).getValue().toString();
-				if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
-					arrayOfTestCaseId[index] = testName;
-					index++;
-				}
-			}
-			if(sheetNumber==1||sheetNumber==2||sheetNumber==3) {
-				String sheetPath=currentDir.getCanonicalPath().toString() + "\\TestCases\\";
-				file = new File(sheetPath + "Mind-AllianceTestCaseSheet.ods");
-				sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
-				for (int i = 2; i <= sheet.getRowCount() ; i++) {
-					testName = sheet.getCellAt("A"+i).getValue().toString();
+				if(testName!=null){
 					if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
 						arrayOfTestCaseId[index] = testName;
 						index++;
 					}
 				}
+				
 			}
+//			if(sheetNumber==1||sheetNumber==2||sheetNumber==3) {
+//				String sheetPath=currentDir.getCanonicalPath().toString() + "\\TestCases\\";
+//				file = new File(sheetPath + "Mind-AllianceTestCaseSheet_V2.ods");
+//				sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
+//				for (int i = 2; i <= sheet.getRowCount() ; i++) {
+//					testName = sheet.getCellAt("A"+i).getValue().toString();
+//					if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
+//						arrayOfTestCaseId[index] = testName;
+//						index++;
+//					}
+//				}
+//			}
 			sheet.detach();
 			return arrayOfTestCaseId;
 		}
