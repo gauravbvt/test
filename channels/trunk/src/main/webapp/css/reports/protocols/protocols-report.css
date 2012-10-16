@@ -66,7 +66,7 @@ div.protocols-contents h4 {
 
 div.protocols-contents div.about h4,
 div.protocols-contents div.participation h4,
-div.protocols-contents div.documentation-top h4 {
+div.protocols-contents div.documentation-top label {
     background: none repeat scroll 0 0 #c3d9ff;
     font-size: 14px;
     font-weight: bold;
@@ -75,6 +75,8 @@ div.protocols-contents div.documentation-top h4 {
     text-transform: uppercase;
     border-bottom: 1px solid #6b8abe;
     border-top: 1px solid #6b8abe;
+    text-align: left;
+    color: #333333;
 }
 
 div.protocols-contents h4.taskName {
@@ -223,7 +225,8 @@ div.protocols-contents div.clearances {
 	border-right: none;
 }
 
-div.protocols-contents div.documentation {
+/*
+div.protocols-contents div.documentation-top {
 	border-top: 1px solid #CCCCCC;
 	float: left;
 	font-size: 12px;
@@ -232,7 +235,7 @@ div.protocols-contents div.documentation {
 	padding: 10px 0 0;
 	width: 711px;
 }
-
+*/
 div.protocols-contents ul {
 	margin: 5px 0 5px 20px;
 	list-style: none;
@@ -429,8 +432,28 @@ div.protocols-contents div.teammates,
 div.protocols-contents div.failureImpact,
 div.protocols-contents div.research-followup-task,
 div.protocols-contents div.contacts-container,
-div.protocols-contents div.media-container {
+div.protocols-contents div.media-container,
+div.protocols-contents div.documentation {
 	padding: 15px 0 10px;
+}
+
+div.protocols-contents div.eoisContainer table {
+    border-collapse: collapse;
+    margin: 10px 0 0;
+    width: 100%;
+}
+
+div.protocols-contents div.eoisContainer table tr th {
+	padding: 5px 0;	
+}
+
+div.protocols-contents div.eoisContainer table tr td {
+    border-top: 1px solid #DDDDDD;
+    padding: 5px 0;	
+}
+
+div.protocols-contents div.eoisContainer table ul {
+	margin: 0;
 }
 
 div.protocols-contents div.research-followup-task a {
