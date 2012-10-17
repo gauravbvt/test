@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -36,73 +37,134 @@ import junit.framework.TestCase;
  */
 public class MAV0127_addNewIssue extends TestCase{
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAV0127_addNewIssue";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="Fail";
+	public String blank=""; 
+	public String exception="";
+	public String browser="";
 	
+	public MAV0127_addNewIssue() throws UIAutomationException{
+		setUp();
+		testMAV0127_addNewIssue();
+		tearDown();
+	}
+
+	/**
+	 * This method will initialize the setup required for every test case
+	 * @throws UIAutomationException 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
 			
-			// Creates Browser instance
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
-			
 			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
+			// Write log			
+			LogFunctions.writeLogs(description);
+						
+			// Creates Browser instance
+			description="Browser initialized";
+			browser=BrowserController.browserName;		
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
 		}
 	}
 	
+	/**
+	 * This method verifies issue is added
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAV0127_addNewIssue() throws UIAutomationException {
 		try{
 		    // Enter URL of Channels
+			stepNo++;
+			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			    
 			// Login page
+			stepNo++;
+			description="Login successful";	
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 			
 			// Plan Page
+		    stepNo++;
+ 	 		description="Navigated to plan page";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
 			
 			// Close Plan Map window
+			stepNo++;
+			description="Plan Map window closed";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
 			
 			// Click on 'Add' button under 'Receives' panel
+			stepNo++;
+			description="Info sharing need is added";
 			planPage.clickAddInReceivesPanel();
 			 
 			// Click on 'New Issue' under 'Actions' pop up menu
+			stepNo++;
+			description="New issue is added";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("NewIssueInReceivesPanel"));	
 			
 			// Sign Out from 'Home' page
+			stepNo++;
+			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 		}
 		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAV0127_addNewIssue");
-					
+			Reporting.getScreenShot(testCaseId);
+			
 			// Sign out from plan page
+			stepNo++;
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-			
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+				
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
 		}
 	}
+	/**
+	 * (non-Javadoc)
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	*/	
 	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+	}
 	/**
      * Loads Test Data for MAV0127_addNewIssue.
      * @throws UIAutomationException
@@ -136,19 +198,6 @@ public class MAV0127_addNewIssue extends TestCase{
 		}
 		catch (ParserConfigurationException pe) {
 			throw new UIAutomationException("File MAV0127_addNewIssue can not be parsed.");
-		}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
 }
