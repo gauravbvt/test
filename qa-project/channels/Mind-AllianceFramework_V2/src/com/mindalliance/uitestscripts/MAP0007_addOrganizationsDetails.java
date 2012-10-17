@@ -39,6 +39,7 @@ public class MAP0007_addOrganizationsDetails extends TestCase{
 	public String failed="FAIL";
 	public String blank=""; 
 	public String scriptException;
+	public String browser="";
 	
 	public MAP0007_addOrganizationsDetails() throws UIAutomationException{
 		setUp();
@@ -67,8 +68,7 @@ public class MAP0007_addOrganizationsDetails extends TestCase{
 					
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
+			browser=BrowserController.browserName;	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -91,7 +91,7 @@ public class MAP0007_addOrganizationsDetails extends TestCase{
 			description="URL Entered";
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

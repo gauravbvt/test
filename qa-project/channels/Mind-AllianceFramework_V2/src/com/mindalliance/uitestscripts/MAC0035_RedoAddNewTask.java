@@ -45,6 +45,7 @@ public class MAC0035_RedoAddNewTask extends TestCase {
 	public String failed="FAIL";
 	public String blank=""; 
 	public String scriptException;
+	public String browser="";
 	
 	public MAC0035_RedoAddNewTask() throws UIAutomationException{
 		setUp();
@@ -73,8 +74,7 @@ public class MAC0035_RedoAddNewTask extends TestCase {
 					
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
+			browser=BrowserController.browserName;	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -92,132 +92,264 @@ public class MAC0035_RedoAddNewTask extends TestCase {
 	@Test
 	public void testMAC0035_RedoAddNewTask() throws UIAutomationException {
 		try{
-		    // Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
+			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Login page
-		    LoginPage loginPage = new LoginPage();
+			stepNo++;
+			description="Login Successful";
+			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-			
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 							
 			// Plan Page
+		    stepNo++;
+			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
 			// Close Plan Map window
+			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Click on 'Add New Segment' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-						
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("segmentForRedoAddTask"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-				
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Add New Task
+			stepNo++;
+			description="Add New Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));
-			
 			//Enter Task Name
 			planPage.enterTaskName(testData.get("TaskName"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Verify Task is added
+			stepNo++;
+			description="Task Added Successfully";
 			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Task Mover window
+			stepNo++;
+			description="Close Task Mover";
 			planPage.closeTaskMoverWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-						
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 					
 			// Undo Update Task
+			stepNo++;
+			description="Undo Update Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoUpdateTask"));
-				
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Undo Add new Task
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoAddTask"));
-							
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("UndoAddTask"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			
 			// Verify Task is removed
+			stepNo++;
+			description="Undo Update Task Successful";
 			planPage.verifyTaskIsRemoved(testData.get("TaskName"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Task Mover window
+			stepNo++;
+			description="Close Task Mover";
 			planPage.closeTaskMoverWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();			
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Redo Add New Task
+			stepNo++;
+			description="Redo Add New Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RedoAddTask"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Verify Task is added
+			stepNo++;
+			description="Redo Add New Task Successful";
 			planPage.verifyTaskNameInTaskMover(testData.get("Task2"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Task Mover window
+			stepNo++;
+			description="Close Task Mover";
 			planPage.closeTaskMoverWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			//Click on Remove this segment
+ 			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-								
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 								
 			//Sign Out from 'Plan' page
+ 			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-		}
-		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAC0035_RedoAddNewTask");
-					
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+		}catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+		
 			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 	}
 	
+	/*
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
+	}
 	/**
      * Loads Test Data for MAC0035_RedoAddNewTask.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -261,19 +393,6 @@ public class MAC0035_RedoAddNewTask extends TestCase {
 		}
 		catch (ParserConfigurationException pe) {
 			throw new UIAutomationException("File MAC0035_RedoAddNewTask can not be parsed.");
-		}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
 }

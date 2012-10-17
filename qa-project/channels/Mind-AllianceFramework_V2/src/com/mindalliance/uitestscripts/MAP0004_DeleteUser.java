@@ -44,7 +44,7 @@ public class MAP0004_DeleteUser extends TestCase{
 	public String passed="Pass";
 	public String failed="FAIL";
 	public String blank=""; 
-	public String scriptException;
+	public String scriptException;public String browser="";
 	
 	public MAP0004_DeleteUser() throws UIAutomationException{
 		setUp();
@@ -74,8 +74,7 @@ public class MAP0004_DeleteUser extends TestCase{
 					
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
+			browser=BrowserController.browserName;	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -102,7 +101,7 @@ public class MAP0004_DeleteUser extends TestCase{
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

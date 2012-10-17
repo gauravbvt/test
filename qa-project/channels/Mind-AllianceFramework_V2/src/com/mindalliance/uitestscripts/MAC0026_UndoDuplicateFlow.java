@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -30,102 +31,201 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class MAC0026_UndoDuplicateFlow extends TestCase{
-	
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAC0026_UndoDuplicateFlow";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
+	public String browser="";
 	
+	public MAC0026_UndoDuplicateFlow() throws UIAutomationException{
+		setUp();
+		testMAC0026_UndoDuplicateFlow();
+		tearDown();
+	}
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
 			
-			// Creates Browser instance
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
-			
 			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
+			// Creates Browser instance
+			description="Browser initialized";
+			browser=BrowserController.browserName;	
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
 	@Test
 	public void testMAC0026_UndoDuplicateFlow() throws UIAutomationException {
 		try{
-		    // Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
+			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Login page
-		    LoginPage loginPage = new LoginPage();
+			stepNo++;
+			description="Login Successful";
+			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-			
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 							
 			// Plan Page
+		    stepNo++;
+			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();
-			
+			homePage.clickCollaborationPlanLink();	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
 			// Close Plan Map window
+			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click Actions pop up menu and Add New Segment
+ 			stepNo++;
+			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-						
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForUndoDuplicateFlow"));
-					
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 					
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// click on 'strench up forms' icon
 			planPage.clickStrenchUpForm();
-			
 			// Click on 'Add' button under 'Receives' panel
+			stepNo++;
+			description="Add Info Receive";
 			planPage.clickAddInReceivesPanel();
-			
 			// Enter Information Name
 			planPage.enterInformationNameInReceivesPanel(testData.get("InformationInRecievesPanel"));
-			
 			// Select 'Other..' option form 'From Task:' dropdown list
 			planPage.selectFrom(testData.get("OtherTaskName"));
-			
 			// Enter From Task name
 			planPage.enterFromTaskName(testData.get("FromTaskNameInRecevesPanel"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'Duplicate flow' under 'Actions' pop up menu
+			stepNo++;
+			description="Duplicate Flow";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("DuplicateFlowInReceivesPanel"));	
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'Undo duplicate flow" in actions pop up menu
+			stepNo++;
+			description="Undo Duplicate Flow";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoDuplicateFlow"));
-			
-			// Click on Remove this segment
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+			//Click on Remove this segment
+ 			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-					
-			// Sign Out from 'Plan' page
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 								
+			//Sign Out from 'Plan' page
+ 			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-		}
-		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAC0026_UndoDuplicateFlow");
-					
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+		}catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+		
 			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+		}
+	}
+	
+	/*
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
 	
@@ -135,6 +235,8 @@ public class MAC0026_UndoDuplicateFlow extends TestCase{
      */
 	public void loadTestData() throws UIAutomationException{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -175,17 +277,4 @@ public class MAC0026_UndoDuplicateFlow extends TestCase{
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
-
 }

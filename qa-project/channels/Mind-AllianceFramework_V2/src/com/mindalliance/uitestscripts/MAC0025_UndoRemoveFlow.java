@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -30,104 +31,201 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class MAC0025_UndoRemoveFlow extends TestCase{
-
-
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAC0025_UndoRemoveFlow";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
+	public String browser="";
 	
+	public MAC0025_UndoRemoveFlow() throws UIAutomationException{
+		setUp();
+		testMAC0025_UndoRemoveFlow();
+		tearDown();
+	}
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
 			
-			// Creates Browser instance
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
-			
 			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
+			// Creates Browser instance
+			description="Browser initialized";
+			browser=BrowserController.browserName;	
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
 	@Test
 	public void testMAC0025_UndoRemoveFlow() throws UIAutomationException {
 		try{
-		    // Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
+			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Login page
-		    LoginPage loginPage = new LoginPage();
+			stepNo++;
+			description="Login Successful";
+			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-			
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 							
 			// Plan Page
+		    stepNo++;
+			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();
-			
+			homePage.clickCollaborationPlanLink();	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
 			// Close Plan Map window
+			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click Actions pop up menu and Add New Segment
+ 			stepNo++;
+			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-						
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForUndoRemoveFlow"));
-					
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 				
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// click on 'strench up forms' icon
+			stepNo++;
+			description="Add Info Receives";
 			planPage.clickStrenchUpForm();
-			
 			// Click on 'Add' button under 'Receives' panel
 			planPage.clickAddInReceivesPanel();
-			
 			// Enter Information Name
 			planPage.enterInformationNameInReceivesPanel(testData.get("InformationInRecievesPanel"));
-			
 			// Select 'Other..' option form 'From Task:' dropdown list
 			planPage.selectFrom(testData.get("OtherTaskName"));
-			
 			// Enter From Task name
 			planPage.enterFromTaskName(testData.get("FromTaskNameInRecevesPanel"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'Remove flow' under 'Actions' pop up menu
+			stepNo++;
+			description="Remove Flow";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("RemoveFlowInReceivesPanel"));	
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'Undo remove flow" in actions pop up menu
+			stepNo++;
+			description="Undo Remove Flow";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoRemoveFlow"));
-			
-			// Click on Remove this segment
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+			//Click on Remove this segment
+ 			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			
-			
-			// Sign Out from 'Plan' page
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 								
+			//Sign Out from 'Plan' page
+ 			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-		}
-		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAC0025_UndoRemoveFlow");
-					
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+		}catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+		
 			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+		}
+	}
+	
+	/*
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
 	
@@ -137,6 +235,8 @@ public class MAC0025_UndoRemoveFlow extends TestCase{
      */
 	public void loadTestData() throws UIAutomationException{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -176,260 +276,4 @@ public class MAC0025_UndoRemoveFlow extends TestCase{
 			throw new UIAutomationException("File MAC0025_UndoRemoveFlow can not be parsed.");
 		}
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
-
-	
-//	public MAC0025_UndoRemoveFlow() {
-//		try {
-//			GlobalVariables.sTestCaseId = "MAC0025_UndoRemoveFlow";
-//			GlobalVariables.sDescription = "Testcase: " + GlobalVariables.sTestCaseId + " execution started";
-//			LogFunctions.writeLogs(GlobalVariables.sDescription);
-//			System.out.println(GlobalVariables.sDescription);
-//			// Call login()
-//			GlobalVariables.bIsSuccess = ApplicationFunctionLibrary.login();
-//			if (GlobalVariables.bIsSuccess) {
-//				
-//				// Click on 'Information Sharing Model' link
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Navigated to Information Sharing Model";
-//				GlobalVariables.oDriver.findElement(By.linkText(GlobalVariables.viewElements.get("informationSharingModel"))).click();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//				// Click on 'Add new segment' option under 'Actions' pop up menu
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Second segment added";
-//				ApplicationFunctionLibrary.addSegment(GlobalVariables.testData.get("Segment For Undo Remove Flow"), "New");
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//				// Add 'New Task' under Action pop-up menu
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="New task added";
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("addNewTask"));
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				// Add details for New Task
-//				GlobalVariables.oDriver.findElement(By.name("segment:part:task")).click();
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:part:task"));
-//				for (int i = 0; i <= 50; i++)
-//					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-//				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Remove Flow"));
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				GlobalVariables.oElement.sendKeys(Keys.TAB);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				// Click on hide details from action pop-menu bar
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathTaskShowMenu"),GlobalVariables.viewElements.get("hideDetails"));
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//				//  Click on 'add info received' option under 'Receives'  section
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="Receive Info";
-//				// Click on legend for maximize the graph
-//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(1000);
-////				GlobalVariables.oDriver.findElement(By.linkText("Add info received")).click();
-//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathAddInfoReceive"))).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name")).click();
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:name"));
-//				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Add Received Info"));
-//				GlobalVariables.oElement.sendKeys(Keys.ENTER);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				GlobalVariables.oDropDown =new Select(GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:firstChoice")));
-//				List<WebElement> options = GlobalVariables.oDropDown.getOptions();
-//			    for(WebElement option : options) {
-//			    	if(GlobalVariables.viewElements.get("other").equals(option.getText())){
-//			    			option.setSelected();
-//			    			break;
-//			    	}
-//			    }
-//			    // WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input")).click();
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input"));
-//				for (int i = 0; i <= 50; i++)
-//					GlobalVariables.oElement.sendKeys(Keys.BACK_SPACE);
-//				GlobalVariables.oElement.sendKeys(GlobalVariables.testData.get("Undo Remove Flow"));
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				GlobalVariables.oElement.sendKeys(Keys.TAB);
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				
-//				// Click on Remove flow under more pop up menu
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="Remove Flow";
-//				// Click on Remove flow under more pop up menu
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathReceiveInfoActionMenu"),GlobalVariables.viewElements.get("removeFlow"));
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				GlobalVariables.oDriver.findElement(By.xpath(GlobalVariables.plan.get("sXpathStretchUpShrinkBack"))).click();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				// Get a handle to the open alert, prompt or confirmation
-//				Alert alert = GlobalVariables.oDriver.switchTo().alert();
-//				// And acknowledge the alert (equivalent to clicking "OK")
-//				alert.accept();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//				// Click on Undo remove flow under Action pop up menu
-//				GlobalVariables.iStepNo++;
-//				GlobalVariables.sDescription="Undo Remove flow done";
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("undoRemoveFlow"));
-//				// ASSERTION: When details entered, the flow should be connected between two nodes
-//				GlobalVariables.bIsSuccess = Boolean.FALSE;
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.name("flow-map"));
-//				List<WebElement> areas = GlobalVariables.oElement.findElements(By.tagName("area"));
-//				for(WebElement area:areas){
-//					GlobalVariables.sStrCheck=area.getAttribute("id");
-//					System.out.println(area.getAttribute("id"));
-//				if(area.getAttribute("id").equals("node1"))
-//					 GlobalVariables.bIsSuccess = Boolean.TRUE;
-//					 break;
-//			    }
-//				if (GlobalVariables.bIsSuccess == Boolean.TRUE) {
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				}
-//				else
-//			    {
-//					GlobalVariables.sVerifyError ="Verification Failed "+"Expected 'edge2' "+" Actual " + GlobalVariables.sStrCheck;
-//			    	// Write Results
-//					LogFunctions.writeLogs(GlobalVariables.sDescription + "" + GlobalVariables.sFailed);
-//					LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//							GlobalVariables.sBlank, GlobalVariables.sVerifyError);
-//			    }					
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(5000);
-//				GlobalVariables.oDropDown = new Select(GlobalVariables.oDriver.findElement(By.name("select-segment:sg-sel")));
-//				options = GlobalVariables.oDropDown.getOptions();
-//			    for(WebElement option : options) {
-//			    	if(option.getText().equals("Segment For Undo Remove Flow")){
-//			    			option.setSelected();
-//			    			break;
-//			    	}
-//			    }
-//			    // WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				ApplicationFunctionLibrary.MouseOverAndClick(GlobalVariables.plan.get("sXpathActionsPopUpMenu"),GlobalVariables.viewElements.get("removeThisSegment"));
-//				// Get a handle to the open alert, prompt or confirmation
-//				alert = GlobalVariables.oDriver.switchTo().alert();
-//				alert.accept();
-//				// WebElement Synchronization
-//				Thread.currentThread();
-//				Thread.sleep(3000);
-//				
-//			    // Call logout()
-//				GlobalVariables.iStepNo++ ;
-//				GlobalVariables.sDescription = "Logout is successful";
-//				ApplicationFunctionLibrary.logout();
-//				// Write Results
-//				LogFunctions.writeLogs(GlobalVariables.sDescription);
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sPassed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//
-//				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-//				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution completed");
-//			}
-//			else{
-//				LogFunctions.writeLogs("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//				System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//				
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						GlobalVariables.sBlank, GlobalVariables.sBlank);
-//				System.out.println("Unable to Undo Remove Flow" + ReportFunctions.getScreenShot("Undo Remove Flow failed"));
-//				GlobalVariables.oDriver.quit();
-//			}
-//		} 
-//		catch (Exception e) {
-//			if (GlobalVariables.oDriver.getTitle().equals(GlobalVariables.sInternalErrorPageTitle)) {
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						e.getMessage(),GlobalVariables.sErrorLogSubDirectoryPath + "\\" + GlobalVariables.sTestCaseId + ".logs");
-//				GlobalVariables.oElement = GlobalVariables.oDriver.findElement(By.id("stackTrace"));
-//				LogFunctions.writeErrorLogs(GlobalVariables.oElement.getText());
-//				System.out.println("Unable to Undo Remove Flow"+ReportFunctions.getScreenShot("Undo Remove Flow failed"));
-//				ApplicationFunctionLibrary.logout();
-//			}
-//			else {
-//				LogFunctions.writeResults(GlobalVariables.sTestCaseId, GlobalVariables.iStepNo, GlobalVariables.sDescription, GlobalVariables.sFailed, 
-//						e.getMessage(),GlobalVariables.sBlank);
-//				System.out.println("Unable to Undo Remove Flow"+ReportFunctions.getScreenShot("Undo Remove Flow failed"));
-//				ApplicationFunctionLibrary.logout();	
-//			}
-//			System.out.println("Testcase: " + GlobalVariables.sTestCaseId + " execution failed");
-//		}
-//	}
-//    public static void main(String args[]) {
-//		try {
-//			GenericFunctionLibrary.initializeTestData();
-//			GenericFunctionLibrary.loadObjectRepository();
-//			new MAC0025_UndoRemoveFlow();
-//			GenericFunctionLibrary.tearDownTestData();
-//			ReportFunctions.generateAutomationReport();
-//		} 
-//		catch (Exception oException) {
-//			// TODO Auto-generated catch block
-//			oException.printStackTrace();
-//			System.out.println("Unable to undo remove flow"+ReportFunctions.getScreenShot("Undo remove flow failed"));
-//		}
-//	}
 }

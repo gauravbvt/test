@@ -45,6 +45,7 @@ public class MAC0036_RedoCutTask extends TestCase {
 	public String failed="FAIL";
 	public String blank=""; 
 	public String scriptException;
+	public String browser="";
 	
 	public MAC0036_RedoCutTask() throws UIAutomationException{
 		setUp();
@@ -73,8 +74,7 @@ public class MAC0036_RedoCutTask extends TestCase {
 					
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
+			browser=BrowserController.browserName;	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -95,7 +95,7 @@ public class MAC0036_RedoCutTask extends TestCase {
 		try{
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			    
 			// Login page
 		    LoginPage loginPage = new LoginPage();
