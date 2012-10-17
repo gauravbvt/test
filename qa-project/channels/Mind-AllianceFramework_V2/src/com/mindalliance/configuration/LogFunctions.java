@@ -1,16 +1,18 @@
 package com.mindalliance.configuration;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This function write logs,result and get system time
+ * @author afour
+ *
+ */
 public class LogFunctions {
-
-	public String testCaseId="";
 	/**
 	 * Get Current DateTime
 	 * @return
@@ -28,13 +30,9 @@ public class LogFunctions {
 	 */
 	public static void writeLogs(String sLog) throws UIAutomationException {	
 		try {	
-			FileWriter fileWriter=new FileWriter("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs\\Logs.log",true);
-			
-//			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getLogFile(), true);
-			
+			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Logs.log",true);
 			BufferedWriter out = new BufferedWriter(fileWriter);
 		    out.write(getDateTime() + ":" + sLog);
-//			out.write(getDateTime() + ":" + sLog);
 		    out.newLine();
 		    out.flush();
 		    out.close();
@@ -59,14 +57,10 @@ public class LogFunctions {
 			if (sScriptException.contains(",")) {
 				sScriptException = sScriptException.replaceAll(",", "|");
 				sScriptException = sScriptException.replaceAll("\n", " ");
-				// sScriptException = sScriptException.substring(0, sScriptException.indexOf("}") + 1);	
 			}
-			FileWriter fileWriter=new FileWriter("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs\\Results.csv",true);
-			
-//			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getResultCsvFile(), true);
+			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv",true);
 			BufferedWriter out = new BufferedWriter(fileWriter);
 			out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
-//			out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
 			out.newLine();
 			out.flush();
 			out.close();
@@ -84,9 +78,7 @@ public class LogFunctions {
 	 */
 	public static void writeErrorLogs(String sLog) throws UIAutomationException {
 		try {
-			String testCaseId="";
-			FileWriter fileWriter=new FileWriter("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs\\Errors");
-//			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getErrorLogSubDirectoryPath() + "\\" +testCaseId + ".logs", true);
+			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Errors");
 		    BufferedWriter out = new BufferedWriter(fileWriter);
 		    out.write(getDateTime() + ":" + sLog);
 		    out.newLine(); 

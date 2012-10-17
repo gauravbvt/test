@@ -28,7 +28,6 @@ import com.mindalliance.configuration.Configuration.TraceLevel;
  * @author AFourTech
  */
 public class Reporting extends TakeScreenshot {
-	
 	public static int totalNoOfTestCasesPassed = 0;
 	public static int totalNoOfTestCasesFailed = 0;
 	public String logDirectoryName;
@@ -70,6 +69,9 @@ public class Reporting extends TakeScreenshot {
 	public String endDateTime;
 	
 	static DateFormat dateFormatGMT = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+	
+	
+	
 	/**
      * Takes a screen shot of the application page 
      * @param  fileName		The name of the file where the screen shot is saved
@@ -87,26 +89,33 @@ public class Reporting extends TakeScreenshot {
     	}
    	    return fileName;
     }
-    
-	// Returns minutes:seconds.milliseconds
+ 
+    // Returns minutes:seconds.milliseconds
     public static String actionTime(long startTimeMilliSecs){
-		long duration = System.currentTimeMillis() - startTimeMilliSecs;
-		return (""+duration/60000+":"+(duration/1000)%60+"."+duration%1000);
-	}
+    	long duration = System.currentTimeMillis() - startTimeMilliSecs;
+    	return (""+duration/60000+":"+(duration/1000)%60+"."+duration%1000);
+    }
     
     // Sends info to System.out  prefixed by time stamp and post fixed with duration time
     public static void timeStampedActionTime(long startTimeMilliSecs, String message){
     	String duration = actionTime(startTimeMilliSecs); // Record time before additional formatting.
-		trace(TraceLevel.Info, dateFormatGMT.format(new Date())+" "+message+duration);
-	}
-    
+    	trace(TraceLevel.Info, dateFormatGMT.format(new Date())+" "+message+duration);
+    }
+   
+    /**
+     * This function prints stack trace if occurs   
+     * @param level
+     * @param message
+     */
 	public static void trace(TraceLevel level, String message){
 		// Auto-generated method stub
 		if ( GlobalVariables.configuration.isTraceLevel(level)){
 			System.out.println(message);
 		}
 	}
-	
+	/**
+	 * This function reads Results.csv file in Logs and generate testcase.html
+	 */
 	public void updateTestCaseExecutionResult() {
 		try {
 			int index = 0;
@@ -145,6 +154,9 @@ public class Reporting extends TakeScreenshot {
 		}
 	}
 	
+	/**
+	 * This function updates Test case sheet
+	 */
 	public void updateTestCaseSheetResult() {
 		try {
 			int cnt=0;
@@ -224,9 +236,9 @@ public class Reporting extends TakeScreenshot {
 				sheet.getCellAt("I10").setValue(noOfCommandTestCasesFailed);
 
 				if(cnt==1)
-					outputFile = new File("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet.ods");
+						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet.ods");
 				else
-					outputFile = new File("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet_V2.ods");
+						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet_V2.ods");
 				sheet.getSpreadSheet().saveAs(outputFile);
 				
 				// Set Pass/Fail Count to 0.
@@ -245,6 +257,9 @@ public class Reporting extends TakeScreenshot {
 		}
 	}
 	
+	/**
+	 * Updates test case sheet result for functional test cases
+	 */
 	public void updateTestCaseSheetResultForFunctionalTestCases() {
 		try {
 			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
@@ -323,8 +338,8 @@ public class Reporting extends TakeScreenshot {
 				}
 			}
 			
-			File outputFile = new File("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\FunctionalTestCase.ods");
-//			File outputFile = new File(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\FunctionalTestCase.ods");
+			
+			File outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\FunctionalTestCase.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
 		}
 		catch(Exception e) {
@@ -362,18 +377,6 @@ public class Reporting extends TakeScreenshot {
 				}
 				
 			}
-//			if(sheetNumber==1||sheetNumber==2||sheetNumber==3) {
-//				String sheetPath=currentDir.getCanonicalPath().toString() + "\\TestCases\\";
-//				file = new File(sheetPath + "Mind-AllianceTestCaseSheet_V2.ods");
-//				sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
-//				for (int i = 2; i <= sheet.getRowCount() ; i++) {
-//					testName = sheet.getCellAt("A"+i).getValue().toString();
-//					if (sheet.getCellAt("I"+i).getValue().toString().toUpperCase().equals(automatesYes)) {
-//						arrayOfTestCaseId[index] = testName;
-//						index++;
-//					}
-//				}
-//			}
 			sheet.detach();
 			return arrayOfTestCaseId;
 		}
@@ -393,8 +396,7 @@ public class Reporting extends TakeScreenshot {
 			csvResult = passed;
 			csvScriptException = blank;
 			csvErrorReport = blank;
-			CsvReader csvTestCase = new CsvReader("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs" + "\\Results.csv");
-//			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
+			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv");
 			csvTestCase.readHeaders();
 			while (csvTestCase.readRecord()) {
 				if (sTestCaseId.equals(csvTestCase.get("TestCaseId")) && csvTestCase.get("Result").equals(failed)) {
@@ -462,8 +464,7 @@ public class Reporting extends TakeScreenshot {
 	 */
 	private void generateFinalTestPassReport() {
 		try {
-			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\index.htm");
-//			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\index.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\index.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -510,9 +511,7 @@ public class Reporting extends TakeScreenshot {
 	private void generateTestCaseSummary() {
 		try {
 			
-			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport"+"\\TestPassSummary.htm");
-//			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath()+"\\TestPassSummary.htm");
-//			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestPassSummary.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\TestPassSummary.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -572,11 +571,12 @@ public class Reporting extends TakeScreenshot {
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * Genearate failure report 
+	 */
 	private void generateFailureReport() {
 		try {
-			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport"+ "\\TestCaseFailureList.htm");
-//			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\TestCaseFailureList.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\TestCaseFailureList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -692,7 +692,7 @@ public class Reporting extends TakeScreenshot {
 						xml.writeEndElement();
 			for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ;i++) {
 				if(GlobalVariables.configuration.getList().getModel().getElementAt(i) != null) {
-					csvTestCase = new CsvReader("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs" + "\\Results.csv");
+					csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv");
 //					csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
 					csvTestCase.readHeaders();
 					while(csvTestCase.readRecord()) {
@@ -777,9 +777,7 @@ public class Reporting extends TakeScreenshot {
 		String arrayOftestCaseResult[] = new String[600];
 		
 		try	{
-			OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport"+"\\TestCaseList.htm");
-			
-//			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseList.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\TestCaseList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -868,11 +866,8 @@ public class Reporting extends TakeScreenshot {
 	 */
 	public void generateAutomationReportInHtml(String testName) {
 	try {
-		csvTestCase = new CsvReader("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs" + "\\Results.csv");
-//		csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
-		
-		OutputStream destination = new FileOutputStream("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\" + testName + ".htm");
-//		OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\" + testName + ".htm");
+		csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv");
+		OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\" + testName + ".htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -1004,6 +999,11 @@ public class Reporting extends TakeScreenshot {
 	}
 	}
 
+	/**
+	 * Read Test case Id of Functional test cases
+	 * @param sheetNumber
+	 * @return
+	 */
 	public String[] readTestCaseIdForFunctional(int sheetNumber) {
 		int index = 0;
 		try {
@@ -1029,14 +1029,16 @@ public class Reporting extends TakeScreenshot {
 			return null;
 		}
 	}
-
+/**
+ * Generate automation report For Functional test cases
+ */
 	public void generateAutomationReportForFunctionalTestCases() {
 		try {
 			// Update Test Case Execution Result
 			updateTestCaseExecutionResult();
 			
 			// Update Test Case Sheet Execution Result
-//			updateTestCaseSheetResultForFunctionalTestCases();
+			updateTestCaseSheetResultForFunctionalTestCases();
 			
 			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;

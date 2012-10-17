@@ -300,19 +300,12 @@ public class UIActions {
 		}	
 		
 	}
-	
-	public static WebDriver setDriver(String browser){
-		WebDriver wd=BrowserController.driver;
-		return wd;
-	}
-	
+	/**
+	 * Gets title of page
+	 * @return
+	 */
 	public static String getTitle(){
 		return GlobalVariables.configuration.getWebDriver().getTitle();
 		
 	}
-	public static boolean findElementBy(String xPath){
-		WebElement e=GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPath));
-		return e.isDisplayed();
-	}
-
 }
