@@ -140,13 +140,17 @@ public class MAV0152_viewSocialPanelShowReceivedMessage extends TestCase{
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 
 		} catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAV0152_viewSocialPanelShowReceivedMessage");
-		
-			//Sign out from home page
-			HeaderController headerController=new HeaderController();
-			headerController.signOut();
+			Reporting.getScreenShot(testCaseId);
 			
-			//Quits the Browser
+			// Sign out from plan page
+			stepNo++;
+			HeaderController headerController=new HeaderController();
+			headerController.signOutPlan();
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+				
+			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
 		}

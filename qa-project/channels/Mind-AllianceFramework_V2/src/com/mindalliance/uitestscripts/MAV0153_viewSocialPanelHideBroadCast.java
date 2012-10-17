@@ -120,25 +120,39 @@ public class MAV0153_viewSocialPanelHideBroadCast extends TestCase{
 			description="Messages tab opened";
 			HomePage homePage=new HomePage();
 			homePage.clickMessagesTabInSocialPanel();
-		
+			 // Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
+			
 			// Click on 'hide broadcast' link and 'show all messages' link
 			stepNo++;
 			description="Broadcasts are hidden";
 			homePage.clickHideBroadcastsInSocialPanel();
+			 // Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
 											
 			// Sign Out from 'Home' page
 			stepNo++;
 			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOut();
-		} catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAV0153_viewSocialPanelHideBroadCast");
-		
-			//Sign out from home page
-			HeaderController headerController=new HeaderController();
-			headerController.signOut();
+			 // Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
 			
-			//Quits the Browser
+		} catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
+			
+			// Sign out from plan page
+			stepNo++;
+			HeaderController headerController=new HeaderController();
+			headerController.signOutPlan();
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+				
+			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
 		}
