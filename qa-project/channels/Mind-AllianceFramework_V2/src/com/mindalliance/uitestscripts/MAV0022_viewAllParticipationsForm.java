@@ -45,6 +45,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 	public String failed="Fail";
 	public String blank=""; 
 	public String exception="";
+	public String browser="";
 
 	public MAV0022_viewAllParticipationsForm() throws UIAutomationException{
 		setUp();
@@ -74,8 +75,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 						
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver("Mozilla Firefox");			
+			browser=BrowserController.browserName;		
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -100,7 +100,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			stepNo++;
 			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    

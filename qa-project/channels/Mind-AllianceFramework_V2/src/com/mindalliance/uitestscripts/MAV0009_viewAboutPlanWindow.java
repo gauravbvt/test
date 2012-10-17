@@ -44,6 +44,7 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 	public String failed="Fail";
 	public String blank=""; 
 	public String exception="";
+	public String browser="";
 	
 	public MAV0009_viewAboutPlanWindow() throws UIAutomationException{
 		setUp();
@@ -58,7 +59,7 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 	@Before
 	protected void setUp() throws UIAutomationException{
 		try{
-				if (GlobalVariables.configuration == null){
+			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
@@ -73,8 +74,7 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 						
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver("Mozilla Firefox");			
+			browser=BrowserController.browserName;		
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -99,7 +99,7 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
@@ -183,8 +183,6 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
 		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
 	/**
@@ -194,9 +192,6 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 	public void loadTestData() throws UIAutomationException
 	{
 		try{
-			String startTime=LogFunctions.getDateTime();
-			GlobalVariables.configuration.setStartTime(startTime);
-			
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			

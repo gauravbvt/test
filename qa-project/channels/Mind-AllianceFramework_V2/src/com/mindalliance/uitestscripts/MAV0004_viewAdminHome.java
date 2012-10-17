@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -25,7 +24,6 @@ import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
-import com.mindalliance.configuration.UIActions;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
@@ -46,8 +44,7 @@ public class MAV0004_viewAdminHome extends TestCase{
 	public String blank=""; 
 	public String exception="";
 	public String browser="";
-	public WebDriver wd=null;
-	
+		
 	public MAV0004_viewAdminHome() throws UIAutomationException{
 		setUp();
 		testMAV0004_viewAdminHome();
@@ -157,12 +154,9 @@ public class MAV0004_viewAdminHome extends TestCase{
 	
 	@After
 	protected void tearDown(){
-		wd=UIActions.setDriver(browser);
-		if(wd!=null){
-			wd.quit();
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
 		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
 	/**

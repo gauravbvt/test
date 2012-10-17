@@ -44,6 +44,7 @@ public class MAV0082_TaskDetails extends TestCase{
 	public String failed="Fail";
 	public String blank=""; 
 	public String exception="";
+	public String browser="";
 	
 	public MAV0082_TaskDetails() throws UIAutomationException{
 		setUp();
@@ -73,8 +74,7 @@ public class MAV0082_TaskDetails extends TestCase{
 						
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver("Mozilla Firefox");			
+			browser=BrowserController.browserName;		
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -99,7 +99,7 @@ public class MAV0082_TaskDetails extends TestCase{
 			stepNo++;
 			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -184,8 +184,6 @@ public class MAV0082_TaskDetails extends TestCase{
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
 		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	/**
      * Loads Test Data for MAV0082_TaskDetails.
@@ -193,9 +191,6 @@ public class MAV0082_TaskDetails extends TestCase{
      */
 	public void loadTestData() throws UIAutomationException{
 		try{
-			String startTime=LogFunctions.getDateTime();
-			GlobalVariables.configuration.setStartTime(startTime);
-			
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			

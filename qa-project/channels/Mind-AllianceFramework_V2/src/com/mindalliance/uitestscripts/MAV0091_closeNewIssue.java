@@ -43,6 +43,7 @@ public class MAV0091_closeNewIssue extends TestCase{
 	public String failed="Fail";
 	public String blank=""; 
 	public String exception="";
+	public String browser="";
 	
 	public MAV0091_closeNewIssue() throws UIAutomationException{
 		setUp();
@@ -73,8 +74,7 @@ public class MAV0091_closeNewIssue extends TestCase{
 						
 			// Creates Browser instance
 			description="Browser initialized";
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver("Mozilla Firefox");			
+			browser=BrowserController.browserName;		
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -98,7 +98,7 @@ public class MAV0091_closeNewIssue extends TestCase{
 			stepNo++;
 			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-		    browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
+		    browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
 		    // Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -184,8 +184,6 @@ public class MAV0091_closeNewIssue extends TestCase{
 		if(GlobalVariables.configuration.getWebDriver()!=null){
 			GlobalVariables.configuration.getWebDriver().quit();
 		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	/**
      * Loads Test Data for MAV0091_closeNewIssue.
