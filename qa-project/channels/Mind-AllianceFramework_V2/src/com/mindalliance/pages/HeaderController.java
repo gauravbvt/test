@@ -1,6 +1,5 @@
 package com.mindalliance.pages;
 
-import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
