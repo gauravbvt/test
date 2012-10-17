@@ -24,7 +24,6 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
-import com.mindalliance.configuration.UIActions;
 import com.mindalliance.configuration.UIAutomationException;
 
 /**
@@ -106,8 +105,7 @@ public class MAV0001_viewLoginPage extends TestCase{
 		// Quits the Browser
 		stepNo++;
 		description="Browser closed";
-		wd=UIActions.setDriver(browser);
-		wd.quit();
+		GlobalVariables.configuration.getWebDriver().quit();
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -120,12 +118,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 	 */
 	@After
 	protected void tearDown(){
-		wd=UIActions.setDriver(browser);
-		if(wd!=null){
-			wd.quit();
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
 		}
-		String endTime=LogFunctions.getDateTime();
-		GlobalVariables.configuration.setEndtime(endTime);
 	}
 	
 	/**
