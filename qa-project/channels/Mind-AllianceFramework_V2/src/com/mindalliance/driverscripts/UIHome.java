@@ -28,21 +28,21 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.apache.commons.lang.ObjectUtils.Null;
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 import org.dyno.visual.swing.layouts.Trailing;
 
 import com.mindalliance.configuration.BrowserController;
+import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
+import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 
 
 public class UIHome extends JFrame implements ActionListener, ItemListener{
-//	int index = 0;
 	public int noOfViewTestCasesExecuted=0;
 	public int noOfPlanTestCasesExecuted=0;
 	public int noOfCommandTestCasesExecuted=0;
@@ -89,7 +89,13 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 	// Constructor 
 	public UIHome() {
 		try {
-			// Initialize Components
+			if (GlobalVariables.configuration == null){
+				GlobalVariables.configuration = Configuration.getConfigurationObject();
+		}
+		if(GlobalVariables.configuration.getAttrSearchList() == null){
+			new ElementController();
+		}
+	// Initialize Components
 			initComponents();
 		}
 		catch (Exception e) {
@@ -362,8 +368,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 		if (jPanelLogo == null) {
 			jPanelLogo = new JPanel();
 			try	{ 
-//				image = ImageIO.read(new File(GlobalVariables.configuration.getCurrentDir() + "//Images//Mind-Alliance_Logo.png"));
-				image = ImageIO.read(new File("D://Mind-AllianceFramework_V2//Images//Mind-Alliance_Logo.png"));
+				image = ImageIO.read(new File(GlobalVariables.configuration.getCurrentDir() + "//Images//Mind-Alliance_Logo.png"));
 			} 
 			catch (Exception ex) {
 				System.out.println("Error Occured in getJPanel1 Function.");
@@ -414,6 +419,7 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 	}
 	
 	Reporting reporting= new Reporting();
+	
 	
 	private JList getJList0() {
 		int actualLength=0;
@@ -498,7 +504,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 			BrowserController browserController=new BrowserController();
 			browserController.initializeDriver(browser);
 			
-			String log_folder="D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs";
+			String log_folder=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs";
+			
+			//			String log_folder="D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs";
 			File log_file=new File(log_folder);
 			deleteFolder(log_file);
 			
@@ -561,8 +569,9 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 			
 			JList<String> jlist=new JList<String>(arrayOfTestCases);
 			GlobalVariables.configuration.setList(jlist);				
-			
-			String folder="D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport";
+			String folder=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport";
+		
+//			String folder="D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport";
 			File file1=new File(folder);
 			deleteFolder(file1);
 			
@@ -648,11 +657,13 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 					clearTestPlanResult();
 			}
 			else if("logs".equals(e.getActionCommand())){
-				File file=new File("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs");
+				File file=new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs");
+//				File file=new File("D:\\Channels\\Mind-AllianceFramework_V2\\Logs\\UILogs");
 				Desktop.getDesktop().open(file);
 			}
 			else if ("reports".equals(e.getActionCommand())) { // when clicked on 'Reports' button
-				File file = new File("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport"+"\\index.htm");
+				File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\index.htm");
+//				File file = new File("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport"+"\\index.htm");
 				Desktop.getDesktop().open(file);
 			}
 			else if("message".equals(e.getActionCommand())){
