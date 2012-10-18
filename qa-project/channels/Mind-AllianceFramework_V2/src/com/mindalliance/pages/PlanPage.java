@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.selenesedriver.FindElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.mindalliance.configuration.Configuration;
