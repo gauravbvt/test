@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -37,12 +38,28 @@ import junit.framework.TestCase;
  *
  */
 public class MAV0168_AdvanceFormOfReceivenfo extends TestCase{
-
-
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAV0168_AdvanceFormOfReceivenfo";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="Fail";
+	public String blank=""; 
+	public String exception="";
+	public String browser="";
 	
+	public MAV0168_AdvanceFormOfReceivenfo() throws UIAutomationException{
+		setUp();
+		testMAV0168_AdvanceFormOfReceivenfo();
+		tearDown();
+	}
+	/**
+	 * This method will initialize the setup required for every test case
+	 * @throws UIAutomationException 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
@@ -51,76 +68,164 @@ public class MAV0168_AdvanceFormOfReceivenfo extends TestCase{
 				new ElementController();
 			}
 			
-			//Creates Browser instance
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
-			
-			//Loads Test data 
+			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
+			// Write log			
+			LogFunctions.writeLogs(description);
+						
+			// Creates Browser instance
+			description="Browser initialized";
+			browser=BrowserController.browserName;		
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 		catch(UIAutomationException ue){
-			Assert.fail("Unable to initialize the driver "+ue.getErrorMessage());
+			stepNo++;
+			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
 		}
 	}
-	
+	/**
+	 * This method displays Advanced form of receive info
+	 * @throws UIAutomationException
+	 */
 	@Test
 	public void testMAV0168_AdvanceFormOfReceivenfo() throws UIAutomationException {
 		try {
 			// Enter URL of Channels
+			stepNo++;
+			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-		    browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-		 		    
+		    browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+		    // Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Login page
+		    stepNo++;
+			description="Login successful";	
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-				
+		    // Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Plan Page
+		    stepNo++;
+			description="Navigated to plan page";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Close Plan Map window
+			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
-					
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Click Actions pop up menu and Add New Segment
+			stepNo++;
+			description="Add nrew segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Enter Segment Name
+			stepNo++;
+			description="Segment name enetered";
 			planPage.enterSegmentName(testData.get("SegmentForSimpleFormOfReceiveInfo"));
-				
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Close Segment window
+			stepNo++;
+			description="Segment window closed";
 			planPage.closeSegmentWindow();
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Click on 'Strench Up' form icon
+			stepNo++;
+			description="Strench up form";
 			planPage.clickStrenchUpForm();
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Click on 'Add' in 'Receives' panel
+			stepNo++;
+			description="Add in receives panel";
 			planPage.clickAddInReceivesPanel();
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Click on 'Show Advanced Form' link
+			stepNo++;
+			description="Show aadvanced form in receives panel";
 			planPage.clickShowAdvancedFormInReceivesPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Click on Remove this segment
+			stepNo++;
+			description="Remove segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+ 			
 			// Sign Out from 'Plan' page
+			stepNo++;
+			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-
-		} catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAV0168_AdvanceFormOfReceivenfo");
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+		}
+		catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
 			
 			// Sign out from plan page
+			stepNo++;
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
 				
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
 		}
-		
+	}
+	/**
+	 * (non-Javadoc)
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	*/	
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
+		}
 	}
 	
 	/**
@@ -164,18 +269,5 @@ public class MAV0168_AdvanceFormOfReceivenfo extends TestCase{
 			throw new UIAutomationException("File MAV0168_AdvanceFormOfReceivenfo can not be parsed.");
 		}
 			
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
 	}
 }
