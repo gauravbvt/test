@@ -124,29 +124,52 @@ public class MAV0225_AddInfoReceiveRemoveInfoNeeds extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Add New Segment
+ 			stepNo++;
+			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-
 			// Enter segment name
 			planPage.enterSegmentName(testData.get("SegementForAddInfoReceiveRemoveInfoNeed"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Close segment window
+ 			stepNo++;
+			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'strench up' form icon
+ 			stepNo++;
+			description="Add Info Receives";
 			planPage.clickStrenchUpForm();
-					
 			// Click on 'Add' button under 'Receives' panel
 			planPage.clickAddInReceivesPanel();
-			 
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			// Click on 'Remove Info Need' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Remove Info Need";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoNeedInReceivesPanel"));	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Remove This segment
+ 			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-							
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+						
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";

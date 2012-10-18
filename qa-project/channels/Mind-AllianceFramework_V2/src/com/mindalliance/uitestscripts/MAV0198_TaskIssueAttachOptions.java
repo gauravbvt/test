@@ -19,6 +19,7 @@ import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
+import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
@@ -37,94 +38,202 @@ import junit.framework.TestCase;
  */
 public class MAV0198_TaskIssueAttachOptions extends TestCase{
 	public Hashtable<String, String> testData;
+	public String testCaseId="MAV0198_TaskIssueAttachOptions";
+	public String description=null;
+	public int stepNo=1;
+	public String passed="Pass";
+	public String failed="FAIL";
+	public String blank=""; 
+	public String scriptException;
+	public String browser="";
 	
+	public MAV0198_TaskIssueAttachOptions() throws UIAutomationException{
+		setUp();
+		testMAV0198_TaskIssueAttachOptions();
+		tearDown();
+	}
+	/*
+	 * This method will initilize the setup required for every test case
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Before
-	protected void setUp(){
+	protected void setUp() throws UIAutomationException{
 		try{
 			if (GlobalVariables.configuration == null){
 					GlobalVariables.configuration = Configuration.getConfigurationObject();
-				
 			}
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
 			
-			// Creates Browser instance
-			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();
-			
 			// Loads Test Data
+			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
+			// Write log		
+			LogFunctions.writeLogs(description);
+					
+			// Creates Browser instance
+			description="Browser initialized";
+			browser=BrowserController.browserName;	
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 		}
 		catch(UIAutomationException ue){
+			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	
 	@Test
 	public void testMAV0198_TaskIssueAttachOptions() throws UIAutomationException {
 		try{
-		    // Enter URL of Channels
+			stepNo++;
+			description="URL Entered";
+			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Login page
-		    LoginPage loginPage = new LoginPage();
+			stepNo++;
+			description="Login Successful";
+			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-			
+		    // Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 							
 			// Plan Page
+		    stepNo++;
+			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();
-			
+			homePage.clickCollaborationPlanLink();	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
 			// Close Plan Map window
+			stepNo++;
+			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Add New Segment
+ 			stepNo++;
+			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Close segment window
+			stepNo++;
+			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
-			
 			// Click on 'strench Up forms' icon 
 			planPage.clickStrenchUpForm();
-		
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			// Click on 'Hide details' under 'Show' pop up under 'Task' panel
+			stepNo++;
+			description="Details Task";
 			planPage.clickPopupMenu(testData.get("ShowInTask"));
 			planPage.clickSubmenu(testData.get("Details"));	
-			
 			// Click on 'Show Advanced Form' link
 			planPage.clickShowAdvancedFormInTaskPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
-				
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			// Click on 'New Issue' under 'Actions' pop up menu in task panel
+			stepNo++;
+			description="New Issues";
 			planPage.clickPopupMenu(testData.get("ActionsInTask"));
 			planPage.clickSubmenu(testData.get("NewIssueInTask"));	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Enter details in description textbox
+			stepNo++;
+			description="Issues Description";
 			planPage.enterDescriptionInIssue(testData.get("Description"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Verify dropdown of attach in issue
+			stepNo++;
+			description="Attachment";
 			planPage.verifyAttachDropdownInIssueInTask(testData.get("Reference"), testData.get("Policy"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Remove This segment
+ 			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+						
+			//Sign Out from 'Plan' page
+ 			stepNo++;
+			description="SignOut Successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+		}catch (UIAutomationException ue) {
+			Reporting.getScreenShot(testCaseId);
 		
-			// Sign Out from 'Plan' page
-			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
-		}
-		catch (UIAutomationException ue) {
-			Reporting.getScreenShot("MAV0198_TaskIssueAttachOptions");
-					
 			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+		}
+	}
+	
+	/*
+	 * This method will perform cleanup actions
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	
+	@After
+	protected void tearDown(){
+		if(GlobalVariables.configuration.getWebDriver()!=null){
+			GlobalVariables.configuration.getWebDriver().quit();
 		}
 	}
 	
@@ -134,6 +243,8 @@ public class MAV0198_TaskIssueAttachOptions extends TestCase{
      */
 	public void loadTestData() throws UIAutomationException{
 		try{
+			String startTime=LogFunctions.getDateTime();
+			GlobalVariables.configuration.setStartTime(startTime);
 			testData=new Hashtable<String,String>();
 			File currentDir=new File(".");
 			
@@ -176,16 +287,4 @@ public class MAV0198_TaskIssueAttachOptions extends TestCase{
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	
-	@After
-	protected void tearDown(){
-		if(GlobalVariables.configuration.getWebDriver()!=null){
-			GlobalVariables.configuration.getWebDriver().quit();
-		}
-	}
 }
