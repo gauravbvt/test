@@ -287,58 +287,58 @@ public class ElementController {
 	 * @param elementValue Value of id / xpath / linktext / partiallinktext / name
 	 * @return boolean
 	 */
-	 public boolean waitForElements(String elementType, String elementValue)
-     {
-		 try
-         {
-			 int timeOutForFindingElementSeconds = Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));			 
-	         int count = 0;
-	         do
-	         {	   try	         	
-	         	{
-	                
-	        	  	List <WebElement> elements = null;
-	                 switch (elementType.toLowerCase())
-	                 {
-	                     case "xpath": elements = GlobalVariables.configuration.getWebDriver().findElements(By.xpath(elementValue));
-	                     	String pageSource=GlobalVariables.configuration.getWebDriver().getPageSource();
-	                         break;
-	                     case "id": elements = GlobalVariables.configuration.getWebDriver().findElements(By.id(elementValue));
-	                         break;
-	                     case "name": 
-	                    	 	elements =GlobalVariables.configuration.getWebDriver().findElements(By.name(elementValue));
-	                         break;
-	                     case "classname": elements = GlobalVariables.configuration.getWebDriver().findElements(By.className(elementValue));
-	                         break;
-	                     case "linktext": elements = GlobalVariables.configuration.getWebDriver().findElements(By.linkText(elementValue));
-	                     	break;
-	                     case "partiallinktext": elements = GlobalVariables.configuration.getWebDriver().findElements(By.partialLinkText(elementValue));
-	                    	break;
-	                 }
-	
-	                 // Verify if element present or not
-	                // if (null != elements)
-	                 //{
-	                    // if (elements.get(1).isDisplayed())
-	                     //{
-	                         return true;
-	                    // }
-	                // }
-	             
-	         	}
-	         	catch(Exception e){}
-	             count++;
-	            Thread.sleep(500);
-	         }
-	         while (count < timeOutForFindingElementSeconds);
-         
-         }catch (Exception e)
-         {        	 
-         }
-
-        return false;
-     }
-	 
+//	 public boolean waitForElements(String elementType, String elementValue)
+//     {
+//		 try
+//         {
+//			 int timeOutForFindingElementSeconds = Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));			 
+//	         int count = 0;
+//	         do
+//	         {	   try	         	
+//	         	{
+//	                
+//	        	  	List <WebElement> elements = null;
+//	                 switch (elementType.toLowerCase())
+//	                 {
+//	                     case "xpath": elements = GlobalVariables.configuration.getWebDriver().findElements(By.xpath(elementValue));
+//	                     	String pageSource=GlobalVariables.configuration.getWebDriver().getPageSource();
+//	                         break;
+//	                     case "id": elements = GlobalVariables.configuration.getWebDriver().findElements(By.id(elementValue));
+//	                         break;
+//	                     case "name": 
+//	                    	 	elements =GlobalVariables.configuration.getWebDriver().findElements(By.name(elementValue));
+//	                         break;
+//	                     case "classname": elements = GlobalVariables.configuration.getWebDriver().findElements(By.className(elementValue));
+//	                         break;
+//	                     case "linktext": elements = GlobalVariables.configuration.getWebDriver().findElements(By.linkText(elementValue));
+//	                     	break;
+//	                     case "partiallinktext": elements = GlobalVariables.configuration.getWebDriver().findElements(By.partialLinkText(elementValue));
+//	                    	break;
+//	                 }
+//	
+//	                 // Verify if element present or not
+//	                // if (null != elements)
+//	                 //{
+//	                    // if (elements.get(1).isDisplayed())
+//	                     //{
+//	                         return true;
+//	                    // }
+//	                // }
+//	             
+//	         	}
+//	         	catch(Exception e){}
+//	             count++;
+//	            Thread.sleep(500);
+//	         }
+//	         while (count < timeOutForFindingElementSeconds);
+//         
+//         }catch (Exception e)
+//         {        	 
+//         }
+//
+//        return false;
+//     }
+//	 
 	  /**
 	  * Returns Xpath count for 'value' from the element.
 	  * @param findBy  id / xpath / linktext / partiallinktext / name

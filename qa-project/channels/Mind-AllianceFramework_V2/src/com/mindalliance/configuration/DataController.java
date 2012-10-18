@@ -22,6 +22,15 @@ import com.mindalliance.configuration.Configuration.TraceLevel;
 public class DataController {
 	static String stestName;
 	public String automatesYes = "YES";
+	public String logFile;
+	public String resultCsvFile;
+	public String reportDirectoryName;
+	public String reportSrcDirectoryPath;
+	public String reportDstDirectoryPath;
+	public String logDirectoryName;
+	public String logDirectoryPath;
+	public String errorLogSubDirectoryPath;
+
 	private static Hashtable<String, XMLConfiguration> pageDataCache = new Hashtable<String, XMLConfiguration>();
 	
 	/**
@@ -93,17 +102,8 @@ public class DataController {
 	/**
 	 *	This function creates result files for log and report e.g. logs,Results.csv 
 	 */
-    public static void createResultFiles() {
+    public void createResultFiles() {
 		try {
-			String logFile;
-			String resultCsvFile;
-			String reportDirectoryName;
-			String reportSrcDirectoryPath;
-			String reportDstDirectoryPath;
-			String logDirectoryName;
-			String logDirectoryPath;
-			String errorLogSubDirectoryPath;
-
 			// Create Report Directory
 			reportDirectoryName="UIAutomationReport";
 			reportSrcDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\Mind-AllianceTestCaseSheet.ods";
