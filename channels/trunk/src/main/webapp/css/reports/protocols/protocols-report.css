@@ -1,7 +1,7 @@
 /* ----- Protocols Styling ----- */
 
 div.protocols-contents {
-	padding: 10px;
+    padding: 10px;
 }
 
 div.plandetails-cont {
@@ -16,9 +16,9 @@ div.plandetails-cont {
 }
 
 div.protocols-contents a {
-	color: #333333;
-	font-weight: bold;
-	text-decoration: none;
+    color: #333333;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 div.protocols-contents h1 {
@@ -31,18 +31,18 @@ div.protocols-contents h1 {
 }
 
 div.protocols-contents h1 span {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 div.protocols-contents h2 {
-	border-bottom: 2px solid #666666;
-	color: #333333;
-	font-size: 24px;
-	font-weight: normal;
-	letter-spacing: 0;
-	margin: 50px 0 40px;
-	text-align: left;
-	text-transform: capitalize;
+    border-bottom: 2px solid #666666;
+    color: #333333;
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: 0;
+    margin: 50px 0 40px;
+    text-align: left;
+    text-transform: capitalize;
 }
 
 div.protocols-contents h3 {
@@ -55,13 +55,13 @@ div.protocols-contents h3 {
 }
 
 div.protocols-content div.communications-toc h3 {
-	padding: 30px 0;
+    padding: 30px 0;
 }
 
 div.protocols-contents h4 {
-	font-size: 16px;
-	font-weight: bold;
-	text-transform: capitalize;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: capitalize;
 }
 
 div.protocols-contents div.about h4,
@@ -90,50 +90,50 @@ div.protocols-contents h4.taskName {
 }
 
 div.protocols-contents h5 {
-	color: #333333;
-	font-size: 13px;
-	font-weight: bold;
-	padding: 7px 0 5px;
-	text-transform: capitalize;
-	line-height: 150%;
+    color: #333333;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 0 5px;
+    text-transform: capitalize;
+    line-height: 150%;
 }
 
 div.protocols-contents div.contact h5 {
-	padding: 5px 0 0;
+    padding: 5px 0 0;
 }
 
 div.protocols-contents h6 {
-	background: none repeat scroll 0 0 #E8E8E8;
-	color: #999999;
-	float: right;
-	font-size: 16px;
-	font-weight: bold;
-	padding: 2px 5px;
-	text-align: right;
-	display: none;
+    background: none repeat scroll 0 0 #E8E8E8;
+    color: #999999;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: right;
+    display: none;
 }
 
 div.protocols-contents label {
-	color: #000000;
-	display: block;
-	font-size: 12px;
-	font-weight: bold;
-	padding: 0 0 5px 0;
-	text-transform: uppercase;
+    color: #000000;
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0 0 5px 0;
+    text-transform: uppercase;
 }
 
 div.protocols-contents label.eois-cont {
-	color: #666666;
+    color: #666666;
 }
 
 div.protocols-contents div.about,
 div.protocols-contents div.participation {
-	display: block;
-	padding: 0 0 0 0;
+    display: block;
+    padding: 0 0 0 0;
 }
 
 div.protocols-contents div.about table td {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 div.protocols-contents div.participation p {
@@ -142,49 +142,48 @@ div.protocols-contents div.participation p {
     line-height: 150%;
 }
 
-
 /*
 div.protocols-contents span.communicatedContext {
-	font-weight: bold;
+    font-weight: bold;
 }
 */
 div.protocols-contents div.orgContact label,
 div.protocols-contents div.employeeContacts label {
-	display: block;
-	font-weight: bold;
-	padding: 10px 0 5px 0;
-	text-transform: capitalize;
-	text-decoration: underline;
+    display: block;
+    font-weight: bold;
+    padding: 10px 0 5px 0;
+    text-transform: capitalize;
+    text-decoration: underline;
 }
 
 div.protocols-contents div.employeeContacts label {
-	padding: 0;
+    padding: 0;
 }
 
 div.protocols-contents div.name-employment {
-	border-bottom: 1px solid #CCCCCC;
-	margin: 0 0 5px;
+    border-bottom: 1px solid #CCCCCC;
+    margin: 0 0 5px;
 }
 
 div.protocols-contents h4 span.participationList span {
-	border-bottom: 2px solid #333333;
+    border-bottom: 2px solid #333333;
 }
 
 div.protocols-contents div.org-contacts {
-	float: left;
-	margin: 0 0 40px;
+    float: left;
+    margin: 0 0 40px;
 }
 
 div.protocols-contents div.employeeContacts {
-	border-left: 5px solid #CCCCCC;
-	float: left;
-	margin: 0;
-	padding: 12px 15px 15px;
-	width: 711px;
+    border-left: 5px solid #CCCCCC;
+    float: left;
+    margin: 0;
+    padding: 12px 15px 15px;
+    width: 711px;
 }
 
 div.protocols-contents div.orgContact {
-background: none repeat scroll 0 0 #E8E8E8;
+    background: none repeat scroll 0 0 #E8E8E8;
     border-left: 5px solid #CCCCCC;
     float: left;
     padding: 12px 15px 15px;
@@ -192,37 +191,37 @@ background: none repeat scroll 0 0 #E8E8E8;
 }
 
 div.protocols-contents div.orgContact h3 {
-	padding: 5px 0 10px;
-	font-size: 16px;
+    padding: 5px 0 10px;
+    font-size: 16px;
 }
 
 div.protocols-contents div.directory-link {
-	float: right;
-	height: 37px;
-	width: 37px;
-	display: none;
+    float: right;
+    height: 37px;
+    width: 37px;
+    display: none;
 }
 
 div.protocols-contents div.work,
 div.protocols-contents div.availability,
 div.protocols-contents div.languages,
 div.protocols-contents div.clearances {
-	border-right: 1px solid #CCCCCC;
-	float: left;
-	font-size: 12px;
-	line-height: 175%;
-	margin: 10px 20px 0 0;
-	min-height: 70px;
-	padding: 0 10px 0 0;
-	width: 139px;
+    border-right: 1px solid #CCCCCC;
+    float: left;
+    font-size: 12px;
+    line-height: 175%;
+    margin: 10px 20px 0 0;
+    min-height: 70px;
+    padding: 0 10px 0 0;
+    width: 139px;
 }
 
 div.protocols-contents div.availability {
-	width: 170px;
+    width: 170px;
 }
 
 div.protocols-contents div.clearances {
-	border-right: none;
+    border-right: none;
 }
 
 /*
@@ -237,69 +236,69 @@ div.protocols-contents div.documentation-top {
 }
 */
 div.protocols-contents ul {
-	margin: 5px 0 5px 20px;
-	list-style: none;
+    margin: 5px 0 5px 20px;
+    list-style: none;
 }
 
 div.protocols-contents ul li {
-	padding: 0 0 5px;
+    padding: 0 0 5px;
 }
 
 div.protocols-contents div.contacts-container ul li {
-	padding: 0 0 10px 0;
+    padding: 0 0 10px 0;
 }
 
 div.protocols-contents ul li ul li {
-	padding:0;  
+    padding: 0;
 }
 
 div.protocols-contents ul li label {
-	padding: 5px 0px;
+    padding: 5px 0px;
 }
 
 div.protocols-contents ul.askedYou,
 div.protocols-contents ul.notifiedYou,
 div.protocols-contents div.observations-toc ul,
 div.protocols-contents div.ongoing-toc ul {
-	list-style: none outside none;
-	margin: 0;
+    list-style: none outside none;
+    margin: 0;
 }
 
 div.protocols-contents ul.askedYou li,
 div.protocols-contents ul.notifiedYou li,
 div.protocols-contents div.observations-toc ul li,
 div.protocols-contents div.ongoing-toc ul li {
-	margin: 5px 0 0 25px;
-	line-height: 150%;
+    margin: 5px 0 0 25px;
+    line-height: 150%;
 }
 
 div.protocols-contents ul.askedYou li ul,
 div.protocols-contents ul.notifiedYou li ul,
 div.protocols-contents div.observations-toc ul li ul {
-	list-style: none outside none;
-	padding: 5px 0 0;
-	margin: 0;
+    list-style: none outside none;
+    padding: 5px 0 0;
+    margin: 0;
 }
 
 div.protocols-contents ul.askedYou li ul li,
 div.protocols-contents ul.notifiedYou li ul li,
 div.protocols-contents div.observations-toc ul li ul li {
-	margin: 5px 0 10px 25px;
-	line-height: 150%;
+    margin: 5px 0 10px 25px;
+    line-height: 150%;
 }
 
 div.protocols-contents div.interlocutors {
-	padding: 0 0 10px;
+    padding: 0 0 10px;
 }
 
 div.protocols-contents div.interlocutors ul li,
 div.protocols-contents div.observations-toc ul li {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 div.protocols-contents div.interlocutors ul li ul li a,
 div.protocols-contents div.observations-toc ul li ul li a {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 div.protocols-contents div.interlocutors a {
@@ -307,19 +306,19 @@ div.protocols-contents div.interlocutors a {
 }
 
 div.protocols-contents div.interlocutors h4 {
-	border-top: 1px solid #e8e8e8;
-	padding: 15px 0 0;
+    border-top: 1px solid #e8e8e8;
+    padding: 15px 0 0;
 }
 
 div.protocols-contents div.ongoing-toc h3,
 div.protocols-contents div.observations-toc h3,
 div.protocols-contents div.communications-toc h3 {
-	padding: 30px 0 20px 0;
-   font-size: 16px;
+    padding: 30px 0 20px 0;
+    font-size: 16px;
 }
 
 div.protocols-contents div.ongoing-toc h3 {
-	padding-top: 0;
+    padding-top: 0;
 }
 
 div.protocols-contents div.triggered div.procedures,
@@ -368,21 +367,20 @@ div.protocols-contents span.impact {
     margin: 0 0 10px;
 }
 
-
 div.protocols-contents div.contact {
-	background: none repeat scroll 0 0 #E8E8E8;
-	border-left: 5px solid #CCCCCC;
-	margin: 5px 0 20px;
-	padding: 10px 10px 13px;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #CCCCCC;
+    margin: 5px 0 20px;
+    padding: 10px 10px 13px;
 }
 
 div.protocols-contents div.contact label {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 div.protocols-contents a.contact-link {
-	border-bottom: 1px dotted #000000;
-	font-weight: normal;
+    border-bottom: 1px dotted #000000;
+    font-weight: normal;
 }
 
 div.protocols-contents div.work-contact,
@@ -401,22 +399,22 @@ div.protocols-contents div.personal-contact span.label {
 }
 
 div.protocols-contents span.addressesContainer {
-	font-size: 12px;
-	text-transform: uppercase;
+    font-size: 12px;
+    text-transform: uppercase;
 }
 
 div.protocols-contents span.addresses {
-	border-right: 1px solid #999999;
-	margin: 0 13px 0 0;
-	padding: 0 10px 0 0;    
+    border-right: 1px solid #999999;
+    margin: 0 13px 0 0;
+    padding: 0 10px 0 0;
 }
 
 div.protocols-contents span.addresses:last-child {
-	border-right: none;
+    border-right: none;
 }
 
 div.protocols-contents span.addresses a {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 div.protocols-contents div.maxDelayContainer,
@@ -434,7 +432,7 @@ div.protocols-contents div.research-followup-task,
 div.protocols-contents div.contacts-container,
 div.protocols-contents div.media-container,
 div.protocols-contents div.documentation {
-	padding: 15px 0 10px;
+    padding: 15px 0 10px;
 }
 
 div.protocols-contents div.eoisContainer table {
@@ -444,34 +442,33 @@ div.protocols-contents div.eoisContainer table {
 }
 
 div.protocols-contents div.eoisContainer table tr th {
-	padding: 5px 0;	
+    padding: 5px 0;
 }
 
 div.protocols-contents div.eoisContainer table tr td {
     border-top: 1px solid #DDDDDD;
-    padding: 5px 0;	
+    padding: 5px 0;
 }
 
 div.protocols-contents div.eoisContainer table ul {
-	margin: 0;
+    margin: 0;
 }
 
 div.protocols-contents div.research-followup-task a {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 div.protocols-contents div.bypassContactsContainer {
-	padding: 5px 0 0 5px;
+    padding: 5px 0 0 5px;
 }
 
 div.protocols-contents div.bypassContactsContainer div.contact {
-	background: #dcdcdc;
-	margin: 20px 0 10px;
+    background: #dcdcdc;
+    margin: 20px 0 10px;
 }
 
-
 div.protocols-contents div.contactsContainer {
-	padding: 15px 0 0 0;
+    padding: 15px 0 0 0;
 }
 
 div.protocols-contents div.contactsContainer-direct {
@@ -482,19 +479,19 @@ div.protocols-contents div.contactsContainer-direct {
 }
 
 div.protocols-contents div.contactsContainer-direct span.anyOf {
-	text-transform: capitalize;	
+    text-transform: capitalize;
 }
 
 div.protocols-contents div.contactsContainer-direct a.contact-link {
 
- }
+}
 
 div.protocols-contents div.failureImpact-small {
-	background: none repeat scroll 0 0 #E8E8E8;
-	border-left: 5px solid #929498;
-	font-style: italic;
-	margin: 15px 0 10px;
-	padding: 10px;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #929498;
+    font-style: italic;
+    margin: 15px 0 10px;
+    padding: 10px;
 }
 
 div.protocols-contents div.failureImpact-small.extreme {
@@ -518,19 +515,19 @@ div.protocols-contents div.failureImpact-small.none {
 }
 
 div.protocols-contents div.failureImpact-small span {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 div.documentation-top ul {
-	padding: 10px 10px 0;
+    padding: 10px 10px 0;
 }
 
 div.documentation-top ul li {
-	padding: 0 0 10px;
+    padding: 0 0 10px;
 }
 
 div.documentation-top label {
-border: medium none;
+    border: medium none;
     font-size: 14px;
     font-weight: bold;
     line-height: 150%;
@@ -542,11 +539,22 @@ border: medium none;
 /* added by JF */
 
 .eoi-question, .eoi-description {
-   font-style: italic;
+    font-style: italic;
     font-size: smaller;
 }
 
 .eoi-question:before {
     content: "Answers: "
 }
+
+.toc-trigger {
+    background: none repeat scroll 0 0 #C3D9FF;
+    border-left: 5px solid #6B8ABE;
+    padding: 0 5px 2px 5px;
+}
+
+.task-name {
+    text-transform: uppercase;
+}
+
 
