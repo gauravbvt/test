@@ -3,16 +3,15 @@ package com.mindalliance.driverscripts;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
-//import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-import java.util.Date;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -37,6 +36,9 @@ import javax.swing.border.SoftBevelBorder;
 import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
+
+import com.mindalliance.configuration.GlobalVariables;
+//import java.awt.Rectangle;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class EmailNotification extends JFrame implements ActionListener, ItemListener{
@@ -325,20 +327,38 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
             	break;
             }
             
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+
+    	    //fill message
+    	    messageBodyPart.setText("This Mail is ");
+
+    	    Multipart multipart = new MimeMultipart();
+    	    multipart.addBodyPart(messageBodyPart);
+
+    	    // Part two is attachment
+    	    messageBodyPart = new MimeBodyPart();
+    	    DataSource source = new FileDataSource(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ "\\Reports\\UIAutomationReport.zip");
+    	    messageBodyPart.setDataHandler(new DataHandler(source));
+    	    messageBodyPart.setFileName("Mind-Alliance Report"+GlobalVariables.configuration.getCurrentDate().toString());
+    	    multipart.addBodyPart(messageBodyPart);
+
+    	    // Put parts in message
+    	    msg.setContent(multipart);
+            	    
             msg.saveChanges();
             
-            // create the second message part
-            MimeBodyPart mbp2 = new MimeBodyPart();
-            // attach the file to the message
-            FileDataSource fds = new FileDataSource("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\index.htm");  
-            mbp2.setDataHandler(new DataHandler(fds));
-            // create the Multipart and add its parts to it
-            Multipart mp = new MimeMultipart();
-            mp.addBodyPart(mbp2);
-            // set the Date: header
-            msg.setSentDate(new Date());            
-            // add the Multipart to the message
-            msg.setContent(mp,"text/html; charset=utf-8");
+//            // create the second message part
+//            MimeBodyPart mbp2 = new MimeBodyPart();
+//            // attach the file to the message
+//            FileDataSource fds = new FileDataSource("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport" + "\\index.htm");  
+//            mbp2.setDataHandler(new DataHandler(fds));
+//            // create the Multipart and add its parts to it
+//            Multipart mp = new MimeMultipart();
+//            mp.addBodyPart(mbp2);
+//            // set the Date: header
+//            msg.setSentDate(new Date());            
+//            // add the Multipart to the message
+//            msg.setContent(mp,"text/html; charset=utf-8");
             
             Transport transport = session.getTransport("smtp");
             transport.connect(host, userName, passWord);

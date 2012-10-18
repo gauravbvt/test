@@ -513,7 +513,8 @@ public class UIHome extends JFrame implements ActionListener, ItemListener{
 			Class<?> cls;
 			cnt = 0;
 					
-			DataController.createResultFiles();
+			DataController dataController = new DataController();
+			dataController.createResultFiles();
 			
 			// Set progressBar Values
 			jProgressBarStatus.setMinimum(0);
