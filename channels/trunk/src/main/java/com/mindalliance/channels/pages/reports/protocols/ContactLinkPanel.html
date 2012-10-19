@@ -10,24 +10,25 @@
 </head>
 <body>
 <wicket:panel>
-    <a class="contact-link" wicket:id="contactLink" href="#"><span wicket:id="contactName">John Doe</span><!--<h5 wicket:id="contactJob">VP Sales ,Northeast, ACME Inc.</h5>--></a>
-    <div class="work-contact" wicket:id="work">
-        <span class="label">Work:</span>
-        <span wicket:id="addresses">contact addresses panel</span>
-    </div>
-    <div class="personal-contact" wicket:id="personal">
-        <span class="label">Personal:</span>
-        <span wicket:id="addresses">contact addresses panel</span>
-    </div>
-    <div class="bypassContactsContainer" wicket:id="bypassContactsContainer">
-        <label wicket:id="bypassLabel">If unreachable, I notify all of</label>
-        <ul>
-            <li wicket:id="bypassContacts">  <!-- repeated -->
-                <span class="contact" wicket:id="bypassContact">[contact link panel with channels]</span>
-            </li>
-        </ul>
-    </div>
-
+	<a class="contact-link" wicket:id="contactLink" href="#">
+		<span wicket:id="contactName">John Doe</span><!--<h5 wicket:id="contactJob">VP Sales ,Northeast, ACME Inc.</h5>-->
+	</a>
+	<div class="work-contact" wicket:id="work">
+		<span class="label">Work:</span>
+		<span wicket:id="addresses">contact addresses panel</span>
+	</div>
+	<div class="personal-contact" wicket:id="personal">
+		<span class="label">Personal:</span>
+		<span wicket:id="addresses">contact addresses panel</span>
+	</div>
+	<div class="bypassContactsContainer" wicket:id="bypassContactsContainer">
+		<label wicket:id="bypassLabel">If unreachable, I notify all of</label>
+		<ul>
+			<li wicket:id="bypassContacts">  <!-- repeated -->
+				<span class="contact" wicket:id="bypassContact">[contact link panel with channels]</span>
+			</li>
+		</ul>
+	</div>
 </wicket:panel>
 </body>
 </html>

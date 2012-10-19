@@ -1,9 +1,5 @@
 /* ----- Protocols Styling ----- */
 
-body {
-    font-family: Verdana;
-}
-
 div.protocols-contents {
     padding: 10px;
 }
@@ -491,10 +487,12 @@ div.protocols-contents div.eoisContainer table {
 
 div.protocols-contents div.eoisContainer table tr th {
     padding: 5px 0;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
 }
 
 div.protocols-contents div.eoisContainer table tr td {
-    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
     padding: 5px 0;
 }
 
@@ -521,7 +519,6 @@ div.protocols-contents div.contactsContainer {
 
 div.protocols-contents div.eois-contacts-cont {
     font-size: 12px;
-    font-style: italic;
     padding: 0 0 12px;	
     text-transform: capitalize;
 }
