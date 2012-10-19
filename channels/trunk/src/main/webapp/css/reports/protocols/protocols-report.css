@@ -1,5 +1,9 @@
 /* ----- Protocols Styling ----- */
 
+body {
+    font-family: Verdana;
+}
+
 div.protocols-contents {
     padding: 10px;
 }
@@ -23,7 +27,7 @@ div.protocols-contents a {
 
 div.protocols-contents h1 {
     color: #333333;
-    font-family: Arial;
+    font-family: Verdana;
     font-size: 36px;
     font-weight: normal;
     letter-spacing: -1px;
@@ -48,7 +52,7 @@ div.protocols-contents h2 {
 div.protocols-contents h3 {
     color: #333333;
     display: block;
-    font-family: Arial;
+    font-family: Verdana;
     font-size: 13px;
     font-weight: bold;
     padding: 10px 0;
@@ -600,13 +604,3 @@ div.documentation-top label {
     content: "Answers: ";
 }
 
-
-/*
-.toc-trigger {
-    background: none repeat scroll 0 0 #C3D9FF;
-    border-left: 5px solid #6B8ABE;
-    padding: 0 5px 2px 5px;
-}
-
-
-*/
