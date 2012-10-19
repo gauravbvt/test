@@ -23,7 +23,7 @@ div.protocols-contents a {
 
 div.protocols-contents h1 {
     color: #333333;
-    font-family: Verdana;
+    font-family: Arial;
     font-size: 36px;
     font-weight: normal;
     letter-spacing: -1px;
@@ -48,7 +48,7 @@ div.protocols-contents h2 {
 div.protocols-contents h3 {
     color: #333333;
     display: block;
-    font-family: Verdana;
+    font-family: Arial;
     font-size: 13px;
     font-weight: bold;
     padding: 10px 0;
@@ -596,8 +596,3 @@ div.documentation-top label {
     font-style: italic;
     font-size: smaller;
 }
-
-.eoi-question:before {
-    content: "Answers: ";
-}
-

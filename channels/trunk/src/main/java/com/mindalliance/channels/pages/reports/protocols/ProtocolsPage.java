@@ -189,17 +189,24 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     // PARTICIPATION
 
     private void addParticipation() {
-        ListView<EmploymentData> employmentsList = new ListView<EmploymentData>(
+        Label employmentsList = new Label(
                 "participationList",
-                proceduresData.getEmployments()
-        ) {
-            @Override
-            protected void populateItem( ListItem<EmploymentData> item ) {
-                EmploymentData employmentData = item.getModelObject();
-                item.add( new Label( "employment", employmentData.getLabel() ) );
-            }
-        };
+                asString( proceduresData.getEmployments() ));
         getContainer().add( employmentsList );
+    }
+
+    private String asString( List<EmploymentData> employments ) {
+        StringBuilder sb = new StringBuilder(  );
+        int count = employments.size();
+        for ( int i=0; i<count; i++ ) {
+            sb.append( employments.get( i ).getLabel() );
+            if ( i == count - 2  ) {
+               sb.append( " and " );
+            } else if ( i != count - 1 && count > 1 ) {
+                sb.append( ", " );
+            }
+        }
+        return sb.toString();
     }
 
     // DOCUMENTATION

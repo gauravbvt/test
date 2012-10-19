@@ -56,7 +56,12 @@ public class EoisPanel extends AbstractDataPanel {
                 description = StringEscapeUtils.escapeXml( description == null ? "" : description );
                 Label descriptionLabel = new Label(
                         "description",
-                        description.isEmpty() ? "--" : description );
+                        description.isEmpty()
+                                ? "--"
+                                : description.endsWith( "?" )
+                                ? ("Answers: " + description)
+                                : description );
+
                 descriptionLabel.add( new AttributeModifier(
                         "class",
                         description.endsWith( "?" )
