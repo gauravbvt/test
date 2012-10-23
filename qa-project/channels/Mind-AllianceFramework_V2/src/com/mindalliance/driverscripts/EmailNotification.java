@@ -37,6 +37,7 @@ import org.dyno.visual.swing.layouts.Constraints;
 import org.dyno.visual.swing.layouts.GroupLayout;
 import org.dyno.visual.swing.layouts.Leading;
 
+import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.GlobalVariables;
 //import java.awt.Rectangle;
 
@@ -169,7 +170,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFiledSMTPServer == null) {
 			jTextFiledSMTPServer = new JTextField();
 			jTextFiledSMTPServer.setPreferredSize(jTextFiledSMTPServer.getPreferredSize());
-			jTextFiledSMTPServer.setText("smtp.gmail.com");
+			jTextFiledSMTPServer.setText("smtp.afourtech.com");
 			jTextFiledSMTPServer.addActionListener(this);
 		}
 		return jTextFiledSMTPServer;
@@ -179,7 +180,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextFieldUserName == null) {
 			jTextFieldUserName = new JTextField();
 			jTextFieldUserName.setPreferredSize(jTextFieldUserName.getPreferredSize());
-			jTextFieldUserName.setText("piugurav0069@gmail.com");
+			jTextFieldUserName.setText("priyanka.gurav@afourtech.com");
 			jTextFieldUserName.addActionListener(this);
 		}
 		return jTextFieldUserName;
@@ -199,7 +200,7 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		if (jTextReceipentEmailId == null) {
 			jTextReceipentEmailId = new JFormattedTextField();
 			jTextReceipentEmailId.setPreferredSize(jTextReceipentEmailId.getPreferredSize());
-			jTextReceipentEmailId.setText("priyanka.gurav@afourtech.com");
+			jTextReceipentEmailId.setText("shrilekha.teke@afourtech.com");
 		}
 		return jTextReceipentEmailId;
 	}
@@ -340,9 +341,10 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 
     	    // Part two is attachment
     	    messageBodyPart = new MimeBodyPart();
+    	    GlobalVariables.configuration=Configuration.getConfigurationObject();
     	    DataSource source = new FileDataSource(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ "\\Reports\\UIAutomationReport.zip");
     	    messageBodyPart.setDataHandler(new DataHandler(source));
-    	    messageBodyPart.setFileName("Mind-Alliance Report"+GlobalVariables.configuration.getCurrentDate().toString());
+    	    messageBodyPart.setFileName("Mind-Alliance Report.zip");
     	    multipart.addBodyPart(messageBodyPart);
 
     	    // Put parts in message
