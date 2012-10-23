@@ -62,10 +62,6 @@ public class BrowserController{
 			throw new UIAutomationException("Driver's .exe not found in lib folder.");
 		}
 		
-	}
-	
-	public void initializeDriver(String browser) throws UIAutomationException	{
-		browserName=browser;
 	}	
 
     /**
@@ -75,45 +71,8 @@ public class BrowserController{
      * @throws UIAutomationException
      */
 	@SuppressWarnings("deprecation")
-    public void enterURL(String URL,String title,String browser) throws UIAutomationException{
-       	try{
-			switch (browser) {
-			case "Mozilla Firefox":
-				driver = new FirefoxDriver(DesiredCapabilities.firefox());
-				GlobalVariables.configuration.setWebDriver(driver);
-				//Maximize the Browser
-				driver.manage().window().maximize();
-				driver.get(URL);
-				break;
-			case "Internet Explorer":
-				driver=null;
-	            DesiredCapabilities.internetExplorer().setJavascriptEnabled(true);       
-	            String IEDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"IEDriverServer.exe";
-	            System.setProperty("webdriver.ie.driver", IEDriverPath);
-	            driver = new InternetExplorerDriver(DesiredCapabilities.internetExplorer());
-	        	GlobalVariables.configuration.setWebDriver(driver);
-	            driver.get(URL);
-	        	break;
-			case "Chrome":
-			   driver=null;
-	 	       String chromeDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"chromedriver.exe";
-	 	       System.setProperty("webdriver.chrome.driver", chromeDriverPath); 
-	 	       DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-	 	       capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
-	 	       driver=new ChromeDriver(capabilities);
-	 	       GlobalVariables.configuration.setWebDriver(driver);
-	 	       driver.get(URL);
-	 	       break;
-			default:
-				break;
-			}
-		}
-		catch(IOException io){
-			throw new UIAutomationException("Driver's .exe not found in lib folder.");
-		}
-		catch (IllegalStateException ie) {
-			throw new UIAutomationException("Driver's .exe not found in lib folder.");
-		}
+    public void enterURL(String URL,String title) throws UIAutomationException{
+		GlobalVariables.configuration.getWebDriver().get(URL);
     	
     	// Assertion : Check Title of Page
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));

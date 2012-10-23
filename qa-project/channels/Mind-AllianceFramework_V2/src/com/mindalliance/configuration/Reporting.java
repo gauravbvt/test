@@ -417,10 +417,11 @@ public class Reporting extends TakeScreenshot {
 		
 	/**
 	 * Generate AutomationReport in Ods
+	 * @throws UIAutomationException 
 	 * @throws Exception 
 	 * @throws XMLStreamException
 	 */
-	public void generateAutomationReport() throws Exception {
+	public void generateAutomationReport() throws IOException, UIAutomationException {
 			// Update Test Case Execution Result
 			updateTestCaseExecutionResult();
 			
@@ -1067,15 +1068,19 @@ public class Reporting extends TakeScreenshot {
 		System.out.println("Zipped Completed");
 	}
 	
-	static public void zipFolder(String srcFolder, String destZipFile)
-			throws Exception {
+	public static void zipFolder(String srcFolder, String destZipFile)throws IOException {
 		ZipOutputStream zip = null;
 		FileOutputStream fileWriter = null;
 
 		fileWriter = new FileOutputStream(destZipFile);
 		zip = new ZipOutputStream(fileWriter);
 
-		addFolderToZip("", srcFolder, zip);
+		try {
+			addFolderToZip("", srcFolder, zip);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		zip.flush();
 		zip.close();
 	}
@@ -1097,8 +1102,7 @@ public class Reporting extends TakeScreenshot {
 		}
 	}
 
-	static private void addFolderToZip(String path, String srcFolder,
-			ZipOutputStream zip) throws Exception {
+	private static void addFolderToZip(String path, String srcFolder,ZipOutputStream zip) throws Exception {
 		File folder = new File(srcFolder);
 
 		for (String fileName : folder.list()) {

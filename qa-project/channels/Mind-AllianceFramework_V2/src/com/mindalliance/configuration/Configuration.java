@@ -83,7 +83,30 @@ public class Configuration {
 
 	String arrayOftestCaseResult[] = new String[600];
 	
+	/**
+	 * This method added TestCaseID to JList
+	 * @param testCaseID
+	 */
 	
+	public void addTestCaseIdToJList(String testCaseID){
+		if(getList()!=null){
+			int arraySize = getList().getModel().getSize();	
+			String[] tempArray = new String[arraySize+1];
+		
+			for(int count=0;count<arraySize;count++){
+				tempArray[count] = getList().getModel().getElementAt(count);
+			}
+			tempArray[arraySize]=testCaseID;
+			JList<String> templist=new JList<String>(tempArray);
+			setList(templist);	
+		}
+		else{
+			String[] tempArray = new String[1];
+			tempArray[0] = testCaseID;
+			JList<String> templist=new JList<String>(tempArray);
+			setList(templist);	
+		}
+	}
 	
 	/**
 	 * Creates the singleton instance of the Configuration class.
