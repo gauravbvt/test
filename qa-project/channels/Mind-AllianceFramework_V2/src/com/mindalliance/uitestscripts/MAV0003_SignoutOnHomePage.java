@@ -45,12 +45,6 @@ public class MAV0003_SignoutOnHomePage extends TestCase{
 	public String exception="";
 	public String browser="";
 	
-	public MAV0003_SignoutOnHomePage() throws UIAutomationException {
-		setUp();
-		testMAV0003_SignoutOnHomePage();
-		tearDown();
-	}
-	
 	/**
 	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
@@ -64,7 +58,7 @@ public class MAV0003_SignoutOnHomePage extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
@@ -72,8 +66,8 @@ public class MAV0003_SignoutOnHomePage extends TestCase{
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;		
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();		
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -90,15 +84,16 @@ public class MAV0003_SignoutOnHomePage extends TestCase{
 	/**
 	 * This method sign out from home page
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0003_SignoutOnHomePage() throws UIAutomationException {
+	public void testMAV0003_SignoutOnHomePage() throws UIAutomationException, IOException {
 		try {
 			// Enter URL of Channels
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		    
@@ -114,16 +109,20 @@ public class MAV0003_SignoutOnHomePage extends TestCase{
 		    
 			// Sign Out from 'Home' page
 			stepNo++;
-			description="Logout successful";
+			description="Signout on Home Page Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOut();
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			
+			Reporting reporting = new Reporting();
+			reporting.generateAutomationReport();
 		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
-			
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
+		    
 			// Sign out from home page
 			stepNo++;
 			HeaderController headerController=new HeaderController();

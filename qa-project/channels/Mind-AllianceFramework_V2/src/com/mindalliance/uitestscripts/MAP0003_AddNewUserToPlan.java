@@ -47,12 +47,6 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	public String scriptException;
 	public String browser="";
 	
-	public MAP0003_AddNewUserToPlan() throws UIAutomationException{
-		setUp();
-		testMAP0003_AddNewUserToPlan();
-		tearDown();
-	}
-	
 	/*
 	 * This method will initilize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
@@ -66,16 +60,16 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
-			// Write log		
+			// Write log			
 			LogFunctions.writeLogs(description);
-					
+						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;	
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -94,15 +88,16 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	/**
 	 * This method adds new user to the plan and verify if the user is added
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAP0003_AddNewUserToPlan() throws UIAutomationException{
+	public void testMAP0003_AddNewUserToPlan() throws UIAutomationException, IOException{
 		try {
 			// Enter URL of Channels
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -143,10 +138,12 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
-		} 
-		catch (UIAutomationException ue) {
+ 			Reporting reporting = new Reporting();
+			reporting.generateAutomationReport();
+		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 			
 			// Sign out from Admin page
 			stepNo++;

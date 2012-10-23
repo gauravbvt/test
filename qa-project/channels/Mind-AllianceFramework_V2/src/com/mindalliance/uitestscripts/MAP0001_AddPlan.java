@@ -46,12 +46,6 @@ public class MAP0001_AddPlan extends TestCase {
 	public String scriptException;
 	public String browser="";
 	
-	public MAP0001_AddPlan() throws UIAutomationException{
-		setUp();
-		testMAP0001_AddPlan();
-		tearDown();
-	}
-	
 	/*
 	 * This method will initilize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
@@ -66,15 +60,16 @@ public class MAP0001_AddPlan extends TestCase {
 				new ElementController();
 			}
 			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
-			// Write log		
+			// Write log			
 			LogFunctions.writeLogs(description);
-					
+						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;	
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -93,15 +88,16 @@ public class MAP0001_AddPlan extends TestCase {
 	/**
 	 * This method will add plan to the Channels and verify if the plan is added
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAP0001_AddPlan() throws UIAutomationException{
+	public void testMAP0001_AddPlan() throws UIAutomationException, IOException{
 		try {
 			// Enter URL of Channels
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -142,9 +138,12 @@ public class MAP0001_AddPlan extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-		} 
-		catch (UIAutomationException ue) {
+			Reporting reporting = new Reporting();
+			reporting.generateAutomationReport();
+		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 		
 			// Sign out from Admin page
 			stepNo++;

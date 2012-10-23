@@ -44,13 +44,6 @@ public class MAV0002_viewHomePage extends TestCase{
 	public String exception="";
 	public String browser="";
 	
-	
-	public MAV0002_viewHomePage() throws UIAutomationException {
-		setUp();
-		testMAV0002_viewHomePage();
-		tearDown();
-	}
-	
 	/**
 	 * This method will initialize the setup required for every test case
 	 * @throws UIAutomationException 
@@ -65,7 +58,7 @@ public class MAV0002_viewHomePage extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
@@ -73,8 +66,8 @@ public class MAV0002_viewHomePage extends TestCase{
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;		
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();	
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -91,15 +84,16 @@ public class MAV0002_viewHomePage extends TestCase{
 	/**
 	 * This method verify that home page is displayed after login to the Channels
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0002_viewHomePage() throws UIAutomationException{
+	public void testMAV0002_viewHomePage() throws UIAutomationException, IOException{
 		try{
 			// Enter URL of Channels
 			stepNo++;
 			description="URL Entered";
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -121,8 +115,12 @@ public class MAV0002_viewHomePage extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 		}
 		catch(UIAutomationException ue){
+			Reporting reporting= new Reporting();
+			reporting.generateAutomationReport();
 			Reporting.getScreenShot(testCaseId);
 			
 			// Sign out from home page

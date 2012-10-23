@@ -46,11 +46,6 @@ public class MAP0009_addTask extends TestCase{
 	public String scriptException;
 	public String browser="";
 	
-	public MAP0009_addTask() throws UIAutomationException{
-		setUp();
-		testMAP0009_addTask();
-		tearDown();
-	}
 	/*
 	 * This method will initilize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()

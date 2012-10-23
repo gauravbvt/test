@@ -24,6 +24,7 @@ import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
+import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 
 /**
@@ -42,13 +43,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 	public String blank=""; 	
 	public String exception="";
 	public String browser="";
-	public WebDriver wd=null;
-	
-	public MAV0001_viewLoginPage() throws UIAutomationException{
-		setUp();
-		testMAV0001_viewLoginPage();
-		tearDown();
-	}
 	
 	/**
 	 * This method will initialize the setup required for every test case
@@ -64,16 +58,18 @@ public class MAV0001_viewLoginPage extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-
+			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
+			loadTestData();
+			
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
-			loadTestData();
 			// Write log		
 			LogFunctions.writeLogs(description);
 			
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();
 			// Write log		
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -90,14 +86,15 @@ public class MAV0001_viewLoginPage extends TestCase{
 	/**
 	 * This method verify that login page is displayed after entering th URL of Channels
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0001_viewLoginPage() throws UIAutomationException{	
+	public void testMAV0001_viewLoginPage() throws UIAutomationException, IOException{	
 		// Enter URL	
 		stepNo++;
 		description="URL Entered";
 		BrowserController browserController=new BrowserController();
-		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+		browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -110,6 +107,9 @@ public class MAV0001_viewLoginPage extends TestCase{
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
+	    
+	    Reporting reporting= new Reporting();
+	    reporting.generateAutomationReport();
 	 }
 	
 	/*

@@ -46,12 +46,7 @@ public class MAC0001_UndoAddSegment extends TestCase {
 	public String blank=""; 
 	public String scriptException;
 	public String browser="";
-	
-	public MAC0001_UndoAddSegment() throws UIAutomationException{
-		setUp();
-		testMAC0001_UndoAddSegment();
-		tearDown();
-	}
+
 	/*
 	 * This method will initilize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
@@ -66,15 +61,16 @@ public class MAC0001_UndoAddSegment extends TestCase {
 				new ElementController();
 			}
 			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
-			// Write log		
+			// Write log			
 			LogFunctions.writeLogs(description);
-					
+						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;	
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();		
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -91,13 +87,13 @@ public class MAC0001_UndoAddSegment extends TestCase {
 	}
 	
 	@Test
-	public void testMAC0001_UndoAddSegment() throws UIAutomationException {
+	public void testMAC0001_UndoAddSegment() throws UIAutomationException, IOException {
 		try{
 			stepNo++;
 			description="URL Entered";
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -174,10 +170,12 @@ public class MAC0001_UndoAddSegment extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 		}catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
-		
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 			// Sign out from plan page
 			stepNo++;
 			description="SignOut Successful";
