@@ -87,15 +87,16 @@ public class MAP0009_addTask extends TestCase{
 	/**
 	 * This method adds task to the plan and verify if the task is added
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAP0009_addTask() throws UIAutomationException {
+	public void testMAP0009_addTask() throws UIAutomationException, IOException {
 		try{
 			stepNo++;
 			description="URL Entered";
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -215,10 +216,12 @@ public class MAP0009_addTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-		}catch (UIAutomationException ue) {
+ 			Reporting reporting = new Reporting();
+			reporting.generateAutomationReport();
+		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
-		
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 			// Sign out from plan page
 			stepNo++;
 			description="SignOut Successful";

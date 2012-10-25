@@ -46,12 +46,6 @@ public class MAP0011_addEventToPlan extends TestCase{
 	public String scriptException;
 	public String browser="";
 	
-	public MAP0011_addEventToPlan() throws UIAutomationException{
-		setUp();
-		testMAP0011_addEventToPlan();
-		tearDown();
-	}
-	
 	/*
 	 * This method will initilize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
@@ -66,15 +60,16 @@ public class MAP0011_addEventToPlan extends TestCase{
 				new ElementController();
 			}
 			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
-			// Write log		
+			// Write log			
 			LogFunctions.writeLogs(description);
-					
+						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;	
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -92,15 +87,16 @@ public class MAP0011_addEventToPlan extends TestCase{
 	/**
 	 * This method adds event to the plan and verify if the event is added
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAP0011_addEventToPlan() throws UIAutomationException {
+	public void testMAP0011_addEventToPlan() throws UIAutomationException, IOException {
 		try {
 			stepNo++;
 			description="URL Entered";
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -192,10 +188,12 @@ public class MAP0011_addEventToPlan extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
+ 			Reporting reporting = new Reporting();
+			reporting.generateAutomationReport();
 		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
-		
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 			// Sign out from plan page
 			stepNo++;
 			description="SignOut Successful";
