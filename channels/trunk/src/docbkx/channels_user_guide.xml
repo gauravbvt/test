@@ -10971,9 +10971,9 @@
               </row>
 
               <row>
-                <entry><para>Job without a title</para></entry>
-
                 <entry><para>An agent is employed by the organization without a title</para></entry>
+
+                <entry><para>Low</para></entry>
 
                 <entry><itemizedlist>
                     <listitem>
@@ -10986,7 +10986,22 @@
                 <entry><para>No</para></entry>
               </row>
 
-
+              <row>
+                <entry><para>An agent with supervised user participation has no supervisor to confirm participation</para></entry>
+                
+                <entry><para>Medium</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Do not require participation confirmation</para>
+                  </listitem>
+                  <listitem>
+                    <para>or add a job in an organization for the agent that has a supervisor</para>
+                  </listitem>
+                </itemizedlist></entry>
+                <entry><para>No</para></entry>
+              </row>
+              
 
             </tbody>
           </tgroup>

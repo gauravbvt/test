@@ -86,8 +86,8 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         uri = plan.getUri();
         version = plan.getVersion();
         participations = isPlanner
-                            ? planParticipationService.getAllParticipations( plan, queryService )
-                            : planParticipationService.getParticipations( plan, getUser().getUserInfo(), queryService );
+                            ? planParticipationService.getAllActiveParticipations( plan, queryService )
+                            : planParticipationService.getActiveUserParticipations( plan, getUser().getUserInfo(), queryService );
         actors = findAssignedActors();
         initComponents( queryService, plan );
     }

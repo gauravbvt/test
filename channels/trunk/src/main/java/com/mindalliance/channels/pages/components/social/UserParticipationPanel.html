@@ -7,26 +7,62 @@
         lang="en">
 <body>
 <wicket:panel>
-	<div class="userInfo" wicket:id="userParticipation">
-  		<div class="tabcontent-group">
-	    	<h3>My user privileges</h3>
-			<div class="tabcontent-content">
-				I am <span wicket:id="userRole">a planner</span>
-			</div>
-		</div>
-		<div class="tabcontent-group">
-			<h3>My participation</h3>
-			<div class="tabcontent-content">
-		      <ul>
-					<li wicket:id="participations">
-						<input wicket:id="confirmed" type="checkbox"/>
-						<span wicket:id="participation">I participate as the NJ Transit Chief of police</span>
-					</li>
-				</ul>
-			</div>
-            <span wicket:id="noParticipation">I do not yet participate</span>
-		</div>
-	</div>
+    <div class="userInfo" wicket:id="userParticipation">
+        <div class="tabcontent-group">
+            <h3>My user privileges</h3>
+
+            <div class="tabcontent-content">
+                I am <span wicket:id="userRole">a planner</span>
+            </div>
+        </div>
+        <div wicket:id="openAndClosedParticipation" class="tabcontent-group">
+            <h3>I participate as</h3>
+
+            <div class="tabcontent-content">
+                <ul>
+                    <li wicket:id="participations">
+                        <input wicket:id="confirmed" type="checkbox"/>
+                        <span wicket:id="participation">the NJ Transit Chief of police</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div wicket:id="supervisedParticipation" class="tabcontent-group">
+            <h3>I participate subject to confirmation as</h3>
+
+            <div class="tabcontent-content">
+                <ul>
+                    <li wicket:id="participations">
+                        <input wicket:id="confirmed" type="checkbox"/>
+                        <span wicket:id="participation">in MTS security agency as crisis commander</span>
+                        (<span wicket:id="validated">Validated</span>)
+                    </li>
+                </ul>
+                <div wicket:id="newParticipation">
+                    in <select wicket:id="orgs">
+                        <option>org</option>
+                    </select>
+                    as <select wicket:id="agents">
+                        <option>agent</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="supervisorParticipationValidations" class="tabcontent-group">
+            <h3>I confirm that I supervise</h3>
+
+            <div class="tabcontent-content">
+                <ul>
+                    <li wicket:id="participationValidations">
+                        <input wicket:id="validated" type="checkbox"/>
+                        <span wicket:id="user">John Doe</span> (<span wicket:id="email">jdoe@email.com</span>)
+                        as <span wicket:id="agent">agent</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
 </wicket:panel>
 </body>
 </html>

@@ -212,7 +212,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     public String getJobTitles() {
         StringBuilder sb = new StringBuilder(  );
         QueryService queryService = getQueryService();
-        List<PlanParticipation> participations = planParticipationService.getParticipations(
+        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                 getPlan(),
                 getUserInfo(),
                 queryService

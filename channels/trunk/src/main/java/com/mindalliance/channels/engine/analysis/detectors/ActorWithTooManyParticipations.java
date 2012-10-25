@@ -30,7 +30,7 @@ public class ActorWithTooManyParticipations extends AbstractIssueDetector {
         Actor actor = (Actor) modelObject;
         if ( actor.isSingular() ) {
             List<PlanParticipation> participations = queryService
-                    .getPlanParticipationService().getParticipations(
+                    .getPlanParticipationService().getParticipationsAsActor(
                             queryService.getPlan(),
                             actor,
                             queryService );

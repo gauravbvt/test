@@ -102,6 +102,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
     @Transient
     private List<UserContactInfo> contactInfoList = new ArrayList<UserContactInfo>();
 
+
     //---------------------------------
 
     public ChannelsUserInfo() {

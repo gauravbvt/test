@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.dao.user.PlanParticipationValidationService;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
@@ -115,6 +116,11 @@ public abstract class DefaultQueryService implements QueryService {
      */
     private PlanParticipationService planParticipationService;
 
+    /**
+     * Plan participation confirmation service.
+     */
+    private PlanParticipationValidationService planParticipationConfirmationService;
+
     //-------------------------------
 
     /**
@@ -128,12 +134,15 @@ public abstract class DefaultQueryService implements QueryService {
             AttachmentManager attachmentManager,
             SemanticMatcher semanticMatcher,
             ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
+            PlanParticipationService planParticipationService,
+            PlanParticipationValidationService planParticipationConfirmationService
+    ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
         this.semanticMatcher = semanticMatcher;
         this.userDao = userDao;
         this.planParticipationService = planParticipationService;
+        this.planParticipationConfirmationService = planParticipationConfirmationService;
     }
 
     //-------------------------------
@@ -2821,11 +2830,14 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
         Set<ChannelsUser> users = new HashSet<ChannelsUser>();
-        List<PlanParticipation> participations = planParticipationService.getParticipations( getPlan(), actor, this );
+        List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor( getPlan(), actor, this );
         for ( PlanParticipation participation : participations ) {
-            ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
-            if ( user != null ) {
-                users.add( user );
+            if ( !actor.isSupervisedParticipation()
+                    || planParticipationService.isValidatedByAllSupervisors( participation, this ) ) {
+                ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
+                if ( user != null ) {
+                    users.add( user );
+                }
             }
         }
         return new ArrayList<ChannelsUser>( users );
@@ -3155,7 +3167,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
     }
 
-     @Override
+    @Override
     public Boolean isInitiated( Segment segment ) {
         return !findInitiators( segment ).isEmpty();
     }
@@ -3540,7 +3552,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public boolean meetsPreEmploymentConstraint( Actor actor,
-                                                  List<PlanParticipation> currentParticipations ) {
+                                                 List<PlanParticipation> currentParticipations ) {
         if ( !actor.isParticipationRestrictedToEmployed() ) return true;
         List<Organization> actorEmployers = findDirectAndIndirectEmployers(
                 findAllEmploymentsForActor( actor ) );
@@ -3557,6 +3569,17 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public UserContactInfoService getUserContactInfoService() {
         return userDao.getUserContactInfoService();
+    }
+
+    @Override
+    public List<Actor> findAllSupervisorsOf( Actor actor ) {
+        Set<Actor> supervisors = new HashSet<Actor>(  );
+        for ( Employment employment : findAllEmploymentsForActor( actor )) {
+            Actor supervisor = employment.getSupervisor();
+            if ( supervisor != null )
+                supervisors.add( supervisor );
+        }
+        return new ArrayList<Actor>( supervisors );
     }
 
     @SuppressWarnings( "unchecked" )

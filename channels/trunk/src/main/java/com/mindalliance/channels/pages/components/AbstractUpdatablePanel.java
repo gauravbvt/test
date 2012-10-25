@@ -562,7 +562,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     @SuppressWarnings( "unchecked" )
     protected Actor findActor( ChannelsUserInfo userInfo ) {
         final QueryService queryService = getQueryService();
-        List<PlanParticipation> participations = planParticipationService.getParticipations(
+        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                 getPlan(),
                 userInfo,
                 getQueryService() );

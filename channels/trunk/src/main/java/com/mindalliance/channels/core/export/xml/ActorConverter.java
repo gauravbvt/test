@@ -68,6 +68,10 @@ public class ActorConverter extends EntityConverter {
         writer.startNode( "participationRestrictedToEmployed" );
         writer.setValue( Boolean.toString( actor.isParticipationRestrictedToEmployed() ) );
         writer.endNode();
+        // participation must be confirmed by a supervisor
+        writer.startNode( "supervisedParticipation" );
+        writer.setValue( Boolean.toString( actor.isSupervisedParticipation() ) );
+        writer.endNode();
         // participant identity visibility
         writer.startNode( "anonymousParticipation" );
         writer.setValue( Boolean.toString( actor.isAnonymousParticipation() ) );
@@ -135,6 +139,8 @@ public class ActorConverter extends EntityConverter {
             actor.setSingularParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "participationRestrictedToEmployed" ) ) {
             actor.setParticipationRestrictedToEmployed( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "supervisedParticipation" ) ) {
+            actor.setSupervisedParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "anonymousParticipation" ) ) {
             actor.setAnonymousParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "clearance" ) ) {

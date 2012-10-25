@@ -1608,4 +1608,11 @@ public interface QueryService {
      * @return a user contact info service
      */
     UserContactInfoService getUserContactInfoService();
+
+    /**
+     * Find all supervisor actors of a given actor.
+     * @param actor an actor
+     * @return a list of supervising actors
+     */
+    List<Actor> findAllSupervisorsOf( Actor actor );
 }

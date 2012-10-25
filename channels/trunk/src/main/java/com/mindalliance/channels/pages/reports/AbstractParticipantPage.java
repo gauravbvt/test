@@ -194,7 +194,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                     // and only one user participation as supervisor is used if many.
                     Employment supervisorEmp = supEmps.get( 0 );
                     List<PlanParticipation> supervisorParticipations =
-                            getPlanParticipationService().getParticipations(
+                            getPlanParticipationService().getParticipationsAsActor(
                                     getPlan(),
                                     supervisorEmp.getActor(),
                                     getQueryService() );

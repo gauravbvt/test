@@ -33,9 +33,9 @@ public class NonParticipatingNormalUser extends AbstractIssueDetector {
         for ( String username : queryService.getUserDao().getUsernames( plan.getUri() ) ) {
             if ( queryService.findUserRole( username ).equals( ChannelsUserInfo.ROLE_USER ) ) {
                 List<PlanParticipation> participations = queryService.getPlanParticipationService()
-                        .getParticipations(
+                        .getActiveUserParticipations(
                                 plan,
-                                queryService.getUserDao().getUserNamed( username).getUserInfo(),
+                                queryService.getUserDao().getUserNamed( username ).getUserInfo(),
                                 queryService );
                 if ( participations.isEmpty() ) {
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );

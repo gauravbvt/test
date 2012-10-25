@@ -212,7 +212,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             ChannelsUser user = ChannelsUser.current( userDao );
             PlanService planService = authorizeParticipant( user, uri );
             Plan plan = planService.getPlan();
-            List<PlanParticipation> participations = planParticipationService.getParticipations(
+            List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                     plan,
                     user.getUserInfo(),
                     planService );
@@ -241,7 +241,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             ChannelsUser protocolsUser = userDao.getUserNamed( username );
             PlanService planService = authorize( user, uri, version );
             Plan plan = planService.getPlan();
-            List<PlanParticipation> participationList = planParticipationService.getParticipations(
+            List<PlanParticipation> participationList = planParticipationService.getActiveUserParticipations(
                     plan,
                     protocolsUser.getUserInfo(),
                     planService
@@ -337,7 +337,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             ChannelsUser user = ChannelsUser.current( userDao );
             PlanService planService = authorizeParticipant( user, uri );
             Plan plan = planService.getPlan();
-            List<PlanParticipation> participations = planParticipationService.getParticipations(
+            List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                     plan,
                     user.getUserInfo(),
                     planService );
@@ -398,7 +398,7 @@ public class ChannelsServiceImpl implements ChannelsService {
         if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
             return true;
         // Participating user can see own procedures. Supervisor can procedures of supervised.
-        List<PlanParticipation> participations = planParticipationService.getParticipations(
+        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                 plan,
                 user.getUserInfo(),
                 planService );
@@ -446,7 +446,7 @@ public class ChannelsServiceImpl implements ChannelsService {
             PlanService planService = authorizeParticipant( user, uri );
             Plan plan = planService.getPlan();
             Actor actor = planService.find( Actor.class, Long.parseLong( agentId ) );
-            if ( planParticipationService.isParticipationAvailable( actor, user, planService ) ) {
+            if ( planParticipationService.isParticipationOpenAndAvailable( actor, user, planService ) ) {
                 planParticipationService.addParticipation(
                         user.getUsername(),
                         plan,

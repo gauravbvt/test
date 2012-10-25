@@ -87,7 +87,7 @@ public class PlanSummaryData implements Serializable {
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService ) {
         actors = new ArrayList<Actor>();
-        List<PlanParticipation> participations = planParticipationService.getParticipations(
+        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                 getPlan(),
                 ChannelsUser.current( userDao ).getUserInfo(),
                 planService );
@@ -119,7 +119,7 @@ public class PlanSummaryData implements Serializable {
             PlanParticipationService planParticipationService ) {
         participationDataList = new ArrayList<ParticipationData>();
         ChannelsUser user = ChannelsUser.current( userDao );
-        List<PlanParticipation> participations = planParticipationService.getParticipations(
+        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
                 getPlan(),
                 user.getUserInfo(), planService );
         for ( PlanParticipation participation : participations ) {

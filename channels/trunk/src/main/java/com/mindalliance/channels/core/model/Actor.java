@@ -56,6 +56,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      */
     private boolean participationRestrictedToEmployed = false;
     /**
+     * Participation must be confirmed by a supervisor to be effective.
+     */
+    private boolean supervisedParticipation = false;
+    /**
      * Is the user's identity and contact info visible in protocols from this actor?
      */
     private boolean anonymousParticipation = false;
@@ -141,6 +145,14 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
 
     public void setParticipationRestrictedToEmployed( boolean participationRestrictedToEmployed ) {
         this.participationRestrictedToEmployed = participationRestrictedToEmployed;
+    }
+
+    public boolean isSupervisedParticipation() {
+        return supervisedParticipation;
+    }
+
+    public void setSupervisedParticipation( boolean supervisedParticipation ) {
+        this.supervisedParticipation = supervisedParticipation;
     }
 
     public boolean isAnonymousParticipation() {

@@ -217,7 +217,7 @@ public class ContactData implements Serializable {
                             queryService,
                             planParticipationservice ) );
                 } else {
-                    List<PlanParticipation> participations = planParticipationservice.getParticipations(
+                    List<PlanParticipation> participations = planParticipationservice.getParticipationsAsActor(
                             queryService.getPlan(),
                             supervisor,
                             queryService );
@@ -290,7 +290,7 @@ public class ContactData implements Serializable {
             ChannelsUserInfo userInfo ) {
         String username = userInfo == null ? null : userInfo.getUsername();
         List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
-        List<PlanParticipation> participations = planParticipationService.getParticipations(
+        List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor(
                 queryService.getPlan(),
                 actor,
                 queryService );

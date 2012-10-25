@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.core.query.QueryService;
@@ -12,10 +13,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +34,9 @@ import java.util.Set;
 public class PlanParticipationServiceImpl
         extends GenericSqlServiceImpl<PlanParticipation, Long>
         implements PlanParticipationService {
+
+    @Autowired
+    private PlanParticipationValidationService planParticipationValidationService;
 
     public PlanParticipationServiceImpl() {
     }
@@ -49,7 +56,7 @@ public class PlanParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<PlanParticipation> getParticipations(
+    public List<PlanParticipation> getUserParticipations(
             Plan plan,
             ChannelsUserInfo userInfo,
             QueryService queryService ) {
@@ -66,7 +73,37 @@ public class PlanParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<PlanParticipation> getParticipations( Plan plan, Actor actor, QueryService queryService ) {
+    public List<PlanParticipation> getActiveUserParticipations(    // TODO use getActiveParticipation() where applicable instead of getParticipations()
+                                                                   final Plan plan,
+                                                                   ChannelsUserInfo userInfo,
+                                                                   final QueryService queryService ) {
+        return (List<PlanParticipation>) CollectionUtils.select(
+                getUserParticipations( plan, userInfo, queryService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isActive( plan, (PlanParticipation) object, queryService );
+                    }
+                }
+        );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isActive( Plan plan, PlanParticipation planParticipation, QueryService queryService ) {
+        Actor actor = planParticipation.getActor( queryService );
+        if ( actor == null ) return false;
+        if ( planParticipation.isSupervised( queryService ) ) {
+            return isValidatedByAllSupervisors( planParticipation, queryService );
+        } else
+            return !actor.isParticipationRestrictedToEmployed()
+                    || isValidatedByEmployment( plan, planParticipation, queryService );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<PlanParticipation> getParticipationsAsActor( Plan plan, Actor actor, QueryService queryService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
@@ -144,7 +181,7 @@ public class PlanParticipationServiceImpl
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         if ( plan != null )  // null = wild card -- to be used only when deleting all participation of a user
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+            criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
         //       criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "participant", participation.getParticipant() ) );
         criteria.add( Restrictions.eq( "actorId", participation.getActorId() ) );
@@ -165,10 +202,27 @@ public class PlanParticipationServiceImpl
     }
 
     @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<PlanParticipation> getAllActiveParticipations( final Plan plan, final QueryService queryService ) {
+        return (List<PlanParticipation>)CollectionUtils.select(
+                getAllParticipations( plan, queryService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        PlanParticipation planParticipation = (PlanParticipation) object;
+                        return isActive( plan, planParticipation, queryService );
+                    }
+                }
+        );
+    }
+
+
+    @Override
     @Transactional
     public void deleteAllParticipations( ChannelsUserInfo userInfo, String username ) {
         // QueryService is null b/c agent-exists validation of participation not wanted.
-        for ( PlanParticipation participation : getParticipations(  null, userInfo, null ) ) {
+        for ( PlanParticipation participation : getUserParticipations( null, userInfo, null ) ) {
             removeParticipation( username, null, participation );
         }
     }
@@ -177,17 +231,17 @@ public class PlanParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     public boolean references( Plan plan, ModelObject mo, QueryService queryService ) {
-        return mo instanceof Actor && !getParticipations( plan, (Actor) mo, queryService ).isEmpty();
+        return mo instanceof Actor && !getParticipationsAsActor( plan, (Actor) mo, queryService ).isEmpty();
     }
 
-    private List<PlanParticipation> validParticipations(
+    public List<PlanParticipation> validParticipations(
             List<PlanParticipation> planParticipations,
             QueryService queryService ) {
         List<PlanParticipation> results = new ArrayList<PlanParticipation>();
         for ( PlanParticipation planParticipation : planParticipations ) {
             try {
                 if ( planParticipation.getParticipant() != null ) {
-                    if ( queryService != null)
+                    if ( queryService != null )
                         queryService.find( Actor.class, planParticipation.getActorId() ); // exception if not found
                     results.add( planParticipation );
                 }
@@ -199,6 +253,122 @@ public class PlanParticipationServiceImpl
     }
 
     @Override
+    public boolean isValidatedByAllSupervisors(
+            PlanParticipation planParticipation,
+            QueryService queryService ) {
+        // Find all supervisors for participation's actor
+        Actor actor = planParticipation.getActor( queryService );
+        if ( actor == null ) return false;
+        List<Actor> supervisors = queryService.findAllSupervisorsOf( actor );
+        boolean validated = true;
+        final List<PlanParticipationValidation> validations = planParticipationValidationService
+                .getParticipationValidations( planParticipation );
+        // Verify that each supervisor (some user participating as that supervisor) has
+        // validated the participation.
+        Iterator<Actor> iter = supervisors.iterator();
+        while ( validated && iter.hasNext() ) {
+            final Actor supervisor = iter.next();
+            validated = CollectionUtils.exists(
+                    validations,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (PlanParticipationValidation) object ).getSupervisorId() == supervisor.getId();
+                        }
+                    }
+            );
+        }
+        return validated;
+    }
+
+    private boolean isValidatedByEmployment(
+            Plan plan,
+            final PlanParticipation planParticipation,
+            final QueryService queryService ) {
+        Actor actor = planParticipation.getActor( queryService );
+        if ( actor == null ) return false;
+        final List<Organization> employers = queryService.findEmployers( actor );
+        return CollectionUtils.exists(
+                getUserParticipations( plan, planParticipation.getParticipant(), queryService ),  // assuming, perhaps wrongly, they are all valid to avoid infinite loops from isValid(...)
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        PlanParticipation otherParticipation = (PlanParticipation) object;
+                        if ( otherParticipation.equals( planParticipation ) ) {
+                            return false;
+                        } else {
+                            if ( otherParticipation.isSupervised( queryService )
+                                    && !isValidatedByAllSupervisors( otherParticipation, queryService ) ) {
+                                return false;
+                            } else {
+                                Actor otherActor = otherParticipation.getActor( queryService );
+                                if ( otherActor == null ) return false;
+                                List<Organization> otherEmployers = queryService.findEmployers( otherActor );
+                                return !CollectionUtils.intersection( employers, otherEmployers ).isEmpty();
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+
+    @Override
+    @Transactional( readOnly = true )
+    public List<Actor> listActorsUserParticipatesAs( Plan plan, ChannelsUser user, QueryService queryService ) {
+        Set<Actor> actors = new HashSet<Actor>();
+        List<PlanParticipation> participationList = getActiveUserParticipations( plan, user.getUserInfo(), queryService );
+        for ( PlanParticipation participation : participationList ) {
+            actors.add( participation.getActor( queryService ) );
+        }
+        return new ArrayList<Actor>( actors );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<PlanParticipation> getParticipationsSupervisedByUser(
+            final ChannelsUser user,
+            final Plan plan,
+            final QueryService queryService ) {
+        return (List<PlanParticipation>) CollectionUtils.select(
+                getAllParticipations( plan, queryService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        PlanParticipation planParticipation = (PlanParticipation) object;
+                        Actor participationActor = planParticipation.getActor( queryService );
+                        if ( participationActor == null ) return false;
+                        List<Actor> supervisors = queryService.findAllSupervisorsOf( participationActor );
+                        if ( supervisors.isEmpty() ) return false;
+                        List<Actor> userActors = listActorsUserParticipatesAs( plan, user, queryService );
+                        return !Collections.disjoint( supervisors, userActors );
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<Actor> listSupervisorsUserParticipatesAs(
+            PlanParticipation planParticipation,
+            Plan plan,
+            ChannelsUser user,
+            QueryService queryService ) {
+        List<Actor> supervisorsUserParticipatesAs = new ArrayList<Actor>();
+        List<Actor> actorsUserParticipatesAs = listActorsUserParticipatesAs( plan, user, queryService );
+        Actor participationActor = planParticipation.getActor( queryService );
+        if ( participationActor != null ) {
+            List<Actor> allSupervisorsOfActor = queryService.findAllSupervisorsOf( participationActor );
+            supervisorsUserParticipatesAs.addAll( CollectionUtils.intersection(
+                    actorsUserParticipatesAs,
+                    allSupervisorsOfActor ) );
+        }
+        return supervisorsUserParticipatesAs;
+    }
+
+
+    @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
     public List<Actor> findOpenActors( final ChannelsUser user, final QueryService queryService ) {
@@ -208,7 +378,7 @@ public class PlanParticipationServiceImpl
                     @Override
                     public boolean evaluate( Object object ) {
                         final Actor actor = (Actor) object;
-                        return queryService.getPlanParticipationService().isParticipationAvailable(
+                        return queryService.getPlanParticipationService().isParticipationOpenAndAvailable(
                                 actor,
                                 user,
                                 queryService );
@@ -220,9 +390,9 @@ public class PlanParticipationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isParticipationAvailable( Actor actor, ChannelsUser user, QueryService queryService ) {
+    public boolean isParticipationOpenAndAvailable( Actor actor, ChannelsUser user, QueryService queryService ) {
         Plan plan = queryService.getPlan();
-        List<PlanParticipation> currentParticipations = getParticipations(
+        List<PlanParticipation> currentParticipations = getUserParticipations(
                 plan,
                 user.getUserInfo(),
                 queryService );
@@ -232,6 +402,17 @@ public class PlanParticipationServiceImpl
                 && !alreadyParticipatingAs( actor, currentParticipations )
                 && !isSingularAndTaken( actor, plan, queryService )
                 && queryService.meetsPreEmploymentConstraint( actor, currentParticipations );
+    }
+
+    @Override
+    @Transactional
+    public void delete( PlanParticipation participation ) {
+        for ( PlanParticipationValidation validation
+                : planParticipationValidationService.getParticipationValidations( participation ) ) {
+            planParticipationValidationService.delete( validation );
+        }
+        ;
+        super.delete( participation );
     }
 
     private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {
@@ -247,9 +428,8 @@ public class PlanParticipationServiceImpl
 
     private boolean isSingularAndTaken( Actor actor, Plan plan, QueryService queryService ) {
         return actor.isSingularParticipation()
-                && !getParticipations( plan, actor, queryService ).isEmpty();
+                && !getParticipationsAsActor( plan, actor, queryService ).isEmpty();
     }
-
 
 
 }

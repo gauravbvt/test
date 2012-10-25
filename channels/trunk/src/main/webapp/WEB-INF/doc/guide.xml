@@ -1152,7 +1152,7 @@ Planners can see this feedback and reply to it. The user can then reply back etc
             <step>
                 <description><![CDATA[Associate a user with one or more agents and add contact information specific to the user's participation as that agent.
 
-Note that users that self-associate with agents that have been defined as "open participation".]]></description>
+Note that users can either self-associate with agents under "open participation" or "participation subject to confirmation by supervisors".]]></description>
                 <script>
                     <action>Set user participation as agents</action>
                     <change>

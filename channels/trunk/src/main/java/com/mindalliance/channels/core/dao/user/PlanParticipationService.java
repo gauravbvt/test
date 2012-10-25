@@ -20,9 +20,11 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
 
     PlanParticipation addParticipation( String username, Plan plan, ChannelsUser participatingUser, Actor actor );
 
-    List<PlanParticipation> getParticipations( Plan plan, ChannelsUserInfo userInfo, QueryService queryService );
+    List<PlanParticipation> getUserParticipations( Plan plan, ChannelsUserInfo userInfo, QueryService queryService );
 
-    List<PlanParticipation> getParticipations( Plan plan, Actor actor, QueryService queryService );
+    List<PlanParticipation> getActiveUserParticipations( Plan plan, ChannelsUserInfo userInfo, QueryService queryService );
+
+    List<PlanParticipation> getParticipationsAsActor( Plan plan, Actor actor, QueryService queryService );
 
     PlanParticipation getParticipation( Plan plan, ChannelsUserInfo userInfo, Actor actor, QueryService queryService );
 
@@ -36,7 +38,11 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
 
     List<PlanParticipation> getAllParticipations( Plan plan, QueryService queryService );
 
+    List<PlanParticipation> getAllActiveParticipations( Plan plan, QueryService queryService );
+
     boolean references( Plan plan, ModelObject mo, QueryService queryService );
+
+    boolean isActive( Plan plan, PlanParticipation planParticipation, QueryService queryService );
 
     /**
      * Get the actors a user could participate and is not already.
@@ -47,7 +53,7 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
      */
     List<Actor> findOpenActors( final ChannelsUser user, final QueryService queryService );
 
-    boolean isParticipationAvailable( Actor actor, ChannelsUser user, QueryService queryService );
+    boolean isParticipationOpenAndAvailable( Actor actor, ChannelsUser user, QueryService queryService );
 
     /**
      * Delete all participations by a user.
@@ -55,4 +61,20 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
      * @param username user deleting the participations
      */
     void deleteAllParticipations( ChannelsUserInfo userInfo, String username );
+
+    List<PlanParticipation> validParticipations(
+            List<PlanParticipation> planParticipations,
+            QueryService queryService );
+
+    boolean isValidatedByAllSupervisors( PlanParticipation planParticipation, QueryService queryService );
+
+    List<Actor> listActorsUserParticipatesAs( Plan plan, ChannelsUser user, QueryService queryService );
+
+    List<PlanParticipation> getParticipationsSupervisedByUser( ChannelsUser user, Plan plan, QueryService queryService );
+
+    List<Actor> listSupervisorsUserParticipatesAs(
+            PlanParticipation planParticipation,
+            Plan plan,
+            ChannelsUser user,
+            QueryService queryService );
 }

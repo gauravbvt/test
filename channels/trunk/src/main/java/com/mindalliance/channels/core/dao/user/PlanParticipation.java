@@ -6,8 +6,12 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
 import com.mindalliance.channels.core.query.QueryService;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -21,7 +25,12 @@ public class PlanParticipation extends AbstractPersistentPlanObject {
 
     @ManyToOne
     private ChannelsUserInfo participant;
+
     private long actorId;
+    @OneToMany( mappedBy = "planParticipation", cascade = CascadeType.ALL)
+
+    @Transient
+    private List<PlanParticipationValidation> participationValidations;
 
     public PlanParticipation() {
     }
@@ -51,7 +60,7 @@ public class PlanParticipation extends AbstractPersistentPlanObject {
     public void setActorId( long actorId ) {
         this.actorId = actorId;
     }
-    
+
     public Actor getActor( QueryService queryService ) {
         try {
             return queryService.find( Actor.class, getActorId() );
@@ -66,5 +75,18 @@ public class PlanParticipation extends AbstractPersistentPlanObject {
 
     public String getParticipantUsername() {
         return getParticipant().getUsername();
+    }
+
+    public boolean isSupervised( QueryService queryService ) {
+        Actor actor = getActor( queryService );
+        return actor != null && actor.isSupervisedParticipation();
+    }
+
+    public List<PlanParticipationValidation> getParticipationValidations() {
+        return participationValidations;
+    }
+
+    public void setParticipationValidations( List<PlanParticipationValidation> participationValidations ) {
+        this.participationValidations = participationValidations;
     }
 }

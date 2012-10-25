@@ -345,6 +345,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         addOpenParticipationCheckBox( participationContainer );
         addSingularParticipationCheckBox( participationContainer );
         addSameEmployerParticipation( participationContainer );
+        addSupervisedParticipation( participationContainer );
         addAnonymousParticipation( participationContainer );
     }
 
@@ -386,6 +387,20 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
         participationContainer.add( sameEmployerCheckBox );
         sameEmployerCheckBox.setEnabled( isLockedByUser( getActor() ) );
     }
+
+    private void addSupervisedParticipation( WebMarkupContainer participationContainer ) {
+        CheckBox supervisedCheckBox = new CheckBox(
+                "isSupervised",
+                new PropertyModel<Boolean>( this, "supervisedParticipation" ) );
+        supervisedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getActor(), "supervisedParticipation" ) );
+            }
+        } );
+        participationContainer.add( supervisedCheckBox );
+        supervisedCheckBox.setEnabled( isLockedByUser( getActor() ) );
+    }
+
 
     private void addAnonymousParticipation( WebMarkupContainer participationContainer ) {
         CheckBox anonymousCheckBox = new CheckBox(
@@ -751,6 +766,20 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements NameRangeab
     public void setParticipationRestrictedToEmployed( boolean val ) {
         doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "participationRestrictedToEmployed", val ) );
     }
+
+    /**
+     * Whether participation must be confirmed by supervisor.
+     *
+     * @return a boolean
+     */
+    public boolean isSupervisedParticipation() {
+        return getActor().isSupervisedParticipation();
+    }
+
+    public void setSupervisedParticipation( boolean val ) {
+        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "supervisedParticipation", val ) );
+    }
+
 
     /**
      * Whether participation as the actor is open.

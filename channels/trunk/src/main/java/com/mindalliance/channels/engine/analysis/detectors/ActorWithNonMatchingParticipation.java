@@ -32,7 +32,7 @@ public class ActorWithNonMatchingParticipation extends AbstractIssueDetector {
         Actor actor = (Actor) modelObject;
         if ( actor.isActual() && actor.isSingularParticipation() && !actor.isAnonymousParticipation() ) {
             List<PlanParticipation> participations = queryService.getPlanParticipationService()
-                    .getParticipations( queryService.getPlan(), actor, queryService );
+                    .getParticipationsAsActor( queryService.getPlan(), actor, queryService );
             if ( !participations.isEmpty() ) {
                 for ( PlanParticipation participation : participations ) {
                     String userFullName = participation.getParticipant().getFullName();

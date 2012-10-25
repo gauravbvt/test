@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.dao.user.PlanParticipationValidationService;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 
@@ -27,16 +28,18 @@ public class PlanService extends DefaultQueryService {
 
     public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, ChannelsUserDao userDao,
                         AttachmentManager attachmentManager, PlanParticipationService planParticipationService,
+                        PlanParticipationValidationService planParticipationConfirmationService,
                         Plan plan ) {
 
-        this( planManager, semanticMatcher, userDao, attachmentManager, planParticipationService );
+        this( planManager, semanticMatcher, userDao, attachmentManager, planParticipationService, planParticipationConfirmationService );
         this.plan = plan;
     }
 
     public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, ChannelsUserDao userDao,
-                        AttachmentManager attachmentManager, PlanParticipationService planParticipationService ) {
+                        AttachmentManager attachmentManager, PlanParticipationService planParticipationService,
+                        PlanParticipationValidationService planParticipationConfirmationService ) {
 
-        super( planManager, attachmentManager, semanticMatcher, userDao, planParticipationService );
+        super( planManager, attachmentManager, semanticMatcher, userDao, planParticipationService, planParticipationConfirmationService );
     }
 
     @Override

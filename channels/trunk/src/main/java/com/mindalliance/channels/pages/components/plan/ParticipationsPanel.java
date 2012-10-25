@@ -248,7 +248,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         participationWrappers = new ArrayList<ParticipationWrapper>();
         QueryService queryService = getQueryService();
         for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
-            List<PlanParticipation> participations = planParticipationService.getParticipations(
+            List<PlanParticipation> participations = planParticipationService.getUserParticipations(
                     getPlan(), channelsUser.getUserInfo(), queryService );
             for ( PlanParticipation participation : participations ) {
                 planParticipationService.refresh( participation );
@@ -462,6 +462,18 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             return username;
         }
 
+        public String getActive() {
+            if ( participation == null ) {
+                return "";
+            } else {
+                return planParticipationService.isActive(
+                        getPlan(),
+                        participation,
+                        getQueryService()
+                ) ? "Yes" : "Not yet";
+            }
+        }
+
         public PlanParticipation getParticipation() {
             return participation;
         }
@@ -580,6 +592,11 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             } else {
                 columns.add( this.makeLinkColumn( "Is agent", "actor", "actor.normalizedName", EMPTY ) );
             }
+            columns.add( makeColumn(
+                    "Confirmed?",
+                    "active",
+                    EMPTY
+            ) );
             columns.add( makeActionLinkColumn(
                     "",
                     "contact",

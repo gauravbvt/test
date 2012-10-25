@@ -176,7 +176,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     protected List<PlanParticipation> getPlanParticipations( Plan plan, ChannelsUser user ) {
-        return planParticipationService.getParticipations(
+        return planParticipationService.getActiveUserParticipations(
                 plan,
                 user.getUserInfo(),
                 getQueryService() );

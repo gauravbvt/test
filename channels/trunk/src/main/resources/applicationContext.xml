@@ -141,7 +141,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="planParticipationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationServiceImpl"/>
-
+    <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationValidationServiceImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -197,6 +197,7 @@ CONFIGURATION NOTES:
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="attachmentManager"/>
         <constructor-arg ref="planParticipationService"/>
+        <constructor-arg ref="planParticipationConfirmationService"/>
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 
@@ -305,6 +306,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RequirementNotSatisfiedByOrganization"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
             </list>
         </property>
     </bean>
