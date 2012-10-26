@@ -15,6 +15,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -153,11 +154,17 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     /// Messageable
 
 
-    @Override
-    public String getToUsername( String topic ) {
+    private String getToUsername( String topic ) {
         return topic.equals( STATUS )
                 ? ChannelsUserInfo.PLANNERS
                 : null;
+    }
+
+    @Override
+    public List<String> getToUserNames( String topic, PlanService planService ) {
+        List<String> usernames = new ArrayList<String>();
+        usernames.add(  getToUsername(  topic  ) );
+        return usernames;
     }
 
     @Override
@@ -169,10 +176,9 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     public String getContent(
             String topic,
             Format format,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService ) {
         if ( topic.equals( STATUS ) ) {
-            return getStatusContent( format, planService, surveysDAO );
+            return getStatusContent( format, planService, planService.getSurveysDAO() );
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }
@@ -269,8 +275,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     public String getSubject(
             String topic,
             Format format,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService ) {
         return null;
     }
 

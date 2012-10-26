@@ -18,4 +18,8 @@ public interface NotificationService {
     void notifyOfSurveys();
 
     void reportOnSurveys();
+
+    void notifyOfParticipationConfirmation();
+
+    void reportOnParticipationConfirmation();
 }

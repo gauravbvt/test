@@ -28,7 +28,7 @@ public class UserMessage extends UserStatement {
 
     @ManyToOne
     private Feedback feedback;
-    
+
     public UserMessage() {} 
 
     public UserMessage( String planUri, int planVersion, String username, String text ) {
@@ -39,8 +39,8 @@ public class UserMessage extends UserStatement {
         super( planUri, planVersion, username, text, modelObject );
     }
 
-
-    public String getToUsername() {
+    @Override
+    public String getToUsername( String topic ) {
         return toUsername;
     }
 
@@ -104,11 +104,6 @@ public class UserMessage extends UserStatement {
 
     // Messageable
 
-
-    @Override
-    public String getToUsername( String topic ) {
-        return getToUsername();
-    }
 
     public String getTextContent( Format format, PlanService planService ) {
         // Ignore TEXT vs HTML for now

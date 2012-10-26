@@ -73,10 +73,10 @@ public class PlanParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<PlanParticipation> getActiveUserParticipations(    // TODO use getActiveParticipation() where applicable instead of getParticipations()
-                                                                   final Plan plan,
-                                                                   ChannelsUserInfo userInfo,
-                                                                   final QueryService queryService ) {
+    public List<PlanParticipation> getActiveUserParticipations(
+            final Plan plan,
+            ChannelsUserInfo userInfo,
+            final QueryService queryService ) {
         return (List<PlanParticipation>) CollectionUtils.select(
                 getUserParticipations( plan, userInfo, queryService ),
                 new Predicate() {
@@ -205,7 +205,7 @@ public class PlanParticipationServiceImpl
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
     public List<PlanParticipation> getAllActiveParticipations( final Plan plan, final QueryService queryService ) {
-        return (List<PlanParticipation>)CollectionUtils.select(
+        return (List<PlanParticipation>) CollectionUtils.select(
                 getAllParticipations( plan, queryService ),
                 new Predicate() {
                     @Override
@@ -367,6 +367,48 @@ public class PlanParticipationServiceImpl
         return supervisorsUserParticipatesAs;
     }
 
+    @Override
+    @Transactional( readOnly = true )
+    public List<String> listSupervisorsToNotify( Plan plan, PlanParticipation planParticipation, QueryService queryService ) {
+        List<String> usernames = new ArrayList<String>();
+        if ( planParticipation.isSupervised( queryService ) ) {
+            Actor actor = planParticipation.getActor( queryService );
+            if ( actor != null ) {
+                List<String> usernamesNotified = planParticipation.usersNotifiedToValidate();
+                for ( Actor supervisor : queryService.findAllSupervisorsOf( actor ) ) {
+                    if ( !planParticipationValidationService.isValidatedBy( planParticipation, supervisor ) ) {
+                        for ( ChannelsUserInfo supervisorUser : findUsersParticipatingAs( plan, supervisor, queryService ) ) {
+                            String supervisorUsername = supervisorUser.getUsername();
+                            if ( !usernamesNotified.contains( supervisorUsername ) ) {
+                                usernames.add( supervisorUsername );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return usernames;
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<ChannelsUserInfo> findUsersParticipatingAs( Plan plan, Actor actor, QueryService queryService ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "actorId", actor.getId() ) );
+        //       criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
+        List<PlanParticipation> participations = (List<PlanParticipation>) criteria.list();
+        Set<ChannelsUserInfo> userInfos = new HashSet<ChannelsUserInfo>();
+        for ( PlanParticipation participation : participations ) {
+            if ( isActive( plan, participation, queryService ) ) {
+                userInfos.add( participation.getParticipant() );
+            }
+        }
+        return new ArrayList<ChannelsUserInfo>( userInfos );
+    }
+
 
     @Override
     @Transactional( readOnly = true )
@@ -406,13 +448,16 @@ public class PlanParticipationServiceImpl
 
     @Override
     @Transactional
-    public void delete( PlanParticipation participation ) {
-        for ( PlanParticipationValidation validation
-                : planParticipationValidationService.getParticipationValidations( participation ) ) {
-            planParticipationValidationService.delete( validation );
+    public void deleteParticipation( Plan plan, ChannelsUserInfo userInfo, Actor actor, QueryService queryService ) {
+        if ( actor != null ) {
+            for ( PlanParticipation participation : getParticipationsAsActor( plan, actor, queryService ) ) {
+                if ( participation.getParticipantUsername().equals( userInfo.getUsername() ) ) {
+                    planParticipationValidationService.deleteValidations( participation );
+                    delete( participation );
+                }
+
+            }
         }
-        ;
-        super.delete( participation );
     }
 
     private boolean alreadyParticipatingAs( final Actor actor, List<PlanParticipation> currentParticipations ) {

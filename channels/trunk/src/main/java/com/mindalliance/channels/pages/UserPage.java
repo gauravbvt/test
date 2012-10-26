@@ -60,7 +60,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean
+    @SpringBean(name="surveysDao")
     private SurveysDAO surveysDAO;
 
     @SpringBean

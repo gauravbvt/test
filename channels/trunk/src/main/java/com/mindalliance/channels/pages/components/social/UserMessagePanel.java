@@ -38,10 +38,10 @@ public class UserMessagePanel extends UserStatementPanel {
     }
 
 
-    protected String getPersistentPlanObjectUsername() {
+    protected String getPersistentPlanObjectUsername(  ) {
         return showReceived
                 ? getUserMessage().getFromUsername()
-                : getUserMessage().getToUsername();
+                : getUserMessage().getToUsername( UserMessage.STATEMENT );
     }
 
     protected String getCssClasses() {

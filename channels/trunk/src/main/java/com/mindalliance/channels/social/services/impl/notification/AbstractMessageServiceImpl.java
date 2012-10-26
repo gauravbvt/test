@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import com.mindalliance.channels.social.services.notification.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Abstract messaging service implementation.
+/**
+ * Abstract messaging service implementation.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -29,17 +29,22 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
     @Autowired
     private ChannelsUserDao userDao;
 
-    protected List<ChannelsUserInfo> getToUsers( Messageable messageable, String topic ) {
+    protected List<ChannelsUserInfo> getToUsers( Messageable messageable, String topic, PlanService planService ) {
         List<ChannelsUser> toUsers = new ArrayList<ChannelsUser>();
-        String toUsername = messageable.getToUsername( topic );
-        String urn = messageable.getPlanUri();
-        if ( toUsername.equals( ChannelsUserInfo.PLANNERS ) )
-            toUsers = userDao.getPlanners( urn );
-        else if ( toUsername.equals( ChannelsUserInfo.USERS ) )
-            toUsers = userDao.getUsers( urn );
-        else
-            toUsers.add( userDao.getUserNamed( toUsername ) );
-        List<ChannelsUserInfo> answer = new ArrayList<ChannelsUserInfo>(  );
+        List<String> toUsernames = messageable.getToUserNames( topic, planService );
+        for ( String toUsername : toUsernames ) {
+            String urn = messageable.getPlanUri();
+            if ( toUsername.equals( ChannelsUserInfo.PLANNERS ) )
+                toUsers = userDao.getPlanners( urn );
+            else if ( toUsername.equals( ChannelsUserInfo.USERS ) )
+                toUsers = userDao.getUsers( urn );
+            else {
+                ChannelsUser aUser = userDao.getUserNamed( toUsername );
+                if ( aUser != null )
+                    toUsers.add( aUser );
+            }
+        }
+        List<ChannelsUserInfo> answer = new ArrayList<ChannelsUserInfo>();
         for ( ChannelsUser toUser : toUsers ) {
             answer.add( toUser.getUserInfo() );
         }
@@ -72,8 +77,7 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             String planUri,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService) {
         StringBuilder sb = new StringBuilder();
         int n = messageables.size();
         String kind = messageables.get( 0 ).getLabel() + " " + topic;
@@ -90,11 +94,10 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             Messageable.Format format,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService ) {
         StringBuilder sb = new StringBuilder();
         for ( Messageable messageable : messageables ) {
-            sb.append( messageable.getContent( topic, format, planService, surveysDAO ) );
+            sb.append( messageable.getContent( topic, format, planService ) );
             sb.append( "\n============================================\n\n" );
         }
         return sb.toString();

@@ -548,16 +548,21 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         }
 
         public void setConfirmed( boolean confirmed ) {
+            QueryService queryService = getQueryService();
             this.confirmed = confirmed;
             if ( confirmed ) {
                 if ( getQueryService().getPlanParticipationService().isParticipationOpenAndAvailable(
                         participation.getActor( getQueryService() ),
                         getUser(),
-                        getQueryService() ) ) {
+                        queryService ) ) {
                     planParticipationService.save( participation );
                 }
             } else {
-                planParticipationService.delete( participation );
+                planParticipationService.deleteParticipation(
+                        getPlan(),
+                        participation.getParticipant(),
+                        participation.getActor( queryService ),
+                        queryService );
             }
             getPlanManager().clearCache(); // Must manually clear the cache
         }

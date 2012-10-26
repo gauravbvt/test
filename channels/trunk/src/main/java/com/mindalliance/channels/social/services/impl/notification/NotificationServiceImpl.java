@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.PlanParticipation;
+import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
@@ -36,9 +38,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A scheduled notification service.
@@ -86,8 +90,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private RFIService rfiService;
     @Autowired
     private RFISurveyService rfiSurveyService;
-    @Autowired
-    private SurveysDAO surveysDAO;
 
     private List<MessagingService> messagingServices;
 
@@ -112,13 +114,15 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             Iterator<UserMessage> messagesToSend = userMessageService.listMessagesToSend( plan.getUri() );
             while ( messagesToSend.hasNext() ) {
                 UserMessage messageToSend = messagesToSend.next();
-                boolean success = sendMessages(
+                List<String> successes = sendMessages(
                         messageToSend,
                         UserStatement.TEXT,
                         EXCLUDE_INTERNAL_MESSAGES,
                         planService );
                 // success = at least one message went out. No retries. Todo: retry each messaging failure?
-                if ( success ) userMessageService.markSent( messageToSend );
+                if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                    userMessageService.markSent( messageToSend );
+                }
             }
         }
     }
@@ -135,12 +139,12 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             PlanService planService = planServiceFactory.getService( plan );
             List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( plan );
             for ( Feedback urgentFeedback : urgentFeedbacks ) {
-                boolean success = sendMessages(
+                List<String> successes = sendMessages(
                         urgentFeedback,
                         UserStatement.TEXT,
                         !EXCLUDE_INTERNAL_MESSAGES,
                         planService );
-                if ( success ) {
+                if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                     urgentFeedback.setWhenNotified( new Date() );
                     feedbackService.save( urgentFeedback );
                 }
@@ -163,7 +167,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                             public int compare( Feedback f1, Feedback f2 ) {
                                 return f1.getCreated().compareTo( f2.getCreated() );
                             }
-                        });
+                        } );
                 boolean success = sendReport(
                         getPlanners( plan ),
                         normalFeedbacks,
@@ -198,8 +202,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         LOG.debug( "Sending out nags about overdue RFIs" );
         List<RFI> nagRFIs = rfiService.listRequestedNags( planService.getPlan() );
         for ( RFI nagRfi : nagRFIs ) {
-            boolean success = sendMessages( nagRfi, RFI.NAG, planService );
-            if ( success ) {
+            List<String> successes = sendMessages( nagRfi, RFI.NAG, planService );
+            if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                 nagRfi.nagged();
                 rfiService.save( nagRfi );
             }
@@ -211,8 +215,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         LOG.debug( "Sending RFI deadline warnings" );
         List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planService.getPlan(), WARNING_DELAY );
         for ( RFI deadlineRFI : deadlineRFIs ) {
-            boolean success = sendMessages( deadlineRFI, RFI.DEADLINE, planService );
-            if ( success ) {
+            List<String> successes = sendMessages( deadlineRFI, RFI.DEADLINE, planService );
+            if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                 deadlineRFI.addNotification( RFI.DEADLINE );
                 rfiService.save( deadlineRFI );
             }
@@ -223,15 +227,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         LOG.debug( "Sending new RFI notices" );
         List<RFI> newRFIs = rfiService.listNewRFIs( planService.getPlan() );
         for ( RFI newRFI : newRFIs ) {
-            boolean success = sendMessages( newRFI, RFI.NEW, planService );
-            if ( success ) {
+            List<String> successes = sendMessages( newRFI, RFI.NEW, planService );
+            if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                 newRFI.addNotification( RFI.NEW );
                 rfiService.save( newRFI );
             }
         }
 
     }
-
 
 
     @Override
@@ -248,6 +251,37 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         }
     }
 
+    @Override
+    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Transactional
+    public void notifyOfParticipationConfirmation() {
+        for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
+            ChannelsUser.current().setPlan( plan );
+            PlanParticipationService planParticipationService = planService.getPlanParticipationService();
+            for ( PlanParticipation planParticipation : planParticipationService.getAllParticipations( plan, planService ) ) {
+                if ( planParticipation.isSupervised( planService ) ) {
+                    List<String> successes = sendMessages(
+                            planParticipation,
+                            PlanParticipation.VALIDATION_REQUESTED,
+                            false,
+                            planService );
+                    for ( String username : successes ) {
+                        planParticipation.addUserNotifiedToValidate( username );
+                    }
+                    planParticipationService.save( planParticipation );
+                }
+            }
+        }
+    }
+
+    @Override
+//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Transactional
+    public void reportOnParticipationConfirmation() {
+        // todo
+    }
+
     private void sendSurveyStatusReports( PlanService planService ) {
         // to planners
         List<RFISurvey> activeSurveys = rfiSurveyService.listActive( planService, analyst );
@@ -258,7 +292,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                     public int compare( RFISurvey s1, RFISurvey s2 ) {
                         return s2.getCreated().compareTo( s1.getCreated() );
                     }
-                });
+                } );
         if ( !activeSurveys.isEmpty() ) {
             sendReport(
                     getPlanners( planService.getPlan() ),
@@ -270,13 +304,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private void sendIncompleteRFIReports( PlanService planService ) {
         // to survey participants
+        final SurveysDAO surveysDAO = planService.getSurveysDAO();
         List<RFI> incompleteRFIs = surveysDAO.listIncompleteActiveRFIs( planService, analyst );
-        Map<String,List<RFI>> userRFIs = new HashMap<String, List<RFI>>(  );
+        Map<String, List<RFI>> userRFIs = new HashMap<String, List<RFI>>();
         for ( RFI incompleteRFI : incompleteRFIs ) {
             String surveyedUsername = incompleteRFI.getSurveyedUsername();
             List<RFI> rfis = userRFIs.get( surveyedUsername );
             if ( rfis == null ) {
-                rfis = new ArrayList<RFI>(  );
+                rfis = new ArrayList<RFI>();
                 userRFIs.put( surveyedUsername, rfis );
             }
             rfis.add( incompleteRFI );
@@ -292,7 +327,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                             public int compare( RFI rfi1, RFI rfi2 ) {
                                 return rfi1.compareUrgencyTo( rfi2, surveysDAO );
                             }
-                        });
+                        } );
                 sendReport(
                         user.getUserInfo(),
                         rfis,
@@ -307,27 +342,26 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //
 
 
-    private boolean sendMessages( Messageable messageable, String topic, PlanService planService ) {
+    private List<String> sendMessages( Messageable messageable, String topic, PlanService planService ) {
         return sendMessages( messageable, topic, !EXCLUDE_INTERNAL_MESSAGES, planService );
     }
 
-    private boolean sendMessages(
+    private List<String> sendMessages(
             Messageable messageable,
             String topic,
             boolean excludeInternalMessages,
             PlanService planService ) {
-        boolean notified = false;
+        Set<String> allSuccesses = new HashSet<String>();
         for ( MessagingService messagingService : messagingServices ) {
             if ( !( excludeInternalMessages && messagingService.isInternal() ) ) {
-                boolean success = messagingService.sendMessage(
+                List<String> successes = messagingService.sendMessage(
                         messageable,
                         topic,
-                        planService,
-                        surveysDAO );
-                notified = notified || success;
+                        planService );
+                allSuccesses.addAll( successes );
             }
         }
-        return notified;
+        return new ArrayList<String>( allSuccesses );
     }
 
     private boolean sendReport(
@@ -335,12 +369,12 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             List<? extends Messageable> messageables,
             String topic,
             PlanService planService ) {
-        List<ChannelsUserInfo> recipients = new ArrayList<ChannelsUserInfo>(  );
-        recipients.add(  recipient );
+        List<ChannelsUserInfo> recipients = new ArrayList<ChannelsUserInfo>();
+        recipients.add( recipient );
         return sendReport( recipients, messageables, topic, planService );
     }
 
-        private boolean sendReport(
+    private boolean sendReport(
             List<ChannelsUserInfo> recipients,
             List<? extends Messageable> messageables,
             String topic,
@@ -351,8 +385,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                     recipients,
                     messageables,
                     topic,
-                    planService,
-                    surveysDAO );
+                    planService );
             reported = reported || success;
         }
         return reported;

@@ -2,11 +2,12 @@ package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.Messageable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract user statement.
@@ -20,6 +21,8 @@ import javax.persistence.Entity;
 abstract public class UserStatement extends AbstractModelObjectReferencingPPO implements Messageable {
 
     public static final String TEXT = "text";
+
+    public static final String STATEMENT = "statement";
 
     @Column( length = 3000 )
     private String text;
@@ -53,6 +56,15 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
 
     /// Messageable
 
+    abstract public String getToUsername( String topic );
+
+    @Override
+    public List<String> getToUserNames( String topic, PlanService planService ) {
+        List<String> usernames = new ArrayList<String>();
+        usernames.add(  getToUsername(  topic  ) );
+        return usernames;
+    }
+
     @Override
     public String getFromUsername( String topic ) {
         return getUsername();
@@ -62,8 +74,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     public String getContent(
             String topic,
             Format format,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService ) {
         if ( topic.equals( TEXT ) ) return getTextContent( format, planService );
         else throw new RuntimeException( "invalid content" );
     }
@@ -72,8 +83,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     public String getSubject(
             String topic,
             Format format,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService ) {
         if ( topic.equals( TEXT ) ) return getTextSubject( format, planService  );
         else throw new RuntimeException( "invalid content" );
     }

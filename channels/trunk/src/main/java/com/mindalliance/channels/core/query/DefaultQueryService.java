@@ -62,6 +62,7 @@ import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
+import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -121,6 +122,11 @@ public abstract class DefaultQueryService implements QueryService {
      */
     private PlanParticipationValidationService planParticipationConfirmationService;
 
+    /**
+     * SurveysDAO
+     */
+    private SurveysDAO surveysDAO;
+
     //-------------------------------
 
     /**
@@ -135,7 +141,8 @@ public abstract class DefaultQueryService implements QueryService {
             SemanticMatcher semanticMatcher,
             ChannelsUserDao userDao,
             PlanParticipationService planParticipationService,
-            PlanParticipationValidationService planParticipationConfirmationService
+            PlanParticipationValidationService planParticipationConfirmationService,
+            SurveysDAO surveysDao
     ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
@@ -143,6 +150,7 @@ public abstract class DefaultQueryService implements QueryService {
         this.userDao = userDao;
         this.planParticipationService = planParticipationService;
         this.planParticipationConfirmationService = planParticipationConfirmationService;
+        this.surveysDAO = surveysDao;
     }
 
     //-------------------------------
@@ -3631,6 +3639,14 @@ public abstract class DefaultQueryService implements QueryService {
 
     public void setUserDao( ChannelsUserDao userDao ) {
         this.userDao = userDao;
+    }
+
+    public SurveysDAO getSurveysDAO() {
+        return surveysDAO;
+    }
+
+    public void setSurveysDAO( SurveysDAO surveysDAO ) {
+        this.surveysDAO = surveysDAO;
     }
 }
 

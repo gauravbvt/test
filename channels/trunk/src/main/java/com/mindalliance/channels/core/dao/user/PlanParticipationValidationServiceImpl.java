@@ -81,9 +81,27 @@ public class PlanParticipationValidationServiceImpl
     public void removeParticipationValidation( PlanParticipation planParticipation, Actor supervisor ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add(  Restrictions.eq( "planParticipation", planParticipation ) );
-        criteria.add(  Restrictions.eq( "supervisorId", supervisor.getId() ) );
-        for ( PlanParticipationValidation validation : (List<PlanParticipationValidation>)criteria.list() )  {
+        criteria.add( Restrictions.eq( "planParticipation", planParticipation ) );
+        criteria.add( Restrictions.eq( "supervisorId", supervisor.getId() ) );
+        for ( PlanParticipationValidation validation : (List<PlanParticipationValidation>) criteria.list() ) {
+            delete( validation );
+        }
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isValidatedBy( PlanParticipation planParticipation, Actor supervisor ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planParticipation", planParticipation ) );
+        criteria.add( Restrictions.eq( "supervisorId", supervisor.getId() ) );
+        return !criteria.list().isEmpty();
+    }
+
+    @Override
+    @Transactional
+    public void deleteValidations( PlanParticipation participation ) {
+        for (PlanParticipationValidation validation : getParticipationValidations( participation ) ) {
             delete( validation );
         }
     }

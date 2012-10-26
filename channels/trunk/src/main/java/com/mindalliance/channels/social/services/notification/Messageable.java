@@ -2,9 +2,9 @@ package com.mindalliance.channels.social.services.notification;
 
 
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * Something that can be the subject of a message.
@@ -26,21 +26,19 @@ public interface Messageable {
      */
     static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "M/d/yyyy HH:mm" );
 
-    String getToUsername( String topic );
+    List<String> getToUserNames( String topic, PlanService planService );
 
     String getFromUsername( String topic );
 
     String getContent(
             String topic,
             Format format,
-            PlanService planService,
-            SurveysDAO surveysDAO );
+            PlanService planService);
 
     String getSubject(
             String topic,
             Format format,
-            PlanService planService,
-            SurveysDAO surveysDAO );
+            PlanService planService );
 
     String getPlanUri();
 

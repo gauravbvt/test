@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.UserMessage;
+import com.mindalliance.channels.social.model.UserStatement;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -455,7 +456,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                                 ? message.isToAllPlanners()
                                 ? "all planners"
                                 : "all users"
-                                : getUserFullName( message.getToUsername() ) ) ) );
+                                : getUserFullName( message.getToUsername( UserStatement.STATEMENT ) ) ) ) );
     }
 
     public List<UserMessage> getUserMessages( ChannelsUser user ) {

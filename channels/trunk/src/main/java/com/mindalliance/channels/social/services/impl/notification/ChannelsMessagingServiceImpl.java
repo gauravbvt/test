@@ -2,11 +2,11 @@ package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +21,11 @@ import java.util.List;
 public class ChannelsMessagingServiceImpl extends AbstractMessageServiceImpl implements ChannelsMessagingService {
 
     @Override
-    public boolean sendMessage(
+    public List<String> sendMessage(
             Messageable messageable,
             String topic,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
-        return false;  //Todo
+            PlanService planService ) {
+        return new ArrayList<String>(  );
     }
 
     @Override
@@ -34,8 +33,7 @@ public class ChannelsMessagingServiceImpl extends AbstractMessageServiceImpl imp
             List<ChannelsUserInfo> recipients,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService,
-            SurveysDAO surveysDAO ) {
+            PlanService planService ) {
         return false;  //Todo
     }
 

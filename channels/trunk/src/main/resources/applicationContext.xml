@@ -142,6 +142,7 @@ CONFIGURATION NOTES:
 
     <bean id="planParticipationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationServiceImpl"/>
     <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationValidationServiceImpl"/>
+    <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -198,6 +199,7 @@ CONFIGURATION NOTES:
         <constructor-arg ref="attachmentManager"/>
         <constructor-arg ref="planParticipationService"/>
         <constructor-arg ref="planParticipationConfirmationService"/>
+        <constructor-arg ref="surveysDao"/>
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 

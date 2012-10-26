@@ -31,4 +31,8 @@ public interface PlanParticipationValidationService extends GenericSqlService<Pl
     void removeParticipationValidation(
             PlanParticipation planParticipation,
             Actor supervisor );
+
+    boolean isValidatedBy( PlanParticipation planParticipation, Actor supervisor );
+
+    void deleteValidations( PlanParticipation participation );
 }

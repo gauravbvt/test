@@ -3,7 +3,6 @@ package com.mindalliance.channels.social.services.notification;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 
 import java.util.List;
 
@@ -23,14 +22,12 @@ public interface MessagingService {
      * @param messageable  a messageable
      * @param topic        a messageable topic
      * @param planService a query service
-     * @param surveysDAO   the surveys DAO
-     * @return a boolean indicating success
+     * @return usernames message was successfully sent to
      */
-    boolean sendMessage(
+    List<String> sendMessage(
             Messageable messageable,
             String topic,
-            PlanService planService,
-            SurveysDAO surveysDAO );
+            PlanService planService );
 
     /**
      * Send reports to users.
@@ -38,15 +35,13 @@ public interface MessagingService {
      * @param messageables a list of messageables
      * @param topic        a messageable topic
      * @param planService a query service
-     * @param surveysDAO   the surveys DAO
      * @return a boolean indicating success
      */
     boolean sendReport(
             List<ChannelsUserInfo> recipients,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService,
-            SurveysDAO surveysDAO );
+            PlanService planService );
 
     /**
      * Whether the messaging service is internal to Channels.

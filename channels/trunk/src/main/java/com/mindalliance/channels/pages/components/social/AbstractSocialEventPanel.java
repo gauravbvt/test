@@ -95,8 +95,8 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     protected abstract void moreInit( WebMarkupContainer socialItemContainer );
 
-    protected String getPersistentPlanObjectUsername() {
-        return poModel.getObject().getUsername();
+    protected String getPersistentPlanObjectUsername(  ) {
+        return poModel.getObject().getUsername( );
     }
 
     protected String getCssClasses() {
@@ -168,7 +168,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     private void addIcon( WebMarkupContainer socialItemContainer ) {
         WebMarkupContainer icon = new WebMarkupContainer( "icon" );
-        icon.setVisible( isPresent( getPersistentPlanObjectUsername() ) );
+        icon.setVisible( isPresent( getPersistentPlanObjectUsername(  ) ) );
         socialItemContainer.add( icon );
     }
 
@@ -184,7 +184,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         if ( getUsername() == null )
             return "all users";
         else {
-            String poUserName = getPersistentPlanObjectUsername();
+            String poUserName = getPersistentPlanObjectUsername(  );
             if ( poUserName == null ) {
                 return "?";
             } else if ( poUserName.equals( ChannelsUserInfo.PLANNERS ) ) {
