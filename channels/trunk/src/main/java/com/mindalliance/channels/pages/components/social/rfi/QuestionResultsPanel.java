@@ -27,7 +27,7 @@ import java.util.Set;
 public class QuestionResultsPanel extends AbstractUpdatablePanel {
 
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     private boolean excludedSelf;

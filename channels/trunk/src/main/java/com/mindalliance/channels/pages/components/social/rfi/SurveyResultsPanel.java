@@ -34,7 +34,7 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
 
     private static final boolean INCLUDE_SELF = true;
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     @SpringBean

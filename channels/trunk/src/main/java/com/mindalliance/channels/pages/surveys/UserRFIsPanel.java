@@ -38,7 +38,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
     private static final int MAX_ROWS = 3;
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     @SpringBean

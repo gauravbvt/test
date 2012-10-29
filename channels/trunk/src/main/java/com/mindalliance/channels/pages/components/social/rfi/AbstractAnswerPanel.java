@@ -53,7 +53,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     @SpringBean
     private AnswerService answerService;
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     private final IModel<Question> questionModel;

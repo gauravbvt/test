@@ -32,7 +32,7 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private QuestionService questionService;
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
     private ListView<Question> answerSetListView;
     private WebMarkupContainer answerSetsContainer;

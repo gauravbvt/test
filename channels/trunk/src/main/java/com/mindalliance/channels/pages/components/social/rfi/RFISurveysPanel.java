@@ -57,7 +57,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     private String about = null;

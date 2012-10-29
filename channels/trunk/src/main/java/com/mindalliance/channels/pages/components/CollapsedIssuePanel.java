@@ -35,7 +35,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
     /**
      * Survey service.
      */
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDao;
 
     @SpringBean

@@ -45,7 +45,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
     private static final String NAME_PART_SEP = "-";
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     @SpringBean

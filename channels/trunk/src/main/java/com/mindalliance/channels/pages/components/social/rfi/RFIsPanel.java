@@ -68,7 +68,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     @SpringBean

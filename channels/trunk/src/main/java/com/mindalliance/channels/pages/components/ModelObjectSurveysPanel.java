@@ -52,7 +52,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean
+    @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
 
     @SpringBean
