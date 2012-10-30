@@ -70,8 +70,7 @@ public class BrowserController{
      * @param title
      * @throws UIAutomationException
      */
-	@SuppressWarnings("deprecation")
-    public void enterURL(String URL,String title) throws UIAutomationException{
+	public void enterURL(String URL,String title) throws UIAutomationException{
 		GlobalVariables.configuration.getWebDriver().get(URL);
     	
     	// Assertion : Check Title of Page
