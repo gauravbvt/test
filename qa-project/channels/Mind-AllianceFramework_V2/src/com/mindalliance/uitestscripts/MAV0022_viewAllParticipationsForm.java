@@ -46,17 +46,12 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 	public String blank=""; 
 	public String exception="";
 	public String browser="";
-
-	public MAV0022_viewAllParticipationsForm() throws UIAutomationException{
-		setUp();
-		testMAV0022_viewAllParticipationsForm();
-		tearDown();
-	}
+	public String scriptException;
+	
 	/**
 	 * This method will initialize the setup required for every test case
-	 * @throws UIAutomationException 
 	 * @see junit.framework.TestCase#setUp()
-	 */	
+	 */
 	@Before
 	protected void setUp() throws UIAutomationException{
 		try{
@@ -67,6 +62,7 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 				new ElementController();
 			}
 			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
@@ -74,33 +70,34 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;		
-			// Write log			
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();		
+			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
-			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
-			
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	/**
 	 * This method verifies by clicking on 'User As Agents' link under 'Participation' pop up menu 'User As Agent' window opens
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0022_viewAllParticipationsForm() throws UIAutomationException{
+	public void testMAV0022_viewAllParticipationsForm() throws UIAutomationException, IOException{
 		try {
 			// Enter URL of Channels
 			stepNo++;
 			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					    
@@ -157,10 +154,12 @@ public class MAV0022_viewAllParticipationsForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-
-		} catch (UIAutomationException ue) {
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
+		}catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
-			
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 			// Sign out from plan page
 			stepNo++;
 			HeaderController headerController=new HeaderController();
