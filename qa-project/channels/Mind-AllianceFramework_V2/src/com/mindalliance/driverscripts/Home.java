@@ -19,9 +19,32 @@ public class Home {
 		GlobalVariables.configuration= Configuration.getConfigurationObject();
 		new ElementController();
 		TestSuite suite = new TestSuite("Mind-Alliance API Testing Framework");	
-//		suite.addTestSuite(MAV0001_viewLoginPage.class);
+//		View
+		
+		suite.addTestSuite(MAV0001_viewLoginPage.class);
 		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
+//		suite.addTestSuite(MAV0004_viewAdminHome.class);
+//		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);	
+//		suite.addTestSuite(MAV0006_redirectToPlanPage.class);
+//		suite.addTestSuite(MAV0008_hidePlannerInfo.class);
+//		suite.addTestSuite(MAV0009_viewAboutPlanWindow.class);
+//		suite.addTestSuite(MAV0010_viewAllEventForm.class);
+//		suite.addTestSuite(MAV0011_viewAllSecrecyclassificationsForm.class);
+//		suite.addTestSuite(MAV0012_viewAllOrganizationForm.class);
+//		suite.addTestSuite(MAV0016_viewAllWhoForm.class);
+//		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
+//		suite.addTestSuite(MAV0019_viewAllIndexForm.class);
+//		suite.addTestSuite(MAV0020_viewAllTagForm.class);
+//		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
+//		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
+//		suite.addTestSuite(MAV0023_viewAllVersionsForm.class);
+		
+//		Plan
+		
+//		suite.addTestSuite(MAC0001_UndoAddSegment.class);
+//		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
+//		suite.addTestSuite(MAP0001_AddPlan.class);
 //		suite.addTestSuite(MAP0001_AddPlan.class);
 //		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 //		suite.addTestSuite(MAP0004_DeleteUser.class);
