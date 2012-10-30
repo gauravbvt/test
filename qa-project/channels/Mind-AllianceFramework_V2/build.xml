@@ -56,4 +56,9 @@
 	   	    <report format="frames" todir="Reports"/>
    		</junitreport>
    </target>
+	
+	<target name="zip">
+			<zip destfile="${project.name}.zip" basedir="${Reports}" excludes="dont*.*" />
+		</target>
+	
 </project>  
