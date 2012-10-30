@@ -46,15 +46,10 @@ public class MAV0177_TaskTagsDetails extends TestCase{
 	public String blank=""; 
 	public String exception="";
 	public String browser="";
+	public String scriptException;
 	
-	public MAV0177_TaskTagsDetails() throws UIAutomationException{
-		setUp();
-		testMAV0177_TaskTagsDetails();
-		tearDown();
-	}
 	/**
 	 * This method will initialize the setup required for every test case
-	 * @throws UIAutomationException 
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -67,6 +62,7 @@ public class MAV0177_TaskTagsDetails extends TestCase{
 				new ElementController();
 			}
 			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
@@ -74,32 +70,34 @@ public class MAV0177_TaskTagsDetails extends TestCase{
 			LogFunctions.writeLogs(description);
 						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;		
-			// Write log			
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();		
+			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
-			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
 		}
 	}
 	/**
 	 * This method displays tasg details in task
 	 * @throws UIAutomationException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0177_TaskTagsDetails() throws UIAutomationException {
+	public void testMAV0177_TaskTagsDetails() throws UIAutomationException, IOException {
 		try{
 		    // Enter URL of Channels
 			stepNo++;
 			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
-			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"),browser);
+			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
@@ -180,8 +178,13 @@ public class MAV0177_TaskTagsDetails extends TestCase{
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-		} catch (UIAutomationException ue) {
+
+ 			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
+		}catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
 			
 			// Sign out from plan page
 			stepNo++;

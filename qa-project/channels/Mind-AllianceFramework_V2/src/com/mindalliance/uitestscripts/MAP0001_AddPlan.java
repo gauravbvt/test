@@ -69,7 +69,7 @@ public class MAP0001_AddPlan extends TestCase {
 						
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();	
+			browserController.initializeDriver();		
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -77,7 +77,7 @@ public class MAP0001_AddPlan extends TestCase {
 		}
 		catch(UIAutomationException ue){
 			stepNo++;
-//			description="Unable to initialize the driver";
+			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
