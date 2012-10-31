@@ -57,7 +57,10 @@
    		</junitreport>
    </target>
 	
-	<target name="zip">
+	<target name="zip" depends="testsuite">
+		<echo>Zipping TestReports</echo> 
+		<echo>${project.name}.zip</echo> 
+		<echo>${Reports}</echo>
 			<zip destfile="${project.name}.zip" basedir="${Reports}" excludes="dont*.*" />
 		</target>
 	
