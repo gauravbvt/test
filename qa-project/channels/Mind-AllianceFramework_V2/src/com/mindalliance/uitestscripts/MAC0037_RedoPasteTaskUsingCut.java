@@ -322,7 +322,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
  			
 			// Close Task Mover window
 			stepNo++;
-			description="Close About Plan Segment";
+			description="Close Task Mover";
 			planPage.closeTaskMoverWindow();
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -347,7 +347,7 @@ public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
  							
 			// Click on 'About Plan segment' under 'Show' pop up menu
 			stepNo++;
-			description="Redo Paste Task";
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
 			// Open Task Mover

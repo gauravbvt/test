@@ -250,6 +250,8 @@ public class MAC0009_UndoDuplicateTask extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
 			// Open Task Mover
+ 			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			planPage.verifyTaskIsNotDuplicated(testData.get("TaskName"));

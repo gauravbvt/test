@@ -132,11 +132,17 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForRedoDisintermediateTask"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 					
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on default task 
 			stepNo++;
@@ -146,6 +152,9 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.enterTaskName(testData.get("TaskName"));
 			// click on 'strench up forms' icon
 			planPage.clickStrenchUpForm();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'Add' button under 'Sends' panel
 			stepNo++;
@@ -159,6 +168,9 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
 			// Click on Strench up form
 			planPage.clickStrenchUpForm();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'Intermediate' under 'Actions' pop up menu in sends panel
 			stepNo++;
@@ -174,16 +186,25 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			// Verify Task is added
 			planPage.verifyTaskNameInTaskMover(testData.get("IntermediateTaskName"));
-
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			// Close Task Mover window
 			stepNo++;
 			description="Close Task Mover";
 			planPage.closeTaskMoverWindow();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Close Segment window
 			stepNo++;
 			description="Close About Plan Segment";
 			planPage.closeAboutPlanSegmentWindow();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on intermediate Task
 			stepNo++;
@@ -191,12 +212,18 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.clickOnIntermediateTask(testData.get("IntermediateTaskName"));
 			// Click on Strench up form
 			planPage.clickStrenchUpForm();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'details' under' show' pop up menu in task panel
 			stepNo++;
 			description="Details of Task";
 			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
 			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'Disintermediate' under 'Actions' pop up of 'Task' panel
 			stepNo++;
@@ -205,6 +232,9 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.clickSubmenu(testData.get("Disintermediate"));
 			// Verify task is disintermediated
 			planPage.verifyDisintermediate(testData.get("UndoDisIntermediate"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'Undo Disintermediate' under 'Actions' pop up menu
 			stepNo++;
@@ -213,6 +243,9 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.clickSubmenu(testData.get("UndoDisIntermediate"));					
 			// Verify added disintermediate task should be undone
 			planPage.verifyUndoDisintermediate(testData.get("RedoDisIntermediate"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Click on 'Redo Disintermediate Task' under 'Actions' pop up menu
 			stepNo++;
@@ -221,6 +254,9 @@ public class MAC0041_RedoDisintermediateTask extends TestCase {
 			planPage.clickSubmenu(testData.get("RedoDisIntermediate"));
 			// Verify undone disintermediate task should be added
 			planPage.verifyRedoDisintermediate(testData.get("UndoDisIntermediate"));			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			//Click on Remove this segment
  			stepNo++;

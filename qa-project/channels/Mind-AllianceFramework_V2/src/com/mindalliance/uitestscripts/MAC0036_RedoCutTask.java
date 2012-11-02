@@ -130,207 +130,221 @@ public class MAC0036_RedoCutTask extends TestCase {
 			description="Add New Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			// Write log
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-		 			
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForRedoCutTask"));
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Add New Task
+			stepNo++;
+			description="Add New Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));
-			
 			// strench up forms
 			planPage.clickStrenchUpForm();
-			
 			// Enter Task Name
 			planPage.enterTaskName(testData.get("TaskName"));
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Verify Task is added
+			stepNo++;
+			description="Task Added Successfully";
 			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Close Task Mover window
 			planPage.closeTaskMoverWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 							
 			// Click on Actions popup in Task Panel and also click on 'Cut Task'
+			stepNo++;
+			description="Cut Task";
 			planPage.clickPopupMenu(testData.get("ActionsInTaskPanel"));
 			planPage.clickSubmenu(testData.get("CutTaskInActionsInTaskPanel"));
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 							
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Verify Task is removed
+			stepNo++;
+			description="Task Removed Successfully";
 			planPage.verifyTaskIsRemoved(testData.get("TaskName"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Close Task Mover window
 			planPage.closeTaskMoverWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();	
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Undo Cut Task
+			stepNo++;
+			description="Undo Cut Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoCutTask"));
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Verify Task is added
+			stepNo++;
+			description="Task Added Successfully";
 			planPage.verifyTaskNameInTaskMover(testData.get("TaskName"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Close Task Mover window
 			planPage.closeTaskMoverWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Redo Cut Task
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RedoCutTask"));
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Click on 'About Plan segment' under 'Show' pop up menu
+			stepNo++;
+			description="Task Mover";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Open Task Mover
 			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Verify Task is removed
+			stepNo++;
+			description="Task Removed Successfully";
 			planPage.verifyTaskIsRemoved(testData.get("TaskName"));
-			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
 			// Close Task Mover window
 			planPage.closeTaskMoverWindow();
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Close Segment window
+			stepNo++;
+			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();	
 			// Write log
-						LogFunctions.writeLogs(description);
-						LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 											
 			// Click on Remove this segment
+			stepNo++;
+			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 					 	
-			// Sign Out from 'Plan' page
+			//Sign Out from 'Plan' page
+ 			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-			Reporting reporting = new Reporting();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			Reporting reporting = new Reporting();
 			reporting.generateAutomationReport();
+			
 		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
-			//Sign out from plan page
+			// Sign out from plan page
+			stepNo++;
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			//Quits the Browser
+ 			// Quits the Browser
+			stepNo++;
+			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
 			Assert.fail(ue.getErrorMessage());
+			// Write log
+ 			LogFunctions.writeLogs(ue.getErrorMessage());
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 	}
 	

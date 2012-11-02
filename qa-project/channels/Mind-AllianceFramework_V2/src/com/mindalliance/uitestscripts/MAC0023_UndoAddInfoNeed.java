@@ -140,7 +140,10 @@ public class MAC0023_UndoAddInfoNeed extends TestCase {
 			stepNo++;
 			description="Close About Plan Segment";
 			planPage.closeSegmentWindow();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'strench up' form icon
 			stepNo++;
 			description="Add Indo Receive";

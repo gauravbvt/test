@@ -148,7 +148,10 @@ public class MAC0024_UndoAddInfoCapability extends TestCase {
 			stepNo++;
 			description="Add Info Sends Panel";
 			planPage.clickAddInSendsPanel();
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Undo Add Info Sharing
 			stepNo++;
 			description="Undo Add Sharing Capabilities";
@@ -177,6 +180,7 @@ public class MAC0024_UndoAddInfoCapability extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			Reporting reporting = new Reporting();
 			reporting.generateAutomationReport();
+			
 		} catch (UIAutomationException ue) {
 			Reporting.getScreenShot(testCaseId);
 			Reporting reporting= new Reporting();
