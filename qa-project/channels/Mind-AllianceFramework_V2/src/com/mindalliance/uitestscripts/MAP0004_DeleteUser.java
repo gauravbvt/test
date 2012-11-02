@@ -113,7 +113,7 @@ public class MAP0004_DeleteUser extends TestCase{
 				
 			// Click on Channels Admin
  			stepNo++;
-			description="URL Entered";
+			description="Channels Admin";
 		    HomePage homePage=new HomePage();
 			homePage.clickChannelsAdminLink();
 			// Write log
@@ -122,7 +122,7 @@ public class MAP0004_DeleteUser extends TestCase{
 	
 			// Add user
  			stepNo++;
-			description="URL Entered";
+			description="Add User";
 		    ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));	
 			// Write log
@@ -131,7 +131,7 @@ public class MAP0004_DeleteUser extends TestCase{
 	
 			// Delete user
 			stepNo++;
-			description="URL Entered";
+			description="Delete User";
 		    channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -139,7 +139,7 @@ public class MAP0004_DeleteUser extends TestCase{
 
 			// Sign Out from 'Admin' page
  			stepNo++;
-			description="URL Entered";
+			description="SignOut Successful";
 		    HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 			// Write log
@@ -154,7 +154,7 @@ public class MAP0004_DeleteUser extends TestCase{
 		    
 			//Sign out from Admin page
 			stepNo++;
-			description="URL Entered";
+			description="SignOut Successful";
 		    HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
 			// Write log
