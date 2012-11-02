@@ -166,28 +166,28 @@ public class Home {
 //		suite.addTestSuite(MAV0253_ViewRequirementDuring.class);
 //		suite.addTestSuite(MAV0254_ViewRequirementAtAnyEvent.class);
 //		Plan
-//		
-//		suite.addTestSuite(MAP0001_AddPlan.class);
-//		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
-//		suite.addTestSuite(MAP0004_DeleteUser.class);
-//		suite.addTestSuite(MAP0005_DeletePlan.class);
+		
+		suite.addTestSuite(MAP0001_AddPlan.class);
+		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
+		suite.addTestSuite(MAP0004_DeleteUser.class);
+		suite.addTestSuite(MAP0005_DeletePlan.class);
 		suite.addTestSuite(MAP0006_addOrganizations.class);
-//		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
-//		suite.addTestSuite(MAP0008_removeExpectation.class);
-//		suite.addTestSuite(MAP0009_addTask.class);
-//		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
-//		suite.addTestSuite(MAP0011_addEventToPlan.class);
-//		suite.addTestSuite(MAP0012_addPhase.class);
-//		suite.addTestSuite(MAP0013_addPhaseDetails.class);
-//		suite.addTestSuite(MAP0014_addSegment.class);
-//		suite.addTestSuite(MAP0015_removeSegment.class);
-//		suite.addTestSuite(MAP0016_addEvent.class);
-//		suite.addTestSuite(MAP0017_deleteEvent.class);
-//		suite.addTestSuite(MAP0022_addGoal.class);
-//		suite.addTestSuite(MAP0023_removeGoal.class);	
-//		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
-//		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-//		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
+		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
+		suite.addTestSuite(MAP0008_removeExpectation.class);
+		suite.addTestSuite(MAP0009_addTask.class);
+		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
+		suite.addTestSuite(MAP0011_addEventToPlan.class);
+		suite.addTestSuite(MAP0012_addPhase.class);
+		suite.addTestSuite(MAP0013_addPhaseDetails.class);
+		suite.addTestSuite(MAP0014_addSegment.class);
+		suite.addTestSuite(MAP0015_removeSegment.class);
+		suite.addTestSuite(MAP0016_addEvent.class);
+		suite.addTestSuite(MAP0017_deleteEvent.class);
+		suite.addTestSuite(MAP0022_addGoal.class);
+		suite.addTestSuite(MAP0023_removeGoal.class);	
+		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
+		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
+		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
 //		Command
 		
 //		suite.addTestSuite(MAC0001_UndoAddSegment.class);
