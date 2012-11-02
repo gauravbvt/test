@@ -39,7 +39,7 @@ import com.mindalliance.pages.LoginPage;
 
 public class MAP0005_DeletePlan extends TestCase {
 	public Hashtable<String, String> testData;
-	public String testCaseId="MAP0004_DeleteUser";
+	public String testCaseId="MAP0005_DeletePlan";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
