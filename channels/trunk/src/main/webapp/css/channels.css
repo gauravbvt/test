@@ -1643,11 +1643,6 @@ li.doc_TAGS {
     background: transparent url('../images/tag.png') no-repeat 0;
 }
 
-li.doc_InfoStandards {
-    padding-left: 20px;
-    background: transparent url('../images/info_standard.png') no-repeat 0;
-}
-
 li.doc_Help {
     padding-left: 20px;
     background: transparent url('../images/help_small.png') no-repeat 0;

@@ -1003,7 +1003,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         Set<Subject> subjects = new HashSet<Subject>();
         List<Flow> flows = sent ? getAllSharingSends() : getAllSharingReceives();
         for ( Flow flow : flows ) {
-            for ( ElementOfInformation eoi : flow.getEois() ) {
+            for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                 Subject subject = new Subject( flow.getName(), eoi.getContent() );
                 subject.setRoot( sent );
                 subjects.add( subject );
@@ -1025,7 +1025,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         Iterator<Flow> flows = sent ? sends() : receives();
         while ( flows.hasNext() ) {
             Flow flow = flows.next();
-            for ( ElementOfInformation eoi : flow.getEois() ) {
+            for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                 Subject subject = new Subject( flow.getName(), eoi.getContent() );
                 subject.setRoot( sent );
                 subjects.add( subject );
@@ -1048,7 +1048,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
             public boolean evaluate( Object object ) {
                 Flow need = (Flow) object;
                 return Matcher.same( subject.getInfo(), need.getName() )
-                       && CollectionUtils.exists( need.getEois(), new Predicate() {
+                       && CollectionUtils.exists( need.getEffectiveEois(), new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         return Matcher.same( ( (ElementOfInformation) object ).getContent(),

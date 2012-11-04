@@ -27,10 +27,6 @@ public class Tag implements Nameable, Comparable<Tag> {
         name = StringUtils.strip( s.trim(), COMPOSITOR ).trim();
     }
 
-    public boolean isInfoStandard() {
-        return false;
-    }
-
     @Override
     public String getName() {
         return name;

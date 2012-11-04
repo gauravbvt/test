@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.procedures.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.InformationData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;

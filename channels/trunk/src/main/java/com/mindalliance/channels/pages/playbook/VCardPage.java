@@ -78,7 +78,7 @@ public class VCardPage extends AbstractChannelsWebPage {
     private void addEOIList() {
         ListView<ElementOfInformation> eoiList = new ListView<ElementOfInformation>(
                 "eois",
-                flow.getEois()
+                flow.getEffectiveEois()
         ) {
             protected void populateItem( ListItem<ElementOfInformation> item ) {
                 item.add( new Label( "name", item.getModelObject().getContent() ) );

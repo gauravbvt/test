@@ -270,6 +270,24 @@ public class ProcedureData implements Serializable {
         return ids;
     }
 
+    public Set<Long> allInfoProductIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allInfoProductIds() );
+        }
+        ids.addAll( getAssignment().allInfoProductIds() );
+        return ids;
+    }
+
+    public Set<Long> allInfoFormatIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( TriggerData trigger : getTriggers() ) {
+            ids.addAll( trigger.allInfoFormatIds() );
+        }
+        ids.addAll( getAssignment().allInfoFormatIds() );
+        return ids;
+    }
+
 
     public boolean isOngoing() {
         return CollectionUtils.exists(
@@ -459,4 +477,5 @@ public class ProcedureData implements Serializable {
     public Part part() {
         return assignmentData.getTask().part();
     }
+
 }

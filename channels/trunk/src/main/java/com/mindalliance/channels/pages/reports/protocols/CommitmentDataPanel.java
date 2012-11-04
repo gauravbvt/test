@@ -1,10 +1,9 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.api.procedures.AbstractFlowData;
 import com.mindalliance.channels.api.procedures.ChannelData;
-import com.mindalliance.channels.api.procedures.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.TimeDelayData;
 import com.mindalliance.channels.core.model.Level;
@@ -148,24 +147,29 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     }
 
     private void addPreferredMedia() {
-        List<MediumData> mediumDataList = flowData.mediumDataList();
-        WebMarkupContainer mediaContainer = new WebMarkupContainer( "mediaContainer" );
-        add( mediaContainer );
-        mediaContainer.add( new Label(
+        List<ChannelData> channelDataList = flowData.getChannelDataList();
+        WebMarkupContainer channelsContainer = new WebMarkupContainer( "channelContainer" );
+        add( channelsContainer );
+        channelsContainer.add( new Label(
                 "via",
-                mediumDataList.size() > 1
+                channelDataList.size() > 1
                         ? "via (in order of preference)"
                         : "via"
         ) );
-        ListView<MediumData> mediaListView = new ListView<MediumData>( "medium", mediumDataList ) {
+        ListView<ChannelData> channelListView = new ListView<ChannelData>( "channel", channelDataList ) {
             @Override
-            protected void populateItem( ListItem<MediumData> item ) {
-                MediumData mediumData = item.getModelObject();
-                item.add( new Label( "mediumName", mediumData.getName() ) );
+            protected void populateItem( ListItem<ChannelData> item ) {
+                ChannelData channelData = item.getModelObject();
+                item.add( new Label( "mediumName", channelData.getMedium() ) );
+                String formatName = channelData.getFormat();
+                Label formatLabel = new Label(
+                        "usingFormat",
+                        formatName == null ? "" : ("using " + formatName) );
+                item.add( formatLabel );
             }
         };
-        mediaContainer.add( mediaListView );
-        mediaContainer.setVisible( !mediumDataList.isEmpty() );
+        channelsContainer.add( channelListView );
+        channelsContainer.setVisible( !channelDataList.isEmpty() );
     }
 
     private void addMaxDelay() {

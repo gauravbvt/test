@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.procedures.ElementOfInformationData;
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.InformationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import org.apache.wicket.markup.html.WebMarkupContainer;

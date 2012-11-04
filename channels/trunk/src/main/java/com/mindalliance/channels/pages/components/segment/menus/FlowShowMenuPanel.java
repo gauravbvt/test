@@ -119,7 +119,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                                     }
                                 } ) );
 
-                if ( !flow.getEois().isEmpty() )
+                if ( !flow.getEffectiveEois().isEmpty() )
                     menuItems.add(
                             new LinkMenuItem(
                                     "menuItem",

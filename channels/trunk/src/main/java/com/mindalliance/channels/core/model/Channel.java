@@ -36,6 +36,8 @@ public class Channel implements Serializable, Comparable<Channel> {
      */
     private String address = "";
 
+    private InfoFormat format;
+
 
     public Channel() {
     }
@@ -43,6 +45,7 @@ public class Channel implements Serializable, Comparable<Channel> {
     public Channel( Channel channel ) {
         medium = channel.getMedium();
         address = channel.getAddress();
+        format = channel.getFormat();
     }
 
     public Channel( TransmissionMedium medium, String address ) {
@@ -71,6 +74,14 @@ public class Channel implements Serializable, Comparable<Channel> {
         this.address = address == null ? "" : address;
     }
 
+    public InfoFormat getFormat() {
+        return format;
+    }
+
+    public void setFormat( InfoFormat format ) {
+        this.format = format;
+    }
+
     /**
      * Compares channels for equality.
      *
@@ -82,7 +93,8 @@ public class Channel implements Serializable, Comparable<Channel> {
         if ( obj instanceof Channel ) {
             Channel channel = (Channel) obj;
             return medium != null && channel.getMedium() != null
-                    && address.equals( channel.getAddress() ) && medium.equals( channel.getMedium() );
+                    && address.equals( channel.getAddress() ) && medium.equals( channel.getMedium() )
+                    && ModelEntity.areEqualOrNull( channel.getFormat(), getFormat() );
         } else {
             return false;
         }
@@ -96,32 +108,36 @@ public class Channel implements Serializable, Comparable<Channel> {
         int hash = 1;
         if ( medium != null ) hash = hash * 31 + medium.hashCode();
         if ( address != null ) hash = hash * 31 + address.hashCode();
+        if ( format != null ) hash = hash * 31 + format.hashCode();
         return hash;
     }
 
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
         String label = medium == null ? "Unspecified medium" : medium.getLabel();
 
-        return address.isEmpty()
+        sb.append( address.isEmpty()
                 ? MessageFormat.format( "via {0}", label )
-                : MessageFormat.format( "{0}: {1}", label, address );
-/*
-                ? Medium.F2F.equals( medium )
-                    ? label
-                    : MessageFormat.format( "via {0}", label )
-                : Medium.Other.equals( medium )
-                    ? MessageFormat.format( "via {0}", getAddress() )
-                    : MessageFormat.format( "{0}: {1}", label, address );
-*/
+                : MessageFormat.format( "{0}: {1}", label, address ) );
+
+        if ( format != null ) {
+            sb.append( " as " ).append( format.getLabel() );
+        }
+        return sb.toString();
     }
 
     public String getLabel() {
+        StringBuilder sb = new StringBuilder();
         String label = medium == null ? "Unspecified medium" : medium.getLabel();
-        return address.isEmpty()
+        sb.append( address.isEmpty()
                 ? MessageFormat.format( "{0}", label )
-                : MessageFormat.format( "{0}: {1}", label, address );
+                : MessageFormat.format( "{0}: {1}", label, address ) );
+        if ( format != null ) {
+            sb.append( " using " ).append( format.getLabel() );
+        }
+        return sb.toString();
     }
 
 
@@ -132,14 +148,14 @@ public class Channel implements Serializable, Comparable<Channel> {
      * @return channels as string
      */
     public static String toString( List<Channel> channels ) {
-        return toString(  channels, ", " );
+        return toString( channels, ", " );
     }
 
     /**
      * Get string collating channels
      *
      * @param channels a set of channels
-     * @param sep  a string
+     * @param sep      a string
      * @return channels as string
      */
     public static String toString( List<Channel> channels, String sep ) {
@@ -212,16 +228,22 @@ public class Channel implements Serializable, Comparable<Channel> {
         return medium.requiresAddress();
     }
 
-    public int compareTo( Channel o ) {
-        if ( medium == null && o.getMedium() == null ) return 0;
-        if ( o.getMedium() == null ) return -1;
+    public int compareTo( Channel other ) {
+        if ( medium == null && other.getMedium() == null ) return 0;
+        if ( other.getMedium() == null ) return -1;
         if ( medium == null ) return 1;
-        int comp = collator.compare( medium.getName(), o.getMedium().getName() );
+        int comp = collator.compare( medium.getName(), other.getMedium().getName() );
         if ( comp == 0 ) {
-            return collator.compare( address, o.getAddress() );
-        } else {
-            return comp;
+            comp = collator.compare( address, other.getAddress() );
         }
+        if ( comp == 0 ) {
+            comp = ( other.getFormat() == null )
+                    ? -1
+                    : ( format == null )
+                        ? 1
+                        : collator.compare( format.getName(), other.getFormat().getName() );
+        }
+        return comp;
     }
 
     /**
@@ -231,7 +253,8 @@ public class Channel implements Serializable, Comparable<Channel> {
      * @return a boolean
      */
     public boolean references( ModelObject mo ) {
-        return mo instanceof TransmissionMedium && ModelObject.areIdentical( mo, medium );
+        return mo instanceof TransmissionMedium && ModelObject.areIdentical( mo, medium )
+                || mo instanceof InfoFormat && ModelObject.areIdentical( mo, format );
     }
 
     /**
@@ -258,14 +281,20 @@ public class Channel implements Serializable, Comparable<Channel> {
                         ? channel.getAddress()
                         : other.getAddress()
         );
+        merged.setFormat(
+                channel.getFormat() != null
+                        ? channel.getFormat()
+                        : other.getFormat()
+        );
         return merged;
     }
 
     /**
      * Calculate the intersection of two lists of channels.
-     * @param channels a list of channels
+     *
+     * @param channels      a list of channels
      * @param otherChannels a list of channels
-     * @param locale the default location
+     * @param locale        the default location
      * @return a list of channels
      */
     public static List<Channel> intersect(
@@ -282,14 +311,25 @@ public class Channel implements Serializable, Comparable<Channel> {
         }
         for ( Channel channel : shorter ) {
             for ( Channel other : longer ) {
-                TransmissionMedium narrowest = ModelEntity.narrowest( channel.getMedium(), other.getMedium(),
-                                                                      locale );
-                if ( narrowest != null ) {
-                    intersection.add( channel.getMedium().equals( narrowest ) ? channel : other );
+                Channel withNarrowerMediumAndFormat =
+                        channel.narrowsOrEquals( other, locale )
+                                ? channel
+                                : other.narrowsOrEquals( channel, locale )
+                                ? other
+                                : null;
+                if ( withNarrowerMediumAndFormat != null ) {
+                    intersection.add( withNarrowerMediumAndFormat );
                     break;
                 }
             }
         }
         return intersection;
+    }
+
+    public boolean narrowsOrEquals( Channel other, Place locale ) {
+        assert getMedium() != null && other.getMedium() != null;
+        return getMedium().narrowsOrEquals( other.getMedium(), locale )
+                && ( other.getFormat() == null
+                || ( getFormat() != null && getFormat().narrowsOrEquals( other.getFormat(), locale ) ) );
     }
 }

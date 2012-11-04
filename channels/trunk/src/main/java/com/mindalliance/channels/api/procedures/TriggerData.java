@@ -326,6 +326,31 @@ public class TriggerData extends AbstractProcedureElementData {
         return ids;
     }
 
+
+    public Set<Long> allInfoProductIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().getInfoProductIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().getInfoProductIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allInfoFormatIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getOnNotification() != null ) {
+            ids.addAll( getOnNotification().getInfoFormatIds() );
+        }
+        if ( getOnRequest() != null ) {
+            ids.addAll( getOnRequest().getInfoFormatIds() );
+        }
+        return ids;
+    }
+
+
+
     public boolean isOnRequestFromOther() {
         return requestFromOther != null;
     }

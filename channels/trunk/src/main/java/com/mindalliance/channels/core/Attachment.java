@@ -48,10 +48,6 @@ public interface Attachment extends Serializable, Comparable<Attachment> {
          * List of end-line or comma-separated tags to pre-load into a plan.
          */
         TAGS( "Tags" ),
-        /**
-         * Info standards.
-         */
-        InfoStandards( "Info standards" ),
 
         Help( "Help" );
 
@@ -89,8 +85,6 @@ public interface Attachment extends Serializable, Comparable<Attachment> {
     String getUrl();
 
     boolean isHelp();
-
-    boolean isInfoStandards();
 
     /**
      * Is MOU.

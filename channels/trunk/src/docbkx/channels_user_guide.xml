@@ -9949,9 +9949,12 @@
                       <para>Remove the redundant channel </para>
                     </listitem>
                     <listitem>
-                      <para>or remove the channel that makes it redundant.</para>
+                      <para>or remove the channel that makes it redundant</para>
                     </listitem>
-                  </itemizedlist></entry>
+                  <listitem>
+                    <para>or set the formats used differently.</para>
+                  </listitem>
+                </itemizedlist></entry>
 
                 <entry><para>No</para></entry>
               </row>
@@ -10809,23 +10812,6 @@
               </row>
 
               <row>
-                <entry><para>Flow not standard compliant</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Add expected element of information </para>
-                    </listitem>
-                    <listitem>
-                      <para>or remove information standard tag.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>No</para></entry>
-              </row>
-
-              <row>
                 <entry><para>No user participates as this agent agent</para></entry>
 
                 <entry><para>Medium</para></entry>
@@ -11002,7 +10988,22 @@
                 <entry><para>No</para></entry>
               </row>
               
-
+              <row>
+                <entry><para>Information product defines no standard element of information</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Remove all references to the information product</para>
+                  </listitem>
+                  <listitem>
+                    <para>or add elements of information to the information product</para>
+                  </listitem>
+                </itemizedlist></entry>
+                <entry><para>No</para></entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>

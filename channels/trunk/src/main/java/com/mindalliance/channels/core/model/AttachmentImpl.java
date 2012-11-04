@@ -101,11 +101,6 @@ public class AttachmentImpl implements Attachment {
     }
 
     @Override
-    public boolean isInfoStandards() {
-        return type == Type.InfoStandards;
-    }
-
-    @Override
     public boolean isHelp() {
         return type == Type.Help;
     }

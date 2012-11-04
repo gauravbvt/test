@@ -1,13 +1,13 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -33,9 +33,10 @@ public class RedundantEOI extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        for ( final ElementOfInformation eoi : flow.getEois() ) {
+        List<ElementOfInformation> eois = flow.getEffectiveEois();
+        for ( final ElementOfInformation eoi : eois ) {
             boolean redundant = CollectionUtils.exists(
-                    flow.getEois(),
+                    eois,
                     new Predicate() {
                         public boolean evaluate( Object object ) {
                             ElementOfInformation other = (ElementOfInformation) object;

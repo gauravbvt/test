@@ -209,13 +209,13 @@ public class AssignedLocationPanel extends AbstractCommandablePanel {
         if ( !info.isEmpty() ) {
             for ( Flow flow : getPart().getAllSharingReceives() ) {
                 if ( Matcher.same( info, flow.getName() ) )
-                    for ( ElementOfInformation eoi : flow.getEois() ) {
+                    for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                         choices.add( eoi.getContent() );
                     }
             }
             for ( Flow flow : getPart().getNeeds() ) {
                 if ( Matcher.same( info, flow.getName() ) )
-                    for ( ElementOfInformation eoi : flow.getEois() ) {
+                    for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                         choices.add( eoi.getContent() );
                     }
             }

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Issue;
@@ -8,6 +7,7 @@ import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,23 +33,23 @@ public class RedundantChannel extends AbstractIssueDetector {
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
         Place locale = queryService.getPlan().getLocale();
-        for ( Channel channel : channels ) {
-            for ( Channel other : channels ) {
-                if ( !channel.equals( other ) ) {
-                    if ( channel.getAddress().isEmpty() &&
-                            other.getAddress().isEmpty()
-                            && channel.getMedium().narrowsOrEquals( other.getMedium(), locale ) ) {
+        for ( int i = 0; i < channels.size(); i++ ) {
+            for ( int j = 0; j < channels.size(); j++ ) {
+                if ( i != j ) {
+                    Channel channel = channels.get( i );
+                    Channel other = channels.get( j );
+                    if ( channel.narrowsOrEquals( other, locale ) ) {
                         Issue issue = makeIssue( queryService, Issue.VALIDITY, (ModelObject) channelable );
                         issue.setDescription( "Channel \""
                                 + channel.getLabel()
-                                + "\" is a special case of \""
+                                + "\" is a redundant with \""
                                 + other.getLabel()
-                                + "\" and is thus redundant." );
+                                + "\"." );
                         issue.setRemediation( "Remove \""
                                 + channel.getLabel()
                                 + "\"\nor remove channel \""
                                 + other.getLabel()
-                                + "\"." );
+                                + "\nor set differently the format used in either." );
                         issue.setSeverity( Level.Low );
                         issues.add( issue );
                     }

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -29,15 +30,26 @@ public class ChannelConverter extends AbstractChannelsConverter {
                          HierarchicalStreamWriter writer,
                          MarshallingContext context ) {
         Channel channel = (Channel) source;
+        // medium
         writer.startNode( "medium" );
         TransmissionMedium medium = channel.getMedium();
         writer.addAttribute( "id", "" + medium.getId() );
         writer.addAttribute( "kind", medium.isType() ? "Type" : "Actual" );
         writer.setValue( medium.getName() );
         writer.endNode();
+        // address
         writer.startNode( "address" );
         writer.setValue( channel.getAddress() );
         writer.endNode();
+        // format
+        InfoFormat format = channel.getFormat();
+        if ( format != null ) {
+            writer.startNode( "format" );
+            writer.addAttribute( "id", "" + format.getId() );
+            writer.addAttribute( "kind", format.isType() ? "Type" : "Actual" );
+            writer.setValue( format.getName() );
+            writer.endNode();
+        }
     }
 
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
@@ -59,6 +71,18 @@ public class ChannelConverter extends AbstractChannelsConverter {
                 channel.setMedium( medium );
             } else if ( nodeName.equals( "address" ) ) {
                 channel.setAddress( reader.getValue() );
+            } else if ( nodeName.equals( "format" ) ) {
+                String id = reader.getAttribute( "id" );
+                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
+                String name = reader.getValue();
+                InfoFormat format;
+                format = getEntity(
+                        InfoFormat.class,
+                        name,
+                        id == null ? null : Long.parseLong( id ),
+                        kind,
+                        context );
+                channel.setFormat( format );
             }
             reader.moveUp();
         }

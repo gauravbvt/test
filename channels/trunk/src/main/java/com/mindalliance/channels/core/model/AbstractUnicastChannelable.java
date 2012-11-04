@@ -111,6 +111,11 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     }
 
     @Override
+    public boolean canSetFormat() {
+        return false;
+    }
+
+    @Override
     public boolean isUndefined() {
         return super.isUndefined() && channels.isEmpty();
     }

@@ -9,6 +9,7 @@ package com.mindalliance.channels.pages;
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.GeoLocatable;
@@ -57,7 +58,7 @@ import com.mindalliance.channels.pages.components.plan.menus.PlanSearchingMenuPa
 import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
 import com.mindalliance.channels.pages.components.segment.ExpandedFlowPanel;
 import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
-import com.mindalliance.channels.pages.components.segment.FlowEOIsPanel;
+import com.mindalliance.channels.pages.components.segment.FlowsEOIsFloatingPanel;
 import com.mindalliance.channels.pages.components.segment.MaximizedFlowPanel;
 import com.mindalliance.channels.pages.components.segment.OverridesPanel;
 import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
@@ -1270,8 +1271,8 @@ PopupSettings.RESIZABLE |
             eoisPanel.setOutputMarkupId( true );
             makeVisible( eoisPanel, false );
         } else {
-            eoisPanel = new FlowEOIsPanel( "eois",
-                    new Model<Flow>( flowViewed ),
+            eoisPanel = new FlowsEOIsFloatingPanel( "eois",
+                    new Model<EOIsHolder>( flowViewed ),
                     getPart().isSend( flowViewed ),
                     getReadOnlyExpansions() );
         }
@@ -2472,8 +2473,8 @@ PopupSettings.RESIZABLE |
                         || change.isAspect( "eois" ) ) ) {
             addEOIsPanel();
             target.add( eoisPanel );
-        } else if ( eoisPanel instanceof FlowEOIsPanel ) {
-            ( (FlowEOIsPanel) eoisPanel ).refresh( target, change, updated );
+        } else if ( eoisPanel instanceof FlowsEOIsFloatingPanel ) {
+            ( (FlowsEOIsFloatingPanel) eoisPanel ).refresh( target, change, updated );
         }
     }
 

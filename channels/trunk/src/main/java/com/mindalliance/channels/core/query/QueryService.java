@@ -1615,4 +1615,11 @@ public interface QueryService {
      * @return a list of supervising actors
      */
     List<Actor> findAllSupervisorsOf( Actor actor );
+
+    /**
+     * Make a name for a new entity.
+     * @param entityClass an entity class
+     * @return a string
+     */
+    String makeNameForNewEntity( Class<? extends ModelEntity> entityClass );
 }

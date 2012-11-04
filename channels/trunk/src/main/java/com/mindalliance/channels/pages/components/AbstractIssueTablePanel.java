@@ -72,7 +72,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
      * Survey service.
      */
 
-    @SpringBean
+    @SpringBean(name="surveysDao")
     SurveysDAO surveysDAO;
 
     @SpringBean

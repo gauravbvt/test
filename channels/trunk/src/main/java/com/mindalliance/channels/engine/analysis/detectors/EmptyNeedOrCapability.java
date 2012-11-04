@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Flow flow = (Flow) modelObject;
         List<Issue> issues = new ArrayList<Issue>();
-        if ( !flow.getName().trim().isEmpty() && flow.getEois().isEmpty() ) {
+        if ( !flow.getName().trim().isEmpty() && flow.getEffectiveEois().isEmpty() ) {
             DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
             issue.setSeverity( Level.Low );
             String needOrCapability = flow.getTarget().isConnector() ? "capability" : "need";

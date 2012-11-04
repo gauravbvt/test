@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
@@ -161,6 +163,16 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
                     getExpansions() );
         } else if ( getObject() instanceof TransmissionMedium ) {
             return new MediumDetailsPanel(
+                    "aspect",
+                    new PropertyModel<ModelEntity>( this, "object" ),
+                    getExpansions() );
+        } else if ( getObject() instanceof InfoProduct ) {
+            return new InfoProductDetailsPanel(
+                    "aspect",
+                    new PropertyModel<ModelEntity>( this, "object" ),
+                    getExpansions() );
+        } else if ( getObject() instanceof InfoFormat ) {
+            return new InfoFormatDetailsPanel(
                     "aspect",
                     new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );

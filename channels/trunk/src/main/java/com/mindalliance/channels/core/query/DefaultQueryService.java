@@ -34,6 +34,8 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -393,7 +395,7 @@ public abstract class DefaultQueryService implements QueryService {
         if ( beneficiary.getOrganization().narrowsOrEquals( agreement.getBeneficiary(), getPlan().getLocale() )
                 && Matcher.same( agreement.getInformation(), sharing.getName() ) ) {
             List<ElementOfInformation> eois = agreement.getEois();
-            if ( eois.isEmpty() || subsetOf( sharing.getEois(), eois ) ) {
+            if ( eois.isEmpty() || subsetOf( sharing.getEffectiveEois(), eois ) ) {
                 String usage = agreement.getUsage();
                 String otherText = beneficiary.getPart().getTask();
                 if ( usage.isEmpty()
@@ -491,6 +493,12 @@ public abstract class DefaultQueryService implements QueryService {
             return (T) Role.UNKNOWN;
         else if ( clazz.isAssignableFrom( TransmissionMedium.class ) && TransmissionMedium.UNKNOWN.getId() == id )
             return (T) TransmissionMedium.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Requirement.class ) && Requirement.UNKNOWN.getId() == id )
+            return (T) Requirement.UNKNOWN;
+        else if ( clazz.isAssignableFrom( InfoProduct.class ) && InfoProduct.UNKNOWN.getId() == id )
+            return (T) InfoProduct.UNKNOWN;
+        else if ( clazz.isAssignableFrom( InfoFormat.class ) && InfoFormat.UNKNOWN.getId() == id )
+            return (T) InfoFormat.UNKNOWN;
         else
             throw new NotFoundException();
     }
@@ -1161,7 +1169,7 @@ public abstract class DefaultQueryService implements QueryService {
     private static List<Dissemination> findDisseminationsInFlow( Flow flow, Subject subject, boolean showTargets,
                                                                  Part startPart, Subject startSubject ) {
         List<Dissemination> disseminations = new ArrayList<Dissemination>();
-        for ( ElementOfInformation eoi : flow.getEois() ) {
+        for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
             Transformation xform = eoi.getTransformation();
             if ( xform.isNone() || subject.isRoot() ) {
                 if ( Matcher.same( flow.getName(), subject.getInfo() )
@@ -1285,7 +1293,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     private static ElementOfInformation disseminatingEoi( final Flow flow, final Subject subject ) {
         return (ElementOfInformation) CollectionUtils.find(
-                flow.getEois(),
+                flow.getEffectiveEois(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -1986,7 +1994,7 @@ public abstract class DefaultQueryService implements QueryService {
     private boolean satisfiesNeed( Flow send, Flow need ) {
         return Matcher.same( send.getName(), need.getName() )
                 &&
-                ( need.getEois().isEmpty()
+                ( need.getEffectiveEois().isEmpty()
                         || hasCommonEOIs( send, need ) );
     }
 
@@ -2135,12 +2143,12 @@ public abstract class DefaultQueryService implements QueryService {
         List<ElementOfInformation> commonEOIs = new ArrayList<ElementOfInformation>();
         List<ElementOfInformation> shorter;
         List<ElementOfInformation> longer;
-        if ( flow.getEois().size() <= otherFlow.getEois().size() ) {
-            shorter = flow.getEois();
-            longer = otherFlow.getEois();
+        if ( flow.getEffectiveEois().size() <= otherFlow.getEffectiveEois().size() ) {
+            shorter = flow.getEffectiveEois();
+            longer = otherFlow.getEffectiveEois();
         } else {
-            longer = flow.getEois();
-            shorter = otherFlow.getEois();
+            longer = flow.getEffectiveEois();
+            shorter = otherFlow.getEffectiveEois();
         }
         for ( final ElementOfInformation eoi : shorter ) {
             ElementOfInformation matching = (ElementOfInformation) CollectionUtils.find(
@@ -2601,12 +2609,8 @@ public abstract class DefaultQueryService implements QueryService {
         for ( ModelObject mo : findAllModelObjects() ) {
             List<Tag> tags = mo.getTags();
             for ( Tag tag : tags ) {
-                if ( tag.isInfoStandard() ) {
-                    domain.add( tag );
-                } else {
-                    for ( String s : tag.getAllComponents() ) {
-                        domain.add( new Tag( s ) );
-                    }
+                for ( String s : tag.getAllComponents() ) {
+                    domain.add( new Tag( s ) );
                 }
             }
         }
@@ -2867,7 +2871,7 @@ public abstract class DefaultQueryService implements QueryService {
                 Flow alternate = it.next();
                 if ( !alternate.equals( flow ) && alternate.isSharing()
                         && Matcher.same( flow.getName(), alternate.getName() )
-                        && subsetOf( flow.getEois(), alternate.getEois() ) )
+                        && subsetOf( flow.getEffectiveEois(), alternate.getEffectiveEois() ) )
                     answer.add( alternate );
             }
         }
@@ -3052,8 +3056,8 @@ public abstract class DefaultQueryService implements QueryService {
      */
     @Override
     public Boolean hasCommonEOIs( Flow flow, Flow otherFlow ) {
-        List<ElementOfInformation> eois = flow.getEois();
-        final List<ElementOfInformation> otherEois = otherFlow.getEois();
+        List<ElementOfInformation> eois = flow.getEffectiveEois();
+        final List<ElementOfInformation> otherEois = otherFlow.getEffectiveEois();
         return CollectionUtils.exists(
                 eois,
                 new Predicate() {
@@ -3077,7 +3081,7 @@ public abstract class DefaultQueryService implements QueryService {
     public List<String> findAllEoiNames() {
         Set<String> eoiNames = new HashSet<String>();
         for ( Flow flow : findAllFlows() ) {
-            for ( ElementOfInformation eoi : flow.getEois() ) {
+            for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                 eoiNames.add( ChannelsUtils.smartUncapitalize( eoi.getContent() ) );
             }
         }
@@ -3581,13 +3585,29 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Actor> findAllSupervisorsOf( Actor actor ) {
-        Set<Actor> supervisors = new HashSet<Actor>(  );
-        for ( Employment employment : findAllEmploymentsForActor( actor )) {
+        Set<Actor> supervisors = new HashSet<Actor>();
+        for ( Employment employment : findAllEmploymentsForActor( actor ) ) {
             Actor supervisor = employment.getSupervisor();
             if ( supervisor != null )
                 supervisors.add( supervisor );
         }
         return new ArrayList<Actor>( supervisors );
+    }
+
+    @Override
+    public String makeNameForNewEntity( Class<? extends ModelEntity> entityClass ) {
+        boolean nameTaken = false;
+        String baseName = ModelEntity.NEW_NAME;
+        String name = baseName;
+        int i = 2;
+        do {
+            nameTaken = getDao().find( entityClass, name ) != null;
+            if ( nameTaken ) {
+                name = baseName + Integer.toString( i );
+                i++;
+            }
+        } while ( nameTaken );
+        return name;
     }
 
     @SuppressWarnings( "unchecked" )

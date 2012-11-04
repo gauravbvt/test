@@ -100,7 +100,7 @@ public class CommitmentReportPanel extends AbstractUpdatablePanel {
                                 );
                             }
                         } )
-                        .setVisible( !reportHelper.getFlow().getEois().isEmpty() ),
+                        .setVisible( !reportHelper.getFlow().getEffectiveEois().isEmpty() ),
 
                 new Label( "commonContact", new PropertyModel<String>( this, "commonContact" ) )
                         .add( reportHelper.newCssClass( isSending() ? "sending" : "receiving" ) ),

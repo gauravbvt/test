@@ -167,11 +167,11 @@ public abstract class AbstractChannelsConverter implements Converter {
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
         List<UserIssue> issues = getPlanDao().findAllUserIssues( modelObject );
-       for ( UserIssue issue : issues ) {
+        for ( UserIssue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
-           writer.endNode();
-       }
+            writer.endNode();
+        }
     }
 
     /**
@@ -196,7 +196,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * Export attachments.
      *
      * @param attachable an attachable
-     * @param writer      a writer
+     * @param writer     a writer
      */
     protected void exportAttachments(
             Attachable attachable,
@@ -218,7 +218,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * Import attachment tickets.
      *
      * @param attachable an attachable
-     * @param reader      a reader
+     * @param reader     a reader
      */
     protected void importAttachments( Attachable attachable, HierarchicalStreamReader reader ) {
         AttachmentManager attachmentManager = getAttachmentManager();
@@ -226,22 +226,27 @@ public abstract class AbstractChannelsConverter implements Converter {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "attachment" ) ) {
-                Attachment.Type type = Attachment.Type.valueOf( reader.getAttribute( "type" ) );
-                String name;
-                String url;
-                if ( IteratorUtils.toList( reader.getAttributeNames() ).contains( "url" )) {
-                    // new format
-                    url = reader.getAttribute( "url" );
-                    name = reader.getValue();
+                String typeName = reader.getAttribute( "type" );
+                if ( typeName.equals( ( "InfoStandards" ) ) ) {  // obsolete
+                    LOG.warn( "Dropping info standards attachment - obsolete" );
                 } else {
-                    // old format
-                    url = reader.getValue();
-                    name = "";
-                }
-                if ( attachmentManager.exists( getPlan(), url ) ) {
-                    attachmentManager.addAttachment( new AttachmentImpl( url, type, name ), attachable );
-                } else {
-                    LOG.warn( "Dropping attachment to {} (not found)", url );
+                    Attachment.Type type = Attachment.Type.valueOf( typeName );
+                    String name;
+                    String url;
+                    if ( IteratorUtils.toList( reader.getAttributeNames() ).contains( "url" ) ) {
+                        // new format
+                        url = reader.getAttribute( "url" );
+                        name = reader.getValue();
+                    } else {
+                        // old format
+                        url = reader.getValue();
+                        name = "";
+                    }
+                    if ( attachmentManager.exists( getPlan(), url ) ) {
+                        attachmentManager.addAttachment( new AttachmentImpl( url, type, name ), attachable );
+                    } else {
+                        LOG.warn( "Dropping attachment to {} (not found)", url );
+                    }
                 }
             }
             reader.moveUp();
@@ -356,13 +361,14 @@ public abstract class AbstractChannelsConverter implements Converter {
         return name == null
                 ? ModelEntity.Kind.Actual
                 : "Type".equals( name )
-                ? ModelEntity.Kind.Type                                     
+                ? ModelEntity.Kind.Type
                 : ModelEntity.Kind.Actual;
     }
 
     /**
      * Export tags.
-     * @param writer a hierarchical stream writer
+     *
+     * @param writer   a hierarchical stream writer
      * @param taggable a taggable
      */
     protected void writeTags( HierarchicalStreamWriter writer, Taggable taggable ) {

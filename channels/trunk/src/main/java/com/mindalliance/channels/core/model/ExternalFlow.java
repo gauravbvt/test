@@ -206,6 +206,24 @@ public class ExternalFlow extends Flow {
             return flow.getEois( );
     }
 
+    public List<ElementOfInformation> getEffectiveEois() {
+        Flow flow = getConnectorFlow();
+        if ( flow == null )
+            return super.getEffectiveEois( );
+        else
+            return flow.getEffectiveEois( );
+    }
+
+
+    public List<ElementOfInformation> getLocalEois() {
+        Flow flow = getConnectorFlow();
+        if ( flow == null )
+            return super.getLocalEois( );
+        else
+            return flow.getLocalEois( );
+    }
+
+
     public void setEois( List<ElementOfInformation> elements ) {
         Flow flow = getConnectorFlow();
         if ( flow == null )
@@ -213,6 +231,15 @@ public class ExternalFlow extends Flow {
         else
             flow.setEois( elements );
     }
+
+    public void setLocalEois( List<ElementOfInformation> elements ) {
+        Flow flow = getConnectorFlow();
+        if ( flow == null )
+            super.setLocalEois( elements );
+        else
+            flow.setLocalEois( elements );
+    }
+
 
     /**
      * Delegate to connector flow.

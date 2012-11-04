@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
@@ -17,6 +16,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +38,9 @@ public class FlowDeclassifies extends AbstractIssueDetector {
             Part source = (Part) flow.getSource();
             List<Flow> receives = source.getAllSharingReceives();
             for ( Flow receive : receives ) {
-                for ( ElementOfInformation inEOI : receive.getEois() ) {
+                for ( ElementOfInformation inEOI : receive.getEffectiveEois() ) {
                     if ( inEOI.isClassified() ) {
-                        for ( ElementOfInformation outEOI : flow.getEois() ) {
+                        for ( ElementOfInformation outEOI : flow.getEffectiveEois() ) {
                             if ( declassifies( outEOI, flow, inEOI, receive, queryService ) ) {
                                 Issue issue = makeIssue( queryService, Issue.ROBUSTNESS, flow );
                                 Subject inSubject = new Subject( receive.getName(), inEOI.getContent() );

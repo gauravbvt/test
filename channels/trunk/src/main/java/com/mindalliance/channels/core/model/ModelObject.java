@@ -293,7 +293,9 @@ public abstract class ModelObject
                 || equals( Role.UNKNOWN )
                 || equals( Phase.UNKNOWN )
                 || equals( TransmissionMedium.UNKNOWN )
-                || equals( Requirement.UNKNOWN );
+                || equals( Requirement.UNKNOWN )
+                || equals( InfoProduct.UNKNOWN )
+                || equals( InfoFormat.UNKNOWN );
     }
 
     /**
@@ -387,7 +389,7 @@ public abstract class ModelObject
         Class[] classes = {
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class,
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
-                Requirement.class
+                Requirement.class, InfoFormat.class, InfoProduct.class
         };
         return Arrays.asList( classes );
     }

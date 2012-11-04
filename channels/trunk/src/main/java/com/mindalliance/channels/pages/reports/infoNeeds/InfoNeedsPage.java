@@ -366,7 +366,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             for ( Flow incoming : part.getAllSharingReceives() ) {
                 if ( Matcher.same( incoming.getName(), info ) ) {
                     incomingFlows.add( incoming );
-                    for ( ElementOfInformation eoi : incoming.getEois() ) {
+                    for ( ElementOfInformation eoi : incoming.getEffectiveEois() ) {
                         eoiContents.add( eoi.getContent() );
                     }
                 }
@@ -375,7 +375,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             for ( Flow need : part.getNeeds() ) {
                 if ( Matcher.same( need.getName(), info ) ) {
                     needs.add( need );
-                    for ( ElementOfInformation eoi : need.getEois() ) {
+                    for ( ElementOfInformation eoi : need.getEffectiveEois() ) {
                         eoiContents.add( eoi.getContent() );
                     }
                 }
@@ -387,7 +387,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 List<Flow> needsForEoi = (List<Flow>) CollectionUtils.select( needs, new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return content.isEmpty() || CollectionUtils.exists( ( (Flow) object ).getEois(),
+                        return content.isEmpty() || CollectionUtils.exists( ( (Flow) object ).getEffectiveEois(),
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate(
@@ -401,7 +401,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 List<Flow> incomingWithEoi = (List<Flow>) CollectionUtils.select( incomingFlows, new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return content.isEmpty() || CollectionUtils.exists( ( (Flow) object ).getEois(),
+                        return content.isEmpty() || CollectionUtils.exists( ( (Flow) object ).getEffectiveEois(),
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate(

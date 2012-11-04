@@ -2,8 +2,8 @@ package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.ElementOfInformation;
-import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Transformation;
@@ -38,15 +38,15 @@ public class TransformationPanel extends AbstractCommandablePanel {
 
     private WebMarkupContainer subjectsContainer;
     private DropDownChoice<String> typeChoice;
-    private IModel<Flow> flowModel;
+    private IModel<EOIsHolder> eoiHolderModel;
     private int eoiIndex;
     private static final int MAX_INFO_LENGTH = 20;
 
     public TransformationPanel( String id,
-                                IModel<Flow> flowModel,
+                                IModel<EOIsHolder> eoiHolderModel,
                                 int eoiIndex ) {
         super( id );
-        this.flowModel = flowModel;
+        this.eoiHolderModel = eoiHolderModel;
         this.eoiIndex = eoiIndex;
         init();
     }
@@ -70,7 +70,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
                 addSubjectsList();
                 adjustFields();
                 target.add( subjectsContainer );
-                update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
+                update( target, new Change( Change.Type.Updated, getEOIHolder(), "eois" ) );
             }
         } );
         add( typeChoice );
@@ -87,7 +87,6 @@ public class TransformationPanel extends AbstractCommandablePanel {
                 addRemove( item );
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( cssClasses( item, wrappers.size() ) ) ) );
             }
         };
@@ -96,12 +95,12 @@ public class TransformationPanel extends AbstractCommandablePanel {
 
     private void addSubject( ListItem<SubjectWrapper> item ) {
         final SubjectWrapper wrapper = item.getModelObject();
-        Part source =  (Part)getFlow().getSource();
+        Part source =  (Part) getEOIHolder().getSource();
         final List<Subject> inputSubjects = source.getAllSubjects( false );
         List<Subject> subjectChoices = new ArrayList<Subject>( inputSubjects );
         if ( getTransformation().getType() == Transformation.Type.Renaming ) {
             subjectChoices.remove( new Subject(
-                    getFlow().getName(),
+                    getEOIHolder().getName(),
                     getElementOfInformation().getContent() ) );
         } else if ( getTransformation().getType() == Transformation.Type.Aggregation ) {
             subjectChoices.removeAll( getTransformation().getSubjects() );
@@ -126,7 +125,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
                     addSubjectsList();
                     target.add( subjectsContainer );
                 }
-                update( target, new Change( Change.Type.Updated, getFlow(), "eois" ) );
+                update( target, new Change( Change.Type.Updated, getEOIHolder(), "eois" ) );
             }
         } );
         subjectText.setVisible( !isReadOnly() && wrapper.isMarkedForCreation() );
@@ -153,7 +152,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
 
 
     private boolean isReadOnly() {
-        return !isLockedByUser( getFlow() ) || !getFlow().canSetNameAndElements();
+        return !isLockedByUser( getEOIHolder() ) || !getEOIHolder().canSetElements();
     }
 
     private void addRemove( ListItem<SubjectWrapper> item ) {
@@ -165,7 +164,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
                 addSubjectsList();
                 target.add( subjectsContainer );
                 update( target,
-                        new Change( Change.Type.Updated, getFlow(), "eois" ) );
+                        new Change( Change.Type.Updated, getEOIHolder(), "eois" ) );
             }
         };
         makeVisible( deleteLink, !isReadOnly() && !wrapper.isMarkedForCreation() );
@@ -203,7 +202,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
     public void setTypeLabel( String val ) {
         Transformation.Type type = Transformation.Type.valueOfLabel( val );
         doCommand(
-                UpdateObject.makeCommand( getUser().getUsername(), getFlow(),
+                UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
                         "eois[" + getEoiIndex() + "].transformation.type",
                         type,
                         UpdateObject.Action.Set )
@@ -216,11 +215,11 @@ public class TransformationPanel extends AbstractCommandablePanel {
     }
 
     private ElementOfInformation getElementOfInformation() {
-        return getFlow().getEois().get( getEoiIndex() );
+        return getEOIHolder().getEffectiveEois().get( getEoiIndex() );
     }
 
-    private Flow getFlow() {
-        return flowModel.getObject();
+    private EOIsHolder getEOIHolder() {
+        return eoiHolderModel.getObject();
     }
 
     private int getEoiIndex() {
@@ -249,7 +248,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
         public void removeSubject() {
             assert !isMarkedForCreation();
             doCommand(
-                    UpdateObject.makeCommand( getUser().getUsername(), getFlow(),
+                    UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
                             "eois[" + getEoiIndex() + "].transformation.subjects",
                             getSubject(),
                             UpdateObject.Action.Remove )
@@ -266,7 +265,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
             assert isMarkedForCreation();
             if ( subject != null )
                 doCommand(
-                        UpdateObject.makeCommand( getUser().getUsername(), getFlow(),
+                        UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
                                 "eois[" + getEoiIndex() + "].transformation.subjects",
                                 subject,
                                 UpdateObject.Action.Add )

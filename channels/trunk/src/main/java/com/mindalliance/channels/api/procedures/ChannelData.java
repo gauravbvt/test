@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
@@ -19,7 +20,7 @@ import java.io.Serializable;
  * Date: 3/20/12
  * Time: 9:46 PM
  */
-@XmlType( propOrder = {"mediumId", "medium", "address"} )
+@XmlType( propOrder = {"mediumId", "medium", "address", "formatId", "format"} )
 public class ChannelData  implements Serializable {
 
     /**
@@ -31,6 +32,7 @@ public class ChannelData  implements Serializable {
     private long transmissionMediumId;
     private String address;
     private TransmissionMedium medium;
+    private InfoFormat format;
 
     public ChannelData() {
         // required
@@ -39,6 +41,7 @@ public class ChannelData  implements Serializable {
     public ChannelData( Channel channel, QueryService queryService ) {
         transmissionMediumId = channel.getMedium().getId();
         address = channel.getAddress();
+        format = channel.getFormat();
         init( queryService );
     }
 
@@ -65,6 +68,17 @@ public class ChannelData  implements Serializable {
     public String getMedium() {
         return medium == null ? null : medium.getName();
     }
+
+    @XmlElement
+    public Long getFormatId() {
+        return format == null ? null : format.getId();
+    }
+
+    @XmlElement
+    public String getFormat() {
+        return format == null ? null : format.getName();
+    }
+
 
     @XmlElement
     public String getAddress() {

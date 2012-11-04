@@ -392,7 +392,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             userContactInfoService.setAddress( getUserInfo(), channel, address );
         }
 
-       @Override
+        @Override
+        public boolean canSetFormat() {
+            return false;
+        }
+
+        @Override
         public String getChannelsString() {
             return Channel.toString( getEffectiveChannels() );
         }

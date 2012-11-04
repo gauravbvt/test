@@ -13,8 +13,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -35,7 +35,7 @@ public class UntimelyDissemination extends AbstractIssueDetector {
         final Flow flow = (Flow) modelObject;
         if ( flow.isNeed() ) {
             Part target = (Part) flow.getTarget();
-            for ( ElementOfInformation eoi : flow.getEois() ) {
+            for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                 if ( eoi.isTimeSensitive() ) {
                     Subject subject = new Subject( flow.getName(), eoi.getContent() );
                     // dissemination from sources

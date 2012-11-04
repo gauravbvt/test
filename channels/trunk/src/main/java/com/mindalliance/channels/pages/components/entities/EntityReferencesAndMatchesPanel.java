@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
@@ -192,6 +194,25 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
                 ? getQueryService().findAllReferencing( getEntity(), Flow.class )
                 : new ArrayList<Flow>();
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<InfoProduct> findIndexedInfoProducts() {
+            return isShowReferences()
+                    ? getQueryService().findAllReferencing( getEntity(), InfoProduct.class )
+                    : new ArrayList<InfoProduct>();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        protected List<InfoFormat> findIndexedInfoFormats() {
+            return isShowReferences()
+                    ? getQueryService().findAllReferencing( getEntity(), InfoFormat.class )
+                    : new ArrayList<InfoFormat>();
+        }
+
 
         /**
          * {@inheritDoc}

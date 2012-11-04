@@ -6,18 +6,17 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.core.model.Node;
-import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
-import org.apache.commons.collections.CollectionUtils;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +50,6 @@ public class InvalidChannel extends AbstractIssueDetector {
                 issue.setDescription( channel.toString() + ": " + problem );
                 issue.setRemediation( remediation );
                 issue.setSeverity( getSeverity( channelable, queryService ) );
-                issues.add( issue );
-            }
-            // Check for duplicate channels.
-            if ( CollectionUtils.cardinality( channel, channels ) > 1 ) {
-                Issue issue = makeIssue( queryService, Issue.VALIDITY, modelObject );
-                issue.setDescription( channel.toString() + " is repeated." );
-                issue.setRemediation( "Remove this channel." );
-                issue.setSeverity( Level.Low );
                 issues.add( issue );
             }
         }

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.DiscoveryData;
-import com.mindalliance.channels.api.procedures.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.InformationData;
 import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.api.procedures.TaskData;

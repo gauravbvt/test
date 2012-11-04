@@ -118,4 +118,10 @@ public interface Channelable extends Identifiable {
      * @param address an address
      */
     void setAddress( Channel channel, String address );
+
+    /**
+     * Whether format can be set.
+     * @return a boolean
+     */
+    boolean canSetFormat();
 }

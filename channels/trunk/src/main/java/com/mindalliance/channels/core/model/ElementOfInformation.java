@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.Matcher;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -221,11 +223,19 @@ public class ElementOfInformation implements Classifiable {
      * Add classifications not already encompassed.
      *
      * @param classificationList a list of classifications
-     * @param plan the plan
+     * @param plan               the plan
      */
     public void addClassifications( List<Classification> classificationList, Plan plan ) {
         for ( Classification classification : classificationList )
             if ( !Classification.encompass( classifications, classification, plan ) )
-                 classifications.add( classification );
+                classifications.add( classification );
     }
-}
+
+
+    private boolean sameDefinitionAs( ElementOfInformation eoi ) {
+        return Matcher.same( getContent(), eoi.getContent() )
+                && Matcher.same( getDescription(), eoi.getDescription() )
+                && Matcher.same( getSpecialHandling(), eoi.getSpecialHandling() );
+    }
+
+ }

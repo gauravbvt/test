@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
+import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.PlanPage;
@@ -64,16 +65,29 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private boolean canAddNewMedium = true;
 
+    /**
+     * New format type marker.
+     */
+    private static InfoFormat NewInfoFormatType;
+
+    private boolean canAddNewInfoFormat = true;
+
+
     static {
         NewMediumType = new TransmissionMedium( "New medium" );
         NewMediumType.setType();
         // fake id
         NewMediumType.setId( Long.MAX_VALUE );
+        NewInfoFormatType = new InfoFormat( "New format" );
+        NewInfoFormatType.setType();
+        // fake id
+        NewInfoFormatType.setId( Long.MAX_VALUE - 1 );
     }
 
-    public ChannelListPanel( String id, IModel<? extends Channelable> model, boolean canAddNewMedium ) {
+    public ChannelListPanel( String id, IModel<? extends Channelable> model, boolean canAddNewMediumAndFormat ) {
         super( id, model, null );
-        this.canAddNewMedium = canAddNewMedium;
+        this.canAddNewMedium = canAddNewMediumAndFormat;
+        this.canAddNewInfoFormat = canAddNewMediumAndFormat;
         init();
     }
 
@@ -108,6 +122,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private void doUpdate( AjaxRequestTarget target ) {
         wrappedChannels = null;
+        createChannelList();
         target.add( channelsList );
         update( target,
                 new Change( Change.Type.Updated, getChannelable(),
@@ -120,12 +135,13 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private void createChannelList() {
         channelsList = new WebMarkupContainer( "editable-container" );
+        channelsList.setOutputMarkupId( true );
         channelsList.add(
                 (ListView<Wrapper>) new WrapperListView(
                         "channels",
                         new PropertyModel<List<Wrapper>>( this, "wrappedChannels" ) ) );
         channelsList.setOutputMarkupId( true );
-        add( channelsList );
+        addOrReplace( channelsList );
     }
 
     /**
@@ -214,11 +230,9 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     TransmissionMedium medium = getMedium();
                     doAction( getChannelable(), UpdateObject.Action.Remove );
                     getCommander().cleanup( TransmissionMedium.class, medium.getName() );
+                    if ( getFormat() != null )
+                        getCommander().cleanup( InfoFormat.class, getFormat().getName() );
                 }
-/*
-                doAction( getChannelable(), included ? UpdateObject.Action.Add
-                        : UpdateObject.Action.Remove );
-*/
             }
         }
 
@@ -256,12 +270,40 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 if ( value.equals( NewMediumType ) ) {
                     medium = doSafeFindOrCreateType(
                             TransmissionMedium.class,
-                            NewMediumType.getName() );
+                            getQueryService().makeNameForNewEntity( TransmissionMedium.class ) );
                 } else {
                     medium = value;
                 }
                 channel.setMedium( medium );
                 doAction( channelable, UpdateObject.Action.Add );
+            }
+        }
+
+        public void setFormat( InfoFormat value ) {
+            if ( channel != null ) {
+                Channelable channelable = getChannelable();
+                if ( channelable.canSetFormat() ) {
+                    InfoFormat format;
+                    if ( value != null && value.equals(  NewInfoFormatType ) ) {
+                        format = doSafeFindOrCreateType(
+                                InfoFormat.class,
+                                getQueryService().makeNameForNewEntity( InfoFormat.class ) );
+                    } else {
+                        format = value == null || value.isUnknown() ? null : value;
+                    }
+                    int index = channelable.getModifiableChannels().indexOf( channel );
+                    if ( index >= 0 ) {
+                        String oldFormatName = channel.getFormat() == null ? null : channel.getFormat().getName();
+                        doCommand( channelable,
+                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                        "modifiableChannels[" + index + "].format",
+                                        format,
+                                        UpdateObject.Action.Set ) );
+                        if ( oldFormatName != null ) {
+                            getCommander().cleanup( InfoFormat.class, oldFormatName );
+                        }
+                    }
+                }
             }
         }
 
@@ -285,6 +327,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 }
             }
         }
+
+
+        public InfoFormat getFormat() {
+            return channel == null ? null : channel.getFormat();
+        }
+
 
         protected Change doCommand( Channelable channelable, Command command ) {
             if ( channelable.isModifiableInProduction() ) {
@@ -329,17 +377,12 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             item.add( addressLabel );
             TextField<String> addressField = createAddressField( wrapper );
             item.add( addressField );
-            item.add( createChoices( wrapper ) );
+            item.add( createMediaChoices( wrapper ) );
+            item.add( createFormatContainer( wrapper ) );
             item.add( createMover( wrapper ) );
-/*
-            Label channelText = new Label( "channel-string",                              // NON-NLS
-                    wrapper.getChannel().toString() );
-            channelText.setVisible( !getChannelable().isEntity() && wrapper.isReadOnly() );
-            item.add( channelText );
-*/
         }
 
-        private AjaxFallbackLink<?> createMover( final Wrapper wrapper ) {
+         private AjaxFallbackLink<?> createMover( final Wrapper wrapper ) {
             AjaxFallbackLink<?> result = new AjaxFallbackLink( "move-to-top" ) {          // NON-NLS
 
                 @Override
@@ -361,7 +404,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
         private List<TransmissionMedium> getCandidateMedia() {
             List<TransmissionMedium> candidates = new ArrayList<TransmissionMedium>();
-            candidates.addAll( getQueryService().listTypeEntities( TransmissionMedium.class ) );
+            candidates.add( TransmissionMedium.UNKNOWN );
+            candidates.addAll( getQueryService().listReferencedEntities( TransmissionMedium.class ) );
             Collections.sort( candidates, new Comparator<TransmissionMedium>() {
                 public int compare( TransmissionMedium o1, TransmissionMedium o2 ) {
                     return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
@@ -372,7 +416,23 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             return candidates;
         }
 
-        private DropDownChoice<TransmissionMedium> createChoices(
+        private List<InfoFormat> getCandidateFormats() {
+            List<InfoFormat> candidates = new ArrayList<InfoFormat>();
+            candidates.add( InfoFormat.UNKNOWN );
+            candidates.addAll( getQueryService().listReferencedEntities( InfoFormat.class ) );
+            Collections.sort( candidates, new Comparator<InfoFormat>() {
+                public int compare( InfoFormat o1, InfoFormat o2 ) {
+                    return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );
+                }
+            } );
+            if ( canAddNewInfoFormat )
+                candidates.add( NewInfoFormatType );
+            return candidates;
+        }
+
+
+
+        private DropDownChoice<TransmissionMedium> createMediaChoices(
                 final Wrapper wrapper ) {
             final DropDownChoice<TransmissionMedium> mediumDropDownChoice = new DropDownChoice<TransmissionMedium>(
                     "medium",
@@ -399,15 +459,51 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             return mediumDropDownChoice;
         }
 
-/*
-        private int maxMediumLabelSize() {
-            int max = 0;
-            for ( TransmissionMedium medium : getCandidateMedia() ) {
-                max = Math.max( max, medium.getLabel().length() );
-            }
-            return max;
+        private WebMarkupContainer createFormatContainer( Wrapper wrapper ) {
+            WebMarkupContainer formatContainer = new WebMarkupContainer( "formatContainer" );
+            InfoFormat format = wrapper.getFormat();
+            // format link
+            Component formatLinkOrLabel =
+                    format == null
+                        ? new Label("formatLink", "format")
+                        : findPage() instanceof PlanPage
+                            ? new ModelObjectLink(
+                                "formatLink",
+                                new Model<InfoFormat>( format ),
+                                new Model<String>( canBeEdited() ? "format" : "format " + format.getName() ) )
+                            : new Label( "formatLink", "format " +  format.getName() );
+            formatLinkOrLabel.setVisible( !wrapper.isMarkedForCreation() );
+            formatContainer.add( formatLinkOrLabel );
+            // format choices
+            final DropDownChoice<InfoFormat> formatDropDownChoice = new DropDownChoice<InfoFormat>(
+                    "formatChoice",
+                    new PropertyModel<InfoFormat>( wrapper, "format" ),
+                    getCandidateFormats(),
+                    new IChoiceRenderer<InfoFormat>() {
+                        public Object getDisplayValue( InfoFormat format ) {
+                            return format.isUnknown() ? "Choose One" : format.getLabel();
+                        }
+
+                        public String getIdValue( InfoFormat object, int index ) {
+                            return Integer.toString( index );
+                        }
+                    } );
+            formatDropDownChoice.add(
+                    new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            doUpdate( target );
+                        }
+                    } );
+
+            formatDropDownChoice.setVisible( canBeEdited() );
+            formatContainer.add( formatDropDownChoice );
+            formatContainer.setVisible(
+                    getChannelable().canSetFormat()
+                    && !(!canBeEdited() && wrapper.getFormat() == null ) // hide when read only and no format
+                    && !wrapper.isMarkedForCreation()  );
+            return formatContainer;
         }
-*/
 
         private TextField<String> createAddressField( Wrapper wrapper ) {
             TextField<String> addressField = new TextField<String>(

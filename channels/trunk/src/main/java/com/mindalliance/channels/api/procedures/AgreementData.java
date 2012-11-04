@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import org.apache.commons.lang.StringEscapeUtils;

@@ -137,8 +137,6 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
             String url = attachment.getUrl();
             if ( attachment.isTags() )
                 reloadTagsFromUrl( plan, url, new TagLoader( plan ) );
-            if ( attachment.isInfoStandards() )
-                reloadTagsFromUrl( plan, url, new InfoStandardsLoader( plan ) );
         }
     }
 
@@ -434,7 +432,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     public void removeAttachment( Attachment attachment, Attachable attachable ) {
         attachable.removeAttachment( attachment );
 
-        if ( attachable instanceof Plan && ( attachment.isTags() || attachment.isInfoStandards() ) )
+        if ( attachable instanceof Plan && ( attachment.isTags() ) )
             reloadTags( (Plan) attachable );
         LOG.debug( "Removed " + attachment + " from " + attachable );
     }
@@ -442,7 +440,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     @Override
     public void addAttachment( Attachment attachment, Attachable attachable ) {
         attachable.addAttachment( attachment );
-        if ( attachable instanceof Plan && ( attachment.isTags() || attachment.isInfoStandards() ) )
+        if ( attachable instanceof Plan && ( attachment.isTags() ) )
             reloadTags( (Plan) attachable );
         LOG.debug( "Added " + attachment + " from " + attachable );
     }

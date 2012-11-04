@@ -3,6 +3,8 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
+import com.mindalliance.channels.api.entities.InfoFormatData;
+import com.mindalliance.channels.api.entities.InfoProductData;
 import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
@@ -10,6 +12,8 @@ import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.entities.RoleData;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -36,7 +40,8 @@ import java.util.Set;
  * Date: 12/9/11
  * Time: 3:43 PM
  */
-@XmlType( propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media"} )
+@XmlType( propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media",
+        "infoProducts", "formats"} )
 public class EnvironmentData  implements Serializable {
 
     private ProceduresData procedures;
@@ -47,6 +52,8 @@ public class EnvironmentData  implements Serializable {
     private List<PlaceData> places;
     private List<RoleData> roles;
     private List<MediumData> media;
+    private List<InfoProductData> infoProducts;
+    private List<InfoFormatData> infoFormats;
     private Plan plan;
 
     public EnvironmentData() {
@@ -68,6 +75,8 @@ public class EnvironmentData  implements Serializable {
             initPlaces(serverUrl, planService );
             initRoles( serverUrl,planService );
             initMedia( serverUrl,planService );
+            initInfoProducts( serverUrl, planService );
+            initInfoFormats( serverUrl, planService );
         } catch ( NotFoundException e ) {
             throw new RuntimeException( e );
         }
@@ -94,7 +103,6 @@ public class EnvironmentData  implements Serializable {
             }
 
         }
-
     }
 
     private void initRoles( String serverUrl,PlanService planService ) throws NotFoundException {
@@ -111,8 +119,41 @@ public class EnvironmentData  implements Serializable {
                 }
             }
         }
-
     }
+
+    private void initInfoProducts( String serverUrl,PlanService planService ) throws NotFoundException {
+        infoProducts = new ArrayList<InfoProductData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allInfoProductIds() ) {
+            InfoProduct infoProduct = planService.find( InfoProduct.class, id );
+            infoProducts.add( new InfoProductData( serverUrl,infoProduct, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : infoProduct.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    infoProducts.add( new InfoProductData( serverUrl,(InfoProduct) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+        }
+    }
+
+    private void initInfoFormats( String serverUrl,PlanService planService ) throws NotFoundException {
+        infoFormats = new ArrayList<InfoFormatData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allInfoFormatIds() ) {
+            InfoFormat infoFormat = planService.find( InfoFormat.class, id );
+            infoFormats.add( new InfoFormatData( serverUrl,infoFormat, getPlan() ) );
+            added.add( id );
+            for ( ModelEntity category : infoFormat.getAllTypes() ) {
+                if ( !added.contains( category.getId() ) ) {
+                    infoFormats.add( new InfoFormatData( serverUrl,(InfoFormat) category, getPlan() ) );
+                    added.add( category.getId() );
+                }
+            }
+        }
+    }
+
+
 
     private void initPlaces( String serverUrl,PlanService planService ) throws NotFoundException {
         places = new ArrayList<PlaceData>();
@@ -231,6 +272,18 @@ public class EnvironmentData  implements Serializable {
         return media;
     }
 
+    @XmlElement( name = "infoProduct" )
+    public List<InfoProductData> getInfoProducts() throws NotFoundException {
+        return infoProducts;
+    }
+
+    @XmlElement( name = "format" )
+    public List<InfoFormatData> getFormats() throws NotFoundException {
+        return infoFormats;
+    }
+
+
+
     private Set<Long> allEventIds() {
         Set<Long> allIds = new HashSet<Long>();
         for ( ProcedureData procedure : procedures.getProcedures() ) {
@@ -301,6 +354,24 @@ public class EnvironmentData  implements Serializable {
         }
         return allIds;
     }
+
+    private Set<Long> allInfoProductIds() {
+        Set<Long> allIds = new HashSet<Long>();
+        for ( ProcedureData procedure : procedures.getProcedures() ) {
+            allIds.addAll( procedure.allInfoProductIds() );
+        }
+        return allIds;
+    }
+
+    private Set<Long> allInfoFormatIds() {
+        Set<Long> allIds = new HashSet<Long>();
+        for ( ProcedureData procedure : procedures.getProcedures() ) {
+            allIds.addAll( procedure.allInfoFormatIds() );
+        }
+        return allIds;
+    }
+
+
 
     private Plan getPlan() {
         return plan;

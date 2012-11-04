@@ -1,6 +1,5 @@
-package com.mindalliance.channels.api.procedures;
+package com.mindalliance.channels.api;
 
-import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import org.apache.commons.lang.StringEscapeUtils;

@@ -292,7 +292,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithoutFailureProtocol"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantSegmentContext"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentContextNeverCaused"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowEOIsNotStandardCompliant"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AmbiguousSharingFlow"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithoutParticipation"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithNonMatchingParticipation"/>
@@ -309,6 +308,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
             </list>
         </property>
     </bean>

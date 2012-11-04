@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class NeedWithNoTimeSensitiveEOI extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>(  );
         Flow flow = (Flow)modelObject;
-        if ( flow.isNeed() && !flow.getEois().isEmpty() && !flow.isTimeSensitive() ) {
+        if ( flow.isNeed() && !flow.getEffectiveEois().isEmpty() && !flow.isTimeSensitive() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
             issue.setDescription( "None of the needed information elements is time-sensitive" );
             issue.setRemediation( "Make at least one element of information time-sensitive" +

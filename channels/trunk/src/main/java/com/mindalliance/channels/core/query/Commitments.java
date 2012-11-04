@@ -148,7 +148,7 @@ public class Commitments implements Serializable, Iterable<Commitment> {
     public Commitments withEoi( final String eoi ) {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments )
-            if ( CollectionUtils.exists( commitment.getSharing().getEois(), new Predicate() {
+            if ( CollectionUtils.exists( commitment.getSharing().getEffectiveEois(), new Predicate() {
                 @Override
                 public boolean evaluate( Object object ) {
                     return Matcher.same( ( (ElementOfInformation) object ).getContent(), eoi );

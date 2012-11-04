@@ -298,7 +298,7 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Filterable 
          */
         private Segment segment;
         /**
-         * Part either initating or terminating event.
+         * Part either initiating or terminating event.
          */
         private Part part;
         /**

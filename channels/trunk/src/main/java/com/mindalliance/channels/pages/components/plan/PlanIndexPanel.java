@@ -4,6 +4,9 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
+import com.mindalliance.channels.core.model.Modelable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
@@ -33,7 +36,7 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EOIS, EVENTS, FLOWS, MEDIA, PHASES,
+            {ALL, ACTORS, EOIS, EVENTS, FLOWS, INFO_FORMATS, INFO_PRODUCTS, MEDIA, PHASES,
                     PLACES, ORGANIZATIONS, ROLES, REQUIREMENTS, SEGMENTS, TASKS};
 
 
@@ -97,6 +100,16 @@ public class PlanIndexPanel extends AbstractIndexPanel {
         return getQueryService().listReferencedEntities( Role.class );
     }
 
+    @Override
+    protected List<InfoProduct> findIndexedInfoProducts() {
+        return getQueryService().listReferencedEntities( InfoProduct.class );
+    }
+
+    @Override
+    protected List<InfoFormat> findIndexedInfoFormats() {
+        return getQueryService().listReferencedEntities( InfoFormat.class );
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -107,11 +120,16 @@ public class PlanIndexPanel extends AbstractIndexPanel {
     /**
      * {@inheritDoc}
      */
-    protected List<ElementOfInformationInFlow> findIndexedEOIs() {
-        List<ElementOfInformationInFlow> eois = new ArrayList<ElementOfInformationInFlow>();
+    protected List<Modelable> findIndexedEOIs() {
+        List<Modelable> eois = new ArrayList<Modelable>();
         for ( Flow flow : findIndexedFlows() ) {
-            for ( ElementOfInformation eoi : flow.getEois() ) {
+            for ( ElementOfInformation eoi : flow.getEffectiveEois() ) {
                 eois.add( new ElementOfInformationInFlow( flow, eoi ) );
+            }
+        }
+        for ( InfoProduct infoProduct : getQueryService().list( InfoProduct.class )) {
+            for ( ElementOfInformation eoi: infoProduct.getEffectiveEois() ) {
+                eois.add( new ElementOfInformationInInfoProduct( infoProduct, eoi ) );
             }
         }
         return eois;
@@ -136,4 +154,5 @@ public class PlanIndexPanel extends AbstractIndexPanel {
         return getQueryService().list( Requirement.class );
     }
 
- }
+
+}

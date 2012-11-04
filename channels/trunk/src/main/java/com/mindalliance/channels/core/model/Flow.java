@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -21,7 +22,7 @@ import java.util.Set;
 /**
  * An arrow between two nodes in the information flow graph.
  */
-public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable {
+public abstract class Flow extends ModelObject implements Channelable, SegmentObject, Prohibitable, EOIsHolder {
 
     /**
      * A list of alternate communication channels for the flow.
@@ -90,11 +91,30 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     private boolean receiptConfirmationRequested = false;
 
+    /**
+     * InfoProduct standardizing the information flowing.
+     */
+    private InfoProduct infoProduct;
+
+    /**
+     * Whether the info flowing is standardized as an InfoProduct having the name of the flow.
+     */
+    private boolean standardized = false;
+
     protected Flow() {
     }
 
     public static String classLabel() {
         return "information flows";
+    }
+
+    @Override
+    public String getName() {
+        if ( infoProduct != null ) {
+            return infoProduct.getName();
+        } else {
+            return super.getName();
+        }
     }
 
     @Override
@@ -224,10 +244,62 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public List<ElementOfInformation> getEois() {
+        return getLocalEois();
+    }
+
+    @Override
+    public List<ElementOfInformation> getLocalEois() {
         return eois;
     }
 
+    /**
+     * Return all EOIS inherited from info product (no redundancies) and all local EOIs not overridden by inherited EOIS.
+     * Local EOIS are at the top of the list.
+     *
+     * @return a list of EOIS
+     */
+    public List<ElementOfInformation> getEffectiveEois() {
+        List<ElementOfInformation> allEois = new ArrayList<ElementOfInformation>();
+        List<ElementOfInformation> inheritedEois = getInheritedEois();
+        for ( final ElementOfInformation eoi : getLocalEois() ) {
+            if ( !isOverridden( eoi, inheritedEois ) ) {
+                allEois.add( eoi );
+            }
+        }
+        allEois.addAll( inheritedEois );
+        return Collections.unmodifiableList( allEois );
+    }
+
+    private List<ElementOfInformation> getInheritedEois() {
+        if ( infoProduct != null ) {
+            return infoProduct.getEffectiveEois();
+        } else {
+            return new ArrayList<ElementOfInformation>();
+        }
+    }
+
+    private boolean isOverridden( final ElementOfInformation eoi, List<ElementOfInformation> inheritedEois ) {
+        return CollectionUtils.exists(
+                inheritedEois,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return Matcher.same( ( (ElementOfInformation) object ).getContent(), eoi.getContent() );
+                    }
+                }
+        );
+    }
+
+
+    public InfoProduct getInfoProduct() {
+        return infoProduct;
+    }
+
     public void setEois( List<ElementOfInformation> elements ) {
+        setLocalEois( elements );
+    }
+
+    public void setLocalEois( List<ElementOfInformation> elements ) {
         eois = new ArrayList<ElementOfInformation>( elements );
     }
 
@@ -246,7 +318,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public boolean isClassified() {
         return CollectionUtils.exists(
-                eois,
+                getEffectiveEois(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return ( (ElementOfInformation) obj ).isClassified();
@@ -261,7 +333,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @param eoi an element of information
      */
-    public void addEoi( ElementOfInformation eoi ) {
+    @Override
+    public void addLocalEoi( ElementOfInformation eoi ) {
+        assert !isStandardized();
         if ( !eois.contains( eoi ) ) {
             if ( isNeed() ) {
                 eoi.retainContentAndTimeSensitivityOnly();
@@ -352,6 +426,18 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     public boolean canSetCanBypassIntermediate() {
         return canGetCanBypassIntermediate();
+    }
+
+    public void setInfoProduct( InfoProduct infoProduct ) {
+        this.infoProduct = infoProduct;
+    }
+
+    public boolean isStandardized() {
+        return standardized;
+    }
+
+    public void setStandardized( boolean standardized ) {
+        this.standardized = standardized;
     }
 
     public String getShortName( Node node, boolean qualified ) {
@@ -822,6 +908,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         channel.setAddress( address );
     }
 
+    @Override
+    public boolean canSetFormat() {
+        return true;
+    }
+
     /**
      * Get part being contacted if any.
      *
@@ -956,7 +1047,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public List<Classification> getClassifications() {
         Set<Classification> classifications = new HashSet<Classification>();
-        for ( ElementOfInformation eoi : eois ) {
+        for ( ElementOfInformation eoi : getEffectiveEois() ) {
             classifications.addAll( eoi.getClassifications() );
         }
         return new ArrayList<Classification>( classifications );
@@ -971,7 +1062,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public List<ElementOfInformation> getEOISWithSameClassifications() {
         List<Classification> allClassifications = getAllEOIClassifications();
         List<ElementOfInformation> eoisCopy = new ArrayList<ElementOfInformation>();
-        for ( ElementOfInformation eoi : eois ) {
+        for ( ElementOfInformation eoi : getEffectiveEois() ) {
             ElementOfInformation copy = new ElementOfInformation();
             copy.setContent( eoi.getContent() );
             copy.setDescription( eoi.getDescription() );
@@ -982,6 +1073,16 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return eoisCopy;
     }
 
+    @Override
+    public boolean isLocalAndEffective( ElementOfInformation eoi ) {
+        return isLocalEoi( eoi ) && !isOverridden( eoi, getInheritedEois() );
+    }
+
+    @Override
+    public boolean isLocalEoi( ElementOfInformation eoi ) {
+        return eois.contains( eoi );
+    }
+
     /**
      * Whether all eois have the same classifications.
      *
@@ -989,13 +1090,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public boolean areAllEOIClassificationsSame() {
         // No eoi has classifications different from those of another eoi.
+        final List<ElementOfInformation> list = getEffectiveEois();
         return !CollectionUtils.exists(
-                eois,
+                list,
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         final ElementOfInformation eoi = (ElementOfInformation) obj;
                         return CollectionUtils.exists(
-                                eois,
+                                list,
                                 new Predicate() {
                                     public boolean evaluate( Object obj ) {
                                         return !CollectionUtils.isEqualCollection(
@@ -1018,7 +1120,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @SuppressWarnings( "unchecked" )
     public List<Classification> getAllEOIClassifications() {
         Set<Classification> allClassifications = new HashSet<Classification>();
-        for ( ElementOfInformation eoi : eois ) {
+        for ( ElementOfInformation eoi : getEffectiveEois() ) {
             allClassifications.addAll( eoi.getClassifications() );
         }
         return new ArrayList<Classification>( allClassifications );
@@ -1076,7 +1178,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     public boolean evaluate( Object obj ) {
                         return ( (Channel) obj ).references( mo );
                     }
-                } );
+                } )
+                || ( infoProduct != null && infoProduct.equals( mo ) );
     }
 
     /**
@@ -1106,8 +1209,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public List<ElementOfInformation> copyEois() {
         List<ElementOfInformation> copy = new ArrayList<ElementOfInformation>();
-        for ( ElementOfInformation eoi : eois ) {
-            copy.add( new ElementOfInformation( eoi ) );
+        if ( !isStandardized() ) {
+            for ( ElementOfInformation eoi : eois ) {
+                copy.add( new ElementOfInformation( eoi ) );
+            }
         }
         return copy;
     }
@@ -1121,14 +1226,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Whether ths flow has an EOI of a given name (case insensitive).
+     * Whether the flow has an EOI of a given name (case insensitive).
      *
      * @param content a string
      * @return a boolean
      */
     public boolean hasEoiNamed( final String content ) {
         return CollectionUtils.exists(
-                getEois(),
+                getEffectiveEois(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return Matcher.same(
@@ -1146,7 +1251,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     public List<Subject> getAllSubjects() {
         Set<Subject> subjects = new HashSet<Subject>();
-        for ( ElementOfInformation eoi : getEois() ) {
+        for ( ElementOfInformation eoi : getEffectiveEois() ) {
             Subject subject = new Subject( getName(), eoi.getContent() );
             subjects.add( subject );
         }
@@ -1176,20 +1281,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             copy.add( new Channel( channel ) );
         }
         return copy;
-    }
-
-    @SuppressWarnings( "unchecked" )
-    /**
-     * Return all tags that are info standards.
-     * @return a list of info standards
-     */
-    public List<InfoStandard> getInfoStandards( Plan plan ) {
-        List<InfoStandard> infoStandards = new ArrayList<InfoStandard>();
-        for ( Tag tag : getTags() ) {
-            InfoStandard infoStandard = plan.getInfoStandard( tag.getName() );
-            if ( infoStandard != null ) infoStandards.add( infoStandard );
-        }
-        return infoStandards;
     }
 
     /**
@@ -1226,9 +1317,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             return false;
     }
 
-    public boolean hasEoiNamedExactly( final String content ) {
+    public boolean hasEffectiveEoiNamedExactly( final String content ) {
         return CollectionUtils.exists(
-                getEois(),
+                getEffectiveEois(),
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         return ( (ElementOfInformation) object ).getContent().equals( content );
@@ -1242,13 +1333,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public boolean isTimeSensitive() {
-        return getEois().isEmpty()
-                || CollectionUtils.exists( eois, PredicateUtils.invokerPredicate( "isTimeSensitive" ) );
+        return getEffectiveEois().isEmpty()
+                || CollectionUtils.exists( getEffectiveEois(), PredicateUtils.invokerPredicate( "isTimeSensitive" ) );
     }
 
     public boolean isTimeSensitive( final String eoiContent ) {
         return CollectionUtils.exists(
-                eois,
+                getEffectiveEois(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -1321,7 +1412,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         final List<String> eoiContents = getEoiContents();
         return Matcher.same( getName(), flow.getName() )
                 // no EOI from flow is missing in this
-                && ( flow.getEois().isEmpty()
+                && ( flow.getEffectiveEois().isEmpty()
                 || ( !CollectionUtils.exists(
                 flow.getEoiContents(),
                 new Predicate() {
@@ -1334,7 +1425,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     private List<String> getEoiContents() {
         List<String> contents = new ArrayList<String>();
-        for ( ElementOfInformation eoi : getEois() ) {
+        for ( ElementOfInformation eoi : getEffectiveEois() ) {
             contents.add( eoi.getContent().toLowerCase() );
         }
         return contents;
@@ -1343,6 +1434,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @Override
     public Map<String, Object> mapState() {
         Map<String, Object> state = super.mapState();
+        state.put( "standardized", isStandardized() );
         state.put( "eois", copyEois() );
         state.put( "askedFor", isAskedFor() );
         state.put( "all", isAll() );
@@ -1364,8 +1456,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     @SuppressWarnings( "unchecked" )
     public void initFromMap( Map<String, Object> state, QueryService queryService ) {
         super.initFromMap( state, queryService );
-        if ( state.containsKey( "eois" ) )
+        if ( state.containsKey( "standardized" ) )
+            setStandardized( (Boolean) state.get( "standardized" ) );
+        if ( !isStandardized() && state.containsKey( "eois" ) )
             setEois( (List<ElementOfInformation>) state.get( "eois" ) );
+        if ( isStandardized() ) {
+            setProductInfoFromName( queryService.getDao() );
+        }
         if ( state.containsKey( "askedFor" ) )
             setAskedFor( (Boolean) state.get( "askedFor" ) );
         if ( state.containsKey( "all" ) )
@@ -1394,6 +1491,68 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
     }
 
+    public void setProductInfoFromName( PlanDao planDao ) {
+        assert isStandardized();
+        if ( !getName().isEmpty() ) {
+            infoProduct = planDao.findOrCreateType( InfoProduct.class, getName(), null );
+        }
+    }
+
+    /// EOIHolder
+
+
+    @Override
+    public boolean isClassificationsAccessible() {
+        return !isNeed();
+    }
+
+    @Override
+    public boolean isSpecialHandlingChangeable() {
+        return !isNeed();
+    }
+
+    @Override
+    public boolean isDescriptionChangeable() {
+        return !isNeed();
+    }
+
+    @Override
+    public boolean canSetTimeSensitivity() {
+        return isNeed();
+    }
+
+    @Override
+    public String getEOIHolderLabel() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "In " );
+        sb.append( isNeed()
+                ? "need for "
+                : isCapability()
+                ? "availability of "
+                : "sharing of " );
+        sb.append( getName() );
+        sb.append( isNeed()
+                ? ""
+                : isCapability()
+                ? " from " + "\"" + getSource().getTitle() + "\""
+                : " by " + "\"" + getSource().getTitle() + "\"" );
+        sb.append( isCapability()
+                ? ""
+                : isNeed()
+                ? " by " + "\"" + getTarget().getTitle() + "\""
+                : " with " + "\"" + getTarget().getTitle() + "\"" );
+        return sb.toString();
+    }
+
+    @Override
+    public boolean canSetElements() {
+        return canSetNameAndElements();
+    }
+
+    @Override
+    public boolean isFlow() {
+        return true;
+    }
 
     /**
      * The significance of a flow.
@@ -1517,7 +1676,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     /**
      * Restriction on implied sharing commitments.
      */
-    public enum Restriction {
+    public enum Restriction {   // todo make Restriction a class with instances set by a combination (and, or, xor, not) of primitive restrictions.
 
         SameTopOrganization,
         SameOrganization,

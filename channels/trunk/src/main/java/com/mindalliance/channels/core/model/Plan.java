@@ -1,7 +1,6 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
-import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -428,16 +427,6 @@ public class Plan extends ModelObject {
         producers.remove( username );
     }
 
-    public InfoStandard getInfoStandard( final String name ) {
-        return (InfoStandard) CollectionUtils.find( getTags(), new Predicate() {
-            @Override
-            public boolean evaluate( Object object ) {
-                Tag tag = (Tag) object;
-                return tag.isInfoStandard() && Matcher.same( tag.getName(), name );
-            }
-        } );
-    }
-
     public boolean isTemplate() {
         return template;
     }
@@ -724,7 +713,6 @@ public class Plan extends ModelObject {
     public List<Type> getAttachmentTypes() {
         List<Type> types = super.getAttachmentTypes();
         types.add( Type.TAGS );
-        types.add( Type.InfoStandards );
         types.add( Type.Image );
         if ( !hasAttachmentOfType( AttachmentImpl.Type.Help ) )
             types.add( Type.Help );

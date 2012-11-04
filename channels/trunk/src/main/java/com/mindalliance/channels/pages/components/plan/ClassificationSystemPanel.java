@@ -285,7 +285,6 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             );
         }
 
-
         /**
          * {@inheritDoc}
          */

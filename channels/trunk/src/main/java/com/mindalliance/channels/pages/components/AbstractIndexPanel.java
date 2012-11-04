@@ -6,6 +6,8 @@ import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Modelable;
@@ -115,6 +117,14 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Indexing choice.
      */
     protected static final String REQUIREMENTS = "Requirements";
+    /**
+     * Indexing choice.
+     */
+    protected static final String INFO_PRODUCTS = "Info products";
+    /**
+     * Indexing choice.
+     */
+    protected static final String INFO_FORMATS = "Info formats";
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -432,6 +442,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             taggables = findIndexedSegments();
         } else if ( indexedOn.equals( REQUIREMENTS ) ) {
             taggables = findIndexedRequirements();
+        } else if ( indexedOn.equals( INFO_PRODUCTS ) ) {
+            taggables = findIndexedInfoProducts();
+        } else if ( indexedOn.equals( INFO_FORMATS ) ) {
+            taggables = findIndexedInfoFormats();
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -484,6 +498,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedSegments() );
         } else if ( indexedOn.equals( REQUIREMENTS ) ) {
             names = indexNamesFor( findIndexedRequirements() );
+        } else if ( indexedOn.equals( INFO_PRODUCTS ) ) {
+            names = indexNamesFor( findIndexedInfoProducts() );
+        } else if ( indexedOn.equals( INFO_FORMATS ) ) {
+            names = indexNamesFor( findIndexedInfoFormats() );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -515,6 +533,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedParts() ) );
         names.addAll( indexNamesFor( findIndexedSegments() ) );
         names.addAll( indexNamesFor( findIndexedRequirements() ) );
+        names.addAll( indexNamesFor( findIndexedInfoProducts() ) );
+        names.addAll( indexNamesFor( findIndexedInfoFormats() ) );
         return new ArrayList<String>( names );
     }
 
@@ -532,6 +552,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         taggables.addAll( findIndexedParts() );
         taggables.addAll( findIndexedSegments() );
         taggables.addAll( findIndexedRequirements() );
+        taggables.addAll( findIndexedInfoProducts() );
+        taggables.addAll( findIndexedInfoFormats() );
         return taggables;
     }
 
@@ -657,6 +679,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 indices = indicesFor( findIndexedSegments() );
             } else if ( indexedOn.equals( REQUIREMENTS ) ) {
                 indices = indicesFor( findIndexedRequirements() );
+            } else if ( indexedOn.equals( INFO_PRODUCTS ) ) {
+                indices = indicesFor( findIndexedInfoProducts() );
+            } else if ( indexedOn.equals( INFO_FORMATS ) ) {
+                indices = indicesFor( findIndexedInfoFormats() );
             } else {
                 throw new IllegalStateException( "Can't index on " + indexedOn );
             }
@@ -679,6 +705,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( isFilteredByName() ) indexEntries.addAll( indicesFor( findIndexedEOIs() ) );
         indexEntries.addAll( indicesFor( findIndexedSegments() ) );
         indexEntries.addAll( indicesFor( findIndexedRequirements() ) );
+        indexEntries.addAll( indicesFor( findIndexedInfoProducts() ) );
+        indexEntries.addAll( indicesFor( findIndexedInfoFormats() ) );
         return indexEntries;
     }
 
@@ -1050,6 +1078,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( !findIndexedEOIs().isEmpty() ) choices.add( EOIS );
         if ( !findIndexedSegments().isEmpty() ) choices.add( SEGMENTS );
         if ( !findIndexedRequirements().isEmpty() ) choices.add( REQUIREMENTS );
+        if ( !findIndexedInfoProducts().isEmpty() ) choices.add( INFO_PRODUCTS );
+        if ( !findIndexedInfoFormats().isEmpty() ) choices.add( INFO_FORMATS );
         return choices;
     }
 
@@ -1130,8 +1160,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      *
      * @return a list of Elements of Information
      */
-    protected List<ElementOfInformationInFlow> findIndexedEOIs() {
-        return new ArrayList<ElementOfInformationInFlow>();
+    protected List<Modelable> findIndexedEOIs() {
+        return new ArrayList<Modelable>();
     }
 
     /**
@@ -1162,9 +1192,27 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
     }
 
     /**
+     * Find all info products to index.
+     *
+     * @return a list of info products
+     */
+    protected List<InfoProduct> findIndexedInfoProducts() {
+        return new ArrayList<InfoProduct>();
+    }
+
+    /**
+     * Find all info formats to index.
+     *
+     * @return a list of info formats
+     */
+    protected List<InfoFormat> findIndexedInfoFormats() {
+        return new ArrayList<InfoFormat>();
+    }
+
+    /**
      * An element of information in a flow.
      */
-    public class ElementOfInformationInFlow implements Nameable, Modelable {
+    public class ElementOfInformationInFlow implements Modelable {
 
         private Flow flow;
         private ElementOfInformation eoi;
@@ -1185,4 +1233,30 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             return flow;
         }
     }
+
+    /**
+     * An element of information in an info product.
+     */
+    public class ElementOfInformationInInfoProduct implements Modelable {
+
+        private InfoProduct infoProduct;
+        private ElementOfInformation eoi;
+
+        public ElementOfInformationInInfoProduct( InfoProduct infoProduct, ElementOfInformation eoi ) {
+            this.infoProduct = infoProduct;
+            this.eoi = eoi;
+        }
+
+        public String getName() {
+            return eoi.getContent().toLowerCase();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public ModelObject getModelObject() {
+            return infoProduct;
+        }
+    }
+
 }

@@ -21,8 +21,10 @@
     <div class="flow-details">
         <table class="flow-definition" summary="Flow definition">
             <tr>
-                <th align="right"><label wicket:id="name-label">Information:</label></th>
-                <td><input wicket:id="name" type="text" value="information" size="40"></td>
+                <th align="right">
+                    <span wicket:id="information">Information</span>:
+                </th>
+                <td><input wicket:id="name" type="text" value="information" size="40"><input wicket:id="standardized" type="checkbox"/> standard info product </td>
             </tr>
             <tr wicket:id="tagsContainer">
                 <th align="right"><label>
@@ -43,7 +45,7 @@
                     <a wicket:id="editEOIs" href="#" title="Click to edit the elements">Elements:</a>
                 </th>
                 <td>
-                    <ul class="element-list">
+                    <ul wicket:id= "eoisContainer" class="element-list">
                         <li wicket:id="eois"><span wicket:id="summary">eoi</span></li>
                     </ul>
                     <span wicket:id="referencesEventPhaseContainer">

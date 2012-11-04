@@ -10,11 +10,13 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.RedirectFlow;
 import com.mindalliance.channels.core.command.commands.SatisfyNeed;
+import com.mindalliance.channels.core.command.commands.StandardizeInformation;
 import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
@@ -41,12 +43,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentLabel;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.Radio;
@@ -83,9 +85,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     private boolean markedForDeletion;
     /**
-     * The name field.
+     * The information name input field.
      */
     private TextField<String> nameField;
+
+    /**
+     * Information label or link (if standdardized)
+     */
+    private Component infoLinkOrLabel;
 
     /**
      * The askedFor buttons.
@@ -241,6 +248,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Receipt confirmation request container.
      */
     private WebMarkupContainer receiptConfirmationRequestedContainer;
+    /**
+     * Whether the information is standardized as an info product.
+     */
+    private CheckBox standardizedCheckbox;
+    /**
+     * EOIs list container.
+     */
+    private WebMarkupContainer eoisContainer;
 
     protected ExpandedFlowPanel(
             String id,
@@ -263,10 +278,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         setOutputMarkupId( true );
         addHeader();
         addSimpleAdvanced();
+        addInfoLabelOrLink();
+        addStandardizedField();
         addNameField();
         addTagsPanel();
         addClassificationFields();
-        addLabeled( "name-label", nameField );
         addEOIs();
         addReferencesEventPhaseField();
         addAskedForRadios();
@@ -317,7 +333,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
@@ -409,14 +425,24 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
 
     private void addEOIs() {
+        addEOIsEditLink();
+        addEOIsList();
+    }
+
+    private void addEOIsEditLink() {
         AjaxFallbackLink editEOIsLink = new AjaxFallbackLink( "editEOIs" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, getFlow(), EOIS ) );
             }
         };
-        editEOIsLink.add( new AttributeModifier( "class", true, new Model<String>( "model-object-link" ) ) );
+        editEOIsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
         add( editEOIsLink );
+    }
+
+    private void addEOIsList() {
+        eoisContainer = new WebMarkupContainer( "eoisContainer" );
+        eoisContainer.setOutputMarkupId( true );
         ListView<String> eoisList = new ListView<String>(
                 "eois",
                 new PropertyModel<List<String>>( this, "eoiSummaries" ) ) {
@@ -425,13 +451,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 item.add( new Label( "summary", item.getModelObject() ) );
             }
         };
-/*
-        TextArea<String> eoisDescriptionField = new TextArea<String>(
-                "eois",
-                new PropertyModel<String>( getFlow(), "eoisSummary" ) );
-        eoisDescriptionField.setEnabled( false );
-*/
-        add( eoisList );
+        eoisContainer.add( eoisList );
+        addOrReplace( eoisContainer );
     }
 
     /**
@@ -441,7 +462,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     public List<String> getEoiSummaries() {
         List<String> eoiStrings = new ArrayList<String>();
-        for ( ElementOfInformation eoi : getFlow().getEois() ) {
+        for ( ElementOfInformation eoi : getFlow().getEffectiveEois() ) {
             eoiStrings.add( eoi.getLabel() + ( eoi.isTimeSensitive() ? "*" : "" ) );
         }
         if ( eoiStrings.isEmpty() ) {
@@ -458,7 +479,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void adjustFields( Flow f ) {
         boolean lockedByUser = isLockedByUser( f );
 
-        nameField.setEnabled( lockedByUser && f.canSetNameAndElements() );
+        nameField.setEnabled( lockedByUser && f.canSetNameAndElements() && !f.isStandardized() );
+        standardizedCheckbox.setEnabled( lockedByUser && f.canSetNameAndElements() );
         intentChoice.setEnabled( lockedByUser && f.canSetNameAndElements() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
         allField.setVisible( isSend() && f.canGetAll() );
@@ -494,7 +516,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * Show/hide/enable/disable parts of the panel given the state of the flow.
      *
-     * @param f the flow
+     * @param f      the flow
      * @param target ajax request target
      */
     private void adjustFieldsOnUpdate( Flow f, AjaxRequestTarget target ) {
@@ -521,6 +543,39 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         return isSend() && f.isNotification();
     }
 
+    private void addInfoLabelOrLink() {
+        if ( getFlow().isStandardized() ) {
+            InfoProduct infoProduct = getFlow().getInfoProduct();
+            infoLinkOrLabel = new ModelObjectLink(
+                    "information",
+                    new Model<InfoProduct>( infoProduct ),
+                    new Model<String>( "Information" ),
+                    "Click to see the definition of the information product" );
+        } else {
+            infoLinkOrLabel = new Label( "information", "Information" );
+        }
+        infoLinkOrLabel.setOutputMarkupId( true );
+        addOrReplace( infoLinkOrLabel );
+    }
+
+    private void addStandardizedField() {
+        standardizedCheckbox = new AjaxCheckBox(
+                "standardized",
+                new PropertyModel<Boolean>( this, "standardized" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addInfoLabelOrLink();
+                target.add( infoLinkOrLabel );
+                adjustFields( getFlow() );
+                target.add( nameField );
+                addEOIsList();
+                target.add( eoisContainer );
+                update( target, new Change( Change.Type.Updated, getFlow(), "standardized" ) );
+            }
+        };
+        add( standardizedCheckbox );
+    }
+
     private void addNameField() {
         nameField = new AutoCompleteTextField<String>(
                 "name",
@@ -531,6 +586,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 return getFlowNameChoices( s );
             }
         };
+        nameField.setOutputMarkupId( true );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
 
             @Override
@@ -539,9 +595,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 target.add( nameField );
                 addOtherChoice();
                 target.add( otherChoice );
+                addInfoLabelOrLink();
+                target.add( infoLinkOrLabel );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
         } );
+        addIssuesAnnotation( nameField, getFlow(), nameField.getId() );
+        add( nameField );
     }
 
     /**
@@ -803,7 +863,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         receiptConfirmationRequestedContainer = new WebMarkupContainer( "receiptConfirmationRequestedContainer" );
         receiptConfirmationRequestedContainer.setOutputMarkupId( true );
         makeVisible( receiptConfirmationRequestedContainer, !isShowSimpleForm() );
-        add(  receiptConfirmationRequestedContainer );
+        add( receiptConfirmationRequestedContainer );
         // receipt confirmation requested
         receiptConfirmationRequestedCheckBox = new CheckBox(
                 "receiptConfirmationRequested",
@@ -916,22 +976,16 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         add( allField );
     }
 
-    /**
-     * Add a component with an attached label.
-     *
-     * @param id        the id. Label is "id-label".
-     * @param component the component
-     * @return the label component
-     */
-    private FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
-        component.setOutputMarkupId( true );
-        FormComponentLabel result = new FormComponentLabel( id, component );
-        add( result );
-        add( component );
-        addIssuesAnnotation( component, getFlow(), component.getId() );
-        return result;
-    }
-
+    /*
+        private FormComponentLabel addLabeled( String id, FormComponent<?> component ) {
+            component.setOutputMarkupId( true );
+            FormComponentLabel result = new FormComponentLabel( id, component );
+            add( result );
+            add( component );
+            addIssuesAnnotation( component, getFlow(), component.getId() );
+            return result;
+        }
+    */
     private void addOtherField() {
         addOtherLink();
         addOtherChoice();
@@ -1319,7 +1373,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
         Flow newFlow = (Flow) change.getSubject( getQueryService() );
         if ( newFlow != null ) { // TODO Find out why this has happened...
-        // requestLockOn( newFlow );
+            // requestLockOn( newFlow );
             setFlow( newFlow );
         }
     }
@@ -1333,7 +1387,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Node other = getOther();
         if ( other.isConnector() ) {
             return ( (Connector) other ).getInnerFlow().getLocalPart();
-         } else {
+        } else {
             return (Part) other;
         }
     }
@@ -1361,7 +1415,9 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @param name a string
      */
     public void setName( String name ) {
-        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "name", name ) );
+        if ( !getFlow().isStandardized() ) {
+            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "name", name ) );
+        }
     }
 
     /**
@@ -1606,6 +1662,20 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "canBypassIntermediate", val ) );
         }
     }
+
+    /**
+     * Get whether information is standardized as an information product.
+     *
+     * @return a boolean
+     */
+    public boolean isStandardized() {
+        return getFlow().isStandardized();
+    }
+
+    public void setStandardized( boolean val ) {
+        doCommand( new StandardizeInformation( getUser().getUsername(), getFlow(), val ) );
+    }
+
 
     /**
      * Get whether receiver must confirm receipt.

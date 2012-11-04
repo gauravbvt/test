@@ -79,7 +79,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.endNode();
         writeTags( writer, flow );
         // eois
-        for ( ElementOfInformation eoi : flow.getEois() ) {
+        for ( ElementOfInformation eoi : flow.getLocalEois() ) {
             writer.startNode( "eoi" );
             context.convertAnother( eoi );
             writer.endNode();
@@ -144,6 +144,10 @@ public class FlowConverter extends AbstractChannelsConverter {
         // Receipt confirmation requested
         writer.startNode( "receiptConfirmationRequested" );
         writer.setValue( Boolean.toString( flow.isReceiptConfirmationRequested() ) );
+        writer.endNode();
+        // Flow information standardized as info product
+        writer.startNode( "standardized" );
+        writer.setValue( Boolean.toString( flow.isStandardized() ) );
         writer.endNode();
 
     }
@@ -261,7 +265,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 ElementOfInformation eoi = (ElementOfInformation) context.convertAnother(
                         segment,
                         ElementOfInformation.class );
-                flow.addEoi( eoi );
+                flow.addLocalEoi( eoi );
             } else if ( nodeName.equals( "channel" ) ) {
                 Channel channel = (Channel) context.convertAnother( segment, Channel.class );
                 flow.addChannel( channel );
@@ -299,6 +303,11 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setCanBypassIntermediate( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "receiptConfirmationRequested" ) ) {
                 flow.setReceiptConfirmationRequested( Boolean.valueOf( reader.getValue() ) );
+            }  else if ( nodeName.equals( "standardized" ) ) {
+                flow.setStandardized( Boolean.valueOf( reader.getValue() ) );
+                if ( flow.isStandardized() ) {
+                    flow.setProductInfoFromName( getPlanDao()  );
+                }
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

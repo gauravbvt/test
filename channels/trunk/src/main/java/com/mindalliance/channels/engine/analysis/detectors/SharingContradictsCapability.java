@@ -16,8 +16,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -72,9 +72,9 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
     }
 
     private static void findEOIMismatch( Plan plan, Flow sharing, Flow capability, List<String> mismatches ) {
-        for ( ElementOfInformation sharedEoi : sharing.getEois() ) {
+        for ( ElementOfInformation sharedEoi : sharing.getEffectiveEois() ) {
             boolean matched = false;
-            for ( ElementOfInformation offeredEoi : capability.getEois() ) {
+            for ( ElementOfInformation offeredEoi : capability.getEffectiveEois() ) {
                 if ( Matcher.same( sharedEoi.getContent(), offeredEoi.getContent() ) ) {
                     matched = true;
                     if ( Classification.hasHigherClassification( offeredEoi.getClassifications(),

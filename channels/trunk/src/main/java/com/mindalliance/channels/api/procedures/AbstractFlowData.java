@@ -5,9 +5,12 @@ import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
@@ -33,6 +36,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private List<Employment> allEmployments;
     private DocumentationData documentation;
     private List<MediumData> mediumDataList;
+    private List<ChannelData> channelDataList;
 
     public AbstractFlowData() {
         // required
@@ -55,7 +59,15 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     protected void initOtherData( PlanService planService ) {
         initFailureSeverity( planService );
         initMediumDataList( serverUrl, planService );
+        initChannelDataList( planService );
         documentation = new DocumentationData( serverUrl, getSharing() );
+    }
+
+    private void initChannelDataList( PlanService planService ) {
+        channelDataList = new ArrayList<ChannelData>();
+        for ( Channel channel : getSharing().getChannels() ) {
+            channelDataList.add( new ChannelData( channel, planService ) );
+        }
     }
 
     private void initMediumDataList( String serverUrl, PlanService planService ) {
@@ -126,8 +138,33 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return media;
     }
 
+    public List<Long> getInfoProductIds() {
+        List<Long> ids = new ArrayList<Long>(  );
+        InfoProduct infoProduct = getSharing().getInfoProduct();
+        if ( infoProduct != null ) {
+            ids.add( infoProduct.getId() );
+        }
+        return ids;
+    }
+
+    public List<Long> getInfoFormatIds() {
+        Set<Long> ids = new HashSet<Long>(  );
+        for ( Channel channel : getSharing().getChannels() ) {
+            InfoFormat format = channel.getFormat();
+            if ( format != null ) {
+                ids.add( format.getId() );
+            }
+        }
+        return new ArrayList<Long>( ids );
+    }
+
+
     public List<MediumData> mediumDataList() {
         return mediumDataList;
+    }
+
+    public List<ChannelData> getChannelDataList() {
+        return channelDataList;
     }
 
 
@@ -253,6 +290,5 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     public String getId() {
         return Long.toString( flow.getId() );
     }
-
 
 }

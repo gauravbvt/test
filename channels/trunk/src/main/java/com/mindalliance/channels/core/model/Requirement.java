@@ -564,7 +564,7 @@ public class Requirement extends ModelObject implements Countable {
     private boolean matchesEois( Flow flow ) {
         if ( information.isEmpty() || eois.isEmpty() ) return true;
         final List<String> flowEoiNames = (List<String>) CollectionUtils.collect(
-                flow.getEois(),
+                flow.getEffectiveEois(),
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {

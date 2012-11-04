@@ -217,7 +217,7 @@ public class DefaultCommander implements Commander {
 
             return change;
         } catch ( CommandException e ) {
-            LOG.warn( "Command failed " + command );
+            LOG.warn( "Command failed " + command, e );
             return Change.failed( e.getMessage() );
         }
     }

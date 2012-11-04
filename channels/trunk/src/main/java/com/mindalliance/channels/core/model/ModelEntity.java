@@ -18,6 +18,7 @@ import java.util.Set;
 public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
     public static final int MAX_NAME_SIZE = 100;
+    public static final String NEW_NAME = "UNNAMED";
 
     /**
      * Actual or Type.
@@ -56,6 +57,14 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      */
     private static final TransmissionMedium ANY_MEDIUM_TYPE;
     /**
+     * Universal info product type.
+     */
+    private static final InfoProduct ANY_INFO_PRODUCT_TYPE;
+    /**
+     * Universal info format type.
+     */
+    private static final InfoFormat ANY_INFO_FORMAT_TYPE;
+    /**
      * All universal types.
      */
     private static final List<ModelEntity> UNIVERSAL_TYPES;
@@ -75,34 +84,52 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
     static {
         UNIVERSAL_TYPES = new ArrayList<ModelEntity>();
+
         ANY_ACTOR_TYPE = new Actor( "any agent" );
         ANY_ACTOR_TYPE.setId( 10000000L - 10 );
         ANY_ACTOR_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_ACTOR_TYPE );
+
         ANY_EVENT_TYPE = new Event( "any event" );
         ANY_EVENT_TYPE.setId( 10000000L - 11 );
         ANY_EVENT_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_EVENT_TYPE );
+
         ANY_ORGANIZATION_TYPE = new Organization( "any organization" );
         ANY_ORGANIZATION_TYPE.setId( 10000000L - 12 );
         ANY_ORGANIZATION_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_ORGANIZATION_TYPE );
+
         ANY_PLACE_TYPE = new Place( "any place" );
         ANY_PLACE_TYPE.setId( 10000000L - 13 );
         ANY_PLACE_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_PLACE_TYPE );
+
         ANY_ROLE_TYPE = new Role( "any role" );
         ANY_ROLE_TYPE.setId( 10000000L - 14 );
         ANY_ROLE_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_ROLE_TYPE );
+
         ANY_PHASE_TYPE = new Phase( "any phase" );
         ANY_PHASE_TYPE.setId( 10000000L - 15 );
         ANY_PHASE_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_PHASE_TYPE );
+
         ANY_MEDIUM_TYPE = new TransmissionMedium( "any medium" );
         ANY_MEDIUM_TYPE.setId( 10000000L - 16 );
         ANY_MEDIUM_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_MEDIUM_TYPE );
+
+        ANY_INFO_PRODUCT_TYPE = new InfoProduct( "any information product" );
+        ANY_INFO_PRODUCT_TYPE.setId( 10000000L - 16 );
+        ANY_INFO_PRODUCT_TYPE.setType();
+        UNIVERSAL_TYPES.add( ANY_INFO_PRODUCT_TYPE );
+
+        ANY_INFO_FORMAT_TYPE = new InfoFormat( "any format" );
+        ANY_INFO_FORMAT_TYPE.setId( 10000000L - 16 );
+        ANY_INFO_FORMAT_TYPE.setType();
+        UNIVERSAL_TYPES.add( ANY_INFO_FORMAT_TYPE );
+
     }
 
     protected ModelEntity() {
@@ -272,7 +299,9 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 || equals( ANY_PLACE_TYPE )
                 || equals( ANY_ROLE_TYPE )
                 || equals( ANY_PHASE_TYPE )
-                || equals( ANY_MEDIUM_TYPE );
+                || equals( ANY_MEDIUM_TYPE )
+                || equals( ANY_INFO_PRODUCT_TYPE )
+                || equals( ANY_INFO_FORMAT_TYPE );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -291,6 +320,10 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
             return (T) ANY_PHASE_TYPE;
         } else if ( entityClass == TransmissionMedium.class ) {
             return (T) ANY_MEDIUM_TYPE;
+        } else if ( entityClass == InfoProduct.class ) {
+            return (T) ANY_INFO_PRODUCT_TYPE;
+        } else if ( entityClass == InfoFormat.class ) {
+            return (T) ANY_INFO_FORMAT_TYPE;
         } else {
             throw new RuntimeException( "No known universal type for " + entityClass.getSimpleName() );
         }
@@ -372,15 +405,15 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      */
     public boolean narrowsOrEquals( ModelEntity other, Place locale ) {
 
-        // same entity
-        if ( equals( other ) )
-            return true;
-
         // UNKNOWN does not narrow or equals UNKNOWN
         if ( other == null || other.isUnknown() )
             return false;
 
-        // Can't compare rotten apples with rotten oranges
+        // same entity
+        if ( equals( other ) )
+            return true;
+
+         // Can't compare rotten apples with rotten oranges
         return getClass().isAssignableFrom( other.getClass() )
                 && !isInvalid( locale )
 

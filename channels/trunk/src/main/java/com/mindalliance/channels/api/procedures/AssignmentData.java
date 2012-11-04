@@ -278,6 +278,24 @@ public class AssignmentData extends AbstractProcedureElementData {
         return ids;
     }
 
+
+    public Set<Long> allInfoProductIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( AbstractFlowData flowData : getCommunications() ) {
+            ids.addAll( flowData.getInfoProductIds() );
+        }
+        return ids;
+    }
+
+    public Set<Long> allInfoFormatIds() {
+        Set<Long> ids = new HashSet<Long>();
+        for ( AbstractFlowData flowData : getCommunications() ) {
+            ids.addAll( flowData.getInfoFormatIds() );
+        }
+        return ids;
+    }
+
+
     public List<AbstractFlowData> getCommunications() {
         List<AbstractFlowData> communications = new ArrayList<AbstractFlowData>();
         communications.addAll( getInNotifications() );
@@ -427,4 +445,5 @@ public class AssignmentData extends AbstractProcedureElementData {
         }
         return allContacts;
     }
+
 }

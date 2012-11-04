@@ -1,7 +1,9 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoProduct;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -18,11 +20,12 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 1:59 PM
  */
-@XmlType( propOrder = {"name", "EOIs"} )
+@XmlType( propOrder = {"name", "EOIs", "infoProductId", "infoProduct"} )
 public class InformationData  implements Serializable {
 
     private Flow sharing;
     private List<ElementOfInformationData> eois;
+    private InfoProduct infoProduct;
 
     public InformationData() {
         // required
@@ -30,6 +33,7 @@ public class InformationData  implements Serializable {
 
     public InformationData( Flow sharing ) {
         this.sharing = sharing;
+        this.infoProduct = sharing.getInfoProduct();
     }
 
     @XmlElement
@@ -41,10 +45,21 @@ public class InformationData  implements Serializable {
     public List<ElementOfInformationData> getEOIs() {
         if ( eois == null ) {
             eois = new ArrayList<ElementOfInformationData>();
-            for ( ElementOfInformation eoi : sharing.getEois() ) {
+            for ( ElementOfInformation eoi : sharing.getEffectiveEois() ) {
                 eois.add( new ElementOfInformationData( eoi ) );
             }
         }
         return eois;
     }
+
+    @XmlElement
+    public Long getInfoProductId() {
+        return infoProduct != null ? infoProduct.getId() : null;
+    }
+
+    @XmlElement
+    public String getInfoProduct() {
+        return infoProduct != null ? infoProduct.getName() : null;
+    }
+
 }

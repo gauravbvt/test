@@ -355,7 +355,7 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public boolean isClearedFor( Flow flow, final Plan plan ) {
         // No eoi in the flow has classification that is not encompassed by the actor's clearance.
         return !CollectionUtils.exists(
-                flow.getEois(),
+                flow.getEffectiveEois(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object obj ) {

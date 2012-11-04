@@ -10,6 +10,8 @@ import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InternalFlow;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -244,6 +246,10 @@ public class PlanDao {
         Role.UNKNOWN.makeImmutable();
         TransmissionMedium.UNKNOWN = findOrCreateType( TransmissionMedium.class, TransmissionMedium.UnknownName, null );
         TransmissionMedium.UNKNOWN.makeImmutable();
+        InfoProduct.UNKNOWN = findOrCreateType( InfoProduct.class, InfoProduct.UnknownName, null );
+        InfoProduct.UNKNOWN.makeImmutable();
+        InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
+        InfoFormat.UNKNOWN.makeImmutable();
         for ( TransmissionMedium medium : media ) {
             add( medium );
             medium.makeImmutable();

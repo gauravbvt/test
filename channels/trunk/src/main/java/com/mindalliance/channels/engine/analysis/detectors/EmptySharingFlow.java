@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class EmptySharingFlow extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow)modelObject;
-        if ( flow.isSharing() && flow.getEois().isEmpty() ) {
+        if ( flow.isSharing() && flow.getEffectiveEois().isEmpty() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
             issue.setDescription( "This sharing flow has no element of information.");
             issue.setSeverity( Level.Medium );
