@@ -7,6 +7,8 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
@@ -498,6 +500,20 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
             return media.isEmpty()
                     ? null
                     : media.get( new Random( 13 ).nextInt( media.size() ) );
+        }
+
+        public InfoProduct getAnyInfoProduct() {
+            List<InfoProduct> infoProducts = getQueryService().listKnownEntity( InfoProduct.class );
+            return infoProducts.isEmpty()
+                    ? null
+                    : infoProducts.get( new Random( 13 ).nextInt( infoProducts.size() ) );
+        }
+
+        public InfoFormat getAnyInfoFormat() {
+            List<InfoFormat> formats = getQueryService().listKnownEntity( InfoFormat.class );
+            return formats.isEmpty()
+                    ? null
+                    : formats.get( new Random( 13 ).nextInt( formats.size() ) );
         }
 
         public RFISurvey getUnknownRFISurvey() {

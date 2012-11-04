@@ -169,12 +169,15 @@ No two segments should address identical goals in identical scenarios.
                     
 Information is named and can be described by a list of essential elements.
 
+Information can be constrained to compliance with a named information product that defines a standard list of elements of information.
+
 An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
                 </description>
             </step>
             <step>
                 <description>For more information, see [${helpUrl}/ch01s16.html this]</description>
             </step>
+            <next group="profiling" activity="profiling-info-product"/>
         </activity>
         <activity id="task">
             <name>Task</name>
@@ -462,9 +465,10 @@ Note that as little and as much as wanted can be put into a task's definition.
             <step>
                 <description>Specify an info need, capability or sharing by
 * naming the information
+* requiring the information to be compliant with a named information product
 * listing its elements
 * indicating whether it is ''pushed'' or ''pulled'
-* the communication channels to use
+* the communication channels to use, each including transmission medium and, optionally, a required format
 * timeliness constraints
 * and more
                 </description>
@@ -481,6 +485,8 @@ Note that as little and as much as wanted can be put into a task's definition.
             </step>
             <next group="info-sharing" activity="connect-with-flow"/>
             <next group="profiling" activity="profiling-medium"/>
+            <next group="profiling" activity="profiling-info-product"/>
+            <next group="profiling" activity="profiling-info-format"/>
         </activity>
         <activity id="connect-with-flow">
             <name>Connect tasks with info sharing</name>
@@ -806,6 +812,67 @@ Note that all profile attributes are optional.]]>
             </step>
             <step>
                 <description>See also [${helpUrl}/ch02s06s13s05.html this]</description>
+            </step>
+        </activity>
+        <activity id="profiling-info-product">
+            <name>Profile an information product</name>
+            <step>
+                <description><![CDATA[Define an information product (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* defining the elements of information flows standardized to this information product require
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open an information product profile</action>
+                    <change>
+                        <subjectPath>guide.anyInfoProduct</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Information products can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
+            </step>
+        </activity>
+        <activity id="profiling-info-format">
+            <name>Profile an information format</name>
+            <step>
+                <description><![CDATA[Define an information format (always a type) that can qualify communication channels by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                <script>
+                    <action>Open an information format profile</action>
+                    <change>
+                        <subjectPath>guide.anyInfoFormat</subjectPath>
+                        <type>Expanded</type>
+                        <property>details</property>
+                    </change>
+                </script>
+            </step>
+            <step>
+                <description>Information formats can be found by name in the plan's index.</description>
+                <script>
+                    <action>Open the index</action>
+                    <change>
+                        <subjectId>-13</subjectId>
+                        <type>AspectViewed</type>
+                        <property>Index</property>
+                    </change>
+                </script>
             </step>
         </activity>
     </group>
