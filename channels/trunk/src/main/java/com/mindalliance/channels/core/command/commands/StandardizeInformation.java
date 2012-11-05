@@ -13,6 +13,8 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
 
+import java.util.List;
+
 /**
  * Command to standardize the information in a flow as an information product.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -63,7 +65,14 @@ public class StandardizeInformation extends AbstractCommand {
                 }
             }
             if ( !standardize ) {
+                // Take the current name of the info product
+                InfoProduct infoProduct = flow.getInfoProduct();
+                if ( infoProduct != null )
+                    flow.setName( infoProduct.getName() );
+                // Make local all current effective eois
+                List<ElementOfInformation> eois = ElementOfInformation.copy( flow.getEffectiveEois() );
                 flow.setInfoProduct( null );
+                flow.setLocalEois( eois );
             }
             Change change = new Change( Change.Type.Updated, flow, "standardized" );
             if ( !name.isEmpty() && wasStandardized && !standardize )

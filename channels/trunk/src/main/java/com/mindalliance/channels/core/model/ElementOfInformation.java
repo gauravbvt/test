@@ -43,6 +43,14 @@ public class ElementOfInformation implements Classifiable {
     public ElementOfInformation() {
     }
 
+    public static List<ElementOfInformation> copy( List<ElementOfInformation> eois ) {
+        List<ElementOfInformation> copiedEois = new ArrayList<ElementOfInformation>(  );
+        for ( ElementOfInformation eoi : eois ) {
+            copiedEois.add( new ElementOfInformation( eoi ) );
+        }
+        return copiedEois;
+    }
+
     public ElementOfInformation( ElementOfInformation eoi ) {
         content = eoi.getContent();
         classifications = new ArrayList<Classification>( eoi.getClassifications() );
@@ -238,4 +246,4 @@ public class ElementOfInformation implements Classifiable {
                 && Matcher.same( getSpecialHandling(), eoi.getSpecialHandling() );
     }
 
- }
+}
