@@ -395,9 +395,9 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Organization> getIndexedOrganizations() {
+    private List<Organization> getIndexedOrganizations( boolean mustBeReferenced ) {
         List<Organization> orgs = (List<Organization>) CollectionUtils.select(
-                getQueryService().listActualEntities( Organization.class ),
+                getQueryService().listActualEntities( Organization.class, mustBeReferenced ),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         return !( (Organization) obj ).isUnknown();
@@ -444,7 +444,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
          * {@inheritDoc}
          */
         protected List<Organization> findIndexedOrganizations() {
-            return getIndexedOrganizations();
+            return getIndexedOrganizations( isMustBeReferenced() );
         }
     }
 

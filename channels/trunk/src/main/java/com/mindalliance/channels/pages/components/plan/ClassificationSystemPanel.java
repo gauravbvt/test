@@ -275,7 +275,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
         @SuppressWarnings( "unchecked" )
         protected List<Actor> findIndexedActors() {
             return (List<Actor>) CollectionUtils.select(
-                    getQueryService().listActualEntities( Actor.class ),
+                    getQueryService().listActualEntities( Actor.class, isMustBeReferenced() ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object obj ) {

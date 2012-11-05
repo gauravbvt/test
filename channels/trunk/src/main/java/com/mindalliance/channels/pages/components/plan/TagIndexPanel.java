@@ -37,6 +37,7 @@ public class TagIndexPanel extends AbstractIndexPanel {
             {ALL, ACTORS, EVENTS, FLOWS, MEDIA, PHASES, PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
 
     private IModel<Tag> tagModel;
+    private static final boolean EXCLUDE_IMMUTABLE = false;
 
     public TagIndexPanel( String id, IModel<Tag> tagModel ) {
         super( id, null );
@@ -77,37 +78,47 @@ public class TagIndexPanel extends AbstractIndexPanel {
     @Override
     protected List<Actor> findIndexedActors() {
         return selectTagged(
-                getQueryService().listReferencedEntities( Actor.class ) );
+                getQueryService().listKnownEntities( Actor.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
     protected List<Event> findIndexedEvents() {
-        return selectTagged( getQueryService().listReferencedEntities( Event.class ) );
+        return selectTagged( getQueryService().listKnownEntities( Event.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
     protected List<Organization> findIndexedOrganizations() {
-        return selectTagged( getQueryService().listReferencedEntities( Organization.class ) );
+        return selectTagged( getQueryService().listKnownEntities( Organization.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
     protected List<Phase> findIndexedPhases() {
-        return selectTagged( getQueryService().listReferencedEntities( Phase.class ) );
+        return selectTagged( getQueryService().listKnownEntities( Phase.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
     protected List<TransmissionMedium> findIndexedMedia() {
-        return selectTagged( getQueryService().listReferencedEntities( TransmissionMedium.class ) );
+        return selectTagged( getQueryService().listKnownEntities( TransmissionMedium.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
     protected List<Place> findIndexedPlaces() {
-        return selectTagged( getQueryService().listReferencedEntities( Place.class ) );
+        return selectTagged( getQueryService().listKnownEntities( Place.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
     protected List<Role> findIndexedRoles() {
-        return selectTagged( getQueryService().listReferencedEntities( Role.class ) );
+        return selectTagged( getQueryService().listKnownEntities( Role.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
+    }
+
+    @Override
+    protected List<InfoProduct> findIndexedInfoProducts() {
+        return selectTagged( getQueryService().listKnownEntities( InfoProduct.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
+    }
+
+    @Override
+    protected List<InfoFormat> findIndexedInfoFormats() {
+        return selectTagged( getQueryService().listKnownEntities( InfoFormat.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override
@@ -123,16 +134,6 @@ public class TagIndexPanel extends AbstractIndexPanel {
     @Override
     protected List<Segment> findIndexedSegments() {
         return selectTagged( getQueryService().list( Segment.class ) );
-    }
-
-    @Override
-    protected List<InfoProduct> findIndexedInfoProducts() {
-        return selectTagged( getQueryService().list( InfoProduct.class ) );
-    }
-
-    @Override
-    protected List<InfoFormat> findIndexedInfoFormats() {
-        return selectTagged( getQueryService().list( InfoFormat.class ) );
     }
 
 

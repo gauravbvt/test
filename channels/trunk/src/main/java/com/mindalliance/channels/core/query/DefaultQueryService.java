@@ -3315,7 +3315,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listKnownEntity( Class<T> clazz ) {
+    public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 list( clazz ),
                 new Predicate() {
@@ -3325,6 +3325,21 @@ public abstract class DefaultQueryService implements QueryService {
                     }
                 }
         );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
+        return mustBeReferenced
+                ? (List<T>) CollectionUtils.select(
+                        listReferencedEntities( clazz ),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (T) object ).isActual();
+                            }
+                        } )
+                : listActualEntities( clazz );
     }
 
     @Override
@@ -3340,6 +3355,7 @@ public abstract class DefaultQueryService implements QueryService {
                 }
         );
     }
+
 
     @Override
     @SuppressWarnings( {"unchecked"} )
@@ -3411,6 +3427,30 @@ public abstract class DefaultQueryService implements QueryService {
                                 || isReferenced( entity );
                     }
                 } );
+    }
+
+     @SuppressWarnings( {"unchecked"} )
+    private <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz, final boolean includeImmutables ) {
+        return (List<T>) CollectionUtils.select( list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        ModelEntity entity = (ModelEntity) object;
+                        return includeImmutables && entity.isImmutable() && !entity.isUnknown()
+                                || isReferenced( entity );
+                    }
+                } );
+    }
+
+
+    @Override
+    public <T extends ModelEntity> List<T> listKnownEntities(
+            Class<T> entityClass,
+            Boolean mustBeReferenced,
+            Boolean includeImmutables ) {
+        return mustBeReferenced
+                ? listReferencedEntities( entityClass, includeImmutables )
+                : listKnownEntities( entityClass ) ;
     }
 
     @Override

@@ -32,6 +32,8 @@ import java.util.Set;
  */
 public class PlanIndexPanel extends AbstractIndexPanel {
 
+    private static final boolean EXCLUDE_IMMUTABLE = false;
+
     /**
      * Indexing choices.
      */
@@ -55,59 +57,59 @@ public class PlanIndexPanel extends AbstractIndexPanel {
      * {@inheritDoc}
      */
     protected List<Actor> findIndexedActors() {
-        return getQueryService().listReferencedEntities( Actor.class );
+        return getQueryService().listKnownEntities( Actor.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**
      * {@inheritDoc}
      */
     protected List<Event> findIndexedEvents() {
-        return getQueryService().listReferencedEntities( Event.class );
+        return getQueryService().listKnownEntities( Event.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**
      * {@inheritDoc}
      */
     protected List<Organization> findIndexedOrganizations() {
-        return getQueryService().listReferencedEntities( Organization.class );
+        return getQueryService().listKnownEntities( Organization.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**
      * {@inheritDoc}
      */
     protected List<Phase> findIndexedPhases() {
-        return getQueryService().listReferencedEntities( Phase.class );
+        return getQueryService().listKnownEntities( Phase.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**
      * {@inheritDoc}
      */
     protected List<TransmissionMedium> findIndexedMedia() {
-        return getQueryService().listReferencedEntities( TransmissionMedium.class );
+        return getQueryService().listKnownEntities( TransmissionMedium.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**
      * {@inheritDoc}
      */
     protected List<Place> findIndexedPlaces() {
-        return getQueryService().listReferencedEntities( Place.class );
+        return getQueryService().listKnownEntities( Place.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**
      * {@inheritDoc}
      */
     protected List<Role> findIndexedRoles() {
-        return getQueryService().listReferencedEntities( Role.class );
+        return getQueryService().listKnownEntities( Role.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     @Override
     protected List<InfoProduct> findIndexedInfoProducts() {
-        return getQueryService().listReferencedEntities( InfoProduct.class );
+        return getQueryService().listKnownEntities( InfoProduct.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     @Override
     protected List<InfoFormat> findIndexedInfoFormats() {
-        return getQueryService().listReferencedEntities( InfoFormat.class );
+        return getQueryService().listKnownEntities( InfoFormat.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**

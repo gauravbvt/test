@@ -832,8 +832,9 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
 
         public boolean isModifiable() {
             return isMarkedForCreation() ||
-                    getEOIHolder().getEffectiveEois().get( index ).equals( eoi ) // still aiming at right target
-                    && getEOIHolder().isLocalAndEffective( eoi );
+                    index < getEOIHolder().getEffectiveEois().size()  // still aiming at right target
+                    && getEOIHolder().getEffectiveEois().get( index ).equals( eoi )
+                    && getEOIHolder().isLocalAndEffective( eoi ); // and which can be modified
         }
     }
 

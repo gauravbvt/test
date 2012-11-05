@@ -73,10 +73,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                                             flow ) );
                                 }
                             } ) );
-
-            // Send message
-            menuItems.add( getSendMessageMenuItem( "menuItem" ) );
-
+            menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
             // View flow eois
             if ( !isCollapsed )
                 menuItems.add(
@@ -152,8 +149,19 @@ public class FlowShowMenuPanel extends MenuPanel {
                 menuItems.add( timeOutLinkMenuItem( "menuItem" ) );
             else if ( !( isLockedByUser( getFlow() ) || getLockOwner( flow ) == null ) )
                 menuItems.add( editedByLinkMenuItem( "menuItem", flow, getLockOwner( flow ) ) );
+            // Send message
+            menuItems.add( getSendMessageMenuItem( "menuItem" ) );
             return menuItems;
         }
+    }
+
+    private List<ModelObjectWrapper> getModelObjectWrappers() {
+        List<ModelObjectWrapper> modelObjects = new ArrayList<ModelObjectWrapper>();
+        Flow flow = getFlow();
+        if ( flow.getInfoProduct() != null ) {
+            modelObjects.add( new ModelObjectWrapper( "Info product", flow.getInfoProduct() ) );
+        }
+        return modelObjects;
     }
 
     private Flow getFlow() {

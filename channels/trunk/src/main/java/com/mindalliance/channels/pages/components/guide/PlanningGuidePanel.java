@@ -468,14 +468,14 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         }
 
         public Event getAnyEvent() {
-            List<Event> events = getQueryService().listKnownEntity( Event.class );
+            List<Event> events = getQueryService().listKnownEntities( Event.class );
             return events.isEmpty()
                     ? null
                     : events.get( new Random( 13 ).nextInt( events.size() ) );
         }
 
         public Phase getAnyPhase() {
-            List<Phase> phases = getQueryService().listKnownEntity( Phase.class );
+            List<Phase> phases = getQueryService().listKnownEntities( Phase.class );
             return phases.isEmpty()
                     ? null
                     : phases.get( new Random( 13 ).nextInt( phases.size() ) );
@@ -489,28 +489,28 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
         }
 
         public Role getAnyRole() {
-            List<Role> roles = getQueryService().listKnownEntity( Role.class );
+            List<Role> roles = getQueryService().listKnownEntities( Role.class );
             return roles.isEmpty()
                     ? null
                     : roles.get( new Random( 13 ).nextInt( roles.size() ) );
         }
 
         public TransmissionMedium getAnyMedium() {
-            List<TransmissionMedium> media = getQueryService().listKnownEntity( TransmissionMedium.class );
+            List<TransmissionMedium> media = getQueryService().listKnownEntities( TransmissionMedium.class );
             return media.isEmpty()
                     ? null
                     : media.get( new Random( 13 ).nextInt( media.size() ) );
         }
 
         public InfoProduct getAnyInfoProduct() {
-            List<InfoProduct> infoProducts = getQueryService().listKnownEntity( InfoProduct.class );
+            List<InfoProduct> infoProducts = getQueryService().listKnownEntities( InfoProduct.class );
             return infoProducts.isEmpty()
                     ? null
                     : infoProducts.get( new Random( 13 ).nextInt( infoProducts.size() ) );
         }
 
         public InfoFormat getAnyInfoFormat() {
-            List<InfoFormat> formats = getQueryService().listKnownEntity( InfoFormat.class );
+            List<InfoFormat> formats = getQueryService().listKnownEntities( InfoFormat.class );
             return formats.isEmpty()
                     ? null
                     : formats.get( new Random( 13 ).nextInt( formats.size() ) );

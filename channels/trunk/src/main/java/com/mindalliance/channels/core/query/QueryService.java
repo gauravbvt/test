@@ -111,7 +111,7 @@ public interface QueryService {
      * @param <T>   a subclass of model entity.
      * @return a list
      */
-    <T extends ModelEntity> List<T> listKnownEntity( Class<T> clazz );
+    <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz );
 
     /**
      * Find all type entities of a given class.
@@ -129,6 +129,14 @@ public interface QueryService {
      */
     <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz );
 
+    /**
+     * Find all actual entities of a given class.
+     *
+     * @param clazz a class of entities
+     * @return a list of entities
+     */
+    <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced );
+
 
     /**
      * Get all referenced objects (known immutable or not orphaned) of the given class.
@@ -138,6 +146,19 @@ public interface QueryService {
      * @return a list
      */
     <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz );
+
+    /**
+     * List all known entities, possibly restricted to those referenced by other entities.
+     * @param entityClass an entity class
+     * @param mustBeReferenced whether it must be referenced to be listed
+     * @param includeImmutables as always referenced
+     * @param <T> a model entity class
+     * @return a list of model entities
+     */
+    <T extends ModelEntity> List<T> listKnownEntities(
+            Class<T> entityClass,
+            Boolean mustBeReferenced,
+            Boolean includeImmutables );
 
     /**
      * Get all entities that narrow or equal a given entity.
@@ -1622,4 +1643,5 @@ public interface QueryService {
      * @return a string
      */
     String makeNameForNewEntity( Class<? extends ModelEntity> entityClass );
+
 }

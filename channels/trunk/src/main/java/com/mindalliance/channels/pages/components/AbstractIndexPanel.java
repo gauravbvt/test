@@ -33,6 +33,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -178,6 +179,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      */
     private List<IndexEntry> indices;
     private String css;
+    /**
+     * Whether index entries must be referenced to appear.
+     */
+    private boolean mustBeReferenced = true;
 
     public AbstractIndexPanel( String id, IModel<? extends Identifiable> model ) {
         this( id, model, null, null );
@@ -253,6 +258,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         addIndexChoice();
         addByNameOrTags();
         addFilterField();
+        addMustBeReferenced();
         addNameRangePanel();
         addIndices();
     }
@@ -340,6 +346,21 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             }
         } );
         addOrReplace( byTagsCheckBox );
+    }
+
+    private void addMustBeReferenced() {
+        AjaxCheckBox referencedCheckbox = new AjaxCheckBox(
+           "referenced",
+                new PropertyModel<Boolean>( this, "mustBeReferenced" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                indices = null;
+                addIndices();
+                target.add( indicesContainer );
+            }
+        };
+        add(  referencedCheckbox );
     }
 
     private void addIndices() {
@@ -773,12 +794,20 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 && !isTaggedWith( taggable, filter );
     }
 
-    private void italicizeIfEntityType( Component component, ModelObject mo ) {
+    private void styleEntityEntry( Component component, ModelObject mo ) {
+        StringBuilder sb = new StringBuilder(  );
         if ( mo.isEntity() && ( (ModelEntity) mo ).isType() ) {
+            sb.append( "font-style: oblique" );
+        }
+        if  ( mo.isEntity() && !getQueryService().isReferenced( mo ) ) {
+            if ( sb.length() > 0) sb.append( "; " );
+            sb.append( "text-decoration:line-through" );
+        }
+        if ( sb.length() > 0 ) {
             component.add(
                     new AttributeModifier(
                             "style",
-                            new Model<String>( "font-style: oblique" ) ) );
+                            new Model<String>( sb.toString() ) ) );
         }
     }
 
@@ -808,6 +837,14 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     : "";
         }
         return css + ( added.isEmpty() ? "" : ( " " + added ) );
+    }
+
+    public boolean isMustBeReferenced() {
+        return mustBeReferenced;
+    }
+
+    public void setMustBeReferenced( boolean val ) {
+        mustBeReferenced = val;
     }
 
 
@@ -988,7 +1025,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     new Model<String>( getAbbreviatedName() ),
                     getToolTip(),
                     addToCss( getIndexedModelObject(), css ) );
-            italicizeIfEntityType( moLink, getIndexedModelObject() );
+            styleEntityEntry( moLink, getIndexedModelObject() );
             add( moLink );
         }
 
@@ -1034,7 +1071,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     item.add( moLink );
                 }
             };
-            italicizeIfEntityType( moLabel, getIndexedModelObject() );
+            styleEntityEntry( moLabel, getIndexedModelObject() );
             add( refList );
         }
 
