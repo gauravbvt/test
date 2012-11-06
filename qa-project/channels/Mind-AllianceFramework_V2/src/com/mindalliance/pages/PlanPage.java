@@ -2412,10 +2412,10 @@ public class PlanPage {
 		String linkTextInPage=null;
 		elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Receives Panel");
 		UIActions.click(fileName,"Show Advanced Simple Form In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Receives Panel");
-		try{
-			Thread.sleep(2000);
-		}
-		catch(Exception e){}
+//		try{
+//			Thread.sleep(2000);
+//		}
+//		catch(Exception e){}
 		if(flag.equals("False")){
 			// Assertion: Verify by clicking on 'Show Advanced Form' link chabges to 'Show Simple form'
 			elementController.requireElementSmart(fileName,"Show Advanced Simple Form In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Show Advanced Simple Form In Receives Panel");
