@@ -163,7 +163,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
             return getEntityAnalyticsPanel();
         } else if ( aspect.equals( ISSUES ) ) {
             return getEntityIssuesPanel();
-        }  else if ( aspect.equals( STRUCTURE ) ) {
+        } else if ( aspect.equals( STRUCTURE ) ) {
             return getEntityStructurePanel();
         } else if ( aspect.equals( AGREEMENTS ) ) {
             return getEntityAgreementsPanel();
@@ -336,18 +336,25 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
 
     @Override
     protected List<String> getAllAspects() {
-        List<String> allAspects =  new ArrayList<String>();
+        List<String> allAspects = new ArrayList<String>();
+        ModelEntity entity = (ModelEntity) getObject();
         allAspects.add( DETAILS );
         if ( isEntityNetworkable() ) {
             allAspects.add( NETWORK );
         }
-        if ( getObject() instanceof Organization ) {
+        if ( entity instanceof Organization && entity.isActual() ) {
             allAspects.add( STRUCTURE );
             allAspects.add( AGREEMENTS );
         }
-        allAspects.add( ANALYTICS );
+        if ( entityHasAnalytics() )
+            allAspects.add( ANALYTICS );
         allAspects.add( ISSUES );
         return allAspects;
+    }
+
+    private boolean entityHasAnalytics() {
+        ModelEntity entity = (ModelEntity) getObject();
+        return !( entity.isType() && ( entity instanceof Actor | entity instanceof Organization ) );
     }
 
     private boolean isEntityNetworkable() {
@@ -360,15 +367,15 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
     @SuppressWarnings( "unchecked" )
     protected List<String> getActionableAspects() {
         final List<String> allActionableAspects = Arrays.asList( ACTIONABLE_ASPECTS );
-        return (List<String>)CollectionUtils.select(
+        return (List<String>) CollectionUtils.select(
                 getAllAspects(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return allActionableAspects.contains( (String)object );
+                        return allActionableAspects.contains( (String) object );
                     }
                 }
-                );
+        );
     }
 
     @Override
