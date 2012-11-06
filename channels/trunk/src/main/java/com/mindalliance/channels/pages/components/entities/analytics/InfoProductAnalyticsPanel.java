@@ -1,0 +1,26 @@
+package com.mindalliance.channels.pages.components.entities.analytics;
+
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.wicket.model.IModel;
+
+import java.util.Set;
+
+/**
+ * Info product analytics panel.
+ * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: 11/6/12
+ * Time: 1:43 PM
+ */
+public class InfoProductAnalyticsPanel extends AbstractUpdatablePanel {
+    public InfoProductAnalyticsPanel( String id, IModel<ModelEntity> model, Set<Long> expansions ) {
+        super( id, model, expansions );
+        init();
+    }
+
+    private void init() {
+        //todo
+    }
+}
