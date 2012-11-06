@@ -1884,16 +1884,16 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<ClassName>simple-advanced</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Show Advanced Simple Form In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span[2]</Xpath>
 		<Name></Name>
 		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<PartialLinkText>Show advanced form</PartialLinkText>
+		<LinkText>Show advanced form</LinkText>
+		<ClassName>simple-advanced</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Type Dropdown In New Issue In Sends Panel</GivenName>
@@ -2869,7 +2869,7 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<ClassName>fp-title</ClassName>
 	</Element>
 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
