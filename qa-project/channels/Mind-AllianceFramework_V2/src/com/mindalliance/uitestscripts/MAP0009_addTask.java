@@ -60,15 +60,16 @@ public class MAP0009_addTask extends TestCase{
 				new ElementController();
 			}
 			
+			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
-			// Write log		
+			// Write log			
 			LogFunctions.writeLogs(description);
-					
+						
 			// Creates Browser instance
-			description="Browser initialized";
-			browser=BrowserController.browserName;	
+			BrowserController browserController= new BrowserController();
+			browserController.initializeDriver();	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

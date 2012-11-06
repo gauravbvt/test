@@ -173,15 +173,6 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			//Click on Remove this segment
- 			stepNo++;
-			description="Remove This Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  								
 			//Sign Out from 'Plan' page
  			stepNo++;
