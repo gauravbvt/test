@@ -209,12 +209,7 @@ public class UIActions {
 				try {
 					alert = webDriver.switchTo().alert();
 				} catch (NoAlertPresentException nap) {
-					try {
-						Reporting.getScreenShot("AlertDialogBoxNotFound");
-					} catch (UIAutomationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					Reporting.getScreenShot("AlertDialogBoxNotFound");
 					GlobalVariables.configuration.getWebDriver().quit();
 					Assert.fail("Alert Dialog Box not found. See Screenshot in Reports directory. "
 							+ nap.getMessage());
