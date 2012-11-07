@@ -21,10 +21,10 @@ public class Home {
 		TestSuite suite = new TestSuite("Mind-Alliance API Testing Framework");	
 //		View
 		
-//		suite.addTestSuite(MAV0001_viewLoginPage.class);
-//		suite.addTestSuite(MAV0002_viewHomePage.class);
-//		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
-//		suite.addTestSuite(MAV0004_viewAdminHome.class);
+		suite.addTestSuite(MAV0001_viewLoginPage.class);
+		suite.addTestSuite(MAV0002_viewHomePage.class);
+		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
+		suite.addTestSuite(MAV0004_viewAdminHome.class);
 //		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);	
 //		suite.addTestSuite(MAV0006_redirectToPlanPage.class);
 //		suite.addTestSuite(MAV0008_hidePlannerInfo.class);
@@ -185,9 +185,9 @@ public class Home {
 //		suite.addTestSuite(MAP0017_deleteEvent.class);
 //		suite.addTestSuite(MAP0022_addGoal.class);
 //		suite.addTestSuite(MAP0023_removeGoal.class);	
-		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
-		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
+//		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
+//		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
+//		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
 //		Command
 		
 //		suite.addTestSuite(MAC0001_UndoAddSegment.class);
