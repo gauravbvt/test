@@ -63,9 +63,6 @@ public class MAV0001_viewLoginPage extends TestCase{
 			
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
-			// Write log		
-			LogFunctions.writeLogs(description);
-			
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();
