@@ -33,12 +33,8 @@ public class LogFunctions {
 	public static void writeLogs(String sLog) throws UIAutomationException {	
 		try {	
 			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs\\Logs.log",true);
-			
-//			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getLogFile(), true);
-			
 			BufferedWriter out = new BufferedWriter(fileWriter);
 		    out.write(getDateTime() + ":" + sLog);
-//			out.write(getDateTime() + ":" + sLog);
 		    out.newLine();
 		    out.flush();
 		    out.close();
@@ -63,14 +59,10 @@ public class LogFunctions {
 			if (sScriptException.contains(",")) {
 				sScriptException = sScriptException.replaceAll(",", "|");
 				sScriptException = sScriptException.replaceAll("\n", " ");
-				// sScriptException = sScriptException.substring(0, sScriptException.indexOf("}") + 1);	
 			}
 			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs\\Results.csv",true);
-			
-//			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getResultCsvFile(), true);
 			BufferedWriter out = new BufferedWriter(fileWriter);
 			out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
-//			out.write(sTestCaseId + "," + iVerifyStepNo + "," + sDescription + "," + sResult + "," + sScriptException + "," + sErrorReport);
 			out.newLine();
 			out.flush();
 			out.close();
@@ -88,9 +80,7 @@ public class LogFunctions {
 	 */
 	public static void writeErrorLogs(String sLog) throws UIAutomationException {
 		try {
-//			String testCaseId="";
 			FileWriter fileWriter=new FileWriter(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs\\Errors");
-//			FileWriter fileWriter = new FileWriter(GlobalVariables.configuration.getErrorLogSubDirectoryPath() + "\\" +testCaseId + ".logs", true);
 		    BufferedWriter out = new BufferedWriter(fileWriter);
 		    out.write(getDateTime() + ":" + sLog);
 		    out.newLine(); 

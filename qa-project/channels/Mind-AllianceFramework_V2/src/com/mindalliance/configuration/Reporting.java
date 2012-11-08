@@ -2,12 +2,15 @@ package com.mindalliance.configuration;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -16,9 +19,8 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.io.FileUtils;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.junit.Assert;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.internal.selenesedriver.TakeScreenshot;
 
 import com.csvreader.CsvReader;
 import com.mindalliance.configuration.Configuration.TraceLevel;
@@ -28,127 +30,96 @@ import com.mindalliance.configuration.Configuration.TraceLevel;
  * helpful for analyzing the results of the test case.
  * @author AFourTech
  */
-public class Reporting
-{
+public class Reporting extends TakeScreenshot {
 	public static int totalNoOfTestCasesPassed = 0;
 	public static int totalNoOfTestCasesFailed = 0;
-	public static String logDirectoryName;
-	public static String logDirectoryPath;
-	public static String errorLogSubDirectoryPath;
-	public static String reportDirectoryName;
-	public static String reportSrcDirectoryPath;
-	public static String reportDstDirectoryPath;
-	public static String testDataDirectoryPath;
-	public static String blank = "";
-	public static String passed = "Pass";
-	public static String failed = "Fail";
-	public static String verifyError;
-	public static String notRun = "NOT RUN";
-	public static String automatesYes = "YES";
-	public static int testCasesAutomated = 0;
-	public static int testCasesPassed = 0;
-	public static int testCasesFailed = 0;
-	public static CsvReader products;
-	public static CsvReader csvTestCase;
-	public static String sSummary;
-	public static String csvResult;
-	public static String csvScriptException;
-	public static String csvErrorReport;
-	public static String arrayOfTestCaseId[] = new String[600];
-	public static String arrayOftestCaseSummary[] = new String[600];
-	public static String arrayOftestCaseResult[] = new String[600];
-	public static String testName;
-	public static int noOfViewTestCasesExecuted=0;
-	public static int noOfPlanTestCasesExecuted=0;
-	public static int noOfCommandTestCasesExecuted=0;
-	public static int noOfViewTestCasesPassed=0;
-	public static int noOfPlanTestCasesPassed=0;
-	public static int noOfCommandTestCasesPassed=0;
-	public static int noOfViewTestCasesFailed=0;
-	public static int noOfPlanTestCasesFailed=0;
-	public static int noOfCommandTestCasesFailed=0;
-	public static String startDateTime;
-	public static String endDateTime;
+	public String logDirectoryName;
+	public String logDirectoryPath;
+	public String errorLogSubDirectoryPath;
+	public String reportDirectoryName;
+	public String reportSrcDirectoryPath;
+	public String reportDstDirectoryPath;
+	public String testDataDirectoryPath;
+	public String blank = "";
+	public String passed = "Pass";
+	public String failed = "Fail";
+	public String verifyError;
+	public String notRun = "NOT RUN";
+	public String automatesYes = "YES";
+	int testCasesAutomated = 0;
+	int testCasesPassed = 0;
+	int testCasesFailed = 0;
+	CsvReader products;
+	CsvReader csvTestCase;
+	String sSummary;
+	String csvResult;
+	String csvScriptException;
+	String csvErrorReport;
+	String arrayOfTestCaseId[] = new String[600];
+	String arrayOftestCaseSummary[] = new String[600];
+	String arrayOftestCaseResult[] = new String[600];
+	String testName;
+	public int noOfViewTestCasesExecuted=0;
+	public int noOfPlanTestCasesExecuted=0;
+	public int noOfCommandTestCasesExecuted=0;
+	public int noOfViewTestCasesPassed=0;
+	public int noOfPlanTestCasesPassed=0;
+	public int noOfCommandTestCasesPassed=0;
+	public int noOfViewTestCasesFailed=0;
+	public int noOfPlanTestCasesFailed=0;
+	public int noOfCommandTestCasesFailed=0;
+	public String startDateTime;
+	public String endDateTime;
 	
 	static DateFormat dateFormatGMT = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 	
-    /**
-     * Takes a screenshot of the application page wherever there is a failure
-     * 
-     * @param  fileName		The name of the file where the screenshot is saved
-     * @return String The path where the screenshot file is saved
-     * @throws UIAutomationException 
-     * @throws WebDriverException 
-     */
-    public static String getScreenShot(String fileName)
-    {
-		try 
-		{
-			// Captures screen shots and create .png file
-   	 		fileName=GlobalVariables.configuration.getCurrentDir().getCanonicalPath() + File.separator + "Reports_Snapshot" + File.separator+fileName + ".png";
-   	 		File scrFile = ((org.openqa.selenium.TakesScreenshot)Configuration.getConfigurationObject().getWebDriver()).getScreenshotAs(OutputType.FILE);
-   	 		FileUtils.copyFile(scrFile, new File(fileName));
-		} catch(IOException io) 
-		{
-			Assert.fail("Unable to create file '"+fileName+".png'");
-		}
-		catch(WebDriverException wde) 
-		{
-			Assert.fail("Unable to create file '"+fileName+".png'");
-		}
-		catch(UIAutomationException ce) 
-		{
-			Assert.fail("Unable to create file '"+fileName+".png'");
-		}
-   	 	return fileName;
-	}
-    
+	
+	
 	/**
-     * Returns time in format minutes:seconds.milliseconds
-     * @param startTimeMilliSecs Start milli seconds value.
-     * @return String
+     * Takes a screen shot of the application page 
+     * @param  fileName		The name of the file where the screen shot is saved
+     * @return String The path where the screen shot file is saved
+	 * @throws UIAutomationException 
+     * @throws IOException 
      */
-    public static String actionTime(long startTimeMilliSecs) 
-    {
-		long duration = System.currentTimeMillis() - startTimeMilliSecs;
-		return (""+duration/60000+":"+(duration/1000)%60+"."+duration%1000);
-	}
+    public static String getScreenShot(String fileName) throws UIAutomationException{    
+   	   	try{
+   	   		fileName=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+File.separator+"Reports_snapshot"+File.separator+fileName+".png";
+	        File scrFile = ((org.openqa.selenium.TakesScreenshot)GlobalVariables.configuration.getWebDriver()).getScreenshotAs(OutputType.FILE);
+    	    FileUtils.copyFile(scrFile, new File(fileName));
+   	   	} catch(IOException io){
+       		  throw new UIAutomationException("Unable to create file '"+fileName+".png'");
+    	}
+   	    return fileName;
+    }
+ 
+    // Returns minutes:seconds.milliseconds
+    public static String actionTime(long startTimeMilliSecs){
+    	long duration = System.currentTimeMillis() - startTimeMilliSecs;
+    	return (""+duration/60000+":"+(duration/1000)%60+"."+duration%1000);
+    }
     
+    // Sends info to System.out  prefixed by time stamp and post fixed with duration time
+    public static void timeStampedActionTime(long startTimeMilliSecs, String message){
+    	String duration = actionTime(startTimeMilliSecs); // Record time before additional formatting.
+    	trace(TraceLevel.Info, dateFormatGMT.format(new Date())+" "+message+duration);
+    }
+   
     /**
-     * Sends info to System.out  prefixed by timestamp and postfixed with duration time
-     * @param startTimeMilliSecs Start milli seconds value.
-     * @param message Message to sent to system for printing on console.
+     * This function prints stack trace if occurs   
+     * @param level
+     * @param message
      */
-    public static void timeStampedActionTime(long startTimeMilliSecs, String message) 
-    {
-    	// Record time before additional formatting.
-    	String duration = actionTime(startTimeMilliSecs); 
-		trace(TraceLevel.Info, dateFormatGMT.format(new Date())+" "+message+duration);
-	}
-    
-    
-    
-    
-    /**
-     * Prints trace on console.
-     * @param level Level defines trace leves such as fatal, error, info etc.
-     * @param message Message to print on console.
-     */
-	public static void trace(TraceLevel level, String message)
-	{
-		// Code to print trace message
-		if ( GlobalVariables.configuration.isTraceLevel(level))
-		{
+	public static void trace(TraceLevel level, String message){
+		// Auto-generated method stub
+		if ( GlobalVariables.configuration.isTraceLevel(level)){
 			System.out.println(message);
 		}
 	}
 	/**
-	 * Method to Update Test Case Execution Result
-	 * @return void
-	 * @throws UIAutomationException 
+	 * This function reads Results.csv file in Logs and generate testcase.html
 	 */
-	public static void updateTestCaseExecutionResult() throws UIAutomationException {
-		try {
+	public void updateTestCaseExecutionResult() throws UIAutomationException, IOException{
 			int index = 0;
 			testCasesPassed = 0;
 			testCasesFailed = 0;
@@ -178,18 +149,116 @@ public class Reporting
 				    }
 			    }
 			}
+	}
+	
+	/**
+	 * This function updates Test case sheet
+	 */
+	public void updateTestCaseSheetResult() throws UIAutomationException, IOException{
+		try {
+			int cnt=0;
+			File file,outputFile;
+			do {
+				cnt++;
+				if(cnt==1)
+					 file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+				else 
+					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+				Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
+			
+				// Update View, Plan & Command Sheets
+				for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ; i++)	{
+					testName = GlobalVariables.configuration.getList().getModel().getElementAt(i).toString();
+
+					// Call readCsvFile
+					String sResult = readCsvFile(testName);
+				
+					if(testName.contains("MAV")) { 
+						sheet = sheet.getSpreadSheet().getSheet(1);
+						// No Of Test Cases Passed & Failed of Views
+						if(sResult.equals(passed))
+							noOfViewTestCasesPassed++;
+						else
+							noOfViewTestCasesFailed++;
+
+					}
+					else if(testName.contains("MAP")) {
+						sheet = sheet.getSpreadSheet().getSheet(2);
+						// No Of Test Cases Passed & Failed of Plans				
+						if(sResult.equals(passed))
+							noOfPlanTestCasesPassed++;
+						else
+							noOfPlanTestCasesFailed++;
+					}
+					else if(testName.contains("MAC")) {
+						sheet = sheet.getSpreadSheet().getSheet(3);
+						// No Of Test Cases Passed & Failed of Commands
+						if(sResult.equals(passed))
+							noOfCommandTestCasesPassed++;
+						else
+							noOfCommandTestCasesFailed++;
+					}
+					
+					for(int j=1;j<sheet.getRowCount();j++) {
+						if(testName.equals(sheet.getValueAt(0,j).toString())) {
+							if (sResult == failed) {
+								sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("J"+(j+1)).setValue(failed);
+								sheet.getCellAt("K"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("K"+(j+1)).setValue(csvScriptException);
+								sheet.getCellAt("L"+(j+1)).setBackgroundColor(Color.CYAN);
+								sheet.getCellAt("L"+(j+1)).setValue(csvErrorReport);
+							}
+							else if (sResult == passed) {	
+								sheet.getCellAt("J"+(j+1)).setBackgroundColor(Color.ORANGE);
+								sheet.getCellAt("J"+(j+1)).setValue(passed);
+							}
+						}
+					}
+				}
+				
+				// Update Summary Sheet
+				sheet=sheet.getSpreadSheet().getSheet(0);
+				// No. Of Test Cases Executed of Views, Plans & Commands
+				sheet.getCellAt("G8").setValue(noOfViewTestCasesExecuted);
+				sheet.getCellAt("G9").setValue(noOfPlanTestCasesExecuted);
+				sheet.getCellAt("G10").setValue(noOfCommandTestCasesExecuted);
+				// No. Of Test Cases Passed of Views, Plans & Commands			
+				sheet.getCellAt("H8").setValue(noOfViewTestCasesPassed);
+				sheet.getCellAt("H9").setValue(noOfPlanTestCasesPassed);
+				sheet.getCellAt("H10").setValue(noOfCommandTestCasesPassed);
+				// No. Of Test Cases Failed of Views, Plans & Commands
+				sheet.getCellAt("I8").setValue(noOfViewTestCasesFailed);
+				sheet.getCellAt("I9").setValue(noOfPlanTestCasesFailed);
+				sheet.getCellAt("I10").setValue(noOfCommandTestCasesFailed);
+
+				if(cnt==1)
+						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet.ods");
+				else
+						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet_V2.ods");
+				sheet.getSpreadSheet().saveAs(outputFile);
+				
+				// Set Pass/Fail Count to 0.
+				noOfViewTestCasesPassed=0;
+				noOfPlanTestCasesPassed=0;
+				noOfCommandTestCasesPassed=0;
+				noOfViewTestCasesFailed=0;
+				noOfPlanTestCasesFailed=0;
+				noOfCommandTestCasesFailed=0;
+				
+			}while(cnt!=2);
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError in updateTestCaseExecutionResult() function.\n");			
+		catch(IOException ie) {
+			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet.ods"+"'");
 		}
 	}
 	
 	/**
-	 * Method to Update Test Case sheet for Functional Test Cases
-	 * @return void 
+	 * Updates test case sheet result for functional test cases
+	 * @throws IOException 
 	 * @throws UIAutomationException 
 	 */
-	public static void updateTestCaseSheetResultForFunctionalTestCases() throws UIAutomationException {
+	public void updateTestCaseSheetResultForFunctionalTestCases() throws UIAutomationException, IOException {
 		try {
 			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
 			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
@@ -267,13 +336,12 @@ public class Reporting
 				}
 			}
 			
-			File outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Reports\\UIAutomationReport" + "\\FunctionalTestCase.ods");
-//			File outputFile = new File(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\FunctionalTestCase.ods");
+			
+			File outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\FunctionalTestCase.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in UpdateTestCaseSheetResultForFunctionalTestCases Function.");
-			
+		catch(IOException ie) {
+			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\FunctionalTestCase.ods"+"'");
 		}
 	}
 	
@@ -285,7 +353,7 @@ public class Reporting
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	public static String[] readTestCaseId(int sheetNumber) throws UIAutomationException	{
+	public String[] readTestCaseId(int sheetNumber) throws UIAutomationException, IOException	{
 		int index = 0;
 		try {
 			File currentDir=new File(".");
@@ -310,11 +378,9 @@ public class Reporting
 			sheet.detach();
 			return arrayOfTestCaseId;
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in readTestCaseId() function. \n");
-			
-			
-		}
+		catch(IOException ie) {
+			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\"+"'");
+			  }
 	}
 
 	/**
@@ -322,17 +388,15 @@ public class Reporting
 	 * @throws UIAutomationException 
 	 * @throws IOException
 	 */
-	public static String readCsvFile(String sTestCaseId) throws UIAutomationException {
+	public String readCsvFile(String sTestCaseId) throws UIAutomationException, IOException {
 		try {
 			csvResult = passed;
 			csvScriptException = blank;
 			csvErrorReport = blank;
-			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs" + "\\Results.csv");
-//			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
+			CsvReader csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv");
 			csvTestCase.readHeaders();
 			while (csvTestCase.readRecord()) {
-				if (sTestCaseId.equals(csvTestCase.get("TestCaseId")) && csvTestCase.get("Result").equals(failed))
-				{
+				if (sTestCaseId.equals(csvTestCase.get("TestCaseId")) && csvTestCase.get("Result").equals(failed)) {
 					csvResult = csvTestCase.get("Result");
 					csvScriptException = csvTestCase.get("ScriptException");
 					csvErrorReport = csvTestCase.get("ErrorReport");
@@ -346,46 +410,43 @@ public class Reporting
 			else
 				return notRun;
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError in readCsvFile() Function.\n");
-			
+		catch(IOException e) {
+			throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv"+"'");
 		}
 	}
 		
 	/**
 	 * Generate AutomationReport in Ods
 	 * @throws UIAutomationException 
-	 * @throws IOException
+	 * @throws Exception 
 	 * @throws XMLStreamException
 	 */
-	public void generateAutomationReport() throws UIAutomationException {
-		try {
-				GlobalVariables.configuration.setEndtime(LogFunctions.getDateTime());
-				// Update Test Case Execution Result
-				updateTestCaseExecutionResult();		
-						
-				
-				// No. of Test Cases Passed and Failed
-				totalNoOfTestCasesPassed = testCasesPassed;
-				totalNoOfTestCasesFailed = testCasesFailed;
-				
-				// Test Case Index
-				generateTestCaseIndex();
-				
-				// Test Case Summary
-				generateTestCaseSummary();
-				
-				// Final Test Pass Report
-				generateFinalTestPassReport();
-				
-				// Failure Report
-				generateFailureReport();
-				
-				System.out.println("Report generated successfully");
-			}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in generateAutomationReport() function.\n");			
-		}
+	public void generateAutomationReport() throws IOException, UIAutomationException {
+			// Update Test Case Execution Result
+			updateTestCaseExecutionResult();
+			
+			// Update Test Case Sheet Execution Result
+			updateTestCaseSheetResult();
+			
+			// No. of Test Cases Passed and Failed
+			totalNoOfTestCasesPassed = testCasesPassed;
+			totalNoOfTestCasesFailed = testCasesFailed;
+			
+			// Test Case Index
+			generateTestCaseIndex();
+			
+			// Test Case Summary
+			generateTestCaseSummary();
+			
+			// Final Test Pass Report
+			generateFinalTestPassReport();
+			
+			// Failure Report
+			generateFailureReport();
+			
+			System.out.println("Report generated successfully");
+			zipFolder("D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport", "D:\\Channels\\Mind-AllianceFramework_V2\\Reports\\UIAutomationReport.zip");
+			System.out.println("Zipped");
 	}
 
 	/**
@@ -394,10 +455,9 @@ public class Reporting
 	 * @throws XMLStreamException
 	 * @throws IOException
 	 */
-	private static void generateFinalTestPassReport() throws UIAutomationException {
+	private void generateFinalTestPassReport() throws UIAutomationException, IOException {
 		try {
-			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Reports\\UIAutomationReport" + "\\index.htm");
-//			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\index.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\index.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -406,7 +466,7 @@ public class Reporting
 				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 				xml.writeStartElement("head");
 					xml.writeStartElement("title");
-						xml.writeCharacters("Mind-Alliance UIAutomation TestPass Report: " + reportDirectoryName);
+						xml.writeCharacters("Mind-Alliance Automation TestPass Report: " + reportDirectoryName);
 					xml.writeEndElement();
 				xml.writeEndElement();
 				xml.writeStartElement("frameset");
@@ -430,9 +490,11 @@ public class Reporting
 			xml.close();
 			destination.close();
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in generateFinalTestPassReport() function. \n");
-			
+		catch(IOException ie) {
+			throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\index.htm"+"'");
+		}
+		catch(XMLStreamException xe) {
+			throw new UIAutomationException("XML File not found");
 		}
 	}
 
@@ -442,12 +504,10 @@ public class Reporting
 	 * @throws XMLStreamException
 	 * @throws IOException
 	 */
-	private static void generateTestCaseSummary() throws UIAutomationException {
+	private void generateTestCaseSummary() throws UIAutomationException {
 		try {
 			
-			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Reports\\UIAutomationReport"+"\\TestPassSummary.htm");
-//			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath()+"\\TestPassSummary.htm");
-//			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestPassSummary.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\TestPassSummary.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -473,14 +533,14 @@ public class Reporting
 									xml.writeEmptyElement("br");
 									xml.writeCharacters("End Datetime: " + GlobalVariables.configuration.getEndtime());
 									xml.writeEmptyElement("br");
-									xml.writeCharacters("Browser: " + GlobalVariables.configuration.getConfigData().get("Browser"));
+									xml.writeCharacters("Browser: " + BrowserController.browserName);
 									xml.writeEmptyElement("br");
 								xml.writeEndElement();
 							xml.writeEndElement();
 							xml.writeStartElement("td");
 								xml.writeStartElement("center");
 									xml.writeStartElement("img");
-										xml.writeAttribute("src","../../images/Mind-Alliance_Logo.png");
+										xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
 										xml.writeAttribute("style","border-style: none");
 									xml.writeEndElement();
 								xml.writeEndElement();
@@ -502,20 +562,20 @@ public class Reporting
 			xml.close();
 			destination.close();
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in generateTestCaseSummary() function. \n");
-			
+		catch(IOException ie) {
+			throw new UIAutomationException("File not found");
+		}
+		catch(XMLStreamException xe) {
+			throw new UIAutomationException("XML File not found");
 		}
 	}
-/**
- * Method to generate Failure Reports
- * @return void
- * @throws UIAutomationException 
- */
-	private static void generateFailureReport() throws UIAutomationException {
+	/**
+	 * Genearate failure report 
+	 * @throws UIAutomationException 
+	 */
+	private void generateFailureReport() throws UIAutomationException {
 		try {
-			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Reports\\UIAutomationReport"+ "\\TestCaseFailureList.htm");
-//			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\TestCaseFailureList.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\TestCaseFailureList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -524,7 +584,7 @@ public class Reporting
 				xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 				xml.writeStartElement("head");
 					xml.writeStartElement("title");
-						xml.writeCharacters("Mind-Alliance Failure Report");
+						xml.writeCharacters("Mind-alliance Failure Report");
 					xml.writeEndElement();
 				xml.writeEndElement();
 				xml.writeStartElement("body");
@@ -541,9 +601,9 @@ public class Reporting
 								xml.writeAttribute("bgColor","#DDDDDD");
 								xml.writeStartElement("td");
 								xml.writeStartElement("center");
-									xml.writeCharacters("Start Datetime: " + startDateTime);
+									xml.writeCharacters("Start Datetime: " + GlobalVariables.configuration.getStartTime());
 									xml.writeEmptyElement("br");
-									xml.writeCharacters("End Datetime: " + endDateTime);
+									xml.writeCharacters("End Datetime: " + GlobalVariables.configuration.getEndtime());
 									xml.writeEmptyElement("br");
 									xml.writeCharacters("Browser: " + GlobalVariables.configuration.getConfigData().get("Browser"));
 									xml.writeEmptyElement("br");
@@ -552,7 +612,7 @@ public class Reporting
 							xml.writeStartElement("td");
 								xml.writeStartElement("center");
 									xml.writeStartElement("img");
-										xml.writeAttribute("src","../../images/Mind-Alliance_Logo.png");
+										xml.writeAttribute("src","../../Images/Mind-Alliance_Logo.png");
 										xml.writeAttribute("style","border-style: solid");
 									xml.writeEndElement();
 								xml.writeEndElement();
@@ -631,7 +691,7 @@ public class Reporting
 						xml.writeEndElement();
 			for (int i = 0; i < GlobalVariables.configuration.getList().getModel().getSize() ;i++) {
 				if(GlobalVariables.configuration.getList().getModel().getElementAt(i) != null) {
-					csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs" + "\\Results.csv");
+					csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv");
 //					csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
 					csvTestCase.readHeaders();
 					while(csvTestCase.readRecord()) {
@@ -700,24 +760,26 @@ public class Reporting
 			xml.close();
 			destination.close();
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in generateFailureReport() function.\n");			
+		catch(IOException ie) {
+			throw new UIAutomationException("File not found");
+		}
+		catch(XMLStreamException xe) {
+			throw new UIAutomationException("XML File not found");
 		}
 	}		
 
 /**
 	 * Generate TestCase Index
+ * @throws UIAutomationException 
 	 * @throws XMLStreamException
 	 * @throws IOException
 	 */
-	public static void generateTestCaseIndex() {
+	private void generateTestCaseIndex() throws UIAutomationException {
 		
 		String arrayOftestCaseResult[] = new String[600];
 		
 		try	{
-			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Reports\\UIAutomationReport"+"\\TestCaseList.htm");
-			
-//			OutputStream destination = new FileOutputStream(reportDstDirectoryPath + "\\TestCaseList.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport\\TestCaseList.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -793,9 +855,11 @@ public class Reporting
 			xml.close();
 			destination.close();
 		}
-		catch(Exception e) {
-			System.out.println("\nError Occured in generateTestCaseIndex() function. \n");
-			e.printStackTrace();
+		catch(IOException ie) {
+			throw new UIAutomationException("File not found");
+		}
+		catch(XMLStreamException xe) {
+			throw new UIAutomationException("XML File not found");
 		}
 	}
 
@@ -805,13 +869,10 @@ public class Reporting
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	public static void generateAutomationReportInHtml(String testName) throws UIAutomationException {
+	public void generateAutomationReportInHtml(String testName) throws UIAutomationException {
 	try {
-		csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Logs\\UILogs" + "\\Results.csv");
-//		csvTestCase = new CsvReader(GlobalVariables.configuration.getLogDirectoryPath() + "\\Results.csv");
-		
-		OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+ File.separator+"Reports\\UIAutomationReport" + "\\" + testName + ".htm");
-//		OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getReportDstDirectoryPath() + "\\" + testName + ".htm");
+		csvTestCase = new CsvReader(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Logs\\UILogs\\Results.csv");
+		OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\" + testName + ".htm");
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
@@ -936,19 +997,22 @@ public class Reporting
 		xml.close();
 		destination.close();
 		csvTestCase.close();
-		}
-		catch(Exception e) 
-		{
-			throw new UIAutomationException("\nError in generateAutomationReportInHtml() function. \n");		
-		}
 	}
-/**
- * Method to read Test Case ID's
- * @param sheetNumber
- * @return
- * @throws UIAutomationException 
- */
-	public static String[] readTestCaseIdForFunctional(int sheetNumber) throws UIAutomationException {
+	catch(IOException ie) {
+		throw new UIAutomationException("File not found");
+	}
+	catch(XMLStreamException xe) {
+		throw new UIAutomationException("XML File not found");
+	}
+	}
+
+	/**
+	 * Read Test case Id of Functional test cases
+	 * @param sheetNumber
+	 * @return
+	 * @throws UIAutomationException 
+	 */
+	public String[] readTestCaseIdForFunctional(int sheetNumber) throws UIAutomationException {
 		int index = 0;
 		try {
 			File file1 = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
@@ -967,45 +1031,88 @@ public class Reporting
 			sheet1.detach();
 			return arrayOfTestCaseId;
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in readTestCaseIdForFunctional() function.\n");
-			
+		catch(IOException io) {
+			throw new UIAutomationException("File not found");
 		}
 	}
 /**
- * Method to Generate Automation report
- * @return void
+ * Generate automation report For Functional test cases
+ * @throws IOException 
  * @throws UIAutomationException 
  */
-	public static void generateAutomationReportForFunctionalTestCases() throws UIAutomationException {
+	public void generateAutomationReportForFunctionalTestCases() throws UIAutomationException, IOException {
+		// Update Test Case Execution Result
+		updateTestCaseExecutionResult();
+		
+		// Update Test Case Sheet Execution Result
+		updateTestCaseSheetResultForFunctionalTestCases();
+		
+		// No. of Test Cases Passed and Failed
+		totalNoOfTestCasesPassed = testCasesPassed;
+		totalNoOfTestCasesFailed = testCasesFailed;
+		
+		// Test Case Index
+		generateTestCaseIndex();
+		
+		// Test Case Summary
+		generateTestCaseSummary();
+		
+		// Final Test Pass Report
+		generateFinalTestPassReport();
+		
+		// Failure Report
+		generateFailureReport();
+		
+		System.out.println("Report generated successfully");
+		
+		System.out.println("Zipped Completed");
+	}
+	
+	public static void zipFolder(String srcFolder, String destZipFile)throws IOException {
+		ZipOutputStream zip = null;
+		FileOutputStream fileWriter = null;
+
+		fileWriter = new FileOutputStream(destZipFile);
+		zip = new ZipOutputStream(fileWriter);
+
 		try {
-			// Update Test Case Execution Result
-			updateTestCaseExecutionResult();
-			
-			// Update Test Case Sheet Execution Result
-//			updateTestCaseSheetResultForFunctionalTestCases();
-			
-			// No. of Test Cases Passed and Failed
-			totalNoOfTestCasesPassed = testCasesPassed;
-			totalNoOfTestCasesFailed = testCasesFailed;
-			
-			// Test Case Index
-			generateTestCaseIndex();
-			
-			// Test Case Summary
-			generateTestCaseSummary();
-			
-			// Final Test Pass Report
-			generateFinalTestPassReport();
-			
-			// Failure Report
-			generateFailureReport();
-			
-			System.out.println("Report generated successfully");
+			addFolderToZip("", srcFolder, zip);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		catch(Exception e) {
-			throw new UIAutomationException("\nError Occured in generateAutomationReportForFunctionalTestCases() function.");
-			
+		zip.flush();
+		zip.close();
+	}
+
+	static private void addFileToZip(String path, String srcFile,
+			ZipOutputStream zip) throws Exception {
+
+		File folder = new File(srcFile);
+		if (folder.isDirectory()) {
+			addFolderToZip(path, srcFile, zip);
+		} else {
+			byte[] buf = new byte[1024];
+			int len;
+			@SuppressWarnings("resource")
+			FileInputStream in = new FileInputStream(srcFile);
+			zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+			while ((len = in.read(buf)) > 0) {
+				zip.write(buf, 0, len);
+			}
+		}
+	}
+
+	private static void addFolderToZip(String path, String srcFolder,ZipOutputStream zip) throws Exception {
+		File folder = new File(srcFolder);
+
+		for (String fileName : folder.list()) {
+			if (path.equals("")) {
+				addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+			} else {
+				addFileToZip(path + "/" + folder.getName(), srcFolder + "/"
+						+ fileName, zip);
+			}
 		}
 	}
 }
