@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -85,8 +87,10 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
     private static final String PLACE = "Place";
     private static final String ROLE = "Role";
     private static final String MEDIUM = "Transmission medium";
+    private static final String INFO_PRODUCT = "Info product";
+    private static final String INFO_FORMAT = "Info format";
 
-    private static String[] TYPE_KINDS = {AGENT, EVENT, ORG, PLACE, ROLE, MEDIUM};
+    private static String[] TYPE_KINDS = {AGENT, EVENT, INFO_FORMAT, INFO_PRODUCT, ORG, PLACE, ROLE, MEDIUM};
     private CheckBox neatoCheckBox;
     private CheckBox dotCheckBox;
 
@@ -230,7 +234,11 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
                         ? Place.class
                         : selectedTypeKind.equals( ROLE )
                         ? Role.class
-                        : null;
+                        : selectedTypeKind.equals( INFO_PRODUCT )
+                        ? InfoProduct.class
+                        :selectedTypeKind.equals( INFO_FORMAT )
+                        ? InfoFormat.class
+                        :null;
         assert clazz != null;
         return ModelEntity.getUniversalTypeFor( clazz );
     }

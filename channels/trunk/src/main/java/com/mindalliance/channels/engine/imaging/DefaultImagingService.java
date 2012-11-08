@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -417,6 +419,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                         : modelObject instanceof com.mindalliance.channels.core.model.Event ? "event"
                         : modelObject instanceof Place ? "place"
                         : modelObject instanceof TransmissionMedium ? "medium"
+                        : modelObject instanceof InfoFormat ? "info_format"
+                        : modelObject instanceof InfoProduct ? "info_product"
                         : "unknown" );
     }
 
