@@ -14,6 +14,7 @@ import com.mindalliance.channels.pages.components.Filterable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -55,6 +56,7 @@ public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements 
     private void init() {
         filters = new ArrayList<Identifiable>();
         addFormatReferenceTable();
+        addValueAnalysis();
     }
 
     private void addFormatReferenceTable() {
@@ -113,7 +115,17 @@ public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements 
         return references;
     }
 
-    private InfoFormat getInfoFormat() {
+    private void addValueAnalysis() {
+        add( new Label( "valueAnalysisTitle", "Value of info format \"" + getInfoFormat().getName() + "\"" ) );
+        EntityValueAnalysisPanel valuePanel = new EntityValueAnalysisPanel<InfoFormat>(
+                "valueAnalysis",
+                new PropertyModel<InfoFormat>( this, "infoFormat" ),
+                getExpansions()
+        );
+        add( valuePanel );
+    }
+
+    public InfoFormat getInfoFormat() {
         return (InfoFormat) getModel().getObject();
     }
 

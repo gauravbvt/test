@@ -127,7 +127,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     @Override
     public String getTitle() {
-        return MessageFormat.format( "{0} {1}", getName(), WordUtils.uncapitalize( task ) );
+        return MessageFormat.format( "{0} - {1}", getName(), WordUtils.uncapitalize( task ) );
     }
 
     @Override
@@ -295,7 +295,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * Test whether the resource spec of the part intersects a given resource spec
      *
      * @param resourceSpec a resource
-     * @param locale the default location
+     * @param locale       the default location
      * @return a boolean
      */
     public boolean isImpliedBy( ResourceSpec resourceSpec, Place locale ) {
@@ -431,7 +431,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param o the organization
+     * @param o      the organization
      * @param locale the default location
      * @return true if belonging
      */
@@ -442,7 +442,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     /**
      * Test if this part is considered belonging to an organization.
      *
-     * @param j the jurisdiction
+     * @param j      the jurisdiction
      * @param locale the default location
      * @return true if belonging
      */
@@ -507,7 +507,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     @Override
     public String displayString( int maxItemLength ) {
         return resourceSpec().displayString( maxItemLength ) + " (" + StringUtils.abbreviate( task, maxItemLength )
-               + ")";
+                + ")";
     }
 
     @Override
@@ -682,9 +682,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( getActor(), mo ) || ModelObject.areIdentical( getRole(), mo )
-               || ModelObject.areIdentical( getJurisdiction(), mo ) || ModelObject.areIdentical( getOrganization(), mo )
-               || ModelObject.areIdentical( location.getNamedPlace(), mo ) || ModelObject.areIdentical( initiatedEvent, mo )
-               || CollectionUtils.exists( goals, new Predicate() {
+                || ModelObject.areIdentical( getJurisdiction(), mo ) || ModelObject.areIdentical( getOrganization(), mo )
+                || ModelObject.areIdentical( location.getNamedPlace(), mo ) || ModelObject.areIdentical( initiatedEvent, mo )
+                || CollectionUtils.exists( goals, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
                 return ( (Goal) object ).references( mo );
@@ -954,13 +954,12 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         else
             setJurisdiction( null );
         if ( state.get( "location" ) != null ) {
-            AssignedLocation assignedLocation= new AssignedLocation();
+            AssignedLocation assignedLocation = new AssignedLocation();
             assignedLocation.initFromMap(
                     (Map<String, Object>) state.get( "location" ),
                     queryService );
             setLocation( assignedLocation );
-        }
-        else
+        } else
             setLocation( null );
     }
 
@@ -1048,11 +1047,11 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
             public boolean evaluate( Object object ) {
                 Flow need = (Flow) object;
                 return Matcher.same( subject.getInfo(), need.getName() )
-                       && CollectionUtils.exists( need.getEffectiveEois(), new Predicate() {
+                        && CollectionUtils.exists( need.getEffectiveEois(), new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         return Matcher.same( ( (ElementOfInformation) object ).getContent(),
-                                                           subject.getContent() );
+                                subject.getContent() );
                     }
                 } );
             }
@@ -1061,25 +1060,25 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     public boolean matchesTaskOf( Part other, Place locale ) {
         return Matcher.same( task, other.getTask() )
-               && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
+                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
     }
 
     /**
      * Whether this overrides another part.
      *
-     * @param other a part
+     * @param other  a part
      * @param locale a place
      * @return a boolean
      */
     public boolean overrides( Part other, Place locale ) {
         return !equals( other ) && !resourceSpec().equals( other.resourceSpec() ) && matchesTaskOf( other, locale )
-               && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
+                && resourceSpec().narrowsOrEquals( other.resourceSpec(), locale );
     }
 
     /**
      * Whether this equals or overrides another part.
      *
-     * @param other a part
+     * @param other  a part
      * @param locale a place
      * @return a boolean
      */
@@ -1134,10 +1133,241 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     @SuppressWarnings( "unchecked" )
     public List<Flow> getAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
-        allFlows.addAll( (List<Flow>)IteratorUtils.toList( receives() ) );
-        allFlows.addAll( (List<Flow>)IteratorUtils.toList( sends() ) );
+        allFlows.addAll( (List<Flow>) IteratorUtils.toList( receives() ) );
+        allFlows.addAll( (List<Flow>) IteratorUtils.toList( sends() ) );
         return allFlows;
     }
+
+    /**
+     * Find all send flows that are required.
+     *
+     * @return a list of flows
+     */
+    public List<Flow> requiredSends() {
+        List<Flow> requiredFlows = new ArrayList<Flow>();
+        for ( Flow out : getAllSharingSends() ) {
+            if ( out.isRequired() ) {
+                requiredFlows.add( out );
+            }
+        }
+        return requiredFlows;
+    }
+
+    /**
+     * Does the execution of the part depend on a given infoProduct?
+     *
+     * @param modelEntity  an info product
+     * @param queryService a query service
+     * @return a boolean
+     */
+    public boolean dependsOnEntity( ModelEntity modelEntity, QueryService queryService ) {
+        if ( modelEntity instanceof InfoProduct )
+            return dependsOnInfoProduct( (InfoProduct) modelEntity, queryService );
+        else if ( modelEntity instanceof InfoFormat )
+            return dependsOnInfoFormat( (InfoFormat) modelEntity, queryService );
+        else if ( modelEntity instanceof TransmissionMedium )
+            return dependsOnMedium( (TransmissionMedium) modelEntity, queryService );
+        else
+            return false;
+    }
+
+    private boolean dependsOnMedium( TransmissionMedium medium, QueryService queryService ) {
+        return !findDependentReceives( medium, queryService ).isEmpty();
+    }
+
+    private boolean dependsOnInfoProduct( InfoProduct infoProduct, QueryService queryService ) {
+        return !findDependentReceives( infoProduct, queryService ).isEmpty();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Flow> findDependentReceives( final InfoProduct infoProduct, final QueryService queryService ) {
+        return (List<Flow>) CollectionUtils.select(
+                getAllSharingReceives(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Flow receive = (Flow) object;
+                        return receive.isImportant()
+                                && receive.getInfoProduct() != null
+                                && receive.getInfoProduct().narrowsOrEquals(
+                                infoProduct,
+                                queryService.getPlan().getLocale() );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean dependsOnInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
+        return !findDependentReceives( infoFormat, queryService ).isEmpty();
+    }
+
+    private List<Flow> findDependentReceives( final InfoFormat infoFormat, final QueryService queryService ) {
+        List<Flow> dependentReceives = new ArrayList<Flow>();
+        final Place locale = queryService.getPlan().getLocale();
+        for ( Flow receive : getAllSharingReceives() ) {
+            if ( receive.isImportant() ) {
+                for ( Channel channel : receive.getEffectiveChannels() ) {
+                    InfoFormat format = channel.getFormat();
+                    if ( format != null && format.narrowsOrEquals( infoFormat, locale ) )
+                        dependentReceives.add( receive );
+                }
+            }
+        }
+        return dependentReceives;
+    }
+
+    private List<Flow> findDependentReceives( final TransmissionMedium transmissionMedium, final QueryService queryService ) {
+        List<Flow> dependentReceives = new ArrayList<Flow>();
+        final Place locale = queryService.getPlan().getLocale();
+        for ( Flow receive : getAllSharingReceives() ) {
+            if ( receive.isImportant() ) {
+                for ( Channel channel : receive.getEffectiveChannels() ) {
+                    TransmissionMedium medium = channel.getMedium();
+                    if ( medium != null && medium.narrowsOrEquals( transmissionMedium, locale ) )
+                        dependentReceives.add( receive );
+                }
+            }
+        }
+        return dependentReceives;
+    }
+
+
+    /**
+     * Does the part have an alternative for entity to successfully execute?
+     *
+     * @param modelEntity  an info product
+     * @param queryService a query service
+     * @return a boolean
+     */
+    public boolean hasAlternativesForEntity( final ModelEntity modelEntity, final QueryService queryService ) {
+        if ( modelEntity instanceof InfoProduct )
+            return hasAlternativesForInfoProduct( (InfoProduct) modelEntity, queryService );
+        else if ( modelEntity instanceof InfoFormat )
+            return hasAlternativesForInfoFormat( (InfoFormat) modelEntity, queryService );
+        else if ( modelEntity instanceof TransmissionMedium )
+            return hasAlternativesForMedium( (TransmissionMedium) modelEntity, queryService );
+        else
+            return false;
+    }
+
+    private boolean hasAlternativesForInfoProduct( final InfoProduct infoProduct, final QueryService queryService ) {
+        List<Flow> dependentReceives = findDependentReceives( infoProduct, queryService );
+        assert !dependentReceives.isEmpty();
+        // For each dependent receive, there is an equivalent flow not using the info product.
+        // i.e., there is no dependent receive for which there is no equivalent flow not using the info product.
+        final Place locale = queryService.getPlan().getLocale();
+        return !CollectionUtils.exists(
+                dependentReceives,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Flow dependentReceive = (Flow) object;
+                        return !CollectionUtils.exists(
+                                getAllSharingReceives(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Flow otherReceive = (Flow) object;
+                                        InfoProduct otherInfoProduct = otherReceive.getInfoProduct();
+                                        return otherReceive.isAlternativeSharingTo( dependentReceive, false, queryService )
+                                                && ( otherInfoProduct == null
+                                                || !otherInfoProduct.narrowsOrEquals( infoProduct, locale ) );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+
+    }
+
+    private boolean hasAlternativesForInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
+        List<Flow> dependentReceives = findDependentReceives( infoFormat, queryService );
+        assert !dependentReceives.isEmpty();
+        final Place locale = queryService.getPlan().getLocale();
+        // For each dependent receive, there is an alternate channel not requiring the format
+        // or there is an equivalent flow not using the info format.
+        // i.e., there is no dependent receive for which there is no equivalent flow not using the info format.
+        return !CollectionUtils.exists(
+                dependentReceives,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Flow dependentReceive = (Flow) object;
+                        return !hasChannelNotUsingFormat( dependentReceive, infoFormat, locale )
+                                && !CollectionUtils.exists(
+                                getAllSharingReceives(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Flow otherReceive = (Flow) object;
+                                        return otherReceive.isAlternativeSharingTo( dependentReceive, false, queryService )
+                                                && hasChannelNotUsingFormat( otherReceive, infoFormat, locale );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
+    private boolean hasChannelNotUsingFormat( Flow flow, final InfoFormat infoFormat, final Place locale ) {
+        return CollectionUtils.exists(
+                flow.getEffectiveChannels(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        InfoFormat format = ( (Channel) object ).getFormat();
+                        return format == null || !format.narrowsOrEquals( infoFormat, locale );
+                    }
+                } );
+    }
+
+    private boolean hasAlternativesForMedium( final TransmissionMedium transmissionMedium, final QueryService queryService ) {
+        List<Flow> dependentReceives = findDependentReceives( transmissionMedium, queryService );
+        assert !dependentReceives.isEmpty();
+        final Place locale = queryService.getPlan().getLocale();
+        // For each dependent receive, there is an alternate channel not requiring the medium
+        // or there is an equivalent flow not using the medium.
+        // i.e., there is no dependent receive for which there is no equivalent flow not using the medium.
+        return !CollectionUtils.exists(
+                dependentReceives,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Flow dependentReceive = (Flow) object;
+                        return !hasChannelNotUsingMedium( dependentReceive, transmissionMedium, locale )
+                                && !CollectionUtils.exists(
+                                getAllSharingReceives(),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        Flow otherReceive = (Flow) object;
+                                        return otherReceive.isAlternativeSharingTo( dependentReceive, false, queryService )
+                                                && hasChannelNotUsingMedium( otherReceive, transmissionMedium, locale );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
+    private boolean hasChannelNotUsingMedium( Flow flow, final TransmissionMedium transmissionMedium, final Place locale ) {
+        return CollectionUtils.exists(
+                flow.getEffectiveChannels(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        TransmissionMedium medium = ( (Channel) object ).getMedium();
+                        return medium == null || !medium.narrowsOrEquals( transmissionMedium, locale );
+                    }
+                } );
+    }
+
+
+
 
     /**
      * Category of tasks.

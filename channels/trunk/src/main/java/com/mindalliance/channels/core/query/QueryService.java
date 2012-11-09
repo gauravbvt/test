@@ -1307,7 +1307,7 @@ public interface QueryService {
     Boolean hasCommonEOIs( Flow flow, Flow otherFlow );
 
     /**
-     * Whether none in a list eois is without a strong match with some in another list.
+     * Whether none in a list eois is without a match with some in another list.
      *
      * @param eois     a list of elements of information
      * @param superset a list of elements of information

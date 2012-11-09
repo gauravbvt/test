@@ -250,6 +250,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
 
     @Override
     public void redisplay( AjaxRequestTarget target ) {
+        indices = null;
         init();
         super.redisplay( target );
     }
@@ -360,7 +361,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 target.add( indicesContainer );
             }
         };
-        add(  referencedCheckbox );
+        referencedCheckbox.setOutputMarkupId( true );
+        addOrReplace(  referencedCheckbox );
     }
 
     private void addIndices() {

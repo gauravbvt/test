@@ -1,8 +1,11 @@
 package com.mindalliance.channels.pages.components.entities.analytics;
 
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.Set;
 
@@ -15,12 +18,33 @@ import java.util.Set;
  * Time: 1:43 PM
  */
 public class InfoProductAnalyticsPanel extends AbstractUpdatablePanel {
+
+
     public InfoProductAnalyticsPanel( String id, IModel<ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
 
     private void init() {
-        //todo
+        addTitle();
+        addValueAnalysis();
     }
+
+    private void addTitle() {
+        add( new Label( "title", "Value of info product \"" + getInfoProduct().getName() + "\"" ) );
+    }
+
+    private void addValueAnalysis() {
+        EntityValueAnalysisPanel valuePanel = new EntityValueAnalysisPanel<InfoProduct>(
+                "valueAnalysis",
+                new PropertyModel<InfoProduct>( this, "infoProduct" ),
+                getExpansions()
+        );
+        add( valuePanel );
+    }
+
+    public InfoProduct getInfoProduct() {
+        return (InfoProduct) getModel().getObject();
+    }
+
 }

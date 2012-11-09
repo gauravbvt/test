@@ -28,7 +28,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.pages.components.AbstractMultiAspectPanel;
+import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
@@ -1831,7 +1831,7 @@ PopupSettings.RESIZABLE |
     private boolean aspectRequiresLock( Identifiable identifiable, String aspect ) {
         if ( aspect == null ) {
             return false;
-        } else if ( aspect.equals( AbstractMultiAspectPanel.DETAILS ) ) {
+        } else if ( aspect.equals( AbstractFloatingMultiAspectPanel.DETAILS ) ) {
             return true;
         } else if ( identifiable instanceof Segment ) {
             return aspect.equals( SegmentEditPanel.GOALS );
@@ -2091,7 +2091,8 @@ PopupSettings.RESIZABLE |
      * {@inheritDoc}
      */
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( target == null || change == null || updated == null ) return;   // protect against showing a panel "in other tab or page"
+        if ( target == null || change == null || updated == null )
+            return;   // protect against showing a panel "in other tab or page"
         // Hide message panel on changed message ( not null )
         String message = change.getMessage();
         if ( message != null ) {
@@ -2221,8 +2222,8 @@ PopupSettings.RESIZABLE |
                         : change.isForInstanceOf( ModelEntity.class )
                         ? entityPanel
                         : null;
-        if ( maPanel != null && maPanel instanceof AbstractMultiAspectPanel ) {
-            ( (AbstractMultiAspectPanel) maPanel ).showAspect( aspect, change, target );
+        if ( maPanel != null && maPanel instanceof AbstractFloatingMultiAspectPanel ) {
+            ( (AbstractFloatingMultiAspectPanel) maPanel ).showAspect( aspect, change, target );
         } else {
             LOG.warn( "Aspect not replaced from" + change );
         }
@@ -2749,22 +2750,15 @@ PopupSettings.RESIZABLE |
     private void refreshPlanSearchingPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( change.isRefresh() ||
-                id == Channels.PLAN_SEARCHING ) {
-            if ( change.isAspect() ) {
-                if ( planSearchingPanel instanceof PlanSearchingFloatingPanel ) {
-                    ( (PlanSearchingFloatingPanel) planSearchingPanel ).refresh( target,
-                            change,
-                            updated,
-                            change.getProperty() );
-                } else {
-                    addPlanSearchingPanel( change.getProperty() );
-                    target.add( planSearchingPanel );
+                id == Channels.PLAN_SEARCHING && change.isDisplay() ) {
+            addPlanSearchingPanel( change.getProperty() );
+            target.add( planSearchingPanel );
 
-                }
-            } else if ( change.isCollapsed() ) {
-                addPlanSearchingPanel( change.getProperty() );
-                target.add( planSearchingPanel );
-            }
+        } else if ( planSearchingPanel instanceof PlanSearchingFloatingPanel ) {
+            ( (PlanSearchingFloatingPanel) planSearchingPanel ).refresh( target,
+                    change,
+                    updated,
+                    change.getProperty() );
         }
     }
 

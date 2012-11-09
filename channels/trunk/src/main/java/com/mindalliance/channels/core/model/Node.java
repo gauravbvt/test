@@ -263,21 +263,6 @@ public abstract class Node extends ModelObject implements SegmentObject {
     }
 
     /**
-     * Find all send flows that are required.
-     *
-     * @return a list of flows
-     */
-    public List<Flow> requiredSends() {
-        List<Flow> requiredFlows = new ArrayList<Flow>();
-        for ( Flow out : sends.values() ) {
-            if ( out.isRequired() ) {
-                requiredFlows.add( out );
-            }
-        }
-        return requiredFlows;
-    }
-
-    /**
      * Whether this node has more than one send of a given name
      *
      * @param name the name of a flow

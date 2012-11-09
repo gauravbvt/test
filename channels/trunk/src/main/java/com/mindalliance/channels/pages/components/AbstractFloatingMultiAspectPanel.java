@@ -234,6 +234,9 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         refreshMenus( target );
+        if ( change.isAspectReplaced() ) {
+            refresh( target, change, change.getProperty() );
+        }
         super.updateWith( target, change, updated );
     }
 

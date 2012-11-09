@@ -1555,6 +1555,22 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
+     * Whether this flow has the same name, significance, and all the EOis of the other flow.
+     *
+     * @param other  another flow
+     * @param isSend whether the flow is looked at as a receive
+     * @return a boolean
+     */
+    public boolean isAlternativeSharingTo( Flow other, boolean isSend, QueryService queryService ) {
+        return !equals( other )
+                && isSharing() && other.isSharing()
+                && Matcher.same( getName(), other.getName() )
+                && ( isSend && getSignificanceToSource() == other.getSignificanceToSource()
+                || !isSend && getSignificanceToTarget() == other.getSignificanceToTarget() )
+                && queryService.subsetOf( other.getEffectiveEois(), getEffectiveEois() );
+    }
+
+    /**
      * The significance of a flow.
      */
     public enum Significance {
