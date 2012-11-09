@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Internal Error</title>
+    <link rel="stylesheet" href="css/general.css" type="text/css">
+<script type="text/javascript" src="./wicket/resource/org.apache.wicket.markup.html.WicketEventReference/wicket-event-ver-B0439F858745C84EA46792F9AC42B6CF.js"></script>
+<script type="text/javascript" src="./wicket/resource/org.apache.wicket.ajax.WicketAjaxReference/wicket-ajax-ver-5E70DA6C8E626D7430DFD94051CFF863.js"></script>
+<script type="text/javascript" id="wicket-ajax-base-url">
+/*<![CDATA[*/
+Wicket.Ajax.baseUrl="plan?plan=mindalliance_com_channels_plans_acme&amp;v=1";
+/*]]>*/
+</script>
+</head>
+<body class="message">
+<div id="top-error">
+    <span class="pointer" title="Click to go back to the Home page" id="id2a1" onclick="var wcall=wicketAjaxGet(&#039;./wicket/page?6-1.IBehaviorListener.0-error~header&#039;,function() { }.bind(this),function() { }.bind(this), function() {return Wicket.$(&#039;id2a1&#039;) != null;}.bind(this));">
+    <div id="header">
+        <div>
+            <h1>Server Error</h1>
+
+            <h2>Channels encountered a server error</h2>
+        </div>
+    </div>
+    </span>
+
+    <div id="contents">
+        <p>Oops. Something went very wrong. We apologize.</p>
+
+        <p>We've already been alerted of the problem and will do our best to fix it ASAP.</p>
+
+        <p>You may want to try <a href=" javascript:history.go(-1)">going back to Channels</a></p>
+
+        <div id="stackTrace" style="display:none;">
+            <h2> Error report </h2>
+            <code>
+                <span>org.apache.wicket.behavior.InvalidBehaviorIdException: Cannot find behavior with
+id &#039;0&#039; on component
+&#039;com.mindalliance.channels.pages.components.plan.PlanOrganizationScopePanel$4:in
+dicator:big-form:allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newI
+nvolved&#039; in page &#039;[Page class = com.mindalliance.channels.pages.PlanPage, id =
+2, render count = 1]&#039;. Perhaps the behavior did not properly implement
+getStatelessHint() and returned &#039;true&#039; to indicate that it is stateless instead
+of returning &#039;false&#039; to indicate that it is stateful.
+	at
+org.apache.wicket.Behaviors.getBehaviorById(Behaviors.java:303)
+	at
+org.apache.wicket.Component.getBehaviorById(Component.java:4524)
+	at
+org.apache.wicket.request.handler.ListenerInterfaceRequestHandler.invokeListener
+(ListenerInterfaceRequestHandler.java:254)
+	at
+org.apache.wicket.request.handler.ListenerInterfaceRequestHandler.respond(Listen
+erInterfaceRequestHandler.java:234)
+	at
+org.apache.wicket.request.cycle.RequestCycle$HandlerExecutor.respond(RequestCycl
+e.java:784)
+	at
+org.apache.wicket.request.RequestHandlerStack.execute(RequestHandlerStack.java:6
+4)
+	at
+org.apache.wicket.request.cycle.RequestCycle.execute(RequestCycle.java:255)
+	at
+org.apache.wicket.request.cycle.RequestCycle.processRequest(RequestCycle.java:21
+2)
+	at
+org.apache.wicket.request.cycle.RequestCycle.processRequestAndDetach(RequestCycl
+e.java:283)
+	at
+org.apache.wicket.protocol.http.WicketFilter.processRequest(WicketFilter.java:18
+8)
+	at
+org.apache.wicket.protocol.http.WicketFilter.doFilter(WicketFilter.java:244)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:311)
+	at
+org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invo
+ke(FilterSecurityInterceptor.java:116)
+	at
+org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFi
+lter(FilterSecurityInterceptor.java:83)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(Exce
+ptionTranslationFilter.java:113)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.session.SessionManagementFilter.doFilter(Sessio
+nManagementFilter.java:101)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.AnonymousAuthenticationFilter.do
+Filter(AnonymousAuthenticationFilter.java:113)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.rememberme.RememberMeAuthenticat
+ionFilter.doFilter(RememberMeAuthenticationFilter.java:146)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFil
+ter.doFilter(SecurityContextHolderAwareRequestFilter.java:54)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(R
+equestCacheAwareFilter.java:45)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.www.BasicAuthenticationFilter.do
+Filter(BasicAuthenticationFilter.java:150)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.AbstractAuthenticationProcessing
+Filter.doFilter(AbstractAuthenticationProcessingFilter.java:182)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(Log
+outFilter.java:105)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilt
+er(SecurityContextPersistenceFilter.java:87)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.session.ConcurrentSessionFilter.doFilter(Concur
+rentSessionFilter.java:125)
+	at
+org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Fi
+lterChainProxy.java:323)
+	at
+org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java
+:173)
+	at
+org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFi
+lterProxy.java:346)
+	at
+org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterPr
+oxy.java:259)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.springframework.orm.hibernate4.support.OpenSessionInViewFilter.doFilterInter
+nal(OpenSessionInViewFilter.java:119)
+	at
+org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilte
+r.java:76)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.springframework.web.filter.AbstractRequestLoggingFilter.doFilterInternal(Abs
+tractRequestLoggingFilter.java:193)
+	at
+org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilte
+r.java:76)
+	at
+org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.jav
+a:1212)
+	at
+org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:399)
+	at
+org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at
+org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at
+org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:766)
+	at
+org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:450)
+	at
+org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollecti
+on.java:230)
+	at
+org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	
+at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at
+org.mortbay.jetty.Server.handle(Server.java:326)
+	at
+org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at
+org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.ja
+va:928)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:549)
+	at
+org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:212)
+	at
+org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at
+org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:410)
+	at
+org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+</span>
+            </code>
+        </div>
+    </div>
+</div>
+</body>
+</html>
