@@ -144,7 +144,7 @@ public class MAC0026_UndoDuplicateFlow extends TestCase{
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Add Info Receive";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Enter Information Name
 			planPage.enterInformationNameInReceivesPanel(testData.get("InformationInRecievesPanel"));
 			// Select 'Other..' option form 'From Task:' dropdown list

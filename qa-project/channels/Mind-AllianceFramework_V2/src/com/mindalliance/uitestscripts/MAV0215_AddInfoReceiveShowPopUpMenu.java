@@ -135,7 +135,7 @@ public class MAV0215_AddInfoReceiveShowPopUpMenu extends TestCase {
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Info Receives";
-			planPage.clickAddInReceivesPanel();			
+			planPage.clickAddInfoReceivesPanel();			
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

@@ -140,7 +140,7 @@ public class MAV0208_AddInfoReceiveSendWithin extends TestCase{
 			// Click on 'Add' in sends panel
 			stepNo++;
 			description="Add Info Sends";
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			
 			// Click on 'Show Advanced Form' in sends panel
 			stepNo++;
@@ -169,7 +169,7 @@ public class MAV0208_AddInfoReceiveSendWithin extends TestCase{
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Info Receives";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

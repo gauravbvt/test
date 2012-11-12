@@ -129,7 +129,7 @@ public class MAV0226_AddInfoSentRemoveSharingCapability extends TestCase{
 			planPage.closeSegmentWindow();
 			
 			// Click on 'Add' button under 'Sends' panel
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 					
 			// Click on 'Remove Info Sharing Capability' under 'Actions' pop up menu
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));

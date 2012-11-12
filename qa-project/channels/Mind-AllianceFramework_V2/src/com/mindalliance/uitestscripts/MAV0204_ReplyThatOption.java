@@ -140,7 +140,7 @@ public class MAV0204_ReplyThatOption extends TestCase{
 			// Click on 'Add' in sends panel
 			stepNo++;
 			description="Add Info Sends";
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -164,7 +164,7 @@ public class MAV0204_ReplyThatOption extends TestCase{
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Receives Panel";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

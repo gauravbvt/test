@@ -143,7 +143,7 @@ public class MAC0025_UndoRemoveFlow extends TestCase{
 			description="Add Info Receives";
 			planPage.clickStrenchUpForm();
 			// Click on 'Add' button under 'Receives' panel
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Enter Information Name
 			planPage.enterInformationNameInReceivesPanel(testData.get("InformationInRecievesPanel"));
 			// Select 'Other..' option form 'From Task:' dropdown list

@@ -135,7 +135,7 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 			// Click on 'Add' in sends panel
 			stepNo++;
 			description="Add Info Sends";
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			// Click on 'Show Advanced Form' in sends panel
 			planPage.clickShowAdvancedFormInSendsPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
 			// Write log
@@ -161,7 +161,7 @@ public class MAV0202_AddInfoReceiveSendElementsLink extends TestCase{
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Info Receives";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Click on 'Show advanced form' in receives panel
 			planPage.clickShowAdvancedFormInReceivesPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
 			// Write log

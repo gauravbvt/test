@@ -142,7 +142,7 @@ public class MAV0223_AddInfoSentCopyCapability extends TestCase{
 			// Click on 'Add' in sends panel
 			stepNo++;
 			description="Add Info Sends";
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

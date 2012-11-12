@@ -146,7 +146,7 @@ public class MAV0220_AddInfoSentHideShowDetails extends TestCase{
 			// Click on 'Add' in Sends panel
 			stepNo++;
 			description="Add Info Sends";
-			planPage.clickAddInSendsPanel();			
+			planPage.clickAddInfoSendsPanel();			
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

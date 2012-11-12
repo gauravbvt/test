@@ -132,7 +132,7 @@ public class MAV0174_AddInfoSend extends TestCase {
 			// Click on 'Add' button under 'Sends' panel
 			stepNo++;
 			description="Add info sharing capability";
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			 // Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    

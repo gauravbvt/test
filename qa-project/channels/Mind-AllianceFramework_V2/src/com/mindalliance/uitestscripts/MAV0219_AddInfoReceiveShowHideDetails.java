@@ -140,7 +140,7 @@ public class MAV0219_AddInfoReceiveShowHideDetails extends TestCase{
 			// Click on 'Add' in Receives panel
 			stepNo++;
 			description="Add Info Receives";
-			planPage.clickAddInReceivesPanel();			
+			planPage.clickAddInfoReceivesPanel();			
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

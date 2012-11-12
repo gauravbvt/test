@@ -142,7 +142,7 @@ public class MAV0225_AddInfoReceiveRemoveInfoNeeds extends TestCase{
 			description="Add Info Receives";
 			planPage.clickStrenchUpForm();
 			// Click on 'Add' button under 'Receives' panel
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

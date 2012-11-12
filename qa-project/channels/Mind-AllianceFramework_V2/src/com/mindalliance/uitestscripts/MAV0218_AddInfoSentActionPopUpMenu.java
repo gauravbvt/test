@@ -140,7 +140,7 @@ public class MAV0218_AddInfoSentActionPopUpMenu extends TestCase{
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Info Receives";
-			planPage.clickAddInSendsPanel();			
+			planPage.clickAddInfoSendsPanel();			
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

@@ -140,7 +140,7 @@ public class MAV0212_AddInfoReceiveSendIssueSeverity extends TestCase{
 			description="Add Info Sends";
 			planPage.clickStrenchUpForm();
 			// Click on 'Add' in sends panel
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			// Click on 'Show Advanced Form' link
 			planPage.clickShowAdvancedFormInSendsPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
 			// Write log
@@ -167,7 +167,7 @@ public class MAV0212_AddInfoReceiveSendIssueSeverity extends TestCase{
 			// Click on 'Add' in receives panel
 			stepNo++;
 			description="Add Info Receives";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

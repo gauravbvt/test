@@ -166,7 +166,7 @@ public class MAV0167_SimpleFormOfReceiveInfo extends TestCase{
 			// Click on 'Add' in 'Receives' panel
 			stepNo++;
 			description="Add in receives panel";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    

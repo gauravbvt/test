@@ -149,7 +149,7 @@ public class MAC0023_UndoAddInfoNeed extends TestCase {
 			description="Add Indo Receive";
 			planPage.clickStrenchUpForm();
 			// Click on 'Add' button under 'Receives' panel
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

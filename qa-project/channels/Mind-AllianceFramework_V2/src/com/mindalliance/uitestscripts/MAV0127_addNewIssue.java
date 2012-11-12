@@ -120,7 +120,7 @@ public class MAV0127_addNewIssue extends TestCase{
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Info sharing need is added";
-			planPage.clickAddInReceivesPanel();
+			planPage.clickAddInfoReceivesPanel();
 			 
 			// Click on 'New Issue' under 'Actions' pop up menu
 			stepNo++;

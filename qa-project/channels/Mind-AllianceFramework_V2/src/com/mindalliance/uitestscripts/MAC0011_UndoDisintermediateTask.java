@@ -159,7 +159,7 @@ public class MAC0011_UndoDisintermediateTask extends TestCase{
 			// Click on 'Add' button under 'Sends' panel
 			stepNo++;
 			description="Add Info Sends";
-			planPage.clickAddInSendsPanel();
+			planPage.clickAddInfoSendsPanel();
 			// Enter Information Name
 			planPage.enterInformationNameInSendsPanel(testData.get("InformationInSendsPanel"));
 			// Select 'Other..' option form 'From Task:' dropdown list
