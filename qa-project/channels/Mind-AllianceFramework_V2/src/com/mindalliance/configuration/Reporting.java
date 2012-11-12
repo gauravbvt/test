@@ -445,7 +445,7 @@ public class Reporting extends TakeScreenshot {
 			generateFailureReport();
 			
 			System.out.println("Report generated successfully");
-			zipFolder(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport", GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"Reports\\UIAutomationReport.zip");
+			zipFolder(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport", GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport.zip");
 			System.out.println("Zipped");
 	}
 
