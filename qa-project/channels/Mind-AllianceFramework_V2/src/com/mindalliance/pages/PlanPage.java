@@ -2486,16 +2486,16 @@ public class PlanPage {
 	 * Clicks on 'Add' in 'Receives' panel
 	 * @throws UIAutomationException
 	 */
-	public void clickAddInReceivesPanel() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Add In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Add In Receives Panel");
-		UIActions.click(fileName,"Add In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Add In Receives Panel");
+	public void clickAddInfoReceivesPanel() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Add Info Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Add In Receives Panel");
+		UIActions.click(fileName,"Add In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Add Info Receives Panel");
 	}
 	
 	/**
 	 * Clicks on 'Add' in 'Sends' panel
 	 * @throws UIAutomationException
 	 */
-	public void clickAddInSendsPanel() throws UIAutomationException{
+	public void clickAddInfoSendsPanel() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Add In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Add In Sends Panel");
 		UIActions.click(fileName,"Add In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Add In Sends Panel");
 	}
