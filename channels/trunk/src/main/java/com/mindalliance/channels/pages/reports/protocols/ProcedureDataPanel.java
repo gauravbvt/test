@@ -57,8 +57,8 @@ public class ProcedureDataPanel extends AbstractDataPanel {
 
      private void addTaskName() {
         add( new Label( "taskName", procedureData.getTaskLabel() ) );
-        add( new Label( "title", procedureData.getTitleOrRole() )  );
-        add( new Label( "org", procedureData.getOrganizationLabel() )  );
+     //   add( new Label( "title", procedureData.getTitleOrRole() )  );
+     //   add( new Label( "org", procedureData.getOrganizationLabel() )  );
 
     }
 

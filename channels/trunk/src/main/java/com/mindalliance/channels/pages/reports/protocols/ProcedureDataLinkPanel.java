@@ -18,15 +18,18 @@ public class ProcedureDataLinkPanel extends AbstractDataPanel {
     public ProcedureDataLinkPanel( String id, ProcedureData procedureData, ProtocolsFinder finder ) {
         super( id, finder );
         this.procedureData = procedureData;
-        init();
+        init( finder );
     }
 
-    private void init() {
+    private void init( ProtocolsFinder finder ) {
         WebMarkupContainer link = new WebMarkupContainer( "link" );
         link.add(  new AttributeModifier( "href", "#" + procedureData.getAnchor() ) );
         add( link );
         link.add( new Label( "taskName", procedureData.getTaskLabel() ) );
-        link.add( new Label( "title", procedureData.getTitleOrRole() )  );
-        link.add( new Label( "org", procedureData.getOrganizationLabel() )  );
+        WebMarkupContainer responsibility = new WebMarkupContainer( "responsibility" );
+        responsibility.setVisible( finder.isMultipleParticipation() );
+        link.add(  responsibility );
+        responsibility.add( new Label( "title", procedureData.getTitleOrRole() )  );
+        responsibility.add( new Label( "org", procedureData.getOrganizationLabel() )  );
     }
 }

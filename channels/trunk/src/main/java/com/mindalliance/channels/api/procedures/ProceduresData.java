@@ -193,4 +193,8 @@ public class ProceduresData  implements Serializable {
         return user;
     }
 
+    public List<Actor> getParticipatingActors() {
+        return participatingActors;
+    }
+
 }

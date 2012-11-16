@@ -12,6 +12,7 @@ import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.PlanParticipationService;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -357,4 +358,12 @@ public class ProtocolsFinder implements Serializable {
         });
     }
 
+    public List<Actor> getParticipatingActors() {
+        List<Actor> participations = proceduresData.getParticipatingActors();
+        return participations == null ? new ArrayList<Actor>() : participations;
+    }
+
+    public boolean isMultipleParticipation() {
+        return getParticipatingActors().size() > 1;
+    }
 }
