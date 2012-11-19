@@ -132,6 +132,7 @@ public class MAV0124_sendMessage extends TestCase{
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Info sharing need is added";
+			planPage.clickStrenchUpForm();
 			planPage.clickAddInfoReceivesPanel();
 			// Write log			
 			LogFunctions.writeLogs(description);
