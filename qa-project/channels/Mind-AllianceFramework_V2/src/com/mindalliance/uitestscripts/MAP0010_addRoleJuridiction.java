@@ -129,27 +129,27 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			 			
-			// Click on 'Add New Segment' under 'Actions' pop up menu
- 			stepNo++;
-			description="Add New Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			planPage.enterSegmentName(testData.get("SegmentForAddRoleJurisdiction"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Close segment window
- 			stepNo++;
-			description="Closed Segment";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			// Click on 'Add New Segment' under 'Actions' pop up menu
+// 			stepNo++;
+//			description="Add New Segment";
+//			planPage.clickPopupMenu(testData.get("Actions"));
+//			planPage.clickSubmenu(testData.get("AddNewSegment"));
+//			planPage.enterSegmentName(testData.get("SegmentForAddRoleJurisdiction"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+// 			
+//			// Close segment window
+// 			stepNo++;
+//			description="Closed Segment";
+//			planPage.closeSegmentWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
 			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
  			stepNo++;
-			description="Closed Segment";
+			description="Organization In Scope ";
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("OrganizationsInScope"));
 			// Write log
@@ -158,7 +158,7 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			
 			// Enter organization name
  			stepNo++;
-			description="Closed Segment";
+			description="Organization Name";
 			planPage.enterOrganizationName(testData.get("Organization"));
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -168,6 +168,14 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			stepNo++;
 			description="Open Organization Created";
 			planPage.clickOnOrganizationEntered(testData.get("Organization"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+ 			// Click on Structure Tab
+ 			stepNo++;
+			description="Structure Tab";
+			planPage.clickStructureTab();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
