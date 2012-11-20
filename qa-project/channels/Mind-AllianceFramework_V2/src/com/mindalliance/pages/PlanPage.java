@@ -1470,6 +1470,16 @@ public class PlanPage {
 			}
 		}
 	}
+	
+	/**
+	 * Click on Structure Tab
+	 * 
+	 */
+	
+	public void clickStructureTab()throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
+		UIActions.click(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
+	}
 	/**
 	 * Enter agent name in organization in scope
 	 * @param agentName
@@ -1581,17 +1591,17 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(informationName,fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		elementController.requireElementSmart(fileName,"Information In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Information In Sends Panel");
 		UIActions.enterKey(Keys.TAB);
-		try{
-			Thread.sleep(1000);
-		}
-		catch(Exception e){}
-		
-		// Assertion: verify information is added
-		elementController.requireElementSmart(fileName,"Add New Sends Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Sends Header");
-		String informationNameInSendsPanel=UIActions.getText(fileName,"Add New Sends Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Sends Header");
-		if(!informationNameInSendsPanel.contains(informationName)){
-			throw new UIAutomationException("Information not entered in sends panel");
-		}
+//		try{
+//			Thread.sleep(1000);
+//		}
+//		catch(Exception e){}
+//		
+//		// Assertion: verify information is added
+//		elementController.requireElementSmart(fileName,"Add New Sends Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Sends Header");
+//		String informationNameInSendsPanel=UIActions.getText(fileName,"Add New Sends Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Sends Header");
+//		if(!informationNameInSendsPanel.contains(informationName)){
+//			throw new UIAutomationException("Information not entered in sends panel");
+//		}
 	}
 	
 	/**
