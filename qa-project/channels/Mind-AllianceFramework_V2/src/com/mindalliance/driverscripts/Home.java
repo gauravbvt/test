@@ -176,7 +176,7 @@ public class Home {
 		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
 		suite.addTestSuite(MAP0008_removeExpectation.class);
 		suite.addTestSuite(MAP0009_addTask.class);
-		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
+//		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
 		suite.addTestSuite(MAP0011_addEventToPlan.class);
 		suite.addTestSuite(MAP0012_addPhase.class);
 		suite.addTestSuite(MAP0013_addPhaseDetails.class);
