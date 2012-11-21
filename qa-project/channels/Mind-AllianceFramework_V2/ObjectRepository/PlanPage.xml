@@ -2181,11 +2181,11 @@
 	</Element>
 	<Element>
 		<GivenName>Send Message In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<PartialLinkText>Send Message</PartialLinkText>
+		<LinkText>Send Message</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
