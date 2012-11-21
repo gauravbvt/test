@@ -473,55 +473,67 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Agent In Organization In Scope</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[2]/span/input</Xpath>
+		<GivenName>Structure Tab</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[3]/a/span</Xpath>
 		<Name></Name>
-		<Id>id1af</Id>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Agent In Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/div/div[2]/div/table/tbody/tr/td[2]/span/input</Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:actor:entity-field</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Title In Organization In Scope</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[3]/input</Xpath>
-		<Name></Name>
-		<Id>id1b0</Id>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/div/div[2]/div/table/tbody/tr/td[3]/input</Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:title</Name>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Role In Organization In Scope</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[4]/span/input</Xpath>
-		<Name></Name>
-		<Id>id305</Id>
+		<Xpath></Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:role:entity-field</Name>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Jurisdiction In Organization In Scope</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[5]/span/input</Xpath>
-		<Name></Name>
-		<Id>id306</Id>
+		<Xpath></Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:jurisdiction:entity-field</Name>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Supervisor In Organization In Scope</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td[6]/span/input</Xpath>
-		<Name></Name>
-		<Id>id307</Id>
+		<Xpath></Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:supervisor:entity-field</Name>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Checkbox Of Agent  Organization In Scope</GivenName>
-		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[13]/td/span/div/div[2]/div/table/tbody/tr/td/input</Xpath>
-		<Name></Name>
-		<Id>id1fa</Id>
+		<Xpath></Xpath>
+		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed</Name>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -1720,12 +1732,12 @@
 	</Element>
 	<Element>
 		<GivenName>Add New Sends Header</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div</Xpath>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/span/span[2]</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<ClassName>info</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Add New Receives Header</GivenName>
@@ -2060,16 +2072,16 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Add In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/a</Xpath>
-		<Name></Name>
+		<GivenName>Add Info Receives Panel</GivenName>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/a/span</Xpath>
+		<Name>Add +</Name>
 		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<PartialLinkText>Add +</PartialLinkText>
+		<LinkText>Add +</LinkText>
+		<ClassName>add-flow</ClassName>
 	</Element>
 	<Element>
-		<GivenName>Add In Sends Panel</GivenName>
+		<GivenName>Add Info Sends Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
