@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -61,6 +62,8 @@ public class MAV0125_copyFlow extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			DataController dc= new DataController();
+			dc.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data

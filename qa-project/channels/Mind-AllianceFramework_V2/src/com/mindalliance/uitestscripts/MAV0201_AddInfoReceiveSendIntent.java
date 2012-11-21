@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -54,6 +55,9 @@ public class MAV0201_AddInfoReceiveSendIntent extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			
+			DataController dataController = new DataController();
+			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
@@ -161,7 +165,10 @@ public class MAV0201_AddInfoReceiveSendIntent extends TestCase{
 			planPage.clickAddInfoReceivesPanel();
 			// Click on 'Show advanced form' in receives panel
 			planPage.clickShowAdvancedFormInReceivesPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
-						
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Verify Intent dropdown list in receives panel					
 			stepNo++;
 			description="Intent - Receives Panel";

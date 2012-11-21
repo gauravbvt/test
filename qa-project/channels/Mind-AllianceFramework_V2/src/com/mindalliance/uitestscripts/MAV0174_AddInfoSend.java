@@ -138,6 +138,8 @@ public class MAV0174_AddInfoSend extends TestCase {
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
  					
 			// Click on 'Remove Info Sharing Capability' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Remove Info Sharing Capability";
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoSharingCapabilityInSendsPanel"));	
 			 // Write log			

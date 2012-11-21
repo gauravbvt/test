@@ -98,42 +98,63 @@ public class MAV0128_removeInfoNeed extends TestCase{
 			description="URL Entered";	
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
-			    
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+						   
 			// Login page
 			stepNo++;
 			description="Login successful";	
 		    LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-			
+		    // Write log
+		    LogFunctions.writeLogs(description);
+		    LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+		 			
 			// Plan Page
 		    stepNo++;
  	 		description="Navigated to plan page";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();
-			
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+						
 			// Close Plan Map window
 			stepNo++;
 			description="Plan Map window closed";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
-			
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+						
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Info sharing need is added";
 			planPage.clickAddInfoReceivesPanel();
-			 
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+						 
 			// Click on 'Remove Info Need' under 'Actions' pop up menu
 			stepNo++;
 			description="Removed info need";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoNeedInReceivesPanel"));	
-				
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+							
 			// Sign Out from 'Home' page
 			stepNo++;
 			description="Logout successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
-
+			// Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);   
+						
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		}catch (UIAutomationException ue) {

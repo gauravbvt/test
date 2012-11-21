@@ -137,6 +137,8 @@ public class MAV0173_AddInfoReceive extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
  			
 			// Click on 'Remove Info Need' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Remove Info Need";
 			planPage.clickPopupMenu(testData.get("ActionsInReceivesPanel"));
 			planPage.clickSubmenu(testData.get("RemoveInfoNeedInReceivesPanel"));	
 			 // Write log			

@@ -146,12 +146,18 @@ public class MAV0195_TaskIssueDetails extends TestCase {
 			planPage.clickSubmenu(testData.get("Details"));	
 			// Click on 'Show Advanced Form' link
 			planPage.clickShowAdvancedFormInTaskPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 				
 			// Click on 'New Issue' under 'Actions' pop up menu in task panel
 			stepNo++;
 			description="New Issue";
 			planPage.clickPopupMenu(testData.get("ActionsInTask"));
 			planPage.clickSubmenu(testData.get("NewIssueInTask"));	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Enter details in description textbox
 			stepNo++;

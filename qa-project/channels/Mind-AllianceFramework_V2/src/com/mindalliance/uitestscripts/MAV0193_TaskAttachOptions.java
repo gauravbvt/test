@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -60,6 +61,8 @@ public class MAV0193_TaskAttachOptions extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			DataController dataController =new DataController();
+			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
@@ -124,25 +127,6 @@ public class MAV0193_TaskAttachOptions extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Add New Segment
- 			stepNo++;
-			description="Add New Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close segment window
-			stepNo++;
-			description="Close About Plan Segment Window";
-			planPage.closeSegmentWindow();
-			// Click on 'strench Up forms' icon 
-			planPage.clickStrenchUpForm();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
 			// Click on 'Details' under 'Show' pop up under 'Task' panel
 			stepNo++;
 			description="Details Task";
@@ -158,15 +142,6 @@ public class MAV0193_TaskAttachOptions extends TestCase{
 			stepNo++;
 			description="Attachment is Present";
 			planPage.verifyAttachDropdownInTask(testData.get("Reference"),testData.get("Policy"),testData.get("MandatingPolicy"), testData.get("prohibitingPolicy"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
-			// Remove This segment
- 			stepNo++;
-			description="Remove This Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

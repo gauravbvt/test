@@ -123,26 +123,7 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Add New Segment
- 			stepNo++;
-			description="Add New Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close segment window
-			stepNo++;
-			description="Close About Plan Segment Window";
-			planPage.closeSegmentWindow();
-			// Click on 'strench Up forms' icon 
-			planPage.clickStrenchUpForm();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+						
 			// Click on 'Details' under 'Show' pop up under 'Task' panel
 			stepNo++;
 			description="Details Task";
@@ -176,6 +157,9 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
 			planPage.closeSegmentWindow();
 			// Strench up form
 			planPage.clickStrenchUpForm();
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Select goal from dropdown list
 			stepNo++;
@@ -192,17 +176,8 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Remove This segment
- 			stepNo++;
-			description="Remove This Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						
-			//Sign Out from 'Plan' page
+
+ 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();

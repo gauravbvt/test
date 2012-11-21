@@ -176,7 +176,10 @@ public class MAV0169_SimpleFormOfSendInfo extends TestCase{
 			stepNo++;
 			description="Show aadvanced form in receives panel";
 			planPage.clickShowAdvancedFormInSendsPanel(testData.get("ShowSimpleFormText"),testData.get("ShowAdvancedFormText"),testData.get("Flag"));
-			
+			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank); 
+ 			
 			// Click on Remove this segment
 			stepNo++;
 			description="Remove segment";
