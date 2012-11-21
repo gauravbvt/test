@@ -71,9 +71,7 @@ public class Reporting extends TakeScreenshot {
 	public String startDateTime;
 	public String endDateTime;
 	
-	static DateFormat dateFormatGMT = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-	
-	
+	static DateFormat dateFormatGMT = new SimpleDateFormat("yy-MM-dd HH:mm:ss");	
 	
 	/**
      * Takes a screen shot of the application page 
