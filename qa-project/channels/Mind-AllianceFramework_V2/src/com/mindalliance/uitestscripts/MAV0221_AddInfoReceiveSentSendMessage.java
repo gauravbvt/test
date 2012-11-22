@@ -124,7 +124,7 @@ public class MAV0221_AddInfoReceiveSentSendMessage extends TestCase{
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			// Enter Segment name
-			planPage.enterSegmentName(testData.get("SegmentForaddInfoSentShowhideDetails"));
+			planPage.enterSegmentName(testData.get("SegmentForaddInfoReceiveSentSendMessage"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
