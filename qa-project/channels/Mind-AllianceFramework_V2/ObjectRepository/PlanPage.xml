@@ -473,8 +473,48 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Network Tab</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Structure Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[3]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Agreements Tab</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[4]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Analytics Tab</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[5]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Issues Tab</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[6]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2190,7 +2230,7 @@
 	</Element>
 	<Element>
 		<GivenName>Send Message In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2374,6 +2414,7 @@
 		<Xpath>//input[contains(@name,'segment:receives:flows-div:flows:0:flow:timing:max-delay:delay-amount')]</Xpath>
 		<Name>segment:receives:flows-div:flows:0:flow:timing:max-delay:delay-amount</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>Element Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[4]/th/a</Xpath>
@@ -2383,6 +2424,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Notification In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[5]/td/span/label/input</Xpath>
