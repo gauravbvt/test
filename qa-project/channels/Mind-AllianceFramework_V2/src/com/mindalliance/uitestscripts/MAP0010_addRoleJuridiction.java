@@ -175,7 +175,7 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			// Click on Structure Tab
  			stepNo++;
 			description="Structure Tab";
-			planPage.clickStructureTab();
+			planPage.clickOrganizationsStructureTab();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
