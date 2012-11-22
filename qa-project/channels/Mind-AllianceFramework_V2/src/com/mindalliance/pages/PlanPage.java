@@ -1472,13 +1472,60 @@ public class PlanPage {
 	}
 	
 	/**
-	 * Click on Structure Tab
-	 * 
+	 * Click on Network tab of Organizations
+	 * @throws UIAutomationException
 	 */
+	public void clickOrganizationsNetworkTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Network Tab",GlobalVariables.configuration.getAttrSearchList(), "Network Tab");
+		UIActions.click(fileName,"Network Tab",GlobalVariables.configuration.getAttrSearchList(), "Network Tab");
+		
+		// Assertion: Verify if the Network Tab is clicked
+		elementController.requireElementSmart(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
+		String networkTab=UIActions.getText(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
+		
+		if(!networkTab.contains(networkTab)){
+			throw new UIAutomationException("Organization is not entered.");
+		}
+	}
 	
-	public void clickStructureTab()throws UIAutomationException{
+	/**
+	 * Click on Structure Tab under Organizations
+	 * @throws UIAutomationException
+	 */	
+	public void clickOrganizationsStructureTab()throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
 		UIActions.click(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
+		
+		// Assertion: Verify if the Structre Tab is clicked
+	}
+	
+	/**
+	 * Click on Agreements Tab under Organizations
+	 * @throws UIAutomationException
+	 */
+	public void clickOrganizationsAgreementTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Agreements Tab",GlobalVariables.configuration.getAttrSearchList(), "Agreements Tab");
+		UIActions.click(fileName,"Agreements Tab",GlobalVariables.configuration.getAttrSearchList(), "Agreements Tab");
+		
+		// Assertion: Verify if the Agreements Tab is clicked
+	}
+	
+	/**
+	 * Click on Analytics Tab under Organizations
+	 * @throws UIAutomationException
+	 */
+	public void clickOrganizationsAnalyticsTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
+		UIActions.click(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
+		
+		// Assertion: Verify if the Structre Tab is clicked
+	}
+	
+	public void clickOrganizationsIssuesTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab");
+		UIActions.click(fileName,"Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab");
+		
+		// Assertion: Verify if the Structre Tab is clicked
 	}
 	/**
 	 * Enter agent name in organization in scope
