@@ -120,7 +120,7 @@ public class Home {
 		suite.addTestSuite(MAV0188_EndEventUnnamed.class);
 		suite.addTestSuite(MAV0189_GoalsLink.class);
 		suite.addTestSuite(MAV0190_GoalsOption.class);
-		suite.addTestSuite(MAV0191_GoalsOptionUnchecked.class);
+//		suite.addTestSuite(MAV0191_GoalsOptionUnchecked.class);
 		suite.addTestSuite(MAV0193_TaskAttachOptions.class);
 		suite.addTestSuite(MAV0194_TaskNewIssue.class);
 		suite.addTestSuite(MAV0195_TaskIssueDetails.class);
@@ -129,7 +129,7 @@ public class Home {
 		suite.addTestSuite(MAV0198_TaskIssueAttachOptions.class);
 		suite.addTestSuite(MAV0199_AddInfoReceiveSendInformation.class);
 		suite.addTestSuite(MAV0200_AddInfoReceiveSendTagLink.class);
-		suite.addTestSuite(MAV0201_AddInfoReceiveSendIntent.class);
+//		suite.addTestSuite(MAV0201_AddInfoReceiveSendIntent.class);
 		suite.addTestSuite(MAV0202_AddInfoReceiveSendElementsLink.class);
 		suite.addTestSuite(MAV0203_NotificationOption.class);
 		suite.addTestSuite(MAV0204_ReplyThatOption.class);
@@ -171,6 +171,7 @@ public class Home {
 		suite.addTestSuite(MAV0272_ViewOrganizationAnalyticsTab.class);
 		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);
 		
+		
 //		Plan
 		
 		suite.addTestSuite(MAP0001_AddPlan.class);
@@ -193,7 +194,7 @@ public class Home {
 		suite.addTestSuite(MAP0023_removeGoal.class);	
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
 		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
+//		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
 		
 //		Command
 		
