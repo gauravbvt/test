@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
-import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -31,13 +30,13 @@ import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
 
-public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
+public class MAV0275_ViewEventIssueTab extends TestCase{
 	public Hashtable<String, String> testData;
-	public String testCaseId="MAV0269_ViewOrganizationsNetworkTab";
+	public String testCaseId="MAV0274_ViewEventAnalyticsTab";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
-	public String failed="FAIL";
+	public String failed="Fail";
 	public String blank=""; 
 	public String scriptException;
 	public String browser="";
@@ -56,9 +55,6 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
 				new ElementController();
 			}
 			
-			DataController dataController= new DataController();
-			dataController.createResultFiles();
-			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
@@ -68,13 +64,12 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
 						
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
-			browserController.initializeDriver();		
+			browserController.initializeDriver();	
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-		}
-		catch(UIAutomationException ue){
+		}catch(UIAutomationException ue){
 			stepNo++;
 			description="Unable to initialize the driver";
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
@@ -85,16 +80,16 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
 	}
 	
 	/**
-	 * This method adds organization to the plan and verify if the organization is added
+	 * This method adds event to the plan and verify if the event is added
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0269_ViewOrganizationsNetworkTab() throws UIAutomationException, IOException{
+	public void testMAV0274_ViewEventAnalyticsTab() throws UIAutomationException, IOException {
 		try {
-			// Enter URL of Channels
 			stepNo++;
 			description="URL Entered";
+			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
 			// Write log
@@ -102,7 +97,7 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
 			// Login page
- 			stepNo++;
+			stepNo++;
 			description="Login Successful";
 			LoginPage loginPage = new LoginPage();
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
@@ -111,7 +106,7 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
 			// Plan Page
- 			stepNo++;
+		    stepNo++;
 			description="Collaboration Plan";
 			HomePage homePage=new HomePage();
 			homePage.clickCollaborationPlanLink();	
@@ -120,50 +115,50 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  						
 			// Close Plan Map window
- 			stepNo++;
+			stepNo++;
 			description="Close Plan Map Window";
 			PlanPage planPage=new PlanPage();
 			planPage.closePlanMap();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Click on 'Organizations In Scope' under 'Scoping' pop up menu
+ 			 							
+			// Click on 'Events In Scope' under 'Scoping' pop up menu
  			stepNo++;
-			description="Organization in Scope";
+			description="Event in Scope";
 			planPage.clickPopupMenu(testData.get("Scoping"));
-			planPage.clickSubmenu(testData.get("OrganizationsInScope"));
+			planPage.clickSubmenu(testData.get("EventsInScope"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
-			// Enter organization name
+			// Click default Event UNNAMED
  			stepNo++;
-			description="Organization Created";
-			planPage.enterOrganizationName(testData.get("Organization1"));
+ 			description="Default Event 'UNNAMED'";
+ 			planPage.clickDefaultEvent();
+ 			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
+ 			// Click Event's Analytics Tab
+ 			stepNo++;
+ 			description="Analytics Tab";
+ 			planPage.clickAnalyticsTab();
+ 			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+			// Close Events window
+ 			stepNo++;
+			description="Close Event Window";
+			planPage.closeUnamedEventsWindow();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
- 			// Click on organization entered
-			stepNo++;
-			description="Click Organization For Details";
-			planPage.clickOrganizationName(testData.get("Organization1"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
- 			// Click Organization's Network Tab
+			//Sign Out from 'Plan' page
  			stepNo++;
-			description="Network's Tab";
-			planPage.clickOrganizationsNetworkTab();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Sign Out from 'Plan' page
- 			stepNo++;
-			description="Signout Successful";
+			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutPlan();
 			// Write log
@@ -194,7 +189,7 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		}
 	}
-	
+
 	/*
 	 * This method will perform cleanup actions
 	 * @see junit.framework.TestCase#tearDown()
@@ -208,7 +203,7 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
 	}
 	
 	/**
-     * Loads Test Data for MAV0269_ViewOrganizationsNetworkTab.
+     * Loads Test Data for MAV0274_ViewEventAnalyticsTab.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -222,28 +217,35 @@ public class MAV0269_ViewOrganizationsNetworkTab extends TestCase{
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File MAV0269_ViewOrganizationsNetworkTab=new File(path + "MAV0269_ViewOrganizationsNetworkTab.xml");
+			File MAV0274_ViewEventAnalyticsTab=new File(path + "MAV0274_ViewEventAnalyticsTab.xml");
 			
-			Document docMAV0269_ViewOrganizationsNetworkTab=db.parse(MAV0269_ViewOrganizationsNetworkTab);
-			Element eleMAV0269_ViewOrganizationsNetworkTab=docMAV0269_ViewOrganizationsNetworkTab.getDocumentElement();
+			Document docMAV0274_ViewEventAnalyticsTab=db.parse(MAV0274_ViewEventAnalyticsTab);
+			Element eleMAV0274_ViewEventAnalyticsTab=docMAV0274_ViewEventAnalyticsTab.getDocumentElement();
 	              
-	        Element oXmlEleMAV0269_ViewOrganizationsNetworkTab = (Element) eleMAV0269_ViewOrganizationsNetworkTab;
-	    	           
-	        this.testData.put("ChannelsURL", oXmlEleMAV0269_ViewOrganizationsNetworkTab.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Scoping", oXmlEleMAV0269_ViewOrganizationsNetworkTab.getElementsByTagName("scoping").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("OrganizationsInScope", oXmlEleMAV0269_ViewOrganizationsNetworkTab.getElementsByTagName("organizationsInScope").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Title",oXmlEleMAV0269_ViewOrganizationsNetworkTab.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Organization1",oXmlEleMAV0269_ViewOrganizationsNetworkTab.getElementsByTagName("organization1").item(0).getChildNodes().item(0).getNodeValue());
+	        Element oXmlEleMAV0274_ViewEventAnalyticsTab = (Element) eleMAV0274_ViewEventAnalyticsTab;
+	       	
+	        this.testData.put("Scoping", oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("scoping").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("EventsInScope",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("eventsInScope").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("ChannelsURL",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Title",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        
+	        this.testData.put("Actions",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AddNewSegment",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("SegmentForAddEvent",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("segmentForAddEvent").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RemoveThisSegment",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Event",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
+			
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File MAV0269_ViewOrganizationsNetworkTab.xml can not be parsed.");
+			throw new UIAutomationException("File MAV0274_ViewEventAnalyticsTab.xml not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File MAV0269_ViewOrganizationsNetworkTab.xml not found.");
+			throw new UIAutomationException("File MAV0274_ViewEventAnalyticsTab.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File MAV0269_ViewOrganizationsNetworkTab.xml can not be parsed.");
+			throw new UIAutomationException("File MAV0274_ViewEventAnalyticsTab.xml can not be parsed.");
 		}
+      
 	}
-
+	
 }
