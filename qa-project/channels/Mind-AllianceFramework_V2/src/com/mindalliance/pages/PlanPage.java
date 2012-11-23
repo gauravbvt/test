@@ -136,16 +136,11 @@ public class PlanPage {
 	 * 'closeEventsWindow' method close the Events window
 	 * @throws UIAutomationException 
 	*/
-	
 	public void closeEventsWindow() throws UIAutomationException{
 			elementController.requireElementSmart(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
 			UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
 			
 			// Assertion: Verify Event window is closed
-			try{
-				Thread.sleep(1000);
-			}
-			catch(Exception e){}
 			xPath=dataController.getPageDataElements(fileName,"Close Events Window", "Xpath");
 			List<WebElement> webElemets=UIActions.getElements(xPath);
 			if(!webElemets.isEmpty()){
@@ -153,6 +148,20 @@ public class PlanPage {
 			}
 			
 	}
+	
+	public void closeUnamedEventsWindow() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Close Unnamed Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Unnamed Events Window");
+		UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Unnamed Events Window");
+		
+		// Assertion: Verify Event window is closed
+		xPath=dataController.getPageDataElements(fileName,"Close Unnamed Events Window", "Xpath");
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("Unamed Events window can not be closed.");
+		}
+		
+	}
+	
 	/**
 	 * Close requirement window
 	 * @throws UIAutomationException
@@ -1480,11 +1489,11 @@ public class PlanPage {
 		UIActions.click(fileName,"Network Tab",GlobalVariables.configuration.getAttrSearchList(), "Network Tab");
 		
 		// Assertion: Verify if the Network Tab is clicked
-		elementController.requireElementSmart(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
-		String networkTab=UIActions.getText(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
+		elementController.requireElementSmart(fileName,"All flows invoving Org",GlobalVariables.configuration.getAttrSearchList(), "All flows invoving Org");
+		String networkTab=UIActions.getText(fileName,"All flows invoving Org",GlobalVariables.configuration.getAttrSearchList(), "All flows invoving Org");
 		
 		if(!networkTab.contains(networkTab)){
-			throw new UIAutomationException("Organization is not entered.");
+			throw new UIAutomationException("Network's Tab not selected");
 		}
 	}
 	
@@ -1497,6 +1506,12 @@ public class PlanPage {
 		UIActions.click(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
 		
 		// Assertion: Verify if the Structre Tab is clicked
+		elementController.requireElementSmart(fileName,"Jobs",GlobalVariables.configuration.getAttrSearchList(), "Jobs");
+		String networkTab=UIActions.getText(fileName,"Jobs",GlobalVariables.configuration.getAttrSearchList(), "Jobs");
+		
+		if(!networkTab.contains(networkTab)){
+			throw new UIAutomationException("Structure's Tab not selected");
+		}
 	}
 	
 	/**
@@ -1508,6 +1523,12 @@ public class PlanPage {
 		UIActions.click(fileName,"Agreements Tab",GlobalVariables.configuration.getAttrSearchList(), "Agreements Tab");
 		
 		// Assertion: Verify if the Agreements Tab is clicked
+		elementController.requireElementSmart(fileName,"Information sharing agreements",GlobalVariables.configuration.getAttrSearchList(), "Information sharing agreements");
+		String networkTab=UIActions.getText(fileName,"Information sharing agreements",GlobalVariables.configuration.getAttrSearchList(), "Information sharing agreements");
+		
+		if(!networkTab.contains(networkTab)){
+			throw new UIAutomationException("Agreements Tab not selected");
+		}
 	}
 	
 	/**
@@ -1519,6 +1540,12 @@ public class PlanPage {
 		UIActions.click(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
 		
 		// Assertion: Verify if the Structre Tab is clicked
+		elementController.requireElementSmart(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
+		String networkTab=UIActions.getText(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
+		
+		if(!networkTab.contains(networkTab)){
+			throw new UIAutomationException("Analytics Tab not selected");
+		}
 	}
 	
 	public void clickOrganizationsIssuesTab() throws UIAutomationException{
@@ -1526,6 +1553,12 @@ public class PlanPage {
 		UIActions.click(fileName,"Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab");
 		
 		// Assertion: Verify if the Structre Tab is clicked
+		elementController.requireElementSmart(fileName,"Kind",GlobalVariables.configuration.getAttrSearchList(), "Kind");
+		String networkTab=UIActions.getText(fileName,"Kind",GlobalVariables.configuration.getAttrSearchList(), "Kind");
+		
+		if(!networkTab.contains(networkTab)){
+			throw new UIAutomationException("Agreements Tab not selected");
+		}
 	}
 	/**
 	 * Enter agent name in organization in scope
@@ -1734,6 +1767,37 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Click Default event UNNAMED
+	 * @throws UIAutomationException
+	 */
+	public void clickDefaultEvent() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Default Event",GlobalVariables.configuration.getAttrSearchList(), "Default Event");
+		UIActions.click(fileName,"Default Event",GlobalVariables.configuration.getAttrSearchList(), "Default Event");
+		// Assertion : Verify 'About Event' window is present		
+		elementController.requireElementSmart(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
+		String headingOfWindowInPage=UIActions.getText(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
+		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "About Event Unnamed Title Actual Text", "Title");
+		if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
+			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		}
+	}
+	
+	/**
+	 * Click Analytics Tab of Event
+	 * @throws UIAutomationException
+	 */
+	public void clickAnalyticsTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
+		UIActions.click(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
+		// Assertion: Verify if the Default Event is clicked
+		elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		
+		if(!networkTab.contains(networkTab)){
+			throw new UIAutomationException("Analytics Tab not selected");
+		}	
+	}
+	/**
 	 * Enter event in about plan window
 	 * @param eventName
 	 * @throws UIAutomationException
@@ -1813,8 +1877,7 @@ public class PlanPage {
 	 * delete phase
 	 * @throws UIAutomationException
 	 */
-	 public void deletePhase() throws UIAutomationException{
-	
+	public void deletePhase() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Delete Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Phase In About Plan");
 		UIActions.click(fileName,"Delete Phase In About Plan",GlobalVariables.configuration.getAttrSearchList(), "Delete Phase In About Plan");
 	
@@ -1824,7 +1887,8 @@ public class PlanPage {
 			}
 			catch(Exception e){}
 		UIActions.assertAlert(questionInXML);
-}
+	}
+	 
 	/**
 	 * Enter value of event in event textbox
 	 * @param eventName
@@ -2777,7 +2841,6 @@ public class PlanPage {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Delete Questionnaire", "Title");
