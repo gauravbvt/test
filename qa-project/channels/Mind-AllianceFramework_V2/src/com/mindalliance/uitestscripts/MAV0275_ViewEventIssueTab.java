@@ -32,7 +32,7 @@ import com.mindalliance.pages.PlanPage;
 
 public class MAV0275_ViewEventIssueTab extends TestCase{
 	public Hashtable<String, String> testData;
-	public String testCaseId="MAV0274_ViewEventAnalyticsTab";
+	public String testCaseId="MAV0275_ViewEventIssueTab";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -85,7 +85,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 	 * @throws IOException 
 	 */
 	@Test
-	public void testMAV0274_ViewEventAnalyticsTab() throws UIAutomationException, IOException {
+	public void testMAV0275_ViewEventIssueTab() throws UIAutomationException, IOException {
 		try {
 			stepNo++;
 			description="URL Entered";
@@ -203,7 +203,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 	}
 	
 	/**
-     * Loads Test Data for MAV0274_ViewEventAnalyticsTab.
+     * Loads Test Data for MAV0275_ViewEventIssueTab.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -217,33 +217,33 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File MAV0274_ViewEventAnalyticsTab=new File(path + "MAV0274_ViewEventAnalyticsTab.xml");
+			File MAV0275_ViewEventIssueTab=new File(path + "MAV0275_ViewEventIssueTab.xml");
 			
-			Document docMAV0274_ViewEventAnalyticsTab=db.parse(MAV0274_ViewEventAnalyticsTab);
-			Element eleMAV0274_ViewEventAnalyticsTab=docMAV0274_ViewEventAnalyticsTab.getDocumentElement();
+			Document docMAV0275_ViewEventIssueTab=db.parse(MAV0275_ViewEventIssueTab);
+			Element eleMAV0275_ViewEventIssueTab=docMAV0275_ViewEventIssueTab.getDocumentElement();
 	              
-	        Element oXmlEleMAV0274_ViewEventAnalyticsTab = (Element) eleMAV0274_ViewEventAnalyticsTab;
+	        Element oXmlEleMAV0275_ViewEventIssueTab = (Element) eleMAV0275_ViewEventIssueTab;
 	       	
-	        this.testData.put("Scoping", oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("scoping").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("EventsInScope",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("eventsInScope").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("ChannelsURL",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Title",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Scoping", oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("scoping").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("EventsInScope",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("eventsInScope").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("ChannelsURL",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Title",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        
-	        this.testData.put("Actions",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddNewSegment",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("SegmentForAddEvent",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("segmentForAddEvent").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("RemoveThisSegment",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Event",oXmlEleMAV0274_ViewEventAnalyticsTab.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Actions",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AddNewSegment",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("SegmentForAddEvent",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("segmentForAddEvent").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RemoveThisSegment",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Event",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
 			
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File MAV0274_ViewEventAnalyticsTab.xml not found.");
+			throw new UIAutomationException("File MAV0275_ViewEventIssueTab.xml not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File MAV0274_ViewEventAnalyticsTab.xml not found.");
+			throw new UIAutomationException("File MAV0275_ViewEventIssueTab.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File MAV0274_ViewEventAnalyticsTab.xml can not be parsed.");
+			throw new UIAutomationException("File MAV0275_ViewEventIssueTab.xml can not be parsed.");
 		}
       
 	}
