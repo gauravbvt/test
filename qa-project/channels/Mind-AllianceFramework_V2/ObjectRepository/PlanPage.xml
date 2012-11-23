@@ -338,6 +338,38 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Default Event</GivenName>
+		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table/tbody/tr/td/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>unnamed</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Analytics Tab</GivenName>
+		<Xpath>//a[contains(@class,'active')]/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>unnamed</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Where this event is referenced</GivenName>
+		<Xpath>//div[contains(@class,'aspect')]/h3</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>unnamed</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Any Event Dropdown In Plan Requirement</GivenName>
 		<Xpath>//select[contains(@name,'requirements:fp-content:mo:aspect:event')]</Xpath>
@@ -462,6 +494,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Organization Table In Organizations In Scope</GivenName>
 		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/div[2]/div[2]/table/tbody</Xpath>
@@ -472,9 +505,20 @@
 		<ClassName>indices-table</ClassName>
 	</Element>
 	
+	
 	<Element>
 		<GivenName>Network Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>All flows invoving Org</GivenName>
+		<Xpath>//div[contains(@class,'aspect')]/span[2]/h3/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -493,8 +537,28 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Jobs</GivenName>
+		<Xpath>//li[contains(@class,'tab0 selected')]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Agreements Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[4]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Information sharing agreements</GivenName>
+		<Xpath>//div[contains(@class,'aspect')]/h3</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -513,8 +577,28 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Task assignments</GivenName>
+		<Xpath>//div[contains(@class,'aspect')]/span/h3/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Issues Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[6]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Kind</GivenName>
+		<Xpath>//a[contains(@class,'wicket_orderNone')]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1160,7 +1244,17 @@
  	
  	<Element>
  		<GivenName>Close Events Window</GivenName>
- 		<Xpath>/html/body/form/div[15]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>//div[contains(@class,'float-bar-close')]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Unnamed Events Window</GivenName>
+ 		<Xpath>//div[contains(@class,'fp-close')]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -2665,7 +2759,7 @@
 	
 	<Element>
 		<GivenName>Events In Scope Title</GivenName>
-		<Xpath>/html/body/form/div[15]/div/div/div/span</Xpath>
+		<Xpath>//div[contains(@class,'float-header')]/h1</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
