@@ -1244,7 +1244,7 @@
  	
  	<Element>
  		<GivenName>Close Events Window</GivenName>
- 		<Xpath>//div[contains(@class,'float-bar-close')]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[15]/div/div/div[3]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
