@@ -1898,6 +1898,12 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
 		UIActions.click(fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
 		UIActions.enterValueInTextBox(eventName,fileName,"Event In Event In Scope Text",GlobalVariables.configuration.getAttrSearchList(), "Event In Event In Scope Text");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		UIActions.enterKey(Keys.TAB);
 		
 		// Check checkbox of event
