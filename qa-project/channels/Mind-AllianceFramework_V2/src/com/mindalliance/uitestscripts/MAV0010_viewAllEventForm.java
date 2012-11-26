@@ -8,6 +8,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -26,9 +30,6 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * TestCase ID: MAV0010_viewAllEventForm
@@ -61,6 +62,9 @@ public class MAV0010_viewAllEventForm extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			
+			DataController dataController= new DataController();
+			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
