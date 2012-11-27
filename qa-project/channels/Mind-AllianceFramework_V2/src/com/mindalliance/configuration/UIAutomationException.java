@@ -2,7 +2,7 @@ package com.mindalliance.configuration;
 
 public class UIAutomationException extends Exception{
 	/**
-	 * 
+	 * User defined exception are defined in this class
 	 */
 	private static final long serialVersionUID = 1L;
 	public String errorMessage;
