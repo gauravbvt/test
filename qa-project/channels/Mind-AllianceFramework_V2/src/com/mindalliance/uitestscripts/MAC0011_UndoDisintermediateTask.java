@@ -255,30 +255,31 @@ public class MAC0011_UndoDisintermediateTask extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Reporting reporting = new Reporting();
-			reporting.generateAutomationReport();
-		} catch (UIAutomationException ue) {
+ 			
+ 			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
+		    
+		}catch (UIAutomationException ue) {
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
+		    
+			// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+				
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
-		
-			// Sign out from plan page
-			stepNo++;
-			description="SignOut Successful";
-			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
-			// Write log
- 			LogFunctions.writeLogs(ue.getErrorMessage());
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
- 			// Quits the Browser
-			stepNo++;
-			description="Browser Closed";
+		    
+			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
-			Assert.fail(ue.getErrorMessage());
-			// Write log
- 			LogFunctions.writeLogs(ue.getErrorMessage());
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			Assert.fail(ue.getErrorMessage());		
 		}
 	}
 	

@@ -236,7 +236,8 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			Reporting reporting= new Reporting();
+
+			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {

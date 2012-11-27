@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -61,6 +62,8 @@ public class MAV0021_viewAllEvaluationForm extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			DataController dataController= new DataController();
+			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
@@ -155,23 +158,31 @@ public class MAV0021_viewAllEvaluationForm extends TestCase{
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
+		    
 		}catch (UIAutomationException ue) {
-			Reporting.getScreenShot(testCaseId);
-			Reporting reporting= new Reporting();
-		    reporting.generateAutomationReport();
-			// Sign out from plan page
-			stepNo++;
-			HeaderController headerController=new HeaderController();
-			headerController.signOutPlan();
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
-			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
+			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
+			Reporting.getScreenShot(testCaseId);
+		    
+			// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
+			HeaderController headerController=new HeaderController();
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 				
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
+		    
 			// Quits the Browser
 			GlobalVariables.configuration.getWebDriver().quit();
-			Assert.fail(ue.getErrorMessage());	
+			Assert.fail(ue.getErrorMessage());		
 		}
 	}
 	/**

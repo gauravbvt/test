@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import com.mindalliance.configuration.BrowserController;
 import com.mindalliance.configuration.Configuration;
+import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
@@ -59,6 +60,8 @@ public class MAP0002_AddNameAndLocalizePlan extends TestCase {
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
+			DataController dataController= new DataController();
+			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
 			// Loads Test Data
@@ -138,30 +141,31 @@ public class MAP0002_AddNameAndLocalizePlan extends TestCase {
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-			Reporting reporting = new Reporting();
-			reporting.generateAutomationReport();
-		} catch (UIAutomationException ue) {
-			Reporting.getScreenShot(testCaseId);
+
 			Reporting reporting= new Reporting();
 		    reporting.generateAutomationReport();
-		
-			// Sign out from Admin page
-			stepNo++;
-			description="Signout";
+		    
+		}catch (UIAutomationException ue) {
+			// Write log
+			LogFunctions.writeLogs(ue.getErrorMessage());
+			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
+			Reporting.getScreenShot(testCaseId);
+		    
+			// Sign out from home page
+		    stepNo++;
+		    description="Logout successful";
 			HeaderController headerController=new HeaderController();
-			headerController.signOutAdmin();
-			// Write log
-			LogFunctions.writeLogs(ue.getErrorMessage());
-			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
-						
+			headerController.signOut();
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+				
+			Reporting reporting= new Reporting();
+		    reporting.generateAutomationReport();
+		    
 			// Quits the Browser
-			stepNo++;
-			description="Browser Closed";
 			GlobalVariables.configuration.getWebDriver().quit();
-			Assert.fail(ue.getErrorMessage());
-			// Write log
-			LogFunctions.writeLogs(ue.getErrorMessage());
-			LogFunctions.writeResults(testCaseId, stepNo, ue.getErrorMessage(), failed, scriptException, blank);
+			Assert.fail(ue.getErrorMessage());		
 		}
 	}
 	
