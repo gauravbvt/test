@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +43,8 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
     private String supervisorsNotified;
 
     private boolean accepted;
+
+    private Date whenAccepted;
 
     private boolean requestNotified;
 
@@ -82,6 +85,7 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
 
     public void setAccepted( boolean accepted ) {
         this.accepted = accepted;
+        whenAccepted = accepted ? new Date( ) : null;
     }
 
     public long getActorId() {

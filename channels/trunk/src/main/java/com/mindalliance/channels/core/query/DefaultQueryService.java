@@ -3604,12 +3604,12 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public boolean meetsPreEmploymentConstraint( Actor actor,
-                                                 List<PlanParticipation> currentParticipations ) {
+                                                 List<PlanParticipation> activeParticipations ) {
         if ( !actor.isParticipationRestrictedToEmployed() ) return true;
         List<Organization> actorEmployers = findDirectAndIndirectEmployers(
                 findAllEmploymentsForActor( actor ) );
         List<Organization> myPlannedEmployers = new ArrayList<Organization>();
-        for ( PlanParticipation participation : currentParticipations ) {
+        for ( PlanParticipation participation : activeParticipations ) {
             Actor participationActor = participation.getActor( this );
             if ( participationActor != null && !participationActor.isOpenParticipation() )
                 myPlannedEmployers.addAll( findDirectAndIndirectEmployers(

@@ -148,6 +148,9 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private List<ParticipationWrapper> openAndConfirmedParticipationWrappers() {
         final QueryService queryService = getQueryService();
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
+        for ( PlanParticipation participation : unconstrainedUnacceptedParticipations() ) {
+            wrappers.add(  new ParticipationWrapper(  participation ) );
+        }
         final List<PlanParticipation> unsupervisedParticipations = unsupervisedParticipations();
         for ( PlanParticipation participation : unsupervisedParticipations ) {
             wrappers.add( new ParticipationWrapper( participation ) );
@@ -180,6 +183,16 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     }
                 } );
         return wrappers;
+    }
+
+    private List<PlanParticipation> unconstrainedUnacceptedParticipations() {
+        List<PlanParticipation> participations = new ArrayList<PlanParticipation>(  );
+        for ( Actor actor : planParticipationService.findOpenActors( getUser(), getQueryService() ) ) {
+            if ( actor.isUnconstrainedParticipation() ) {
+                participations.add( new PlanParticipation(  getUsername(),  getPlan(),  getUser(),  actor ) );
+            }
+        }
+        return participations;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -605,6 +618,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                             queryService );
                 }
             }
+            selectedAvailableParticipationOrg = null;
             getPlanManager().clearCache(); // Must manually clear the cache
         }
 

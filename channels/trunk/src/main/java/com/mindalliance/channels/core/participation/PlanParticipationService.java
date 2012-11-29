@@ -55,7 +55,7 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
      * @param queryService a query service
      * @return a list of actors
      */
-    List<Actor> findOpenActors( final ChannelsUser user, final QueryService queryService );
+    List<Actor> findOpenActors( ChannelsUser user, final QueryService queryService );
 
     boolean isParticipationOpenAndAvailable( Actor actor, ChannelsUser user, QueryService queryService );
 

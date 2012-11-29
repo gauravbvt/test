@@ -454,12 +454,16 @@ public class PlanParticipationServiceImpl
                 plan,
                 user.getUserInfo(),
                 queryService );
+        List<PlanParticipation> activeParticipations = getActiveUserParticipations(
+                plan,
+                user.getUserInfo(),
+                queryService );
         return actor != null
                 && !actor.isUnknown()
                 && actor.isParticipationUserAssignable()
                 && !alreadyParticipatingAs( actor, currentParticipations )
                 && !isSingularAndTaken( actor, plan, queryService )
-                && queryService.meetsPreEmploymentConstraint( actor, currentParticipations );
+                && queryService.meetsPreEmploymentConstraint( actor, activeParticipations );
     }
 
     @Override

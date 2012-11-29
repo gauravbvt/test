@@ -1618,11 +1618,11 @@ public interface QueryService {
     /**
      * Whether participation as actor possible given current participation.
      * @param actor an actor
-     * @param currentParticipations  a list of participations
+     * @param activeParticipations  a list of active participations
      * @return  a boolean -- not cached
      */
     boolean meetsPreEmploymentConstraint( Actor actor,
-                                          List<PlanParticipation> currentParticipations );
+                                          List<PlanParticipation> activeParticipations );
 
     /**
      * Get user contact info service.

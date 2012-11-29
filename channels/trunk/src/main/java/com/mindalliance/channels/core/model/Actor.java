@@ -404,4 +404,10 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public boolean isParticipationUserAssignable() {
         return isOpenParticipation() || isParticipationRestrictedToEmployed() || isSupervisedParticipation();
     }
+
+    public boolean isUnconstrainedParticipation() {
+        return isOpenParticipation()
+                && !isSingularParticipation()
+                && !isSupervisedParticipation();
+    }
 }
