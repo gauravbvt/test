@@ -22,7 +22,8 @@ import java.util.List;
  * Time: 10:02 AM
  */
 @XmlType( propOrder = {"id", "name", "hasUniqueIdentity", "isAnonymous", "categories", "kind",
-        "availability", "languages", "classifications", "documentation", "openParticipationToAll", "openParticipationToEmployed"} )
+        "availability", "languages", "classifications", "documentation", "openParticipationToAll",
+        "openParticipationToEmployed", "supervisedParticipation"} )
 public class AgentData extends ModelEntityData {
 
     public AgentData() {
@@ -99,6 +100,10 @@ public class AgentData extends ModelEntityData {
         return getActor().isParticipationRestrictedToEmployed();
     }
 
+    @XmlElement
+    public boolean getSupervisedParticipation() {
+        return getActor().isSupervisedParticipation();
+    }
 
     @XmlElement
     @Override

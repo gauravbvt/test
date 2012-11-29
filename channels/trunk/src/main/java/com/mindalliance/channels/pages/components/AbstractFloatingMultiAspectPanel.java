@@ -125,9 +125,16 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         return new Change( Change.Type.Collapsed, getObject() );
     }
 
-    /**
-     * Panel initialization.
-     */
+    protected void minimizeNormalize( AjaxRequestTarget target ) {
+        super.minimizeNormalize( target );
+        if (!isMinimized() ) {
+            refresh( target, new Change( Change.Type.Refresh ), getAspectShown() );
+        }
+    }
+
+        /**
+        * Panel initialization.
+        */
     protected void init() {
         moContainer = new WebMarkupContainer( "mo" );
         getContentContainer().add( moContainer );
@@ -246,10 +253,13 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         refreshTitle( target );
         refreshMenus( target );
         if ( change.isUnknown()
+                || change.isRefresh()
                 || change.isDisplay()
                 || change.isModified()
                 || change.isSelected() ) {
-            showAspect( aspect, change, target );
+            if ( !isMinimized() ) {
+                showAspect( aspect, change, target );
+            }
         }
     }
 

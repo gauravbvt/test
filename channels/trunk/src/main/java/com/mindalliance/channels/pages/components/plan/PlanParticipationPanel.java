@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.model.IModel;
 
 import java.util.Set;
@@ -17,6 +19,8 @@ import java.util.Set;
  * Time: 9:50:48 AM
  */
 public class PlanParticipationPanel extends AbstractCommandablePanel {
+
+    private ParticipationsPanel participationsPanel;
 
     public PlanParticipationPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -33,11 +37,23 @@ public class PlanParticipationPanel extends AbstractCommandablePanel {
 
     private void init() {
         addParticipations();
+        addRefreshButton();
     }
 
     private void addParticipations() {
-        ParticipationsPanel participationsPanel = new ParticipationsPanel( "participations" );
+        participationsPanel = new ParticipationsPanel( "participations" );
         addOrReplace( participationsPanel );
+    }
+
+    private void addRefreshButton() {
+        AjaxLink refreshButton = new IndicatingAjaxLink( "refresh" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                addParticipations();
+                target.add( participationsPanel );
+            }
+        };
+        add( refreshButton );
     }
 
     /**

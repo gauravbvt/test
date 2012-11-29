@@ -9,10 +9,10 @@ package com.mindalliance.channels.core.query;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
-import com.mindalliance.channels.core.dao.user.PlanParticipationValidationService;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
+import com.mindalliance.channels.core.participation.PlanParticipationValidationService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 
 /**

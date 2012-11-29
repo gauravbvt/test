@@ -1217,9 +1217,13 @@ Planners can see this feedback and reply to it. The user can then reply back etc
         <activity id="participation">
             <name>Set user participation</name>
             <step>
-                <description><![CDATA[Associate a user with one or more agents and add contact information specific to the user's participation as that agent.
+                <description><![CDATA[The protocols generated for a user are those of the agents the user participates as in the plan.
+                    
+A planner can associate a user with one or more agents and add contact information specific to the user's participation as that agent.
 
-Note that users can either self-associate with agents under "open participation" or "participation subject to confirmation by supervisors".]]></description>
+Users can self-associate with so called "open" agents. The participation may require confirmation by supervisors before it becomes effective.
+
+If a participation by a user is set by someone else, the user must first accept it for the participation to become effective.]]></description>
                 <script>
                     <action>Set user participation as agents</action>
                     <change>

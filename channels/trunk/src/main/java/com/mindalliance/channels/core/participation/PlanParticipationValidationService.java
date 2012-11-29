@@ -1,5 +1,6 @@
-package com.mindalliance.channels.core.dao.user;
+package com.mindalliance.channels.core.participation;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;

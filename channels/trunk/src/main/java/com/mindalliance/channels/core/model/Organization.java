@@ -55,6 +55,15 @@ public class Organization extends AbstractUnicastChannelable
      * Bogus organization used to signify that the organization is not known...
      */
     public static Organization UNKNOWN;
+    /**
+     * Whether the organization is a place holder for dynamically participating organizations.
+     */
+    public boolean placeHolder;
+    /**
+     * Identity of the actor who is authorized to place an organization
+     * and confirms participation of that organization's actors without supervisors.
+     */
+    public Actor custodian;
 
     /**
      * Name of unknown organization.
@@ -202,6 +211,22 @@ public class Organization extends AbstractUnicastChannelable
 
     public void setMission( String mission ) {
         this.mission = mission;
+    }
+
+    public Actor getCustodian() {
+        return custodian;
+    }
+
+    public void setCustodian( Actor custodian ) {
+        this.custodian = custodian;
+    }
+
+    public boolean isPlaceHolder() {
+        return placeHolder;
+    }
+
+    public void setPlaceHolder( boolean placeHolder ) {
+        this.placeHolder = placeHolder;
     }
 
     /**
@@ -408,6 +433,7 @@ public class Organization extends AbstractUnicastChannelable
         return super.references( mo )
                 || ModelObject.areIdentical( parent, mo )
                 || ModelObject.areIdentical( location, mo )
+                || ModelObject.areIdentical( custodian, mo )
                 ||
                 CollectionUtils.exists(
                         jobs,

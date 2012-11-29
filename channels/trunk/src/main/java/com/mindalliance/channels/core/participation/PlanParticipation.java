@@ -1,5 +1,7 @@
-package com.mindalliance.channels.core.dao.user;
+package com.mindalliance.channels.core.participation;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
@@ -19,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * A user's participation in a plan.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -29,6 +32,7 @@ import java.util.List;
 public class PlanParticipation extends AbstractPersistentPlanObject implements Messageable {
 
     public static final String VALIDATION_REQUESTED = "validation requested";
+    public static final String ACCEPTANCE_REQUESTED = "acceptance requested";
 
     @ManyToOne
     private ChannelsUserInfo participant;
@@ -36,6 +40,10 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
     private long actorId;
 
     private String supervisorsNotified;
+
+    private boolean accepted;
+
+    private boolean requestNotified;
 
     @OneToMany( mappedBy = "planParticipation", cascade = CascadeType.ALL )
     @Transient
@@ -54,12 +62,26 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
         this.actorId = actor.getId();
     }
 
+    public PlanParticipation( PlanParticipation participation ) {
+        super( participation.getPlanUri(), participation.getPlanVersion(), participation.getUsername() );
+        this.participant = participation.getParticipant();
+        this.actorId = participation.getActorId();
+    }
+
     public ChannelsUserInfo getParticipant() {
         return participant;
     }
 
     public void setParticipant( ChannelsUserInfo userInfo ) {
         this.participant = userInfo;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted( boolean accepted ) {
+        this.accepted = accepted;
     }
 
     public long getActorId() {
@@ -78,12 +100,24 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
         this.supervisorsNotified = supervisorsNotified;
     }
 
+    public boolean isRequestNotified() {
+        return requestNotified;
+    }
+
+    public void setRequestNotified( boolean requestNotified ) {
+        this.requestNotified = requestNotified;
+    }
+
     public Actor getActor( QueryService queryService ) {
         try {
             return queryService.find( Actor.class, getActorId() );
         } catch ( NotFoundException e ) {
             return null;
         }
+    }
+
+    public boolean isRequested() {
+        return !participant.getUsername().equals( getUsername() );
     }
 
     public boolean isObsolete( QueryService queryService ) {
@@ -134,16 +168,34 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
 
     @Override
     public String getContent( String topic, Format format, PlanService planService ) {
-        return "As supervisor, you are requested to confirm "
-                + asString( planService )
-                + "\n\nThank you!\n"
-                + planService.getPlan().getClient();
+        if ( topic.equals( VALIDATION_REQUESTED ) ) {
+            return "As supervisor, you are requested to confirm "
+                    + asString( planService )
+                    + "\n\nThank you!\n"
+                    + planService.getPlan().getClient();
+        } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
+            return "You are requested to participate as "
+                    + getActor( planService ).getName()
+                    + ". It is up to you to accept or not."
+                    + "\n\nThank you!\n"
+                    + planService.getPlan().getClient();
+        } else {
+            throw new RuntimeException( "Unknown topic " + topic );
+        }
     }
 
     @Override
     public List<String> getToUserNames( String topic, PlanService planService ) {
-        return planService.getPlanParticipationService()
+        if ( topic.equals( VALIDATION_REQUESTED ) ) {
+            return planService.getPlanParticipationService()
                 .listSupervisorsToNotify( planService.getPlan(), this, planService );
+        } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
+            List<String> usernames = new ArrayList<String>();
+            usernames.add( participant.getUsername() );
+            return usernames;
+        } else {
+            throw new RuntimeException( "Unknown topic " + topic );
+        }
     }
 
     @Override
@@ -153,7 +205,13 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
 
     @Override
     public String getSubject( String topic, Format format, PlanService planService ) {
-        return "Request to confirm " + asString( planService );
+        if ( topic.equals( VALIDATION_REQUESTED ) ) {
+            return "Request to confirm " + asString( planService );
+        } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
+            return "Your participation is requested as " + getActor( planService ).getName();
+        } else {
+            throw new RuntimeException( "Unknown topic " + topic );
+        }
     }
 
     @Override

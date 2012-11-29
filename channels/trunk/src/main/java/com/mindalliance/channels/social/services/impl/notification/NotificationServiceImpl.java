@@ -4,9 +4,9 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.participation.PlanParticipation;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -131,7 +131,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// FEEDBACK ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
@@ -186,7 +186,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// SURVEYS ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfSurveys() {
         for ( Plan plan : planManager.getPlans() ) {
@@ -252,7 +252,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // each minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( Plan plan : planManager.getPlans() ) {
@@ -280,6 +280,39 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void reportOnParticipationConfirmation() {
         // todo
+    }
+
+    @Override
+    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Transactional
+    public void notifyOfParticipationRequest() {
+        for ( Plan plan : planManager.getPlans() ) {
+            PlanService planService = planServiceFactory.getService( plan );
+            ChannelsUser.current().setPlan( plan );
+            PlanParticipationService planParticipationService = planService.getPlanParticipationService();
+            for ( PlanParticipation planParticipation : planParticipationService.getAllParticipations( plan, planService ) ) {
+                if ( planParticipation.isRequested()
+                        && !planParticipation.isAccepted()
+                        && !planParticipation.isRequestNotified() ) {
+                    List<String> successes = sendMessages(
+                            planParticipation,
+                            PlanParticipation.ACCEPTANCE_REQUESTED,
+                            false,
+                            planService );
+                    if ( !successes.isEmpty() ) {
+                        planParticipation.setRequestNotified( true );
+                    }
+                    planParticipationService.save( planParticipation );
+                }
+            }
+        }
+    }
+
+    @Override
+//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Transactional
+    public void reportOnParticipationRequests() {
+        //Todo
     }
 
     private void sendSurveyStatusReports( PlanService planService ) {

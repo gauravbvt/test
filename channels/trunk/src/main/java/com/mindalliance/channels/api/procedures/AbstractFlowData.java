@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Commitment;
@@ -13,6 +12,7 @@ import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 
 import java.util.ArrayList;

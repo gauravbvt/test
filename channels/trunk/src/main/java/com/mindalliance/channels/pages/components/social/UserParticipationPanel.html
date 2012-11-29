@@ -15,38 +15,42 @@
                 I am <span wicket:id="userRole">a planner</span>
             </div>
         </div>
-        <div wicket:id="openAndClosedParticipation" class="tabcontent-group">
+        <div wicket:id="openAndConfirmedParticipation" class="tabcontent-group">
             <h3>I participate as</h3>
-
+            <div wicket:id="noParticipation" class="tabcontent-content">No one yet</div>
             <div class="tabcontent-content">
                 <ul>
                     <li wicket:id="participations">
-                        <input wicket:id="confirmed" type="checkbox"/>
+                        <input wicket:id="accepted" type="checkbox" title="Select to accept, deselect to refuse"/>
                         <span wicket:id="participation">the NJ Transit Chief of police</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div wicket:id="supervisedParticipation" class="tabcontent-group">
-            <h3>I participate subject to confirmation as</h3>
-
-            <div class="tabcontent-content">
-                <ul>
-                    <li wicket:id="participations">
-                        <input wicket:id="confirmed" type="checkbox"/>
-                        <span wicket:id="participation">in MTS security agency as crisis commander</span>
-                        (<span wicket:id="validated">Validated</span>)
+                        <span wicket:id="requester">(requested by John Doe)</span>
                     </li>
                 </ul>
                 <div wicket:id="newParticipation">
-                    in <select wicket:id="orgs">
+                    <span wicket:id="newParticipationLabel">I (also) participate in</span>
+                    <select wicket:id="orgs">
                         <option>org</option>
                     </select>
-                    as <select wicket:id="agents">
-                        <option>agent</option>
-                    </select>
+                    <div wicket:id="asAgent">
+                         as <select wicket:id="agents">
+                            <option>agent</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div wicket:id="unconfirmedSupervisedParticipation" class="tabcontent-group">
+            <h3>I await confirmation to participate as</h3>
+
+            <div class="tabcontent-content">
+                <ul>
+                    <li wicket:id="participations">
+                        <input wicket:id="accepted" type="checkbox" title="Select to accept, deselect to refuse"/>
+                        <span wicket:id="participation">in MTS security agency as crisis commander</span>
+                        <span wicket:id="requester">(requested by John Doe)</span>
+                    </li>
+                </ul>
+             </div>
         </div>
         <div wicket:id="supervisorParticipationValidations" class="tabcontent-group">
             <h3>I confirm that I supervise</h3>

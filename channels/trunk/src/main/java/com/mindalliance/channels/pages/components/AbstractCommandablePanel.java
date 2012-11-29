@@ -140,7 +140,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a model entity
      */
     @SuppressWarnings( "unchecked" )
-    protected <T extends ModelEntity> T doSafeFindOrCreate( Class<T> clazz, String name ) {
+    protected <T extends ModelEntity> T doSafeFindOrCreateActual( Class<T> clazz, String name ) {
         String safeName = ChannelsUtils.cleanUpName( name );
         return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
                                                      clazz,

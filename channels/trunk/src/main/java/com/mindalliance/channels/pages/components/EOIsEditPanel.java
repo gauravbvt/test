@@ -703,7 +703,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
      */
     @Override
     public void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isUnknown() || change.isModified() ) {
+        if ( change.isUnknown() || change.isModified() || change.isRefresh() ) {
             addHeaders();
             addEOIs();
             target.add( eoisContainer );

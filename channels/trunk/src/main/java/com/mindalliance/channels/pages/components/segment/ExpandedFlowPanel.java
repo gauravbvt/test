@@ -480,7 +480,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         boolean lockedByUser = isLockedByUser( f );
 
         nameField.setEnabled( lockedByUser && f.canSetNameAndElements() && !f.isStandardized() );
-        standardizedCheckbox.setEnabled( lockedByUser && f.canSetNameAndElements() );
+        standardizedCheckbox.setEnabled( !f.getName().isEmpty() && lockedByUser && f.canSetNameAndElements() );
         intentChoice.setEnabled( lockedByUser && f.canSetNameAndElements() );
         askedForButtons.setEnabled( lockedByUser && f.canSetAskedFor() );
         allField.setVisible( isSend() && f.canGetAll() );
@@ -573,7 +573,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "standardized" ) );
             }
         };
-        add( standardizedCheckbox );
+        Flow f = getFlow();
+        standardizedCheckbox.setOutputMarkupId( true );
+        standardizedCheckbox.setEnabled( !f.getName().isEmpty()
+                && isLockedByUser(f)
+                && f.canSetNameAndElements() );
+        addOrReplace( standardizedCheckbox );
     }
 
     private void addNameField() {
@@ -597,6 +602,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 target.add( otherChoice );
                 addInfoLabelOrLink();
                 target.add( infoLinkOrLabel );
+                addStandardizedField();
+                target.add( standardizedCheckbox );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
         } );

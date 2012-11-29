@@ -93,7 +93,8 @@ public class PlanSearchingFloatingPanel extends AbstractFloatingMultiAspectPanel
             return getPlanWhosWhoPanel();
         } else if ( aspect.equals( DOCUMENTS ) ) {
             return getPlanBibliographyPanel();
-        } else throw new RuntimeException( "Unknown searching aspect " + aspect );
+        } else {
+            throw new RuntimeException( "Unknown searching aspect " + aspect ); }
     }
 
     @Override

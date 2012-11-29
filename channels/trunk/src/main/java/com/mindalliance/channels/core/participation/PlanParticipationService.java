@@ -1,5 +1,7 @@
-package com.mindalliance.channels.core.dao.user;
+package com.mindalliance.channels.core.participation;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
@@ -19,6 +21,8 @@ import java.util.List;
 public interface PlanParticipationService extends GenericSqlService<PlanParticipation, Long> {
 
     PlanParticipation addParticipation( String username, Plan plan, ChannelsUser participatingUser, Actor actor );
+
+    PlanParticipation addAcceptedParticipation( String username, Plan plan, ChannelsUser participatingUser, Actor actor );
 
     List<PlanParticipation> getUserParticipations( Plan plan, ChannelsUserInfo userInfo, QueryService queryService );
 
@@ -84,4 +88,10 @@ public interface PlanParticipationService extends GenericSqlService<PlanParticip
     List<ChannelsUserInfo> findUsersParticipatingAs( Plan plan, Actor actor, QueryService queryService );
 
     void deleteParticipation( Plan plan, ChannelsUserInfo participant, Actor actor, QueryService queryService );
+
+
+    void accept( PlanParticipation participation );
+
+    void refuse( PlanParticipation participation );
+
 }

@@ -4,13 +4,13 @@ import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.participation.PlanParticipation;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 

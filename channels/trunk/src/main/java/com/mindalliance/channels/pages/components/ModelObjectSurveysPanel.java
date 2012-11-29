@@ -111,7 +111,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( change.isUnknown() || change.isModified() ) {
+        if ( change.isUnknown() || change.isModified() || change.isRefresh() ) {
             init();
             target.add( this );
         }

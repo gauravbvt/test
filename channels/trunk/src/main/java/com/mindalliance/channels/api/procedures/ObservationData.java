@@ -77,7 +77,7 @@ public class ObservationData  implements Serializable {
 
     @XmlElement
     public String getLabel() {
-        return getPrefix() + " " + getScenarioLabel();
+        return getPrefix() + " \"" + getScenarioLabel() + "\"";
     }
 
     public String getPrefix() {

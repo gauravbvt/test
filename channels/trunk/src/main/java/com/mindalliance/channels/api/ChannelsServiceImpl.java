@@ -11,13 +11,13 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.participation.PlanParticipation;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -439,7 +439,7 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-    public void addParticipation( String uri, String agentId ) {
+    public void acceptParticipation( String uri, String agentId ) {
         LOG.info( "Adding user participation in production plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
@@ -447,14 +447,13 @@ public class ChannelsServiceImpl implements ChannelsService {
             Plan plan = planService.getPlan();
             Actor actor = planService.find( Actor.class, Long.parseLong( agentId ) );
             if ( planParticipationService.isParticipationOpenAndAvailable( actor, user, planService ) ) {
-                planParticipationService.addParticipation(
-                        user.getUsername(),
+                PlanParticipation participation = new PlanParticipation( user.getUsername(),
                         plan,
                         user,
-                        actor
-                );
+                        actor );
+                planParticipationService.accept( participation );
             } else {
-                throw new Exception( "Participation can not be added" );
+                throw new Exception( "Participation was not accepted" );
             }
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -466,8 +465,8 @@ public class ChannelsServiceImpl implements ChannelsService {
     }
 
     @Override
-    public void removeParticipation( String uri, String agentId ) {
-        LOG.info( "Removing user participation in production plan " + uri );
+    public void refuseParticipation( String uri, String agentId ) {
+        LOG.info( "Refusing user participation in production plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanService planService = authorizeParticipant( user, uri );
@@ -480,12 +479,9 @@ public class ChannelsServiceImpl implements ChannelsService {
                     planService
             );
             if ( planParticipation != null ) {
-                planParticipationService.removeParticipation(
-                        user.getUsername(),
-                        plan,
-                        planParticipation );
+                planParticipationService.refuse( planParticipation );
             } else {
-                throw new Exception( "Participation can not be removed" );
+                throw new Exception( "Participation was not refused" );
             }
         } catch ( Exception e ) {
             throw new WebApplicationException(

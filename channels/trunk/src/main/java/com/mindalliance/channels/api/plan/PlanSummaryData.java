@@ -4,10 +4,10 @@ import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.participation.PlanParticipation;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -119,7 +119,7 @@ public class PlanSummaryData implements Serializable {
             PlanParticipationService planParticipationService ) {
         participationDataList = new ArrayList<ParticipationData>();
         ChannelsUser user = ChannelsUser.current( userDao );
-        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
+        List<PlanParticipation> participations = planParticipationService.getUserParticipations(
                 getPlan(),
                 user.getUserInfo(), planService );
         for ( PlanParticipation participation : participations ) {

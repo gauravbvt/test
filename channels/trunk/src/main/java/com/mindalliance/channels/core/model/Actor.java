@@ -400,4 +400,8 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public String getParticipationPlurality() {
         return isSingular() ? "one user" : "many users";
     }
+
+    public boolean isParticipationUserAssignable() {
+        return isOpenParticipation() || isParticipationRestrictedToEmployed() || isSupervisedParticipation();
+    }
 }

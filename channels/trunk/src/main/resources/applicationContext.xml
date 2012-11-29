@@ -49,6 +49,7 @@ CONFIGURATION NOTES:
                 <value>com.mindalliance.channels.social.model</value>
                 <value>com.mindalliance.channels.core.dao.user</value>
                 <value>com.mindalliance.channels.core.community</value>
+                <value>com.mindalliance.channels.core.participation</value>
             </list>
         </property>
     </bean>
@@ -140,8 +141,8 @@ CONFIGURATION NOTES:
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 
-    <bean id="planParticipationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationServiceImpl"/>
-    <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.dao.user.PlanParticipationValidationServiceImpl"/>
+    <bean id="planParticipationService" class="com.mindalliance.channels.core.participation.PlanParticipationServiceImpl"/>
+    <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.participation.PlanParticipationValidationServiceImpl"/>
     <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
@@ -309,6 +310,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceholderOrganizationWithoutCustodian"/>
             </list>
         </property>
     </bean>

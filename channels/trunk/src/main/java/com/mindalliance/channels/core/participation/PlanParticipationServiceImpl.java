@@ -1,5 +1,7 @@
-package com.mindalliance.channels.core.dao.user;
+package com.mindalliance.channels.core.participation;
 
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -54,6 +56,19 @@ public class PlanParticipationServiceImpl
     }
 
     @Override
+    @Transactional
+    public PlanParticipation addAcceptedParticipation( String username, Plan plan, ChannelsUser participatingUser, Actor actor ) {
+        if ( canBeDesignated( plan, actor ) ) {
+            PlanParticipation planParticipation = new PlanParticipation( username, plan, participatingUser, actor );
+            planParticipation.setAccepted( true );
+            save( planParticipation );
+            return planParticipation;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
     public List<PlanParticipation> getUserParticipations(
@@ -92,7 +107,7 @@ public class PlanParticipationServiceImpl
     @Transactional( readOnly = true )
     public boolean isActive( Plan plan, PlanParticipation planParticipation, QueryService queryService ) {
         Actor actor = planParticipation.getActor( queryService );
-        if ( actor == null ) return false;
+        if ( actor == null || !planParticipation.isAccepted() ) return false;
         if ( planParticipation.isSupervised( queryService ) ) {
             return isValidatedByAllSupervisors( planParticipation, queryService );
         } else
@@ -253,6 +268,7 @@ public class PlanParticipationServiceImpl
     }
 
     @Override
+    @Transactional( readOnly = true )
     public boolean isValidatedByAllSupervisors(
             PlanParticipation planParticipation,
             QueryService queryService ) {
@@ -420,7 +436,7 @@ public class PlanParticipationServiceImpl
                     @Override
                     public boolean evaluate( Object object ) {
                         final Actor actor = (Actor) object;
-                        return queryService.getPlanParticipationService().isParticipationOpenAndAvailable(
+                        return isParticipationOpenAndAvailable(
                                 actor,
                                 user,
                                 queryService );
@@ -440,7 +456,7 @@ public class PlanParticipationServiceImpl
                 queryService );
         return actor != null
                 && !actor.isUnknown()
-                && actor.isOpenParticipation()
+                && actor.isParticipationUserAssignable()
                 && !alreadyParticipatingAs( actor, currentParticipations )
                 && !isSingularAndTaken( actor, plan, queryService )
                 && queryService.meetsPreEmploymentConstraint( actor, currentParticipations );
@@ -456,6 +472,46 @@ public class PlanParticipationServiceImpl
                     delete( participation );
                 }
 
+            }
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<PlanParticipation> listMatching( PlanParticipation participation ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "planUri", participation.getPlanUri() ) );
+        criteria.add( Restrictions.eq( "participant", participation.getParticipant() ) );
+        criteria.add( Restrictions.eq( "actorId", participation.getActorId() ) );
+        return (List<PlanParticipation>) criteria.list();
+    }
+
+    @Override
+    @Transactional
+    public void accept( PlanParticipation participation ) {
+        List<PlanParticipation> matches = listMatching( participation );
+        if ( matches.isEmpty() ) {
+            PlanParticipation planParticipation = new PlanParticipation( participation );
+            planParticipation.setAccepted( true );
+            save( planParticipation );
+        } else {
+            for ( PlanParticipation planParticipation : matches ) {
+                planParticipation.setAccepted( true );
+                save( planParticipation );
+            }
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public void refuse( PlanParticipation participation ) {
+        for ( PlanParticipation planParticipation : listMatching( participation ) ) {
+            if ( participation.isRequested() ) {
+                planParticipation.setAccepted( false );
+                save( planParticipation );
+            } else {
+                delete( planParticipation );
             }
         }
     }

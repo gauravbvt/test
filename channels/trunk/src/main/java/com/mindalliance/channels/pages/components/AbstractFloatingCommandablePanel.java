@@ -187,7 +187,7 @@ abstract public class AbstractFloatingCommandablePanel extends AbstractCommandab
         moveBar.addOrReplace( minimizeLink );
     }
 
-    private void minimizeNormalize( AjaxRequestTarget target ) {
+    protected void minimizeNormalize( AjaxRequestTarget target ) {
         minimized = !minimized;
         makeVisible( content, !minimized );
         makeVisible( resizer, !minimized );

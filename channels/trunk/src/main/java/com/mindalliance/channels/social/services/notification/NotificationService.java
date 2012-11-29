@@ -22,4 +22,8 @@ public interface NotificationService {
     void notifyOfParticipationConfirmation();
 
     void reportOnParticipationConfirmation();
+
+    void notifyOfParticipationRequest();
+
+    void reportOnParticipationRequests();
 }

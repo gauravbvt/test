@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.export.xml;
 
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Job;
@@ -56,7 +57,18 @@ public class OrganizationConverter extends EntityConverter {
                                    HierarchicalStreamWriter writer,
                                    MarshallingContext context ) {
         Organization org = (Organization) entity;
-        Organization parent = org.getParent();
+        if ( org.isPlaceHolder() ) {
+            writer.startNode( "placeHolder" );
+            writer.setValue( "true" );
+            writer.endNode();
+        }
+        Actor custodian = org.getCustodian();
+        if ( custodian != null && !custodian.getName().trim().isEmpty() ) {
+            writer.startNode( "custodian" );
+            writer.addAttribute( "id", Long.toString( custodian.getId() ) );
+            writer.setValue( custodian.getName() );
+            writer.endNode();
+        }
         if ( org.isActorsRequired() ) {
             writer.startNode( "actorsRequired" );
             writer.setValue( "true" );
@@ -67,6 +79,7 @@ public class OrganizationConverter extends EntityConverter {
             writer.setValue( "true" );
             writer.endNode();
         }
+        Organization parent = org.getParent();
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
             writer.addAttribute( "id", Long.toString( parent.getId() ) );
@@ -121,7 +134,12 @@ public class OrganizationConverter extends EntityConverter {
                                 UnmarshallingContext context ) {
         Organization org = (Organization) entity;
         Plan plan = getPlan();
-        if ( nodeName.equals( "actorsRequired" ) ) {
+        if ( nodeName.equals( "placeHolder" ) ) {
+            org.setPlaceHolder( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "custodian" ) ) {
+            String id = reader.getAttribute( "id");
+            org.setCustodian( findOrCreate( Actor.class, reader.getValue(), id ) );
+        } else if ( nodeName.equals( "actorsRequired" ) ) {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "agreementsRequired" ) ) {
             org.setAgreementsRequired( reader.getValue().equals( "true" ) );

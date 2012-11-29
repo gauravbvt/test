@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.dao.user;
+package com.mindalliance.channels.core.participation;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;

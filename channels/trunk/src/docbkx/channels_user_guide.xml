@@ -11004,6 +11004,22 @@
                 <entry><para>No</para></entry>
               </row>
               
+              <row>
+                <entry><para>Placeholder organization does not identify its custodian.</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Make the organization not a placeholder.</para>
+                  </listitem>
+                  <listitem>
+                    <para>or identify the custodian agent</para>
+                  </listitem>
+                </itemizedlist></entry>
+                <entry><para>No</para></entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable>

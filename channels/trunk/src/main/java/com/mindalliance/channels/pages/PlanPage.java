@@ -2117,7 +2117,7 @@ PopupSettings.RESIZABLE |
                 openOrCloseChild( change, target );
             } else if ( change.isUndoing() || change.isUnknown() || change.isRecomposed()
                     || change.isAdded() && change.isForInstanceOf( Part.class ) ) {
-                refresh( target, change, new ArrayList<Updatable>() );
+                refreshAll( target );
             } else if ( change.isUpdated() && isExpanded( change.getId() ) ) {
                 Change accumulatedChange = changes.get( change.getId() );
                 if ( accumulatedChange == null ) {
@@ -2385,8 +2385,7 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
         Plan plan = getPlan();
-        if ( change.isRefresh() ||
-                change.isDisplay() && identifiable instanceof Plan ) {
+        if ( change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel( change );
             target.add( planEditPanel );
         } else if ( planEditPanel instanceof PlanEditPanel ) {
@@ -2400,8 +2399,7 @@ PopupSettings.RESIZABLE |
     private void refreshSegmentEditPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                ( change.isDisplay() || change.isAdded() )
+        if ( ( change.isDisplay() || change.isAdded() )
                         && identifiable != null
                         && identifiable instanceof Segment
                 ||
@@ -2421,7 +2419,7 @@ PopupSettings.RESIZABLE |
     private void refreshEntityPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         ModelEntity entity = findExpandedEntity();
-        if ( change.isRefresh() || entity == null ||
+        if ( entity == null ||
                 change.isDisplay()
                         && change.isForInstanceOf( ModelEntity.class ) ) {
             addEntityPanel();
@@ -2439,8 +2437,7 @@ PopupSettings.RESIZABLE |
             Change change,
             List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && identifiable instanceof Part
                         && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
@@ -2453,8 +2450,7 @@ PopupSettings.RESIZABLE |
     private void refreshCommitmentsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && identifiable instanceof Flow
                         && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
@@ -2467,8 +2463,7 @@ PopupSettings.RESIZABLE |
     private void refreshEOIsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && identifiable instanceof Flow
                         && ( change.isCollapsed()
                         || change.isAspect( "eois" ) ) ) {
@@ -2482,8 +2477,7 @@ PopupSettings.RESIZABLE |
     private void refreshFailureImpactsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && identifiable instanceof SegmentObject
                         && change.isAspect(
                         "failure" ) ) {
@@ -2497,8 +2491,7 @@ PopupSettings.RESIZABLE |
     private void refreshDisseminationPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null && identifiable instanceof SegmentObject
+        if ( identifiable != null && identifiable instanceof SegmentObject
                         && change.isAspect( "dissemination" ) ) {
             boolean showTargets = change.hasQualifier( "show", "targets" );
             Subject subject = (Subject) change.getQualifier( "subject" );
@@ -2512,8 +2505,7 @@ PopupSettings.RESIZABLE |
     private void refreshModelObjectSurveysPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null && identifiable instanceof ModelObject
+        if ( identifiable != null && identifiable instanceof ModelObject
                         && change.isAspect( "surveys" ) ) {
             addModelObjectSurveysPanel();
             target.add( modelObjectSurveysPanel );
@@ -2524,8 +2516,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && identifiable instanceof Part
                         && change.isAspect( "overrides" ) ) {
             addOverridesPanel();
@@ -2538,8 +2529,7 @@ PopupSettings.RESIZABLE |
     private void refreshRequirementsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof Requirement ) {
             Requirement viewedRequirement = null;
@@ -2565,9 +2555,8 @@ PopupSettings.RESIZABLE |
 
     private void refreshAllEventsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                ( id == Channels.ALL_EVENTS
-                        && change.isDisplay() ) ) {
+        if ( id == Channels.ALL_EVENTS
+                        && change.isDisplay() ) {
             addAllEventsPanel();
             target.add( allEventsPanel );
         } else if ( allEventsPanel instanceof PlanEventsFloatingPanel ) {
@@ -2579,8 +2568,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshAllOrganizationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.ALL_ORGANIZATIONS
+        if ( id == Channels.ALL_ORGANIZATIONS
                         && change.isDisplay() ) {
             addAllOrganizationsPanel( change );
             target.add( allOrganizationsPanel );
@@ -2594,8 +2582,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshAllSegmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.ALL_SEGMENTS
+        if ( id == Channels.ALL_SEGMENTS
                         && change.isDisplay() ) {
             addAllSegmentsPanel();
             target.add( allSegmentsPanel );
@@ -2608,8 +2595,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshAllClassificationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.ALL_CLASSIFICATIONS
+        if ( id == Channels.ALL_CLASSIFICATIONS
                         && change.isDisplay() ) {
             addAllClassificationsPanel();
             target.add( allClassificationsPanel );
@@ -2622,8 +2608,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshTaskMoverPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.TASK_MOVER
+        if ( id == Channels.TASK_MOVER
                         && change.isDisplay() ) {
             addTaskMoverPanel();
             target.add( taskMoverPanel );
@@ -2636,8 +2621,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshProtocolsMapPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.PROTOCOLS_MAP
+        if ( id == Channels.PROTOCOLS_MAP
                         && change.isDisplay() ) {
             addProtocolsMapPanel();
             target.add( protocolsMapPanel );
@@ -2650,8 +2634,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshPlanEvaluationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.PLAN_EVALUATION
+        if ( id == Channels.PLAN_EVALUATION
                         && change.isDisplay() ) {
             addPlanEvaluationPanel();
             target.add( planEvaluationPanel );
@@ -2664,8 +2647,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshAllIssuesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.ALL_ISSUES
+        if ( id == Channels.ALL_ISSUES
                         && change.isDisplay() ) {
             addAllIssuesPanel();
             target.add( allIssuesPanel );
@@ -2678,8 +2660,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshPlanVersionsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.PLAN_VERSIONS
+        if ( id == Channels.PLAN_VERSIONS
                         && change.isDisplay() ) {
             addPlanVersionsPanel();
             target.add( planVersionsPanel );
@@ -2692,8 +2673,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshPlanParticipationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.PLAN_PARTICIPATION
+        if ( id == Channels.PLAN_PARTICIPATION
                         && change.isDisplay() ) {
             addPlanParticipationPanel();
             target.add( planParticipationPanel );
@@ -2708,8 +2688,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllFeedbackPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof Feedback ) {
             Feedback expandedFeedback = (Feedback) identifiable;
@@ -2729,8 +2708,7 @@ PopupSettings.RESIZABLE |
     private void refreshDataCollectionPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
-        if ( change.isRefresh() ||
-                identifiable != null
+        if ( identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof RFISurvey ) {
             RFISurvey rfiSurvey = (RFISurvey) identifiable;
@@ -2749,8 +2727,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshPlanSearchingPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( change.isRefresh() ||
-                id == Channels.PLAN_SEARCHING && change.isDisplay() ) {
+        if ( id == Channels.PLAN_SEARCHING && change.isDisplay() ) {
             addPlanSearchingPanel( change.getProperty() );
             target.add( planSearchingPanel );
 

@@ -4,12 +4,12 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
-import com.mindalliance.channels.core.dao.user.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
+import com.mindalliance.channels.core.participation.PlanParticipation;
+import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -474,6 +474,14 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             }
         }
 
+        public String getAccepted() {
+            if ( participation == null || !hasActor() ) {
+                return "";
+            } else {
+                return participation.isAccepted() ? "Yes" : "No";
+            }
+        }
+
         public PlanParticipation getParticipation() {
             return participation;
         }
@@ -511,11 +519,19 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 planParticipationService.removeParticipation( getUser().getUsername(), getPlan(), participation );
             }
             if ( actor != null ) {
-                participation = planParticipationService.addParticipation(
-                        getUser().getUsername(),
-                        getPlan(),
-                        userDao.getUserNamed( getUsername() ),
-                        actor );
+                if ( getUser().getUsername().equals( username ) ) {
+                    participation = planParticipationService.addAcceptedParticipation(
+                            getUser().getUsername(),
+                            getPlan(),
+                            userDao.getUserNamed( username ),
+                            actor );
+                } else {
+                    participation = planParticipationService.addParticipation(
+                            getUser().getUsername(),
+                            getPlan(),
+                            userDao.getUserNamed( username ),
+                            actor );
+                }
             } else {
                 participation = null;
             }
@@ -593,7 +609,12 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 columns.add( this.makeLinkColumn( "Is agent", "actor", "actor.normalizedName", EMPTY ) );
             }
             columns.add( makeColumn(
-                    "Confirmed?",
+                    "Accepted?",
+                    "accepted",
+                    EMPTY
+            ) );
+            columns.add( makeColumn(
+                    "Active?",
                     "active",
                     EMPTY
             ) );

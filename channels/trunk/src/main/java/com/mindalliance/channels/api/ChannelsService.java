@@ -162,13 +162,13 @@ public interface ChannelsService {
 
     @PUT
     @Path( "plan/{uri}/agent/{agentId}/participation")
-    void addParticipation( @PathParam("uri") String uri,
-                                      @PathParam("agentId") String agentId);
+    void acceptParticipation( @PathParam( "uri" ) String uri,
+                              @PathParam( "agentId" ) String agentId );
 
     @DELETE
     @Path( "plan/{uri}/agent/{agentId}/participation")
-    void removeParticipation( @PathParam("uri") String uri,
-                                      @PathParam("agentId") String agentId);
+    void refuseParticipation( @PathParam( "uri" ) String uri,
+                              @PathParam( "agentId" ) String agentId );
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

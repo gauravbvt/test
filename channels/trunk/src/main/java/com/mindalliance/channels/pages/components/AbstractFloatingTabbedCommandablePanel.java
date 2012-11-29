@@ -196,7 +196,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         moveBar.addOrReplace( minimizeLink );
     }
 
-    private void minimizeNormalize( AjaxRequestTarget target ) {
+    protected void minimizeNormalize( AjaxRequestTarget target ) {
         minimized = !minimized;
         makeVisible( header, !minimized );
         makeVisible( content, !minimized );
@@ -210,7 +210,6 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
                 + MINIMIZED_HEIGHT + ", "
                 + minimized + ");";
         target.appendJavaScript( minimizeNormalizeScript );
-
     }
 
     private void addHeader() {
@@ -471,6 +470,12 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
     public void setSelectedTabName( String selectedTabName ) {
         this.selectedTabName = selectedTabName;
     }
+
+    protected boolean isMinimized() {
+        return minimized;
+    }
+
+
 
     public class Tab implements Serializable {
         private String name;

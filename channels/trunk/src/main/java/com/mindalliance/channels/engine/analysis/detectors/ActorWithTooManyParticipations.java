@@ -1,10 +1,10 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.core.dao.user.PlanParticipation;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.participation.PlanParticipation;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 

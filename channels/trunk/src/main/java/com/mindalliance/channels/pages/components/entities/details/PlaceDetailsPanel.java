@@ -370,7 +370,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel{
         else {
             if ( oldWithin == null || !isSame( name, oldName ) )
                 newPlace = ( getPlace().isActual()
-                        ? doSafeFindOrCreate( Place.class, name )
+                        ? doSafeFindOrCreateActual( Place.class, name )
                         : doSafeFindOrCreateType( Place.class, name ) );
         }
         updatePlace( "within", newPlace );
