@@ -1191,7 +1191,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
                                 && receive.getInfoProduct() != null
                                 && receive.getInfoProduct().narrowsOrEquals(
                                 infoProduct,
-                                queryService.getPlan().getLocale() );
+                                queryService.getPlanLocale() );
                     }
                 }
         );
@@ -1204,7 +1204,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     private List<Flow> findDependentReceives( final InfoFormat infoFormat, final QueryService queryService ) {
         List<Flow> dependentReceives = new ArrayList<Flow>();
-        final Place locale = queryService.getPlan().getLocale();
+        final Place locale = queryService.getPlanLocale();
         for ( Flow receive : getAllSharingReceives() ) {
             if ( receive.isImportant() ) {
                 for ( Channel channel : receive.getEffectiveChannels() ) {
@@ -1219,7 +1219,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     private List<Flow> findDependentReceives( final TransmissionMedium transmissionMedium, final QueryService queryService ) {
         List<Flow> dependentReceives = new ArrayList<Flow>();
-        final Place locale = queryService.getPlan().getLocale();
+        final Place locale = queryService.getPlanLocale();
         for ( Flow receive : getAllSharingReceives() ) {
             if ( receive.isImportant() ) {
                 for ( Channel channel : receive.getEffectiveChannels() ) {
@@ -1256,7 +1256,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         assert !dependentReceives.isEmpty();
         // For each dependent receive, there is an equivalent flow not using the info product.
         // i.e., there is no dependent receive for which there is no equivalent flow not using the info product.
-        final Place locale = queryService.getPlan().getLocale();
+        final Place locale = queryService.getPlanLocale();
         return !CollectionUtils.exists(
                 dependentReceives,
                 new Predicate() {
@@ -1285,7 +1285,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     private boolean hasAlternativesForInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
         List<Flow> dependentReceives = findDependentReceives( infoFormat, queryService );
         assert !dependentReceives.isEmpty();
-        final Place locale = queryService.getPlan().getLocale();
+        final Place locale = queryService.getPlanLocale();
         // For each dependent receive, there is an alternate channel not requiring the format
         // or there is an equivalent flow not using the info format.
         // i.e., there is no dependent receive for which there is no equivalent flow not using the info format.
@@ -1327,7 +1327,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     private boolean hasAlternativesForMedium( final TransmissionMedium transmissionMedium, final QueryService queryService ) {
         List<Flow> dependentReceives = findDependentReceives( transmissionMedium, queryService );
         assert !dependentReceives.isEmpty();
-        final Place locale = queryService.getPlan().getLocale();
+        final Place locale = queryService.getPlanLocale();
         // For each dependent receive, there is an alternate channel not requiring the medium
         // or there is an equivalent flow not using the medium.
         // i.e., there is no dependent receive for which there is no equivalent flow not using the medium.

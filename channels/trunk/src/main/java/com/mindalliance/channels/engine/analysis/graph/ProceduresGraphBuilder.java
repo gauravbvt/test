@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
@@ -18,6 +17,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -104,7 +104,7 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
     }
 
     private boolean isFocusedOnOrganization( Assignment assignment ) {
-        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, queryService.getPlan().getLocale() );
+        return focusEntity != null && assignment.getOrganization().narrowsOrEquals( focusEntity, queryService.getPlanLocale() );
     }
 
     private Commitment summarize( Commitment commitment ) {

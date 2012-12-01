@@ -10,6 +10,7 @@ import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.entities.RoleData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.InfoFormat;
@@ -60,9 +61,9 @@ public class EnvironmentData  implements Serializable {
         // required
     }
 
-    public EnvironmentData( String serverUrl, ProceduresData procedures, PlanService planService ) {
+    public EnvironmentData( String serverUrl, ProceduresData procedures, PlanCommunity planCommunity ) {
         this.procedures = procedures;
-        initData( serverUrl, planService );
+        initData( serverUrl, planCommunity.getPlanService() );
     }
 
     private void initData( String serverUrl, PlanService planService ) {

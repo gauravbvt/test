@@ -10,11 +10,10 @@ import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -62,8 +61,7 @@ public class ProtocolsFinder implements Serializable {
     public ProtocolsFinder(
             String serverUrl,
             ProceduresData proceduresData,
-                            QueryService queryService,
-                            PlanParticipationService planParticipationService,
+                            PlanCommunity planCommunity,
                             ChannelsUser user,
                             ChannelsService channelsService,
                             String username,
@@ -73,34 +71,32 @@ public class ProtocolsFinder implements Serializable {
         this.user = user;
         this.username = username;
         this.actorId = actorId;
-        initFinder( queryService, planParticipationService, channelsService );
+        initFinder( planCommunity, channelsService );
     }
 
     private void initFinder(
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsService channelsService ) {
-        Plan plan = queryService.getPlan();
+        Plan plan = planCommunity.getPlan();
         planScopeData = channelsService.getPlanScope( plan.getUri(), Integer.toString( plan.getVersion() ) );
-        directoryData = new DirectoryData( proceduresData, queryService, planParticipationService);
+        directoryData = new DirectoryData( proceduresData );
         ongoingProcedures = new ArrayList<ProcedureData>();
         onObservations = new HashMap<ObservationData, List<ProcedureData>>();
         onNotificationsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
         onRequestsByContact = new HashMap<ContactData, Map<TriggerData, List<ProcedureData>>>();
-        onRequests = new HashMap<TriggerData, List<ProcedureData>>();    // todo - using triggerData is wrong? Use NotificationData? etc.
+        onRequests = new HashMap<TriggerData, List<ProcedureData>>();
         onNotifications = new HashMap<TriggerData, List<ProcedureData>>();
         onDiscoveries = new HashMap<TriggerData, List<ProcedureData>>();
         onResearches = new HashMap<TriggerData, List<ProcedureData>>();
         rolodex = new HashSet<ContactData>();
         for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
-            processProcedureData( procedureData, queryService, planParticipationService, user );
+            processProcedureData( procedureData, planCommunity, user );
         }
     }
 
     private void processProcedureData(
             ProcedureData procedureData,
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsUser user ) {
         if ( procedureData.isOngoing() ) {
             ongoingProcedures.add( procedureData );
@@ -126,9 +122,8 @@ public class ProtocolsFinder implements Serializable {
                 addTo( onDiscoveries, triggerData, procedureData );
                 TaskData discoveringTask = new TaskData(
                         serverUrl,
+                        planCommunity,
                         triggerData.discoveringPart(),
-                        queryService,
-                        planParticipationService,
                         user );
             }
             for ( TriggerData triggerData : procedureData.getResearchTriggers() ) {

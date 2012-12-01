@@ -8,12 +8,12 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -86,8 +86,8 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         uri = plan.getUri();
         version = plan.getVersion();
         participations = isPlanner
-                            ? planParticipationService.getAllActiveParticipations( plan, queryService )
-                            : planParticipationService.getActiveUserParticipations( plan, getUser().getUserInfo(), queryService );
+                            ? planParticipationService.getAllActiveParticipations( getPlanCommunity() )
+                            : planParticipationService.getActiveUserParticipations( getUser().getUserInfo(), getPlanCommunity() );
         actors = findAssignedActors();
         initComponents( queryService, plan );
     }

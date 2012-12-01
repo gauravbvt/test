@@ -1,9 +1,9 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -47,15 +47,15 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
     public List<String> sendMessage(
             Messageable messageable,
             String topic,
-            PlanService planService ) {
+            PlanCommunity planCommunity ) {
         List<String> successes = new ArrayList<String>(  );
-        List<ChannelsUserInfo> toUsers = getToUsers( messageable, topic, planService );
+        List<ChannelsUserInfo> toUsers = getToUsers( messageable, topic, planCommunity );
         ChannelsUserInfo fromUser = getFromUser( messageable, topic );
         String subject = StringUtils.abbreviate(
-                messageable.getSubject( topic, Messageable.Format.TEXT, planService ),
+                messageable.getSubject( topic, Messageable.Format.TEXT, planCommunity.getPlanService() ),
                 MAX_SUBJECT_SIZE );
         String content = StringUtils.abbreviate(
-                messageable.getContent( topic, Messageable.Format.TEXT, planService ),
+                messageable.getContent( topic, Messageable.Format.TEXT, planCommunity.getPlanService() ),
                 Integer.MAX_VALUE );
         for ( ChannelsUserInfo toUser : toUsers ) {
             boolean success = sendEmail( toUser.getEmail(),
@@ -76,12 +76,12 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
             List<ChannelsUserInfo> recipients,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService ) {
+            PlanCommunity planCommunity ) {
         boolean reported = false;
-        Plan plan = planService.getPlan();
+        Plan plan = planCommunity.getPlan();
         if ( !messageables.isEmpty() ) {
-            String subject = makeReportSubject( plan.getUri(), messageables, topic, planService );
-            String content = makeReportContent( Messageable.Format.TEXT, messageables, topic, planService );  // always as text for now
+            String subject = makeReportSubject( plan.getUri(), messageables, topic, planCommunity );
+            String content = makeReportContent( Messageable.Format.TEXT, messageables, topic, planCommunity );  // always as text for now
             for ( ChannelsUserInfo recipient : recipients ) {
                 boolean success = sendEmail(
                         recipient.getEmail(),

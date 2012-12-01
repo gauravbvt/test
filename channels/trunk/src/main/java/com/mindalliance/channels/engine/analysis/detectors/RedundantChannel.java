@@ -32,7 +32,7 @@ public class RedundantChannel extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Channelable channelable = (Channelable) modelObject;
         List<Channel> channels = channelable.getEffectiveChannels();
-        Place locale = queryService.getPlan().getLocale();
+        Place locale = queryService.getPlanLocale();
         for ( int i = 0; i < channels.size(); i++ ) {
             for ( int j = 0; j < channels.size(); j++ ) {
                 if ( i != j ) {

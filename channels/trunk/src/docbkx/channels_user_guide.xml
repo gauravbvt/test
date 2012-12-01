@@ -9990,51 +9990,7 @@
                 <entry><para>No</para></entry>
               </row>
 
-              <row>
-                <entry><para>Agent assigned to user with different name</para></entry>
-
-                <entry><para>Medium</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Assign a user of the same name to the agent, </para>
-                    </listitem>
-                    <listitem>
-                      <para>assign no user to the agent, </para>
-                    </listitem>
-                    <listitem>
-                      <para>make the agent anonymous, </para>
-                    </listitem>
-                    <listitem>
-                      <para>or allow more than one user to participate as this agent.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Too many participations as agent</para></entry>
-
-                <entry><para>Medium</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Unassign users, </para>
-                    </listitem>
-                    <listitem>
-                      <para>make the agent an archetype, </para>
-                    </listitem>
-                    <listitem>
-                      <para>or make the agent a placeholder of which there can be more than
-                        one.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>No</para></entry>
-              </row>
-
-              <row>
+               <row>
                 <entry><para>More than one send can terminate the task</para></entry>
 
                 <entry><para>Medium</para></entry>
@@ -10348,23 +10304,6 @@
                   </itemizedlist></entry>
 
                 <entry><para>No</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Non-planner user is not a participant</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Assign an agent to the user </para>
-                    </listitem>
-                    <listitem>
-                      <para>or unregister the user.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
               </row>
 
               <row>
@@ -10809,20 +10748,6 @@
                   </itemizedlist></entry>
 
                 <entry><para>No</para></entry>
-              </row>
-
-              <row>
-                <entry><para>No user participates as this agent agent</para></entry>
-
-                <entry><para>Medium</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Assign a user to the agent. </para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
               </row>
 
               <row>

@@ -5,6 +5,7 @@
  */
 package com.mindalliance.channels.pages.reports;
 
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
@@ -15,7 +16,6 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.core.participation.PlanParticipation;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -195,9 +195,8 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                     Employment supervisorEmp = supEmps.get( 0 );
                     List<PlanParticipation> supervisorParticipations =
                             getPlanParticipationService().getParticipationsAsActor(
-                                    getPlan(),
                                     supervisorEmp.getActor(),
-                                    getQueryService() );
+                                    getPlanCommunity() );
                     supervisor = new AggregatedContact(
                             service,
                             supervisorEmp,
@@ -256,9 +255,9 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                 return null;
             else
                 return getPlanParticipationService().getParticipation(
-                        getPlan(),
                         user.getUserInfo(),
-                        actor, queryService );
+                        actor,
+                        getPlanCommunity() );
         }
 
         public String getAvailability() {

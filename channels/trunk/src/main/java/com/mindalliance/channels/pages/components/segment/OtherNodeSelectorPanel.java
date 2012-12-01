@@ -20,10 +20,7 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,10 +46,6 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
      * To indicate a tbd other.
      */
     static final private String TBD = "*To be determined*";
-    /**
-     * Selecting the unknown node from the first choices drop-down indicates the desire to select from the second choices.
-     */
-    private Node unknownOtherNode;
     /**
      * Node associated to the other node to be selected.
      */
@@ -103,7 +96,13 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        unknownOtherNode = new Part() {
+        selectedOtherNode = otherNodeModel.getObject();
+        addFirstChoiceDropDown();
+        addSecondChoiceInput();
+    }
+
+    private Part unknownOtherNode() {
+        return new Part() {
             /** {@inheritDoc} */
             public String toString() {
                 return "Enter a task name";
@@ -119,9 +118,6 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
                 return displayString();
             }
         };
-        selectedOtherNode = otherNodeModel.getObject();
-        addFirstChoiceDropDown();
-        addSecondChoiceInput();
     }
 
     private void addFirstChoiceDropDown() {
@@ -154,11 +150,11 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
     }
 
     private boolean isUnknownOtherSelected() {
-        return selectedOtherNode.equals( unknownOtherNode );
+        return selectedOtherNode.equals( unknownOtherNode() );
     }
 
     private String displayString( Node node ) {
-        return node.equals( unknownOtherNode )
+        return node.equals( unknownOtherNode() )
                 ? OTHER
                 : isTBD( node )
                 ? TBD
@@ -166,7 +162,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
     }
 
     private String shortDisplayString( Node node ) {
-        return node.equals( unknownOtherNode )
+        return node.equals( unknownOtherNode() )
                 ? OTHER
                 : isTBD( node )
                 ? TBD
@@ -227,7 +223,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         return !isUnknownOtherSelected() && !selectedOtherNode.equals( otherNodeModel.getObject() );
     }
 
-    public List<Node> getFirstChoiceNodes() {
+ /*   public List<Node> getFirstChoiceNodes() {
         List<Node> firstChoices = new ArrayList<Node>();
         firstChoices.addAll( firstChoiceNodes.getObject() );
         firstChoices.remove( selectedOtherNode );
@@ -243,7 +239,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         results.add( unknownOtherNode );
         return results;
     }
-
+*/
     public List<Node> getSecondChoices() {
         List<Node> nodes = new ArrayList<Node>( secondChoiceNodes.getObject() );
         if ( selectedOtherNode != null ) nodes.remove( selectedOtherNode );

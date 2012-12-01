@@ -391,7 +391,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<Issue> issues = new ArrayList<Issue>();
         Set<Part> parts = new HashSet<Part>();
         for ( Play play : queryService.findAllPlays( resourceSpec, specific ) ) {
-            parts.add( play.getPartFor( resourceSpec ) );
+            parts.add( play.getPartFor( resourceSpec, queryService ) );
             issues.addAll( listIssues( queryService, play.getFlow(), true ) );
         }
         for ( Part part : parts )
@@ -617,7 +617,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             final Organization toOrg,
             final Phase.Timing timing,
             final Event event ) {
-        final Place planLocale = queryService.getPlan().getLocale();
+        final Place planLocale = queryService.getPlanLocale();
         List<Requirement> requirements = (List<Requirement>) CollectionUtils.select(
                 queryService.list( Requirement.class ),
                 new Predicate() {
@@ -652,7 +652,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public <T extends ModelEntity> EntityRelationship<T> findEntityRelationship( QueryService queryService,
                                                                                  T fromEntity, T toEntity,
                                                                                  Segment segment ) {
-        Place planLocale = queryService.getPlan().getLocale();
+        Place planLocale = queryService.getPlanLocale();
         Commitments commitments = Commitments.all( queryService )
                 .inSegment( segment )
                 .withEntityCommitting( fromEntity, planLocale )
@@ -689,7 +689,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public List<EntityRelationship> findEntityRelationships( Segment segment, ModelEntity entity,
                                                              QueryService queryService ) {
         List<EntityRelationship> rels = new ArrayList<EntityRelationship>();
-        Place planLocale = queryService.getPlan().getLocale();
+        Place planLocale = queryService.getPlanLocale();
         // Committing relationships
         Commitments entityCommittingCommitments = Commitments.all( queryService )
                 .inSegment( segment )
@@ -794,7 +794,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 } else {
                     StringBuilder sb = new StringBuilder();
                     Plan plan = queryService.getPlan();
-                    Place locale = plan.getLocale();
+                    Place locale = queryService.getPlanLocale();
                     List<Commitment> agreedTo = agreedToFilter( commitments, queryService );
                     if ( agreedTo.isEmpty() ) {
                         sb.append( "none of the sharing commitments are agreed to as required " );
@@ -880,7 +880,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                             "add jobs to relevant organizations so that agents can be assigned to source and/or target tasks" );
                 } else {
                     Plan plan = queryService.getPlan();
-                    Place locale = plan.getLocale();
+                    Place locale = queryService.getPlanLocale();
                     List<Commitment> agreedTo = agreedToFilter( commitments, queryService );
                     if ( agreedTo.isEmpty() ) {
                         remediations.add( "change the profile of the committing organizations and " +
@@ -1068,7 +1068,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     public List<String> findRealizabilityProblems( Plan plan, Commitment commitment, QueryService queryService ) {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
-        Place planLocale = plan.getLocale();
+        Place planLocale = queryService.getPlanLocale();
         if ( !queryService.isAgreedToIfRequired( commitment ) )
             problems.add( "sharing not agreed to as required" );
         if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) )
@@ -1117,7 +1117,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         return queryService.getAllCommitments().inSituation(
                 timing,
                 event,
-                queryService.getPlan().getLocale() )
+                queryService.getPlanLocale() )
                 .satisfying( requirement ).size();
     }
 

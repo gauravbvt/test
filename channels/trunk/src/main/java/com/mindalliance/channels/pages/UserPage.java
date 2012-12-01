@@ -8,9 +8,9 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.participation.PlanParticipation;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.social.SocialPanel;

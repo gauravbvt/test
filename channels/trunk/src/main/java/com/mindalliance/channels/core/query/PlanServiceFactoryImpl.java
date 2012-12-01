@@ -42,7 +42,7 @@ public class PlanServiceFactoryImpl implements PlanServiceFactory, ApplicationCo
         if ( planService != null )
             return planService;
 
-        PlanService result = (PlanService) applicationContext.getBean( "planService" );
+        PlanService result = (PlanService) applicationContext.getBean( "planService" );  // a prototype, not a singleton
         result.setPlan( plan );
         services.put( plan, result );
         return result;

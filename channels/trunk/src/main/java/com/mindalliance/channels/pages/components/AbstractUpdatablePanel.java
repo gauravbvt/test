@@ -10,6 +10,10 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -18,9 +22,10 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -80,6 +85,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     @SpringBean
     private ChannelsUserDao userDao;
+
+    @SpringBean
+    private PlanServiceFactory planServiceFactory;
+
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
 
     /**
      * Simple date format.
@@ -157,7 +168,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     @Override
     public QueryService getQueryService() {
-        return getCommander().getQueryService();
+//        return getCommander().getQueryService();
+        return getPlanService();
     }
 
     /**
@@ -563,9 +575,8 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected Actor findActor( ChannelsUserInfo userInfo ) {
         final QueryService queryService = getQueryService();
         List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                getPlan(),
                 userInfo,
-                getQueryService() );
+                getPlanCommunity() );
         List<Actor> actors = (List<Actor>) CollectionUtils.collect(
                 participations,
                 new Transformer() {
@@ -610,5 +621,18 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         settings.setAdjustInputWidth( true );
         return settings;
     }
+
+    protected PlanCommunity getPlanCommunity() {
+        return planCommunityManager.getPlanCommunity( getPlan() );
+    }
+
+    protected PlanService getPlanService() {
+        return getPlanCommunity().getPlanService();
+    }
+
+    protected Place getPlanLocale() {
+        return getPlanService().getPlanLocale();
+    }
+
 
 }

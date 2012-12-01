@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.query;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
@@ -41,8 +40,6 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 
@@ -76,6 +73,12 @@ public interface QueryService {
      * @return the plan manager.
      */
     PlanManager getPlanManager();
+
+    /**
+     * Get default locale.
+     * @return a place
+     */
+    Place getPlanLocale();
 
     /**
      * Get attachment manager.
@@ -599,6 +602,13 @@ public interface QueryService {
      * @return a list of organizations
      */
     List<Organization> findEmployers( Actor actor );
+
+    /**
+     * Find direct and indirect employers given employments.
+     * @param employments  a list of employments
+     * @return  a list of organziations
+     */
+    List<Organization> findDirectAndIndirectEmployers( List<Employment> employments );
 
     /**
      * Find if part is ever started.
@@ -1528,13 +1538,6 @@ public interface QueryService {
      */
     List<Flow> findAllCapabilitiesNamed( String name );
 
-    /**
-     * Find all users that participate a a given actor.
-     *
-     * @param actor an actor
-     * @return a list of users
-     */
-    List<ChannelsUser> findUsersParticipatingAs( Actor actor );
 
     /**
      * Whether this is a sharing flow where source actor is target actor.
@@ -1542,13 +1545,6 @@ public interface QueryService {
      * @param flow@return a boolean
      */
     boolean isSharingWithSelf( Flow flow );
-
-    /**
-     * Get user's full name.
-     *
-     * @param participation@return a string
-     */
-    String getUserFullName( PlanParticipation participation );
 
     Actor getKnownActualActor( Part part );
 
@@ -1607,22 +1603,6 @@ public interface QueryService {
             Phase.Timing timing,
             Event event,
             Analyst analyst );
-
-    /**
-     * Get a plan participation service.
-     *
-     * @return a plan participation service
-     */
-    PlanParticipationService getPlanParticipationService();
-
-    /**
-     * Whether participation as actor possible given current participation.
-     * @param actor an actor
-     * @param activeParticipations  a list of active participations
-     * @return  a boolean -- not cached
-     */
-    boolean meetsPreEmploymentConstraint( Actor actor,
-                                          List<PlanParticipation> activeParticipations );
 
     /**
      * Get user contact info service.

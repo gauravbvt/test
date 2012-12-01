@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -59,7 +60,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     abstract public String getToUsername( String topic );
 
     @Override
-    public List<String> getToUserNames( String topic, PlanService planService ) {
+    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
         List<String> usernames = new ArrayList<String>();
         usernames.add(  getToUsername(  topic  ) );
         return usernames;

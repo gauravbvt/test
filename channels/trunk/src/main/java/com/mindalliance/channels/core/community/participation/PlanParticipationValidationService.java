@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.participation;
+package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;

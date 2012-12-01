@@ -1,6 +1,5 @@
 package com.mindalliance.channels.core.query;
 
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.ResourceSpec;
@@ -148,8 +147,8 @@ public class Play implements Serializable {
      * @param resourceSpec a resourceSpec
      * @return a part
      */
-    public Part getPartFor( ResourceSpec resourceSpec ) {
-        return part.resourceSpec().narrowsOrEquals( resourceSpec, ChannelsUser.plan().getLocale() ) ?
+    public Part getPartFor( ResourceSpec resourceSpec, QueryService queryService ) {
+        return part.resourceSpec().narrowsOrEquals( resourceSpec, queryService.getPlanLocale() ) ?
                     part : getOtherPart();
     }
 }

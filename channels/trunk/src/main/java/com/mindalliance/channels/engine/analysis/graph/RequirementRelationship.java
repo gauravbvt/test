@@ -94,7 +94,7 @@ public class RequirementRelationship extends Relationship<Organization> {
             req.setCommitterOrganization( (Organization) getFromIdentifiable( queryService ) );
             req.setBeneficiaryOrganization( (Organization) getToIdentifiable( queryService ) );
             Iterator<Commitment> commitmentIterator = allCommitments.iterator();
-            Place planLocale = plan.getLocale();
+            Place planLocale = queryService.getPlanLocale();
             boolean fulfilled = false;
             while ( !fulfilled && commitmentIterator.hasNext() ) {
                 Commitment commitment = commitmentIterator.next();

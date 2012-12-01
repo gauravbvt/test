@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
@@ -9,8 +10,6 @@ import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -47,17 +46,15 @@ public class RequestData extends AbstractFlowData {
 
     public RequestData(
             String serverUrl,
+            PlanCommunity planCommunity,
             Flow request,
             boolean initiating,
             Assignment assignment,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( serverUrl, initiating, request, assignment, planService, planParticipationService, user );
+        super( serverUrl, planCommunity, initiating, request, assignment, user );
         initData(
                 serverUrl,
-                planService,
-                planParticipationService,
+                planCommunity,
                 user == null ? null : user.getUserInfo() );
     }
 
@@ -68,18 +65,17 @@ public class RequestData extends AbstractFlowData {
 
     protected void initData(
             String serverUrl,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsUserInfo userInfo  ) {
-        initCommitments( planService );
-        initContactEmployments( serverUrl, planService, planParticipationService, userInfo );
-        initConsumingTask( serverUrl, planService, planParticipationService );
-        initOtherData( planService );
+        initCommitments( planCommunity );
+        initContactEmployments( serverUrl, planCommunity, userInfo );
+        initConsumingTask( serverUrl, planCommunity );
+        initOtherData( planCommunity );
     }
 
-    private void initCommitments( PlanService planService ) {
+    private void initCommitments( PlanCommunity planCommunity ) {
         commitments = new ArrayList<Commitment>(  ) ;
-        for ( Commitment commitment : planService.findAllCommitments( getSharing(), false, false ) ) {   // no unknowns, not to self
+        for ( Commitment commitment : planCommunity.getPlanService().findAllCommitments( getSharing(), false, false ) ) {   // no unknowns, not to self
             if ( isInitiating() ) {  // requesting
                 if ( commitment.getBeneficiary().equals( getAssignment() ) ) {
                     commitments.add( commitment );
@@ -94,8 +90,7 @@ public class RequestData extends AbstractFlowData {
 
     private void initContactEmployments(
             String serverUrl,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
         Set<Employment> contactedEmployments = new HashSet<Employment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>(  );
@@ -107,18 +102,16 @@ public class RequestData extends AbstractFlowData {
                         serverUrl,
                         employment,
                         commitment,
-                        planService,
-                        planParticipationService,
+                        planCommunity,
                         userInfo ) ) ;
             } else { // replying
                 Employment employment = commitment.getBeneficiary().getEmployment();
                 contactedEmployments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
                         serverUrl,
-                        employment,
+                         employment,
                         commitment,
-                        planService,
-                        planParticipationService,
+                        planCommunity,
                         userInfo ) ) ;
             }
         }
@@ -126,13 +119,12 @@ public class RequestData extends AbstractFlowData {
         contacts = new ArrayList<ContactData>( contactDataSet );
     }
 
-    private void initConsumingTask( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initConsumingTask( String serverUrl, PlanCommunity planCommunity ) {
         if ( !isInitiating() )  {
             consumingTaskData = new TaskData(
                     serverUrl,
+                    planCommunity,
                     (Part)getSharing().getTarget(),
-                    planService,
-                    planParticipationService,
                     getUser() );
             if ( flow().isTerminatingToTarget() )
                 impactOnConsumingTask = "terminates";

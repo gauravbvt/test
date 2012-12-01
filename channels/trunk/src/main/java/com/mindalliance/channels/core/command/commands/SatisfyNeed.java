@@ -120,7 +120,7 @@ public class SatisfyNeed extends AbstractCommand {
         newFlow.setSignificanceToTarget( need.getSignificanceToTarget() );
         newFlow.setChannels( Channel.intersect( capability.getChannels(),
                                                 need.getChannels(),
-                                                queryService.getPlan().getLocale() ) );
+                                                queryService.getPlanLocale() ) );
         newFlow.setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
         newFlow.setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
         newFlow.setRestriction( Restriction.resolve( need.getRestriction(), capability.getRestriction() ) );

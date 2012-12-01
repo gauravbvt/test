@@ -1,15 +1,16 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.PlanParticipationValidation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationValidationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.participation.PlanParticipationValidation;
-import com.mindalliance.channels.core.participation.PlanParticipationValidationService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -113,7 +114,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
                         resetAll();
-                        getPlanManager().clearCache();
+                        // getPlanManager().clearCache();
                         target.add( userParticipationContainer );
                         update( target, new Change( Change.Type.Updated, getPlan(), "participation" ) );
                     }
@@ -187,7 +188,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private List<PlanParticipation> unconstrainedUnacceptedParticipations() {
         List<PlanParticipation> participations = new ArrayList<PlanParticipation>(  );
-        for ( Actor actor : planParticipationService.findOpenActors( getUser(), getQueryService() ) ) {
+        PlanCommunity planCommunity = getPlanCommunity();
+        for ( Actor actor : planParticipationService.findOpenActors( getUser(), planCommunity ) ) {
             if ( actor.isUnconstrainedParticipation() ) {
                 participations.add( new PlanParticipation(  getUsername(),  getPlan(),  getUser(),  actor ) );
             }
@@ -198,9 +200,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<PlanParticipation> unsupervisedParticipations() {
         return (List<PlanParticipation>) CollectionUtils.select( planParticipationService.getUserParticipations(
-                getPlan(),
                 getUser().getUserInfo(),
-                getQueryService() ),
+                getPlanCommunity() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -212,16 +213,16 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<PlanParticipation> confirmedSupervisedParticipations() {
         final QueryService queryService = getQueryService();
+        final PlanCommunity planCommunity = getPlanCommunity();
         return (List<PlanParticipation>) CollectionUtils.select( planParticipationService.getUserParticipations(
-                getPlan(),
                 getUser().getUserInfo(),
-                getQueryService() ),
+                planCommunity ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         PlanParticipation participation = (PlanParticipation) object;
                         return ( participation.isSupervised( queryService )
-                                && planParticipationService.isValidatedByAllSupervisors( participation, queryService ) );
+                                && planParticipationService.isValidatedByAllSupervisors( participation, planCommunity ) );
                     }
                 } );
     }
@@ -289,7 +290,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private void resetAllAndUpdate( AjaxRequestTarget target ) {
         resetAll();
-        getPlanManager().clearCache();
+        // getPlanManager().clearCache();
         target.add( userParticipationContainer );
         update( target, new Change( Change.Type.Updated, getPlan(), "participation" ) );
     }
@@ -449,16 +450,16 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<PlanParticipation> unconfirmedSupervisedParticipations() {
         final QueryService queryService = getQueryService();
+        final PlanCommunity planCommunity = getPlanCommunity();
         return (List<PlanParticipation>) CollectionUtils.select( planParticipationService.getUserParticipations(
-                getPlan(),
                 getUser().getUserInfo(),
-                getQueryService() ),
+                planCommunity ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         PlanParticipation participation = (PlanParticipation) object;
                         return ( participation ).isSupervised( queryService )
-                                && !planParticipationService.isValidatedByAllSupervisors( participation, queryService );
+                                && !planParticipationService.isValidatedByAllSupervisors( participation, planCommunity );
                     }
                 } );
     }
@@ -497,14 +498,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     @SuppressWarnings( "unchecked" )
     private List<ParticipationValidationWrapper> participationValidationWrappers() {
-        final QueryService queryService = getQueryService();
+        final PlanCommunity planCommunity = getPlanCommunity();
         List<ParticipationValidationWrapper> wrappers = new ArrayList<ParticipationValidationWrapper>();
         final List<PlanParticipationValidation> allValidations =
                 planParticipationValidationService.getParticipationValidations( getPlan() );
         final List<Actor> userActors = planParticipationService.listActorsUserParticipatesAs(
-                getPlan(),
                 getUser(),
-                queryService );
+                planCommunity );
         // Find all plan participation validation made by a supervisor user participates as (= confirmed)
         List<PlanParticipationValidation> userValidations = (List<PlanParticipationValidation>) CollectionUtils.select(
                 allValidations,
@@ -512,7 +512,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     @Override
                     public boolean evaluate( Object object ) {
                         PlanParticipationValidation validation = (PlanParticipationValidation) object;
-                        Actor supervisor = validation.getSupervisor( queryService );
+                        Actor supervisor = validation.getSupervisor( planCommunity.getPlanService() );
                         return supervisor != null && userActors.contains( supervisor );
                     }
                 }
@@ -524,7 +524,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         List<PlanParticipation> planParticipationAwaitingUserValidation =
                 (List<PlanParticipation>) CollectionUtils.select(
                         planParticipationService
-                                .getParticipationsSupervisedByUser( getUser(), getPlan(), queryService ),
+                                .getParticipationsSupervisedByUser( getUser(), planCommunity ),
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
@@ -535,7 +535,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                                             @Override
                                             public boolean evaluate( Object object ) {
                                                 PlanParticipationValidation validation = (PlanParticipationValidation) object;
-                                                Actor supervisor = validation.getSupervisor( queryService );
+                                                Actor supervisor = validation.getSupervisor( planCommunity.getPlanService() );
                                                 return validation.getPlanParticipation()
                                                         .equals( supervisedParticipation )
                                                         && supervisor != null
@@ -580,7 +580,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private boolean isActorAvailableForParticipation( Actor actor ) {
-        return planParticipationService.isParticipationOpenAndAvailable( actor, getUser(), getQueryService() );
+        return planParticipationService.isParticipationOpenAndAvailable( actor, getUser(), getPlanCommunity() );
     }
 
     public class ParticipationWrapper implements Serializable {
@@ -604,7 +604,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         }
 
         public void setAccepted( boolean accepted ) {
-            QueryService queryService = getQueryService();
+            PlanCommunity planCommunity = getPlanCommunity();
             if ( accepted ) {
                 planParticipationService.accept( participation );
             } else {
@@ -612,18 +612,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     planParticipationService.refuse( participation );
                 } else {
                     planParticipationService.deleteParticipation(
-                            getPlan(),
                             participation.getParticipant(),
-                            participation.getActor( queryService ),
-                            queryService );
+                            participation.getActor( planCommunity.getPlanService() ),
+                            planCommunity );
                 }
             }
             selectedAvailableParticipationOrg = null;
-            getPlanManager().clearCache(); // Must manually clear the cache
-        }
-
-        public boolean isConfirmedByAllSupervisors( QueryService queryService ) {
-            return planParticipationService.isValidatedByAllSupervisors( participation, queryService );
+            // getPlanManager().clearCache(); // Must manually clear the cache
         }
 
         public Actor getActor( QueryService queryService ) {
@@ -663,11 +658,11 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
         public void setValidated( boolean validated ) {
             this.validated = validated;
+            PlanCommunity planCommunity = getPlanCommunity();
             for ( Actor supervisor : planParticipationService.listSupervisorsUserParticipatesAs(
                     participationValidation.getPlanParticipation(),
-                    getPlan(),
                     getUser(),
-                    getQueryService()
+                    planCommunity
             ) ) {
                 if ( validated ) {
                     planParticipationValidationService.addParticipationValidation(

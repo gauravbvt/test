@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
@@ -161,7 +162,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     }
 
     @Override
-    public List<String> getToUserNames( String topic, PlanService planService ) {
+    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
         List<String> usernames = new ArrayList<String>();
         usernames.add(  getToUsername(  topic  ) );
         return usernames;

@@ -58,9 +58,6 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.participation.PlanParticipationValidationService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -114,15 +111,6 @@ public abstract class DefaultQueryService implements QueryService {
      * File user details service.
      */
     private ChannelsUserDao userDao;
-    /**
-     * Plan participation service.
-     */
-    private PlanParticipationService planParticipationService;
-
-    /**
-     * Plan participation confirmation service.
-     */
-    private PlanParticipationValidationService planParticipationConfirmationService;
 
     /**
      * SurveysDAO
@@ -142,16 +130,12 @@ public abstract class DefaultQueryService implements QueryService {
             AttachmentManager attachmentManager,
             SemanticMatcher semanticMatcher,
             ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService,
-            PlanParticipationValidationService planParticipationConfirmationService,
             SurveysDAO surveysDao
     ) {
         this.planManager = planManager;
         this.attachmentManager = attachmentManager;
         this.semanticMatcher = semanticMatcher;
         this.userDao = userDao;
-        this.planParticipationService = planParticipationService;
-        this.planParticipationConfirmationService = planParticipationConfirmationService;
         this.surveysDAO = surveysDao;
     }
 
@@ -381,8 +365,8 @@ public abstract class DefaultQueryService implements QueryService {
             }
         }
         // Include plan as possible referencer
-        if ( getPlan().references( mo )
-                || planParticipationService.references( getPlan(), mo, this ) ) {
+        if ( getPlan().references( mo )/*
+                || planParticipationService.references( getPlan(), mo, this )*/ ) {
             count++;
         }
         return count;
@@ -392,7 +376,7 @@ public abstract class DefaultQueryService implements QueryService {
     public Boolean covers( Agreement agreement, Commitment commitment ) {
         Flow sharing = commitment.getSharing();
         Assignment beneficiary = commitment.getBeneficiary();
-        if ( beneficiary.getOrganization().narrowsOrEquals( agreement.getBeneficiary(), getPlan().getLocale() )
+        if ( beneficiary.getOrganization().narrowsOrEquals( agreement.getBeneficiary(), getPlanLocale() )
                 && Matcher.same( agreement.getInformation(), sharing.getName() ) ) {
             List<ElementOfInformation> eois = agreement.getEois();
             if ( eois.isEmpty() || subsetOf( sharing.getEffectiveEois(), eois ) ) {
@@ -444,7 +428,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Boolean encompasses( Agreement agreement, Agreement other ) {
-        if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), getPlan().getLocale() )
+        if ( other.getBeneficiary().narrowsOrEquals( agreement.getBeneficiary(), getPlanLocale() )
                 && Matcher.same( agreement.getInformation(), other.getInformation() ) ) {
             String usage = agreement.getUsage();
             String otherText = other.getUsage();
@@ -523,6 +507,12 @@ public abstract class DefaultQueryService implements QueryService {
         else if ( clazz.isAssignableFrom( TransmissionMedium.class )
                 && ModelEntity.getUniversalTypeFor( TransmissionMedium.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( TransmissionMedium.class );
+        else if ( clazz.isAssignableFrom( InfoFormat.class )
+                && ModelEntity.getUniversalTypeFor( InfoFormat.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( InfoFormat.class );
+        else if ( clazz.isAssignableFrom( InfoProduct.class )
+                && ModelEntity.getUniversalTypeFor( InfoProduct.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( InfoProduct.class );
         else
             throw new NotFoundException();
     }
@@ -554,7 +544,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( {"unchecked"} )
     public List<Actor> findAllActualActors( ResourceSpec resourceSpec ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         Set<Actor> actors = new HashSet<Actor>();
         // If the resource spec is anyone, then return no actor,
         // else it would return every actor known to the app
@@ -585,7 +575,7 @@ public abstract class DefaultQueryService implements QueryService {
             Class<T> entityClass,
             final T entityType ) {
         assert entityType.isType();
-        final Place locale = getPlan().getLocale();
+        final Place locale = getPlanLocale();
         return (List<T>) CollectionUtils.select(
                 findAllModelObjects( entityClass ),
                 new Predicate() {
@@ -608,7 +598,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Assignment> findAllAssignments( Part part, Boolean includeUnknowns, Boolean includeProhibited ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         Set<Assignment> result = new HashSet<Assignment>();
         if ( !part.isEmpty() ) {
             if ( includeProhibited || !part.isProhibited() ) {
@@ -832,7 +822,7 @@ public abstract class DefaultQueryService implements QueryService {
         Set<Commitment> commitments = new HashSet<Commitment>();
         if ( flow.isSharing() && !flow.isProhibited() ) {
             List<Flow> allFlows = findAllFlows();
-            Place locale = getPlan().getLocale();
+            Place locale = getPlanLocale();
             Assignments beneficiaries = assignments.assignedTo( (Part) flow.getTarget() );
             for ( Assignment committer : assignments.assignedTo( (Part) flow.getSource() ) ) {
                 Actor committerActor = committer.getActor();
@@ -913,7 +903,7 @@ public abstract class DefaultQueryService implements QueryService {
         boolean prohibited = false;
         Flow sharing = commitment.getSharing();
         Iterator<Flow> overriddingFlows = findAllOverridingFlows( sharing, allFlows ).iterator();
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         while ( !prohibited && overriddingFlows.hasNext() ) {
             Flow overridingFlow = overriddingFlows.next();
             if ( overridingFlow.isProhibited() ) {
@@ -966,7 +956,7 @@ public abstract class DefaultQueryService implements QueryService {
             Specable specable,
             Assignments assignments,
             List<Flow> allFlows ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Flow flow : allFlows ) {
             if ( flow.isSharing() ) {
@@ -994,7 +984,7 @@ public abstract class DefaultQueryService implements QueryService {
             Specable specable,
             Assignments assignments,
             List<Flow> allFlows ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         Set<Commitment> commitments = new HashSet<Commitment>();
         for ( Flow flow : allFlows ) {
             if ( flow.isSharing() ) {
@@ -1020,7 +1010,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Job> findAllConfirmedJobs( Specable specable ) {
         List<Job> jobs = new ArrayList<Job>();
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         for ( Organization org : listActualEntities( Organization.class ) )
             for ( Job job : org.getJobs() )
                 if ( job.resourceSpec( org ).narrowsOrEquals( specable, locale ) )
@@ -1348,7 +1338,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Employment> findAllEmploymentsForRole( final Role role ) {
-        final Place locale = getPlan().getLocale();
+        final Place locale = getPlanLocale();
         return (List<Employment>) CollectionUtils.select(
                 findAllEmploymentsWithKnownActors(),
                 new Predicate() {
@@ -1553,7 +1543,7 @@ public abstract class DefaultQueryService implements QueryService {
         List<Part> initiators = new ArrayList<Part>();
         Event event = eventTiming.getEvent();
         boolean concurrent = eventTiming.getTiming() == Phase.Timing.Concurrent;
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         for ( Part part : findAllParts() ) {
             if ( concurrent ) {
                 Event initiatedEvent = part.getInitiatedEvent();
@@ -1666,7 +1656,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<? extends ModelObject> findAllModelObjectsIn( Place place ) {
         List<ModelObject> inPlace = new ArrayList<ModelObject>();
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         for ( Organization org : list( Organization.class ) ) {
             if ( org.getLocation() != null && org.getLocation().narrowsOrEquals( place, locale ) )
                 inPlace.add( org );
@@ -1714,7 +1704,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( "unchecked" )
     public List<? extends ModelEntity> findAllNarrowingOrEqualTo( final ModelEntity entity ) {
-        final Place locale = getPlan().getLocale();
+        final Place locale = getPlanLocale();
         return (List<? extends ModelEntity>) CollectionUtils.select(
                 list( entity.getClass() ),
                 new Predicate() {
@@ -1729,7 +1719,7 @@ public abstract class DefaultQueryService implements QueryService {
     private List<Flow> findAllOverriddenFlows( Flow sharing, List<Flow> allFlows ) {
         List<Flow> overriddenFlows = new ArrayList<Flow>();
         if ( sharing.isSharing() ) {
-            Place locale = getPlan().getLocale();
+            Place locale = getPlanLocale();
             for ( Flow s : allFlows ) {
                 if ( s.isSharing() && sharing.overrides( s, locale ) ) {
                     overriddenFlows.add( s );
@@ -1742,7 +1732,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Part> findAllOverriddenParts( Part part, List<Part> parts ) {
         List<Part> overriddenParts = new ArrayList<Part>();
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         for ( Part p : parts ) {
             if ( part.overrides( p, locale ) ) {
                 overriddenParts.add( p );
@@ -1754,7 +1744,7 @@ public abstract class DefaultQueryService implements QueryService {
     private List<Flow> findAllOverridingFlows( Flow sharing, List<Flow> allFlows ) {
         List<Flow> overridingFlows = new ArrayList<Flow>();
         if ( sharing.isSharing() ) {
-            Place locale = getPlan().getLocale();
+            Place locale = getPlanLocale();
             for ( Flow s : allFlows ) {
                 if ( s.isSharing() && s.overrides( sharing, locale ) ) {
                     overridingFlows.add( s );
@@ -1767,7 +1757,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Part> findAllOverridingParts( Part part, List<Part> parts ) {
         List<Part> overridingParts = new ArrayList<Part>();
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         for ( Part p : parts ) {
             if ( p.overrides( part, locale ) ) {
                 overridingParts.add( p );
@@ -1800,7 +1790,7 @@ public abstract class DefaultQueryService implements QueryService {
             segments.add( segment );
         }
 
-        Place locale = plan.getLocale();
+        Place locale = getPlanLocale();
         for ( Segment seg : segments ) {
             for ( Iterator<Part> parts = seg.parts(); parts.hasNext(); ) {
                 Part part = parts.next();
@@ -1856,7 +1846,7 @@ public abstract class DefaultQueryService implements QueryService {
                     if ( flow.getSource().isPart() ) {
                         Part part = (Part) flow.getSource();
                         if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific,
-                                getPlan().getLocale() ) ) {
+                                getPlanLocale() ) ) {
                             // sends
                             Play play = new Play( part, flow, true );
                             plays.add( play );
@@ -1865,7 +1855,7 @@ public abstract class DefaultQueryService implements QueryService {
                     if ( flow.getTarget().isPart() ) {
                         Part part = (Part) flow.getTarget();
                         if ( part.resourceSpec().matchesOrSubsumes( resourceSpec, specific,
-                                getPlan().getLocale() ) ) {
+                                getPlanLocale() ) ) {
                             // receives
                             Play play = new Play( part, flow, false );
                             plays.add( play );
@@ -1883,8 +1873,8 @@ public abstract class DefaultQueryService implements QueryService {
         List<T> referencers = new ArrayList<T>();
         if ( Plan.class.isAssignableFrom( clazz ) ) {
             Plan plan = getPlan();
-            if ( plan.references( referenced )
-                    || planParticipationService.references( plan, referenced, DefaultQueryService.this ) ) {
+            if ( plan.references( referenced )/*
+                    || planParticipationService.references( plan, referenced, DefaultQueryService.this )*/ ) {
                 referencers.add( (T) plan );
             }
         } else {
@@ -1901,7 +1891,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Flow> findAllRelatedFlows( ResourceSpec resourceSpec, Boolean asSource ) {
         List<Flow> relatedFlows = new ArrayList<Flow>();
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         for ( Segment segment : list( Segment.class ) ) {
             Iterator<Flow> flows = segment.flows();
             while ( flows.hasNext() ) {
@@ -1946,7 +1936,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<ResourceSpec> findAllResourcesNarrowingOrEqualTo( Specable specable ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         List<ResourceSpec> list = new ArrayList<ResourceSpec>();
         for ( ResourceSpec spec : findAllResourceSpecs() ) {
             if ( spec.narrowsOrEquals( specable, locale ) )
@@ -1958,7 +1948,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Role> findAllRolesOf( Actor actor ) {
         Set<Role> roles = new HashSet<Role>();
-        Place place = getPlan().getLocale();
+        Place place = getPlanLocale();
         for ( Specable spec : findAllResourceSpecs() ) {
             if ( spec.getRole() != null ) {
                 if ( spec.getActor() != null && actor.narrowsOrEquals( spec.getActor(), place )
@@ -2456,7 +2446,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Flow> findOverriddenSharingReceives( Part part ) {
         List<Flow> overriddenReceives = new ArrayList<Flow>();
-        final Place locale = getPlan().getLocale();
+        final Place locale = getPlanLocale();
         List<Part> parts = findSynonymousParts( part );
         for ( Part overriding : findAllOverridingParts( part, parts ) ) {
             for ( final Flow sharingReceive : part.getAllSharingReceives() ) {
@@ -2481,7 +2471,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public List<Flow> findOverriddenSharingSends( Part part ) {
         List<Flow> overriddenSends = new ArrayList<Flow>();
-        final Place locale = getPlan().getLocale();
+        final Place locale = getPlanLocale();
         List<Part> parts = findSynonymousParts( part );
         for ( Part overriding : findAllOverridingParts( part, parts ) ) {
             for ( final Flow sharingSend : part.getAllSharingSends() ) {
@@ -2672,7 +2662,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Job> findUnconfirmedJobs( Organization organization ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         Set<Job> unconfirmedJobs = new HashSet<Job>();
         List<Job> confirmedJobs = organization.getJobs();
         for ( Segment segment : list( Segment.class ) ) {
@@ -2839,22 +2829,6 @@ public abstract class DefaultQueryService implements QueryService {
         }
     }
 
-    @Override
-    public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
-        Set<ChannelsUser> users = new HashSet<ChannelsUser>();
-        List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor( getPlan(), actor, this );
-        for ( PlanParticipation participation : participations ) {
-            if ( !actor.isSupervisedParticipation()
-                    || planParticipationService.isValidatedByAllSupervisors( participation, this ) ) {
-                ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
-                if ( user != null ) {
-                    users.add( user );
-                }
-            }
-        }
-        return new ArrayList<ChannelsUser>( users );
-    }
-
     /**
      * Get alternate flows.
      *
@@ -2891,7 +2865,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public Assignments getAssignments( Boolean includeUnknowns, Boolean includeProhibited ) {
-        Place locale = getPlan().getLocale();
+        Place locale = getPlanLocale();
         Assignments result = new Assignments( locale );
         Set<Assignment> assignments = new HashSet<Assignment>();
         for ( Segment segment : list( Segment.class ) )
@@ -3019,17 +2993,6 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     /**
-     * Get user's full name.
-     *
-     * @param participation a plan participation
-     * @return a string
-     */
-    @Override
-    public String getUserFullName( PlanParticipation participation ) {
-        return participation.getParticipant().getFullName();
-    }
-
-    /**
      * Instantiate a gaol from a serialization map.
      *
      * @param map a map
@@ -3105,7 +3068,7 @@ public abstract class DefaultQueryService implements QueryService {
             req.setCommitterOrganization( (Organization) requirementRelationship.getFromIdentifiable( this ) );
             req.setBeneficiaryOrganization( (Organization) requirementRelationship.getToIdentifiable( this ) );
             if ( allCommitments.satisfying( req )
-                    .inSituation( timing, event, plan.getLocale() )
+                    .inSituation( timing, event, getPlanLocale() )
                     .realizable( analyst, plan, this ).isEmpty() )
                 unfulfilled.add( req );
         }
@@ -3175,7 +3138,7 @@ public abstract class DefaultQueryService implements QueryService {
             );
         } else {
             ResourceSpec partSpec = part.resourceSpec();
-            return partSpec.hasEntityOrBroader( entity, getPlan().getLocale() );
+            return partSpec.hasEntityOrBroader( entity, getPlanLocale() );
         }
     }
 
@@ -3234,7 +3197,7 @@ public abstract class DefaultQueryService implements QueryService {
                     }
             );
         }
-        hasReference = hasReference || planParticipationService.references( getPlan(), mo, this );
+        /*hasReference = hasReference || planParticipationService.references( getPlan(), mo, this );*/
         return hasReference;
     }
 
@@ -3360,7 +3323,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     @SuppressWarnings( {"unchecked"} )
     public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity ) {
-        final Place place = getPlan().getLocale();
+        final Place place = getPlanLocale();
         return (List<T>) CollectionUtils.select(
                 list( entity.getClass() ),
                 new Predicate() {
@@ -3597,26 +3560,7 @@ public abstract class DefaultQueryService implements QueryService {
         } );
     }
 
-    @Override
-    public PlanParticipationService getPlanParticipationService() {
-        return planParticipationService;
-    }
 
-    @Override
-    public boolean meetsPreEmploymentConstraint( Actor actor,
-                                                 List<PlanParticipation> activeParticipations ) {
-        if ( !actor.isParticipationRestrictedToEmployed() ) return true;
-        List<Organization> actorEmployers = findDirectAndIndirectEmployers(
-                findAllEmploymentsForActor( actor ) );
-        List<Organization> myPlannedEmployers = new ArrayList<Organization>();
-        for ( PlanParticipation participation : activeParticipations ) {
-            Actor participationActor = participation.getActor( this );
-            if ( participationActor != null && !participationActor.isOpenParticipation() )
-                myPlannedEmployers.addAll( findDirectAndIndirectEmployers(
-                        findAllEmploymentsForActor( participationActor ) ) );
-        }
-        return !Collections.disjoint( myPlannedEmployers, actorEmployers );
-    }
 
     @Override
     public UserContactInfoService getUserContactInfoService() {
@@ -3651,7 +3595,8 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
+    @Override
+    public List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
         Set<Organization> allEmployers = new HashSet<Organization>();
         List<Organization> directEmployers = (List<Organization>) CollectionUtils.collect(
                 employments,
@@ -3682,6 +3627,11 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public PlanManager getPlanManager() {
         return planManager;
+    }
+
+    @Override
+    public Place getPlanLocale() {
+        return getPlan().getLocale();
     }
 
     public SemanticMatcher getSemanticMatcher() {

@@ -4,8 +4,6 @@ import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,7 +33,7 @@ public class DirectoryData implements Serializable {
         // required
     }
 
-    public DirectoryData( ProceduresData proceduresData, QueryService queryService, PlanParticipationService planParticipationService ) {
+    public DirectoryData( ProceduresData proceduresData ) {
         this.proceduresData = proceduresData;
         initData( );
     }

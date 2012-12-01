@@ -31,7 +31,7 @@ public class InvalidEntityTyping extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         ModelEntity entity = (ModelEntity) modelObject;
         List<ModelEntity> types = entity.getAllTypes();
-        Place locale = queryService.getPlan().getLocale();
+        Place locale = queryService.getPlanLocale();
 
         // Entity is inherently inconsistent with one of its types
         for ( ModelEntity type : types ) {

@@ -1,9 +1,11 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.AgentData;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.participation.PlanParticipation;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -33,18 +35,24 @@ public class ParticipationData  implements Serializable {
         // required
     }
 
-    public ParticipationData( String serverUrl, PlanParticipation participation, ChannelsUser user, PlanService planService ) {
+    public ParticipationData(
+            String serverUrl,
+            PlanCommunity planCommunity,
+            ChannelsUser user,
+            PlanParticipation participation ) {
         this.participation = participation;
         this.user = user;
-        init( serverUrl, planService );
+        init( serverUrl, planCommunity );
     }
 
-    private void init( String serverUrl, PlanService planService ) {
-        agentData = new AgentData( serverUrl, participation.getActor( planService), planService.getPlan() );
+    private void init( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
+        PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
+        agentData = new AgentData( serverUrl, participation.getActor( planService), planCommunity.getPlan() );
         actor = participation.getActor( planService );
         userData = new UserData( user, planService );
-        confirmed = planService.getPlanParticipationService().isValidatedByAllSupervisors( participation, planService );
-        active = planService.getPlanParticipationService().isActive( planService.getPlan(), participation, planService );
+        confirmed = planParticipationService.isValidatedByAllSupervisors( participation, planCommunity );
+        active = planParticipationService.isActive( participation, planCommunity );
     }
 
     @XmlElement

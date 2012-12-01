@@ -138,7 +138,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel{
     private List<String> findWithinCandidates() {
         final Place place = getPlace();
         if ( place.isActual() ) {
-            final Place locale = getPlan().getLocale();
+            final Place locale = getPlanLocale();
             List<Place> allCandidatePlaces = (List<Place>) CollectionUtils.select(
                     getQueryService().listActualEntities( Place.class ),
                     new Predicate() {

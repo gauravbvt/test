@@ -299,7 +299,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
 
     private List<String> getMediaChoices() {
         List<String> choices = new ArrayList<String>();
-        final Place planLocale = getPlan().getLocale();
+        final Place planLocale = getPlanLocale();
         for ( final TransmissionMedium medium : getQueryService().list( TransmissionMedium.class ) ) {
             if ( !medium.isUnknown() ) {
                 boolean subsumed = CollectionUtils.exists(

@@ -53,7 +53,7 @@ public class RedundantPart extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        List<Part> equivalentParts = findEquivalentTo( part, queryService.getPlan().getLocale() );
+        List<Part> equivalentParts = findEquivalentTo( part, queryService.getPlanLocale() );
         int count = equivalentParts.size();
         if ( count > 0 ) {
             DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );

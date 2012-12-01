@@ -50,7 +50,7 @@ public class VCardPage extends AbstractChannelsWebPage {
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
 
         ResourceSpec actorSpec = getActorSpec( flow.getContactedPart() );
-        init( actorSpec.getOrganization(), actorSpec.getJob( getPlan().getLocale() ) );
+        init( actorSpec.getOrganization(), actorSpec.getJob( getPlanLocale() ) );
     }
 
     private ResourceSpec getActorSpec( Part part ) {

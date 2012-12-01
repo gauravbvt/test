@@ -300,14 +300,14 @@ public class Requirement extends ModelObject implements Countable {
         } else {
             Commitments commitments = new Commitments( queryService, candidateFlows );
             final Plan plan = queryService.getPlan();
-            final Place planLocale = plan.getLocale();
+            final Place planLocale = queryService.getPlanLocale();
             Iterator<Commitment> commitmentIterator = (Iterator<Commitment>) IteratorUtils.filteredIterator(
                     commitments.iterator(),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
                             Commitment commitment = (Commitment) object;
-                            return commitment.isInSituation( timing, event, plan.getLocale() )
+                            return commitment.isInSituation( timing, event, queryService.getPlanLocale() )
                                     && satisfiedBy( commitment, planLocale )
                                     && analyst.canBeRealized( commitment, plan, queryService );
                         }
@@ -514,7 +514,7 @@ public class Requirement extends ModelObject implements Countable {
             final Organization organization,
             final boolean asBeneficiary,
             QueryService queryService ) {
-        final Place planLocale = queryService.getPlan().getLocale();
+        final Place planLocale = queryService.getPlanLocale();
         return (List<Flow>) CollectionUtils.select(
                 queryService.findAllFlows(),
                 new Predicate() {

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import com.mindalliance.channels.social.services.notification.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,12 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
     @Autowired
     private ChannelsUserDao userDao;
 
-    protected List<ChannelsUserInfo> getToUsers( Messageable messageable, String topic, PlanService planService ) {
+    protected List<ChannelsUserInfo> getToUsers(
+            Messageable messageable,
+            String topic,
+            PlanCommunity planCommunity ) {
         List<ChannelsUser> toUsers = new ArrayList<ChannelsUser>();
-        List<String> toUsernames = messageable.getToUserNames( topic, planService );
+        List<String> toUsernames = messageable.getToUserNames( topic, planCommunity );
         for ( String toUsername : toUsernames ) {
             String urn = messageable.getPlanUri();
             if ( toUsername.equals( ChannelsUserInfo.PLANNERS ) )
@@ -77,7 +80,7 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             String planUri,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService) {
+            PlanCommunity planCommunity) {
         StringBuilder sb = new StringBuilder();
         int n = messageables.size();
         String kind = messageables.get( 0 ).getLabel() + " " + topic;
@@ -94,10 +97,10 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             Messageable.Format format,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService ) {
+            PlanCommunity planCommunity ) {
         StringBuilder sb = new StringBuilder();
         for ( Messageable messageable : messageables ) {
-            sb.append( messageable.getContent( topic, format, planService ) );
+            sb.append( messageable.getContent( topic, format, planCommunity.getPlanService() ) );
             sb.append( "\n============================================\n\n" );
         }
         return sb.toString();

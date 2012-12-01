@@ -1,14 +1,13 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.PlanService;
 
 import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
@@ -46,109 +45,102 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public AssignmentData(
             String serverUrl,
+            PlanCommunity planCommunity,
             Assignment assignment,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user,
             ProcedureData procedureData ) {
-        super( assignment, planService, planParticipationService, user );
+        super( planCommunity, assignment,  user );
         this.procedureData = procedureData;
-        initData( serverUrl, planService, planParticipationService );
+        initData( serverUrl, planCommunity );
     }
 
-    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
-        taskData = new TaskData( serverUrl, getAssignment(), planService, planParticipationService, getUser() );
-        initInNotifications(  serverUrl, planService, planParticipationService );
-        initOutNotifications(  serverUrl, planService, planParticipationService );
-        initInRequests( serverUrl, planService, planParticipationService );
-        initOutRequests( serverUrl, planService, planParticipationService );
-        initDiscoveries(  serverUrl, planService, planParticipationService );
-        initAllResearch(  serverUrl, planService, planParticipationService );
+    private void initData( String serverUrl, PlanCommunity planCommunity ) {
+        taskData = new TaskData( serverUrl, getAssignment(), planCommunity, getUser() );
+        initInNotifications(  serverUrl, planCommunity );
+        initOutNotifications(  serverUrl, planCommunity );
+        initInRequests( serverUrl, planCommunity );
+        initOutRequests( serverUrl, planCommunity );
+        initDiscoveries(  serverUrl, planCommunity );
+        initAllResearch(  serverUrl, planCommunity );
     }
 
-    private void initAllResearch( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initAllResearch( String serverUrl, PlanCommunity planCommunity ) {
         allResearch = new ArrayList<ResearchData>();
         for ( Flow researchFlow : research() ) {
             allResearch.add( new ResearchData(
                     serverUrl,
+                    planCommunity,
                     researchFlow,
                     getAssignment(),
-                    planService,
-                    planParticipationService,
                     getUser() ) );
         }
 
     }
 
-    private void initDiscoveries( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initDiscoveries( String serverUrl, PlanCommunity planCommunity ) {
         discoveries = new ArrayList<DiscoveryData>();
         for ( Flow discoveringFlow : discoveries() ) {
             discoveries.add( new DiscoveryData(
                     serverUrl,
+                    planCommunity,
                     discoveringFlow,
-                    planService,
-                    planParticipationService,
                     getUser() ) );
         }
 
     }
 
-    private void initOutRequests( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initOutRequests( String serverUrl, PlanCommunity planCommunity ) {
             outRequests = new ArrayList<RequestData>();
             for ( Flow outRequestFlow : outRequests() ) {
                 boolean initiating = true;
                 outRequests.add( new RequestData(
                         serverUrl,
+                        planCommunity,
                         outRequestFlow,
                         initiating,
                         getAssignment(),
-                        planService,
-                        planParticipationService,
                         getUser() ) );
             }
     }
 
-    private void initInRequests( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initInRequests( String serverUrl, PlanCommunity planCommunity ) {
             inRequests = new ArrayList<RequestData>();
             for ( Flow inRequestFlow : inRequests() ) {
                 boolean initiating = false;
                 inRequests.add( new RequestData(
                         serverUrl,
+                        planCommunity,
                         inRequestFlow,
                         initiating,
                         getAssignment(),
-                        planService,
-                        planParticipationService,
                         getUser() ) );
             }
     }
 
-    private void initOutNotifications( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initOutNotifications( String serverUrl, PlanCommunity planCommunity ) {
             outNotifications = new ArrayList<NotificationData>();
             for ( Flow outNotificationFlow : outNotifications() ) {
                 boolean initiating = true;
                 outNotifications.add( new NotificationData(
                         serverUrl,
+                        planCommunity,
                         outNotificationFlow,
                         initiating,
                         getAssignment(),
-                        planService,
-                        planParticipationService,
-                        getUser() ) );
+                         getUser() ) );
             }
     }
 
-    private void initInNotifications( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initInNotifications( String serverUrl, PlanCommunity planCommunity ) {
         inNotifications = new ArrayList<NotificationData>();
         for ( Flow inNotificationFlow : inNotifications() ) {
             boolean initiating = false;
             inNotifications.add( new NotificationData(
                     serverUrl,
+                    planCommunity,
                     inNotificationFlow,
                     initiating,
                     getAssignment(),
-                    planService,
-                    planParticipationService,
                     getUser() ) );
         }
     }

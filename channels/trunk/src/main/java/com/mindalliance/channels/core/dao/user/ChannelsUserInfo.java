@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
-import com.mindalliance.channels.core.participation.PlanParticipation;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;

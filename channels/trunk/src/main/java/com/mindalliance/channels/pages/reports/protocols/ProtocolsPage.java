@@ -11,12 +11,16 @@ import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.social.model.Feedback;
@@ -60,6 +64,13 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     @SpringBean( name = "channelsService" )
     private ChannelsService channelsService;
+
+    @SpringBean
+    private PlanServiceFactory planServiceFactory;
+
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
+
 
     private WebMarkupContainer aboutContainer;
     private WebMarkupContainer finderContainer;
@@ -143,11 +154,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 }
             }
         }
+        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( getPlan() );
         finder = new ProtocolsFinder(
                 channelsService.getServerUrl(),
                 proceduresData,
-                getQueryService(),
-                getPlanParticipationService(),
+                planCommunity,
                 protocolsUser,
                 channelsService,
                 username,
@@ -607,6 +618,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             return null;
         }
     }
+
+    private PlanService getPlanService( Plan plan ) {
+        return planServiceFactory.getService( plan );
+    }
+
 
 
 }

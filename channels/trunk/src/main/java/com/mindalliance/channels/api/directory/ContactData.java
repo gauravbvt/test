@@ -2,6 +2,9 @@ package com.mindalliance.channels.api.directory;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
@@ -9,8 +12,7 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -55,12 +57,11 @@ public class ContactData implements Serializable {
             Employment employment,
             ChannelsUserInfo userInfo,
             boolean includeSupervisor,
-            QueryService queryService,
-            PlanParticipationService planParticipationservice ) {
+            PlanCommunity planCommunity ) {
         this.employment = employment;
         this.userInfo = userInfo;
         this.includeSupervisor = includeSupervisor;
-        init( serverUrl, queryService, planParticipationservice );
+        init( serverUrl, planCommunity );
     }
 
     public ContactData( // create contact data of employment contacted in commitment
@@ -69,21 +70,19 @@ public class ContactData implements Serializable {
                         Commitment commitment,
                         ChannelsUserInfo userInfo,
                         boolean includeSupervisor,
-                        QueryService queryService,
-                        PlanParticipationService planParticipationservice ) {
+                        PlanCommunity planCommunity ) {
         this.employment = employment;
         this.commitment = commitment;
         this.userInfo = userInfo;
         this.includeSupervisor = includeSupervisor;
-        init( serverUrl, queryService, planParticipationservice );
+        init( serverUrl, planCommunity );
     }
 
     /**
      * Find a user's contacts from san employment.
      *
      * @param employment               an employment
-     * @param queryService             a plan service
-     * @param planParticipationService a plan participation service
+     * @param planCommunity             a plan community
      * @param userInfo                 a user info
      * @return a list of contact data
      */
@@ -91,8 +90,7 @@ public class ContactData implements Serializable {
             String serverUrl,
             Employment employment,
             Commitment commitment,
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
         List<ContactData> contactList = new ArrayList<ContactData>();
         Actor actor = employment.getActor();
@@ -103,13 +101,11 @@ public class ContactData implements Serializable {
                     commitment,
                     null,
                     true,
-                    queryService,
-                    planParticipationService ) );
+                    planCommunity ) );
         } else {
             List<PlanParticipation> otherParticipations = getOtherParticipations(
                     actor,
-                    queryService,
-                    planParticipationService,
+                    planCommunity,
                     userInfo );
             if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
                 contactList.add( new ContactData(
@@ -118,8 +114,7 @@ public class ContactData implements Serializable {
                         commitment,
                         null,
                         true,
-                        queryService,
-                        planParticipationService ) );
+                        planCommunity ) );
             }
             for ( PlanParticipation otherParticipation : otherParticipations ) {
                 contactList.add( new ContactData(
@@ -128,8 +123,7 @@ public class ContactData implements Serializable {
                         commitment,
                         otherParticipation.getParticipant(),
                         true,
-                        queryService,
-                        planParticipationService ) );
+                        planCommunity ) );
             }
         }
         return contactList;
@@ -137,13 +131,12 @@ public class ContactData implements Serializable {
 
     private void init(
             String serverUrl,
-            QueryService queryService,
-            PlanParticipationService planParticipationservice ) {
-        initWorkChannels( queryService );
-        initPersonalChannels( queryService );
-        initSupervisorContacts( serverUrl, queryService, planParticipationservice );
-        initOrganizationChannels( queryService );
-        initBypassContacts( serverUrl, queryService, planParticipationservice );
+            PlanCommunity planCommunity ) {
+        initWorkChannels( planCommunity.getPlanService() );
+        initPersonalChannels( planCommunity.getPlanService() );
+        initSupervisorContacts( serverUrl, planCommunity );
+        initOrganizationChannels( planCommunity.getPlanService() );
+        initBypassContacts( serverUrl, planCommunity );
         initPictureUrl( serverUrl );
     }
 
@@ -187,13 +180,15 @@ public class ContactData implements Serializable {
 
     }
 
-    private void initSupervisorContacts( String serverUrl, QueryService queryService, PlanParticipationService planParticipationservice ) {
+    private void initSupervisorContacts( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
+        PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
         supervisorContacts = new ArrayList<ContactData>();
         if ( includeSupervisor && getSupervisor() != null ) {
             Actor supervisor = getSupervisor();
             Employment sameOrgEmployment = null;
             Employment parentOrgEmployment = null;
-            Iterator<Employment> iter = queryService.findAllEmploymentsForActor( supervisor ).iterator();
+            Iterator<Employment> iter = planService.findAllEmploymentsForActor( supervisor ).iterator();
             List<Organization> ancestors = getOrganization().ancestors();
             while ( sameOrgEmployment == null && iter.hasNext() ) {
                 Employment supervisorEmployment = iter.next();
@@ -214,21 +209,17 @@ public class ContactData implements Serializable {
                             supervisorEmployment,
                             null,
                             false,
-                            queryService,
-                            planParticipationservice ) );
+                            planCommunity ) );
                 } else {
-                    List<PlanParticipation> participations = planParticipationservice.getParticipationsAsActor(
-                            queryService.getPlan(),
+                    List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor(
                             supervisor,
-                            queryService );
+                            planCommunity );
                     for ( PlanParticipation participation : participations ) {
                         supervisorContacts.add( new ContactData(
                                 serverUrl,
                                 supervisorEmployment,
                                 participation.getParticipant(),
-                                false,
-                                queryService,
-                                planParticipationservice ) );
+                                false,planCommunity ) );
                     }
                 }
             }
@@ -237,19 +228,17 @@ public class ContactData implements Serializable {
 
     private void initBypassContacts(
             String serverUrl,
-            QueryService queryService,
-            PlanParticipationService planParticipationservice ) {
+            PlanCommunity planCommunity ) {
         Set<Employment> bypassEmploymentSet = new HashSet<Employment>();
         if ( commitment() != null ) {
             Set<ContactData> bypassContactSet = new HashSet<ContactData>();
-            for ( Employment bypassEmployment : findBypassContactEmployments( queryService ) ) {
+            for ( Employment bypassEmployment : findBypassContactEmployments( planCommunity.getPlanService() ) ) {
                 bypassEmploymentSet.add( bypassEmployment );
                 bypassContactSet.addAll( findContactsFromEmployment(
                         serverUrl,
                         bypassEmployment,
                         null,   // todo -- bypassing is not transitive, right?
-                        queryService,
-                        planParticipationservice,
+                        planCommunity,
                         userInfo ) );
             }
             bypassContacts = new ArrayList<ContactData>( bypassContactSet );
@@ -285,15 +274,15 @@ public class ContactData implements Serializable {
     // Find list of participation as actor other than by the user.
     static private List<PlanParticipation> getOtherParticipations(
             Actor actor,
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
+        PlanService planService = planCommunity.getPlanService();
+        PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
         String username = userInfo == null ? null : userInfo.getUsername();
         List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
         List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor(
-                queryService.getPlan(),
                 actor,
-                queryService );
+                planCommunity );
         for ( PlanParticipation participation : participations ) {
             if ( username == null || !username.equals( participation.getParticipantUsername() ) ) {
                 otherParticipations.add( participation );

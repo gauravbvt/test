@@ -1,10 +1,9 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.QueryService;
 
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
@@ -31,23 +30,21 @@ public class DiscoveryData implements Serializable {
 
     public DiscoveryData(
             String serverUrl,
+            PlanCommunity planCommunity,
             Flow notificationToSelf,
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
         this.user = user;
-        initData( serverUrl, queryService, planParticipationService );
+        initData( serverUrl, planCommunity );
     }
 
-    private void initData( String serverUrl, QueryService planService, PlanParticipationService planParticipationService ) {
+    private void initData( String serverUrl, PlanCommunity planCommunity ) {
         if ( notificationToSelf != null ) {
-            infoDiscoveredData = new InfoDiscoveredData( serverUrl, notificationToSelf, planService, planParticipationService, user );
+            infoDiscoveredData = new InfoDiscoveredData( serverUrl, planCommunity, notificationToSelf, user );
             followUpTask = new TaskData(
                     serverUrl,
+                    planCommunity,
                     (Part) notificationToSelf.getTarget(),
-                    planService,
-                    planParticipationService,
                     user );
         } else
             infoDiscoveredData = null;

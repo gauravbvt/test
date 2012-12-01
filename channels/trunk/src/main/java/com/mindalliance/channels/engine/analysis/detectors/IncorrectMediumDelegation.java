@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -15,6 +14,7 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
                 issues.add( issue );
             }
 
-            Place locale = plan.getLocale();
+            Place locale = queryService.getPlanLocale();
             if ( redundantDelegate( medium, delegate, locale ) ) {
                 Issue issue = makeIssue( queryService, Issue.VALIDITY, medium );
                 issue.setDescription( medium.getEffectiveCast().name() + " \"" + medium.getName() + "\" delegates to "

@@ -187,7 +187,7 @@ public class PlaceReferencePanel extends AbstractCommandablePanel {
         boolean editable =
                 getPlan().isDevelopment()
                         && getLockManager().isLockedByUser( getUser().getUsername(), getEntity().getId() )
-                        && !ModelObject.areIdentical( getPlan().getLocale(), getEntity() );
+                        && !ModelObject.areIdentical( getPlanService().getPlanLocale(), getEntity() );
         if ( !editable ) {
             planCheckBox.setEnabled( false );
             eventCheckBox.setEnabled( false );

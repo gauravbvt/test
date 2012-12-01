@@ -1,14 +1,13 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.Commitments;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -58,68 +57,67 @@ public class ProcedureData implements Serializable {
 
     public ProcedureData(
             String serverUrl,
+            PlanCommunity planCommunity,
             Assignment assignment,
             Commitments benefitingCommitments,
             Commitments committingCommitments,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.assignment = assignment;
         this.benefitingCommitments = benefitingCommitments;
         this.committingCommitments = committingCommitments;
         this.user = user;
-        initData( serverUrl, planService, planParticipationService );
+        initData( serverUrl, planCommunity );
     }
 
-    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
-        assignmentData = new AssignmentData( serverUrl, assignment, planService, planParticipationService, user, this );
-        initTriggers( serverUrl, planService, planParticipationService );
+    private void initData( String serverUrl, PlanCommunity planCommunity ) {
+        assignmentData = new AssignmentData( serverUrl, planCommunity, assignment, user, this );
+        initTriggers( serverUrl, planCommunity );
     }
 
 
-    private void initTriggers( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initTriggers( String serverUrl, PlanCommunity planCommunity ) {
         triggers = new ArrayList<TriggerData>();
         // anytime
         if ( assignment.isOngoing() ) {
-            TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
+            TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
             triggerData.setOngoing( true );
-            triggerData.initTrigger( planService, planParticipationService );
+            triggerData.initTrigger( planCommunity );
             triggers.add( triggerData );
         } else {
             // event phase is trigger
             if ( assignment.isInitiatedByEventPhase() ) {
-                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment,  user );
                 triggerData.setEventPhase( assignment.getEventPhase() );
                 triggerData.setEventPhaseContext( assignment.getEventPhaseContext() );
-                triggerData.initTrigger( planService, planParticipationService );
+                triggerData.initTrigger( planCommunity );
                 triggers.add( triggerData );
             }
             // information discovery (notifications to self)
             for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
-                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
                 triggerData.setNotificationToSelf( triggerSelfNotification );
-                triggerData.initTrigger( planService, planParticipationService );
+                triggerData.initTrigger( planCommunity );
                 triggers.add( triggerData );
             }
             // triggering notifications (from others)
             for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
-                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
                 triggerData.setNotificationFromOther( triggerNotification );
-                triggerData.initTrigger( planService, planParticipationService );
+                triggerData.initTrigger( planCommunity );
                 triggers.add( triggerData );
             }
             // triggering requests
             for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
-                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
                 triggerData.setRequestFromOther( triggerRequest );
-                triggerData.initTrigger( planService, planParticipationService );
+                triggerData.initTrigger( planCommunity );
                 triggers.add( triggerData );
             }
             // triggering requests to self
             for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
-                TriggerData triggerData = new TriggerData( serverUrl,assignment, planService, planParticipationService, user );
+                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
                 triggerData.setRequestToSelf( triggerRequest );
-                triggerData.initTrigger( planService, planParticipationService );
+                triggerData.initTrigger( planCommunity );
                 triggers.add( triggerData );
             }
         }

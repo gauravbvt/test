@@ -8,6 +8,7 @@ import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.entities.RoleData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Event;
@@ -56,10 +57,10 @@ public class PlanScopeData  implements Serializable {
         // required for JAXB
     }
 
-    public PlanScopeData( String serverUrl, Plan plan, PlanService planService ) {
-        this.plan = plan;
+    public PlanScopeData( String serverUrl, PlanCommunity planCommunity ) {
+        this.plan = planCommunity.getPlan();
         cache = new HashMap<Long, ModelObjectData>();
-        init( serverUrl, planService );
+        init(  serverUrl, planCommunity.getPlanService() );
     }
 
     private void init( String serverUrl, PlanService planService ) {

@@ -11,8 +11,6 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.participation.PlanParticipationValidationService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 
 /**
@@ -28,30 +26,24 @@ public class PlanService extends DefaultQueryService {
     }
 
     public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, ChannelsUserDao userDao,
-                        AttachmentManager attachmentManager, PlanParticipationService planParticipationService,
-                        PlanParticipationValidationService planParticipationConfirmationService, SurveysDAO surveysDao,
+                        AttachmentManager attachmentManager, SurveysDAO surveysDao,
                         Plan plan ) {
 
         this( planManager,
                 semanticMatcher,
                 userDao,
                 attachmentManager,
-                planParticipationService,
-                planParticipationConfirmationService,
                 surveysDao );
         this.plan = plan;
     }
 
     public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, ChannelsUserDao userDao,
-                        AttachmentManager attachmentManager, PlanParticipationService planParticipationService,
-                        PlanParticipationValidationService planParticipationConfirmationService, SurveysDAO surveysDao ) {
+                        AttachmentManager attachmentManager, SurveysDAO surveysDao ) {
 
         super( planManager,
                 attachmentManager,
                 semanticMatcher,
                 userDao,
-                planParticipationService,
-                planParticipationConfirmationService,
                 surveysDao );
     }
 

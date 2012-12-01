@@ -2,16 +2,16 @@ package com.mindalliance.channels.pages.procedures;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Specable;
-import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -85,7 +85,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
     @Override
     public AttributeModifier newCssClass( String cssClass ) {
-        return new AttributeModifier( "class", true, new Model<String>( cssClass ) );
+        return new AttributeModifier( "class", new Model<String>( cssClass ) );
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
     @Override
     public QueryService getPlanService() {
-        return selector.getPlanService();
+        return selector.getQueryService();
     }
 
     @Override
@@ -234,7 +234,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
     @Override
     public Assignments getNotifications( Assignments assignments, QueryService queryService ) {
-        Assignments result = new Assignments( queryService.getPlan().getLocale() );
+        Assignments result = new Assignments( queryService.getPlanLocale() );
         for ( Assignment assignment : assignments.getAssignments() ) {
             if ( !selector.getCommitmentsTriggering( assignment.getPart() ).isEmpty() )
                 result.add( assignment );
@@ -244,7 +244,7 @@ public class DefaultReportHelper implements ReportHelper, Serializable {
 
     @Override
     public Assignments getRequests( Assignments assignments, QueryService queryService ) {
-        Assignments result = new Assignments( queryService.getPlan().getLocale() );
+        Assignments result = new Assignments( queryService.getPlanLocale() );
         for ( final Assignment assignment : assignments.getAssignments() ) {
             boolean triggeredByRequest = CollectionUtils.exists(
                     selector.getCommitments(),

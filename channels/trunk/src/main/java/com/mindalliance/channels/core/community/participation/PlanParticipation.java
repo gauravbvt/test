@@ -1,5 +1,6 @@
-package com.mindalliance.channels.core.participation;
+package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
@@ -168,6 +169,10 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
         return sb.toString();
     }
 
+    public String getUserFullName() {
+        return getParticipant().getFullName();
+    }
+
     /// Messageable
 
     @Override
@@ -189,10 +194,10 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
     }
 
     @Override
-    public List<String> getToUserNames( String topic, PlanService planService ) {
+    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
-            return planService.getPlanParticipationService()
-                .listSupervisorsToNotify( planService.getPlan(), this, planService );
+            return planCommunity.getPlanParticipationService()
+                .listSupervisorsToNotify( this, planCommunity );
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             List<String> usernames = new ArrayList<String>();
             usernames.add( participant.getUsername() );
@@ -222,4 +227,5 @@ public class PlanParticipation extends AbstractPersistentPlanObject implements M
     public String getLabel() {
         return "Participation";
     }
+
 }

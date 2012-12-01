@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.PlaceReference;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Plan plan = (Plan) modelObject;
-        Place locale = plan.getLocale();
+        Place locale = queryService.getPlanLocale();
         if ( locale != null ) {
             PlaceReference ref = locale.getMustBeContainedIn();
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {

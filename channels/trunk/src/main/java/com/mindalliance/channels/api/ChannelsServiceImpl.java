@@ -7,6 +7,10 @@ import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -16,8 +20,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -73,6 +75,8 @@ public class ChannelsServiceImpl implements ChannelsService {
     private EmailMessagingService emailMessagingService;
     @Autowired
     private UserContactInfoService userContactInfoService;
+    @Autowired
+    private PlanCommunityManager planCommunityManager;
 
     private String serverUrl;
 
@@ -92,7 +96,9 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
                 user.setPlan( plan );
-                result.add( new PlanSummaryData( serverUrl, getPlanService( plan ), userDao, planParticipationService ) );
+                result.add( new PlanSummaryData(
+                        serverUrl,
+                        planCommunityManager.getPlanCommunity( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -103,8 +109,10 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting summary for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorize( user, uri, version );
-            return new PlanSummaryData( serverUrl, planService, userDao, planParticipationService );
+            Plan plan = authorize( user, uri, version );
+            return new PlanSummaryData(
+                    serverUrl,
+                    planCommunityManager.getPlanCommunity( plan ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -120,8 +128,8 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting release info for production version of plan " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
-            PlanService planService = authorizeParticipant( user, uri );
-            return new PlanReleaseData( planService.getPlan() );
+            Plan plan = authorizeParticipant( user, uri );
+            return new PlanReleaseData( plan );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -147,7 +155,9 @@ public class ChannelsServiceImpl implements ChannelsService {
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
                     && plan.isProduction() ) {
                 user.setPlan( plan );
-                result.add( new PlanSummaryData( serverUrl, getPlanService( plan ), userDao, planParticipationService ) );
+                result.add( new PlanSummaryData(
+                        serverUrl,
+                        planCommunityManager.getPlanCommunity( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -166,9 +176,10 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorize( user, uri, version );
-            Plan plan = planService.getPlan();
-            return new PlanScopeData( serverUrl, plan, planService );
+            Plan plan = authorize( user, uri, version );
+            return new PlanScopeData(
+                    serverUrl,
+                    planCommunityManager.getPlanCommunity( plan ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -183,18 +194,16 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting user procedures of agent " + actorId + " for production version of plan " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
-            PlanService planService = authorizeParticipant( user, uri );
-            Plan plan = planService.getPlan();
-            Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
+            Plan plan = authorizeParticipant( user, uri );
+            PlanService planService = getPlanService(  plan );
+            Actor actor = getPlanService( plan ).find( Actor.class, Long.parseLong( actorId ) );
             if ( !canSeeProcedures( user, actor, planService ) ) {
                 throw new Exception( "Procedures not visible to " + user.getUsername() + " for plan with uri " + uri );
             }
             return new ProceduresData(
                     serverUrl,
-                    plan,
-                    actor,
-                    planService,
-                    planParticipationService );
+                    planCommunityManager.getPlanCommunity( plan ),
+                    actor );
         } catch ( Exception e ) {
             LOG.warn( "No procedures available for agent " + actorId, e );
             throw new WebApplicationException(
@@ -210,18 +219,14 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting user procedures for production version of plan " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
-            PlanService planService = authorizeParticipant( user, uri );
-            Plan plan = planService.getPlan();
+            Plan plan = authorizeParticipant( user, uri );
             List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                    plan,
                     user.getUserInfo(),
-                    planService );
+                    getPlanCommunity(  plan ) );
             return new ProceduresData(
                     serverUrl,
-                    plan,
+                    planCommunityManager.getPlanCommunity( plan ),
                     participations,
-                    planService,
-                    planParticipationService,
                     user );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
@@ -239,22 +244,18 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting " + username + "'s procedures for plan " + uri + " version " + version );
         try {
             ChannelsUser protocolsUser = userDao.getUserNamed( username );
-            PlanService planService = authorize( user, uri, version );
-            Plan plan = planService.getPlan();
+            Plan plan = authorize( user, uri, version );
             List<PlanParticipation> participationList = planParticipationService.getActiveUserParticipations(
-                    plan,
                     protocolsUser.getUserInfo(),
-                    planService
+                    getPlanCommunity(  plan )
             );
             if ( participationList.isEmpty() ) {
                 throw new Exception( username + " does not participate in plan " + uri + " version " + version );
             }
             return new ProceduresData(
                     serverUrl,
-                    plan,
+                    planCommunityManager.getPlanCommunity( plan ),
                     participationList,
-                    planService,
-                    planParticipationService,
                     protocolsUser );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
@@ -271,15 +272,12 @@ public class ChannelsServiceImpl implements ChannelsService {
         ChannelsUser user = ChannelsUser.current( userDao );
         LOG.info( "Getting procedures of agent " + actorId + " for plan " + uri + " version " + version );
         try {
-            PlanService planService = authorize( user, uri, version );
-            Plan plan = planService.getPlan();
-            Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
+            Plan plan = authorize( user, uri, version );
+            Actor actor = getPlanService( plan ).find( Actor.class, Long.parseLong( actorId ) );
             return new ProceduresData(
                     serverUrl,
-                    plan,
-                    actor,
-                    planService,
-                    planParticipationService );
+                    planCommunityManager.getPlanCommunity( plan ),
+                    actor );
         } catch ( Exception e ) {
             LOG.warn( "No procedures available for agent " + actorId, e );
             throw new WebApplicationException(
@@ -295,11 +293,9 @@ public class ChannelsServiceImpl implements ChannelsService {
             String uri,
             String version,
             String username ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorize( user, uri, version );
             ProceduresData proceduresData = getUserProcedures( uri, version, username );
-            return new DirectoryData( proceduresData, planService, planParticipationService );
+            return new DirectoryData( proceduresData );
         } catch ( Exception e ) {
             LOG.warn( "Failed to retrieve directory", e );
             throw new WebApplicationException(
@@ -315,11 +311,9 @@ public class ChannelsServiceImpl implements ChannelsService {
             String uri,
             String version,
             String agentId ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorize( user, uri, version );
             ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
-            return new DirectoryData( proceduresData, planService, planParticipationService );
+            return new DirectoryData( proceduresData );
         } catch ( Exception e ) {
             LOG.warn( "Failed to retrieve directory", e );
             throw new WebApplicationException(
@@ -335,17 +329,15 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting user directory for production version of plan " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
-            PlanService planService = authorizeParticipant( user, uri );
-            Plan plan = planService.getPlan();
+            Plan plan = authorizeParticipant( user, uri );
             List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                    plan,
                     user.getUserInfo(),
-                    planService );
+                    getPlanCommunity(  plan ) );
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in production plan " + uri );
             }
             ProceduresData proceduresData = getMyProcedures( uri );
-            return new DirectoryData( proceduresData, planService, planParticipationService );
+            return new DirectoryData( proceduresData );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -356,24 +348,24 @@ public class ChannelsServiceImpl implements ChannelsService {
         }
     }
 
-    private PlanService authorizeParticipant( ChannelsUser user, String uri ) throws Exception {
+    private Plan authorizeParticipant( ChannelsUser user, String uri ) throws Exception {
         Plan plan = planManager.findProductionPlan( uri );
         if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
             throw new Exception( user.getUsername() + " is not authorized to access production plan " + uri );
         }
         user.setPlan( plan );
-        return getPlanService( plan );
+        return plan;
     }
 
     // Only planners can request access to a specific version of a plan.
-    private PlanService authorize( ChannelsUser user, String uri, String version ) throws Exception {
+    private Plan authorize( ChannelsUser user, String uri, String version ) throws Exception {
         Plan plan = planManager.getPlan( uri, Integer.parseInt( version ) );
         if ( user == null
                 || plan == null
                 || ( plan.isDevelopment() && !user.isPlanner( uri ) )
                 || ( plan.isProduction() && !user.isParticipant( uri ) ) )
             throw new Exception( "Unauthorized access to plan " + uri + " version " + version );
-        return getPlanService( plan );
+        return plan;
     }
 
     @Override
@@ -381,8 +373,8 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorize( user, uri, version );
-            return new IssuesData( serverUrl, planService, analyst, userDao, planParticipationService );
+            Plan plan = authorize( user, uri, version );
+            return new IssuesData( serverUrl, planCommunityManager.getPlanCommunity( plan ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -399,9 +391,8 @@ public class ChannelsServiceImpl implements ChannelsService {
             return true;
         // Participating user can see own procedures. Supervisor can procedures of supervised.
         List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                plan,
                 user.getUserInfo(),
-                planService );
+                getPlanCommunity(  plan ) );
         for ( PlanParticipation participation : participations ) {
             Actor participant = participation.getActor( planService );
             if ( participant != null
@@ -421,10 +412,10 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Receiving feedback for protocols from production plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizeParticipant( user, uri );
+            Plan plan = authorizeParticipant( user, uri );
             feedbackService.sendFeedback(
                     user.getUsername(),
-                    planService.getPlan(),
+                    plan,
                     Feedback.Type.valueOf( type ),
                     Feedback.PROTOCOLS,
                     feedback,
@@ -443,10 +434,9 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Adding user participation in production plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizeParticipant( user, uri );
-            Plan plan = planService.getPlan();
-            Actor actor = planService.find( Actor.class, Long.parseLong( agentId ) );
-            if ( planParticipationService.isParticipationOpenAndAvailable( actor, user, planService ) ) {
+            Plan plan = authorizeParticipant( user, uri );
+            Actor actor = getPlanService( plan ).find( Actor.class, Long.parseLong( agentId ) );
+            if ( planParticipationService.isParticipationOpenAndAvailable( actor, user, getPlanCommunity(  plan ) ) ) {
                 PlanParticipation participation = new PlanParticipation( user.getUsername(),
                         plan,
                         user,
@@ -469,14 +459,12 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Refusing user participation in production plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizeParticipant( user, uri );
-            Plan plan = planService.getPlan();
-            Actor actor = planService.find( Actor.class, Long.parseLong( agentId ) );
+            Plan plan = authorizeParticipant( user, uri );
+            Actor actor = getPlanService( plan ).find( Actor.class, Long.parseLong( agentId ) );
             PlanParticipation planParticipation = planParticipationService.getParticipation(
-                    plan,
                     user.getUserInfo(),
                     actor,
-                    planService
+                    getPlanCommunity(  plan )
             );
             if ( planParticipation != null ) {
                 planParticipationService.refuse( planParticipation );
@@ -497,9 +485,8 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Inviting user to participate in plan " + uri );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizeParticipant( user, uri );
-            Plan plan = planService.getPlan();
-            ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, planService );
+            Plan plan = authorizeParticipant( user, uri );
+            ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, getPlanService( plan ) );
             message = message + makeInvitation( invitedUser, plan );
             emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
 
@@ -517,8 +504,8 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Adding user contact info " );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizeParticipant( user, uri );
-            TransmissionMedium medium = planService.find( TransmissionMedium.class, Long.parseLong( mediumId ) );
+            Plan plan = authorizeParticipant( user, uri );
+            TransmissionMedium medium = getPlanService( plan ).find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             if ( !medium.isAddressValid( address ) ) throw new Exception( "Invalid address" );
             userContactInfoService.addChannel(
                     user.getUsername(),
@@ -538,8 +525,8 @@ public class ChannelsServiceImpl implements ChannelsService {
         LOG.info( "Removing user contact info " );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanService planService = authorizeParticipant( user, uri );
-            TransmissionMedium medium = planService.find( TransmissionMedium.class, Long.parseLong( mediumId ) );
+            Plan plan = authorizeParticipant( user, uri );
+            TransmissionMedium medium = getPlanService( plan ).find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             userContactInfoService.removeChannel( user.getUserInfo(), new Channel( medium, address ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -590,6 +577,10 @@ public class ChannelsServiceImpl implements ChannelsService {
 
     private PlanService getPlanService( Plan plan ) {
         return planServiceFactory.getService( plan );
+    }
+
+    private PlanCommunity getPlanCommunity( Plan plan ) {
+        return planCommunityManager.getPlanCommunity( plan );
     }
 
 }

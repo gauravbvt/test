@@ -2,14 +2,14 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
 import com.mindalliance.channels.core.query.PlanService;
@@ -51,54 +51,51 @@ public class ProceduresData  implements Serializable {
 
     public ProceduresData(
             String serverUrl,
-            Plan plan,
+            PlanCommunity planCommunity,
             List<PlanParticipation> participations,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        this.plan = plan;
+        this.plan = planCommunity.getPlan();
         this.user = user;
-        initData( serverUrl, participations, planService, planParticipationService );
-    }
-
-    private void initData(
-            String serverUrl,
-            List<PlanParticipation> participations,
-            PlanService planService,
-            PlanParticipationService planParticipationService ) {
-        initParticipatingActors( serverUrl, participations, planService, planParticipationService );
-        this.actors = getActors( participations );
-        initData( serverUrl, planService, planParticipationService );
+        initData( serverUrl, participations, planCommunity );
     }
 
     public ProceduresData(
             String serverUrl,
-            Plan plan,
-            Actor actor,
-            PlanService planService,
-            PlanParticipationService planParticipationService ) {
-        this.plan = plan;
+            PlanCommunity planCommunity,
+            Actor actor ) {
+        this.plan = planCommunity.getPlan();
         this.actors = new ArrayList<Actor>();
         actors.add( actor );
-        initData( serverUrl, planService, planParticipationService );
+        initData( serverUrl, planCommunity );
     }
 
-    private void initData( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
-        initProcedures( serverUrl, planService, planParticipationService );
-        initEmployments( planService, planParticipationService );
-        environmentData =  new EnvironmentData( serverUrl, this, planService );
+
+    private void initData(
+            String serverUrl,
+            List<PlanParticipation> participations,
+            PlanCommunity planCommunity ) {
+        initParticipatingActors( serverUrl, participations, planCommunity );
+        this.actors = getActors( participations );
+        initData( serverUrl, planCommunity );
     }
 
-    private void initEmployments( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initData( String serverUrl, PlanCommunity planCommunity ) {
+        initProcedures( serverUrl, planCommunity );
+        initEmployments( planCommunity );
+        environmentData =  new EnvironmentData( serverUrl, this, planCommunity );
+    }
+
+    private void initEmployments( PlanCommunity planCommunity ) {
         employments = new ArrayList<EmploymentData>();
         for ( Actor actor : actors )
-            for ( Employment employment : planService.findAllEmploymentsForActor( actor ) ) {
+            for ( Employment employment : planCommunity.getPlanService().findAllEmploymentsForActor( actor ) ) {
                 employments.add( new EmploymentData( employment ) );
             }
     }
 
-    private void initProcedures( String serverUrl, PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initProcedures( String serverUrl, PlanCommunity planCommunity ) {
         procedures = new ArrayList<ProcedureData>();
+        PlanService planService = planCommunity.getPlanService();
         Commitments allCommitments = planService.getAllCommitments( true, false );
         Set<Assignment> assignments = new HashSet<Assignment>();
         for ( Actor actor : actors ) {
@@ -109,11 +106,10 @@ public class ProceduresData  implements Serializable {
         for ( Assignment assignment : assignments ) {
             procedures.add( new ProcedureData(
                     serverUrl,
+                    planCommunity,
                     assignment,
                     allCommitments.benefiting( assignment ),
                     allCommitments.committing( assignment ),
-                    planService,
-                    planParticipationService,
                     user ) );
         }
     }
@@ -121,9 +117,9 @@ public class ProceduresData  implements Serializable {
     private void initParticipatingActors(
             String serverUrl,
             List<PlanParticipation> participations,
-            PlanService planService,
-            PlanParticipationService planParticipationService ) {
+            PlanCommunity planCommunity ) {
         participatingActors = new ArrayList<Actor>();
+        PlanService planService = planCommunity.getPlanService();
         for ( PlanParticipation participation : participations ) {
             Actor actor = participation.getActor( planService );
             if ( actor != null ) participatingActors.add( actor );

@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.dao.user;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -42,9 +41,6 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
 
     @Autowired
     private UserContactInfoService userContactInfoService;
-
-    @Autowired
-    private PlanParticipationService planParticipationService;
 
 
     @Override
@@ -91,8 +87,6 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
     public void deleteUser( String username,
                             ChannelsUser user,
                             PlanManager planManager ) {
-        // Delete user participation
-        planParticipationService.deleteAllParticipations( user.getUserInfo(), username );
         // Delete user contact info
         userContactInfoService.removeAllChannels( user.getUserInfo() );
         delete( user.getUserInfo() );

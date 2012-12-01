@@ -10,6 +10,10 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -22,8 +26,8 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -95,6 +99,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     @SpringBean
     private PlanManager planManager;
 
+    @SpringBean
+    private PlanServiceFactory planServiceFactory;
+
     private transient QueryService queryService;
 
     @SpringBean
@@ -111,6 +118,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     @SpringBean
     private PlanParticipationService planParticipationService;
+
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
+
 
     /**
      * Subsituted update target.
@@ -177,9 +188,16 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     protected List<PlanParticipation> getPlanParticipations( Plan plan, ChannelsUser user ) {
         return planParticipationService.getActiveUserParticipations(
-                plan,
                 user.getUserInfo(),
-                getQueryService() );
+                getPlanCommunity() );
+    }
+
+    protected PlanCommunity getPlanCommunity() {
+        return planCommunityManager.getPlanCommunity( plan );
+    }
+
+    private PlanService getPlanService() {
+        return getPlanCommunity().getPlanService();
     }
 
     protected BookmarkablePageLink<? extends WebPage> getProtocolsLink(
@@ -587,7 +605,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     @Override
     public final QueryService getQueryService() {
         if ( queryService == null )
-            queryService = commanderFactory.getCommander( plan ).getQueryService();
+            queryService = getPlanService();
+//            queryService = commanderFactory.getCommander( plan ).getQueryService();
         return queryService;
     }
 
@@ -696,7 +715,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                 + "&" + VERSION_PARM + "=" + getPlan().getVersion();
     }
 
-
-
+    protected Place getPlanLocale() {
+        return getPlanService().getPlanLocale();
+    }
 
 }

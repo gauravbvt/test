@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.issues;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
@@ -41,8 +42,8 @@ public class PlanMetricsData  implements Serializable {
         // required
     }
 
-    public PlanMetricsData( PlanService planService ) {
-        init( planService );
+    public PlanMetricsData( PlanCommunity planCommunity ) {
+        init( planCommunity.getPlanService() );
     }
 
     private void init( PlanService planService ) {

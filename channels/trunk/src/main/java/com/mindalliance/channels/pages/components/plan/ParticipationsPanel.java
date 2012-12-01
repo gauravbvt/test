@@ -1,6 +1,9 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -8,9 +11,6 @@ import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Channels;
@@ -246,10 +246,10 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         List<ParticipationWrapper> participationWrappers = new ArrayList<ParticipationWrapper>();
         participationWrappers = new ArrayList<ParticipationWrapper>();
-        QueryService queryService = getQueryService();
+        PlanCommunity planCommunity = getPlanCommunity();
         for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
             List<PlanParticipation> participations = planParticipationService.getUserParticipations(
-                    getPlan(), channelsUser.getUserInfo(), queryService );
+                     channelsUser.getUserInfo(), planCommunity );
             for ( PlanParticipation participation : participations ) {
                 planParticipationService.refresh( participation );
                 ParticipationWrapper wrapper = new ParticipationWrapper(
@@ -467,9 +467,8 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 return "";
             } else {
                 return planParticipationService.isActive(
-                        getPlan(),
                         participation,
-                        getQueryService()
+                        getPlanCommunity()
                 ) ? "Yes" : "Not yet";
             }
         }
@@ -535,7 +534,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             } else {
                 participation = null;
             }
-            getPlanManager().clearCache();
+            // getPlanManager().clearCache();
         }
 
         public List<Actor> getDomain() {

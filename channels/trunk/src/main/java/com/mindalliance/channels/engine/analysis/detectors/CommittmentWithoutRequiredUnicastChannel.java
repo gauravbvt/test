@@ -14,9 +14,9 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -40,7 +40,7 @@ public class CommittmentWithoutRequiredUnicastChannel extends AbstractIssueDetec
             for ( Commitment commitment : queryService.findAllCommitments( flow, false, assignments ) )
                 contactedEntities.add( commitment.getContactedEntity() );
 
-            final Place locale = queryService.getPlan().getLocale();
+            final Place locale = queryService.getPlanLocale();
             for ( Channelable contacted : contactedEntities ) {
                 for ( final Channel flowChannel : flow.getEffectiveChannels() ) {
                     if ( flowChannel.isUnicast() && !flowChannel.isDirect() ) {

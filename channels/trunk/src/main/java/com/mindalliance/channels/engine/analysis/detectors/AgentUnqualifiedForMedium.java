@@ -8,9 +8,9 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -82,7 +82,7 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
 
     private void checkQualification( Actor actor, List<TransmissionMedium> qualifiedMedia, List<Issue> issues, Flow flow,
                                      boolean isCommitter, Set<Actor> unqualified, QueryService queryService ) {
-        Place planLocale = queryService.getPlan().getLocale();
+        Place planLocale = queryService.getPlanLocale();
         for ( TransmissionMedium medium : qualifiedMedia ) {
             Actor qualification = medium.getQualification();
             if ( !actor.narrowsOrEquals( qualification, planLocale ) && !unqualified.contains( actor ) ) {

@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Flow;
@@ -10,6 +9,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
                     }
                 }
                 // under-secured delegated medium
-                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( plan.getLocale() );
+                List<TransmissionMedium> delegates = medium.getEffectiveDelegates( queryService.getPlanLocale() );
                 for ( TransmissionMedium delegate : delegates ) {
                     if ( !medium.isDirect() ) {
                         List<Classification> delegateClassifications = medium.getEffectiveSecurity( plan );

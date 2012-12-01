@@ -1,13 +1,13 @@
 package com.mindalliance.channels.pages.components.social;
 
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.PlanParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -213,9 +213,8 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         StringBuilder sb = new StringBuilder(  );
         QueryService queryService = getQueryService();
         List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                getPlan(),
                 getUserInfo(),
-                queryService
+                getPlanCommunity()
         );
         for ( PlanParticipation participation : participations ) {
             Actor actor = participation.getActor( queryService );

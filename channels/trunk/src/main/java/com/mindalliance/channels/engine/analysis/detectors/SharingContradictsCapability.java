@@ -47,7 +47,7 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
                     Plan plan = queryService.getPlan();
                     findEOIMismatch( plan, flow, send, mismatches );
                     findIntentMismatch( flow, send, mismatches );
-                    findChannelsMismatch( flow, send, mismatches, plan.getLocale() );
+                    findChannelsMismatch( flow, send, mismatches, queryService.getPlanLocale() );
                     findDelayMismatch( flow, send, mismatches );
                     if ( !mismatches.isEmpty() ) {
                         Issue issue = makeIssue( queryService, Issue.VALIDITY, flow );

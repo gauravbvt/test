@@ -7,8 +7,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class AmbiguousSharingFlow extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Flow sharing = (Flow) modelObject;
         if ( !sharing.isReferencesEventPhase() ) {
-            Place locale = queryService.getPlan().getLocale();
+            Place locale = queryService.getPlanLocale();
             for ( Flow other : queryService.findAllFlows() ) {
                 if ( other.isSharing()
                         && sharing.isAskedFor() == other.isAskedFor()

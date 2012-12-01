@@ -224,7 +224,7 @@ public class PlaceAnalyticsPanel
         List<Place> places = queryService.listActualEntities( Place.class );
         List<Place> result = new ArrayList<Place>( places.size() );
 
-        Place locale = queryService.getPlan().getLocale();
+        Place locale = queryService.getPlanLocale();
 
         for ( Place p : places )
             if ( !p.equals( place ) && p.matchesOrIsInside( place, locale ) )

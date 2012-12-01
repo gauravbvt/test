@@ -1,7 +1,7 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class ChannelsMessagingServiceImpl extends AbstractMessageServiceImpl imp
     public List<String> sendMessage(
             Messageable messageable,
             String topic,
-            PlanService planService ) {
+            PlanCommunity planCommunity ) {
         return new ArrayList<String>(  );
     }
 
@@ -33,7 +33,7 @@ public class ChannelsMessagingServiceImpl extends AbstractMessageServiceImpl imp
             List<ChannelsUserInfo> recipients,
             List<? extends Messageable> messageables,
             String topic,
-            PlanService planService ) {
+            PlanCommunity planCommunity ) {
         return false;  //Todo
     }
 

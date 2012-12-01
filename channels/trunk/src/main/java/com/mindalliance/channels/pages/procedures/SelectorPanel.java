@@ -570,8 +570,4 @@ public class SelectorPanel extends AbstractUpdatablePanel implements Assignments
         return imagingService;
     }
 
-    @Override
-    public QueryService getPlanService() {
-        return getCommanderFactory().getCommander( getPlan() ).getQueryService();
-    }
 }

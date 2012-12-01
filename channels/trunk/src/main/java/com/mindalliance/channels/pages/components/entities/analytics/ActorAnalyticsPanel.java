@@ -23,7 +23,6 @@ import com.mindalliance.channels.pages.components.entities.AbstractFilterableTab
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -101,7 +100,6 @@ public class ActorAnalyticsPanel
      * Model objects filtered on (show only where so and so is the actor etc.)
      */
     private List<Identifiable> filters;
-    private WebMarkupContainer participantsContainer;
     private WebMarkupContainer assignmentsContainer;
     private WebMarkupContainer commitmentsContainer;
 
@@ -119,7 +117,6 @@ public class ActorAnalyticsPanel
         addActorEmploymentTable();
         addAssignmentsPanel();
         addCommitmentsPanel();
-        addParticipantsTable();
     }
 
     private void addRoles() {
@@ -182,25 +179,6 @@ public class ActorAnalyticsPanel
         );
         actorEmploymentTable.setOutputMarkupId( true );
         rolesContainer.addOrReplace( actorEmploymentTable );
-    }
-
-    private void addParticipantsTable() {
-        participantsContainer = new WebMarkupContainer( "participantsContainer" );
-        participantsContainer.setOutputMarkupId( true );
-        makeVisible( participantsContainer, getActor().isActual() );
-        addOrReplace( participantsContainer );
-        Component participantsTable = getActor().isActual()
-                ? new ParticipantsTable(
-                "participants",
-                new PropertyModel<List<ChannelsUser>>( this, "participants" ),
-                MAX_ROWS )
-                : new Label( "participants", "" );
-        participantsTable.setOutputMarkupId( true );
-        participantsContainer.add( participantsTable );
-    }
-
-    public List<ChannelsUser> getParticipants() {
-        return getQueryService().findUsersParticipatingAs( getActor() );
     }
 
     public String getIndexedOn() {

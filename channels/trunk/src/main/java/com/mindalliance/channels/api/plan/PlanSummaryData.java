@@ -2,13 +2,11 @@ package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.PlanParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.participation.PlanParticipation;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -46,33 +44,26 @@ public class PlanSummaryData implements Serializable {
         // required
     }
 
-    public PlanSummaryData(
-            String serverUrl,
-            PlanService planService,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
-        init( serverUrl, planService, userDao, planParticipationService );
-
+    public PlanSummaryData( String serverUrl, PlanCommunity planCommunity ) {
+        init(  serverUrl, planCommunity );
     }
 
     private void init(
             String serverUrl,
-            PlanService planService,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
-        plan = planService.getPlan();
-        initPlanners( planService );
-        initParticipations( serverUrl,planService, userDao, planParticipationService );
-        initOpenActors( serverUrl, planService, userDao, planParticipationService );
-        initParticipantActors( planService, userDao, planParticipationService );
-        initSupervised( serverUrl, planService );
+            PlanCommunity planCommunity ) {
+        plan = planCommunity.getPlan();
+        initPlanners( planCommunity );
+        initParticipations( serverUrl,planCommunity );
+        initOpenActors( serverUrl, planCommunity );
+        initParticipantActors( planCommunity );
+        initSupervised( serverUrl, planCommunity );
         documentation = new DocumentationData( serverUrl, getPlan() );
     }
 
-    private void initSupervised( String serverUrl, PlanService planService ) {
+    private void initSupervised( String serverUrl, PlanCommunity planCommunity ) {
         Set<Actor> supervisedSet = new HashSet<Actor>();
         for ( Actor actor : getParticipantActors() ) {
-            supervisedSet.addAll( planService.findSupervised(  actor ) );
+            supervisedSet.addAll( planCommunity.getPlanService().findSupervised(  actor ) );
         }
         List<Actor> supervisedActors = new ArrayList<Actor>( supervisedSet );
         underlings = new ArrayList<AgentData>();
@@ -83,16 +74,13 @@ public class PlanSummaryData implements Serializable {
     }
 
     private void initParticipantActors(
-            PlanService planService,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
+            PlanCommunity planCommunity ) {
         actors = new ArrayList<Actor>();
-        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                getPlan(),
-                ChannelsUser.current( userDao ).getUserInfo(),
-                planService );
+        List<PlanParticipation> participations = planCommunity.getPlanParticipationService().getActiveUserParticipations(
+                ChannelsUser.current( planCommunity.getUserDao() ).getUserInfo(),
+                planCommunity );
         for ( PlanParticipation participation : participations ) {
-            Actor actor = participation.getActor( planService );
+            Actor actor = participation.getActor( planCommunity.getPlanService() );
             if ( actor != null ) actors.add( actor );
         }
 
@@ -100,12 +88,11 @@ public class PlanSummaryData implements Serializable {
 
     private void initOpenActors(
             String serverUrl,
-            PlanService planService,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
+            PlanCommunity planCommunity ) {
         openActorList = new ArrayList<AgentData>();
-        ChannelsUser user = ChannelsUser.current( userDao );
-        List<Actor> openActors = planParticipationService.findOpenActors( user, planService );
+        ChannelsUser user = ChannelsUser.current( planCommunity.getUserDao() );
+        List<Actor> openActors = planCommunity.getPlanParticipationService()
+                .findOpenActors( user, planCommunity );
         for ( Actor openActor : openActors ) {
             openActorList.add( new AgentData( serverUrl, openActor, getPlan() ) );
         }
@@ -114,24 +101,25 @@ public class PlanSummaryData implements Serializable {
 
     private void initParticipations(
             String serverUrl,
-            PlanService planService,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
+            PlanCommunity planCommunity ) {
         participationDataList = new ArrayList<ParticipationData>();
-        ChannelsUser user = ChannelsUser.current( userDao );
-        List<PlanParticipation> participations = planParticipationService.getUserParticipations(
-                getPlan(),
-                user.getUserInfo(), planService );
+        ChannelsUser user = ChannelsUser.current( planCommunity.getUserDao() );
+        List<PlanParticipation> participations = planCommunity.getPlanParticipationService()
+                .getUserParticipations( user.getUserInfo(), planCommunity );
         for ( PlanParticipation participation : participations ) {
-            participationDataList.add( new ParticipationData( serverUrl, participation, user, planService ) );
+            participationDataList.add( new ParticipationData(
+                    serverUrl,
+                    planCommunity,
+                    user,
+                    participation ) );
         }
 
     }
 
-    private void initPlanners( PlanService planService ) {
+    private void initPlanners( PlanCommunity planCommunity ) {
         planners = new ArrayList<UserData>();
-        for ( ChannelsUser planner : planService.getUserDao().getPlanners( getPlan().getUri() ) ) {
-            planners.add( new UserData( planner, planService ) );
+        for ( ChannelsUser planner : planCommunity.getUserDao().getPlanners( getPlan().getUri() ) ) {
+            planners.add( new UserData( planner, planCommunity.getPlanService() ) );
         }
 
     }

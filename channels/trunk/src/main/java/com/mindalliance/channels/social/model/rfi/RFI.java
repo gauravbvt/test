@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Employment;
@@ -338,7 +339,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     }
 
     @Override
-    public List<String> getToUserNames( String topic, PlanService planService ) {
+    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
         List<String> usernames = new ArrayList<String>();
         usernames.add(  getToUsername(  topic  ) );
         return usernames;
@@ -482,9 +483,9 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                     .append( plan.getDescription() )
                     .append( "\n" );
         }
-        if ( plan.getLocale() != null ) {
+        if ( planService.getPlanLocale() != null ) {
             sb.append( "Targeted location: " )
-                    .append( plan.getLocale().getName() )
+                    .append( planService.getPlanLocale().getName() )
                     .append( "\n" );
         }
         sb.append( "\n" );

@@ -1,10 +1,9 @@
 package com.mindalliance.channels.api.issues;
 
 import com.mindalliance.channels.api.plan.PlanSummaryData;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 
@@ -35,28 +34,22 @@ public class IssuesData  implements Serializable {
     public IssuesData() {
     }
 
-    public IssuesData(
-            String serverUrl,
-            PlanService planService,
-            Analyst analyst,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
-        init( serverUrl, planService, analyst, userDao, planParticipationService );
+     public IssuesData( String serverUrl, PlanCommunity planCommunity ) {
+        init( serverUrl, planCommunity );
     }
 
     private void init(
             String serverUrl,
-            PlanService planService,
-            Analyst analyst,
-            ChannelsUserDao userDao,
-            PlanParticipationService planParticipationService ) {
-        planSummaryData = new PlanSummaryData( serverUrl, planService, userDao, planParticipationService );
-        planMetricsData = new PlanMetricsData( planService );
-        initIssues( planService, analyst );
+            PlanCommunity planCommunity ) {
+        planSummaryData = new PlanSummaryData( serverUrl, planCommunity );
+        planMetricsData = new PlanMetricsData( planCommunity );
+        initIssues( planCommunity );
     }
 
-    private void initIssues( PlanService planService, Analyst analyst ) {
+    private void initIssues( PlanCommunity planCommunity ) {
         issues = new ArrayList<IssueData>();
+        PlanService planService = planCommunity.getPlanService();
+        Analyst analyst = planCommunity.getAnalyst();
         for ( ModelObject mo : planService.list( ModelObject.class ) ) {
             for ( Issue issue : analyst.listIssues( planService, mo, true ) ) {
                 issues.add( new IssueData( issue, mo ) );

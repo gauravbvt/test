@@ -267,7 +267,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         }
         List<Requirement> applierRequirements = new ArrayList<Requirement>();
         QueryService queryService = getQueryService();
-        Place planLocale = queryService.getPlan().getLocale();
+        Place planLocale = getPlanLocale();
         for ( RequirementRelationship reqRel : reqRels ) {
             for ( Requirement req : reqRel.getRequirements() ) {
                 Requirement appliedReq = req.transientCopy();
@@ -295,7 +295,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
     public List<Commitment> getCommitments() {
         if ( selectedAppliedRequirement != null ) {
             return getQueryService().getAllCommitments()
-                    .inSituation( selectedTiming, selectedEvent, getQueryService().getPlan().getLocale() )
+                    .inSituation( selectedTiming, selectedEvent, getPlanLocale() )
                     .satisfying( selectedAppliedRequirement ).toList();
         } else {
             return new ArrayList<Commitment>();
@@ -374,12 +374,12 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
             }
             if ( qualifiers.containsKey( "timing" ) ) {
                 Phase.Timing timing = (Phase.Timing) qualifiers.get( "timing" );
-                appliedReq.setSituationIfAppropriate( timing, null, getQueryService().getPlan().getLocale() );
+                appliedReq.setSituationIfAppropriate( timing, null, getPlanLocale() );
             }
             if ( qualifiers.containsKey( "event" ) ) {
                 Long id = (Long) qualifiers.get( "event" );
                 Event event = getQueryService().find( Event.class, id );
-                appliedReq.setSituationIfAppropriate( null, event, getQueryService().getPlan().getLocale() );
+                appliedReq.setSituationIfAppropriate( null, event, getPlanLocale() );
             }
             return appliedReq;
         } catch ( NotFoundException e ) {

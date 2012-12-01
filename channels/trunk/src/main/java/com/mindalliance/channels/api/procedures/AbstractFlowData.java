@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.MediumData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
@@ -12,7 +13,6 @@ import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
 import com.mindalliance.channels.core.query.PlanService;
 
 import java.util.ArrayList;
@@ -44,19 +44,19 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public AbstractFlowData(
             String serverUrl,
+            PlanCommunity planCommunity,
             boolean initiating,
             Flow flow,
             Assignment assignment,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( assignment, planService, planParticipationService, user );
+        super( planCommunity, assignment, user );
         this.serverUrl = serverUrl;
         this.initiating = initiating;
         this.flow = flow;
     }
 
-    protected void initOtherData( PlanService planService ) {
+    protected void initOtherData( PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         initFailureSeverity( planService );
         initMediumDataList( serverUrl, planService );
         initChannelDataList( planService );
@@ -116,14 +116,12 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private List<ContactData> findContactsFromEmployment(
             Employment employment,
             Commitment commitment,
-            PlanService planService,
-            PlanParticipationService planParticipationService ) {
+            PlanCommunity planCommunity ) {
         return ContactData.findContactsFromEmployment(
                 serverUrl,
                 employment,
                 commitment,
-                planService,
-                planParticipationService,
+                planCommunity,
                 getUser() == null ? null : getUser().getUserInfo()
         );
 

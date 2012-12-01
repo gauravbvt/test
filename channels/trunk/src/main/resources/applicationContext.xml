@@ -48,8 +48,7 @@ CONFIGURATION NOTES:
             <list>
                 <value>com.mindalliance.channels.social.model</value>
                 <value>com.mindalliance.channels.core.dao.user</value>
-                <value>com.mindalliance.channels.core.community</value>
-                <value>com.mindalliance.channels.core.participation</value>
+                <value>com.mindalliance.channels.core.community.participation</value>
             </list>
         </property>
     </bean>
@@ -141,9 +140,10 @@ CONFIGURATION NOTES:
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 
-    <bean id="planParticipationService" class="com.mindalliance.channels.core.participation.PlanParticipationServiceImpl"/>
-    <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.participation.PlanParticipationValidationServiceImpl"/>
+    <bean id="planParticipationService" class="com.mindalliance.channels.core.community.participation.PlanParticipationServiceImpl"/>
+    <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.community.participation.PlanParticipationValidationServiceImpl"/>
     <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
+    <bean id="planCommunityManager" class="com.mindalliance.channels.core.community.PlanCommunityManagerImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -198,8 +198,6 @@ CONFIGURATION NOTES:
         <constructor-arg ref="semanticMatcher"/>
         <constructor-arg ref="userDao"/>
         <constructor-arg ref="attachmentManager"/>
-        <constructor-arg ref="planParticipationService"/>
-        <constructor-arg ref="planParticipationConfirmationService"/>
         <constructor-arg ref="surveysDao"/>
         <property name="serverUrl" value="${server.url}"/>
     </bean>
@@ -257,7 +255,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnTargetPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnSourcePart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SinglePointOfFailure"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.NonParticipatingNormalUser"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSegmentForEventPhase"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UnplayedPart"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UselessActor"/>
@@ -294,9 +291,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantSegmentContext"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentContextNeverCaused"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AmbiguousSharingFlow"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithoutParticipation"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithNonMatchingParticipation"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithTooManyParticipations"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartTerminatedByManySends"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NeedWithNoTimeSensitiveEOI"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>

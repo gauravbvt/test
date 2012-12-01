@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
@@ -7,8 +8,6 @@ import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.jws.WebMethod;
@@ -50,11 +49,10 @@ public class TriggerData extends AbstractProcedureElementData {
 
     public TriggerData(
             String serverUrl,
+            PlanCommunity planCommunity,
             Assignment assignment, // task assignment being triggered
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( assignment, planService, planParticipationService, user );
+        super( planCommunity, assignment, user );
         this.serverUrl = serverUrl;
     }
 
@@ -116,73 +114,69 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     // Called after nature of trigger is set.
-    public void initTrigger( PlanService planService, PlanParticipationService planParticipationService ) {
-        initDiscoveryData( planService, planParticipationService );
-        initResearchData( planService, planParticipationService );
-        initOnNotification( planService, planParticipationService );
-        initOnRequest( planService, planParticipationService );
-        initSituationData( planService, planParticipationService );
+    public void initTrigger( PlanCommunity planCommunity ) {
+        initDiscoveryData( planCommunity );
+        initResearchData( planCommunity );
+        initOnNotification( planCommunity );
+        initOnRequest( planCommunity );
+        initSituationData( planCommunity );
     }
 
-    private void initSituationData( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initSituationData( PlanCommunity planCommunity) {
         if ( isSituationKnown() ) {
-            situationData = new SituationData( getAssignment(), planService, planParticipationService, getUser() );
+            situationData = new SituationData( planCommunity, getAssignment(), getUser() );
         } else {
             situationData = null;
         }
     }
 
-    private void initOnRequest( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initOnRequest( PlanCommunity planCommunity ) {
         if ( requestFromOther != null )
             onRequest = new RequestData(
                     serverUrl,
+                    planCommunity,
                     requestFromOther,
                     false,
                     getAssignment(),
-                    planService,
-                    planParticipationService,
                     getUser() );
         else
             onRequest = null;
 
     }
 
-    private void initOnNotification( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initOnNotification( PlanCommunity planCommunity ) {
 
         if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
             onNotification = new NotificationData(
                     serverUrl,
+                    planCommunity,
                     notificationFromOther,
                     false,
                     getAssignment(),
-                    planService,
-                    planParticipationService,
                     getUser() );
         else
             onNotification = null;
     }
 
-    private void initResearchData( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initResearchData( PlanCommunity planCommunity ) {
         if ( requestToSelf != null )
             researchData = new ResearchData(
                     serverUrl,
+                    planCommunity,
                     requestToSelf,
                     getAssignment(),
-                    planService,
-                    planParticipationService,
                     getUser() );
         else
             researchData = null;
 
     }
 
-    private void initDiscoveryData( PlanService planService, PlanParticipationService planParticipationService ) {
+    private void initDiscoveryData( PlanCommunity planCommunity ) {
         if ( notificationToSelf != null )
             discoveryData = new DiscoveryData(
                     serverUrl,
+                    planCommunity,
                     notificationToSelf,
-                    planService,
-                    planParticipationService,
                     getUser() );
         else
             discoveryData = null;

@@ -1,12 +1,11 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -30,11 +29,10 @@ public class SituationData extends AbstractProcedureElementData {
     }
 
     public SituationData(
+            PlanCommunity planCommunity,
             Assignment assignment,
-            PlanService planService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
-        super( assignment, planService, planParticipationService, user );
+        super( planCommunity, assignment, user );
     }
 
     @XmlElement

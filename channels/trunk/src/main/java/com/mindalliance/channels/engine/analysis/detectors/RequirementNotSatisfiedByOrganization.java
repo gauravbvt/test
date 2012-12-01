@@ -46,7 +46,7 @@ public class RequirementNotSatisfiedByOrganization extends AbstractIssueDetector
             boolean asBeneficiary,
             List<Issue> issues,
             QueryService queryService ) {
-        Place planLocale = queryService.getPlan().getLocale();
+        Place planLocale = queryService.getPlanLocale();
         if ( req.appliesTo( org, asBeneficiary, planLocale ) ) {
             Requirement.Satisfaction satisfaction = req.satisfaction( org, asBeneficiary, queryService, getAnalyst() );
             if ( satisfaction == Requirement.Satisfaction.Impossible ) {

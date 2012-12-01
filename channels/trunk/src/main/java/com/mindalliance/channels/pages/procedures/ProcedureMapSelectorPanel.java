@@ -203,7 +203,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
                 assignments.add( commitment.getCommitter() );
                 assignments.add( commitment.getBeneficiary() );
             }
-            Assignments results = new Assignments( getPlan().getLocale() );
+            Assignments results = new Assignments( getPlanLocale() );
             for ( Assignment assignment : assignments )
                 results.add( assignment );
             allAssignments = results;
@@ -251,7 +251,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
         return focusEntity != null
                 && assignment.getOrganization().narrowsOrEquals(
                 (ModelEntity) focusEntity,
-                getQueryService().getPlan().getLocale() );
+                getPlanLocale() );
     }
 
 
@@ -405,7 +405,7 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
 
     @Override
     public Assignments getSources( Part part ) {
-        Assignments results = new Assignments( getPlan().getLocale() );
+        Assignments results = new Assignments( getPlanLocale() );
         for ( Commitment commitment : getCommitmentsTriggering( part ) ) {
             results.add( commitment.getCommitter() );
         }
@@ -432,11 +432,6 @@ public class ProcedureMapSelectorPanel extends AbstractUpdatablePanel implements
     @Override
     public AttachmentManager getAttachmentManager() {
         return attachmentManager;
-    }
-
-    @Override
-    public QueryService getPlanService() {
-        return commanderFactory.getCommander( getPlan() ).getQueryService();
     }
 
     @Override

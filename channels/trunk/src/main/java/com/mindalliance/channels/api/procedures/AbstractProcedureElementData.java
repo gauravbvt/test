@@ -1,10 +1,9 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.participation.PlanParticipationService;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.Serializable;
@@ -27,25 +26,23 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     }
 
     protected AbstractProcedureElementData(
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
+            PlanCommunity planCommunity,
             ChannelsUser user ) {
         this.user = user;
-        initData( queryService, planParticipationService, user );
+        initData( planCommunity );
     }
 
     protected AbstractProcedureElementData(
+            PlanCommunity planCommunity,
             Assignment assignment,
-            QueryService queryService,
-            PlanParticipationService planParticipationService,
             ChannelsUser user ) {
         this.assignment = assignment;
         this.user = user;
-        initData( queryService, planParticipationService, user );
+        initData( planCommunity );
     }
 
-    private void initData( QueryService queryService, PlanParticipationService planParticipationService, ChannelsUser user ) {
-        plan = queryService.getPlan();
+    private void initData( PlanCommunity planCommunity ) {
+        plan = planCommunity.getPlan();
     }
 
     public Assignment getAssignment() {
