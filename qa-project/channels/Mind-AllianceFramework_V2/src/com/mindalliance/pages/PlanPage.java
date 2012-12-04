@@ -1750,6 +1750,15 @@ public class PlanPage {
 		UIActions.selectByText(between);
 	}
 	
+	public void selectReceivesFromTaskDropDown(String option) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"From DropDown Receives Info",GlobalVariables.configuration.getAttrSearchList(),"From DropDown Receives Info");
+		UIActions.click(fileName,"From DropDown Receives Info",GlobalVariables.configuration.getAttrSearchList(),"From DropDown Receives Info");
+		
+		Select contextDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(contextDropDownList);
+		UIActions.selectByText(option);
+	}
+	
 	/**
 	 * Enter value in 'From' textbox in receives panel
 	 * @param fromTaskName
