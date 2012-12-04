@@ -971,6 +971,8 @@ public class Reporting extends TakeScreenshot {
 						xml.writeEndElement();
 					if (csvTestCase.get("ScriptException") != blank) {
 						xml.writeStartElement("td");
+						xml.writeStartElement("a");
+						xml.writeAttribute("href", Reporting.getScreenShot(testName));
 							xml.writeCharacters(csvTestCase.get("ScriptException"));
 					}
 					else {
@@ -1076,7 +1078,6 @@ public class Reporting extends TakeScreenshot {
 		try {
 			addFolderToZip("", srcFolder, zip);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		zip.flush();
