@@ -238,44 +238,53 @@ public class MAC0012_UndoMoveTask extends TestCase {
 						
 			// Undo Update Task
 			stepNo++;
-			description="Close About Plan Segment";
+			description="Undo Move Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("UndoMoveTask"));	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Verify duplicated task should be undone			
-			// Click on 'About Plan segment' under 'Show' pop up menu
-			stepNo++;
-			description="Task Mover";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Open Task Mover
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			planPage.verifyTaskIsNotDuplicated(testData.get("TaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close Task Mover window
-			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			// Verify duplicated task should be undone			
+//			// Click on 'About Plan segment' under 'Show' pop up menu
+//			stepNo++;
+//			description="Task Mover";
+//			planPage.clickPopupMenu(testData.get("Show"));
+//			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
+//			// Open Task Mover
+//			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+//			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
+//			planPage.verifyTaskIsNotDuplicated(testData.get("TaskName"));
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			
+//			// Close Task Mover window
+//			stepNo++;
+//			description="Close Task Mover";
+//			planPage.closeTaskMoverWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//			
+//			// Close Segment window
+//			stepNo++;
+//			description="Close About Plan Segment";
+//			planPage.closeSegmentWindow();
+//			// Write log
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 					
 			//Click on Remove this segment
+ 			stepNo++;
+			description="Remove This Segment";
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+ 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
 			planPage.clickPopupMenu(testData.get("Actions"));
@@ -333,7 +342,7 @@ public class MAC0012_UndoMoveTask extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for MAC0025_UndoRemoveFlow.
+     * Loads Test Data for MAC0012_UndoMoveTask.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException{

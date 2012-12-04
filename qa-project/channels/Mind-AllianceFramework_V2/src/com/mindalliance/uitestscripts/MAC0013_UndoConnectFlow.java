@@ -38,7 +38,7 @@ import junit.framework.TestCase;
  */
 public class MAC0013_UndoConnectFlow extends TestCase {
 	public Hashtable<String, String> testData;
-	public String testCaseId="MAC0012_UndoMoveTask";
+	public String testCaseId="MAC0013_UndoConnectFlow";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -166,8 +166,7 @@ public class MAC0013_UndoConnectFlow extends TestCase {
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
- 			
+		
 //			// Click on 'About Plan segment' under 'Show' pop up menu
 //			stepNo++;
 //			description="Task Mover";
