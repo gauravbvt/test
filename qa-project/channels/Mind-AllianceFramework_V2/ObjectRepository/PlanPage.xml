@@ -1551,9 +1551,10 @@
 		<LinkText>Undo Disintermediate</LinkText>
 		<ClassName>dropmenu</ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Undo Move Tasks</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2564,10 +2565,21 @@
 	
 	<Element>
 		<GivenName>From Task Name In Receives Panel</GivenName>
-		<Xpath>//input[contains(@class,'node-secondchoice')]</Xpath>
+		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/select/option[2]</Xpath>
 		<Name>segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input</Name>
 		<ClassName>node-secondchoice</ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>From DropDown Receives Info</GivenName>
+		<Xpath>//*[@class="node-firstchoice"]</Xpath>
+		<Name>segment:receives:flows-div:flows:0:flow:other:firstChoice</Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName>node-firstchoice</ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Segment Dropdown On Plan Page</GivenName>
 		<Xpath>/html/body/form/div[29]/div/ul/li[3]/a/span</Xpath>
@@ -2577,6 +2589,7 @@
 		<LinkText></LinkText>
 		<ClassName>plan</ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Actual Segment Dropdown On Plan Page</GivenName>
 		<Xpath>/html/body/form/div[29]/div/ul/li[3]</Xpath>
