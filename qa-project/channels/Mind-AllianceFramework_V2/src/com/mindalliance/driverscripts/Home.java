@@ -218,7 +218,7 @@ public class Home {
 		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
 		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
 		suite.addTestSuite(MAC0012_UndoMoveTask.class);
-		suite.addTestSuite(MAC0013_UndoConnectFlow.class);
+//		suite.addTestSuite(MAC0013_UndoConnectFlow.class);
 		suite.addTestSuite(MAC0021_CopyTask.class);
 		suite.addTestSuite(MAC0023_UndoAddInfoNeed.class);
 		suite.addTestSuite(MAC0024_UndoAddInfoCapability.class);
