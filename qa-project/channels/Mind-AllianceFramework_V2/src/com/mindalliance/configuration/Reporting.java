@@ -972,7 +972,7 @@ public class Reporting extends TakeScreenshot {
 					if (csvTestCase.get("ScriptException") != blank) {
 						xml.writeStartElement("td");
 						xml.writeStartElement("a");
-						xml.writeAttribute("href", Reporting.getScreenShot(testName));
+						xml.writeAttribute("href", GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports_Snapshot\\"+testName+".png");
 							xml.writeCharacters(csvTestCase.get("ScriptException"));
 					}
 					else {
