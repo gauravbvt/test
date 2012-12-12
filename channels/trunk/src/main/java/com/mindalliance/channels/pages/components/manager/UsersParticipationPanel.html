@@ -15,22 +15,17 @@
         <span wicket:id="nameRanges">[name range panel]</span>
     </div>
     <div wicket:id="participationTable">[user participation table]</div>
-    <ul wicket:id="notesContainer">
-        <li wicket:id="notes">
-            <span wicket:id="note">4 users' participation await your confirmation</span>
-        </li>
-    </ul>
-    <div wicket:id="assignmentContainer">
-        I request that user
-        <input wicket:id="assignedUser" type="text"/>
-        <span wicket:id="agenciesContainer">
-            participate in
+    <div class="participation" wicket:id="assignmentContainer">
+        <h4>New participation</h4>
+        User <input wicket:id="assignedUser" type="text" width="80"/>
+        <div wicket:id="agenciesContainer">
+            is to participate in
             <select wicket:id="agencies"><option>org name</option></select>
-        </span>
-        <span wicket:id="agentsContainer">
+        </div>
+        <div wicket:id="agentsContainer">
             as
             <select wicket:id="agents"><option>agent name</option></select>
-        </span>
+        </div>
     </div>
  </wicket:panel>
 </body>

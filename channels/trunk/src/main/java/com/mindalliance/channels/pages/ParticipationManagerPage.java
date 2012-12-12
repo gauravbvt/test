@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.manager.ParticipationManagerPanel;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -29,7 +30,12 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
 
     @Override
     protected void addContent() {
+        addTitle();
         addParticipationManagerPanel();
+    }
+
+    private void addTitle() {
+        getContainer().add( new Label("title", getPageName() ) );
     }
 
     private void addParticipationManagerPanel() {
@@ -46,7 +52,7 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getPageName() {
-        return "Participation manager";
+        return "Plan participation";
     }
 
     @Override

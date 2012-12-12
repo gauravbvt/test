@@ -139,4 +139,8 @@ public class Agent implements Nameable, Identifiable {
     public String getChannelsString() {
         return actor.getChannelsString();
     }
+
+    public String toString() {
+        return "Agent " + getName();
+    }
 }

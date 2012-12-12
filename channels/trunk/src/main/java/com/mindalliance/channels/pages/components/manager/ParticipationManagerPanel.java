@@ -10,6 +10,7 @@ import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,21 +25,13 @@ import java.util.List;
  */
 public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
-    private ParticipationTodosPanel participationTodosPanel;
-
     public ParticipationManagerPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
         init();
     }
 
     private void init() {
-        addParticipationTodos();
         addTabPanel();
-    }
-
-    private void addParticipationTodos() {
-        participationTodosPanel = new ParticipationTodosPanel( "todos", getModel() );
-        addOrReplace( participationTodosPanel );
     }
 
     private void addTabPanel() {
@@ -64,12 +57,21 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
                 return new OrganizationsParticipationPanel( id, getModel() );
             }
         } );
+        tabs.add( new AbstractTab( new PropertyModel<String>( this, "todosTitle" ) ) {
+            public Panel getPanel( String id ) {
+                return new ParticipationTodosPanel( id, getModel() );
+            }
+        } );
+
         return tabs;
+    }
+
+    public String getTodosTitle() {
+        return "Todo"; // todo - add count
     }
 
 
     public void updateContent( AjaxRequestTarget target ) {
-        addParticipationTodos();
-        target.add( participationTodosPanel );
+        // do nothing
     }
 }

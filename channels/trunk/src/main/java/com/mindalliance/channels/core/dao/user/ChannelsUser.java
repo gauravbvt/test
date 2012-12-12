@@ -290,6 +290,16 @@ public class ChannelsUser implements UserDetails {
     }
 
     /**
+     * Return a normalized version of the full name without username.
+     *
+     * @return a string
+     */
+    public String getSimpleNormalizedFullName() {
+        return getNormalizedFullName( false );
+    }
+
+
+    /**
      * Return a normalized version of the full name with or without username.
      *
      * @param withUsername whether to add username

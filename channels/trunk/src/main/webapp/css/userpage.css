@@ -1731,3 +1731,118 @@ div.feedback-options ul li ul li:last-child a,
 span.menuitem ul li ul li:last-child a {
     border-bottom: 1px solid #A7A9AC;
 }
+
+/* Added by JF */
+
+    /* name range filter */
+
+ul.ranges {
+    font-size: 8pt;
+}
+
+ul.ranges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+
+ul.ranges li {
+    display: inline;
+}
+
+ul.ranges li:before {
+    content: "  \2015   ";
+}
+
+ul.ranges li:first-child:before {
+    content: " ";
+}
+
+ul.ranges li a.selected {
+    background-color: #c3d9ff;
+    color: #000000;
+}
+
+div.filters ul.ranges li a {
+    background: #F6F6F6;
+    border: 1px solid #BCBEC0;
+    color: #666666;
+    font-weight: bold;
+    line-height: 100%;
+    padding: 0 3px;
+}
+
+div.filters ul.ranges li a:hover {
+    background: #F6F6F6;
+    border: 1px solid #999999;
+    color: #333333;
+}
+
+div.filters ul.ranges li a.selected {
+    background: none repeat scroll 0 0 #DCDDDE;
+    border: 1px solid #BCBEC0;
+    color: #999999;
+    font-style: normal;
+    font-weight: bold;
+    padding: 0 3px;
+}
+
+div.filters ul.ranges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    float: right;
+}
+
+div.filters ul.ranges li {
+    display: inline;
+}
+
+div.wicket-aa-container {
+    background: white;
+    border: 1px outset #808080;
+    margin: 2px;
+}
+
+    /* auto complete */
+
+div.wicket-aa {
+    text-align: left;
+}
+
+div.wicket-aa ul {
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+}
+
+div.wicket-aa ul li {
+    cursor: pointer;
+}
+
+div.wicket-aa ul li:hover {
+    background: #c3d9ff;
+}
+
+div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0; }
+
+    /* participation user name input */
+
+.participation div {
+    margin-top: 10px;
+}
+
+.participation h4 {
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+    color: #666666;
+    margin: 10px 0;
+    padding: 2px 0 2px 5px;
+    text-transform: uppercase;
+}
+
+.participation input[type='text'] {
+    width: 50%;
+}

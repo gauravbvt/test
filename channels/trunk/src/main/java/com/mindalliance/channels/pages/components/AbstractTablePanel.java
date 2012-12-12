@@ -23,6 +23,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -248,7 +249,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                       IModel<T> model ) {
                 T object = property == null
                         ? model.getObject()
-                        : (T)ChannelsUtils.getProperty( model.getObject(), property, null );
+                        : (T) ChannelsUtils.getProperty( model.getObject(), property, null );
                 String text = "" + callAnalyst( methodName, object, extras );
                 String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
@@ -702,13 +703,37 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String cssClasses,
             final Updatable updatable
     ) {
+        return makeActionLinkColumn( name, label, action, null, property, null, updatable );
+    }
+
+        /**
+        * Make actionlink column.
+        *
+        * @param name       column name
+        * @param label      cell content
+        * @param action     action to call on row object
+        * @param confirmationMessage a message to confirm action (no confirmation if null)
+        * @param property   if not null, property which value must be non-null for a link to appear
+        * @param updatable  target of call
+        * @param cssClasses a string
+        * @return a column
+        */
+    protected AbstractColumn<T> makeActionLinkColumn(
+            String name,
+            final String label,
+            final String action,
+            final String confirmationMessage,
+            final String property,
+            final String cssClasses,
+            final Updatable updatable
+    ) {
         return new AbstractColumn<T>( new Model<String>( name ), label ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
                 T bean = model.getObject();
                 if ( property == null || ChannelsUtils.getProperty( bean, property, null ) != null ) {
-                    ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, cssClasses, updatable );
+                    ActionLinkPanel cellContent = new ActionLinkPanel( id, label, bean, action, confirmationMessage, cssClasses, updatable );
                     cellItem.add( cellContent );
                 } else {
                     cellItem.add( new Label( id, "" ) );
@@ -806,7 +831,6 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
 
-
     /**
      * Make geomap link column.
      *
@@ -894,7 +918,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final T bean,
                 final String action,
                 final Updatable updatable ) {
-            this( id, label, bean, action, null, updatable );
+            this( id, label, bean, action, null, null, updatable );
         }
 
         public ActionLinkPanel(
@@ -904,12 +928,32 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final String action,
                 final String cssClasses,
                 final Updatable updatable ) {
+            this( id, label, bean, action, null, cssClasses, updatable );
+        }
+
+        public ActionLinkPanel(
+                String id,
+                String label,
+                final T bean,
+                final String action,
+                String confirmationMessage,
+                final String cssClasses,
+                final Updatable updatable ) {
             super( id );
-            AjaxLink link = new AjaxLink<String>( "link" ) {
-                public void onClick( AjaxRequestTarget target ) {
-                    updatable.update( target, bean, action );
-                }
-            };
+            AjaxFallbackLink link;
+            if ( confirmationMessage != null ) {
+                link = new ConfirmedAjaxFallbackLink<String>( "link", confirmationMessage ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        updatable.update( target, bean, action );
+                    }
+                };
+            } else {
+                link = new AjaxFallbackLink<String>( "link" ) {
+                    public void onClick( AjaxRequestTarget target ) {
+                        updatable.update( target, bean, action );
+                    }
+                };
+            }
             if ( cssClasses != null ) {
                 link.add( new AttributeModifier( "class", new Model<String>( cssClasses ) ) );
             }
@@ -1191,12 +1235,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         public void setName( final String name ) {
             Nameable nameable = null;
             if ( name != null && !name.isEmpty() ) {
-                nameable = (Nameable)CollectionUtils.find(
+                nameable = (Nameable) CollectionUtils.find(
                         choices,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return ((Nameable)object).getName().equals( name );
+                                return ( (Nameable) object ).getName().equals( name );
                             }
                         }
                 );
