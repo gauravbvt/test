@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.services;
 
 import com.mindalliance.channels.core.command.CommandListener;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.ExecutedCommand;
 
@@ -19,11 +20,10 @@ public interface ExecutedCommandService extends CommandListener, GenericSqlServi
     /**
      * Get an iterator on the command events recorded for a plan.
      *
-     * @param planUri a string
-     * @param planVersion an int
+     * @param planCommunity a planCommunity
      * @return an iterator on command events
      */
-    Iterator<ExecutedCommand> getExecutedCommands( String planUri, int planVersion );
+    Iterator<ExecutedCommand> getExecutedCommands( PlanCommunity planCommunity );
 
     /**
      * When command execution data for a plan was last modified since server is up.

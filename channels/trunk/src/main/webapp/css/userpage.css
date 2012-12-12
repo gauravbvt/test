@@ -58,7 +58,7 @@ div.header {
     background: url('../images/global-header-bg.png') #c3d9ff;
     border-left: 1px solid #999999;
     border-right:1px solid #999999;
-    border-bottom:px solid #999999;
+    border-bottom:1px solid #999999;
     font-size:12px;
     float:left;
 }
@@ -1471,12 +1471,12 @@ div.filters input[type="checkbox"] {
 
 /* ----- Tabs ----- */
 
-#surveys div.tabpanel > div,
-#surveys div.tabpanel div.tab-panel {
+.page-content div.tabpanel > div,
+.page-content div.tabpanel div.tab-panel {
     clear:both;
 }
 
-#surveys div.tabpanel div.tab-row {
+.page-content div.tabpanel div.tab-row {
     float: left;
     width: 100%;
     line-height: normal;
@@ -1484,19 +1484,19 @@ div.filters input[type="checkbox"] {
     margin:10px 0;
 }
 
-#surveys div.tabpanel div.tab-row ul {
+.page-content div.tabpanel div.tab-row ul {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-#surveys div.tabpanel div.tab-row li {
+.page-content div.tabpanel div.tab-row li {
     float: left;
     margin: 0;
     padding: 0;
 }
 
-#surveys div.tabpanel div.tab-row a {
+.page-content div.tabpanel div.tab-row a {
     display: block;
     background: #E8E8E8;
     height:20px;
@@ -1509,11 +1509,11 @@ div.filters input[type="checkbox"] {
     margin:0 0 0 5px;
 }
 
-#surveys div.tabpanel div.tab-row a:hover {
+.page-content div.tabpanel div.tab-row a:hover {
     color: #333333;
 }
 
-#surveys div.tabpanel div.tab-row li.selected a {
+.page-content div.tabpanel div.tab-row li.selected a {
     display: block;
     background: #f6f6f6;
     border-bottom:1px solid #f6f6f6;

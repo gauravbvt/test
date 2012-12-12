@@ -1,8 +1,8 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
@@ -20,7 +20,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     void sendFeedback(
             String username,
-            Plan plan,
+            PlanCommunity planCommunity,
             Feedback.Type type,
             String topic,
             String content,
@@ -28,16 +28,16 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     void sendFeedback(
             String username,
-            Plan plan,
+            PlanCommunity planCommunity,
             Feedback.Type type,
             String topic,
             String text,
             boolean urgent,
             ModelObject mo );
 
-    List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan );
+    List<Feedback> listNotYetNotifiedNormalFeedbacks( PlanCommunity planCommunity );
 
-    List<Feedback> listNotYetNotifiedUrgentFeedbacks( Plan plan );
+    List<Feedback> listNotYetNotifiedUrgentFeedbacks( PlanCommunity planCommunity );
 
     void addReplyTo( Feedback feedback, UserMessage reply, UserMessageService messageService );
 
@@ -50,10 +50,10 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
      * @param topic            topic or null if any topic
      * @param containing       substring of the contents or null if any
      * @param username         string - creator of feedback, or null if don't care
-     * @return
+     * @return a list of feedback
      */
     List<Feedback> selectInitialFeedbacks(
-            Plan plan,
+            PlanCommunity planCommunity,
             Boolean urgentOnly,
             Boolean unresolvedOnly,
             Boolean notRepliedToOnly,
@@ -72,9 +72,9 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
     /**
      * Count the unresolved feedback of a user in a plan.
      *
-     * @param plan a plan
+     * @param planCommunity a plan community
      * @param user a user
      * @return an int
      */
-    int countUnresolvedFeedback( Plan plan, ChannelsUser user );
+    int countUnresolvedFeedback( PlanCommunity planCommunity, ChannelsUser user );
 }

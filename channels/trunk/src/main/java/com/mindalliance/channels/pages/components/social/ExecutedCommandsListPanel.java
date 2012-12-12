@@ -155,7 +155,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
         Plan plan = getPlan();
         List<ExecutedCommand> executedCommands = new ArrayList<ExecutedCommand>();
         PeekAheadIterator<ExecutedCommand> iterator = new PeekAheadIterator<ExecutedCommand>(
-                executedCommandService.getExecutedCommands( plan.getUri(), plan.getVersion() ) );
+                executedCommandService.getExecutedCommands( getPlanCommunity() ) );
         while ( iterator.hasNext() && executedCommands.size() < numberToShow ) {
             ExecutedCommand executedCommand = iterator.next();
             if ( executedCommand != null ) {

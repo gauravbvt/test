@@ -2,8 +2,10 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.ParticipationManager;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -42,7 +44,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User participations panel.
@@ -55,13 +59,10 @@ import java.util.List;
 public class ParticipationsPanel extends AbstractCommandablePanel implements NameRangeable {
 
     @SpringBean
-    private PlanParticipationService planParticipationService;
+    private ParticipationManager participationManager;
 
     @SpringBean
     private UserContactInfoService userContactInfoService;
-
-    @SpringBean
-    private ChannelsUserDao userDao;
 
     private static final int MAX_ROWS = 10;
     private static String USERNAMES = "Users";
@@ -78,10 +79,10 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private ParticipationsTable participationsTable;
     private NameRangePanel nameRangePanel;
     private NameRange nameRange = new NameRange();
-    private boolean onlyWithActors;
-    private boolean onlyWithoutActors;
-    private CheckBox withoutActorCheckBox;
-    private CheckBox withActorCheckBox;
+    private boolean onlyWithAgents;
+    private boolean onlyWithoutAgents;
+    private CheckBox withoutAgentCheckBox;
+    private CheckBox withAgentCheckBox;
     private ParticipationWrapper selectedParticipation;
     private WebMarkupContainer participationDiv;
     private ParticipationWrapper addedParticipationWrapper;
@@ -97,8 +98,8 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         addIndexedOnChoices();
         addRangesPanel();
         addParticipationsTable();
-        addWithActorCheckBox();
-        addWithoutActorCheckBox();
+        addWithAgentCheckBox();
+        addWithoutAgentCheckBox();
         addParticipation();
     }
 
@@ -183,44 +184,44 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         addOrReplace( participationsTable );
     }
 
-    private void addWithActorCheckBox() {
-        withActorCheckBox = new CheckBox(
-                "withActorsOnly",
-                new PropertyModel<Boolean>( this, "onlyWithActors" )
+    private void addWithAgentCheckBox() {
+        withAgentCheckBox = new CheckBox(
+                "withAgentsOnly",
+                new PropertyModel<Boolean>( this, "onlyWithAgents" )
         );
-        withActorCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        withAgentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 nameRange = new NameRange();
-                addWithoutActorCheckBox();
+                addWithoutAgentCheckBox();
                 addRangesPanel();
                 addParticipationsTable();
-                target.add( withoutActorCheckBox );
+                target.add( withoutAgentCheckBox );
                 target.add( nameRangePanel );
                 target.add( participationsTable );
             }
         } );
-        withActorCheckBox.setOutputMarkupId( true );
-        addOrReplace( withActorCheckBox );
+        withAgentCheckBox.setOutputMarkupId( true );
+        addOrReplace( withAgentCheckBox );
     }
 
-    private void addWithoutActorCheckBox() {
-        withoutActorCheckBox = new CheckBox(
-                "withoutActorsOnly",
-                new PropertyModel<Boolean>( this, "onlyWithoutActors" )
+    private void addWithoutAgentCheckBox() {
+        withoutAgentCheckBox = new CheckBox(
+                "withoutAgentsOnly",
+                new PropertyModel<Boolean>( this, "onlyWithoutAgents" )
         );
-        withoutActorCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        withoutAgentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addWithActorCheckBox();
+                addWithAgentCheckBox();
                 nameRange = new NameRange();
                 addRangesPanel();
                 addParticipationsTable();
-                target.add( withActorCheckBox );
+                target.add( withAgentCheckBox );
                 target.add( nameRangePanel );
                 target.add( participationsTable );
             }
         } );
-        withoutActorCheckBox.setOutputMarkupId( true );
-        addOrReplace( withoutActorCheckBox );
+        withoutAgentCheckBox.setOutputMarkupId( true );
+        addOrReplace( withoutAgentCheckBox );
     }
 
     /**
@@ -235,8 +236,8 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 new Predicate() {
                     public boolean evaluate( Object object ) {
                         ParticipationWrapper wrapper = (ParticipationWrapper) object;
-                        return ( !onlyWithActors || wrapper.hasActor() )
-                                && ( !onlyWithoutActors || !wrapper.hasActor() )
+                        return ( !onlyWithAgents || wrapper.hasAgent() )
+                                && ( !onlyWithoutAgents || !wrapper.hasAgent() )
                                 && isInNameRange( wrapper );
                     }
                 }
@@ -247,11 +248,13 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         List<ParticipationWrapper> participationWrappers = new ArrayList<ParticipationWrapper>();
         participationWrappers = new ArrayList<ParticipationWrapper>();
         PlanCommunity planCommunity = getPlanCommunity();
+        ChannelsUserDao userDao = planCommunity.getUserDao();
+        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
-            List<PlanParticipation> participations = planParticipationService.getUserParticipations(
-                     channelsUser.getUserInfo(), planCommunity );
-            for ( PlanParticipation participation : participations ) {
-                planParticipationService.refresh( participation );
+            List<UserParticipation> participations = userParticipationService.getUserParticipations(
+                     channelsUser, planCommunity );
+            for ( UserParticipation participation : participations ) {
+                userParticipationService.refresh( participation );
                 ParticipationWrapper wrapper = new ParticipationWrapper(
                         channelsUser.getUsername(),
                         participation );
@@ -261,10 +264,10 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 participationWrappers.add( new ParticipationWrapper( channelsUser.getUsername() ) );
                 if ( addedParticipationWrapper != null ) {
                     participationWrappers.add( addedParticipationWrapper );
+                    addedParticipationWrapper = null;
                 }
             }
         }
-        addedParticipationWrapper = null;
         return participationWrappers;
     }
 
@@ -280,22 +283,22 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
     }
 
-    public boolean isOnlyWithActors() {
-        return onlyWithActors;
+    public boolean isOnlyWithAgents() {
+        return onlyWithAgents;
     }
 
-    public void setOnlyWithActors( boolean val ) {
-        if ( val ) onlyWithoutActors = false;
-        onlyWithActors = val;
+    public void setOnlyWithAgents( boolean val ) {
+        if ( val ) onlyWithoutAgents = false;
+        onlyWithAgents = val;
     }
 
-    public boolean isOnlyWithoutActors() {
-        return onlyWithoutActors;
+    public boolean isOnlyWithoutAgents() {
+        return onlyWithoutAgents;
     }
 
-    public void setOnlyWithoutActors( boolean val ) {
-        if ( val ) onlyWithActors = false;
-        onlyWithoutActors = val;
+    public void setOnlyWithoutAgents( boolean val ) {
+        if ( val ) onlyWithAgents = false;
+        onlyWithoutAgents = val;
     }
 
     /**
@@ -328,13 +331,13 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         addOrReplace( participationDiv );
         addParticipationLabel();
         addParticipationLink();
-        addParticipationActorChannels();
+        addParticipationAgentChannels();
         addUserChannels();
     }
 
     private boolean isAssignedParticipationSelected() {
         return selectedParticipation != null
-                && selectedParticipation.getActor() != null;
+                && selectedParticipation.getAgent() != null;
     }
 
     private void addParticipationLabel() {
@@ -352,25 +355,30 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
 
     private void addParticipationLink() {
         ParticipationWrapper pw = getParticipation();
-        Actor actor = ( pw == null ) ? null : pw.getActor();
-        WebMarkupContainer asActorSpan = new WebMarkupContainer( "asActor" );
-        asActorSpan.setOutputMarkupId( true );
-        makeVisible( asActorSpan, actor != null );
-        participationDiv.addOrReplace( asActorSpan );
-        if ( actor != null ) {
-            ModelObjectLink actorLink = new ModelObjectLink( "actorLink", new Model<Actor>( actor ), new Model<String>( actor.getName() ) );
-            asActorSpan.add( actorLink );
+        Agent agent = ( pw == null ) ? null : pw.getAgent();
+        WebMarkupContainer asAgentSpan = new WebMarkupContainer( "asAgent" );
+        asAgentSpan.setOutputMarkupId( true );
+        makeVisible( asAgentSpan, agent != null );
+        participationDiv.addOrReplace( asAgentSpan );
+        if ( agent != null ) {
+            ModelObjectLink actorLink = new ModelObjectLink(
+                    "actorLink",
+                    new Model<Actor>( agent.getActor() ),
+                    new Model<String>( agent.getName() ) );
+            asAgentSpan.add( actorLink );
         } else {
-            asActorSpan.add( new Label( "actorLink", "" ) );
+            asAgentSpan.add( new Label( "actorLink", "" ) );
         }
     }
 
-    private void addParticipationActorChannels() {
+    private void addParticipationAgentChannels() {
         ParticipationWrapper pw = getParticipation();
-        String channelsString = pw != null && pw.getActor() != null
-                ? pw.getActor().getChannelsString()
-                : "None";
-        Label label = new Label( "actorChannels", channelsString );
+        String channelsString = ( pw == null || pw.getAgent() == null )
+                ? "None"
+                : pw.getAgent().isRegistered()
+                    ? "TBD"    // todo - registered agents have their own contact info?
+                    : pw.getAgent().getActor().getChannelsString();
+        Label label = new Label( "agentChannels", channelsString );
         label.setOutputMarkupId( true );
         participationDiv.addOrReplace( label );
     }
@@ -406,25 +414,26 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 addParticipation();
                 target.add( participationDiv );
             } else {
-                if ( action.equals( "entity named" ) ) {
+                if ( action.equals( "agent set" ) ) {
                     resetParticipations();
                     addParticipationsTable();
                     target.add( participationsTable );
                     selectedParticipation = null;
                     addParticipation();
                     target.add( participationDiv );
-                    update(
+/*                    update(
                             target,
                             new Change(
                                     Change.Type.Updated,
-                                    getPlan() ) );
+                                    getPlan() ) );*/
                 } else if ( action.equals( "participation" ) ) {
-                    ChannelsUser participatingUser = userDao.getUserNamed( wrapper.getUsername() );
+                    ChannelsUser participatingUser
+                            = getPlanCommunity().getUserDao().getUserNamed( wrapper.getUsername() );
                     if ( participatingUser != null ) {
                         selectedParticipation = null;
                         addedParticipationWrapper = new ParticipationWrapper(
                                 participatingUser.getUsername(),
-                                new PlanParticipation( getUsername(), getPlan(), participatingUser ) );
+                                new UserParticipation( getUsername(), participatingUser, getPlanCommunity() ) );
                         addParticipation();
                         target.add( participationDiv );
                         addParticipationsTable();
@@ -447,13 +456,13 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     public class ParticipationWrapper implements Serializable {
 
         private String username;
-        private PlanParticipation participation;
+        private UserParticipation participation;
 
         public ParticipationWrapper( String username ) {
             this.username = username;
         }
 
-        public ParticipationWrapper( String username, PlanParticipation participation ) {
+        public ParticipationWrapper( String username, UserParticipation participation ) {
             this.username = username;
             this.participation = participation;
         }
@@ -466,7 +475,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             if ( participation == null ) {
                 return "";
             } else {
-                return planParticipationService.isActive(
+                return getPlanCommunity().getUserParticipationService().isActive(
                         participation,
                         getPlanCommunity()
                 ) ? "Yes" : "Not yet";
@@ -474,23 +483,23 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public String getAccepted() {
-            if ( participation == null || !hasActor() ) {
+            if ( participation == null || !hasAgent() ) {
                 return "";
             } else {
                 return participation.isAccepted() ? "Yes" : "No";
             }
         }
 
-        public PlanParticipation getParticipation() {
+        public UserParticipation getParticipation() {
             return participation;
         }
 
-        public void setParticipation( PlanParticipation participation ) {
+        public void setParticipation( UserParticipation participation ) {
             this.participation = participation;
         }
 
-        public boolean hasActor() {
-            return participation != null && participation.getActor( getQueryService() ) != null;
+        public boolean hasAgent() {
+            return participation != null && participation.getAgent( getPlanCommunity() ) != null;
         }
 
         public String getUserFullName() {
@@ -509,27 +518,30 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             return getQueryService().findUserRole( username );
         }
 
-        public Actor getActor() {
-            return participation == null ? null : participation.getActor( getQueryService() );
+        public Agent getAgent() {
+            return participation == null ? null : participation.getAgent( getPlanCommunity() );
         }
 
-        public void setActor( Actor actor ) {
+        public void setAgent( Agent agent ) {
+            PlanCommunity planCommunity = getPlanCommunity();
+            ChannelsUserDao userDao = planCommunity.getUserDao();
+            UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
             if ( participation != null ) {
-                planParticipationService.removeParticipation( getUser().getUsername(), getPlan(), participation );
+                userParticipationService.removeParticipation( getUser().getUsername(), participation, getPlanCommunity() );
             }
-            if ( actor != null ) {
+            if ( agent != null ) {
                 if ( getUser().getUsername().equals( username ) ) {
-                    participation = planParticipationService.addAcceptedParticipation(
+                    participation = userParticipationService.addAcceptedParticipation(
                             getUser().getUsername(),
-                            getPlan(),
                             userDao.getUserNamed( username ),
-                            actor );
+                            agent,
+                            getPlanCommunity() );
                 } else {
-                    participation = planParticipationService.addParticipation(
+                    participation = userParticipationService.addParticipation(
                             getUser().getUsername(),
-                            getPlan(),
                             userDao.getUserNamed( username ),
-                            actor );
+                            agent,
+                            getPlanCommunity() );
                 }
             } else {
                 participation = null;
@@ -537,26 +549,38 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             // getPlanManager().clearCache();
         }
 
-        public List<Actor> getDomain() {
-            List<Actor> domain = new ArrayList<Actor>();
-            List<Actor> actors = getQueryService().listActualEntities( Actor.class );
-            for ( Actor actor : actors ) {
-                if ( planParticipationService.canBeDesignated( getPlan(), actor ) )
-                    domain.add( actor );
+        public List<Agent> getDomain() {
+            Set<Agent> domain = new HashSet<Agent>();
+            PlanCommunity planCommunity = getPlanCommunity();
+            List<Agent> agents = participationManager.getAllKnownAgents( planCommunity );
+            for ( Agent agent : agents ) {
+                ChannelsUser participatingUser = getParticipatingUser();
+                if ( participatingUser != null
+                        && participationManager.isParticipationAvailable(
+                        agent,
+                        getParticipatingUser(),
+                        planCommunity ) )
+                    domain.add( agent );
             }
+            List<Agent> orderedDomain = new ArrayList<Agent>( domain );
             Collections.sort(
-                    domain,
-                    new Comparator<Actor>() {
+                    orderedDomain,
+                    new Comparator<Agent>() {
                         @Override
-                        public int compare( Actor a1, Actor a2 ) {
+                        public int compare( Agent a1, Agent a2 ) {
                             return a1.getName().compareTo( a2.getName() );
                         }
                     } );
-            return domain;
+            return orderedDomain;
         }
 
         public ChannelsUserInfo getParticipatingUserInfo() {
-            return participation.getParticipant();
+            ChannelsUser participatingUser = getParticipatingUser();
+            return participatingUser == null ? null : participatingUser.getUserInfo();
+        }
+
+        private ChannelsUser getParticipatingUser() {
+            return getPlanCommunity().getUserDao().getUserNamed( username );
         }
     }
 
@@ -589,23 +613,25 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             columns.add( makeColumn(
                     "Name",
                     "userNormalizedFullName",
-                    null,
-                    EMPTY,
-                    null,
-                    "userNormalizedFullName"
+                    EMPTY
+            ) );
+            columns.add( makeColumn(
+                    "Email",
+                    "userEmail",
+                    EMPTY
             ) );
             if ( isLockedByUser( Channels.PLAN_PARTICIPATION ) ) {
-                columns.add( makeEntityReferenceColumn(
+                columns.add( makeNameableReferenceColumn(
                         "Is agent",
-                        "actor",
+                        "agent",
                         "domain",
-                        Actor.class,
-                        true,
+                        Agent.class,
+                        "agent set",
                         "Name an agent representing the user",
                         ParticipationsPanel.this
                 ) );
             } else {
-                columns.add( this.makeLinkColumn( "Is agent", "actor", "actor.normalizedName", EMPTY ) );
+                columns.add( this.makeColumn( "Is agent", "agent.name", EMPTY ) );
             }
             columns.add( makeColumn(
                     "Accepted?",
@@ -621,7 +647,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                     "",
                     "contact",
                     "select",
-                    "actor",
+                    "agent",
                     "more",
                     ParticipationsPanel.this
             ) );
@@ -630,7 +656,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                         "",
                         "add",
                         "participation",
-                        "actor",
+                        "agent",
                         "more",
                         ParticipationsPanel.this ) );
             }

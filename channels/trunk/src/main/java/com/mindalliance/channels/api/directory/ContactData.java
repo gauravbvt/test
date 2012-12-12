@@ -3,8 +3,9 @@ package com.mindalliance.channels.api.directory;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
@@ -103,7 +104,7 @@ public class ContactData implements Serializable {
                     true,
                     planCommunity ) );
         } else {
-            List<PlanParticipation> otherParticipations = getOtherParticipations(
+            List<UserParticipation> otherParticipations = getOtherParticipations(
                     actor,
                     planCommunity,
                     userInfo );
@@ -116,7 +117,7 @@ public class ContactData implements Serializable {
                         true,
                         planCommunity ) );
             }
-            for ( PlanParticipation otherParticipation : otherParticipations ) {
+            for ( UserParticipation otherParticipation : otherParticipations ) {
                 contactList.add( new ContactData(
                         serverUrl,
                         employment,
@@ -182,7 +183,7 @@ public class ContactData implements Serializable {
 
     private void initSupervisorContacts( String serverUrl, PlanCommunity planCommunity ) {
         PlanService planService = planCommunity.getPlanService();
-        PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
+        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         supervisorContacts = new ArrayList<ContactData>();
         if ( includeSupervisor && getSupervisor() != null ) {
             Actor supervisor = getSupervisor();
@@ -211,10 +212,10 @@ public class ContactData implements Serializable {
                             false,
                             planCommunity ) );
                 } else {
-                    List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor(
-                            supervisor,
+                    List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent(
+                            new Agent( supervisor ),  // todo - agents!
                             planCommunity );
-                    for ( PlanParticipation participation : participations ) {
+                    for ( UserParticipation participation : participations ) {
                         supervisorContacts.add( new ContactData(
                                 serverUrl,
                                 supervisorEmployment,
@@ -272,18 +273,17 @@ public class ContactData implements Serializable {
 
 
     // Find list of participation as actor other than by the user.
-    static private List<PlanParticipation> getOtherParticipations(
-            Actor actor,
+    static private List<UserParticipation> getOtherParticipations(
+            Actor actor,                           // todo - agents!
             PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
-        PlanService planService = planCommunity.getPlanService();
-        PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
+        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         String username = userInfo == null ? null : userInfo.getUsername();
-        List<PlanParticipation> otherParticipations = new ArrayList<PlanParticipation>();
-        List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor(
-                actor,
+        List<UserParticipation> otherParticipations = new ArrayList<UserParticipation>();
+        List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent(
+                new Agent( actor ),
                 planCommunity );
-        for ( PlanParticipation participation : participations ) {
+        for ( UserParticipation participation : participations ) {
             if ( username == null || !username.equals( participation.getParticipantUsername() ) ) {
                 otherParticipations.add( participation );
             }
@@ -447,5 +447,9 @@ public class ContactData implements Serializable {
 
     public boolean forNotification() {
         return commitment != null && commitment().getSharing().isNotification();
+    }
+
+    public String username() {
+        return userInfo.getUsername();
     }
 }

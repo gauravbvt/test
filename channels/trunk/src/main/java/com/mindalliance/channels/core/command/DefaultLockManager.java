@@ -7,7 +7,6 @@
 package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,18 +27,13 @@ public class DefaultLockManager implements LockManager {
      */
     private static final Logger LOG = LoggerFactory.getLogger( DefaultLockManager.class );
 
-    /**
-     * Query service.
-     */
-    private final QueryService queryService;
 
     /**
      * The managed locks, indexed by id.
      */
     private final Map<Long, Lock> locks = Collections.synchronizedMap( new HashMap<Long, Lock>() );
 
-    public DefaultLockManager( QueryService queryService ) {
-        this.queryService = queryService;
+    public DefaultLockManager(  ) {
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services;
 
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFIForward;
@@ -36,11 +36,11 @@ public interface RFIForwardService extends GenericSqlService<RFIForward, Long> {
     /**
      * Find all forwards in a survey.
      *
-     * @param plan      a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey a survey
      * @return a list of forwards
      */
-    List<RFIForward> select( Plan plan, RFISurvey rfiSurvey );
+    List<RFIForward> select( PlanCommunity planCommunity, RFISurvey rfiSurvey );
 
     /**
      * Find all forwards to a user of a survey.

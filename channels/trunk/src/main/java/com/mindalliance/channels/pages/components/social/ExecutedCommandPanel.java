@@ -131,7 +131,6 @@ public class ExecutedCommandPanel extends AbstractSocialEventPanel {
         if ( !timeLabelString.isEmpty() ) {
             timeLabel.add( new AttributeModifier(
                     "title",
-                    true,
                     new PropertyModel<String>( this, "longTime" ) ) );
         }
         socialItemContainer.add( timeLabel );

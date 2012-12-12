@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -392,12 +392,10 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private boolean sendNewMessage( boolean emailIt, ChannelsUser sender ) {
         String text = getNewMessageText();
         if ( !text.isEmpty() ) {
-            Plan plan = getPlan();
             UserMessage userMessage = new UserMessage(
-                    plan.getUri(),
-                    plan.getVersion(),
                     sender.getUsername(),
-                    text );
+                    text,
+                    getPlanCommunity() );
             userMessage.setToUsername( getNewMessageRecipient().getUsername() );
             if ( getNewMessageAbout() != null )
                 userMessage.setMoRef( getNewMessageAbout() );
@@ -460,14 +458,14 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public List<UserMessage> getUserMessages( ChannelsUser user ) {
-        Plan plan = getPlan();
+        PlanCommunity planCommunity = getPlanCommunity();
         String username = getUser().getUsername();
         List<UserMessage> userMessages = new ArrayList<UserMessage>();
         Iterator<UserMessage> iterator;
         if ( isShowReceived() ) {
-            iterator = userMessageService.getReceivedMessages( username, plan.getUri() );
+            iterator = userMessageService.getReceivedMessages( username, planCommunity );
         } else {
-            iterator = userMessageService.getSentMessages( username, plan.getUri() );
+            iterator = userMessageService.getSentMessages( username, planCommunity );
         }
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();

@@ -5,7 +5,8 @@
  */
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
@@ -150,7 +151,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
         private final List<Channel> channels = new ArrayList<Channel>();
         private final Set<Employment> employments = new HashSet<Employment>();
         private Organization organization;
-        private PlanParticipation participation;
+        private UserParticipation participation;
         private AggregatedContact supervisor;
 
         //-------------------------------
@@ -166,7 +167,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                 QueryService service, 
                 Assignment assignment, 
                 Assignments assignments,
-                PlanParticipation participation ) {
+                UserParticipation participation ) {
             this( service, assignment.getEmployment(), assignments, participation );
         }
 
@@ -174,7 +175,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                 QueryService service, 
                 Employment employment, 
                 Assignments assignments,
-                PlanParticipation participation ) {
+                UserParticipation participation ) {
             this.participation = participation;
             actor = employment.getActor();
             organization = employment.getOrganization();
@@ -193,9 +194,9 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                     // TODO - WRONG: only one employment (could be an irrelevant one) of a supervisor used
                     // and only one user participation as supervisor is used if many.
                     Employment supervisorEmp = supEmps.get( 0 );
-                    List<PlanParticipation> supervisorParticipations =
-                            getPlanParticipationService().getParticipationsAsActor(
-                                    supervisorEmp.getActor(),
+                    List<UserParticipation> supervisorParticipations =
+                            getUserParticipationService().getParticipationsAsAgent(
+                                    new Agent( supervisorEmp.getActor() ),  // todo - agents!
                                     getPlanCommunity() );
                     supervisor = new AggregatedContact(
                             service,
@@ -248,15 +249,15 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                     : actor.equals( other.getActor() );
         }
 
-        public PlanParticipation findParticipation( QueryService queryService, Actor actor, String username ) {
+        public UserParticipation findParticipation( QueryService queryService, Actor actor, String username ) {
             if( username == null ) return null;
             ChannelsUser user = getUserDao().getUserNamed( username );
             if ( user == null )
                 return null;
             else
-                return getPlanParticipationService().getParticipation(
-                        user.getUserInfo(),
-                        actor,
+                return getUserParticipationService().getParticipation(
+                        user,
+                        new Agent( actor ),  // todo - agents!
                         getPlanCommunity() );
         }
 
@@ -328,7 +329,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
             return organization;
         }
 
-        public PlanParticipation getParticipation() {
+        public UserParticipation getParticipation() {
             return participation;
         }
 

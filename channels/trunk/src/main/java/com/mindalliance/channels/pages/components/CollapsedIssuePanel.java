@@ -70,8 +70,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
             public void onClick( AjaxRequestTarget target ) {
                     RFISurvey survey = surveysDao.getOrCreateRemediationSurvey(
                             getUsername(),
-                            getPlan(),
-                            getQueryService(),
+                            getPlanCommunity(),
                             issue );
                 // Open all surveys panel on this survey
                 Change change = new Change( Change.Type.Expanded, survey );
@@ -83,7 +82,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         Label surveyActionLabel = new Label(
                 "surveyAction",
                 new Model<String>(
-                        rfiSurveyService.findRemediationSurvey( getPlan(), issue, getQueryService() ) != null
+                        rfiSurveyService.findRemediationSurvey( getPlanCommunity(), issue ) != null
                                 ? "View survey"
                                 : "Create survey"
                 ) );

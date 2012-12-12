@@ -1,12 +1,10 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -31,68 +29,59 @@ public interface SurveysDAO {
      * Get or create a questionnaire and survey for an issue.
      *
      * @param username     a string
-     * @param plan         a plan
-     * @param queryService a query service
+     * @param planCommunity         a plan community
      * @param issue        an issue
      * @return a survey
      */
     RFISurvey getOrCreateRemediationSurvey(
             String username,
-            Plan plan,
-            QueryService queryService,
+            PlanCommunity planCommunity,
             Issue issue );
 
     /**
      * Count a user's unanswered, active RFIs in a given plan.
      *
-     * @param plan         a plan
+     * @param planCommunity    a plan community
      * @param user         a user
-     * @param queryService a query service
      * @return an int
      */
-    int countUnanswered( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+    int countUnanswered( PlanCommunity planCommunity, ChannelsUser user );
 
     /**
      * Count a user's partially answered, active RFIs in a given plan.
      *
-     * @param plan         a plan
+     * @param planCommunity    a plan community
      * @param user         a user
-     * @param queryService a query service
      * @return an int
      */
-    int countIncomplete( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+    int countIncomplete( PlanCommunity planCommunity, ChannelsUser user );
 
     /**
      * Count a user's overdue, active RFIs in for a given plan.
      *
-     * @param plan         a plan
+     * @param planCommunity    a plan community
      * @param user         a user
-     * @param queryService a query service
      * @return an int
      */
-    int countLate( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+    int countLate( PlanCommunity planCommunity, ChannelsUser user );
 
     /**
      * Find a user's incomplete, active RFIs in a plan.
      *
-     * @param plan         a plan
+     * @param planCommunity    a plan community
      * @param user         a user
-     * @param queryService a query service
-     * @param analyst      an analyst
      * @return a list of RFIs
      */
-    List<RFI> findIncompleteRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+    List<RFI> findIncompleteRFIs( PlanCommunity planCommunity, ChannelsUser user);
 
     /**
      * Find a user's completed, active RFIs in a plan.
      *
-     * @param plan         a plan
+     * @param planCommunity    a plan community
      * @param user         a user
-     * @param queryService a query service
-     * @param analyst      an analyst
      * @return a list of RFIs
      */
-    List<RFI> findCompletedRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+    List<RFI> findCompletedRFIs( PlanCommunity planCommunity, ChannelsUser user );
 
     /**
      * Whether all required questions in an RFI have been answered.
@@ -105,13 +94,11 @@ public interface SurveysDAO {
     /**
      * Find a user's declined, active RFIs in a plan.
      *
-     * @param plan         a plan
+     * @param planCommunity    a plan community
      * @param user         a user
-     * @param queryService a query service
-     * @param analyst      an analyst
      * @return a list of RFIs
      */
-    List<RFI> findDeclinedRFIs( Plan plan, ChannelsUser user, QueryService queryService, Analyst analyst );
+    List<RFI> findDeclinedRFIs( PlanCommunity planCommunity, ChannelsUser user );
 
     /**
      * Get count of required questions in an rfi.
@@ -145,17 +132,17 @@ public interface SurveysDAO {
      */
     int getOptionalAnswersCount( RFI rfi );
 
-    Map<String, Integer> findResponseMetrics( Plan plan, final RFISurvey rfiSurvey );
+    Map<String, Integer> findResponseMetrics( PlanCommunity planCommunity, final RFISurvey rfiSurvey );
 
     /**
      * Find the RFIs in a given survey with answers.
      *
-     * @param plan      a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey a survey
      * @return a string like "105c 95i 3d" (105 completed, 95 incomplete 3 declined)
      */
     List<RFI> findAnsweringRFIs(
-            Plan plan,
+            PlanCommunity planCommunity,
             RFISurvey rfiSurvey );
 
 
@@ -177,17 +164,15 @@ public interface SurveysDAO {
     /**
      * Whether an rfi is incomplete and late.
      *
-     * @param rfi          an rfi
-     * @param queryService a query service
-     * @param analyst      an analyst
+     * @param planCommunity    a plan community
      * @return a boolean
      */
-    boolean isOverdue( RFI rfi, QueryService queryService, Analyst analyst );
+    boolean isOverdue( PlanCommunity planCommunity, RFI rfi );
 
     /**
      * Process all answers to a question in a survey.
      *
-     * @param plan             a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey        a survey
      * @param question         a question
      * @param sharedOnly       a boolean - only answers that are shared vs. all answers
@@ -195,7 +180,7 @@ public interface SurveysDAO {
      * @return a map - text of answer => list of usernames who gave it
      */
     Map<String, Set<String>> processAnswers(
-            Plan plan,
+            PlanCommunity planCommunity,
             RFISurvey rfiSurvey,
             Question question,
             boolean sharedOnly,
@@ -220,60 +205,59 @@ public interface SurveysDAO {
     /**
      * List incomplete but active RFIs in a plan.
      *
-     * @param planService a plan service
-     * @param analyst     analyst
+     * @param planCommunity    a plan community
      * @return a list of RFIs
      */
-    List<RFI> listIncompleteActiveRFIs( PlanService planService, Analyst analyst );
+    List<RFI> listIncompleteActiveRFIs( PlanCommunity planCommunity );
 
     /**
      * Find all completed RFIs in a survey.
      *
-     * @param plan      a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey a survey
      * @return a list of RFIs
      */
-    List<RFI> findAllCompletedRFIs( Plan plan, RFISurvey rfiSurvey );
+    List<RFI> findAllCompletedRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey );
 
     /**
      * Find all completed RFIs in a survey.
      *
-     * @param plan      a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey a survey
      * @return a list of RFIs
      */
-    List<RFI> findAllIncompleteRFIs( Plan plan, RFISurvey rfiSurvey );
+    List<RFI> findAllIncompleteRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey );
 
     /**
      * Find all declined RFIs in a survey.
      *
-     * @param plan      a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey a survey
      * @return a list of RFIs
      */
-    List<RFI> findAllDeclinedRFIs( Plan plan, RFISurvey rfiSurvey );
+    List<RFI> findAllDeclinedRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey );
 
     /**
      * Find all RFI forwardings in a survey.
      *
-     * @param plan      a plan
+     * @param planCommunity    a plan community
      * @param rfiSurvey a survey
      * @return a list of rfi forwards
      */
-    List<RFIForward> findAllRFIForwards( Plan plan, RFISurvey rfiSurvey );
+    List<RFIForward> findAllRFIForwards( PlanCommunity planCommunity, RFISurvey rfiSurvey );
 
     /**
      * A user forwards and RFI to a list of valid email addresses.
      * Must be called from a context where the plan is the current user's plan.
      *
-     * @param queryService a queryService
+     * @param planCommunity    a plan community
      * @param user a user
      * @param rfi         an rfi
      * @param forwardedTo a list of strings
      * @param message     a string
      * @return a list of string (the new emails the RFI has been forwarded to
      */
-    List<String> forwardRFI( QueryService queryService, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
+    List<String> forwardRFI( PlanCommunity planCommunity, ChannelsUser user, RFI rfi, List<String> forwardedTo, String message );
 
     /**
      * Find the user who forwarded an RFI.

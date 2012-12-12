@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.model.rfi;
 
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import org.apache.commons.validator.UrlValidator;
 
 import javax.persistence.Column;
@@ -18,7 +18,7 @@ import java.net.URL;
  * Time: 3:19 PM
  */
 @Entity
-public class Answer extends AbstractPersistentPlanObject {
+public class Answer extends AbstractPersistentChannelsObject {
 
     @ManyToOne
     private AnswerSet answerSet;
@@ -39,7 +39,7 @@ public class Answer extends AbstractPersistentPlanObject {
     }
 
     public Answer( AnswerSet answerSet ) {
-        super( answerSet.getPlanUri(), answerSet.getPlanVersion(), answerSet.getUsername() );
+        super( answerSet.getCommunityUri(), answerSet.getPlanUri(),answerSet.getPlanVersion(), answerSet.getUsername() );
         this.answerSet = answerSet;
     }
 

@@ -1,16 +1,14 @@
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -19,6 +17,8 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -775,6 +775,37 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
+    protected AbstractColumn<T> makeNameableReferenceColumn(
+            String name,
+            final String nameableProperty,
+            final String choicesProperty,
+            final Class<? extends Nameable> nameableClass,
+            final String action,
+            final String title,
+            final Updatable updatable
+    ) {
+        return new AbstractColumn<T>( new Model<String>( name ), nameableProperty ) {
+            @SuppressWarnings( "unchecked" )
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                T bean = model.getObject();
+                NameableNamePanel cellContent = new NameableNamePanel(
+                        id,
+                        bean,
+                        nameableProperty,
+                        (List<Nameable>) ChannelsUtils.getProperty( bean, choicesProperty, null ),
+                        nameableClass,
+                        action,
+                        updatable
+                );
+                cellContent.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+                cellItem.add( cellContent );
+            }
+        };
+    }
+
+
 
     /**
      * Make geomap link column.
@@ -1073,6 +1104,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             add( nameField );
         }
 
+
+/*
         private boolean matches( String text, String otherText, boolean actual ) {
             if ( entityClass.isAssignableFrom( Role.class )
                     || entityClass.isAssignableFrom( Event.class )
@@ -1082,6 +1115,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 return Matcher.matches( text, otherText );
             }
         }
+*/
 
         public String getEntityName() {
             ModelEntity entity = (ModelEntity) ChannelsUtils.getProperty( bean, entityProperty, null );
@@ -1103,4 +1137,77 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             }
         }
     }
+
+    private class NameableNamePanel extends Panel {
+
+        private T bean;
+        private String nameableProperty;
+        private Class<? extends Nameable> nameableClass;
+        private List<Nameable> choices;
+
+        public NameableNamePanel(
+                String id,
+                final T bean,
+                String nameableProperty,
+                final List<Nameable> choices,
+                Class<? extends Nameable> nameableClass,
+                final String action,
+                final Updatable updatable ) {
+            super( id );
+            this.bean = bean;
+            this.nameableProperty = nameableProperty;
+            this.nameableClass = nameableClass;
+            this.choices = choices;
+            AutoCompleteTextField<String> nameField = new AutoCompleteTextField<String>(
+                    "name",
+                    new PropertyModel<String>( this, "name" ),
+                    getAutoCompleteSettings() ) {
+                protected Iterator<String> getChoices( String s ) {
+                    List<String> candidates = new ArrayList<String>();
+                    if ( choices != null ) {
+                        for ( Nameable nameable : choices ) {
+                            String choice = nameable.getName();
+                            if ( getQueryService().likelyRelated( s, choice ) )
+                                candidates.add( choice );
+                        }
+                        Collections.sort( candidates );
+                    }
+                    return candidates.iterator();
+                }
+            };
+            nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                protected void onUpdate( AjaxRequestTarget target ) {
+                    updatable.update( target, bean, action );
+                }
+            } );
+            add( nameField );
+        }
+
+        public String getName() {
+            Nameable nameable = (Nameable) ChannelsUtils.getProperty( bean, nameableProperty, null );
+            return nameable == null ? "" : nameable.getName();
+        }
+
+        public void setName( final String name ) {
+            Nameable nameable = null;
+            if ( name != null && !name.isEmpty() ) {
+                nameable = (Nameable)CollectionUtils.find(
+                        choices,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ((Nameable)object).getName().equals( name );
+                            }
+                        }
+                );
+            }
+            try {
+                PropertyUtils.setProperty( bean, nameableProperty, nameable );
+            } catch ( Exception e ) {
+                LOG.error( "Failed to set property " + nameableProperty );
+                throw new RuntimeException( e );
+            }
+        }
+    }
+
 }

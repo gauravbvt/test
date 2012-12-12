@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.ChannelsService;
 import com.mindalliance.channels.api.ModelObjectData;
+import com.mindalliance.channels.api.PlanCommunityEndPoint;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
@@ -63,7 +63,7 @@ public class ProtocolsFinder implements Serializable {
             ProceduresData proceduresData,
                             PlanCommunity planCommunity,
                             ChannelsUser user,
-                            ChannelsService channelsService,
+                            PlanCommunityEndPoint channelsService,
                             String username,
                             Long actorId ) {
         this.serverUrl = serverUrl;
@@ -76,7 +76,7 @@ public class ProtocolsFinder implements Serializable {
 
     private void initFinder(
             PlanCommunity planCommunity,
-            ChannelsService channelsService ) {
+            PlanCommunityEndPoint channelsService ) {
         Plan plan = planCommunity.getPlan();
         planScopeData = channelsService.getPlanScope( plan.getUri(), Integer.toString( plan.getVersion() ) );
         directoryData = new DirectoryData( proceduresData );

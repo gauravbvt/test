@@ -1,9 +1,11 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
+import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
@@ -35,9 +37,9 @@ import java.util.Set;
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
 @XmlType( propOrder = {"date", "planIdentifier", "userEmail", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
-public class ProceduresData  implements Serializable {
+public class ProceduresData implements Serializable {
 
-    private Plan plan;
+    private PlanCommunity planCommunity;
     private List<Actor> actors;
     private ChannelsUser user;
     private List<ProcedureData> procedures;
@@ -52,9 +54,9 @@ public class ProceduresData  implements Serializable {
     public ProceduresData(
             String serverUrl,
             PlanCommunity planCommunity,
-            List<PlanParticipation> participations,
+            List<UserParticipation> participations,
             ChannelsUser user ) {
-        this.plan = planCommunity.getPlan();
+        this.planCommunity = planCommunity;
         this.user = user;
         initData( serverUrl, participations, planCommunity );
     }
@@ -63,7 +65,7 @@ public class ProceduresData  implements Serializable {
             String serverUrl,
             PlanCommunity planCommunity,
             Actor actor ) {
-        this.plan = planCommunity.getPlan();
+        this.planCommunity = planCommunity;
         this.actors = new ArrayList<Actor>();
         actors.add( actor );
         initData( serverUrl, planCommunity );
@@ -72,7 +74,7 @@ public class ProceduresData  implements Serializable {
 
     private void initData(
             String serverUrl,
-            List<PlanParticipation> participations,
+            List<UserParticipation> participations,
             PlanCommunity planCommunity ) {
         initParticipatingActors( serverUrl, participations, planCommunity );
         this.actors = getActors( participations );
@@ -82,7 +84,7 @@ public class ProceduresData  implements Serializable {
     private void initData( String serverUrl, PlanCommunity planCommunity ) {
         initProcedures( serverUrl, planCommunity );
         initEmployments( planCommunity );
-        environmentData =  new EnvironmentData( serverUrl, this, planCommunity );
+        environmentData = new EnvironmentData( serverUrl, this, planCommunity );
     }
 
     private void initEmployments( PlanCommunity planCommunity ) {
@@ -116,12 +118,12 @@ public class ProceduresData  implements Serializable {
 
     private void initParticipatingActors(
             String serverUrl,
-            List<PlanParticipation> participations,
+            List<UserParticipation> participations,
             PlanCommunity planCommunity ) {
         participatingActors = new ArrayList<Actor>();
         PlanService planService = planCommunity.getPlanService();
-        for ( PlanParticipation participation : participations ) {
-            Actor actor = participation.getActor( planService );
+        for ( UserParticipation participation : participations ) {
+            Actor actor = participation.getAgent( planCommunity ).getActor();
             if ( actor != null ) participatingActors.add( actor );
         }
 
@@ -135,12 +137,12 @@ public class ProceduresData  implements Serializable {
 
     @XmlElement( name = "plan" )
     public PlanIdentifierData getPlanIdentifier() {
-        return new PlanIdentifierData( plan );
+        return new PlanIdentifierData( planCommunity );
     }
 
     @XmlElement
     public String getDateVersioned() {
-        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() );
+        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( planCommunity.getPlan().getWhenVersioned() );
     }
 
     @XmlElement( name = "agentId" )
@@ -152,7 +154,7 @@ public class ProceduresData  implements Serializable {
         return actorIds;
     }
 
-    private List<Actor> getActors( List<PlanParticipation> participations ) {
+    private List<Actor> getActors( List<UserParticipation> participations ) {
         return participatingActors;
     }
 
@@ -182,7 +184,7 @@ public class ProceduresData  implements Serializable {
     }
 
     public Plan getPlan() {
-        return plan;
+        return planCommunity.getPlan();
     }
 
     public ChannelsUser getUser() {
@@ -193,4 +195,23 @@ public class ProceduresData  implements Serializable {
         return participatingActors;
     }
 
+    public Set<ContactData> allContacts() {
+        Set<ContactData> allContacts = new HashSet<ContactData>();
+        for ( ProcedureData procedureData : getProcedures() ) {
+            allContacts.addAll( procedureData.allContacts() );
+        }
+        return allContacts;
+    }
+
+    public Set<OrganizationData> allEmployers() {
+        Set<OrganizationData> allEmployers = new HashSet<OrganizationData>();
+        for ( ProcedureData procedureData : getProcedures() ) {
+            allEmployers.add( procedureData.employer() );
+        }
+        return allEmployers;
+    }
+
+    public PlanCommunity getPlanCommunity() {
+        return planCommunity;
+    }
 }

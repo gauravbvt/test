@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.PresenceRecord;
 import com.mindalliance.channels.social.services.PresenceRecordService;
@@ -43,13 +43,13 @@ public class PresenceRecordServiceImpl
 
     @Override
     @Transactional( readOnly = true)
-    public PresenceRecord findLatestPresence( String username, String uri ) {
+    public PresenceRecord findLatestPresence( String username, String communityUri ) {
         PresenceRecord latestPresence;
-        if ( isLatestPresenceCached( uri, username ) ) {
-            latestPresence = getLatestCachedPresence( uri, username );
+        if ( isLatestPresenceCached(  username, communityUri ) ) {
+            latestPresence = getLatestCachedPresence( communityUri, username );
         } else {
-            latestPresence = fetchLatestPresence( uri, username );
-            cacheLatestPresence( uri, username, latestPresence );
+            latestPresence = fetchLatestPresence( communityUri, username );
+            cacheLatestPresence( communityUri, username, latestPresence );
         }
         return latestPresence;
     }
@@ -57,7 +57,7 @@ public class PresenceRecordServiceImpl
     private PresenceRecord fetchLatestPresence( String uri, String username ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", uri ) );
+        criteria.add( Restrictions.eq( "communityUri", uri ) );
         criteria.add( Restrictions.eq( "username", username ) );
         criteria.addOrder( Order.desc( "created" ) );
         List<PresenceRecord> results = (List<PresenceRecord>)criteria.list( );
@@ -75,61 +75,59 @@ public class PresenceRecordServiceImpl
 
     @Override
    @Transactional
-    public void killIfAlive( String username, Plan plan ) {
-        if ( isAlive( username, plan.getVersionUri() ) )
-            kill( username, plan  );
+    public void killIfAlive( String username, PlanCommunity planCommunity ) {
+        if ( isAlive( username, planCommunity.getUri() ) )
+            kill( username, planCommunity  );
     }
 
-    private void kill( String username, Plan plan ) {
-        recordAbsence( username, plan  );
-        getUserLives( plan.getVersionUri()  ).remove( username );
+    private void kill( String username, PlanCommunity planCommunity ) {
+        recordAbsence( username, planCommunity  );
+        getUserLives( planCommunity.getUri()  ).remove( username );
         deaths.add( username );
     }
 
     @Override
     @Transactional
-    public void keepAlive( String username, Plan plan, int refreshDelay ) {
-        String uri = plan.getVersionUri();
-        if ( !getUserLives( uri ).containsKey( username ) ) {
+    public void keepAlive( String username, PlanCommunity planCommunity, int refreshDelay ) {
+        if ( !getUserLives( planCommunity.getUri() ).containsKey( username ) ) {
             // Record first sign of life
-            recordPresence( username, plan );
+            recordPresence( username, planCommunity );
         }
-        Map<String, Long> lives = getUserLives( uri );
+        Map<String, Long> lives = getUserLives( planCommunity.getUri() );
         lives.put( username, System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
     }
 
     @Override
     @Transactional
-    public List<String> giveMeYourDead( Plan plan ) {
-        discoverDeadUsers( plan );
+    public List<String> giveMeYourDead( PlanCommunity planCommunity ) {
+        discoverDeadUsers( planCommunity );
         List<String> deathRoll = new ArrayList<String>( deaths );
         deaths = new HashSet<String>();
         return deathRoll;
     }
 
-    private void discoverDeadUsers( Plan plan ) {
-        String uri = plan.getVersionUri();
+    private void discoverDeadUsers( PlanCommunity planCommunity ) {
         List<String> discovered = new ArrayList<String>(  );
-        for ( String username : getUserLives(  uri  ).keySet() ) {
-            if ( !isAlive(  username, uri ) ) {
+        for ( String username : getUserLives(  planCommunity.getUri()  ).keySet() ) {
+            if ( !isAlive(  username, planCommunity.getUri() ) ) {
                 discovered.add( username );
             }
         }
         for ( String deadUser : discovered ) {
-            kill( deadUser, plan );
+            kill( deadUser, planCommunity );
         }
     }
 
     @Transactional
-    public void recordPresence( String username, Plan plan ) {
-        resetLatestPresences( plan.getVersionUri() );
-        save( new PresenceRecord( PresenceRecord.Type.Active, username, plan.getVersionUri(), plan.getVersion() ) );
+    public void recordPresence( String username, PlanCommunity planCommunity ) {
+        resetLatestPresences( planCommunity.getUri() );
+        save( new PresenceRecord( PresenceRecord.Type.Active, username, planCommunity ) );
     }
 
     @Transactional
-    public void recordAbsence( String username, Plan plan ) {
-        resetLatestPresences( plan.getVersionUri() );
-        save( new PresenceRecord( PresenceRecord.Type.Inactive, username, plan.getVersionUri(), plan.getVersion() ) );
+    public void recordAbsence( String username, PlanCommunity planCommunity ) {
+        resetLatestPresences( planCommunity.getUri() );
+        save( new PresenceRecord( PresenceRecord.Type.Inactive, username, planCommunity ) );
     }
 
     private Map<String, Long> getUserLives( String urn ) {

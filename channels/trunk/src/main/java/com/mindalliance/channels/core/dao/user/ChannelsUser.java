@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Plan;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.springframework.security.core.Authentication;
@@ -53,6 +54,10 @@ public class ChannelsUser implements UserDetails {
      * Web client info.
      */
     private WebClientInfo clientInfo;
+    /**
+     * URI of the the current plan community for this user.
+     */
+    private String planCommunityUri;
 
     //----------------------------------------
     public ChannelsUser() {
@@ -66,12 +71,26 @@ public class ChannelsUser implements UserDetails {
         anonymous = false;
     }
 
-    public Plan getPlan() {
+    public ChannelsUser( ChannelsUserInfo userInfo, PlanCommunity planCommunity ) {
+        this( userInfo );
+        planCommunityUri = planCommunity.getUri();
+        plan = planCommunity.getPlan();
+    }
+
+    public Plan getPlan() {   // todo - replace usage by getPlanCommunity()
         return plan;
     }
 
-    public void setPlan( Plan plan ) {
+    public void setPlan( Plan plan ) {   // todo - replace by setPlanCommunity(...)
         this.plan = plan;
+    }
+
+    public String getPlanCommunityUri() {
+        return planCommunityUri;
+    }
+
+    public void setPlanCommunityUri( String planCommunityUri ) {
+        this.planCommunityUri = planCommunityUri;
     }
 
     public boolean isAnonymous() {

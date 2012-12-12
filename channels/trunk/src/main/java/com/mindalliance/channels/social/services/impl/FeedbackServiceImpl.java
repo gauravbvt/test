@@ -1,8 +1,8 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.Feedback;
 import com.mindalliance.channels.social.model.UserMessage;
@@ -31,12 +31,12 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Transactional
     public void sendFeedback(
             String username,
-            Plan plan,
+            PlanCommunity planCommunity,
             Feedback.Type type,
             String topic,
             String text,
             boolean urgent ) {
-        Feedback feedback = new Feedback( username, plan.getUri(), plan.getVersion(), type );
+        Feedback feedback = new Feedback( username, type, planCommunity );
         feedback.setTopic( topic );
         feedback.setText( text );
         feedback.setUrgent( urgent );
@@ -47,13 +47,13 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Transactional
     public void sendFeedback(
             String username,
-            Plan plan,
+            PlanCommunity planCommunity,
             Feedback.Type type,
             String topic,
             String text,
             boolean urgent,
             ModelObject about ) {
-        Feedback feedback = new Feedback( username, plan.getUri(), plan.getVersion(), type );
+        Feedback feedback = new Feedback( username, type, planCommunity );
         feedback.setTopic( topic );
         feedback.setText( text );
         feedback.setUrgent( urgent );
@@ -64,11 +64,11 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true)
-    public List<Feedback> listNotYetNotifiedNormalFeedbacks( Plan plan ) {
+    public List<Feedback> listNotYetNotifiedNormalFeedbacks( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.isNull( "whenNotified" ) );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "urgent", false ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<Feedback>) criteria.list();
@@ -77,10 +77,10 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Override
     @Transactional( readOnly = true)
     @SuppressWarnings( "unchecked" )
-    public List<Feedback> listNotYetNotifiedUrgentFeedbacks( Plan plan ) {
+    public List<Feedback> listNotYetNotifiedUrgentFeedbacks( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.isNull( "whenNotified" ) );
         criteria.add( Restrictions.eq( "urgent", true ) );
         criteria.addOrder( Order.desc( "created" ) );
@@ -101,7 +101,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     @Transactional( readOnly = true)
     @SuppressWarnings( "unchecked" )
     public List<Feedback> selectInitialFeedbacks(
-            Plan plan,
+            PlanCommunity planCommunity,
             Boolean urgentOnly,
             Boolean notResolvedOnly,
             Boolean notRepliedToOnly,
@@ -110,7 +110,7 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
             String username ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria(  getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         if ( urgentOnly ) {
             criteria.add( Restrictions.eq( "urgent", true ) );
         }
@@ -141,10 +141,10 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     }
 
     @Override
-    public int countUnresolvedFeedback( Plan plan, ChannelsUser user ) {
+    public int countUnresolvedFeedback( PlanCommunity planCommunity, ChannelsUser user ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "username", user.getUsername()) );
         criteria.add( Restrictions.eq( "resolved", false ) );
         return criteria.list().size();

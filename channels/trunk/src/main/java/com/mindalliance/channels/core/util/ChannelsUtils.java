@@ -705,4 +705,7 @@ public final class ChannelsUtils {
         return writer.toString();
     }
 
+    public static boolean bothNullOrEqual( Object o1, Object o2 ) {
+        return o1 == null && o2 == null || o1 != null && o2 != null && o1.equals( o2 );
+    }
 }

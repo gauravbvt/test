@@ -3,6 +3,7 @@ package com.mindalliance.channels.social.services.impl;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.ExecutedCommand;
@@ -41,11 +42,11 @@ public class ExecutedCommandServiceImpl
 
     @Override
     @Transactional( readOnly = true)
-    public Iterator<ExecutedCommand> getExecutedCommands( String planUri, int planVersion ) {
+    public Iterator<ExecutedCommand> getExecutedCommands( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", planUri ) );
-        criteria.add( Restrictions.eq( "planVersion", planVersion ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "planVersion", planCommunity.getPlanVersion() ) );
         criteria.addOrder( Order.desc( "created" ) );
         List<ExecutedCommand> results = (List<ExecutedCommand>)criteria.list( );
         return results.iterator();
@@ -85,7 +86,7 @@ public class ExecutedCommandServiceImpl
             Change change) {
         Plan plan = commander.getPlan();
         changed( plan.getVersionUri() );
-        ExecutedCommand commandEvent = new ExecutedCommand( type, command, change, plan.getUri(), plan.getVersion() );
+        ExecutedCommand commandEvent = new ExecutedCommand( type, command, change, commander.getPlanCommunity() );
         save( commandEvent );
         
     }

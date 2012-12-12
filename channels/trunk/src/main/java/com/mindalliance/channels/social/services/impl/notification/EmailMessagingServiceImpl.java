@@ -52,10 +52,10 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
         List<ChannelsUserInfo> toUsers = getToUsers( messageable, topic, planCommunity );
         ChannelsUserInfo fromUser = getFromUser( messageable, topic );
         String subject = StringUtils.abbreviate(
-                messageable.getSubject( topic, Messageable.Format.TEXT, planCommunity.getPlanService() ),
+                messageable.getSubject( topic, Messageable.Format.TEXT, planCommunity ),
                 MAX_SUBJECT_SIZE );
         String content = StringUtils.abbreviate(
-                messageable.getContent( topic, Messageable.Format.TEXT, planCommunity.getPlanService() ),
+                messageable.getContent( topic, Messageable.Format.TEXT, planCommunity ),
                 Integer.MAX_VALUE );
         for ( ChannelsUserInfo toUser : toUsers ) {
             boolean success = sendEmail( toUser.getEmail(),

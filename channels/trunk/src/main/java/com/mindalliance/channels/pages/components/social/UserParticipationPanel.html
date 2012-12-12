@@ -28,7 +28,7 @@
                 </ul>
                 <div wicket:id="newParticipation">
                     <span wicket:id="newParticipationLabel">I (also) participate in</span>
-                    <select wicket:id="orgs">
+                    <select wicket:id="agencies">
                         <option>org</option>
                     </select>
                     <div wicket:id="asAgent">
@@ -52,13 +52,13 @@
                 </ul>
              </div>
         </div>
-        <div wicket:id="supervisorParticipationValidations" class="tabcontent-group">
+        <div wicket:id="supervisorParticipationConfirmations" class="tabcontent-group">
             <h3>I confirm that I supervise</h3>
 
             <div class="tabcontent-content">
                 <ul>
-                    <li wicket:id="participationValidations">
-                        <input wicket:id="validated" type="checkbox"/>
+                    <li wicket:id="participationConfirmations">
+                        <input wicket:id="confirmed" type="checkbox"/>
                         <span wicket:id="user">John Doe</span> (<span wicket:id="email">jdoe@email.com</span>)
                         as <span wicket:id="agent">agent</span>
                     </li>

@@ -32,7 +32,7 @@ public class PlanSearchingMenuPanel extends MenuPanel {
         menuItems.add( showAspect( Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS ) );
         menuItems.add( showAspect( Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAXONOMIES ) );
         menuItems.add( showAspect( Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.WHOSWHO ) );
-        menuItems.add( showAspect( Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.DOCUMENTS ) );
+        menuItems.add( showAspect( Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.ATTACHMENTS ) );
         return menuItems;
     }
 }

@@ -1,7 +1,8 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.query.PlanService;
@@ -19,7 +20,9 @@ import java.util.List;
  */
 public interface CommunityService {
 
-    PlanParticipationService getPlanParticipationService();
+    UserParticipationService getUserParticipationService();
+
+    UserParticipationConfirmationService getUserParticipationConfirmationService();
 
     PlanService getPlanService();
 
@@ -31,7 +34,7 @@ public interface CommunityService {
      * @param actor an actor
      * @return a list of users
      */
-    List<ChannelsUser> findUsersParticipatingAs( Actor actor );
+    List<ChannelsUser> findUsersParticipatingAs( Actor actor );   // todo --obsolete
 
     /**
      * Whether participation as actor possible given current participation.
@@ -39,8 +42,8 @@ public interface CommunityService {
      * @param activeParticipations  a list of active participations
      * @return  a boolean -- not cached
      */
-    boolean meetsPreEmploymentConstraint( Actor actor,
-                                          List<PlanParticipation> activeParticipations );
+    boolean meetsPreEmploymentConstraint( Actor actor, // todo -- obsolete
+                                          List<UserParticipation> activeParticipations );
 
 
 }

@@ -3,7 +3,8 @@ package com.mindalliance.channels.api.plan;
 import com.mindalliance.channels.api.entities.AgentData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
@@ -37,6 +38,7 @@ public class PlanSummaryData implements Serializable {
     private List<AgentData> openActorList;
     private List<AgentData> underlings;
     private DocumentationData documentation;
+    private PlanIdentifierData planIdentifierData;
     private List<Actor> actors;
     private Plan plan;
 
@@ -58,6 +60,7 @@ public class PlanSummaryData implements Serializable {
         initParticipantActors( planCommunity );
         initSupervised( serverUrl, planCommunity );
         documentation = new DocumentationData( serverUrl, getPlan() );
+        planIdentifierData = new PlanIdentifierData( planCommunity );
     }
 
     private void initSupervised( String serverUrl, PlanCommunity planCommunity ) {
@@ -76,11 +79,11 @@ public class PlanSummaryData implements Serializable {
     private void initParticipantActors(
             PlanCommunity planCommunity ) {
         actors = new ArrayList<Actor>();
-        List<PlanParticipation> participations = planCommunity.getPlanParticipationService().getActiveUserParticipations(
-                ChannelsUser.current( planCommunity.getUserDao() ).getUserInfo(),
+        List<UserParticipation> participations = planCommunity.getUserParticipationService().getActiveUserParticipations(
+                ChannelsUser.current( planCommunity.getUserDao() ),
                 planCommunity );
-        for ( PlanParticipation participation : participations ) {
-            Actor actor = participation.getActor( planCommunity.getPlanService() );
+        for ( UserParticipation participation : participations ) {
+            Actor actor = participation.getAgent( planCommunity ).getActor();  // todo - agents!
             if ( actor != null ) actors.add( actor );
         }
 
@@ -91,10 +94,10 @@ public class PlanSummaryData implements Serializable {
             PlanCommunity planCommunity ) {
         openActorList = new ArrayList<AgentData>();
         ChannelsUser user = ChannelsUser.current( planCommunity.getUserDao() );
-        List<Actor> openActors = planCommunity.getPlanParticipationService()
-                .findOpenActors( user, planCommunity );
-        for ( Actor openActor : openActors ) {
-            openActorList.add( new AgentData( serverUrl, openActor, getPlan() ) );
+        List<Agent> openAgents = planCommunity.getParticipationManager()
+                .findSelfAssignableOpenAgents( planCommunity, user );
+        for ( Agent openAgent : openAgents ) {
+            openActorList.add( new AgentData( serverUrl, openAgent.getActor(), getPlan() ) ); // todo - agents!
         }
 
     }
@@ -104,9 +107,9 @@ public class PlanSummaryData implements Serializable {
             PlanCommunity planCommunity ) {
         participationDataList = new ArrayList<ParticipationData>();
         ChannelsUser user = ChannelsUser.current( planCommunity.getUserDao() );
-        List<PlanParticipation> participations = planCommunity.getPlanParticipationService()
-                .getUserParticipations( user.getUserInfo(), planCommunity );
-        for ( PlanParticipation participation : participations ) {
+        List<UserParticipation> participations = planCommunity.getUserParticipationService()
+                .getUserParticipations( user, planCommunity );
+        for ( UserParticipation participation : participations ) {
             participationDataList.add( new ParticipationData(
                     serverUrl,
                     planCommunity,
@@ -126,8 +129,9 @@ public class PlanSummaryData implements Serializable {
 
     @XmlElement
     public PlanIdentifierData getPlanIdentifier() {
-        return new PlanIdentifierData( getPlan() );
+        return planIdentifierData;
     }
+
 
     @XmlElement
     public String getDateVersioned() {

@@ -91,14 +91,14 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
     private List<SurveyWrapper> getSurveyWrappers() {
         List<SurveyWrapper> surveyWrappers = new ArrayList<SurveyWrapper>();
         Set<Questionnaire> questionnairesUsed = new HashSet<Questionnaire>();
-        for ( RFISurvey survey : rfiSurveyService.select( getPlan(), getModelObject() ) ) {
+        for ( RFISurvey survey : rfiSurveyService.select( getPlanCommunity(), getModelObject() ) ) {
             if ( !survey.getQuestionnaire().isIssueRemediation() ) {
                 surveyWrappers.add( new SurveyWrapper( survey ) );
                 questionnairesUsed.add( survey.getQuestionnaire() );
             }
         }
         for ( Questionnaire questionnaire : questionnaireService.findApplicableQuestionnaires(
-                getPlan(),
+                getPlanCommunity(),
                 getModelObject() ) ) {
             if ( !questionnairesUsed.contains( questionnaire ) )
                 surveyWrappers.add( new SurveyWrapper( questionnaire ) );
@@ -248,7 +248,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
             if ( rfiSurvey != null ) {
                 return rfiSurvey.isClosed()
                         ? "Closed"
-                        : rfiSurvey.isOngoing( getQueryService(), getAnalyst() )
+                        : rfiSurvey.isOngoing( getPlanCommunity() )
                         ? "Launched"
                         : "Closed";
             } else {
@@ -285,7 +285,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
 
         private Map<String,Integer> getResponseMetrics() {
             if ( metrics == null ) {
-                metrics = surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
+                metrics = surveysDAO.findResponseMetrics( getPlanCommunity(), rfiSurvey );
             }
             return metrics;
         }
@@ -299,7 +299,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
         public boolean launch() {
             assert rfiSurvey == null;
             rfiSurvey = rfiSurveyService.launch(
-                    getPlan(),
+                    getPlanCommunity(),
                     getUsername(),
                     getQuestionnaire(),
                     getModelObject() );

@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -30,12 +31,13 @@ public class OrganizationData extends ModelEntityData {
     public OrganizationData() {
     }
 
-    public OrganizationData( String serverUrl, ModelObject modelObject, PlanService planService ) {
-        super( serverUrl, modelObject, planService.getPlan() );
-        init( planService );
+    public OrganizationData( String serverUrl, ModelObject modelObject, PlanCommunity planCommunity ) {
+        super( serverUrl, modelObject, planCommunity.getPlan() );
+        init( planCommunity );
     }
 
-    private void init( PlanService planService ) {
+    private void init( PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         participating = planService.getPlan().isInScope( getOrganization() );
         channelsDataList = new ArrayList<ChannelData>(  );
         for ( Channel channel : getOrganization().getEffectiveChannels() ) {

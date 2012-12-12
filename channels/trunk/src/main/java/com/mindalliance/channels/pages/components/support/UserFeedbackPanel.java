@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.support;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.AjaxIndicatorAwareContainer;
 import com.mindalliance.channels.social.model.Feedback;
@@ -256,8 +255,7 @@ public class UserFeedbackPanel extends AbstractUpdatablePanel {
 
     private boolean saveFeedback() {
         ChannelsUser currentUser = getUser();
-        Plan plan = getPlan();
-        Feedback feedback = new Feedback( currentUser.getUsername(), plan.getUri(), plan.getVersion(), feedbackType() );
+        Feedback feedback = new Feedback( currentUser.getUsername(), feedbackType(), getPlanCommunity() );
         feedback.setTopic( topic );
         feedback.setText( getContent() );
         feedback.setFromEmail( currentUser.getEmail() );

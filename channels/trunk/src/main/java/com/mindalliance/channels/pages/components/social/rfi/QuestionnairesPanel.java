@@ -182,7 +182,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         };
         deleteButton.setVisible( selectedQuestionnaire != null
                 && !selectedQuestionnaire.isActive()
-                && rfiSurveyService.findSurveys( getPlan(), selectedQuestionnaire ).isEmpty()
+                && rfiSurveyService.findSurveys( getPlanCommunity(), selectedQuestionnaire ).isEmpty()
         );
         questionnaireContainer.add( deleteButton );
         // activate
@@ -229,7 +229,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
 
     private void deleteQuestionnaire() {
         if ( selectedQuestionnaire != null ) {
-            questionnaireService.deleteIfNotUsed( getPlan(), selectedQuestionnaire );
+            questionnaireService.deleteIfNotUsed( getPlanCommunity(), selectedQuestionnaire );
             selectedQuestionnaire = null;
         }
     }
@@ -251,7 +251,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
     public List<QuestionnaireWrapper> getFilteredQuestionnaires() {
         List<QuestionnaireWrapper> wrappers = new ArrayList<QuestionnaireWrapper>();
         List<Questionnaire> questionnaires = questionnaireService.select(
-                getPlan(),
+                getPlanCommunity(),
                 getAbout().equals( ANYTHING ) ? null : getAbout(),
                 getStatus().equals( ALL ) ? null : Questionnaire.Status.valueOf( getStatus().toUpperCase() ),
                 isRemediation()
@@ -342,7 +342,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         AjaxLink newQuestionnaireButton = new AjaxLink( "newQuestionnaire" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                selectedQuestionnaire = new Questionnaire( getPlan(), getUsername() );
+                selectedQuestionnaire = new Questionnaire( getPlanCommunity(), getUsername() );
                 selectedQuestionnaire.setAbout( getDefaultAbout() );
                 questionnaireService.save( selectedQuestionnaire );
                 addQuestionnaireTable();
@@ -465,11 +465,11 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         }
 
         public int getRfiCount() {
-            return rfiService.getRFICount( getPlan(), questionnaire );
+            return rfiService.getRFICount( getPlanCommunity(), questionnaire );
         }
 
         public int getSurveyCount() {
-            return rfiSurveyService.findSurveys( getPlan(), questionnaire ).size();
+            return rfiSurveyService.findSurveys( getPlanCommunity(), questionnaire ).size();
         }
 
         public String getExpandLabel() {

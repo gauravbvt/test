@@ -35,7 +35,7 @@ public class AssignmentSpecPanel extends AbstractCommandablePanel {
     }
 
     private void addTabsPanel() {
-        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() );
+        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() );
         tabbedPanel.setOutputMarkupId( true );
         addOrReplace( tabbedPanel );
     }

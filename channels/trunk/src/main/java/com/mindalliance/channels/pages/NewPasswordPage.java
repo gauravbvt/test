@@ -109,7 +109,7 @@ public class NewPasswordPage extends WebPage {
         outcomeContainer.setOutputMarkupId( true );
         Label outcomeLabel = new Label( "message", getOutcome() );
         if ( !outcome.equals(  NEW_PASSWORD_SENT ) ) {
-            outcomeLabel.add(  new AttributeModifier( "class", true, new Model<String>( "error" ) ) );
+            outcomeLabel.add(  new AttributeModifier( "class", new Model<String>( "error" ) ) );
         }
         outcomeContainer.add( outcomeLabel );
         makeVisible( outcomeLabel, !outcome.isEmpty() );
@@ -177,7 +177,7 @@ public class NewPasswordPage extends WebPage {
      * @param visible   a boolean
      */
     private static void makeVisible( Component component, boolean visible ) {
-        component.add( new AttributeModifier( "style", true, new Model<String>(
+        component.add( new AttributeModifier( "style", new Model<String>(
                 visible ? "" : "display:none" ) ) );
     }
 

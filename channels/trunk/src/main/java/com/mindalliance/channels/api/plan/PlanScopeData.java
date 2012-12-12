@@ -43,7 +43,7 @@ import java.util.Map;
 @XmlType( propOrder = {"date", "identity", "phases", "places", "events", "roles", "organizations", "actors", "employments"} )
 public class PlanScopeData  implements Serializable {
 
-    private Plan plan;
+    private PlanCommunity planCommunity;
     private Map<Long, ModelObjectData> cache;
     private List<PhaseData> phases;
     private List<PlaceData> places;
@@ -58,22 +58,23 @@ public class PlanScopeData  implements Serializable {
     }
 
     public PlanScopeData( String serverUrl, PlanCommunity planCommunity ) {
-        this.plan = planCommunity.getPlan();
+        this.planCommunity = planCommunity;
         cache = new HashMap<Long, ModelObjectData>();
-        init(  serverUrl, planCommunity.getPlanService() );
+        init(  serverUrl, planCommunity );
     }
 
-    private void init( String serverUrl, PlanService planService ) {
-        initPhases( serverUrl, planService );
-        initPlaces( serverUrl, planService );
-        initEvents( serverUrl, planService );
-        initRoles( serverUrl,planService );
-        initOrgs( serverUrl,planService );
-        initActors( serverUrl,planService );
-        initEmployments( planService );
+    private void init( String serverUrl, PlanCommunity planCommunity ) {
+        initPhases( serverUrl, planCommunity );
+        initPlaces( serverUrl, planCommunity );
+        initEvents( serverUrl, planCommunity );
+        initRoles( serverUrl,planCommunity );
+        initOrgs( serverUrl,planCommunity );
+        initActors( serverUrl,planCommunity );
+        initEmployments( planCommunity );
     }
 
-    private void initEmployments( PlanService planService ) {
+    private void initEmployments( PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         employments = new ArrayList<EmploymentData>();
         for ( Organization org : planService.list( Organization.class ) ) {
             if ( !org.isUnknown() && !org.isUniversal() )
@@ -84,60 +85,66 @@ public class PlanScopeData  implements Serializable {
 
     }
 
-    private void initActors( String serverUrl, PlanService planService ) {
+    private void initActors( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         actors = new ArrayList<AgentData>();
         for ( Actor actor : planService.list( Actor.class ) ) {
             if ( !actor.isUnknown() && !actor.isUniversal() )
-                actors.add( cache( actor, new AgentData( serverUrl,actor, plan ) ) );
+                actors.add( cache( actor, new AgentData( serverUrl,actor, getPlan() ) ) );
         }
 
     }
 
-    private void initOrgs( String serverUrl, PlanService planService ) {
+    private Plan getPlan() {
+        return planCommunity.getPlan();
+    }
+
+    private void initOrgs( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         orgs = new ArrayList<OrganizationData>();
         for ( Organization org : planService.list( Organization.class ) ) {
             if ( !org.isUnknown() && !org.isUniversal() )
-                orgs.add( cache( org, new OrganizationData( serverUrl,org, planService ) ) );
+                orgs.add( cache( org, new OrganizationData( serverUrl,org, planCommunity ) ) );
         }
 
     }
 
-    private void initRoles( String serverUrl, PlanService planService ) {
+    private void initRoles( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         roles = new ArrayList<RoleData>();
         for ( Role role : planService.list( Role.class ) ) {
             if ( !role.isUnknown() && !role.isUniversal() )
-                roles.add( cache( role, new RoleData( serverUrl,role, plan ) ) );
+                roles.add( cache( role, new RoleData( serverUrl,role, getPlan() ) ) );
         }
 
     }
 
-    private void initEvents( String serverUrl, PlanService planService ) {
+    private void initEvents( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         events = new ArrayList<EventData>();
         for ( Event event : planService.list( Event.class ) ) {
             if ( !event.isUnknown() && !event.isUniversal() )
-                events.add( cache( event, new EventData( serverUrl,event, plan ) ) );
+                events.add( cache( event, new EventData( serverUrl,event, getPlan() ) ) );
         }
 
     }
 
-    private void initPlaces( String serverUrl, PlanService planService ) {
+    private void initPlaces( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         places = new ArrayList<PlaceData>();
         for ( Place place : planService.list( Place.class ) ) {
             if ( !place.isUnknown() && !place.isUniversal() )
-                places.add( cache( place, new PlaceData( serverUrl,place, plan ) ) );
+                places.add( cache( place, new PlaceData( serverUrl,place, getPlan() ) ) );
         }
     }
 
-    private void initPhases( String serverUrl, PlanService planService ) {
+    private void initPhases( String serverUrl, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         phases = new ArrayList<PhaseData>();
         for ( Phase phase : planService.list( Phase.class ) ) {
             if ( !phase.isUnknown() && !phase.isUniversal() )
-                phases.add( cache( phase, new PhaseData( serverUrl,phase, plan ) ) );
+                phases.add( cache( phase, new PhaseData( serverUrl,phase, getPlan() ) ) );
         }
-    }
-
-    public void setPlan( Plan plan ) {
-        this.plan = plan;
     }
 
     @XmlElement
@@ -147,7 +154,7 @@ public class PlanScopeData  implements Serializable {
 
     @XmlElement
     public PlanIdentifierData getIdentity() {
-        return new PlanIdentifierData( plan );
+        return new PlanIdentifierData( planCommunity );
     }
 
     @XmlElement( name = "phase" )

@@ -34,7 +34,7 @@ public class PlanSearchingFloatingPanel extends AbstractFloatingMultiAspectPanel
     public static final String TAGS = "Tags";
     public static final String TAXONOMIES = "Taxonomies";
     public static final String WHOSWHO = "Who's who";
-    public static final String DOCUMENTS = "All documents";
+    public static final String ATTACHMENTS = "All attachments";
 
     private PlanIndexPanel planIndexPanel;
     private PlanTagsPanel planTagsPanel;
@@ -45,7 +45,7 @@ public class PlanSearchingFloatingPanel extends AbstractFloatingMultiAspectPanel
     /**
      * Aspects.
      */
-    private static final String[] ASPECTS = {INDEX, TAGS, TAXONOMIES, WHOSWHO, DOCUMENTS};
+    private static final String[] ASPECTS = {INDEX, TAGS, TAXONOMIES, WHOSWHO, ATTACHMENTS};
 
 
     public PlanSearchingFloatingPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
@@ -91,7 +91,7 @@ public class PlanSearchingFloatingPanel extends AbstractFloatingMultiAspectPanel
             return getPlanTypologiesPanel();
         } else if ( aspect.equals( WHOSWHO ) ) {
             return getPlanWhosWhoPanel();
-        } else if ( aspect.equals( DOCUMENTS ) ) {
+        } else if ( aspect.equals( ATTACHMENTS ) ) {
             return getPlanBibliographyPanel();
         } else {
             throw new RuntimeException( "Unknown searching aspect " + aspect ); }

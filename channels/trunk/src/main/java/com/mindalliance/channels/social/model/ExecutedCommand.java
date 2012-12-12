@@ -4,7 +4,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import javax.persistence.Entity;
  * Time: 2:20 PM
  */
 @Entity
-public class ExecutedCommand extends AbstractPersistentPlanObject {
+public class ExecutedCommand extends AbstractPersistentChannelsObject {
 
     private String commandName;
     private String commandUndoes;
@@ -39,8 +40,8 @@ public class ExecutedCommand extends AbstractPersistentPlanObject {
 
     public ExecutedCommand() {}
 
-    public ExecutedCommand( Type type, Command command, Change change, String planUri, int planVersion ) {
-        super( planUri, planVersion, command.getUserName() );
+    public ExecutedCommand( Type type, Command command, Change change, PlanCommunity planCommunity ) {
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), command.getUserName() );
         this.type = type;
         commandName = command.getName();
         if ( type == Type.Undone )  commandUndoes = command.getUndoes();

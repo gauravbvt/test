@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.core.command;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -313,6 +314,8 @@ public interface Commander {
      */
     Plan getPlan();
 
+    String getPlanCommunityUri();
+
     /**
      * All users are out of sync with plan versions.
      */
@@ -379,4 +382,8 @@ public interface Commander {
      * @return a lock manager
      */
     LockManager getLockManager();
+
+    void setPlanCommunity( PlanCommunity planCommunity );
+
+    PlanCommunity getPlanCommunity();
 }

@@ -100,7 +100,7 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             PlanCommunity planCommunity ) {
         StringBuilder sb = new StringBuilder();
         for ( Messageable messageable : messageables ) {
-            sb.append( messageable.getContent( topic, format, planCommunity.getPlanService() ) );
+            sb.append( messageable.getContent( topic, format, planCommunity ) );
             sb.append( "\n============================================\n\n" );
         }
         return sb.toString();

@@ -100,7 +100,6 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                 addDeleteImage( item );
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( cssClasses( item, count ) ) ) );
 
             }

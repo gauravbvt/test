@@ -1,10 +1,10 @@
 package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.lang.WordUtils;
 
@@ -83,8 +83,8 @@ public class Feedback extends UserStatement {
         this.id = id; // only to be used for unknown feedback
     }
 
-    public Feedback( String username, String planUri, int planVersion, Type type ) {
-        super( planUri, planVersion, username );
+    public Feedback( String username, Type type, PlanCommunity planCommunity ) {
+        super( username, planCommunity );
         this.type = type;
     }
 
@@ -204,12 +204,13 @@ public class Feedback extends UserStatement {
         return ChannelsUserInfo.PLANNERS;
     }
 
-    protected String getTextContent( Format format, PlanService planService ) {
+    @Override
+    protected String getTextContent( Format format, PlanCommunity planCommunity ) {
         // Ignore format
         return "Plan: " + getPlanUri()
                 + ":"
                 + getPlanVersion()
-                + "\nUser: " + planService.getUserDao().getFullName( getUsername() )
+                + "\nUser: " + planCommunity.getUserDao().getFullName( getUsername() )
                 + "\n"
                 + DATE_FORMAT.format( getCreated() )
                 + aboutString(  )
@@ -247,7 +248,7 @@ public class Feedback extends UserStatement {
         }
     }
 
-    protected String getTextSubject( Format format, PlanService planService ) {
+    protected String getTextSubject( Format format, PlanCommunity planCommunity ) {
         // Ignore format
         StringBuilder sb = new StringBuilder();
         sb.append( "Feedback" );

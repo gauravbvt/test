@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.model.rfi;
 
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
@@ -18,7 +18,7 @@ import java.util.List;
  * Time: 1:49 PM
  */
 @Entity
-public class Question extends AbstractPersistentPlanObject {
+public class Question extends AbstractPersistentChannelsObject {
 
 
 
@@ -71,7 +71,7 @@ public class Question extends AbstractPersistentPlanObject {
     }
 
     public Question( String username, Questionnaire questionnaire ) {
-        super( questionnaire.getPlanUri(), questionnaire.getPlanVersion(), username);
+        super( questionnaire.getCommunityUri(), questionnaire.getPlanUri(), questionnaire.getPlanVersion(), username);
         this.questionnaire = questionnaire;
     }
 

@@ -365,8 +365,7 @@ public abstract class DefaultQueryService implements QueryService {
             }
         }
         // Include plan as possible referencer
-        if ( getPlan().references( mo )/*
-                || planParticipationService.references( getPlan(), mo, this )*/ ) {
+        if ( getPlan().references( mo ) ) {
             count++;
         }
         return count;
@@ -1370,7 +1369,6 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Employment> findAllEmploymentsWithKnownActors() {
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
-
         for ( Organization org : listActualEntities( Organization.class ) ) {
             for ( Job job : org.getJobs() ) {
                 employments.add( new Employment( job.getActor(), org, job ) );
@@ -1873,8 +1871,7 @@ public abstract class DefaultQueryService implements QueryService {
         List<T> referencers = new ArrayList<T>();
         if ( Plan.class.isAssignableFrom( clazz ) ) {
             Plan plan = getPlan();
-            if ( plan.references( referenced )/*
-                    || planParticipationService.references( plan, referenced, DefaultQueryService.this )*/ ) {
+            if ( plan.references( referenced ) ) {
                 referencers.add( (T) plan );
             }
         } else {
@@ -3197,7 +3194,6 @@ public abstract class DefaultQueryService implements QueryService {
                     }
             );
         }
-        /*hasReference = hasReference || planParticipationService.references( getPlan(), mo, this );*/
         return hasReference;
     }
 
@@ -3295,13 +3291,13 @@ public abstract class DefaultQueryService implements QueryService {
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
         return mustBeReferenced
                 ? (List<T>) CollectionUtils.select(
-                        listReferencedEntities( clazz ),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (T) object ).isActual();
-                            }
-                        } )
+                listReferencedEntities( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (T) object ).isActual();
+                    }
+                } )
                 : listActualEntities( clazz );
     }
 
@@ -3392,7 +3388,7 @@ public abstract class DefaultQueryService implements QueryService {
                 } );
     }
 
-     @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings( {"unchecked"} )
     private <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz, final boolean includeImmutables ) {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
@@ -3413,7 +3409,7 @@ public abstract class DefaultQueryService implements QueryService {
             Boolean includeImmutables ) {
         return mustBeReferenced
                 ? listReferencedEntities( entityClass, includeImmutables )
-                : listKnownEntities( entityClass ) ;
+                : listKnownEntities( entityClass );
     }
 
     @Override
@@ -3561,7 +3557,6 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
 
-
     @Override
     public UserContactInfoService getUserContactInfoService() {
         return userDao.getUserContactInfoService();
@@ -3577,6 +3572,20 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return new ArrayList<Actor>( supervisors );
     }
+
+    @Override
+    public List<Actor> findAllFixedSupervisorsOf( Actor actor ) {
+        Set<Actor> supervisors = new HashSet<Actor>();
+        for ( Employment employment : findAllEmploymentsForActor( actor ) ) {
+            if ( !employment.getOrganization().isPlaceHolder() ) {
+                Actor supervisor = employment.getSupervisor();
+                if ( supervisor != null )
+                    supervisors.add( supervisor );
+            }
+        }
+        return new ArrayList<Actor>( supervisors );
+    }
+
 
     @Override
     public String makeNameForNewEntity( Class<? extends ModelEntity> entityClass ) {

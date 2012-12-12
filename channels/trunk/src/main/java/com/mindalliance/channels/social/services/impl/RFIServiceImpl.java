@@ -1,14 +1,11 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
@@ -44,10 +41,10 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> select( Plan plan, RFISurvey rfiSurvey ) {
+    public List<RFI> select( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "rfiSurvey", rfiSurvey ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<RFI>) criteria.list();
@@ -55,7 +52,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
 
     @Override
     @Transactional( readOnly = true )
-    public int getRFICount( Plan plan, final Questionnaire questionnaire ) {
+    public int getRFICount( PlanCommunity planCommunity, final Questionnaire questionnaire ) {
         List<RFI> rfis = list();
         return CollectionUtils.select(
                 rfis,
@@ -73,7 +70,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @Transactional
     public void makeOrUpdateRFI(
-            Plan plan,
+            PlanCommunity planCommunity,
             String username,
             RFISurvey rfiSurvey,
             ChannelsUserInfo userInfo,
@@ -82,9 +79,9 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
             Role role,
             Date deadlineDate ) {
         String surveyedUsername = userInfo.getUsername();
-        RFI rfi = find( plan, rfiSurvey, surveyedUsername );
+        RFI rfi = find( planCommunity, rfiSurvey, surveyedUsername );
         if ( rfi == null ) {
-            rfi = new RFI( username, plan.getUri(), plan.getVersion() );
+            rfi = new RFI( username, planCommunity );
             rfi.setSurveyedUsername( surveyedUsername );
             if ( organization != null )
                 rfi.setOrganizationId( organization.getId() );
@@ -101,11 +98,11 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @Transactional
     public void nag(
-            Plan plan,
+            PlanCommunity planCommunity,
             String username,
             RFISurvey rfiSurvey,
             ChannelsUserInfo userInfo ) {
-        RFI rfi = find( plan, rfiSurvey, userInfo.getUsername() );
+        RFI rfi = find( planCommunity, rfiSurvey, userInfo.getUsername() );
         if ( rfi != null ) {
             rfi.nag();
             save( rfi );
@@ -116,12 +113,12 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
     public RFI find(
-            Plan plan,
+            PlanCommunity planCommunity,
             RFISurvey rfiSurvey,
             String surveyedUsername ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "rfiSurvey", rfiSurvey ) );
         criteria.add( Restrictions.eq( "surveyedUsername", surveyedUsername ) );
         List<RFI> rfis = criteria.list();
@@ -134,9 +131,9 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<String> findParticipants( Plan plan, RFISurvey rfiSurvey ) {
+    public List<String> findParticipants( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
         Set<String> usernames = new HashSet<String>();
-        List<RFI> rfis = select( plan, rfiSurvey );
+        List<RFI> rfis = select( planCommunity, rfiSurvey );
         for ( RFI rfi : rfis ) {
             usernames.add( rfi.getSurveyedUsername() );
         }
@@ -146,18 +143,17 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> listActiveRFIs( final PlanService planService, final Analyst analyst ) {
-        Plan plan = planService.getPlan();
+    public List<RFI> listActiveRFIs( final PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         return (List<RFI>) CollectionUtils.select(
                 criteria.list(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         RFI rfi = (RFI) object;
-                        return rfi.isActive( planService, analyst );
+                        return rfi.isActive( planCommunity );
                     }
                 } );
     }
@@ -166,13 +162,11 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
     public List<RFI> listUserActiveRFIs(
-            Plan plan,
-            ChannelsUser user,
-            final QueryService queryService,
-            final Analyst analyst) {
+            final PlanCommunity planCommunity,
+            ChannelsUser user) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "surveyedUsername", user.getUsername() ) );
         return (List<RFI>) CollectionUtils.select(
                 criteria.list(),
@@ -180,7 +174,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
                     @Override
                     public boolean evaluate( Object object ) {
                         RFI rfi = (RFI) object;
-                        return rfi.isActive( queryService, analyst );
+                        return rfi.isActive( planCommunity );
                     }
                 } );
     }
@@ -188,10 +182,13 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> listOngoingUserRFIs( Plan plan, ChannelsUser user, final QueryService queryService, final Analyst analyst ) {
+    public List<RFI> listOngoingUserRFIs(
+            final PlanCommunity planCommunity,
+            ChannelsUser user
+    ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "surveyedUsername", user.getUsername() ) );
         return (List<RFI>) CollectionUtils.select(
                 criteria.list(),
@@ -199,7 +196,7 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
                     @Override
                     public boolean evaluate( Object object ) {
                         RFI rfi = (RFI) object;
-                        return rfi.isOngoing( queryService, analyst );
+                        return rfi.isOngoing( planCommunity );
                     }
                 } );
     }
@@ -215,10 +212,10 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> listRequestedNags( Plan plan ) {
+    public List<RFI> listRequestedNags( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "naggingRequested", true ) );
         return  (List<RFI>) CollectionUtils.select(
                 criteria.list(),
@@ -234,12 +231,12 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> listApproachingDeadline( Plan plan, long warningDelay ) {
+    public List<RFI> listApproachingDeadline( PlanCommunity planCommunity, long warningDelay ) {
         Date now = new Date( );
         Date warningBound = new Date( now.getTime() + warningDelay );
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.between( "deadline", now, warningBound ) );
         return  (List<RFI>) CollectionUtils.select(
                 criteria.list(),
@@ -255,10 +252,10 @@ public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> listNewRFIs( Plan plan ) {
+    public List<RFI> listNewRFIs( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         return  (List<RFI>) CollectionUtils.select(
                 criteria.list(),
                 new Predicate() {

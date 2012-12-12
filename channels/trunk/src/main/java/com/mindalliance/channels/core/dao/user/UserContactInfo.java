@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
  * Time: 11:00 AM
  */
 @Entity
-public class UserContactInfo extends AbstractPersistentPlanObject {
+public class UserContactInfo extends AbstractPersistentChannelsObject {
 
     @ManyToOne
     private ChannelsUserInfo user;

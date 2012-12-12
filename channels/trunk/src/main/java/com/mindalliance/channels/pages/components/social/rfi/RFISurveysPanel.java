@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
@@ -144,12 +145,13 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
     public List<RFISurveyWrapper> getRfiSurveyWrappers() {
         List<RFISurveyWrapper> wrappers = new ArrayList<RFISurveyWrapper>();
+        PlanCommunity planCommunity = getPlanCommunity();
         List<RFISurvey> rfiSurveys = rfiSurveyService.select(
-                getPlan(),
+                planCommunity,
                 onlyLaunched, // restrict to open surveys or not
                 about );
         for ( RFISurvey rfiSurvey : rfiSurveys ) {
-            if ( !rfiSurvey.isObsolete( getQueryService(), getAnalyst() ) ) {
+            if ( !rfiSurvey.isObsolete( planCommunity ) ) {
                 if ( !onlyAnswered || getAnsweredCount( rfiSurvey ) > 0 )
                     if ( !isFilteredOut( rfiSurvey ) ) {
                         rfiSurveyService.refresh( rfiSurvey );
@@ -161,6 +163,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     }
 
     private void addRFISurvey() {
+        PlanCommunity planCommunity = getPlanCommunity();
         rfiSurveyContainer = new WebMarkupContainer( "rfiSurveyContainer" );
         rfiSurveyContainer.setOutputMarkupId( true );
         makeVisible( rfiSurveyContainer, selectedRFISurvey != null );
@@ -182,13 +185,13 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         activateButton.add( new AttributeModifier(
                 "value",
                 new Model<String>( selectedRFISurvey == null
-                        || selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() )
+                        || selectedRFISurvey.isObsolete( planCommunity )
                         ? ""
                         : selectedRFISurvey.isClosed()
                         ? "Activate this survey"
                         : "Retire this survey" ) ) );
         activateButton.setVisible( selectedRFISurvey != null
-                && !selectedRFISurvey.isObsolete( getQueryService(), getAnalyst() ) );
+                && !selectedRFISurvey.isObsolete( planCommunity ) );
         rfiSurveyContainer.add( activateButton );
         // can forward
         AjaxCheckBox canForwardCheckBox = new AjaxCheckBox(
@@ -238,7 +241,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     public String getRfiSurveyLabel() {
         return selectedRFISurvey == null
                 ? ""
-                : selectedRFISurvey.getLabel( getQueryService() );
+                : selectedRFISurvey.getSurveyLabel(  );
     }
 
     public RFISurvey getSelectedRFISurvey() {
@@ -325,7 +328,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     }
 
     private int getAnsweredCount( RFISurvey rfiSurvey ) {
-        return surveysDAO.findAnsweringRFIs( getPlan(), rfiSurvey ).size();
+        return surveysDAO.findAnsweringRFIs( getPlanCommunity(), rfiSurvey ).size();
     }
 
     public boolean isCanBeForwarded() {
@@ -467,7 +470,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         public String getStatusLabel() {
-            return rfiSurvey.getStatusLabel( getQueryService(), getAnalyst() );
+            return rfiSurvey.getStatusLabel( getPlanCommunity() );
         }
 
         public int getSentToCount() {
@@ -502,7 +505,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
         private Map<String,Integer> getResponseMetrics() {
             if ( metrics == null ) {
-                metrics = surveysDAO.findResponseMetrics( getPlan(), rfiSurvey );
+                metrics = surveysDAO.findResponseMetrics( getPlanCommunity(), rfiSurvey );
             }
             return metrics;
         }

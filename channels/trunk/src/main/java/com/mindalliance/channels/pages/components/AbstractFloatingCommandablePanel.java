@@ -130,7 +130,7 @@ abstract public class AbstractFloatingCommandablePanel extends AbstractCommandab
                 close( target );
             }
         };
-        closeLink.add( new AttributeModifier( "onMouseOver", true, new Model<String>( "this.focus();" ) ) );
+        closeLink.add( new AttributeModifier( "onMouseOver", new Model<String>( "this.focus();" ) ) );
         moveBar.add( closeLink );
         // Content
         addContent();

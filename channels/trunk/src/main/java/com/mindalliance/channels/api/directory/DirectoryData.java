@@ -57,7 +57,7 @@ public class DirectoryData implements Serializable {
 
     @XmlElement( name = "plan" )
     public PlanIdentifierData getPlanIdentifier() {
-        return new PlanIdentifierData( proceduresData.getPlan() );
+        return new PlanIdentifierData( proceduresData.getPlanCommunity() );
     }
 
     @XmlElement

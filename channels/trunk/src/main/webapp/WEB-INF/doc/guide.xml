@@ -1281,17 +1281,17 @@ The table can be indexed by the name of the agent or by attributes of employment
             </step>
         </activity>
         <activity id="documents">
-            <name>Search for documents</name>
+            <name>Search for attachements</name>
             <step>
-                <description>Documents of various types (policy, reference, picture etc.) can be attached to the plan and any element in it. 
+                <description>Documents and Web pages of various types (policy, reference, picture etc.) can be attached to the plan and any element in it. 
                     
-A table with all documents attached in the plan can be found in the plan's ''bibliography''.</description>
+A table with all attachments in the plan can be found in the plan's ''attachments''.</description>
                 <script>
-                    <action>Open the plan's bibliography</action>
+                    <action>Open the plan's attachments</action>
                     <change>
                         <subjectId>-13</subjectId>
                         <type>AspectViewed</type>
-                        <property>All documents</property>
+                        <property>All attachments</property>
                     </change>
                 </script>
             </step>

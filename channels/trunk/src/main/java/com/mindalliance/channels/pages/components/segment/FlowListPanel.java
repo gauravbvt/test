@@ -190,7 +190,6 @@ public class FlowListPanel extends AbstractCommandablePanel {
                 }
                 flowPanel.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( getCssClasses( item ) ) ) );
                 item.add( flowPanel );
             }

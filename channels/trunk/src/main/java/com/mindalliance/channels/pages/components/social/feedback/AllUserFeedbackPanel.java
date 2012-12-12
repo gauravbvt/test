@@ -195,7 +195,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     public List<FeedbackWrapper> getFilteredFeedbacks() {
         List<FeedbackWrapper> wrappers = new ArrayList<FeedbackWrapper>();
         List<Feedback> feedbacks = feedbackService.selectInitialFeedbacks(
-                getPlan(),
+                getPlanCommunity(),
                 urgentOnly,
                 unresolvedOnly,
                 notRepliedToOnly,

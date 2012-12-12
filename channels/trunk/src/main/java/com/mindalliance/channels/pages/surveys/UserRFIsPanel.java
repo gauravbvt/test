@@ -60,7 +60,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
     private void addTabbedPanel() {
         reset();
-        tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() ) {
+        tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() ) {
             @Override
             protected void onAjaxUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.NeedsRefresh ) );
@@ -114,21 +114,21 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
     private List<RFIWrapper> getTodoRFIs() {
         if ( todoRFIs == null ) {
-            todoRFIs = surveysDAO.findIncompleteRFIs( getPlan(), getUser(), getQueryService(), getAnalyst() );
+            todoRFIs = surveysDAO.findIncompleteRFIs( getPlanCommunity(), getUser() );
         }
         return wrapAll( todoRFIs );
     }
 
     private List<RFIWrapper> getDoneRFIs() {
         if ( doneRFIs == null ) {
-            doneRFIs = surveysDAO.findCompletedRFIs( getPlan(), getUser(), getQueryService(), getAnalyst() );
+            doneRFIs = surveysDAO.findCompletedRFIs( getPlanCommunity(), getUser() );
         }
         return wrapAll( doneRFIs );
     }
 
     private List<RFIWrapper> getDeclinedRFIs() {
         if ( declinedRFIs == null ) {
-            declinedRFIs = surveysDAO.findDeclinedRFIs( getPlan(), getUser(), getQueryService(), getAnalyst() );
+            declinedRFIs = surveysDAO.findDeclinedRFIs( getPlanCommunity(), getUser() );
         }
         return wrapAll( declinedRFIs );
     }
@@ -177,7 +177,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         }
 
         public String getSurveyLabel() {
-            return rfi.getLabel( getQueryService() );
+            return rfi.getRFILabel(  );
         }
 
         public String getJob() {

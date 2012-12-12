@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.dao.user;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  */
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint( columnNames = {"EMAIL", "USERNAME"} ) )
-public class ChannelsUserInfo extends AbstractPersistentPlanObject {
+public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
 
     /**
      * The admin role string.
@@ -97,7 +97,7 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
 
     @OneToMany( mappedBy = "participant", cascade = CascadeType.ALL )
     @Transient
-    private List<PlanParticipation> planParticipations;
+    private List<UserParticipation> userParticipations;
 
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     @Transient
@@ -263,12 +263,12 @@ public class ChannelsUserInfo extends AbstractPersistentPlanObject {
         this.generatedPassword = generatedPassword;
     }
 
-    public List<PlanParticipation> getPlanParticipations() {
-        return planParticipations;
+    public List<UserParticipation> getUserParticipations() {
+        return userParticipations;
     }
 
-    public void setPlanParticipations( List<PlanParticipation> planParticipations ) {
-        this.planParticipations = planParticipations;
+    public void setUserParticipations( List<UserParticipation> userParticipations ) {
+        this.userParticipations = userParticipations;
     }
 
     public List<UserContactInfo> getContactInfoList() {

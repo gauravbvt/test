@@ -48,7 +48,6 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         if ( !causes.isEmpty() ) {
             conceptualImage.add(  new AttributeModifier(
                     "title",
-                    true,
                     new Model<String>( "Can not be realized: "
                             + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) )
             ) );
@@ -184,12 +183,10 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         if ( overridden || overriding ) {
             overridesImage.add( new AttributeModifier(
                     "src",
-                    true,
                     new Model<String>( "images/" + image )
             ) );
             overridesImage.add( new AttributeModifier(
                     "title",
-                    true,
                     new Model<String>( title )
             ) );
         }

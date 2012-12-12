@@ -131,7 +131,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             for ( String username : usernames ) {
                 RFI rfi = null;
                 if ( getAllParticipantUsernames().contains( username ) )
-                    rfi = rfiService.find( getPlan(), rfiSurvey, username );
+                    rfi = rfiService.find( getPlanCommunity(), rfiSurvey, username );
                 SurveyParticipation surveyParticipation = new SurveyParticipation(
                         userDao.getUserNamed( username ).getUserInfo(),
                         rfi,
@@ -229,7 +229,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private List<String> getAllParticipantUsernames() {
         if ( allParticipantUsernames == null ) {
-            allParticipantUsernames = rfiService.findParticipants( getPlan(), getRFISurvey() );
+            allParticipantUsernames = rfiService.findParticipants( getPlanCommunity(), getRFISurvey() );
         }
         return allParticipantUsernames;
     }
@@ -284,7 +284,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             public void onClick( AjaxRequestTarget target ) {
                 for ( SurveyParticipation participation : getSelectedSurveyParticipations() ) {
                     rfiService.makeOrUpdateRFI(
-                            getPlan(),
+                            getPlanCommunity(),
                             getUsername(),
                             participation.getRfiSurvey(),
                             participation.getUserInfo(),
@@ -320,7 +320,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             public void onClick( AjaxRequestTarget target ) {
                 for ( SurveyParticipation participation : naggableParticipations ) {
                     rfiService.nag(
-                            getPlan(),
+                            getPlanCommunity(),
                             getUsername(),
                             participation.getRfiSurvey(),
                             participation.getUserInfo()
@@ -587,7 +587,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
         public boolean isNaggable() {
             return rfi != null
-                    && surveysDAO.isOverdue( rfi, getQueryService(), getAnalyst() );
+                    && surveysDAO.isOverdue( getPlanCommunity(), rfi );
 
         }
     }

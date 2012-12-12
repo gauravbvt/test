@@ -154,7 +154,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
                 link.add( sectionNameLabel );
                 item.add( link );
                 if ( item.getModelObject().equals( selectedSection ) ) {
-                    item.add( new AttributeModifier( "class", true, new Model<String>( "selected" ) ) );
+                    item.add( new AttributeModifier( "class", new Model<String>( "selected" ) ) );
                 }
             }
         };

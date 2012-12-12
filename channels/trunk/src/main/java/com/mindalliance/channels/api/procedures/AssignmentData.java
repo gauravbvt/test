@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
@@ -38,6 +39,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     private TaskData taskData;
     private List<DiscoveryData> discoveries;
     private List<ResearchData> allResearch;
+    private OrganizationData employer;
 
     public AssignmentData() {
         // required
@@ -62,6 +64,11 @@ public class AssignmentData extends AbstractProcedureElementData {
         initOutRequests( serverUrl, planCommunity );
         initDiscoveries(  serverUrl, planCommunity );
         initAllResearch(  serverUrl, planCommunity );
+        initEmployer( serverUrl, planCommunity );
+    }
+
+    private void initEmployer( String serverUrl, PlanCommunity planCommunity ) {
+        employer = new OrganizationData( serverUrl, getAssignment().getOrganization(),  planCommunity  );
     }
 
     private void initAllResearch( String serverUrl, PlanCommunity planCommunity ) {
@@ -436,6 +443,10 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
         }
         return allContacts;
+    }
+
+    public OrganizationData employer() {
+         return employer;
     }
 
 }

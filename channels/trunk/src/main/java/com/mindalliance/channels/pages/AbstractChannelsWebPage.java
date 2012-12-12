@@ -12,8 +12,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -117,7 +117,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     private ChannelsUserDao userDao;
 
     @SpringBean
-    private PlanParticipationService planParticipationService;
+    private UserParticipationService userParticipationService;
 
     @SpringBean
     private PlanCommunityManager planCommunityManager;
@@ -179,21 +179,21 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     protected Commander getCommander() {
-        return commanderFactory.getCommander( plan );
+        return commanderFactory.getCommander( getPlanCommunity() );
     }
 
-    public PlanParticipationService getPlanParticipationService() {
-        return planParticipationService;
+    public UserParticipationService getUserParticipationService() {
+        return userParticipationService;
     }
 
-    protected List<PlanParticipation> getPlanParticipations( Plan plan, ChannelsUser user ) {
-        return planParticipationService.getActiveUserParticipations(
-                user.getUserInfo(),
-                getPlanCommunity() );
+    protected List<UserParticipation> getUserParticipations( PlanCommunity planCommunity, ChannelsUser user ) {
+        return userParticipationService.getActiveUserParticipations(
+                user,
+                planCommunity );
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return planCommunityManager.getPlanCommunity( plan );
+        return planCommunityManager.makePlanCommunity( plan );
     }
 
     private PlanService getPlanService() {
@@ -203,32 +203,31 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     protected BookmarkablePageLink<? extends WebPage> getProtocolsLink(
             String id,
             QueryService queryService,
-            Plan plan,
+            PlanCommunity planCommunity,
             ChannelsUser user,
             boolean samePage ) {
-        List<PlanParticipation> planParticipations = getPlanParticipations( plan, user );
-        String uri = plan.getUri();
-        boolean planner = user.isPlanner( uri );
+        List<UserParticipation> userParticipations = getUserParticipations( planCommunity, user );
+        boolean planner = user.isPlanner( planCommunity.getPlan().getUri() );
         BookmarkablePageLink<? extends WebPage> guidelinesLink;
-        if ( planner || planParticipations.size() != 1 ) {
+        if ( planner || userParticipations.size() != 1 ) {
             guidelinesLink = newTargetedLink(
                     id,
                     "",
                     AllProtocolsPage.class,
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
-                            uri,
+                            planCommunity.getUri(),
                             plan.getVersion() ),
                     null,
                     plan );
         } else {
-            Actor actor = planParticipations.get( 0 ).getActor( queryService );
+            Actor actor = userParticipations.get( 0 ).getAgent( planCommunity ).getActor(); // todo - agents!
             guidelinesLink = newTargetedLink( id,
                     "",
                     ProtocolsPage.class,
                     AbstractParticipantPage.createParameters(
                             actor,
-                            uri,
+                            planCommunity.getUri(),
                             plan.getVersion() ),
                     null,
                     plan );
@@ -241,13 +240,14 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public BookmarkablePageLink<? extends WebPage> getInfoNeedsLink(
             String id,
             QueryService queryService,
-            Plan plan, ChannelsUser user,
+            PlanCommunity planCommunity,
+            ChannelsUser user,
             boolean samePage ) {
-        List<PlanParticipation> planParticipations = getPlanParticipations( plan, user );
+        List<UserParticipation> userParticipations = getUserParticipations( planCommunity, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         BookmarkablePageLink<? extends WebPage> infoNeedsLink;
-        if ( planner || planParticipations.size() != 1 ) {
+        if ( planner || userParticipations.size() != 1 ) {
             infoNeedsLink = newTargetedLink(
                     id,
                     "",
@@ -259,7 +259,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     null,
                     plan );
         } else {
-            Actor actor = planParticipations.get( 0 ).getActor( queryService );
+            Actor actor = userParticipations.get( 0 ).getAgent( planCommunity ).getActor(); // todo - agents!;
             infoNeedsLink = newTargetedLink( id,
                     "",
                     InfoNeedsPage.class,

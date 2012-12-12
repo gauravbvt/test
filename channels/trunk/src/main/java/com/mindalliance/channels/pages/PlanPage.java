@@ -43,19 +43,19 @@ import com.mindalliance.channels.pages.components.plan.floating.PlanClassificati
 import com.mindalliance.channels.pages.components.plan.floating.PlanEvaluationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEventsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanOrganizationsPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanParticipationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanRequirementsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanVersionsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ProtocolsMapFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.TaskMoverFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.UserParticipationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanImprovingMenuPanel;
-import com.mindalliance.channels.pages.components.plan.menus.PlanParticipationMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanScopingMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanSearchingMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
+import com.mindalliance.channels.pages.components.plan.menus.UserParticipationMenuPanel;
 import com.mindalliance.channels.pages.components.segment.ExpandedFlowPanel;
 import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
 import com.mindalliance.channels.pages.components.segment.FlowsEOIsFloatingPanel;
@@ -188,7 +188,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private PlanScopingMenuPanel scopingMenu;
     private PlanSearchingMenuPanel searchingMenu;
-    private PlanParticipationMenuPanel participationMenu;
+    private UserParticipationMenuPanel participationMenu;
     private PlanImprovingMenuPanel improvingMenu;
 
     /**
@@ -311,7 +311,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component taskMoverPanel;
     private Component allIssuesPanel;
     private Component planVersionsPanel;
-    private Component planParticipationPanel;
+    private Component userParticipationPanel;
     private Component planSearchingPanel;
 
     /**
@@ -533,7 +533,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addAllIssuesPanel();
         addPlanVersionsPanel();
         // participating
-        addPlanParticipationPanel();
+        addUserParticipationPanel();
         addAllFeedbackPanel();
         addDataCollectionPanel();
         // searching
@@ -649,7 +649,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addParticipationMenu() {
-        participationMenu = new PlanParticipationMenuPanel(
+        participationMenu = new UserParticipationMenuPanel(
                 "participationMenu",
                 new PropertyModel<Segment>( this, "segment" ),
                 getReadOnlyExpansions() );
@@ -1040,17 +1040,17 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( planVersionsPanel );
     }
 
-    private void addPlanParticipationPanel() {
+    private void addUserParticipationPanel() {
         if ( !expansions.contains( Channels.PLAN_PARTICIPATION ) ) {
-            planParticipationPanel = new Label( "planParticipation", "" );
-            planParticipationPanel.setOutputMarkupId( true );
-            makeVisible( planParticipationPanel, false );
+            userParticipationPanel = new Label( "userParticipation", "" );
+            userParticipationPanel.setOutputMarkupId( true );
+            makeVisible( userParticipationPanel, false );
         } else {
-            planParticipationPanel = new PlanParticipationFloatingPanel(
-                    "planParticipation",
+            userParticipationPanel = new UserParticipationFloatingPanel(
+                    "userParticipation",
                     new Model<Plan>( getPlan() ) );
         }
-        form.addOrReplace( planParticipationPanel );
+        form.addOrReplace( userParticipationPanel );
     }
 
     private void addPlanSearchingPanel( String aspect ) {
@@ -2176,7 +2176,7 @@ PopupSettings.RESIZABLE |
         } else if ( change.getId() == Channels.PLAN_SEARCHING ) {
             refreshPlanSearchingPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_PARTICIPATION ) {
-            refreshPlanParticipationPanel( target, change, updated );
+            refreshUserParticipationPanel( target, change, updated );
         } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             refreshDataCollectionPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Plan.class ) ) {
@@ -2355,7 +2355,7 @@ PopupSettings.RESIZABLE |
         refreshPlanEvaluationPanel( target, change, updated );
         refreshAllIssuesPanel( target, change, updated );
         refreshPlanVersionsPanel( target, change, updated );
-        refreshPlanParticipationPanel( target, change, updated );
+        refreshUserParticipationPanel( target, change, updated );
         refreshPlanSearchingPanel( target, change, updated );
     }
 
@@ -2671,14 +2671,14 @@ PopupSettings.RESIZABLE |
         }
     }
 
-    private void refreshPlanParticipationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+    private void refreshUserParticipationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.PLAN_PARTICIPATION
                         && change.isDisplay() ) {
-            addPlanParticipationPanel();
-            target.add( planParticipationPanel );
-        } else if ( planParticipationPanel instanceof PlanParticipationFloatingPanel ) {
-            ( (PlanParticipationFloatingPanel) planParticipationPanel ).refresh( target,
+            addUserParticipationPanel();
+            target.add( userParticipationPanel );
+        } else if ( userParticipationPanel instanceof UserParticipationFloatingPanel ) {
+            ( (UserParticipationFloatingPanel) userParticipationPanel ).refresh( target,
                     change,
                     updated );
         }

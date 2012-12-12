@@ -32,7 +32,7 @@ public final class Matcher {
      */
     private static final Collator COLLATOR = Collator.getInstance();
 
-    private static final String SEPARATORS = " .,:;?!/\\|+-'\"()[]";
+    private static final String SEPARATORS = " .,:;?!/\\|+-'\"()[]@";
 
     //-------------------------------
     /**

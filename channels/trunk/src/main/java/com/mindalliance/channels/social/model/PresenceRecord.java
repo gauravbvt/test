@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.model;
 
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 
 import javax.persistence.Entity;
 
@@ -12,10 +13,10 @@ import javax.persistence.Entity;
  * Time: 3:10 PM
  */
 @Entity
-public class PresenceRecord extends AbstractPersistentPlanObject {
+public class PresenceRecord extends AbstractPersistentChannelsObject {
 
-    public PresenceRecord( Type type, String username, String planUri, int planVersion ) {
-        super( planUri, planVersion, username );
+    public PresenceRecord( Type type, String username, PlanCommunity planCommunity ) {
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
         this.type = type;
     }
 

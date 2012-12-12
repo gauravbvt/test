@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.FeedbackStatementPanel;
 import com.mindalliance.channels.pages.components.social.UserMessagePanel;
@@ -213,8 +212,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
 
     private void replyToFeedback( boolean emailIt ) {
         if ( reply != null && !reply.trim().isEmpty() ) {
-            Plan plan = getPlan();
-            UserMessage message = new UserMessage( plan.getUri(), plan.getVersion(), getUsername(), reply );
+            UserMessage message = new UserMessage( getUsername(), reply, getPlanCommunity() );
             message.setToUsername( feedback.getUsername() );
             message.setText( reply );
             message.setSendNotification( emailIt );

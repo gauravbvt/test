@@ -8,7 +8,8 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
@@ -85,13 +86,13 @@ public class UserPage extends AbstractChannelsBasicPage {
         addPlanName();
         addPlanClient();
         addReferences();
-        addGotoLinks( getPlan(), getUser() );
+        addGotoLinks( getPlanCommunity(), getUser() );
         addSocial();
     }
 
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
-        addGotoLinks( getPlan(), getUser() );
+        addGotoLinks( getPlanCommunity(), getUser() );
         target.add( gotoIconsContainer );
         updateSocialPanel( target );
     }
@@ -154,43 +155,45 @@ public class UserPage extends AbstractChannelsBasicPage {
         );
     }
 
-    private void addGotoLinks( Plan plan, ChannelsUser user ) {
-
-        List<PlanParticipation> participations = getPlanParticipations( plan, user );
+    private void addGotoLinks( PlanCommunity planCommunity, ChannelsUser user ) {
+        Plan plan = planCommunity.getPlan();
+        List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
-        // guidelines link
-        BookmarkablePageLink<? extends WebPage> gotoGuidelinesLink =
-                getProtocolsLink( "gotoGuidelines", getQueryService(), getPlan(), user, true );
-        gotoGuidelinesLink.add( new AttributeModifier(
+        // Protocols link
+        BookmarkablePageLink<? extends WebPage> gotoProtocolsLink =
+                getProtocolsLink( "gotoProtocols", getQueryService(), getPlanCommunity(), user, true );
+        gotoProtocolsLink.add( new AttributeModifier(
                 "title",
-                new Model<String>( getGotoGuidelinesDescription( user, plan ) ) ) );
+                new Model<String>( getGotoProtocolsDescription( user, plan ) ) ) );
         // info needs link
+/*
         BookmarkablePageLink<? extends WebPage> gotoInfoNeedsLink =
                 getInfoNeedsLink( "gotoInfoNeeds", getQueryService(), getPlan(), user, true );
         gotoInfoNeedsLink
                 .add( new AttributeModifier(
                         "title",
                         new Model<String>( getGotoInfoNeedsDescription( user, plan ) ) ) );
+*/
         // Surveys
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
                 getRFIsLink( "gotoRFIs", getPlan(), true );
-        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, plan ) );
+        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, planCommunity ) );
         gotoRFIsLink.add( gotoRFIsLabel )
                 .add( new AttributeModifier(
                         "title",
-                        new Model<String>( getGotoRFIsDescription( user, plan ) ) ) );
+                        new Model<String>( getGotoRFIsDescription( user, planCommunity ) ) ) );
         // Feedback
         BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
                 getFeedbackLink( "gotoFeedback", getPlan(), true );
-        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, plan ) );
+        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, planCommunity ) );
         gotoFeedbackLink.add( gotoFeedbackLabel )
                 .add( new AttributeModifier(
                         "title",
-                        new Model<String>( getGotoFeedbackDescription( user, plan ) ) ) );
+                        new Model<String>( getGotoFeedbackDescription( user, planCommunity ) ) ) );
         // plan editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
         gotoModelLink.add( new AttributeModifier(
@@ -204,22 +207,33 @@ public class UserPage extends AbstractChannelsBasicPage {
                         .setVisible( user.isAdmin() )
                         .setOutputMarkupId( true ),
 
+                // Goto participation manager
+                new WebMarkupContainer( "participationManager" )
+                        .add( newTargetedLink(
+                                "gotoParticipationManager",
+                                "",
+                                ParticipationManagerPage.class,
+                                null,
+                                plan ) )
+                        .setOutputMarkupId( true ),
+
                 // Goto model
                 new WebMarkupContainer( "model" )
                         .add( gotoModelLink )
                         .setVisible( planner || plan.isVisibleToUsers() )
                         .setOutputMarkupId( true ),
-                // Goto guidelines
-                new WebMarkupContainer( "guidelines" )
-                        .add( gotoGuidelinesLink )
+
+                // Goto protocols
+                new WebMarkupContainer( "protocols" )
+                        .add( gotoProtocolsLink )
                         .setVisible( planner || !participations.isEmpty() )
                         .setOutputMarkupId( true ),
 
                 // Goto info needs
-                new WebMarkupContainer( "infoNeeds" )
+          /*      new WebMarkupContainer( "infoNeeds" )
                         .add( gotoInfoNeedsLink )
                         .setVisible( planner || !participations.isEmpty() )
-                        .setOutputMarkupId( true ),
+                        .setOutputMarkupId( true ),*/
 
                 // Goto surveys
                 new WebMarkupContainer( "rfis" )
@@ -245,16 +259,16 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     }
 
-    private String getGotoGuidelinesDescription( ChannelsUser user, Plan plan ) {
+    private String getGotoProtocolsDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
                 ? "Set how users participate in the plan and view their collaboration protocols."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
 
-    private String getRFIsLabel( ChannelsUser user, Plan plan ) {
+    private String getRFIsLabel( ChannelsUser user, PlanCommunity planCommunity ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "Planning surveys" );
-        int lateCount = surveysDAO.countLate( plan, user, getQueryService(), getAnalyst() );
+        int lateCount = surveysDAO.countLate( planCommunity, user );
         if ( lateCount > 0 ) {
             sb.append( " (" )
                     .append( lateCount )
@@ -263,10 +277,10 @@ public class UserPage extends AbstractChannelsBasicPage {
         return sb.toString();
     }
 
-    private String getFeedbackLabel( ChannelsUser user, Plan plan ) {
+    private String getFeedbackLabel( ChannelsUser user, PlanCommunity planCommunity ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "Feedback and replies" );
-        int count = userMessageService.countNewFeedbackReplies( plan, user );
+        int count = userMessageService.countNewFeedbackReplies( planCommunity, user );
         if ( count > 0 ) {
             sb.append( " (" )
                     .append( count )
@@ -284,20 +298,20 @@ public class UserPage extends AbstractChannelsBasicPage {
                 : "View my information needs and their status in this plan.";
     }
 
-    private String getGotoRFIsDescription( ChannelsUser user, Plan plan ) {
+    private String getGotoRFIsDescription( ChannelsUser user, PlanCommunity planCommunity ) {
         QueryService queryService = getQueryService();
         Analyst analyst = getAnalyst();
-        int activeCount = rfiService.listUserActiveRFIs( plan, user, queryService, analyst ).size();
+        int activeCount = rfiService.listUserActiveRFIs( planCommunity, user ).size();
         StringBuilder sb = new StringBuilder();
         sb
                 .append( "I participate in " )
                 .append( activeCount == 0 ? "no" : activeCount )
                 .append( activeCount > 1 ? " surveys" : " survey" );
         if ( activeCount > 0 ) {
-            int noAnswerCount = surveysDAO.countUnanswered( plan, user, queryService, analyst );
+            int noAnswerCount = surveysDAO.countUnanswered( planCommunity, user );
             // int incompleteCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
             int partialCount = activeCount - noAnswerCount;
-            int lateCount = surveysDAO.countLate( plan, user, queryService, getAnalyst() );
+            int lateCount = surveysDAO.countLate( planCommunity, user );
             sb
                     .append( " of which " )
                     .append( noAnswerCount == 0 ? "none" : noAnswerCount )
@@ -320,9 +334,9 @@ public class UserPage extends AbstractChannelsBasicPage {
         return sb.toString();
     }
 
-    private String getGotoFeedbackDescription( ChannelsUser user, Plan plan ) {
-        int unresolvedCount = feedbackService.countUnresolvedFeedback( plan, user );
-        int newReplyCount = userMessageService.countNewFeedbackReplies( plan, user );
+    private String getGotoFeedbackDescription( ChannelsUser user, PlanCommunity planCommunity ) {
+        int unresolvedCount = feedbackService.countUnresolvedFeedback( planCommunity, user );
+        int newReplyCount = userMessageService.countNewFeedbackReplies( planCommunity, user );
         StringBuilder sb = new StringBuilder();
         if ( unresolvedCount == 0 ) {
             sb.append( "All feedback are resolved." );

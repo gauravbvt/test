@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.ChannelsService;
+import com.mindalliance.channels.api.PlanCommunityEndPoint;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
@@ -62,8 +62,8 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private Actor actor;
     private ChannelsUser protocolsUser;
 
-    @SpringBean( name = "channelsService" )
-    private ChannelsService channelsService;
+    @SpringBean( name = "planCommunityEndPoint" )
+    private PlanCommunityEndPoint planCommunityEndPoint;
 
     @SpringBean
     private PlanServiceFactory planServiceFactory;
@@ -130,10 +130,10 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private void initData() throws Exception {
         Plan plan = getPlan();
-        planSummaryData = channelsService.getPlan( plan.getUri(), Integer.toString( plan.getVersion() ) );
+        planSummaryData = planCommunityEndPoint.getPlan( plan.getUri(), Integer.toString( plan.getVersion() ) );
         if ( actorId != null ) {
             actor = getQueryService().find( Actor.class, actorId );
-            proceduresData = channelsService.getAgentProcedures(
+            proceduresData = planCommunityEndPoint.getAgentProcedures(
                     plan.getUri(),
                     Integer.toString( plan.getVersion() ),
                     Long.toString( actorId ) );
@@ -143,24 +143,24 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 throw new Exception( "Failed to retrieve protocols" );
             else {
                 if ( protocolsUser.isPlanner( getPlan().getUri() ) ) {
-                    proceduresData = channelsService.getUserProcedures(
+                    proceduresData = planCommunityEndPoint.getUserProcedures(
                             plan.getUri(),
                             Integer.toString( plan.getVersion() ),
                             username );
                 } else if ( getUser().getUsername().equals( username ) ) {
-                    proceduresData = channelsService.getMyProcedures( getPlan().getUri() );
+                    proceduresData = planCommunityEndPoint.getMyProcedures( getPlan().getUri() );
                 } else {
                     throw new Exception( "Failed to retrieve protocols" );
                 }
             }
         }
-        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( getPlan() );
+        PlanCommunity planCommunity = planCommunityManager.makePlanCommunity( getPlan() );
         finder = new ProtocolsFinder(
-                channelsService.getServerUrl(),
+                planCommunityEndPoint.getServerUrl(),
                 proceduresData,
                 planCommunity,
                 protocolsUser,
-                channelsService,
+                planCommunityEndPoint,
                 username,
                 actorId );
     }

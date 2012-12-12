@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
@@ -56,11 +56,11 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                                         ? "(Users who participate as agents in this plan and thus have their protocols)"
                                         : "(Your participation in this plan)"
                                 ),
-                        new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {
+                        new ListView<UserParticipation>( "participatingUsers", getParticipations() ) {
                             @Override
-                            protected void populateItem( ListItem<PlanParticipation> item ) {
-                                PlanParticipation p = item.getModelObject();
-                                Actor actor = p.getActor( getQueryService() );
+                            protected void populateItem( ListItem<UserParticipation> item ) {
+                                UserParticipation p = item.getModelObject();
+                                Actor actor = p.getAgent( getPlanCommunity() ).getActor(); // todo - agents!
                                 String participatingUsername = p.getParticipant().getUsername();
                                 ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
                                 item.add(

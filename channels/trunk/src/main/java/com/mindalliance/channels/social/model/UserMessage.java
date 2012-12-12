@@ -1,9 +1,9 @@
 package com.mindalliance.channels.social.model;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
 import javax.persistence.Entity;
@@ -31,12 +31,12 @@ public class UserMessage extends UserStatement {
 
     public UserMessage() {} 
 
-    public UserMessage( String planUri, int planVersion, String username, String text ) {
-        super( planUri, planVersion, username, text);
+    public UserMessage( String username, String text, PlanCommunity planCommunity ) {
+        super( username, text, planCommunity );
     }
 
-    public UserMessage( String planUri, int planVersion, String username, String text, ModelObject modelObject ) {
-        super( planUri, planVersion, username, text, modelObject );
+    public UserMessage( String username, String text, ModelObject modelObject, PlanCommunity planCommunity ) {
+        super( username, text, modelObject, planCommunity );
     }
 
     @Override
@@ -105,7 +105,7 @@ public class UserMessage extends UserStatement {
     // Messageable
 
 
-    public String getTextContent( Format format, PlanService planService ) {
+    public String getTextContent( Format format, PlanCommunity planCommunity ) {
         // Ignore TEXT vs HTML for now
         Date now = new Date();
         StringBuilder sb = new StringBuilder();
@@ -130,7 +130,7 @@ public class UserMessage extends UserStatement {
         return sb.toString();
     }
 
-    public String getTextSubject( Format format, PlanService planService ) {
+    public String getTextSubject( Format format, PlanCommunity planCommunity ) {
         return "[" + getPlanUri() + "] " + getText();
     }
 

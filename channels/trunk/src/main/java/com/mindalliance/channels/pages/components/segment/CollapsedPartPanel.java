@@ -64,7 +64,7 @@ public class CollapsedPartPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Expanded, getPart() ) );
             }
         } );
-        summaryPanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
+        summaryPanel.add( new AttributeModifier( "class", new Model<String>( getCssClasses() ) ) );
         addOrReplace( summaryPanel );
     }
 

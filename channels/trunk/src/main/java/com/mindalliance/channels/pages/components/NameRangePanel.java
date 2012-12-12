@@ -93,7 +93,7 @@ public class NameRangePanel extends Panel {
                 item.add( link );
                 String rangeLabel = range.getLabel();
                 if ( range == selectedRange || ( range.isEmpty() && selectedRange == null ) ) {
-                    link.add( new AttributeModifier( "class", true, new Model<String>( "selected" ) ) );
+                    link.add( new AttributeModifier( "class", new Model<String>( "selected" ) ) );
                 }
                 link.add( new Label(
                         "label",

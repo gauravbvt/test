@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social;
 
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.community.PlanCommunity;
 
 import java.util.List;
 
@@ -18,24 +18,24 @@ public interface PresenceListener {
      * Record a user explicitly leaving a plan.
      *
      * @param username a string
-     * @param plan a plan
+     * @param planCommunity a plan community
      */
-    void killIfAlive( String username, Plan plan );
+    void killIfAlive( String username, PlanCommunity planCommunity );
 
     /**
      * Take note of heart beat signalling user since in a plan.
      *
      * @param username     a string
-     * @param plan a plan
+     * @param planCommunity a plan community
      * @param refreshDelay the delay between heat beats
      */
-    void keepAlive( String username, Plan plan, int refreshDelay );
+    void keepAlive( String username, PlanCommunity planCommunity, int refreshDelay );
 
     /**
      * Give the list of all users who have just left a plan.
      *
-     * @param plan a plan
+     * @param planCommunity a plan community
      * @return a list of user names as strings
      */
-    List<String> giveMeYourDead( Plan plan );
+    List<String> giveMeYourDead(  PlanCommunity planCommunity );
 }

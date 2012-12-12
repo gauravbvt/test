@@ -12,12 +12,11 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -81,7 +80,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     private ChannelsUser user;
 
     @SpringBean
-    private PlanParticipationService planParticipationService;
+    private UserParticipationService userParticipationService;
 
     @SpringBean
     private ChannelsUserDao userDao;
@@ -196,7 +195,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a commander
      */
     protected Commander getCommander() {
-        return commanderFactory.getCommander( getPlan() );
+        return commanderFactory.getCommander( getPlanCommunity() );
     }
 
     /**
@@ -572,17 +571,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     @SuppressWarnings( "unchecked" )
-    protected Actor findActor( ChannelsUserInfo userInfo ) {
+    protected Actor findActor( ChannelsUser use ) {
         final QueryService queryService = getQueryService();
-        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                userInfo,
+        List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+                user,
                 getPlanCommunity() );
         List<Actor> actors = (List<Actor>) CollectionUtils.collect(
                 participations,
                 new Transformer() {
                     @Override
                     public Object transform( Object input ) {
-                        return ( (PlanParticipation) input ).getActor( queryService );
+                        return ( (UserParticipation) input ).getAgent( getPlanCommunity() ).getActor();
                     }
                 }
         );
@@ -623,7 +622,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return planCommunityManager.getPlanCommunity( getPlan() );
+        return planCommunityManager.makePlanCommunity( getPlan() );
     }
 
     protected PlanService getPlanService() {

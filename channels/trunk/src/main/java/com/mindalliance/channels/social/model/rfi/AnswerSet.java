@@ -1,8 +1,8 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -25,7 +25,7 @@ import java.util.List;
  */
 
 @Entity
-public class AnswerSet extends AbstractPersistentPlanObject {
+public class AnswerSet extends AbstractPersistentChannelsObject {
 
     @ManyToOne
     private Question question;
@@ -47,8 +47,8 @@ public class AnswerSet extends AbstractPersistentPlanObject {
     public AnswerSet() {
     }
 
-    public AnswerSet( Plan plan, ChannelsUser user, RFI rfi, Question question ) {
-        super( plan, user );
+    public AnswerSet( PlanCommunity planCommunity, ChannelsUser user, RFI rfi, Question question ) {
+        super( planCommunity, user );
         this.rfi = rfi;
         this.question = question;
     }

@@ -8,8 +8,8 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
@@ -43,13 +43,13 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     private ChannelsUserDao userDao;
 
     @SpringBean
-    private PlanParticipationService planParticipationService;
+    private UserParticipationService userParticipationService;
 
     private String uri;
 
     private int version;
 
-    private List<PlanParticipation> participations;
+    private List<UserParticipation> participations;
 
     private List<Actor> actors;
 
@@ -71,7 +71,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         return version;
     }
 
-    protected List<PlanParticipation> getParticipations() {
+    protected List<UserParticipation> getParticipations() {
         return participations;
     }
 
@@ -86,8 +86,8 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         uri = plan.getUri();
         version = plan.getVersion();
         participations = isPlanner
-                            ? planParticipationService.getAllActiveParticipations( getPlanCommunity() )
-                            : planParticipationService.getActiveUserParticipations( getUser().getUserInfo(), getPlanCommunity() );
+                            ? userParticipationService.getAllActiveParticipations( getPlanCommunity() )
+                            : userParticipationService.getActiveUserParticipations( getUser(), getPlanCommunity() );
         actors = findAssignedActors();
         initComponents( queryService, plan );
     }

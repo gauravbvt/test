@@ -83,7 +83,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
 
     private void processOtherResults() {
         results = surveysDAO.processAnswers(
-                getPlan(),
+                getPlanCommunity(),
                 getRFI().getRfiSurvey(),
                 getQuestion(),
                 SHARED_ONLY,
@@ -250,7 +250,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
             answerSet = answerSetService.findAnswerSet( rfi, getQuestion() );
         }
         if ( answerSet == null ) {
-            answerSet = new AnswerSet( getPlan(), getUser(), getRFI(), getQuestion() );
+            answerSet = new AnswerSet( getPlanCommunity(), getUser(), getRFI(), getQuestion() );
         }
         return answerSet;
     }

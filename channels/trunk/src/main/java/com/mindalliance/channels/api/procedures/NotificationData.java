@@ -2,7 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
@@ -96,7 +96,7 @@ public class NotificationData extends AbstractFlowData {
         Set<Employment> employments = new HashSet<Employment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>();
         PlanService planService = planCommunity.getPlanService();
-        PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
+        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         for ( Commitment commitment : commitments ) {
             if ( isInitiating() ) {  // notifying
                 Employment employment = commitment.getBeneficiary().getEmployment();

@@ -123,7 +123,6 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 int count = getClassifications().size();
                 item.add( new AttributeModifier(
                         "class",
-                        true,
                         new Model<String>( itemCssClasses( item.getIndex(), count ) ) ) );
             }
         };
@@ -166,7 +165,6 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 + ( ( getPlan().classificationsFor( classificationSystem).size() ) % 2 == 0 ? "even" : "odd" );
         newClassificationContainer.add( new AttributeModifier(
                 "class",
-                true,
                 new Model<String>( cssClasses ) ) );
         classificationsContainer.add( newClassificationContainer );
         // input field

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
@@ -40,13 +40,13 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
     public List<Questionnaire> select(
-            Plan plan,
+            PlanCommunity planCommunity,
             String about,
             Questionnaire.Status status,
             boolean includeRemediation ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         if ( about != null && !about.isEmpty() ) {
             criteria.add( Restrictions.eq( "about", about ) );
         }
@@ -63,10 +63,10 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<Questionnaire> findApplicableQuestionnaires( Plan plan, ModelObject modelObject ) {
+    public List<Questionnaire> findApplicableQuestionnaires( PlanCommunity planCommunity, ModelObject modelObject ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "about", modelObject.getClassLabel() ) );
         criteria.add( Restrictions.eq( "status", Questionnaire.Status.ACTIVE ) );
         criteria.add( Restrictions.isNull( "remediatedModelObjectRefString" ) );
@@ -77,10 +77,10 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public Questionnaire findRemediationQuestionnaire( Plan plan, Issue issue ) {
+    public Questionnaire findRemediationQuestionnaire( PlanCommunity planCommunity, Issue issue ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "planUri", plan.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "about", Questionnaire.makeRemediationAbout( issue ) ) );
         criteria.add( Restrictions.eq( "issueKind", issue.getKind() ) );
         criteria.add( Restrictions.eq( "remediatedModelObjectRefString",
@@ -92,8 +92,8 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
 
     @Override
     @Transactional
-    public void deleteIfNotUsed( Plan plan, Questionnaire questionnaire ) {
-        if ( rfiSurveyService.findSurveys( plan, questionnaire ).isEmpty() ) {
+    public void deleteIfNotUsed( PlanCommunity planCommunity, Questionnaire questionnaire ) {
+        if ( rfiSurveyService.findSurveys( planCommunity, questionnaire ).isEmpty() ) {
             delete(  questionnaire );
         }
     }

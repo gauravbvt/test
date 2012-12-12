@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.command.commands.DisconnectFlow;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -74,19 +75,12 @@ public class DefaultCommander implements Commander {
      */
     private LockManager lockManager;
 
-    /**
-     * The planDao (and therefore, plan) used by this commander.
-     */
-    private PlanDao planDao;
-
     private PlanManager planManager;
 
     /**
      * Presence listeners.
      */
     private List<PresenceListener> presenceListeners = new ArrayList<PresenceListener>();
-
-    private QueryService queryService;
 
     /**
      * Whether in reloading mode, i.e. replaying journaled commands.
@@ -113,8 +107,18 @@ public class DefaultCommander implements Commander {
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
+    private PlanCommunity planCommunity;
+
     //-------------------------------
     public DefaultCommander() {
+    }
+
+    public PlanCommunity getPlanCommunity() {
+        return planCommunity;
+    }
+
+    public void setPlanCommunity( PlanCommunity planCommunity ) {
+        this.planCommunity = planCommunity;
     }
 
     //-------------------------------
@@ -255,7 +259,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public Exporter getExporter( String userName ) {
-        return importExportFactory.createExporter( userName, planDao );
+        return importExportFactory.createExporter( userName, getPlanDao() );
     }
 
     @Override
@@ -270,7 +274,12 @@ public class DefaultCommander implements Commander {
 
     @Override
     public Plan getPlan() {
-        return planDao.getPlan();
+        return planCommunity.getPlan();
+    }
+
+    @Override
+    public String getPlanCommunityUri() {
+        return getPlan().getUri(); // todo - change for getPlanCommunity().getUri()
     }
 
     @Override
@@ -334,14 +343,14 @@ public class DefaultCommander implements Commander {
      * Replay journaled commands for current plan.
      */
     private void replayJournal() {
-        Plan plan = planDao.getPlan();
+        Plan plan = planCommunity.getPlan();
 
         try {
             if ( plan.isDevelopment() ) {
-                replay( planDao.getJournal() );
+                replay( getPlanDao().getJournal() );
                 LOG.info( "Replayed journal for plan {}", plan );
 
-                planDao.save( importExportFactory.createExporter( "daemon", planDao ) );
+                getPlanDao().save( importExportFactory.createExporter( "daemon", getPlanDao() ) );
             }
         } catch ( IOException e ) {
             LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
@@ -404,20 +413,20 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void keepAlive( String userName, int refreshDelay ) {
-        Plan plan = getPlan();
-        synchronized ( plan ) {
+        PlanCommunity planCommunity = getPlanCommunity();
+        synchronized ( planCommunity.getPlan() ) {  // todo - synchronize on plan community
             for ( PresenceListener presenceListener : presenceListeners )
-                presenceListener.keepAlive( userName, plan, refreshDelay );
+                presenceListener.keepAlive( userName, planCommunity, refreshDelay );
             processDeaths();
         }
     }
 
     private void processDeaths() {
-        Plan plan = getPlan();
-        synchronized ( plan ) {
+        PlanCommunity planCommunity = getPlanCommunity();  // todo - synchronize on plan community
+        synchronized ( planCommunity.getPlan() ) {
             Set<String> deads = new HashSet<String>();
             for ( PresenceListener presenceListener : presenceListeners )
-                deads.addAll( presenceListener.giveMeYourDead( plan ) );
+                deads.addAll( presenceListener.giveMeYourDead( planCommunity ) );
 
             for ( String userName : deads )
                 processDeath( userName );
@@ -621,10 +630,10 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void userLeftPlan( String username ) {
-        Plan plan = getPlan();
-        synchronized ( plan ) {
+        PlanCommunity planCommunity = getPlanCommunity();
+        synchronized ( planCommunity.getPlan() ) { // todo - synchronize on planCommunity
             for ( PresenceListener presenceListener : presenceListeners )
-                presenceListener.killIfAlive( username, plan );
+                presenceListener.killIfAlive( username, planCommunity );
             processDeath( username );
         }
     }
@@ -640,12 +649,9 @@ public class DefaultCommander implements Commander {
 
     @Override
     public PlanDao getPlanDao() {
-        return planDao;
+        return planCommunity.getPlanService().getDao();
     }
 
-    void setPlanDao( PlanDao planDao ) {
-        this.planDao = planDao;
-    }
 
     public PlanManager getPlanManager() {
         return planManager;
@@ -657,11 +663,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public QueryService getQueryService() {
-        return queryService;
-    }
-
-    void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
+        return planCommunity.getPlanService();
     }
 
     public int getTimeout() {

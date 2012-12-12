@@ -5,11 +5,9 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -32,7 +30,7 @@ import java.util.List;
  * Time: 1:50 PM
  */
 @Entity
-public class RFI extends AbstractPersistentPlanObject implements Messageable {
+public class RFI extends AbstractPersistentChannelsObject implements Messageable {
 
 
     public static final String DEADLINE = "deadline";
@@ -80,12 +78,12 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         this.id = id;
     }
 
-    public RFI( String username, String planUri, int planVersion ) {
-        super( planUri, planVersion, username );
+    public RFI( String username, PlanCommunity planCommunity ) {
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
     }
 
-    public RFI( String username, String planUri, int planVersion, String surveyedUsername, Employment employment ) {
-        this( username, planUri, planVersion );
+    public RFI( String username, String surveyedUsername, Employment employment, PlanCommunity planCommunity ) {
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
         this.surveyedUsername = surveyedUsername;
         title = employment.getTitle();
         organizationId = employment.getOrganization().getId();
@@ -93,7 +91,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     }
 
     public RFI( RFI rfi ) {
-        this( rfi.getUsername(), rfi.getPlanUri(), rfi.getPlanVersion() );
+        super( rfi.getCommunityUri(), rfi.getPlanUri(), rfi.getPlanVersion(), rfi.getUsername()  );
         setDeadline( rfi.getDeadline() );
         setRfiSurvey( rfi.getRfiSurvey() );
     }
@@ -217,21 +215,21 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         this.answerSets = answerSets;
     }
 
-    public boolean isLate( QueryService queryService, Analyst analyst ) {
+    public boolean isLate( PlanCommunity planCommunity ) {
         return !isDeclined()
                 && getDeadline() != null
                 && new Date().after( getDeadline() )
-                && getRfiSurvey().isOngoing( queryService, analyst );
+                && getRfiSurvey().isOngoing( planCommunity );
     }
 
-    public boolean isActive( QueryService queryService, Analyst analyst ) {
+    public boolean isActive( PlanCommunity planCommunity ) {
         return !isDeclined()
-                && isOngoing( queryService, analyst );
+                && isOngoing( planCommunity );
     }
 
-    public boolean isOngoing( QueryService queryService, Analyst analyst ) {
+    public boolean isOngoing( PlanCommunity planCommunity ) {
         RFISurvey survey = getRfiSurvey();
-        return survey.isOngoing( queryService, analyst );
+        return survey.isOngoing( planCommunity );
     }
 
     public long getTimeLeft() {
@@ -273,8 +271,8 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     }
 
 
-    public String getLabel( QueryService queryService ) {
-        return getRfiSurvey().getLabel( queryService );
+    public String getRFILabel(  ) {
+        return getRfiSurvey().getSurveyLabel(  );
     }
 
     public void nagged() {
@@ -359,14 +357,14 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     public String getContent(
             String topic,
             Format format,
-            PlanService planService ) {
-        SurveysDAO surveysDAO = planService.getSurveysDAO();
+            PlanCommunity planCommunity ) {
+        SurveysDAO surveysDAO = planCommunity.getPlanService().getSurveysDAO();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
-            return getNagContent( format, planService, surveysDAO );
+            return getNagContent( format, planCommunity, surveysDAO );
         else if ( topic.equals( TODO ) )
-            return getTodoContent( format, planService, surveysDAO );
+            return getTodoContent( format, planCommunity, surveysDAO );
         else if ( topic.equals( NEW ) )
-            return getNewRFIContent( format, planService, surveysDAO );
+            return getNewRFIContent( format, planCommunity, surveysDAO );
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }
@@ -375,7 +373,8 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
     public String getSubject(
             String topic,
             Format format,
-            PlanService planService ) {
+            PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, planService );
         else if ( topic.equals( NEW ) )
@@ -391,19 +390,19 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
 
     private String getNagSubject( Format format, PlanService planService ) {
         // ignore format
-        return getLabel( planService )
+        return getRFILabel(  )
                 + "is due on "
                 + Messageable.DATE_FORMAT.format( getDeadline() );
     }
 
     private String getNagContent(
             Format format,
-            PlanService planService,
+            PlanCommunity planCommunity,
             SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
         boolean overdue = getDeadline() != null && new Date().after( getDeadline() );
         sb.append( "This is a reminder to complete " )
-                .append( getLabel( planService ) )
+                .append( getRFILabel(  ) )
                 .append( "." );
         if ( overdue ) {
             sb.append( " The survey was due on " )
@@ -420,14 +419,14 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                 .append( "% of all required questions. Completing this survey would be greatly appreciated!\n\n" )
                 .append( "Regards,\n\n" )
                 .append( "The planners of " )
-                .append( planService.getPlan().getName() );
+                .append( planCommunity.getName() );
         return sb.toString();
     }
 
-    private String getTodoContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+    private String getTodoContent( Format format, PlanCommunity planCommunity, SurveysDAO surveysDAO ) {
         // Ignore format
         StringBuilder sb = new StringBuilder();
-        sb.append( getLabel( planService ) );
+        sb.append( getRFILabel(  ) );
         if ( getDeadline() != null ) {
             Date now = new Date();
             sb.append( now.after( getDeadline() ) ? " was" : " is" )
@@ -440,7 +439,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                 .append( percentComplete )
                 .append( "% complete.\n\n" );
         sb.append( "Your participation was requested by " )
-                .append( planService.getUserDao().getFullName( getUsername() ) )
+                .append( planCommunity.getUserDao().getFullName( getUsername() ) )
                 .append( ".\n\n" );
         int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( this );
         int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( this );
@@ -457,7 +456,7 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                 .append( " optional " )
                 .append( optionalQuestionsCount > 1 ? "questions" : "question" )
                 .append( ".\n\n" );
-        int surveyCompletionCount = surveysDAO.findAllCompletedRFIs( planService.getPlan(), getRfiSurvey() ).size();
+        int surveyCompletionCount = surveysDAO.findAllCompletedRFIs( planCommunity, getRfiSurvey() ).size();
         sb.append( surveyCompletionCount )
                 .append( " other " )
                 .append( surveyCompletionCount > 1 ? "participants" : "participant" )
@@ -470,9 +469,9 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
         return "New survey: " + getName();
     }
 
-    private String getNewRFIContent( Format format, PlanService planService, SurveysDAO surveysDAO ) {
+    private String getNewRFIContent( Format format, PlanCommunity planCommunity, SurveysDAO surveysDAO ) {
         // ignore format
-        Plan plan = planService.getPlan();
+        Plan plan = planCommunity.getPlan();
         StringBuilder sb = new StringBuilder();
         sb.append( plan.getClient() );
         sb.append( " invites you to participate in a survey about the \"" )
@@ -483,18 +482,18 @@ public class RFI extends AbstractPersistentPlanObject implements Messageable {
                     .append( plan.getDescription() )
                     .append( "\n" );
         }
-        if ( planService.getPlanLocale() != null ) {
+        if ( planCommunity.getCommunityLocale() != null ) {
             sb.append( "Targeted location: " )
-                    .append( planService.getPlanLocale().getName() )
+                    .append( planCommunity.getCommunityLocale().getName() )
                     .append( "\n" );
         }
         sb.append( "\n" );
-        sb.append( getLabel( planService ) ).append( "\n" );
+        sb.append( getRFILabel(  ) ).append( "\n" );
         sb.append( "can be accessed here: " )
-                .append( surveysDAO.makeURL( planService, this ) )
+                .append( surveysDAO.makeURL( planCommunity.getPlanService(), this ) )
                 .append( "\n\n" );
         // New account login instructions
-        ChannelsUser surveyedUser = planService.getUserDao().getUserNamed( getSurveyedUsername() );
+        ChannelsUser surveyedUser = planCommunity.getUserDao().getUserNamed( getSurveyedUsername() );
         if ( surveyedUser != null ) {
             sb.append( "To login, use your email address as user name" )
                     .append( surveyedUser.getEmail() );

@@ -1,9 +1,7 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -78,7 +76,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         ChannelsUserInfo userInfo = getUserInfo();
         final String currentUsername = getUser().getUsername();
         if ( userInfo != null ) {
-            final Actor actor = findActor( userInfo );
+            /*final Actor actor = findActor( userInfo );
             if ( actor != null && showProfile ) {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
@@ -90,7 +88,7 @@ public class SocialItemMenuPanel extends MenuPanel {
                         new Model<String>( "Show profile" ),
                         link ) );
             }
-            final String participant = userInfo.getUsername();
+*/            final String participant = userInfo.getUsername();
             if ( participant != null && !participant.equals( currentUsername ) ) {
                 Link link = new AjaxFallbackLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {

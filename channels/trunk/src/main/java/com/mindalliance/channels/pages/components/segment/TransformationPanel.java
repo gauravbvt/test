@@ -138,13 +138,11 @@ public class TransformationPanel extends AbstractCommandablePanel {
         if ( !inputSubjects.contains( subject ) ) {
             subjectLabel.add( new AttributeModifier(
                     "class",
-                    true,
                     new Model<String>( "to-be-deleted" ) ) );
         }
         if ( subject.getLabel( MAX_INFO_LENGTH ).length() < subject.toString().length() ) {
             subjectLabel.add( new AttributeModifier(
                     "title",
-                    true,
                     new Model<String>( subject.toString() ) ) );
         }
         item.addOrReplace( subjectLabel );

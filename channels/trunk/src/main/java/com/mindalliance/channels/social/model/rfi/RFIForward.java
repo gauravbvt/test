@@ -1,8 +1,8 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +17,7 @@ import java.util.Date;
  * Time: 8:25 PM
  */
 @Entity
-public class RFIForward extends AbstractPersistentPlanObject {
+public class RFIForward extends AbstractPersistentChannelsObject {
 
     @Column(length=1024)
     private String forwardToEmail;
@@ -35,8 +35,8 @@ public class RFIForward extends AbstractPersistentPlanObject {
 
     public RFIForward() {}
 
-    public RFIForward( Plan plan, ChannelsUser user, RFI rfi, String forwardToEmail, String message  ) {
-        super( plan.getUri(), plan.getVersion(), user.getUsername()  );
+    public RFIForward( PlanCommunity planCommunity, ChannelsUser user, RFI rfi, String forwardToEmail, String message  ) {
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), user.getUsername()  );
         this.rfi = rfi;
         this.forwardToEmail = forwardToEmail;
         this.message = message;

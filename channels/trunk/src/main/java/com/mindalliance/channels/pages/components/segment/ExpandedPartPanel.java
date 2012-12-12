@@ -329,7 +329,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Collapsed, getPart() ) );
             }
         } );
-        summaryPanel.add( new AttributeModifier( "class", true, new Model<String>( getCssClasses() ) ) );
+        summaryPanel.add( new AttributeModifier( "class", new Model<String>( getCssClasses() ) ) );
         addOrReplace( summaryPanel );
     }
 
@@ -388,7 +388,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         categoryChoice.setOutputMarkupId( true );
         Part.Category category = getPart().getCategory();
         if ( category != null )
-            categoryChoice.add( new AttributeModifier( "title", true, new Model<String>( category.getHint() ) ) );
+            categoryChoice.add( new AttributeModifier( "title", new Model<String>( category.getHint() ) ) );
         categoryChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Assignment;
@@ -86,7 +87,7 @@ public class ProcedureData implements Serializable {
         } else {
             // event phase is trigger
             if ( assignment.isInitiatedByEventPhase() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment,  user );
+                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
                 triggerData.setEventPhase( assignment.getEventPhase() );
                 triggerData.setEventPhaseContext( assignment.getEventPhaseContext() );
                 triggerData.initTrigger( planCommunity );
@@ -139,7 +140,7 @@ public class ProcedureData implements Serializable {
         return assignmentData;
     }
 
-    @XmlElement( name = "id")
+    @XmlElement( name = "id" )
     public String getAnchor() {
         return getAssignment().getTask().getAnchor();
     }
@@ -425,7 +426,7 @@ public class ProcedureData implements Serializable {
         return sb.toString();
     }
 
-     public boolean hasReceives() {
+    public boolean hasReceives() {
         return getAssignment().hasReceives();
     }
 
@@ -474,6 +475,10 @@ public class ProcedureData implements Serializable {
 
     public Part part() {
         return assignmentData.getTask().part();
+    }
+
+    public OrganizationData employer() {
+        return assignmentData.employer();
     }
 
 }

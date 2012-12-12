@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Plan;
@@ -57,14 +57,14 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                                     ? "(Users who participate as agents in this plan and thus have info needs)"
                                     : "(Your participation in this plan)"
                     ),
-               new ListView<PlanParticipation>( "participatingUsers", getParticipations() ) {
+               new ListView<UserParticipation>( "participatingUsers", getParticipations() ) {
                     @Override
-                    protected void populateItem( ListItem<PlanParticipation> item ) {
+                    protected void populateItem( ListItem<UserParticipation> item ) {
                         PageParameters parameters = new PageParameters();
-                        PlanParticipation p = item.getModelObject();
+                        UserParticipation p = item.getModelObject();
                         parameters.set( PLAN, getUri() );
                         parameters.set( VERSION, getVersion() );
-                        Actor actor = p.getActor( getQueryService() );
+                        Actor actor = p.getAgent( getPlanCommunity() ).getActor();
                         parameters.set( "agent", actor.getId() );
                         String participantUsername = p.getParticipant().getUsername();
                         parameters.set( "user", participantUsername );

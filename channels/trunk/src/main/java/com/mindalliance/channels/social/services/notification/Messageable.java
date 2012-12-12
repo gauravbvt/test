@@ -2,7 +2,6 @@ package com.mindalliance.channels.social.services.notification;
 
 
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.query.PlanService;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -34,12 +33,14 @@ public interface Messageable {
     String getContent(
             String topic,
             Format format,
-            PlanService planService);
+            PlanCommunity planCommunity);
 
     String getSubject(
             String topic,
             Format format,
-            PlanService planService );
+            PlanCommunity planCommunity );
+
+    String getCommunityUri();
 
     String getPlanUri();
 

@@ -7,10 +7,9 @@
 package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.PresenceListener;
@@ -34,7 +33,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     private static final Logger LOG = LoggerFactory.getLogger( CommanderFactoryImpl.class );
 
-    private final Map<Plan, Commander> commanders = new ConcurrentHashMap<Plan, Commander>();
+    private final Map<String, Commander> commanders = new ConcurrentHashMap<String, Commander>();
 
     private List<CommandListener> commonListeners = new ArrayList<CommandListener>();
 
@@ -66,25 +65,23 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
     }
 
     @Override
-    public Commander getCommander( Plan plan ) {
-        Commander commander = commanders.get( plan );
+    public Commander getCommander( PlanCommunity planCommunity ) {
+        String planCommunityUri = planCommunity.getUri();
+        Commander commander = commanders.get( planCommunityUri );
         if ( commander != null )
             return commander;
 
         synchronized ( this ) {
             // Check if someone else beat us at initialization
-            Commander cmd = commanders.get( plan );
+            Commander cmd = commanders.get( planCommunityUri );
             if ( cmd != null )
                 return cmd;
 
             DefaultCommander newCommander = new DefaultCommander();
-            commanders.put( plan, newCommander );
+            commanders.put( planCommunityUri, newCommander );
+            newCommander.setPlanCommunity( planCommunity );
             newCommander.setPlanManager( planManager );
-            newCommander.setPlanDao( planManager.getDao( plan ) );
-
-            PlanService planService = planServiceFactory.getService( plan );
-            newCommander.setQueryService( planService );
-            newCommander.setLockManager( new DefaultLockManager( planService ) );
+            newCommander.setLockManager( new DefaultLockManager( ) );
 
             newCommander.setCommandListeners( commonListeners );
             newCommander.setImportExportFactory( importExportFactory );

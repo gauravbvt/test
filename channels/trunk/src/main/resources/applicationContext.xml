@@ -140,10 +140,14 @@ CONFIGURATION NOTES:
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 
-    <bean id="planParticipationService" class="com.mindalliance.channels.core.community.participation.PlanParticipationServiceImpl"/>
-    <bean id="planParticipationConfirmationService" class="com.mindalliance.channels.core.community.participation.PlanParticipationValidationServiceImpl"/>
+    <bean id="userParticipationService" class="com.mindalliance.channels.core.community.participation.UserParticipationServiceImpl"/>
+    <bean id="userParticipationConfirmationService" class="com.mindalliance.channels.core.community.participation.UserParticipationConfirmationServiceImpl"/>
+    <bean id="registeredOrganizationService" class="com.mindalliance.channels.core.community.participation.RegisteredOrganizationServiceImpl"/>
+    <bean id="organizationRegistrationService" class="com.mindalliance.channels.core.community.participation.OrganizationRegistrationServiceImpl"/>
+    <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>
     <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
     <bean id="planCommunityManager" class="com.mindalliance.channels.core.community.PlanCommunityManagerImpl"/>
+    <bean id="participationManager" class="com.mindalliance.channels.core.community.participation.ParticipationManagerImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -486,7 +490,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <!-- REST API -->
-    <bean id="channelsService" class="com.mindalliance.channels.api.ChannelsServiceImpl">
+    <bean id="planCommunityEndPoint" class="com.mindalliance.channels.api.PlanCommunityEndPointImpl">
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 

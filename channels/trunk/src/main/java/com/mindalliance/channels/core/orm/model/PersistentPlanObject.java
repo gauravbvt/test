@@ -33,7 +33,7 @@ public interface PersistentPlanObject extends Timestamped, Identifiable, Channel
      *
      * @return string
      */
-    String getPlanUri();
+    String getCommunityUri();
 
     /**
      * Get the plan's version.

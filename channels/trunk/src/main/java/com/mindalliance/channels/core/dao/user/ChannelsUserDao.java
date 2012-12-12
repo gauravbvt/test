@@ -57,7 +57,7 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
      * @param uri the plan uri
      * @return a list of strings
      */
-    List<String> getUsernames( String uri );
+    List<String> getUsernames( String uri );     // todo - users in a plan community : only planners are in the default plan community with uri == plan uri
 
     /**
      * Get a sorted list of all user names (email addresses).
@@ -72,7 +72,7 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
      * @param uri the plan's uri
      * @return the list
      */
-    List<ChannelsUser> getUsers( String uri );
+    List<ChannelsUser> getUsers( String uri );   // todo - users in a plan community
 
     /**
      * Change the user's password and email a notice.
@@ -142,4 +142,11 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
      * @return a user contact info service
      */
     UserContactInfoService getUserContactInfoService();
+
+    /**
+     * Find all users with a given full name.
+     * @param name a user full name
+     * @return a list of users
+     */
+    List<ChannelsUser> findAllUsersWithFullName( String name, String uri );
 }

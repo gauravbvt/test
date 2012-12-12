@@ -1,11 +1,11 @@
 package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
@@ -31,7 +31,7 @@ import java.util.List;
  * Time: 1:40 PM
  */
 @Entity
-public class Questionnaire extends AbstractPersistentPlanObject {
+public class Questionnaire extends AbstractPersistentChannelsObject {
 
 
     public enum Status {
@@ -77,8 +77,8 @@ public class Questionnaire extends AbstractPersistentPlanObject {
     public Questionnaire() {
     }
 
-    public Questionnaire( Plan plan, String username ) {
-        super( plan.getUri(), plan.getVersion(), username );
+    public Questionnaire( PlanCommunity planCommunity, String username ) {
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
     }
 
     public Questionnaire( long id ) {

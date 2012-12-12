@@ -27,6 +27,9 @@ public class UserContactInfoServiceImpl
         extends GenericSqlServiceImpl<UserContactInfo, Long>
         implements UserContactInfoService {
 
+    public UserContactInfoServiceImpl() {
+    }
+
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )

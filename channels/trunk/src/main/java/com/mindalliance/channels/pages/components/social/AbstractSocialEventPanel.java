@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
@@ -49,7 +49,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private ChannelsUserDao userDao;
     
     @SpringBean
-    private PlanParticipationService planParticipationService;
+    private UserParticipationService userParticipationService;
 
     private PresenceRecord latestPresenceRecord = null;
 
@@ -211,13 +211,13 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     public String getJobTitles() {
         StringBuilder sb = new StringBuilder(  );
-        QueryService queryService = getQueryService();
-        List<PlanParticipation> participations = planParticipationService.getActiveUserParticipations(
-                getUserInfo(),
+        PlanCommunity planCommunity = getPlanCommunity();
+        List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+                getUser(),
                 getPlanCommunity()
         );
-        for ( PlanParticipation participation : participations ) {
-            Actor actor = participation.getActor( queryService );
+        for ( UserParticipation participation : participations ) {
+            Actor actor = participation.getAgent( planCommunity ).getActor(); // todo - agents!
             if ( actor != null ) {
                 String s = getActorJobTitles( actor );
                 sb.append( s );
@@ -247,11 +247,11 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
 
-    public String getPhotoUrl() {
+    public String getPhotoUrl() { // todo - user user's photo!
         String url = null;
-        ChannelsUserInfo userInfo = getUserInfo();
-        if ( userInfo != null ) {
-            Actor actor = findActor( userInfo );
+        ChannelsUser user = getUser();
+        if ( user != null ) {
+            Actor actor = findActor( user );
             if ( actor != null )
                 url = imagingService.getSquareIconUrl( getPlan(), actor );
         }

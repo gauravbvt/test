@@ -27,8 +27,8 @@ public class ExternalLinkPanel extends Panel {
 
     private void init() {
         ExternalLink link = new ExternalLink( "link", url, text );
-        link.add( new AttributeModifier( "class", true, new Model<String>( "link" ) ) );
-        link.add( new AttributeModifier( "target", true, new Model<String>( "_" ) ) );
+        link.add( new AttributeModifier( "class", new Model<String>( "link" ) ) );
+        link.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
         add( link );
     }
 }

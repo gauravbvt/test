@@ -2,8 +2,8 @@ package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -89,7 +89,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Autowired
     private ChannelsMessagingService channelsMessagingService;
     @Autowired
-    private PlanParticipationService planParticipationService;
+    private UserParticipationService userParticipationService;
     @Autowired
     private RFIService rfiService;
     @Autowired
@@ -115,9 +115,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void notifyOfUserMessages() {
         LOG.debug( "Sending out user messages" );
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
-            Iterator<UserMessage> messagesToSend = userMessageService.listMessagesToSend( plan.getUri() );
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
+            Iterator<UserMessage> messagesToSend = userMessageService.listMessagesToSend( planCommunity.getUri() );
             while ( messagesToSend.hasNext() ) {
                 UserMessage messageToSend = messagesToSend.next();
                 List<String> successes = sendMessages(
@@ -133,11 +132,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         }
     }
 
-    private PlanCommunity getPlanCommunity( Plan plan ) {
-        return planCommunityManager.getPlanCommunity( plan );
-    }
-
-
     //// FEEDBACK ////
 
     @Override
@@ -145,9 +139,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
-            List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( plan );
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
+            List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( planCommunity );
             for ( Feedback urgentFeedback : urgentFeedbacks ) {
                 List<String> successes = sendMessages(
                         urgentFeedback,
@@ -167,9 +160,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
-            List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( plan );
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
+            List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( planCommunity );
             if ( !normalFeedbacks.isEmpty() ) {
                 Collections.sort( normalFeedbacks,
                         new Comparator<Feedback>() {
@@ -179,7 +171,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                             }
                         } );
                 boolean success = sendReport(
-                        getPlanners( plan ),
+                        getPlanners( planCommunity.getPlan() ),
                         normalFeedbacks,
                         UserStatement.TEXT,
                         planCommunity );
@@ -199,8 +191,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfSurveys() {
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             // to survey participants
             sendNags( planCommunity );
             sendDeadlineApproachingNotifications( planCommunity );
@@ -210,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private void sendNags( PlanCommunity planCommunity ) {
         LOG.debug( "Sending out nags about overdue RFIs" );
-        List<RFI> nagRFIs = rfiService.listRequestedNags( planCommunity.getPlan() );
+        List<RFI> nagRFIs = rfiService.listRequestedNags( planCommunity );
         for ( RFI nagRfi : nagRFIs ) {
             List<String> successes = sendMessages( nagRfi, RFI.NAG, planCommunity );
             if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
@@ -223,7 +214,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private void sendDeadlineApproachingNotifications( PlanCommunity planCommunity ) {
         LOG.debug( "Sending RFI deadline warnings" );
-        List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planCommunity.getPlan(), WARNING_DELAY );
+        List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planCommunity, WARNING_DELAY );
         for ( RFI deadlineRFI : deadlineRFIs ) {
             List<String> successes = sendMessages( deadlineRFI, RFI.DEADLINE, planCommunity );
             if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
@@ -235,7 +226,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     private void sendNewRFIs( PlanCommunity planCommunity ) {
         LOG.debug( "Sending new RFI notices" );
-        List<RFI> newRFIs = rfiService.listNewRFIs( planCommunity.getPlan() );
+        List<RFI> newRFIs = rfiService.listNewRFIs( planCommunity );
         for ( RFI newRFI : newRFIs ) {
             List<String> successes = sendMessages( newRFI, RFI.NEW, planCommunity );
             if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
@@ -252,8 +243,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of new feedback" );
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             // to survey participants
             sendIncompleteRFIReports( planCommunity );
             // to planners
@@ -265,22 +255,21 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfParticipationConfirmation() {
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
-            ChannelsUser.current().setPlan( plan );
-            PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
+            ChannelsUser.current().setPlan( planCommunity.getPlan() );
+            UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
             PlanService planService = planCommunity.getPlanService();
-            for ( PlanParticipation planParticipation : planParticipationService.getAllParticipations( getPlanCommunity( plan ) ) ) {
-                if ( planParticipation.isSupervised( planService ) ) {
+            for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( planCommunity ) ) {
+                if ( userParticipation.isSupervised( planCommunity ) ) {
                     List<String> successes = sendMessages(
-                            planParticipation,
-                            PlanParticipation.VALIDATION_REQUESTED,
+                            userParticipation,
+                            UserParticipation.VALIDATION_REQUESTED,
                             false,
                             planCommunity );
                     for ( String username : successes ) {
-                        planParticipation.addUserNotifiedToValidate( username );
+                        userParticipation.addUserNotifiedToValidate( username );
                     }
-                    planParticipationService.save( planParticipation );
+                    userParticipationService.save( userParticipation );
                 }
             }
         }
@@ -297,24 +286,23 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfParticipationRequest() {
-        for ( Plan plan : planManager.getPlans() ) {
-            PlanCommunity planCommunity = getPlanCommunity( plan );
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             PlanService planService = planCommunity.getPlanService();
-            ChannelsUser.current().setPlan( plan );
-            PlanParticipationService planParticipationService = planCommunity.getPlanParticipationService();
-            for ( PlanParticipation planParticipation : planParticipationService.getAllParticipations( getPlanCommunity( plan ) ) ) {
-                if ( planParticipation.isRequested()
-                        && !planParticipation.isAccepted()
-                        && !planParticipation.isRequestNotified() ) {
+            ChannelsUser.current().setPlan( planCommunity.getPlan() );
+            UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
+            for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( planCommunity ) ) {
+                if ( userParticipation.isRequested()
+                        && !userParticipation.isAccepted()
+                        && !userParticipation.isRequestNotified() ) {
                     List<String> successes = sendMessages(
-                            planParticipation,
-                            PlanParticipation.ACCEPTANCE_REQUESTED,
+                            userParticipation,
+                            UserParticipation.ACCEPTANCE_REQUESTED,
                             false,
                             planCommunity );
                     if ( !successes.isEmpty() ) {
-                        planParticipation.setRequestNotified( true );
+                        userParticipation.setRequestNotified( true );
                     }
-                    planParticipationService.save( planParticipation );
+                    userParticipationService.save( userParticipation );
                 }
             }
         }
@@ -330,7 +318,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private void sendSurveyStatusReports( PlanCommunity planCommunity ) {
         // to planners
         PlanService planService = planCommunity.getPlanService();
-        List<RFISurvey> activeSurveys = rfiSurveyService.listActive( planService, analyst );
+        List<RFISurvey> activeSurveys = rfiSurveyService.listActive( planCommunity );
         Collections.sort(
                 activeSurveys,
                 new Comparator<RFISurvey>() {
@@ -352,7 +340,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         // to survey participants
         PlanService planService = planCommunity.getPlanService();
         final SurveysDAO surveysDAO = planService.getSurveysDAO();
-        List<RFI> incompleteRFIs = surveysDAO.listIncompleteActiveRFIs( planService, analyst );
+        List<RFI> incompleteRFIs = surveysDAO.listIncompleteActiveRFIs( planCommunity );
         Map<String, List<RFI>> userRFIs = new HashMap<String, List<RFI>>();
         for ( RFI incompleteRFI : incompleteRFIs ) {
             String surveyedUsername = incompleteRFI.getSurveyedUsername();

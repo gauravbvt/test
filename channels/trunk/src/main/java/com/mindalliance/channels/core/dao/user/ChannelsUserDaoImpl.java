@@ -119,6 +119,20 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         }
     }
 
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<ChannelsUser> findAllUsersWithFullName( final String name, String uri ) {
+        return (List<ChannelsUser>) CollectionUtils.select(
+                getUsers( uri ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((ChannelsUser)object).getFullName().equalsIgnoreCase( name );
+                    }
+                }
+        );
+    }
 
     @Override
     @Transactional( readOnly = true )

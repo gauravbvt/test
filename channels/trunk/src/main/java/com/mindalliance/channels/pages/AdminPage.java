@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -75,7 +75,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private ChannelsUserDao userDao;
 
     @SpringBean
-    private PlanParticipationService planParticipationService;
+    private UserParticipationService userParticipationService;
 
     private ListView<ChannelsUser> userList;
 
@@ -304,7 +304,7 @@ public class AdminPage extends AbstractChannelsWebPage {
         for ( ChannelsUser u : toDelete ) {
             getPlanManager().setAuthorities( u, null, null );
             userDao.deleteUser( ChannelsUser.current().getUsername(), u, getPlanManager() );
-            planParticipationService.deleteAllParticipations( u.getUserInfo(), ChannelsUser.current().getUsername() );
+            userParticipationService.deleteAllParticipations( u, ChannelsUser.current().getUsername() );
         }
         if ( !toDelete.isEmpty() ) {
             toDelete.clear();

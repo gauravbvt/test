@@ -1618,6 +1618,14 @@ public interface QueryService {
     List<Actor> findAllSupervisorsOf( Actor actor );
 
     /**
+     * Find all supervisor actors of a given actor in non-placeholder organizations.
+     * @param actor an actor
+     * @return a list of supervising actors
+     */
+    List<Actor> findAllFixedSupervisorsOf( Actor actor );
+
+
+    /**
      * Make a name for a new entity.
      * @param entityClass an entity class
      * @return a string

@@ -55,8 +55,8 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
     }
 
     private void addCounts() {
-        int participationCount = rfiService.findParticipants( getPlan(), getRFISurvey() ).size();
-        int answeredCount = surveysDAO.findAnsweringRFIs( getPlan(), getRFISurvey() ).size();
+        int participationCount = rfiService.findParticipants( getPlanCommunity(), getRFISurvey() ).size();
+        int answeredCount = surveysDAO.findAnsweringRFIs( getPlanCommunity(), getRFISurvey() ).size();
         Label countLabel = new Label(
                 "count",
                 ( answeredCount
@@ -107,7 +107,7 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
             questionResultsPanel = new Label( "questionResults", "" );
         } else {
             Map<String, Set<String>> results = surveysDAO.processAnswers(
-                    getPlan(),
+                    getPlanCommunity(),
                     getRFISurvey(),
                     getSelectedQuestion(),
                     !SHARED_ONLY,

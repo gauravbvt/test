@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services;
 
-import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.PresenceListener;
 import com.mindalliance.channels.social.model.PresenceRecord;
@@ -18,21 +18,21 @@ public interface PresenceRecordService extends GenericSqlService<PresenceRecord,
      * Find latest presence change for a user in a plan (entering or leaving).
      *
      * @param username a string
-     * @param planUri a sanitized plan uri
+     * @param communityUri a planCommunity URI
      * @return a presence event
      */
-    PresenceRecord findLatestPresence( String username, String planUri );
+    PresenceRecord findLatestPresence( String username, String communityUri );
 
     /**
      * Has a keep-alive heartbeat been heard recently?
      *
      * @param username a string
-     * @param planUri a string
+     * @param communityUri a planCommunity URI
      * @return a boolean
      */
-    boolean isAlive( String username, String planUri );
+    boolean isAlive( String username, String communityUri );
 
-    void recordAbsence( String username, Plan plan );
+    void recordAbsence( String username, PlanCommunity planCommunity );
 
-    void recordPresence( String username, Plan plan );
+    void recordPresence( String username, PlanCommunity planCommunity );
 }

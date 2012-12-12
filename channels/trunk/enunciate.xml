@@ -1,8 +1,8 @@
 <enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.8.xsd">
     <api-classes>
-        <include pattern="com.mindalliance.channels.api.ChannelsService"/>
-        <include pattern="com.mindalliance.channels.api.ChannelsServiceImpl"/>
+        <include pattern="com.mindalliance.channels.api.PlanCommunityEndPoint"/>
+        <include pattern="com.mindalliance.channels.api.PlanCommunityEndPointImpl"/>
     </api-classes>
     <webapp mergeWebXML="src/main/web.xml">
         <globalServletFilter name="securityFilter" classname="org.springframework.web.filter.DelegatingFilterProxy"/>

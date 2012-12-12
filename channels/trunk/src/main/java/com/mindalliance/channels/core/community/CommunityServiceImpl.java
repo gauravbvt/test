@@ -1,7 +1,9 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.PlanParticipation;
-import com.mindalliance.channels.core.community.participation.PlanParticipationService;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
@@ -29,22 +31,30 @@ public class CommunityServiceImpl implements CommunityService {
     private PlanCommunity planCommunity;
     private final PlanService planService;
     private Analyst analyst;
-    private final PlanParticipationService planParticipationService;
+    private final UserParticipationService userParticipationService;
+    private UserParticipationConfirmationService userParticipationConfirmationService;
 
     public CommunityServiceImpl(
             PlanCommunity planCommunity,
             PlanService planService,
             Analyst analyst,
-            PlanParticipationService planParticipationService ) {
+            UserParticipationService userParticipationService,
+            UserParticipationConfirmationService userParticipationConfirmationService ) {
         this.planCommunity = planCommunity;
         this.planService = planService;
         this.analyst = analyst;
-        this.planParticipationService = planParticipationService;
+        this.userParticipationService = userParticipationService;
+        this.userParticipationConfirmationService = userParticipationConfirmationService;
     }
 
     @Override
-    public PlanParticipationService getPlanParticipationService() {
-        return planParticipationService;
+    public UserParticipationService getUserParticipationService() {
+        return userParticipationService;
+    }
+
+    @Override
+    public UserParticipationConfirmationService getUserParticipationConfirmationService() {
+        return userParticipationConfirmationService;
     }
 
     @Override
@@ -60,11 +70,11 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
         Set<ChannelsUser> users = new HashSet<ChannelsUser>();
-        List<PlanParticipation> participations = planParticipationService.getParticipationsAsActor( actor, planCommunity );
+        List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent( new Agent( actor ), planCommunity );
         ChannelsUserDao userDao = planService.getUserDao();
-        for ( PlanParticipation participation : participations ) {
+        for ( UserParticipation participation : participations ) {
             if ( !actor.isSupervisedParticipation()
-                    || planParticipationService.isValidatedByAllSupervisors( participation, planCommunity ) ) {
+                    || userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, planCommunity ) ) {
                 ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
                 if ( user != null ) {
                     users.add( user );
@@ -76,13 +86,13 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public boolean meetsPreEmploymentConstraint( Actor actor,
-                                                 List<PlanParticipation> activeParticipations ) {
+                                                 List<UserParticipation> activeParticipations ) {
         if ( !actor.isParticipationRestrictedToEmployed() ) return true;
         List<Organization> actorEmployers = planService.findDirectAndIndirectEmployers(
                 planService.findAllEmploymentsForActor( actor ) );
         List<Organization> myPlannedEmployers = new ArrayList<Organization>();
-        for ( PlanParticipation participation : activeParticipations ) {
-            Actor participationActor = participation.getActor( planService );
+        for ( UserParticipation participation : activeParticipations ) {
+            Actor participationActor = participation.getAgent( planCommunity ).getActor( );
             if ( participationActor != null && !participationActor.isOpenParticipation() )
                 myPlannedEmployers.addAll( planService.findDirectAndIndirectEmployers(
                         planService.findAllEmploymentsForActor( participationActor ) ) );

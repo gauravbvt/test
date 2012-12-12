@@ -68,7 +68,7 @@ public class ReportSegment implements Serializable {
                  new WebMarkupContainer( "segmentLink" )
                          .add( new Label( "segmentLinkText",
                                  getTitle() ).setRenderBodyOnly( true ) )
-                         .add( new AttributeModifier( "href", true, getLink() ) ) );
+                         .add( new AttributeModifier( "href", getLink() ) ) );
      }
 
      public Segment getSegment() {

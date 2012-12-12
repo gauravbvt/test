@@ -180,13 +180,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         WebMarkupContainer icon = new WebMarkupContainer( "hide_noop_icon" );
         icon.add( new AttributeModifier(
                 "src",
-                true,
                 new Model<String>( hidingNoop
                         ? "images/hide_noop_on.png"
                         : "images/hide_noop.png" ) ) );
         icon.add( new AttributeModifier(
                 "title",
-                true,
                 new Model<String>( hidingNoop
                         ? "Show all"
                         : "Hide not realizable" ) ) );
@@ -210,13 +208,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         WebMarkupContainer icon = new WebMarkupContainer( "show_connectors_icon" );
         icon.add( new AttributeModifier(
                 "src",
-                true,
                 new Model<String>( showingConnectors
                         ? "images/show_connectors_on.png"
                         : "images/show_connectors.png" ) ) );
         icon.add( new AttributeModifier(
                 "title",
-                true,
                 new Model<String>( showingConnectors
                         ? "Hide  info needs and capabilities"
                         : "Show info needs and capabilities" ) ) );
@@ -240,13 +236,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         WebMarkupContainer icon = new WebMarkupContainer( "show_goals_icon" );
         icon.add( new AttributeModifier(
                 "src",
-                true,
                 new Model<String>( showingGoals
                         ? "images/show_goals_on.png"
                         : "images/show_goals.png" ) ) );
         icon.add( new AttributeModifier(
                 "title",
-                true,
                 new Model<String>( showingGoals
                         ? "Hide goals"
                         : "Show goals" ) ) );
@@ -292,13 +286,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
         WebMarkupContainer icon = new WebMarkupContainer( "fit_icon" );
         icon.add( new AttributeModifier(
                 "src",
-                true,
                 new Model<String>( resizedToFit
                         ? "images/fit_on.png"
                         : "images/fit.png" ) ) );
         icon.add( new AttributeModifier(
                 "title",
-                true,
                 new Model<String>( resizedToFit
                         ? "Show flow map at normal size"
                         : "Reduce flow map to fit" ) ) );

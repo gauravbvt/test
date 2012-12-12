@@ -4,7 +4,6 @@ import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
 import com.google.code.jqwicket.JQContributionConfig;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
-import com.mindalliance.channels.core.command.LockManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -15,8 +14,6 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.pages.playbook.ContactPage;
-import com.mindalliance.channels.pages.playbook.VCardPage;
 import com.mindalliance.channels.pages.png.DisseminationPng;
 import com.mindalliance.channels.pages.png.EntitiesNetworkPng;
 import com.mindalliance.channels.pages.png.EntityNetworkPng;
@@ -29,15 +26,10 @@ import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
-import com.mindalliance.channels.pages.procedures.AssignmentReportPage;
-import com.mindalliance.channels.pages.procedures.CommitmentReportPage;
-import com.mindalliance.channels.pages.procedures.ProcedureMapPage;
-import com.mindalliance.channels.pages.procedures.ProceduresReportPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
-import com.mindalliance.channels.pages.reports.protocols.StaticProtocols;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -171,16 +163,10 @@ public class Channels extends WebApplication
                 : UserPage.class;
     }
 
-    /**
-     * Get the active plan's lock manager.
-     *
-     * @param plan a plan
-     * @return a lock manager
-     */
-    public LockManager getLockManager( Plan plan ) {
+ /*   public LockManager getLockManager( Plan plan ) {
         return commanderFactory.getCommander( plan ).getLockManager();
     }
-
+*/
 
     /**
      * Set to strip wicket tags from subpanels.
@@ -216,16 +202,10 @@ public class Channels extends WebApplication
 
         getMarkupSettings().setStripWicketTags( true );
 
-        mountPage( "procedures", ProceduresReportPage.class );
         mountPage( "allProtocols", AllProtocolsPage.class );
         mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
         mountPage( "protocols", ProtocolsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );
-        mountPage( "mapped", ProcedureMapPage.class );
-        mountPage( "task", AssignmentReportPage.class );
-        mountPage( "flow", CommitmentReportPage.class );
-        mountPage( "vcards", VCardPage.class );
-        mountPage( "contacts", ContactPage.class );
         mountPage( "plan", PlanPage.class );
         mountPage( "admin", AdminPage.class );
         mountPage( "nosops.html", NoAccessPage.class );
@@ -237,7 +217,6 @@ public class Channels extends WebApplication
         mountPage( "surveys", RFIsPage.class );
         mountPage( "feedback", FeedbackPage.class );
         mountPage( "help", HelpPage.class );
-        mountPage( "staticProtocols", StaticProtocols.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );

@@ -63,27 +63,28 @@ public class EnvironmentData  implements Serializable {
 
     public EnvironmentData( String serverUrl, ProceduresData procedures, PlanCommunity planCommunity ) {
         this.procedures = procedures;
-        initData( serverUrl, planCommunity.getPlanService() );
+        initData( serverUrl, planCommunity );
     }
 
-    private void initData( String serverUrl, PlanService planService ) {
-        plan = planService.getPlan();
+    private void initData( String serverUrl, PlanCommunity planCommunity ) {
+        plan = planCommunity.getPlan();
         try {
-            initEvents( serverUrl, planService );
-            initPhases( serverUrl, planService );
-            initOrgs( serverUrl,planService );
-            initActors( serverUrl,planService );
-            initPlaces(serverUrl, planService );
-            initRoles( serverUrl,planService );
-            initMedia( serverUrl,planService );
-            initInfoProducts( serverUrl, planService );
-            initInfoFormats( serverUrl, planService );
+            initEvents( serverUrl, planCommunity );
+            initPhases( serverUrl, planCommunity );
+            initOrgs( serverUrl,planCommunity );
+            initActors( serverUrl,planCommunity );
+            initPlaces(serverUrl, planCommunity );
+            initRoles( serverUrl,planCommunity );
+            initMedia( serverUrl,planCommunity );
+            initInfoProducts( serverUrl, planCommunity );
+            initInfoFormats( serverUrl, planCommunity );
         } catch ( NotFoundException e ) {
             throw new RuntimeException( e );
         }
     }
 
-    private void initMedia( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initMedia( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         media = new ArrayList<MediumData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allMediumIds() ) {
@@ -106,7 +107,8 @@ public class EnvironmentData  implements Serializable {
         }
     }
 
-    private void initRoles( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initRoles( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         roles = new ArrayList<RoleData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allRoleIds() ) {
@@ -122,7 +124,8 @@ public class EnvironmentData  implements Serializable {
         }
     }
 
-    private void initInfoProducts( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initInfoProducts( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         infoProducts = new ArrayList<InfoProductData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allInfoProductIds() ) {
@@ -138,7 +141,8 @@ public class EnvironmentData  implements Serializable {
         }
     }
 
-    private void initInfoFormats( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initInfoFormats( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         infoFormats = new ArrayList<InfoFormatData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allInfoFormatIds() ) {
@@ -156,7 +160,8 @@ public class EnvironmentData  implements Serializable {
 
 
 
-    private void initPlaces( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initPlaces( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         places = new ArrayList<PlaceData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allPlaceIds() ) {
@@ -173,7 +178,8 @@ public class EnvironmentData  implements Serializable {
 
     }
 
-    private void initActors( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initActors( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         actors = new ArrayList<AgentData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allActorIds() ) {
@@ -190,22 +196,23 @@ public class EnvironmentData  implements Serializable {
 
     }
 
-    private void initOrgs( String serverUrl,PlanService planService ) throws NotFoundException {
+    private void initOrgs( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         orgs = new ArrayList<OrganizationData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allOrganizationIds() ) {
             Organization org = planService.find( Organization.class, id );
-            orgs.add( new OrganizationData( serverUrl,org, planService ) );
+            orgs.add( new OrganizationData( serverUrl,org, planCommunity ) );
             added.add( id );
             for ( ModelEntity category : org.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    orgs.add( new OrganizationData( serverUrl,(Organization) category, planService ) );
+                    orgs.add( new OrganizationData( serverUrl,(Organization) category, planCommunity ) );
                     added.add( category.getId() );
                 }
             }
             for ( Organization parent : org.ancestors() ) {
                 if ( !added.contains( parent.getId() ) ) {
-                    orgs.add( new OrganizationData( serverUrl,parent, planService ) );
+                    orgs.add( new OrganizationData( serverUrl,parent, planCommunity ) );
                     added.add( parent.getId() );
                 }
             }
@@ -213,7 +220,8 @@ public class EnvironmentData  implements Serializable {
 
     }
 
-    private void initPhases( String serverUrl, PlanService planService ) throws NotFoundException {
+    private void initPhases( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         phases = new ArrayList<PhaseData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allPhaseIds() ) {
@@ -230,7 +238,8 @@ public class EnvironmentData  implements Serializable {
 
     }
 
-    private void initEvents(  String serverUrl, PlanService planService ) throws NotFoundException {
+    private void initEvents(  String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
+        PlanService planService = planCommunity.getPlanService();
         events = new ArrayList<EventData>();
         for ( Long eventId : allEventIds() ) {
             Event event = planService.find( Event.class, eventId );

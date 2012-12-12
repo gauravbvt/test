@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentPlanObject;
+import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.core.query.QueryService;
 
 import javax.persistence.Column;
@@ -18,7 +18,7 @@ import javax.persistence.Entity;
  * Time: 12:57 PM
  */
 @Entity
-public abstract class AbstractModelObjectReferencingPPO extends AbstractPersistentPlanObject {
+public abstract class AbstractModelObjectReferencingPPO extends AbstractPersistentChannelsObject {
 
     /**
      * Model object reference as string.
@@ -36,16 +36,17 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     public AbstractModelObjectReferencingPPO() {
     }
 
-    public AbstractModelObjectReferencingPPO( String planUri, int planVersion, String username ) {
-        super( planUri, planVersion, username);
+    public AbstractModelObjectReferencingPPO( String communityUri, String planUri, int planVersion, String username ) {
+        super( communityUri, planUri, planVersion, username);
     }
 
     public AbstractModelObjectReferencingPPO(
+            String communityUri,
             String planUri,
             int planVersion,
             String username,
             ModelObject modelObject ) {
-        this( planUri, planVersion, username );
+        this( communityUri, planUri, planVersion, username );
         moRef = new ModelObjectRef( modelObject ).asString();
         moLabel = aboutLabel( modelObject );
         moTypeName = modelObject.getTypeName();
