@@ -126,7 +126,10 @@ public class MAV0248_RemoveRequirement extends TestCase{
 			description="Plan Requirement";
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("Planrequirement"));
-			
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Click on 'New' button in requirement definition
 			stepNo++;
 			description="New Requirement";

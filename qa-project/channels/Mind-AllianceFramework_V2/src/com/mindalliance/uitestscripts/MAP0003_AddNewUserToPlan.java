@@ -30,6 +30,7 @@ import com.mindalliance.pages.ChannelsAdmin;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
+import com.mindalliance.pages.PlanPage;
 
 /**
  * Test Case ID: MAP0003_AddNewUserToPlan
@@ -147,11 +148,14 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 		    reporting.generateAutomationReport();
 		    
 		}catch (UIAutomationException ue) {
+			PlanPage planPage= new PlanPage();
+			planPage.getStackTraceOnPlanPage();
+			
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,description,failed, ue.getErrorMessage(), blank);
 			Reporting.getScreenShot(testCaseId);
-		    
+			
 			// Sign out from home page
 		    stepNo++;
 		    description="Logout successful";
