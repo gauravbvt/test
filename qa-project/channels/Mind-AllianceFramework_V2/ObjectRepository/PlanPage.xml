@@ -1693,8 +1693,35 @@
 		<ClassName></ClassName>
 	</Element>
 	
+	<Element>
+		<GivenName>Undo Add New Requirement</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText>Undo add new requirement</PartialLinkText>
+		<LinkText>Undo add new requirement</LinkText>
+		<ClassName></ClassName>
+	</Element>
 	
+	<Element>
+		<GivenName>Undo Remove Requirement</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText>Undo remove requirement</PartialLinkText>
+		<LinkText>Undo remove requirement</LinkText>
+		<ClassName></ClassName>
+	</Element>
 	
+	<Element>
+		<GivenName>Redo Remove Requirement</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Redo remove requirement</LinkText>
+		<ClassName>Redo remove requirement</ClassName>
+	</Element>
 	
 	<Element>
 		<GivenName>Undo Remove This Segment</GivenName>
