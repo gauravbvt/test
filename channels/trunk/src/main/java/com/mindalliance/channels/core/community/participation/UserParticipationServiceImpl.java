@@ -41,6 +41,9 @@ public class UserParticipationServiceImpl
     @Autowired
     private ParticipationManager participationManager;
 
+    @Autowired
+    private OrganizationParticipationService organizationParticipationService;
+
     public UserParticipationServiceImpl() {
     }
 
@@ -57,7 +60,7 @@ public class UserParticipationServiceImpl
                     username,
                     participatingUser,
                     agent,
-                    planCommunity);
+                    planCommunity );
             save( userParticipation );
             return userParticipation;
         } else {
@@ -141,10 +144,10 @@ public class UserParticipationServiceImpl
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
 //        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
         criteria.add( Restrictions.eq( "actorId", agent.getActor().getId() ) );
-        if ( agent.getOrganizationRegistration() == null )
-            criteria.add( Restrictions.isNull( "organizationRegistration" ) );
+        if ( agent.getOrganizationParticipation() == null )
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
-            criteria.add( Restrictions.eq( "organizationRegistration", agent.getOrganizationRegistration() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
         criteria.addOrder( Order.desc( "created" ) );
         return validParticipations( (List<UserParticipation>) criteria.list(), planCommunity );
     }
@@ -162,10 +165,10 @@ public class UserParticipationServiceImpl
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "participant", user.getUserInfo() ) );
         criteria.add( Restrictions.eq( "actorId", agent.getActor().getId() ) );
-        if ( agent.getOrganizationRegistration() == null )
-            criteria.add( Restrictions.isNull( "organizationRegistration" ) );
+        if ( agent.getOrganizationParticipation() == null )
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
-            criteria.add( Restrictions.eq( "organizationRegistration", agent.getOrganizationRegistration() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
         criteria.addOrder( Order.desc( "created" ) );
         List<UserParticipation> participations = validParticipations(
                 (List<UserParticipation>) criteria.list(),
@@ -387,10 +390,10 @@ public class UserParticipationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "actorId", agent.getActor().getId() ) );
-        if ( agent.getOrganizationRegistration() == null )
-            criteria.add( Restrictions.isNull( "organizationRegistration" ) );
+        if ( agent.getOrganizationParticipation() == null )
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
-            criteria.add( Restrictions.eq( "organizationRegistration", agent.getOrganizationRegistration() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
         List<UserParticipation> participations = (List<UserParticipation>) criteria.list();
         Set<ChannelsUserInfo> userInfos = new HashSet<ChannelsUserInfo>();
         for ( UserParticipation participation : participations ) {
@@ -456,10 +459,30 @@ public class UserParticipationServiceImpl
     }
 
     @Override
+    @Transactional( readOnly = true )
     public boolean isUserParticipatingAs( ChannelsUser user, Agent agent, PlanCommunity planCommunity ) {
         return listAgentsUserParticipatesAs( user, planCommunity ).contains( agent );
     }
 
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> listUserParticipationIn( OrganizationParticipation organizationParticipation,
+                                                            PlanCommunity planCommunity ) {
+        OrganizationParticipation orgParticipation = organizationParticipationService
+                .findOrganizationRegistration( organizationParticipation.getRegisteredOrganization().getName( planCommunity ),
+                        organizationParticipation.getPlaceholderOrganization( planCommunity ),
+                        planCommunity );
+        if ( orgParticipation == null ) {
+            return new ArrayList<UserParticipation>();
+        } else {
+            Session session = getSession();
+            Criteria criteria = session.createCriteria( getPersistentClass() );
+            criteria.add( Restrictions.eq( "communityUri", organizationParticipation.getCommunityUri() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", orgParticipation ) );
+            return (List<UserParticipation>) criteria.list();
+        }
+    }
 
 
 }

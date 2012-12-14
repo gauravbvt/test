@@ -8,47 +8,44 @@ import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import java.util.List;
 
 /**
- * Organization registration service.
+ * Organization participation service.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 12/3/12
  * Time: 8:35 PM
  */
-public interface OrganizationRegistrationService extends GenericSqlService<OrganizationRegistration, Long> {
+public interface OrganizationParticipationService extends GenericSqlService<OrganizationParticipation, Long> {
 
-    boolean isValid( OrganizationRegistration registration, PlanCommunity planCommunity );
+    boolean isValid( OrganizationParticipation registration, PlanCommunity planCommunity );
 
     List<Agency> listRegisteredAgencies( PlanCommunity planCommunity );
 
     List<Agency> listAgenciesRegisteredAs( Organization placeholder, PlanCommunity planCommunity );
 
-    OrganizationRegistration findOrganizationRegistration(
+    OrganizationParticipation findOrganizationRegistration(
             String orgName,
             Organization placeholder,
             PlanCommunity planCommunity );
 
-    boolean canRegisterOrganizationAs( ChannelsUser user, Organization placeholder, PlanCommunity planCommunity);
-
-    boolean canUnregisterOrganizationAs(
+    boolean canUnregisterAnOrganizationFrom(
             ChannelsUser user,
-            String orgName,
             Organization placeholder,
             PlanCommunity planCommunity );
 
-    RegisteredOrganization registerOrganizationAs(
+    boolean unregisterOrganizationAs(
             ChannelsUser user,
-            String orgName,
-            Organization placeholder,
-            PlanCommunity planCommunity );
-
-    void unregisterOrganizationAs(
-            ChannelsUser user,
-            String orgName,
-            Organization placeholder,
-            PlanCommunity planCommunity );
-
-    List<OrganizationRegistration> findRegistrationsFor(
             RegisteredOrganization registeredOrganization,
+            Organization placeholder,
+            PlanCommunity planCommunity );
+
+    List<OrganizationParticipation> findRegistrationsFor(
+            RegisteredOrganization registeredOrganization,
+            PlanCommunity planCommunity );
+
+    OrganizationParticipation registerOrganizationAs(
+            ChannelsUser user,
+            RegisteredOrganization registeredOrganization,
+            Organization placeholder,
             PlanCommunity planCommunity );
 }

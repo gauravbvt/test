@@ -24,7 +24,7 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
     private UserParticipation userParticipation;
     private long supervisorId;
     @ManyToOne
-    private OrganizationRegistration organizationRegistration;
+    private OrganizationParticipation organizationParticipation;
 
     public UserParticipationConfirmation() {
     }
@@ -39,7 +39,7 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
                 username );
         this.userParticipation = userParticipation;
         this.supervisorId =  supervisor != null ? supervisor.getActorId() : -1;
-        this.organizationRegistration = supervisor != null ? supervisor.getOrganizationRegistration() : null;
+        this.organizationParticipation = supervisor != null ? supervisor.getOrganizationParticipation() : null;
     }
 
     public UserParticipation getUserParticipation() {
@@ -47,17 +47,17 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
     }
 
 
-    public OrganizationRegistration getOrganizationRegistration() {
-        return organizationRegistration;
+    public OrganizationParticipation getOrganizationParticipation() {
+        return organizationParticipation;
     }
 
     public Agent getSupervisor( PlanCommunity planCommunity ) {
         Actor actor = getSupervisorActor( planCommunity.getPlanService() );
         if ( actor == null ) return null;
-        if ( organizationRegistration == null ) {
+        if ( organizationParticipation == null ) {
             return new Agent( actor );
         } else {
-            return new Agent( actor, organizationRegistration, planCommunity );
+            return new Agent( actor, organizationParticipation, planCommunity );
         }
     }
 

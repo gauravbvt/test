@@ -141,4 +141,8 @@ public class PlanCommunity implements Nameable, Identifiable {
     public boolean isModifiableInProduction() {
         return false;
     }
+
+    public boolean isCommunityLeader( ChannelsUser user ) {
+        return user.isPlanner( getPlan().getUri() );   // todo have non-planners be community leaders as well or instead
+    }
 }

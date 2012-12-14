@@ -5,8 +5,6 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,29 +25,29 @@ import java.util.List;
  * Time: 2:35 PM
  */
 @Entity
-public class OrganizationRegistration extends AbstractPersistentChannelsObject {
+public class OrganizationParticipation extends AbstractPersistentChannelsObject {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( OrganizationRegistration.class );
+    private static final Logger LOG = LoggerFactory.getLogger( OrganizationParticipation.class );
 
     private long placeholderOrgId;
     @ManyToOne
     private RegisteredOrganization registeredOrganization;
 
     @Transient
-    @OneToMany( mappedBy = "organizationRegistration", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "organizationParticipation", cascade = CascadeType.ALL )
     private List<UserParticipation> userParticipationList;
 
     @Transient
-    @OneToMany( mappedBy = "organizationRegistration", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "organizationParticipation", cascade = CascadeType.ALL )
     private List<UserParticipationConfirmation> userParticipationConfirmationList;
 
-    public OrganizationRegistration() {
+    public OrganizationParticipation() {
     }
 
-    public OrganizationRegistration(
+    public OrganizationParticipation(
             String username,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
@@ -95,8 +93,8 @@ public class OrganizationRegistration extends AbstractPersistentChannelsObject {
 
     @Override
     public boolean equals( Object object ) {
-        if ( object instanceof OrganizationRegistration ) {
-            OrganizationRegistration other = (OrganizationRegistration) object;
+        if ( object instanceof OrganizationParticipation ) {
+            OrganizationParticipation other = (OrganizationParticipation) object;
             return placeholderOrgId == other.getPlaceholderOrgId()
                     && registeredOrganization.equals( other.getRegisteredOrganization() );
         } else {
@@ -117,18 +115,18 @@ public class OrganizationRegistration extends AbstractPersistentChannelsObject {
         return registeredOrganization.getFixedJobs( planCommunity );
     }
 
-    public boolean isValidAgent( final Agent agent, PlanCommunity planCommunity ) {
+ /*   public boolean isValidAgent( final Agent agent, PlanCommunity planCommunity ) {
         return CollectionUtils.exists(
                 new Agency( this, planCommunity ).getAgents( planCommunity ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return object.equals( agent );
+                        return ((Agent)object).equals( agent );
                     }
                 }
         );
     }
-
+*/
     public List<Job> getPlaceholderJobs( PlanCommunity planCommunity ) {
         Organization placeholder = getPlaceholderOrganization( planCommunity );
         if ( placeholder != null ) {
@@ -136,5 +134,13 @@ public class OrganizationRegistration extends AbstractPersistentChannelsObject {
         } else {
             return new ArrayList<Job>(  );
         }
+    }
+
+    public String asString( PlanCommunity planCommunity) {
+        StringBuilder sb = new StringBuilder(  );
+        sb.append( getRegisteredOrganization().getName( planCommunity ) );
+        sb.append( " registered as " );
+        sb.append( getPlaceholderOrganization( planCommunity ).getName() );
+        return sb.toString();
     }
 }

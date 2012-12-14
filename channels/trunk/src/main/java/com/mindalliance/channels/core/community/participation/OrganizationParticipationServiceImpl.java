@@ -20,28 +20,31 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Organization registration service implementation.
+ * Organization participation service implementation.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 12/3/12
  * Time: 8:40 PM
  */
-public class OrganizationRegistrationServiceImpl
-        extends GenericSqlServiceImpl<OrganizationRegistration, Long>
-        implements OrganizationRegistrationService {
+public class OrganizationParticipationServiceImpl
+        extends GenericSqlServiceImpl<OrganizationParticipation, Long>
+        implements OrganizationParticipationService {
 
     @Autowired
     private RegisteredOrganizationService registeredOrganizationService;
 
-    public OrganizationRegistrationServiceImpl() {
+    @Autowired
+    private UserParticipationService userParticipationService;
+
+    public OrganizationParticipationServiceImpl() {
     }
 
     @Override
     @Transactional( readOnly = true )
     public List<Agency> listRegisteredAgencies( PlanCommunity planCommunity ) {
         Set<Agency> agencies = new HashSet<Agency>();
-        for ( OrganizationRegistration registration : list() ) {
+        for ( OrganizationParticipation registration : list() ) {
             if ( isValid( registration, planCommunity ) ) {
                 Agency agency = new Agency( registration, planCommunity );
                 agencies.add( agency );
@@ -52,7 +55,7 @@ public class OrganizationRegistrationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isValid( OrganizationRegistration registration, PlanCommunity planCommunity ) {
+    public boolean isValid( OrganizationParticipation registration, PlanCommunity planCommunity ) {
         Organization placeholder = registration.getPlaceholderOrganization( planCommunity );
         return placeholder != null
                 && placeholder.isPlaceHolder()
@@ -70,7 +73,7 @@ public class OrganizationRegistrationServiceImpl
             criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
             criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
             List<Agency> agencies = new ArrayList<Agency>();
-            for ( OrganizationRegistration registration : (List<OrganizationRegistration>) criteria.list() ) {
+            for ( OrganizationParticipation registration : (List<OrganizationParticipation>) criteria.list() ) {
                 agencies.add( new Agency( registration, planCommunity ) );
             }
             return agencies;
@@ -80,42 +83,34 @@ public class OrganizationRegistrationServiceImpl
     }
 
     @Override
-    public boolean canRegisterOrganizationAs(
-            ChannelsUser user,
-            Organization placeholder,
-            PlanCommunity planCommunity ) {
-        return planCommunity.isCustodianOf( user, placeholder );
-    }
-
-    @Override
     @Transactional( readOnly = true )
-    public boolean canUnregisterOrganizationAs(
+    public boolean canUnregisterAnOrganizationFrom(
             ChannelsUser user,
-            String orgName,
             Organization placeholder,
             PlanCommunity planCommunity ) {
-        return !placeholder.isPlaceHolder() || canRegisterOrganizationAs( user, placeholder, planCommunity );
+        return placeholder.isPlaceHolder()
+                && planCommunity.isCustodianOf( user, placeholder );
     }
 
     @Override
     @Transactional
-    public RegisteredOrganization registerOrganizationAs(
+    public OrganizationParticipation registerOrganizationAs(
             ChannelsUser user,
-            String orgName,
+            RegisteredOrganization registeredOrganization,
             Organization placeholder,
             PlanCommunity planCommunity ) {
-        if ( canRegisterOrganizationAs( user, placeholder, planCommunity ) ) {
-            RegisteredOrganization registeredOrg =
-                    registeredOrganizationService.findOrAdd( user, orgName, planCommunity );
-            if ( !isAgencyRegisteredAs( registeredOrg, placeholder, planCommunity ) ) {
-                OrganizationRegistration registration = new OrganizationRegistration(
+        if ( planCommunity.isCustodianOf( user, placeholder )) {
+            if ( !isAgencyRegisteredAs( registeredOrganization, placeholder, planCommunity ) ) {
+                OrganizationParticipation registration = new OrganizationParticipation(
                         user.getUsername(),
-                        registeredOrg,
+                        registeredOrganization,
                         placeholder,
                         planCommunity );
                 save( registration );
+                return registration;
+            } else {
+                return null;
             }
-            return registeredOrg;
         } else {
             return null;
         }
@@ -131,51 +126,58 @@ public class OrganizationRegistrationServiceImpl
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
         criteria.add( Restrictions.eq( "registeredOrganization", registeredOrg ) );
-        return !validate( (List<OrganizationRegistration>) criteria.list(), planCommunity ).isEmpty();
+        return !validate( (List<OrganizationParticipation>) criteria.list(), planCommunity ).isEmpty();
     }
 
     @Override
     @Transactional
-    public void unregisterOrganizationAs(
+    public boolean unregisterOrganizationAs(
             ChannelsUser user,
-            String orgName,
+            RegisteredOrganization registeredOrg,
             Organization placeholder,
             PlanCommunity planCommunity ) {
-        if ( canUnregisterOrganizationAs( user, orgName, placeholder, planCommunity ) ) {
-            OrganizationRegistration registration = findOrganizationRegistration( orgName, placeholder, planCommunity );
-            if ( registration != null ) {
-                delete( registration );
+        if ( canUnregisterAnOrganizationFrom( user, placeholder, planCommunity ) ) {
+            OrganizationParticipation organizationParticipation = findOrganizationRegistration(
+                    registeredOrg.getName( planCommunity ),
+                    placeholder,
+                    planCommunity );
+            if ( organizationParticipation != null
+                    && userParticipationService.listUserParticipationIn(
+                    organizationParticipation,
+                    planCommunity ).isEmpty() ) {
+                delete( organizationParticipation );
+                return true;
             }
         }
+        return false;
     }
 
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<OrganizationRegistration> findRegistrationsFor( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
+    public List<OrganizationParticipation> findRegistrationsFor( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "registeredOrganization", registeredOrganization ) );
-        return validate( (List<OrganizationRegistration>) criteria.list(), planCommunity );
+        return validate( (List<OrganizationParticipation>) criteria.list(), planCommunity );
     }
 
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public OrganizationRegistration findOrganizationRegistration(
+    public OrganizationParticipation findOrganizationRegistration(
             String orgName,
             Organization placeholder,
             PlanCommunity planCommunity ) {
         RegisteredOrganization registeredOrg = registeredOrganizationService.find( orgName, planCommunity );
         if ( registeredOrg != null ) {
             Session session = getSession();
-            Plan plan = planCommunity.getPlan();
             Criteria criteria = session.createCriteria( getPersistentClass() );
             criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
             criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
             criteria.add( Restrictions.eq( "registeredOrganization", registeredOrg ) );
-            List<OrganizationRegistration> registrations = validate( (List<OrganizationRegistration>) criteria.list(), planCommunity );
+            List<OrganizationParticipation> registrations = validate( (List<OrganizationParticipation>) criteria.list(), planCommunity );
             if ( !registrations.isEmpty() ) {
                 return registrations.get( 0 );
             } else {
@@ -187,15 +189,15 @@ public class OrganizationRegistrationServiceImpl
     }
 
     @SuppressWarnings( "unchecked" )
-    private List<OrganizationRegistration> validate(
-            List<OrganizationRegistration> organizationRegistrations,
+    private List<OrganizationParticipation> validate(
+            List<OrganizationParticipation> organizationRegistrations,
             final PlanCommunity planCommunity ) {
-        return (List<OrganizationRegistration>)CollectionUtils.select(
+        return (List<OrganizationParticipation>)CollectionUtils.select(
                 organizationRegistrations,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isValid( ( OrganizationRegistration) object , planCommunity );
+                        return isValid( (OrganizationParticipation) object , planCommunity );
                     }
                 }
         );

@@ -22,5 +22,5 @@ public interface RegisteredOrganizationService extends GenericSqlService<Registe
 
     RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, PlanCommunity planCommunity );
 
-    void removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity );
+    boolean removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity );
 }

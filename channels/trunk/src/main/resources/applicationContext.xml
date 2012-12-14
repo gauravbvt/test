@@ -143,7 +143,7 @@ CONFIGURATION NOTES:
     <bean id="userParticipationService" class="com.mindalliance.channels.core.community.participation.UserParticipationServiceImpl"/>
     <bean id="userParticipationConfirmationService" class="com.mindalliance.channels.core.community.participation.UserParticipationConfirmationServiceImpl"/>
     <bean id="registeredOrganizationService" class="com.mindalliance.channels.core.community.participation.RegisteredOrganizationServiceImpl"/>
-    <bean id="organizationRegistrationService" class="com.mindalliance.channels.core.community.participation.OrganizationRegistrationServiceImpl"/>
+    <bean id="organizationParticipationService" class="com.mindalliance.channels.core.community.participation.OrganizationParticipationServiceImpl"/>
     <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>
     <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
     <bean id="planCommunityManager" class="com.mindalliance.channels.core.community.PlanCommunityManagerImpl"/>

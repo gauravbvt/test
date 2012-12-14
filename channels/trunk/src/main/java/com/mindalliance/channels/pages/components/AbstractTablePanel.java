@@ -74,7 +74,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     /**
      * Content of an empty cell
      */
-    protected static final String EMPTY = "-";
+    public static final String EMPTY = "-";
     /**
      * Number of plays shown in table at a time
      */
@@ -172,16 +172,18 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String text = "" + ChannelsUtils.getProperty( model.getObject(), labelProperty, defaultText );
-                String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                T bean = model.getObject();
+                String defaultTextValue = findStringValue( bean, defaultText );
+                String text = "" + ChannelsUtils.getProperty( bean, labelProperty, defaultTextValue );
+                String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
                 if ( style != null ) {
-                    String styleClass = findStyleClass( model.getObject(), style );
+                    String styleClass = findStringValue( bean, style );
                     if ( styleClass != null )
                         cellItem.add( new AttributeModifier( "class", new Model<String>( styleClass ) ) );
                 }
                 if ( titleProperty != null ) {
-                    String title = "" + ChannelsUtils.getProperty( model.getObject(), titleProperty, null );
+                    String title = "" + ChannelsUtils.getProperty( bean, titleProperty, null );
                     if ( !title.isEmpty() )
                         cellItem.add( new AttributeModifier( "title", new Model<String>( title ) ) );
                 }
@@ -213,9 +215,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String username = (String) ChannelsUtils.getProperty( model.getObject(), usernameProperty, null );
+                T bean = model.getObject();
+                String defaultTextValue = findStringValue( bean, defaultText );
+                String username = (String) ChannelsUtils.getProperty( bean, usernameProperty, null );
                 ChannelsUser user = username == null ? null : userDao.getUserNamed( username );
-                String labelText = ( user == null ) ? ( defaultText == null ? "" : defaultText ) : user.getFullName();
+                String labelText = ( user == null ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : user.getFullName();
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }
         };
@@ -230,8 +234,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                String text = "" + callAnalyst( methodName, model.getObject(), extras );
-                String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                T bean = model.getObject();
+                String defaultTextValue = findStringValue( bean, defaultText );
+                String text = "" + callAnalyst( methodName, bean, extras );
+                String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }
         };
@@ -247,11 +253,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
-                T object = property == null
+                T bean = property == null
                         ? model.getObject()
                         : (T) ChannelsUtils.getProperty( model.getObject(), property, null );
-                String text = "" + callAnalyst( methodName, object, extras );
-                String labelText = ( text.isEmpty() ) ? ( defaultText == null ? "" : defaultText ) : text;
+                String defaultTextValue = findStringValue( bean, defaultText );
+                String text = "" + callAnalyst( methodName, bean, extras );
+                String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }
         };
@@ -325,7 +332,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 String classes = "";
 //                classes = "link";
                 if ( style != null ) {
-                    String styleClass = findStyleClass( model.getObject(), style );
+                    String styleClass = findStringValue( model.getObject(), style );
                     if ( styleClass != null )
                         classes = classes + " " + styleClass;
                 }
@@ -353,12 +360,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             mo = (ModelObject) ChannelsUtils.getProperty( bean, moProperty, null );
         }
         if ( mo != null ) {
+            String defaultTextValue = findStringValue( bean, defaultText );
             String labelText = (String) ChannelsUtils.getProperty(
                     bean,
                     labelProperty,
-                    defaultText );
+                    defaultTextValue );
             labelText = ( labelText == null || labelText.isEmpty() )
-                    ? ( defaultText == null ? "" : defaultText )
+                    ? ( defaultTextValue == null ? "" : defaultTextValue )
                     : labelText;
             if ( filterable != null ) {
                 return new FilterableModelObjectLink(
@@ -384,7 +392,8 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 }
             }
         } else {
-            return new Label( id, new Model<String>( ( defaultText == null ? "" : defaultText ) ) );
+            String defaultTextValue = findStringValue( bean, defaultText );
+            return new Label( id, new Model<String>( ( defaultTextValue == null ? "" : defaultTextValue ) ) );
         }
     }
 
@@ -398,14 +407,52 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         return cellLinkContent( id, bean, moProperty, labelProperty, defaultText, filterable, false );
     }
 
-    private String findStyleClass( Object bean, String style ) {
-        String styleClass;
-        if ( style.startsWith( "@" ) ) {
-            styleClass = (String) ChannelsUtils.getProperty( bean, style.substring( 1 ), null );
-        } else {
-            styleClass = style;
+    private Component cellFilteredContent(
+            String id,
+            T bean,
+            String identifiableProperty,
+            String labelProperty,
+            String defaultText,
+            String titleProperty,
+            Filterable filterable ) {
+        Identifiable identifiable = null;
+        identifiable = (Identifiable) ChannelsUtils.getProperty( bean, identifiableProperty, null );
+        String hint = "";
+        if ( titleProperty != null ) {
+            hint = (String)ChannelsUtils.getProperty( bean, titleProperty, "" );
         }
-        return styleClass;
+        if ( identifiable != null ) {
+            String defaultTextValue = findStringValue( bean, defaultText );
+            String labelText = (String) ChannelsUtils.getProperty(
+                    bean,
+                    labelProperty,
+                    defaultTextValue );
+            labelText = ( labelText == null || labelText.isEmpty() )
+                    ? ( defaultTextValue == null ? "" : defaultTextValue )
+                    : labelText;
+            return new FilterableLabel(
+                        id,
+                        new Model<Identifiable>( identifiable ),
+                        new Model<String>( labelText ),
+                        hint,
+                        identifiableProperty,
+                        filterable
+                );
+        } else {
+            String defaultTextValue = findStringValue( bean, defaultText );
+            return new Label( id, new Model<String>( ( defaultTextValue == null ? "" : defaultTextValue ) ) );
+        }
+    }
+
+    private String findStringValue( Object bean, String text ) {
+        String value;
+        if ( text == null ) return null;
+        if ( text.startsWith( "@" ) ) {
+            value = (String) ChannelsUtils.getProperty( bean, text.substring( 1 ), null );
+        } else {
+            value = text;
+        }
+        return value;
     }
 
     protected AbstractColumn<T> makeFilterableLinkColumn( String name,
@@ -427,10 +474,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         defaultText,
                         filterable,
                         isMoRefString ) );
-                /*              String classes = "link";
-                                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
-                */
-            }
+             }
         };
     }
 
@@ -451,12 +495,33 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         labelProperty,
                         defaultText,
                         filterable ) );
-                /*              String classes = "link";
-                                 cellItem.add( new AttributeModifier( "class", true, new Model<String>( classes ) ) );
-                */
             }
         };
     }
+
+    protected AbstractColumn<T> makeFilterableColumn( String name,
+                                                          final String identifiableProperty,
+                                                          final String labelProperty,
+                                                          final String defaultText,
+                                                          final String titleProperty,
+                                                          final Filterable filterable ) {
+        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      final IModel<T> model ) {
+                cellItem.add( cellFilteredContent(
+                        id,
+                        model.getObject(),
+                        identifiableProperty,
+                        labelProperty,
+                        defaultText,
+                        titleProperty,
+                        filterable ) );
+            }
+        };
+    }
+
 
     /**
      * Defines a column containing external links.
@@ -480,13 +545,15 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 String url = (String) ChannelsUtils.getProperty( bean, urlProperty, null );
                 Component cellContent;
                 if ( url != null ) {
-                    String labelText = (String) ChannelsUtils.getProperty( bean, labelProperty, defaultText );
+                    String defaultTextValue = findStringValue( bean, defaultText );
+                    String labelText = (String) ChannelsUtils.getProperty( bean, labelProperty, defaultTextValue );
                     labelText = ( labelText == null || labelText.isEmpty() )
-                            ? ( defaultText == null ? "" : defaultText )
+                            ? ( defaultTextValue == null ? "" : defaultTextValue )
                             : labelText;
                     cellContent = new ExternalLinkPanel( id, url, labelText );
                 } else {
-                    cellContent = new Label( id, defaultText == null ? "" : defaultText );
+                    String defaultTextValue = findStringValue( bean, defaultText );
+                    cellContent = new Label( id, defaultText == null ? "" : defaultTextValue );
                 }
                 cellItem.add( cellContent );
             }
@@ -630,9 +697,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                                     property,
                                     null ) );
                 }
-                String labelText = (String) ChannelsUtils.getProperty( bean, labelProperty, defaultText );
+                String defaultTextValue = findStringValue( bean, defaultText );
+                String labelText = (String) ChannelsUtils.getProperty( bean, labelProperty, defaultTextValue );
                 labelText = ( labelText == null || labelText.isEmpty() )
-                        ? ( defaultText == null ? "" : defaultText )
+                        ? ( defaultTextValue == null ? "" : defaultTextValue )
                         : labelText;
                 ExpandLinkPanel<Identifiable> cellContent = new ExpandLinkPanel<Identifiable>(
                         id,
@@ -665,7 +733,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     /**
-     * Make actionlink column.
+     * Make actionLink column.
      *
      * @param name      column name
      * @param label     cell content
@@ -685,7 +753,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     /**
-     * Make actionlink column.
+     * Make actionLink column.
      *
      * @param name       column name
      * @param label      cell content
@@ -703,11 +771,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String cssClasses,
             final Updatable updatable
     ) {
-        return makeActionLinkColumn( name, label, action, null, property, null, updatable );
+        return makeActionLinkColumn( name, label, action, null, property, cssClasses, updatable );
     }
 
         /**
-        * Make actionlink column.
+        * Make actionLink column.
         *
         * @param name       column name
         * @param label      cell content

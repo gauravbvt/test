@@ -28,7 +28,7 @@ public class RegisteredOrganizationServiceImpl
         implements RegisteredOrganizationService {
 
     @Autowired
-    OrganizationRegistrationService organizationRegistrationService;
+    OrganizationParticipationService organizationParticipationService;
 
     public RegisteredOrganizationServiceImpl() {
     }
@@ -84,12 +84,14 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     @Transactional
-    public void removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity ) {
+    public boolean removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity ) {
         RegisteredOrganization registered = find( orgName, planCommunity );
         if ( registered != null ) {
-            if ( organizationRegistrationService.findRegistrationsFor( registered, planCommunity ).isEmpty() ) {
+            if ( organizationParticipationService.findRegistrationsFor( registered, planCommunity ).isEmpty() ) {
                 delete( registered );
+                return true;
             }
         }
+        return false;
     }
 }

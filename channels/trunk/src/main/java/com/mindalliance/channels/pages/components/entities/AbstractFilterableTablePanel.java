@@ -1,10 +1,9 @@
 package com.mindalliance.channels.pages.components.entities;
 
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -73,9 +72,9 @@ abstract public class AbstractFilterableTablePanel extends AbstractTablePanel im
      */
     protected boolean isFilteredOut( Object bean ) {
         for ( String property : filters.keySet() ) {
-            if ( !ModelObject.areEqualOrNull(
-                    (ModelObject) filters.get( property ),
-                    (ModelObject) ChannelsUtils.getProperty( bean, property, null ) ) ) {
+            if ( !ChannelsUtils.areEqualOrNull(
+                    filters.get( property ),
+                    ChannelsUtils.getProperty( bean, property, null ) ) ) {
                 return true;
             }
         }

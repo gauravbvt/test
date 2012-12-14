@@ -23,9 +23,10 @@ import java.util.Set;
  */
 public class Agency implements Nameable, Identifiable {
 
-    // Only one of organization or organizationRegistration must be set.
+    // Only one of fixedOrganization or organizationParticipation or registeredOrganization must be set.
     private Organization fixedOrganization;
-    private OrganizationRegistration organizationRegistration;
+    private RegisteredOrganization registeredOrganization;
+    private OrganizationParticipation organizationParticipation;
     private String name;
 
     public Agency( Organization fixedOrganization ) {
@@ -34,29 +35,42 @@ public class Agency implements Nameable, Identifiable {
         name = fixedOrganization.getName();
     }
 
-    public Agency( OrganizationRegistration organizationRegistration, PlanCommunity planCommunity ) {
-        this.organizationRegistration = organizationRegistration;
-        name = organizationRegistration.getRegisteredOrganization().getName( planCommunity );
+    public Agency( OrganizationParticipation organizationParticipation, PlanCommunity planCommunity ) {
+        this.organizationParticipation = organizationParticipation;
+        name = organizationParticipation.getRegisteredOrganization().getName( planCommunity );
+    }
+
+    public Agency( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
+        this.registeredOrganization = registeredOrganization;
+        name = registeredOrganization.getName( planCommunity );
     }
 
     public Organization getFixedOrganization() {
         return fixedOrganization;
     }
 
-    public OrganizationRegistration getOrganizationRegistration() {
-        return organizationRegistration;
+    public OrganizationParticipation getOrganizationParticipation() {
+        return organizationParticipation;
     }
 
-    public boolean isRegistered() {
-        assert ( fixedOrganization == null || organizationRegistration == null )
-                && !( fixedOrganization == null && organizationRegistration == null );
-        return organizationRegistration != null;
+    public RegisteredOrganization getRegisteredOrganization() {
+        return registeredOrganization;
+    }
+
+    public boolean isRegisteredByCommunity() {
+        if ( fixedOrganization != null ) return false;
+        if ( registeredOrganization != null )
+            return !registeredOrganization.isFixedOrganization();
+        if ( organizationParticipation != null )
+            return !organizationParticipation.getRegisteredOrganization().isFixedOrganization();
+        else
+            throw new IllegalStateException(  );
     }
 
     public List<Agent> getAgents( PlanCommunity planCommunity ) {
         Set<Agent> agents = new HashSet<Agent>();
         for ( Job job : getPlaceholderJobs( planCommunity ) ) {
-            Agent agent = new Agent( job.getActor(), organizationRegistration, planCommunity );
+            Agent agent = new Agent( job.getActor(), organizationParticipation, planCommunity );
             agents.add( agent );
         }
         for ( Job job : getFixedJobs( planCommunity ) ) {   // if any
@@ -73,12 +87,20 @@ public class Agency implements Nameable, Identifiable {
 
     @Override
     public long getId() {
-        return isRegistered() ? organizationRegistration.getId() : fixedOrganization.getId();
+        return fixedOrganization != null
+                ? fixedOrganization.getId()
+                : registeredOrganization != null
+                ? registeredOrganization.getId()
+                : organizationParticipation.getId();
     }
 
     @Override
     public String getDescription() {
-        return isRegistered() ? organizationRegistration.getDescription() : fixedOrganization.getDescription();
+        return fixedOrganization != null
+                ? fixedOrganization.getDescription()
+                : registeredOrganization != null
+                ? registeredOrganization.getDescription()
+                : organizationParticipation.getDescription();
     }
 
     @Override
@@ -103,18 +125,20 @@ public class Agency implements Nameable, Identifiable {
      * @return a list of jobs
      */
     public List<Job> getPlaceholderJobs( PlanCommunity planCommunity ) {
-        if ( isRegistered() ) {
-            return organizationRegistration.getPlaceholderJobs( planCommunity );
+        if ( organizationParticipation != null ) {
+            return organizationParticipation.getPlaceholderJobs( planCommunity );
         } else {
             return new ArrayList<Job>();
         }
     }
 
     public List<Job> getFixedJobs( PlanCommunity planCommunity ) {
-        if ( isRegistered() ) {
-            return organizationRegistration.getFixedJobs( planCommunity );
-        } else {
+        if ( organizationParticipation != null ) {
+            return organizationParticipation.getFixedJobs( planCommunity );
+        } else if ( fixedOrganization != null ) {
             return fixedOrganization.getJobs();
+        } else {
+            return new ArrayList<Job>();
         }
     }
 
@@ -122,8 +146,9 @@ public class Agency implements Nameable, Identifiable {
     public boolean equals( Object object ) {
         if ( object instanceof Agency ) {
             Agency other = (Agency) object;
-            return ChannelsUtils.bothNullOrEqual( fixedOrganization, other.getFixedOrganization() )
-                    && ChannelsUtils.bothNullOrEqual( organizationRegistration, other.getOrganizationRegistration() );
+            return ChannelsUtils.areEqualOrNull( fixedOrganization, other.getFixedOrganization() )
+                    && ChannelsUtils.areEqualOrNull( organizationParticipation, other.getOrganizationParticipation() )
+                    && ChannelsUtils.areEqualOrNull( registeredOrganization, other.getRegisteredOrganization() );
         } else {
             return false;
         }
@@ -133,7 +158,12 @@ public class Agency implements Nameable, Identifiable {
     public int hashCode() {
         int hash = 1;
         if ( fixedOrganization != null ) hash = hash * 31 + fixedOrganization.hashCode();
-        if ( organizationRegistration != null ) hash = hash * 31 + organizationRegistration.hashCode();
+        if ( organizationParticipation != null ) hash = hash * 31 + organizationParticipation.hashCode();
+        if ( registeredOrganization != null ) hash = hash * 31 + getRegisteredOrganization().hashCode();
         return hash;
+    }
+
+    public boolean isParticipatingAsSelf() {
+        return fixedOrganization != null && !fixedOrganization.isPlaceHolder();
     }
 }

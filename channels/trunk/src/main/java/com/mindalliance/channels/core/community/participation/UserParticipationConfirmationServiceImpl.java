@@ -70,10 +70,10 @@ public class UserParticipationConfirmationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "supervisorId", supervisor.getActorId() ) );
-        if ( supervisor.getOrganizationRegistration() == null )
-            criteria.add( Restrictions.isNull( "organizationRegistration" ) );
+        if ( supervisor.getOrganizationParticipation() == null )
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
-            criteria.add( Restrictions.eq( "organizationRegistration", supervisor.getOrganizationRegistration() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", supervisor.getOrganizationParticipation() ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<UserParticipationConfirmation>) criteria.list();
     }
@@ -98,10 +98,10 @@ public class UserParticipationConfirmationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "userParticipation", userParticipation ) );
         criteria.add( Restrictions.eq( "supervisorId", supervisor.getActorId() ) );
-        if ( supervisor.getOrganizationRegistration() == null )
-            criteria.add( Restrictions.isNull( "organizationRegistration" ) );
+        if ( supervisor.getOrganizationParticipation() == null )
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
-            criteria.add( Restrictions.eq( "organizationRegistration", supervisor.getOrganizationRegistration() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", supervisor.getOrganizationParticipation() ) );
         for ( UserParticipationConfirmation validation : (List<UserParticipationConfirmation>) criteria.list() ) {
             delete( validation );
         }
@@ -114,10 +114,10 @@ public class UserParticipationConfirmationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "userParticipation", userParticipation ) );
         criteria.add( Restrictions.eq( "supervisorId", supervisor.getActorId() ) );
-        if ( supervisor.getOrganizationRegistration() == null )
-            criteria.add( Restrictions.isNull( "organizationRegistration" ) );
+        if ( supervisor.getOrganizationParticipation() == null )
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
-            criteria.add( Restrictions.eq( "organizationRegistration", supervisor.getOrganizationRegistration() ) );
+            criteria.add( Restrictions.eq( "organizationParticipation", supervisor.getOrganizationParticipation() ) );
         return !criteria.list().isEmpty();
     }
 

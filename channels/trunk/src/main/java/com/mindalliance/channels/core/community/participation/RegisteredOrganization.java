@@ -54,7 +54,9 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     private List<OrganizationContactInfo> contactInfoList;
     @OneToMany( mappedBy = "registeredOrganization", cascade = CascadeType.ALL )
     @Transient
-    private List<OrganizationRegistration> registrationList;
+    private List<OrganizationParticipation> registrationList;
+
+    public RegisteredOrganization() {}
 
     public RegisteredOrganization( String username, String name, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
@@ -71,7 +73,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public boolean isFixedOrganization() {
-        return fixedOrganizationId == -1;
+        return fixedOrganizationId != -1;
     }
 
     public List<OrganizationContactInfo> getContactInfoList() {
@@ -113,7 +115,8 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         try {
             return planCommunity.getPlanService().find( Organization.class, fixedOrganizationId );
         } catch ( NotFoundException e ) {
-            LOG.warn( "Organization not found at " + fixedOrganizationId );
+            if ( fixedOrganizationId > -1 )
+                LOG.warn( "Organization not found at " + fixedOrganizationId );
             return null;
         }
     }
@@ -139,11 +142,11 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         this.parentRegistered = parentRegistered;
     }
 
-    public List<OrganizationRegistration> getRegistrationList() {
+    public List<OrganizationParticipation> getRegistrationList() {
         return registrationList;
     }
 
-    public void setRegistrationList( List<OrganizationRegistration> registrationList ) {
+    public void setRegistrationList( List<OrganizationParticipation> registrationList ) {
         this.registrationList = registrationList;
     }
 
@@ -152,7 +155,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         if ( object instanceof RegisteredOrganization ) {
             RegisteredOrganization other = (RegisteredOrganization)object;
             return fixedOrganizationId == other.getFixedOrganizationId()
-                    && ChannelsUtils.bothNullOrEqual( name, other.getName( ) );
+                    && ChannelsUtils.areEqualOrNull( name, other.getName( ) );
         } else {
             return false;
         }

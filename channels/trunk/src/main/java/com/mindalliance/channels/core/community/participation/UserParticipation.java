@@ -40,10 +40,10 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     private long actorId;
 
     /**
-     * User participates as actor in registered organization derived from actor in placeholder organization.
+     * User participates as actor in plan-defined organization or in an organization participating as a placeholder organization.
      */
     @ManyToOne
-    private OrganizationRegistration organizationRegistration;
+    private OrganizationParticipation organizationParticipation;
 
     private String supervisorsNotified;
 
@@ -72,7 +72,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
                               PlanCommunity planCommunity ) {
         this( username, participatingUser, planCommunity );
         this.actorId = agent.getActorId();
-        organizationRegistration = agent.getOrganizationRegistration();
+        organizationParticipation = agent.getOrganizationParticipation();
     }
 
     public UserParticipation( UserParticipation participation ) {
@@ -108,10 +108,10 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     public Agent getAgent( PlanCommunity planCommunity ) {
         Actor actor = getActor( planCommunity );
         if ( actor == null ) return null;
-        if ( organizationRegistration == null ) {
+        if ( organizationParticipation == null ) {
             return new Agent( actor );
         } else {
-            return new Agent( actor, organizationRegistration, planCommunity );
+            return new Agent( actor, organizationParticipation, planCommunity );
         }
     }
 
@@ -168,17 +168,17 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         this.whenAccepted = whenAccepted;
     }
 
-    public OrganizationRegistration getOrganizationRegistration() {
-        return organizationRegistration;
+    public OrganizationParticipation getOrganizationParticipation() {
+        return organizationParticipation;
     }
 
-    public void setOrganizationRegistration( OrganizationRegistration organizationRegistration ) {
-        this.organizationRegistration = organizationRegistration;
+    public void setOrganizationParticipation( OrganizationParticipation organizationParticipation ) {
+        this.organizationParticipation = organizationParticipation;
     }
 
     public boolean isForAgent( Agent agent ) {
         return actorId == agent.getActorId()
-                && ( ChannelsUtils.bothNullOrEqual( organizationRegistration, agent.getOrganizationRegistration() ) );
+                && ( ChannelsUtils.areEqualOrNull( organizationParticipation, agent.getOrganizationParticipation() ) );
     }
 
     public List<String> usersNotifiedToValidate() {

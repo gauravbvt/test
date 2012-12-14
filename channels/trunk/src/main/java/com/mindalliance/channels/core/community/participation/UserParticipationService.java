@@ -76,4 +76,8 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
     void refuse( UserParticipation participation );
 
     boolean isUserParticipatingAs( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
+
+    List<UserParticipation> listUserParticipationIn(
+            OrganizationParticipation organizationParticipation,
+            PlanCommunity planCommunity );
 }

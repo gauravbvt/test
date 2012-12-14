@@ -15,11 +15,10 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
-import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -51,7 +50,7 @@ import java.util.List;
  * Date: 12/4/12
  * Time: 11:14 AM
  */
-public class UsersParticipationPanel extends AbstractUpdatablePanel implements NameRangeable, Filterable {
+public class UsersParticipationPanel extends AbstractUpdatablePanel implements NameRangeable {
 
     private static final String ALL_USERS = "All users";
     private static final String COLLABORATORS = "Users I collaborate with";
@@ -71,10 +70,6 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
      * Selected name range.
      */
     private NameRange nameRange = new NameRange();
-    /**
-     * Model objects filtered on (show only where so and so is the actor etc.)
-     */
-    private List<Identifiable> filters = new ArrayList<Identifiable>();
 
     /**
      * Maximum number of rows shown in table at a time.
@@ -88,7 +83,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private ChannelsUser assignmentUser;
     private Agency assignmentAgency;
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm z" );
     private UserParticipation addedParticipation;
 
     public UsersParticipationPanel( String id, IModel<? extends Identifiable> model ) {
@@ -105,12 +100,12 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     }
 
     private void addUsersDropDown() {
-        DropDownChoice<String> usersChoice = new DropDownChoice<String>(
+        DropDownChoice<String> usersRelationshipChoice = new DropDownChoice<String>(
                 "users",
                 new PropertyModel<String>( this, "userRelationship" ),
                 Arrays.asList( USER_CHOICES )
         );
-        usersChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        usersRelationshipChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 resetUserParticipationWrappers();
@@ -120,7 +115,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 target.add( usersParticipationTable );
             }
         } );
-        add( usersChoice );
+        add( usersRelationshipChoice );
     }
 
     private void addNameRangePanel() {
@@ -154,25 +149,6 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     public void setNameRange( AjaxRequestTarget target, NameRange range ) {
         nameRange = range;
         nameRangePanel.setSelected( target, range );
-        resetUserParticipationWrappers();
-        addUsersParticipationTable();
-        target.add( usersParticipationTable );
-    }
-
-
-    @Override
-    public boolean isFiltered( Identifiable identifiable, String property ) {
-        return filters.contains( identifiable );
-    }
-
-    @Override
-    public void toggleFilter( Identifiable identifiable, String property, AjaxRequestTarget target ) {
-        // Property ignored since no two properties filtered are ambiguous on type.
-        if ( isFiltered( identifiable, property ) ) {
-            filters.remove( identifiable );
-        } else {
-            filters.add( identifiable );
-        }
         resetUserParticipationWrappers();
         addUsersParticipationTable();
         target.add( usersParticipationTable );
@@ -215,9 +191,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                         planCommunity
                 );
                 for ( UserParticipation participation : userParticipationList ) {
-                    if ( !isFilteredOut( participation ) ) {
-                        userParticipationWrappers.add( new UserParticipationWrapper( user, participation ) );
-                    }
+                     userParticipationWrappers.add( new UserParticipationWrapper( user, participation ) );
                 }
                 if ( userParticipationList.isEmpty() ) {
                     userParticipationWrappers.add( new UserParticipationWrapper( user ) );
@@ -244,11 +218,6 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 return participationManager.areColleagues( planCommunity, user, getUser() );
             else throw new RuntimeException( "Unknown relationship" );
         }
-    }
-
-    private boolean isFilteredOut( UserParticipation participation ) {
-        Agent agent = participation.getAgent( getPlanCommunity() );
-        return !filters.isEmpty() && !filters.contains( agent );
     }
 
 /*
@@ -697,9 +666,9 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     /**
      * User participation table.
      */
-    private class UsersParticipationTable extends AbstractTablePanel<UserParticipationWrapper> {
+    private class UsersParticipationTable extends AbstractFilterableTablePanel {
 
-        IModel<List<UserParticipationWrapper>> userParticipationModel;
+        private IModel<List<UserParticipationWrapper>> userParticipationModel;
 
         public UsersParticipationTable( String id, IModel<List<UserParticipationWrapper>> userParticipationModel ) {
             super( id, MAX_ROWS );
@@ -707,12 +676,19 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             initTable();
         }
 
+        @SuppressWarnings( "unchecked" )
         private void initTable() {
             final List<IColumn<UserParticipationWrapper>> columns = new ArrayList<IColumn<UserParticipationWrapper>>();
             columns.add( makeColumn( "User", "normalizedFullName", EMPTY ) );
             columns.add( makeColumn( "Email", "email", EMPTY ) );
             columns.add( makeColumn( "Is my", "relationshipsToUser", EMPTY ) );
-            columns.add( makeColumn( "Participates as", "agentName", null, EMPTY, "agentDescription" ) );
+            columns.add( makeFilterableColumn(
+                    "Participates as",
+                    "agent",
+                    "agentName",
+                    EMPTY,
+                    "agentDescription",
+                    UsersParticipationTable.this ) );
             columns.add( makeColumn( "Accepted?", "accepted", EMPTY ) );
             columns.add( makeColumn( "As of", "whenAccepted", EMPTY ) );
             columns.add( makeColumn( "OKed by supervisors?", "confirmed", EMPTY ) );
@@ -724,14 +700,33 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                     "more",
                     UsersParticipationPanel.this ) );
             // provider and table
-            add( new AjaxFallbackDefaultDataTable<UserParticipationWrapper>(
+            addOrReplace( new AjaxFallbackDefaultDataTable<UserParticipationWrapper>(
                     "userParticipationTable",
                     columns,
                     new SortableBeanProvider<UserParticipationWrapper>(
-                            userParticipationModel.getObject(),
+                            getFilteredParticipations(),
                             "normalizedFullName" ),
                     getPageSize() ) );
         }
+
+        @SuppressWarnings( "unchecked" )
+        private List<UserParticipationWrapper> getFilteredParticipations() {
+            return (List<UserParticipationWrapper>) CollectionUtils.select(
+                    userParticipationModel.getObject(),
+                    new Predicate() {
+                        public boolean evaluate( Object obj ) {
+                            return !isFilteredOut( obj );
+                        }
+                    }
+            );
+        }
+
+        @Override
+        protected void resetTable( AjaxRequestTarget target ) {
+            initTable();
+            target.add( this );
+        }
+
     }
 
 }

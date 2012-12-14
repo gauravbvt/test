@@ -7,7 +7,23 @@
         lang="en">
 <body>
 <wicket:panel>
-    UNDER CONSTRUCTION
+    <div class="filters">
+        Show
+        <select wicket:id="agenciesFilter">
+            <option>All agencies</option>
+        </select>
+        <span wicket:id="nameRanges">[name range panel]</span>
+    </div>
+    <div wicket:id="agenciesTable">[user participation table]</div>
+    <div class="participation" wicket:id="registeringContainer">
+        <h4>New registration</h4>
+        Register organization named <input wicket:id="orgName" type="text" width="80"/>
+        <div wicket:id="placeholdersContainer">
+            as
+            <select wicket:id="placeholders"><option>org name</option></select>
+        </div>
+    </div>
+    <div wicket:id="agencyProfile">[agency profile panel]</div>
 </wicket:panel>
 </body>
 </html>

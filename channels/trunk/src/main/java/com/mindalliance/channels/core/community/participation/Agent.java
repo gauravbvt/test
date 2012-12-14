@@ -17,7 +17,7 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 public class Agent implements Nameable, Identifiable {
 
     private Actor actor;
-    private OrganizationRegistration organizationRegistration;
+    private OrganizationParticipation organizationParticipation;
     private String name;
 
     public Agent( Actor actor ) {
@@ -25,18 +25,18 @@ public class Agent implements Nameable, Identifiable {
         name = actor.getName();
     }
 
-    public Agent( Actor actor, OrganizationRegistration organizationRegistration, PlanCommunity planCommunity ) {
+    public Agent( Actor actor, OrganizationParticipation organizationParticipation, PlanCommunity planCommunity ) {
         this.actor = actor;
-        this.organizationRegistration = organizationRegistration;
-        if ( organizationRegistration != null ) {
-            name = actor.getName() + " in " + new Agency( organizationRegistration, planCommunity ).getName();
+        this.organizationParticipation = organizationParticipation;
+        if ( organizationParticipation != null ) {
+            name = actor.getName() + " in " + new Agency( organizationParticipation, planCommunity ).getName();
         } else {
             name = actor.getName();
         }
     }
 
     public Agent( Actor actor, Agency agency, PlanCommunity planCommunity ) {
-        this( actor, agency.getOrganizationRegistration(), planCommunity );
+        this( actor, agency.getOrganizationParticipation(), planCommunity );
     }
 
     public Actor getActor() {
@@ -47,8 +47,8 @@ public class Agent implements Nameable, Identifiable {
         return actor.getId();
     }
 
-    public OrganizationRegistration getOrganizationRegistration() {
-        return organizationRegistration;
+    public OrganizationParticipation getOrganizationParticipation() {
+        return organizationParticipation;
     }
 
     /**
@@ -57,7 +57,7 @@ public class Agent implements Nameable, Identifiable {
      * @return a boolean
      */
     public boolean isRegistered() {
-        return organizationRegistration != null;
+        return organizationParticipation != null;
     }
 
 
@@ -93,8 +93,8 @@ public class Agent implements Nameable, Identifiable {
 
     public boolean isValid( PlanCommunity planCommunity ) {
         return actor != null
-                && ( planCommunity.getPlanService().listActualEntities( Actor.class ).contains(  actor ))
-                && ( organizationRegistration == null || organizationRegistration.isValidAgent( this, planCommunity ) );
+                && ( planCommunity.getPlanService().listActualEntities( Actor.class ).contains(  actor ))/*
+                && ( organizationParticipation == null || organizationParticipation.isValidAgent( this, planCommunity ) )*/;
     }
 
     public boolean isParticipationUserAssignable() {
@@ -118,7 +118,7 @@ public class Agent implements Nameable, Identifiable {
         if ( object instanceof Agent ) {
             Agent other = (Agent) object;
             return actor.equals( other.getActor() )
-                    && ChannelsUtils.bothNullOrEqual( organizationRegistration, other.getOrganizationRegistration() );
+                    && ChannelsUtils.areEqualOrNull( organizationParticipation, other.getOrganizationParticipation() );
         } else {
             return false;
         }
@@ -128,7 +128,7 @@ public class Agent implements Nameable, Identifiable {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + actor.hashCode();
-        if ( organizationRegistration != null ) hash = hash * 31 + organizationRegistration.hashCode();
+        if ( organizationParticipation != null ) hash = hash * 31 + organizationParticipation.hashCode();
         return hash;
     }
 
