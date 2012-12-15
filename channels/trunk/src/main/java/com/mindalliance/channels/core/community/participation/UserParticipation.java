@@ -82,6 +82,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
                 participation.getUsername() );
         this.participant = participation.getParticipant();
         this.actorId = participation.getActorId();
+        this.organizationParticipation = participation.getOrganizationParticipation();
     }
 
     public ChannelsUserInfo getParticipant() {
@@ -262,5 +263,27 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     public String getLabel() {
         return "Participation";
     }
+
+    @Override
+    public boolean equals( Object object ) {
+        if ( object instanceof  UserParticipation ) {
+            UserParticipation other = (UserParticipation)object;
+            return participant.equals(  other.getParticipant() )
+                    && actorId == other.getActorId()
+                    && ChannelsUtils.areEqualOrNull( organizationParticipation, other.getOrganizationParticipation() );
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + participant.hashCode();
+        hash = hash * 31 + new Long( actorId ).hashCode();
+        if ( organizationParticipation != null ) hash = hash * 31 + organizationParticipation.hashCode();
+        return hash;
+    }
+
 
 }

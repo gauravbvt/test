@@ -28,8 +28,8 @@ public interface ExecutedCommandService extends CommandListener, GenericSqlServi
     /**
      * When command execution data for a plan was last modified since server is up.
      *
-     * @param planUri a string
+     * @param planCommunityUri a string
      * @return a date
      */
-    Date getWhenLastChanged( String planUri );
+    Date getWhenLastChanged( String planCommunityUri );
 }

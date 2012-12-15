@@ -46,7 +46,7 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
     /**
      * Delete all participations by a user.
      *
-     * @param user a user for which participation is to be terminated
+     * @param user     a user for which participation is to be terminated
      * @param username user deleting the participations
      */
     void deleteAllParticipations( ChannelsUser user, String username );
@@ -68,7 +68,7 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
 
     List<ChannelsUserInfo> findUsersParticipatingAs( Agent agent, PlanCommunity planCommunity );
 
-    void deleteParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
+    boolean deleteParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
 
 
     void accept( UserParticipation participation );

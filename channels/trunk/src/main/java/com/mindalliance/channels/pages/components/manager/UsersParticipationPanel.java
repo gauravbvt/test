@@ -85,6 +85,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm z" );
     private UserParticipation addedParticipation;
+    private WebMarkupContainer agentAssignmentContainer;
 
     public UsersParticipationPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
@@ -191,7 +192,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                         planCommunity
                 );
                 for ( UserParticipation participation : userParticipationList ) {
-                     userParticipationWrappers.add( new UserParticipationWrapper( user, participation ) );
+                    userParticipationWrappers.add( new UserParticipationWrapper( user, participation ) );
                 }
                 if ( userParticipationList.isEmpty() ) {
                     userParticipationWrappers.add( new UserParticipationWrapper( user ) );
@@ -335,7 +336,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addAssignmentAgent();
-                target.add( assignmentContainer );
+                target.add( agentAssignmentContainer );
             }
         } );
         container.add( agencyChoice );
@@ -382,10 +383,10 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     }
 
     private void addAssignmentAgent() {
-        WebMarkupContainer container = new WebMarkupContainer( "agentsContainer" );
-        container.setOutputMarkupId( true );
-        makeVisible( container, assignmentAgency != null );
-        assignmentContainer.addOrReplace( container );
+        agentAssignmentContainer = new WebMarkupContainer( "agentsContainer" );
+        agentAssignmentContainer.setOutputMarkupId( true );
+        makeVisible( agentAssignmentContainer, assignmentAgency != null );
+        assignmentContainer.addOrReplace( agentAssignmentContainer );
         List<Agent> availableParticipationAgents = agentsWithAvailableParticipation();
         DropDownChoice<Agent> agentChoice = new DropDownChoice<Agent>(
                 "agents",
@@ -393,8 +394,8 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 availableParticipationAgents,
                 new ChoiceRenderer<Agent>() {
                     @Override
-                    public Object getDisplayValue( Agent actor ) {
-                        return actor.getName();
+                    public Object getDisplayValue( Agent agent ) {
+                        return agent.getActorName();
                     }
 
                     @Override
@@ -413,12 +414,12 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 target.add( assignmentContainer );
                 update( target, Change.message(
                         addedParticipation != null
-                            ? addedParticipation.asString( getPlanCommunity() ) + " was added"
-                            : "Failed to add participation") );
+                                ? "Added " + addedParticipation.asString( getPlanCommunity() )
+                                : "Failed to add participation" ) );
                 addedParticipation = null;
             }
         } );
-        container.add( agentChoice );
+        agentAssignmentContainer.add( agentChoice );
     }
 
     private List<Agent> agentsWithAvailableParticipation() {
@@ -444,12 +445,17 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         if ( object instanceof UserParticipationWrapper ) {
             UserParticipationWrapper wrapper = (UserParticipationWrapper) object;
             if ( action.equals( "unassign" ) ) {
-                wrapper.unassign();
+                String userParticipationString = wrapper.toString();
+                boolean success = wrapper.unassign();
                 resetUserParticipationWrappers();
                 addUsersParticipationTable();
                 target.add( usersParticipationTable );
                 addAssigning();
                 target.add( assignmentContainer );
+                update( target, Change.message(
+                        success
+                                ? "Removed " + userParticipationString
+                                : "Failed to remove " + userParticipationString ) );
             }
         }
     }
@@ -507,11 +513,19 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         PlanCommunity planCommunity = getPlanCommunity();
         ParticipationManager participationManager = planCommunity.getParticipationManager();
         if ( participationManager.isParticipationAvailable( agent, assignmentUser, planCommunity ) ) {
-            addedParticipation = planCommunity.getUserParticipationService().addParticipation(
-                    getUsername(),
-                    assignmentUser,
-                    agent,
-                    planCommunity );
+            if ( getUser().equals( assignmentUser ) ) {
+                addedParticipation = planCommunity.getUserParticipationService().addAcceptedParticipation(
+                        getUsername(),
+                        assignmentUser,
+                        agent,
+                        planCommunity );
+            } else {
+                addedParticipation = planCommunity.getUserParticipationService().addParticipation(
+                        getUsername(),
+                        assignmentUser,
+                        agent,
+                        planCommunity );
+            }
         }
         assignmentAgency = null;
     }
@@ -619,12 +633,13 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         }
 
         public String getConfirmed() {
-            if ( userParticipation == null )
+            if ( userParticipation == null
+                    || !userParticipation.getAgent( getPlanCommunity() ).isSupervisedParticipation() )
                 return null;
             else {
                 UserParticipationConfirmationService userParticipationConfirmationService
                         = getPlanCommunity().getUserParticipationConfirmationService();
-                return userParticipationConfirmationService.isConfirmedByAllSupervisors(
+                return  userParticipationConfirmationService.isConfirmedByAllSupervisors(
                         userParticipation,
                         getPlanCommunity() )
                         ? "Yes"
@@ -633,14 +648,15 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         }
 
 
-        public void unassign() {
+        public boolean unassign() {
             if ( userParticipation != null && isUserInCharge() ) {
                 PlanCommunity planCommunity = getPlanCommunity();
-                planCommunity.getUserParticipationService().deleteParticipation(
+                return planCommunity.getUserParticipationService().deleteParticipation(
                         new ChannelsUser( userParticipation.getParticipant(), planCommunity ),
                         userParticipation.getAgent( planCommunity ),
                         planCommunity );
             }
+            return false;
         }
 
         public boolean isUserInCharge() {
@@ -659,6 +675,14 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             return isUserInCharge()
                     ? getUser()
                     : null;
+        }
+
+        public String toString() {
+            if ( userParticipation != null ) {
+                return userParticipation.asString( getPlanCommunity() );
+            } else {
+                return user.getFullName();
+            }
         }
     }
 

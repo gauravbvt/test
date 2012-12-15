@@ -57,12 +57,12 @@ public class DirectoryData implements Serializable {
 
     @XmlElement( name = "plan" )
     public PlanIdentifierData getPlanIdentifier() {
-        return new PlanIdentifierData( proceduresData.getPlanCommunity() );
+        return proceduresData.getPlanIdentifier();
     }
 
     @XmlElement
     public String getDateVersioned() {
-        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( proceduresData.getPlan().getWhenVersioned() );
+        return proceduresData.getDateVersioned();
     }
 
     @XmlElement( name = "employment" )

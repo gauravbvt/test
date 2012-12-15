@@ -37,7 +37,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     private RegisteredOrganizationService registeredOrganizationService;
 
     @Autowired
-    private OrganizationParticipationService organizationorganizationParticipationServiceService;
+    private OrganizationParticipationService organizationParticipationServiceService;
 
     @Autowired
     private PlanManager planManager;
@@ -56,12 +56,12 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 agencies.add( new Agency( organization ) );
         }
         // registered as placeholder
-        agencies.addAll( organizationorganizationParticipationServiceService.listRegisteredAgencies( planCommunity ) );
+        agencies.addAll( organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) );
         // registered by community but not registered as placeholders
         for ( RegisteredOrganization registeredOrganization
                 : registeredOrganizationService.getAllRegisteredOrganizations( planCommunity ) ) {
             if ( !registeredOrganization.isFixedOrganization()
-                    && organizationorganizationParticipationServiceService.findRegistrationsFor(
+                    && organizationParticipationServiceService.findRegistrationsFor(
                     registeredOrganization,
                     planCommunity ).isEmpty() ) {
                 agencies.add( new Agency( registeredOrganization, planCommunity ) );
@@ -90,7 +90,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         // Registered agents
-        for ( Agency agency : organizationorganizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
+        for ( Agency agency : organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
             if ( agency.isRegisteredByCommunity() )
                 agents.addAll( agency.getAgents( planCommunity ) );
         }
@@ -104,16 +104,19 @@ public class ParticipationManagerImpl implements ParticipationManager {
         List<Agent> agents = new ArrayList<Agent>();
         // In fixed organizations
         for ( Actor actor : planService.listActualEntities( Actor.class ) ) {
-            Agent agent = new Agent( actor );
-            if ( isParticipationSelfAssignable(
-                    agent,
-                    user,
-                    planCommunity ) ) {
-                agents.add( agent );
+            if ( actorHasNonPlaceholderEmployers( actor, planCommunity ) ) {
+                Agent agent = new Agent( actor );
+                if ( isParticipationSelfAssignable(
+                        agent,
+                        user,
+                        planCommunity ) ) {
+                    agents.add( agent );
+                }
             }
+
         }
         // In registered organizations
-        for ( Agency agency : organizationorganizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
+        for ( Agency agency : organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
             for ( Agent agent : agency.getAgents( planCommunity ) ) {
                 if ( isParticipationSelfAssignable(
                         agent,
@@ -124,6 +127,18 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         return agents;
+    }
+
+    private boolean actorHasNonPlaceholderEmployers( Actor actor, PlanCommunity planCommunity ) {
+        return CollectionUtils.exists(
+                planCommunity.getPlanService().findAllEmploymentsForActor( actor ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !( (Employment) object ).getOrganization().isPlaceHolder();
+                    }
+                }
+        );
     }
 
     @Override
@@ -174,7 +189,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         // in registered organizations
         // When a fixed organization is registered under a placeholder,
         // it has the jobs it derives from the placeholder in addition to the jobs it already defines.
-        for ( Agency agency : organizationorganizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
+        for ( Agency agency : organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
             for ( Job job : agency.getPlaceholderJobs( planCommunity ) ) {
                 if ( new Agent( job.getActor(), agency, planCommunity ).equals( agent ) ) {
                     if ( job.getSupervisor() != null ) {

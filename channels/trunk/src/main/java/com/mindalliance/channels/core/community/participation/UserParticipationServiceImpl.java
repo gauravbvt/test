@@ -406,16 +406,19 @@ public class UserParticipationServiceImpl
 
     @Override
     @Transactional
-    public void deleteParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity ) {
+    public boolean deleteParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity ) {
+        boolean success = false;
         if ( agent != null ) {
             for ( UserParticipation participation : getParticipationsAsAgent( agent, planCommunity ) ) {
                 if ( participation.getParticipantUsername().equals( user.getUsername() ) ) {
                     userParticipationConfirmationService.deleteConfirmations( participation );
                     delete( participation );
+                    success = true;
                 }
 
             }
         }
+        return success;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -425,6 +428,11 @@ public class UserParticipationServiceImpl
         criteria.add( Restrictions.eq( "communityUri", participation.getCommunityUri() ) );
         criteria.add( Restrictions.eq( "participant", participation.getParticipant() ) );
         criteria.add( Restrictions.eq( "actorId", participation.getActorId() ) );
+        if ( participation.getOrganizationParticipation() == null ) {
+            criteria.add( Restrictions.isNull( "organizationParticipation" ) );
+        } else {
+            criteria.add( Restrictions.eq( "organizationParticipation", participation.getOrganizationParticipation() ) );
+        }
         return (List<UserParticipation>) criteria.list();
     }
 

@@ -77,9 +77,6 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     private DiagramFactory diagramFactory;
 
     @SpringBean
-    private ChannelsUser user;
-
-    @SpringBean
     private UserParticipationService userParticipationService;
 
     @SpringBean
@@ -226,7 +223,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      * @return a string
      */
     protected String getUsername() {
-        return user.getUsername();
+        return getUser().getUsername();
     }
 
     protected Change getChange() {
@@ -409,7 +406,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     public ChannelsUser getUser() {
-        return user;
+        return ChannelsUser.current();
     }
 
     /**
@@ -419,7 +416,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     @Override
     public Plan getPlan() {
-        return user.plan();
+        return getUser().getPlan();
     }
 
     protected String planVersionUri() {
@@ -574,7 +571,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected Actor findActor( ChannelsUser use ) {
         final QueryService queryService = getQueryService();
         List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
-                user,
+                getUser(),
                 getPlanCommunity() );
         List<Actor> actors = (List<Actor>) CollectionUtils.collect(
                 participations,

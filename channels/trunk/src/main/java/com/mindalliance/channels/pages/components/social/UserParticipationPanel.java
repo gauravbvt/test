@@ -32,7 +32,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -144,17 +146,22 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
 
     private List<ParticipationWrapper> openAndConfirmedParticipationWrappers() {
-        List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
+        Set<UserParticipation> participationSet = new HashSet<UserParticipation>(  );
         for ( UserParticipation participation : unconstrainedUnacceptedParticipations() ) {
-            wrappers.add(  new ParticipationWrapper(  participation ) );
+            participationSet.add( participation );
         }
         final List<UserParticipation> unsupervisedParticipations = unsupervisedParticipations();
         for ( UserParticipation participation : unsupervisedParticipations ) {
-            wrappers.add( new ParticipationWrapper( participation ) );
+            participationSet.add( participation );
         }
         final List<UserParticipation> confirmedSupervisedParticipations = confirmedSupervisedParticipations();
         for ( UserParticipation participation : confirmedSupervisedParticipations ) {
-            wrappers.add( new ParticipationWrapper( participation ) );
+            participationSet.add( participation );
+        }
+        List<UserParticipation> list = new ArrayList<UserParticipation>( participationSet );
+        List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();
+        for ( UserParticipation participation : participationSet ) {
+            wrappers.add(  new ParticipationWrapper( participation ) );
         }
         Collections.sort(
                 wrappers,
@@ -173,14 +180,14 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private List<UserParticipation> unconstrainedUnacceptedParticipations() {
-        List<UserParticipation> participations = new ArrayList<UserParticipation>(  );
+        Set<UserParticipation> participations = new HashSet<UserParticipation>(  );
         PlanCommunity planCommunity = getPlanCommunity();
         for ( Agent agent : participationManager.findSelfAssignableOpenAgents( planCommunity, getUser() ) ) {
             if ( agent.isUnconstrainedParticipation() ) {
                 participations.add( new UserParticipation(  getUsername(),  getUser(),  agent, planCommunity ) );
             }
         }
-        return participations;
+        return new ArrayList<UserParticipation>( participations );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -227,17 +234,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
 
     private String getAssignation( Agent agent ) {
-        StringBuilder sb = new StringBuilder();
-        if ( agent != null ) {
-            sb.append( agent.getName() );
-            String channelsString = agent.getChannelsString();  // todo - need agent-specific channels (not just actor-specific)
-            if ( !channelsString.isEmpty() ) {
-                sb.append( ", reachable via " );
-                sb.append( channelsString );
-            }
-            sb.append( '.' );
-        }
-        return sb.toString();
+        return agent != null ? agent.getName() : "?";
     }
 
     private void addToBeConfirmedParticipation() {
@@ -327,8 +324,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 availableParticipationAgents,
                 new ChoiceRenderer<Agent>() {
                     @Override
-                    public Object getDisplayValue( Agent actor ) {
-                        return actor.getName();
+                    public Object getDisplayValue( Agent agent ) {
+                        return agent.getActorName();
                     }
 
                     @Override
@@ -608,6 +605,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                             planCommunity );
                 }
             }
+            resetAll();
             selectedAvailableParticipationAgency = null;
             // getPlanManager().clearCache(); // Must manually clear the cache
         }

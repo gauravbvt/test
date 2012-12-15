@@ -269,7 +269,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.MediumWithoutMode"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>--> <!-- TODO Apply to plan community -->
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowOverUndersecuredMedium"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.BroadcastOnlyChannels"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumDelegation"/>

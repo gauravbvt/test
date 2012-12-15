@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,14 +34,14 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     private static final Logger LOG = LoggerFactory.getLogger( RegisteredOrganization.class );
 
     /**
-     * The id of a plan-defined organization this proxies. Null if the organization is not plan-defined.
+     * The id of a plan-defined organization this proxies. -1 if the organization is not plan-defined.
      */
     private long fixedOrganizationId = -1;
-    @Column(length=1000)
+    @Column( length = 1000 )
     private String name;
-    @Column(length=2000)
+    @Column( length = 2000 )
     private String description;
-    @Column(length=2000)
+    @Column( length = 2000 )
     private String mission;
     private long parentId;
     /**
@@ -56,7 +55,8 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     @Transient
     private List<OrganizationParticipation> registrationList;
 
-    public RegisteredOrganization() {}
+    public RegisteredOrganization() {
+    }
 
     public RegisteredOrganization( String username, String name, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
@@ -100,14 +100,17 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         this.mission = mission;
     }
 
+    public String getCommunityGivenName() {
+        return name;
+    }
+
     public String getName( PlanCommunity planCommunity ) {
         if ( name != null ) {
             return name;
-        }
-        else {
+        } else {
             Organization org = getFixedOrganization( planCommunity );
-                assert org == null || org.isActual();
-                return org == null ? "?" : org.getName();
+            assert org == null || org.isActual();
+            return org == null ? "?" : org.getName();
         }
     }
 
@@ -150,12 +153,19 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         this.registrationList = registrationList;
     }
 
+    public boolean isCommunityDefined() {
+        return fixedOrganizationId == -1;
+    }
+
     @Override
     public boolean equals( Object object ) {
         if ( object instanceof RegisteredOrganization ) {
-            RegisteredOrganization other = (RegisteredOrganization)object;
-            return fixedOrganizationId == other.getFixedOrganizationId()
-                    && ChannelsUtils.areEqualOrNull( name, other.getName( ) );
+            RegisteredOrganization other = (RegisteredOrganization) object;
+            if ( isCommunityDefined() ) {
+                return name.equals( other.getCommunityGivenName() );
+            } else {
+                return fixedOrganizationId == other.getFixedOrganizationId();
+            }
         } else {
             return false;
         }
@@ -164,8 +174,11 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + new Long( fixedOrganizationId ).hashCode();
-        if ( name != null ) hash = hash * 31 + name.hashCode();
+        if ( isCommunityDefined() ) {
+            hash = hash * 31 + name.hashCode();
+        } else {
+            hash = hash * 31 + new Long( fixedOrganizationId ).hashCode();
+        }
         return hash;
     }
 
@@ -176,9 +189,9 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
             if ( org != null )
                 return Collections.unmodifiableList( org.getJobs() );
             else
-                return new ArrayList<Job>(  );
+                return new ArrayList<Job>();
         } else {
-            return new ArrayList<Job>(  );
+            return new ArrayList<Job>();
         }
     }
 

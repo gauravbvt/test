@@ -180,7 +180,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = executedCommandService.getWhenLastChanged( planVersionUri() );
+        Date whenLastChanged = executedCommandService.getWhenLastChanged( getPlanCommunity().getUri() );
         if ( whenLastChanged != null && whenLastChanged.after( whenLastRefreshed ) ) {
             addExecutedCommands();
             adjustComponents( target );

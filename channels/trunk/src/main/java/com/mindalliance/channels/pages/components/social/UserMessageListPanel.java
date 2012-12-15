@@ -480,7 +480,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void refresh( AjaxRequestTarget target, Change change ) {
-        Date whenLastChanged = userMessageService.getWhenLastChanged( planVersionUri() );
+        Date whenLastChanged = userMessageService.getWhenLastChanged( getPlanCommunity().getUri() );
         if ( whenLastChanged == null || whenLastChanged.after( whenLastRefreshed ) ) {
             addUserMessages();
             adjustComponents( target );

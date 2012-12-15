@@ -10,7 +10,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.Commitments;
@@ -39,13 +38,14 @@ import java.util.Set;
 @XmlType( propOrder = {"date", "planIdentifier", "userEmail", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
 public class ProceduresData implements Serializable {
 
-    private PlanCommunity planCommunity;
     private List<Actor> actors;
     private ChannelsUser user;
     private List<ProcedureData> procedures;
     private List<EmploymentData> employments;
     private List<Actor> participatingActors;
     private EnvironmentData environmentData;
+    private PlanIdentifierData planIdentifierData;
+    private String dateVersioned;
 
     public ProceduresData() {
         // required
@@ -56,7 +56,6 @@ public class ProceduresData implements Serializable {
             PlanCommunity planCommunity,
             List<UserParticipation> participations,
             ChannelsUser user ) {
-        this.planCommunity = planCommunity;
         this.user = user;
         initData( serverUrl, participations, planCommunity );
     }
@@ -65,7 +64,6 @@ public class ProceduresData implements Serializable {
             String serverUrl,
             PlanCommunity planCommunity,
             Actor actor ) {
-        this.planCommunity = planCommunity;
         this.actors = new ArrayList<Actor>();
         actors.add( actor );
         initData( serverUrl, planCommunity );
@@ -85,6 +83,9 @@ public class ProceduresData implements Serializable {
         initProcedures( serverUrl, planCommunity );
         initEmployments( planCommunity );
         environmentData = new EnvironmentData( serverUrl, this, planCommunity );
+        planIdentifierData = new PlanIdentifierData( planCommunity );
+        dateVersioned = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" )
+                .format( planCommunity.getPlan().getWhenVersioned() );
     }
 
     private void initEmployments( PlanCommunity planCommunity ) {
@@ -137,12 +138,12 @@ public class ProceduresData implements Serializable {
 
     @XmlElement( name = "plan" )
     public PlanIdentifierData getPlanIdentifier() {
-        return new PlanIdentifierData( planCommunity );
+        return planIdentifierData;
     }
 
     @XmlElement
     public String getDateVersioned() {
-        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( planCommunity.getPlan().getWhenVersioned() );
+        return dateVersioned;
     }
 
     @XmlElement( name = "agentId" )
@@ -183,10 +184,6 @@ public class ProceduresData implements Serializable {
         return planService.getAssignments().with( new ResourceSpec( actor ) );
     }
 
-    public Plan getPlan() {
-        return planCommunity.getPlan();
-    }
-
     public ChannelsUser getUser() {
         return user;
     }
@@ -211,7 +208,4 @@ public class ProceduresData implements Serializable {
         return allEmployers;
     }
 
-    public PlanCommunity getPlanCommunity() {
-        return planCommunity;
-    }
-}
+ }

@@ -143,4 +143,12 @@ public class Agent implements Nameable, Identifiable {
     public String toString() {
         return "Agent " + getName();
     }
+
+    public String getActorName() {
+        return actor.getName();
+    }
+
+    public boolean isSupervisedParticipation() {
+        return actor.isSupervisedParticipation();
+    }
 }

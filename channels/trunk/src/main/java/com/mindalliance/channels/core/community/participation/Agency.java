@@ -166,4 +166,8 @@ public class Agency implements Nameable, Identifiable {
     public boolean isParticipatingAsSelf() {
         return fixedOrganization != null && !fixedOrganization.isPlaceHolder();
     }
+
+    public String toString() {
+        return "Agency " + getName();
+    }
 }

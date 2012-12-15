@@ -1082,8 +1082,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 problems.add( "no access to required transmission media" );
             if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) )
                 problems.add( "insufficient technical qualification" );
-            if ( !isReachable( commitment, mediaUsed, planLocale ) )
-                problems.add( "missing contact info" );
+            /*if ( !isReachable( commitment, mediaUsed, planLocale ) )
+                problems.add( "missing contact info" );*/    // contact info will be supplied by participating user
         }
         return problems;
     }

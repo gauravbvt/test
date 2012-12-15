@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.ExecutedCommand;
 import com.mindalliance.channels.social.services.ExecutedCommandService;
@@ -70,12 +69,12 @@ public class ExecutedCommandServiceImpl
     }
 
     @Override
-    public Date getWhenLastChanged( String planUri ) {
-        return whenLastChanged.get( planUri );
+    public Date getWhenLastChanged( String planCommunityUri ) {
+        return whenLastChanged.get( planCommunityUri );
     }
 
-    private void changed( String planUri ) {
-        whenLastChanged.put( planUri, new Date() );
+    private void changed( String planCommunityUri ) {
+        whenLastChanged.put( planCommunityUri, new Date() );
     }
 
     
@@ -84,9 +83,9 @@ public class ExecutedCommandServiceImpl
             ExecutedCommand.Type type,
             Command command,
             Change change) {
-        Plan plan = commander.getPlan();
-        changed( plan.getVersionUri() );
-        ExecutedCommand commandEvent = new ExecutedCommand( type, command, change, commander.getPlanCommunity() );
+        PlanCommunity planCommunity = commander.getPlanCommunity();
+        changed( planCommunity.getUri() );
+        ExecutedCommand commandEvent = new ExecutedCommand( type, command, change, planCommunity );
         save( commandEvent );
         
     }

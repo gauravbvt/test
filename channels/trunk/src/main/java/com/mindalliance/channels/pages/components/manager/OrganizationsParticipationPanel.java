@@ -381,6 +381,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         if ( object instanceof AgencyParticipationWrapper ) {
             AgencyParticipationWrapper wrapper = (AgencyParticipationWrapper) object;
             if ( action.equals( "remove" ) ) {
+                String orgParticipationString = wrapper.toString();
                 boolean success = wrapper.remove();
                 resetOrganizationParticipationWrappers();
                 addOrganizationParticipationTable();
@@ -390,7 +391,9 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 addAgencyProfile();
                 target.add( agencyProfilePanel );
                 update( target, Change.message(
-                        success ? "Removal successful " : "Removal failed"
+                        success ? "Removed " + orgParticipationString
+                                : "Failed to remove "
+                                + orgParticipationString
                 ) );
             } else if ( action.equals( "showProfile" ) ) {
                 profiledAgency = wrapper.getAgency();
@@ -424,6 +427,10 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
         public Agency getAgency() {
             return agency;
+        }
+
+        public OrganizationParticipation getOrganizationParticipation() {
+            return organizationParticipation;
         }
 
         public String getStatus() {
@@ -495,6 +502,13 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                success = registeredOrganizationService.removeIfUnused( getUser(), getAgency().getName(), getPlanCommunity() );
            }
             return success;
+        }
+
+        public String toString() {
+            if ( organizationParticipation != null )
+                return organizationParticipation.asString( getPlanCommunity() );
+            else
+                return agency.toString();
         }
     }
 

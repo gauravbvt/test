@@ -2901,23 +2901,23 @@ public abstract class DefaultQueryService implements QueryService {
         String label = "";
         if ( part.getActor() != null ) {
             label += part.getActor().getName();
-            if ( part.getActor().isType() ) {
+            /*if ( part.getActor().isType() ) {
                 Actor impliedActor = getKnownActualActor( part );
-                if ( impliedActor != null /*&& !impliedActor.isArchetype()*/ ) {
+                if ( impliedActor != null *//*&& !impliedActor.isArchetype()*//* ) {
                     label += " (" + impliedActor.getName() + ")";
                 }
-            }
+            }*/
         }
         if ( part.getRole() != null ) {
             if ( !label.isEmpty() )
                 label += sep;
-            if ( part.getActor() == null ) {
+            /*if ( part.getActor() == null ) {
                 Actor impliedActor = getKnownActualActor( part );
-                if ( impliedActor != null /*&& !impliedActor.isArchetype()*/ ) {
+                if ( impliedActor != null *//*&& !impliedActor.isArchetype()*//* ) {
                     label += impliedActor.getName();
                     label += " ";
                 }
-            }
+            }*/
             if ( !label.isEmpty() )
                 label += "as ";
             label += part.getRole().getName();
