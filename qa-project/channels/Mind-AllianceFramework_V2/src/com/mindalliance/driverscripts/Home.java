@@ -84,7 +84,7 @@ public class Home {
 		suite.addTestSuite(MAV0116_showSent.class);
 		suite.addTestSuite(MAV0117_showReceived.class);
 		suite.addTestSuite(MAV0124_sendMessage.class);
-		suite.addTestSuite(MAV0125_copyFlow.class);
+//		suite.addTestSuite(MAV0125_copyFlow.class);
 		suite.addTestSuite(MAV0126_copyNeed.class);
 		suite.addTestSuite(MAV0127_addNewIssue.class);
 		suite.addTestSuite(MAV0128_removeInfoNeed.class);
@@ -159,7 +159,7 @@ public class Home {
 		suite.addTestSuite(MAV0246_ShowRequirementNetwork.class);
 		suite.addTestSuite(MAV0247_NewRequirement.class);
 		suite.addTestSuite(MAV0248_RemoveRequirement.class);
-		suite.addTestSuite(MAV0249_EditRequirement.class);
+//		suite.addTestSuite(MAV0249_EditRequirement.class);
 		suite.addTestSuite(MAV0250_ViewAllSituationRequirement.class);
 		suite.addTestSuite(MAV0251_ViewRequirementBefore.class);
 		suite.addTestSuite(MAV0252_ViewRequirementAfter.class);
@@ -183,7 +183,7 @@ public class Home {
 		suite.addTestSuite(MAP0008_removeExpectation.class);
 		suite.addTestSuite(MAP0009_addTask.class);
 //		suite.addTestSuite(MAP0010_addRoleJuridiction.class);
-		suite.addTestSuite(MAP0011_addEventToPlan.class);
+//		suite.addTestSuite(MAP0011_addEventToPlan.class);
 		suite.addTestSuite(MAP0012_addPhase.class);
 		suite.addTestSuite(MAP0013_addPhaseDetails.class);
 		suite.addTestSuite(MAP0014_addSegment.class);
@@ -216,8 +216,8 @@ public class Home {
 		suite.addTestSuite(MAC0008_UndoPasteTaskUsingCopy.class);
 		suite.addTestSuite(MAC0009_UndoDuplicateTask.class);
 		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
-		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
-		suite.addTestSuite(MAC0012_UndoMoveTask.class);
+//		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
+//		suite.addTestSuite(MAC0012_UndoMoveTask.class);
 //		suite.addTestSuite(MAC0013_UndoConnectFlow.class);
 		suite.addTestSuite(MAC0021_CopyTask.class);
 		suite.addTestSuite(MAC0023_UndoAddInfoNeed.class);
