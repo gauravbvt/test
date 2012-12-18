@@ -1704,6 +1704,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Redo Add New Requirement</GivenName>
+		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText>Redo add new requirement</PartialLinkText>
+		<LinkText>Redo add new requirement</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Undo Remove Requirement</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
