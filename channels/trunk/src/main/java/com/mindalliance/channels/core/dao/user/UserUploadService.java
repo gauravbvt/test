@@ -6,6 +6,7 @@ import java.io.File;
 
 /**
  * User file upload service.
+ * Note: User is modified but not saved.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -20,5 +21,5 @@ public interface UserUploadService {
 
     File findSquaredUserPhoto( String fileName );
 
-    boolean removeUserPhoto( ChannelsUser user );
+   // boolean removeUserPhoto( ChannelsUser user );
 }

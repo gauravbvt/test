@@ -399,5 +399,12 @@ public class ChannelsUser implements UserDetails {
         this.clientInfo = clientInfo;
     }
 
- }
+    public String getPhoto() {
+        return userInfo.getPhoto();
+    }
+
+    public void setPhoto( String s ) {
+        userInfo.setPhoto( s );
+    }
+}
 

@@ -150,23 +150,4 @@ public interface ChannelsUserDao extends GenericSqlService<ChannelsUserInfo, Lon
      */
     List<ChannelsUser> findAllUsersWithFullName( String name, String uri );
 
-    /**
-     * Get the user's photo's file name, if any.
-     * @param username a user name
-     * @return a string (e.g. jf_aed7rqher7.png)
-     */
-    String getPhoto( String username );
-
-    /**
-     * Set the user's photo's file name.
-     * @param username a user name
-     * @param fileName a string (e.g. jf_aed7rqher7.png)
-     */
-    void setPhoto( String username, String fileName );
-
-    /**
-     * remove a user's photo
-     * @param username a username
-     */
-    void removePhoto( String username );
-}
+ }

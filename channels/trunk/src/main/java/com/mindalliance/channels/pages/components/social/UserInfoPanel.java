@@ -56,11 +56,9 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private static final Logger LOG = LoggerFactory.getLogger( UserInfoPanel.class );
 
     private WebMarkupContainer userInfoContainer;
-    private ChannelsUserInfo temp;
+    private ChannelsUser temp;
     private static final String EMAIL_REGEX = "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}";
 
-    @SpringBean
-    private ChannelsUser user;
 
     @SpringBean
     private ChannelsUserDao userDao;
@@ -113,11 +111,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void resetTemp() {
-        temp = new ChannelsUserInfo(
+        ChannelsUser user = getUser();
+        ChannelsUserInfo tempUserInfo = new ChannelsUserInfo(
                 user.getUsername(),
                 user.getFullName(),
                 user.getEmail()
         );
+        tempUserInfo.setPhoto( user.getPhoto() );
+        temp = new ChannelsUser( tempUserInfo );
         newPassword = "";
         repeatNewPassword = "";
     }
@@ -129,7 +130,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void addIdentity() {
-        userInfoContainer.add( new Label( "userId", new Model<String>( user.getUserInfo().getUsername() ) ) );
+        userInfoContainer.add( new Label( "userId", new Model<String>( getUser().getUserInfo().getUsername() ) ) );
         addFullNameField();
         addEmailField();
         addPhotoFields();
@@ -186,8 +187,10 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         userInfoContainer.addOrReplace( removePhotoButton );
     }
 
-    private boolean  removePhoto() {
-        return userUploadService.removeUserPhoto( getUser() );
+    private boolean removePhoto() {
+        boolean exists = hasPhoto();
+        temp.setPhoto( null );
+        return exists;
     }
 
     private void addUploadFields() {
@@ -208,15 +211,15 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         uploadButton = new AjaxSubmitLink( "upload" ) {
             @Override
             protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
-                resetAll();   // todo - This is never called
                 target.add( UserInfoPanel.this );
                 update( target, new Change( Change.Type.Unknown ) );
             }
 
             @Override
             protected void onError( AjaxRequestTarget target, Form<?> form ) {
-                resetAll();   // todo -but this, is even when submit is successful. I am perplexed.
-                target.add( UserInfoPanel.this );
+                addPhotoFields();
+                adjustFields( target );
+                target.add( userInfoContainer );
                 update( target, new Change( Change.Type.Unknown ) );
                 // update( target, Change.message( "Failed to upload photo" ) );
             }
@@ -247,19 +250,22 @@ public class UserInfoPanel extends AbstractSocialListPanel {
      */
         FileUpload upload = uploadPhotoField.getFileUpload();
         if ( upload != null ) {
-            LoggerFactory.getLogger( getClass() ).info( "Uploading photo for {}", user );
-            userUploadService.uploadUserPhoto( user, upload );
+            LoggerFactory.getLogger( getClass() ).info( "Uploading photo for {}", temp );
+            userUploadService.uploadUserPhoto( temp, upload );
         }
     }
 
 
     public String getSquaredPhotoSrc() {
         String src = null;
-        ChannelsUser user = getUser();
-        if ( user != null ) {
-            src = userUploadService.getSquareUserIconURL( user );
+        if ( hasPhoto() ) {
+            src = userUploadService.getSquareUserIconURL( temp );
         }
         return src == null ? "images/actor.user.png" : src;
+    }
+
+    public boolean hasPhoto() {
+        return temp.getPhoto() != null;
     }
 
 
@@ -429,10 +435,10 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     private boolean save() throws IOException {
         if ( passwordOk && !newPassword.isEmpty() && isValidNewPassword() ) {
-            temp.setPassword( newPassword );
+            temp.getUserInfo().setPassword( newPassword );
         }
         if ( canSave() ) {
-            userDao.updateIdentity( user.getUserInfo(), temp );
+            userDao.updateIdentity( getUser().getUserInfo(), temp.getUserInfo() );
             return true;
         } else {
             return false;
@@ -450,11 +456,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     public void setFullName( String val ) {
-        temp.setFullName( val == null ? "" : val );
-    }
-
-    public boolean hasPhoto() {
-        return userDao.getPhoto( getUsername() ) != null;
+        temp.getUserInfo().setFullName( val == null ? "" : val );
     }
 
 
@@ -463,7 +465,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     public void setEmail( String val ) {
-        temp.setEmail( val == null ? "" : val );
+        temp.getUserInfo().setEmail( val == null ? "" : val );
     }
 
     public String getPassword() {
@@ -478,7 +480,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private boolean isValidPassword() {
-        return passwordHash.equals( user.getPassword() );
+        return passwordHash.equals( getUser().getPassword() );
     }
 
     public String getNewPassword() {

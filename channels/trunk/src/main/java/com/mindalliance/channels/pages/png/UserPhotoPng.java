@@ -27,9 +27,9 @@ public class UserPhotoPng extends ChannelsDynamicImageResource {
     protected byte[] getImageData( Attributes attributes ) {
         UserUploadService userUploadService = ( (Channels) Channels.get() ).getUserUploadService();
         PageParameters parameters = attributes.getParameters();
-        String username = parameters.get( "name" ).toString();
+        String fileName = parameters.get( "name" ).toString();
         try {
-            File photoFile = userUploadService.findSquaredUserPhoto( username );
+            File photoFile = userUploadService.findSquaredUserPhoto( fileName );
             if ( photoFile != null ) {
                 FileInputStream in = new FileInputStream( photoFile );
                 return IOUtils.toByteArray( in );

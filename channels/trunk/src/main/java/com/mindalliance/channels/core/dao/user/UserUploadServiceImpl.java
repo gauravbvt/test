@@ -25,9 +25,6 @@ public class UserUploadServiceImpl implements UserUploadService {
     @Autowired
     private ImagingService imagingService;
 
-    @Autowired
-    private ChannelsUserDao userDao;
-
     /**
      * The logger.
      */
@@ -80,14 +77,14 @@ public class UserUploadServiceImpl implements UserUploadService {
 
     @Override
     public boolean uploadUserPhoto( ChannelsUser user, FileUpload upload ) {
-        if ( userDao.getPhoto( user.getUsername() ) != null ) {
+        if ( user.getPhoto() != null ) {
             LOG.warn( "Photo already uploaded for " + user.getUsername() );
             return false;
         }
         try {
             BufferedImage image = ImageIO.read( upload.getInputStream() );
             String fileName = user.getUsername() + "_" + Long.toString( System.currentTimeMillis() );
-            userDao.setPhoto( user.getUsername(), fileName );
+            user.setPhoto( fileName );
             File outputFile = new File( getUserPhotoUploadDirPath() + File.separator + fileName + ".png" );
             ImageIO.write( image, "png", outputFile );
             imagingService.squarify(
@@ -102,8 +99,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     @Override
-    public File findSquaredUserPhoto( String username ) {
-        String fileName = userDao.getPhoto( username );
+    public File findSquaredUserPhoto( String fileName ) {
         if ( fileName != null ) {
             return new File( getSquaredDirectory(), fileName + "_squared.png" );
         } else {
@@ -111,12 +107,14 @@ public class UserUploadServiceImpl implements UserUploadService {
         }
     }
 
-    @Override
+/*    @Override
     public boolean removeUserPhoto( ChannelsUser user ) {
-        boolean exists = userDao.getPhoto( user.getUsername() ) != null;
+        boolean exists = user.getPhoto() != null;
+        user.setPhoto( null );
+*//*
         if ( exists ) {
             try {
-                File squared = findSquaredUserPhoto( user.getUsername() );
+                File squared = findSquaredUserPhoto( user.getPhoto() );
                 if ( squared != null && squared.exists() ) {
                     if ( squared.delete() ) {
                         LOG.info( squared.getAbsolutePath() + " deleted" );
@@ -134,14 +132,15 @@ public class UserUploadServiceImpl implements UserUploadService {
             } catch ( Exception e ) {
                 LOG.warn( "Failed to delete photo of user " + user.getUsername(), e );
             } finally {
-                userDao.removePhoto( user.getUsername() );
+                user.setPhoto( null );
             }
         }
+*//*
         return exists;
-    }
+    }*/
 
     private String getUserPhotoUploadPath( ChannelsUser user ) {
-        String fileName = userDao.getPhoto( user.getUsername() );
+        String fileName = user.getPhoto(  );
         return fileName != null ? getUserPhotoUploadDirPath() + File.separator + fileName + ".png" : null;
     }
 
@@ -161,7 +160,7 @@ public class UserUploadServiceImpl implements UserUploadService {
         if ( squareIconFile != null ) {
             if ( squareIconFile.exists() ) {
                 return getUserPhotoUpload()
-                        + "/" + user.getUsername()
+                        + "/" + user.getPhoto()
                         + "/" + Long.toString( System.currentTimeMillis() );     // seed to prevent caching
             } else {
                 return null;
@@ -171,7 +170,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     private File getSquaredUserFile( ChannelsUser user ) {
-        String fileName = userDao.getPhoto( user.getUsername() );
+        String fileName = user.getPhoto( );
         if ( fileName != null )
             return new File( getSquaredDirectory(), fileName + "_squared.png" );
         else
