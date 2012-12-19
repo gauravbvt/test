@@ -28,6 +28,7 @@ import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.PlanPage;
@@ -43,6 +44,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -628,6 +630,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected Place getPlanLocale() {
         return getPlanService().getPlanLocale();
+    }
+
+    protected Form getForm() {
+        return ( (AbstractChannelsBasicPage) getPage() ).getForm();
     }
 
 

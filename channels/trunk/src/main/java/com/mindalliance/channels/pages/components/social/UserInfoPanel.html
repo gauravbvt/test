@@ -13,7 +13,7 @@
 			<div class="tabcontent-content">
 	         <table>
 	             <tr>
-	             	<td>User ID:</td>
+	             	<td>ID:</td>
 	             	<td><span wicket:id="userId">uid</span></td>
 	             </tr>
 	             <tr>
@@ -24,6 +24,17 @@
 	             	<td>Email:</td>
 	             	<td><input type="text" wicket:id="email"/></td>
 	             </tr>
+                 <tr>
+                     <td>Photo:</td>
+                     <td>
+                         <img wicket:id="photo" src="#"  width="32" height="32" alt="user photo"/>
+                         <a wicket:id="removePhoto"> Remove </a>
+                         <span wicket:id="uploadContainer">
+                             <label class="attach-ctl"> <input class="file" type="file" wicket:id="uploadPhoto" value="Browse"></label>
+                             <a wicket:id="upload" href="#">Upload</a>
+                         </span>
+                     </td>
+                 </tr>
 	         </table>
 	         <div class="buttons">
 	             <input wicket:id="apply1" type="button" value="Apply" />

@@ -1,16 +1,17 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
@@ -43,7 +44,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private PresenceRecordService presenceRecordService;
 
     @SpringBean
-    private ImagingService imagingService;
+    private UserUploadService userUploadService;
 
     @SpringBean
     private ChannelsUserDao userDao;
@@ -217,9 +218,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 getPlanCommunity()
         );
         for ( UserParticipation participation : participations ) {
-            Actor actor = participation.getAgent( planCommunity ).getActor(); // todo - agents!
-            if ( actor != null ) {
-                String s = getActorJobTitles( actor );
+            Agent agent = participation.getAgent( planCommunity );
+            if ( agent != null ) {
+                String s = agent.getName();
                 sb.append( s );
                 if ( !s.isEmpty() ) sb.append( ". " );
             }
@@ -247,15 +248,13 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
 
-    public String getPhotoUrl() { // todo - user user's photo!
-        String url = null;
+    public String getPhotoUrl() {
+        String src = null;
         ChannelsUser user = getUser();
         if ( user != null ) {
-            Actor actor = findActor( user );
-            if ( actor != null )
-                url = imagingService.getSquareIconUrl( getPlan(), actor );
+            src = userUploadService.getSquareUserIconURL( user );
         }
-        return url == null ? "images/actor.user.png" : url;
+        return src == null ? "images/actor.user.png" : src;
     }
 
     public ChannelsUserInfo getUserInfo() {

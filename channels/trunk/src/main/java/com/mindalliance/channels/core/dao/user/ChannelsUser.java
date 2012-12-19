@@ -399,5 +399,5 @@ public class ChannelsUser implements UserDetails {
         this.clientInfo = clientInfo;
     }
 
-}
+ }
 

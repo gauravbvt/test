@@ -38,5 +38,4 @@ public class AbstractSocialListPanel extends AbstractUpdatablePanel {
         hideSocialLink.setVisible( collapsible );
     }
 
-
 }

@@ -176,28 +176,46 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     private boolean squarify( Plan plan, String url, ModelObject modelObject ) {
         try {
             BufferedImage image = getImage( plan, url );
-            int width = image.getWidth();
-            int height = image.getHeight();
-            int max = Math.max( width, height );
-
-            BufferedImage icon = new BufferedImage( max, max, Transparency.TRANSLUCENT );
-            icon.createGraphics();
-            Graphics2D graphics = (Graphics2D) icon.getGraphics();
-            graphics.drawImage( image,
-                    ( max - width ) / 2,
-                    ( max - height ) / 2,
-                    image.getWidth(),
-                    image.getHeight(),
-                    null );
-
+            BufferedImage icon = doSquarify( image );
             ImageIO.write( icon, "png", getIconFile( modelObject, "_squared.png" ) );
-            graphics.dispose();
             return true;
 
         } catch ( IOException e ) {
             LOG.warn( "Failed to squarify image at " + url + " (" + e.getMessage() + ')', e );
             return false;
         }
+    }
+
+    private BufferedImage doSquarify( BufferedImage image ) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int max = Math.max( width, height );
+
+        BufferedImage squared = new BufferedImage( max, max, Transparency.TRANSLUCENT );
+        squared.createGraphics();
+        Graphics2D graphics = (Graphics2D) squared.getGraphics();
+        graphics.drawImage( image,
+                ( max - width ) / 2,
+                ( max - height ) / 2,
+                image.getWidth(),
+                image.getHeight(),
+                null );
+        graphics.dispose();
+        return squared;
+    }
+
+    @Override
+    public boolean squarify( String filePath, File iconFile ) {
+        try {
+            BufferedImage image = ImageIO.read( new File( filePath ) );
+            BufferedImage icon = doSquarify( image );
+            ImageIO.write( icon, "png", iconFile );
+            return true;
+        } catch ( IOException e ) {
+            LOG.warn( "Failed to squarify image at " + filePath + " (" + e.getMessage() + ')' );
+            return false;
+        }
+
     }
 
     @Override
@@ -261,7 +279,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 return getSquareIconUrl( plan, modelObject );
 
         } catch ( IOException e ) {
-            LOG.warn( "Failed to get icon url", e );
+            LOG.warn( "Failed to get square icon url", e );
         }
 
         return null;
@@ -275,7 +293,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     @Override
     public File findIcon( Plan plan, String encodedPath ) throws IOException {
         String decodedPath = URLEncoder.encode( encodedPath, "UTF-8" );
-        decodedPath =  decodedPath.replaceAll( SEPARATOR, File.separator );
+        decodedPath = decodedPath.replaceAll( SEPARATOR, File.separator );
         return new File( getIconFilePrefix( plan ) + decodedPath );
     }
 
@@ -287,11 +305,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     private void createNumberedIcon( Plan plan,
-            BufferedImage resized,
-            ModelObject modelObject,
-            int width,
-            int height,
-            int number )
+                                     BufferedImage resized,
+                                     ModelObject modelObject,
+                                     int width,
+                                     int height,
+                                     int number )
             throws IOException {
 
         BufferedImage icon = new BufferedImage( width, height, BufferedImage.TRANSLUCENT );
@@ -343,6 +361,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return new File( getIconsDirectoryFor( modelObject ),
                 sanitizeFileName( modelObject.getName() ) + suffix );
     }
+
 
     private static String sanitizeFileName( String fileName ) {
 

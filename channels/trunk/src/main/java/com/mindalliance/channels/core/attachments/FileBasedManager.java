@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -116,11 +117,14 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
      */
     private List<String> imageDomains = new ArrayList<String>();
 
+    private Resource dataDirectory;
+
     public FileBasedManager() {
     }
 
     /**
      * Specify what plan manager to hook up to.
+     *
      * @param planManager the plan manager
      */
     public void setPlanManager( PlanManager planManager ) {
@@ -144,7 +148,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
      * Remove a mapped url for a given plan.
      *
      * @param plan the plan
-     * @param url the url
+     * @param url  the url
      */
     @Override
     public void remove( Plan plan, String url ) {
@@ -179,6 +183,14 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         }
 
         return result;
+    }
+
+    public void setDataDirectory( Resource dataDirectory ) {
+        this.dataDirectory = dataDirectory;
+    }
+
+    public Resource getDataDirectory() {
+        return dataDirectory;
     }
 
     /**
@@ -314,7 +326,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         InputStream in = new BufferedInputStream( new DigestInputStream( upload.getInputStream(), messageDigest ) );
         try {
             FileDocument fileDocument = upload( in, messageDigest, createFile( getUploadDirectory( plan ),
-                                                                               upload.getFileName() ) );
+                    upload.getFileName() ) );
 
             synchronized ( documentMap ) {
                 FileDocument actual = resolve( fileDocument );
@@ -344,9 +356,9 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
             LOG.info( "Uploaded file into ", outputFile );
 
             return new FileDocument( outputFile,
-                                     uploadPath + outputFile.getName(),
-                                     URLEncoder.encode( new String( messageDigest.digest() )
-                                                                .replaceAll( ",", "\\u002c" ), "UTF-8" ) );
+                    uploadPath + outputFile.getName(),
+                    URLEncoder.encode( new String( messageDigest.digest() )
+                            .replaceAll( ",", "\\u002c" ), "UTF-8" ) );
 
         } finally {
             out.close();
@@ -357,8 +369,8 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     public String getLabel( Plan plan, Attachment attachment ) {
         FileDocument fileDocument = documentMap.get( attachment.getUrl() );
         return attachment.getName().isEmpty() ? fileDocument == null ? attachment.getUrl()
-                                                                     : fileDocument.getFile().getName()
-                                              : attachment.getName();
+                : fileDocument.getFile().getName()
+                : attachment.getName();
     }
 
     @Override
@@ -413,7 +425,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
 
             in = new BufferedReader( new InputStreamReader(
                     isUploadedFileDocument( url ) ? new FileInputStream( getUploadedFile( plan, url ) )
-                                                  : new URL( url ).openStream() ) );
+                            : new URL( url ).openStream() ) );
 
             loader.load( in );
         } catch ( IOException e ) {
@@ -507,9 +519,9 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
                 for ( String url : digests.stringPropertyNames() )
                     if ( exists( plan, url ) )
                         documentMap.put( url,
-                                         new FileDocument( new File( getUploadDirectory( plan ), url ),
-                                                           url,
-                                                           digests.getProperty( url ) ) );
+                                new FileDocument( new File( getUploadDirectory( plan ), url ),
+                                        url,
+                                        digests.getProperty( url ) ) );
             }
         }
 

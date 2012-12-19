@@ -69,6 +69,7 @@ public interface ImagingService {
      */
     String getSquareIconUrl( Plan plan, ModelObject modelObject );
 
+
     /**
      * Find icon name for given model object.
      *
@@ -126,4 +127,12 @@ public interface ImagingService {
      * @return a string
      */
     String tooComplexImagePath();
+
+    /**
+     * Make square a file given its path and store into given file.
+     * @param filePath path to image to make square
+     * @param iconFile file where to store squared image
+     * @return boolean whether successful
+     */
+    boolean squarify( String filePath, File iconFile );
 }

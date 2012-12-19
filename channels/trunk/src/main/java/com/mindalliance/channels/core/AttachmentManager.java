@@ -18,6 +18,8 @@ import java.util.List;
  */
 public interface AttachmentManager {
 
+     public static final String USERS = "users";
+
     /**
      * Add an attachment to an attachable object.
      *
@@ -134,11 +136,12 @@ public interface AttachmentManager {
     void removeAttachment( Attachment attachment, Attachable attachable );
 
     /**
-     * Upload a file and get an attachment.
+     * Upload a file and get an attachment to a model object.
      *
      * @param plan a plan
      * @param upload what to upload
      * @return an attachment or null if failed
      */
     Attachment upload( Plan plan, Upload upload );
+
 }

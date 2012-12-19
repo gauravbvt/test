@@ -90,6 +90,9 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     @Column(length=2000)
     private String planAccesses;
 
+    @Column(length=1000)
+    private String photo;
+
     /**
      * The user's global access role (ROLE_USER|ROLE_PLANNER|ROLE_ADMIN|null).
      */
@@ -237,6 +240,14 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
 
     public void setGlobalAccess( String globalAccess ) {
         this.globalAccess = globalAccess;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto( String photo ) {
+        this.photo = photo;
     }
 
     /**

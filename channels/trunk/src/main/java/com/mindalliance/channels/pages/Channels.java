@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -26,6 +27,7 @@ import com.mindalliance.channels.pages.png.PngReference;
 import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
+import com.mindalliance.channels.pages.png.UserPhotoPng;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
@@ -121,6 +123,8 @@ public class Channels extends WebApplication
     private PlanServiceFactory planServiceFactory;
 
     private ImagingService imagingService;
+
+    private UserUploadService userUploadService;
 
     private AttachmentManager attachmentManager;
     
@@ -219,6 +223,7 @@ public class Channels extends WebApplication
         mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
+        mountResource( "users/photos/${name}/${seed}", new PngReference( UserPhotoPng.class ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );
         mountResource( "segment.png", new PngReference( FlowMapPng.class ) );
         mountResource( "plan.png", new PngReference( PlanMapPng.class ) );
@@ -320,6 +325,14 @@ public class Channels extends WebApplication
 
     public ImagingService getImagingService() {
         return imagingService;
+    }
+
+    public UserUploadService getUserUploadService() {
+        return userUploadService;
+    }
+
+    public void setUserUploadService( UserUploadService userUploadService ) {
+        this.userUploadService = userUploadService;
     }
 
     public void setImagingService( ImagingService imagingService ) {

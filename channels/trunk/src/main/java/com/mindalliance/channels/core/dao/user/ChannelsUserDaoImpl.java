@@ -136,6 +136,37 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
 
     @Override
     @Transactional( readOnly = true )
+    public String getPhoto( String username ) {
+        ChannelsUser user = getUserNamed( username );
+        if ( user != null ) {
+            return user.getUserInfo().getPhoto();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public void setPhoto( String username, String fileName ) {
+        ChannelsUser user = getUserNamed( username );
+        if ( user != null ) {
+            user.getUserInfo().setPhoto( fileName );
+            save( user.getUserInfo() );
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removePhoto( String username ) {
+        ChannelsUser user = getUserNamed( username );
+        if ( user != null ) {
+            user.getUserInfo().setPhoto( null );
+            save( user.getUserInfo() );
+        }
+    }
+
+    @Override
+    @Transactional( readOnly = true )
     public List<ChannelsUser> getUsers() {
         List<ChannelsUser> result = new ArrayList<ChannelsUser>();
         List<ChannelsUserInfo> userInfos = list();

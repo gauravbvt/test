@@ -5,20 +5,28 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
+import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
+import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
@@ -60,6 +68,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     @SpringBean
     private UserContactInfoService userContactInfoService;
 
+    @SpringBean
+    private ImagingService imagingService;
+
+    @SpringBean
+    private UserUploadService userUploadService;
+
 
     private Pattern emailPattern;
     private String passwordHash;
@@ -70,6 +84,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private TextField<String> repeatNewPasswordText;
     private List<String> errors;
     private WebMarkupContainer errorsContainer;
+    private WebMarkupContainer photoImg;
+    private ConfirmedAjaxFallbackLink removePhotoButton;
+    private WebMarkupContainer uploadContainer;
+    private FileUploadField uploadPhotoField;
+    private AjaxSubmitLink uploadButton;
 
     public UserInfoPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
@@ -111,6 +130,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     private void addIdentity() {
         userInfoContainer.add( new Label( "userId", new Model<String>( user.getUserInfo().getUsername() ) ) );
+        addFullNameField();
+        addEmailField();
+        addPhotoFields();
+    }
+
+    private void addFullNameField() {
         userInfoContainer.add( new TextField<String>( "fullName", new PropertyModel<String>( this, "fullName" ) )
                 .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                     @Override
@@ -119,6 +144,9 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                     }
                 } )
         );
+    }
+
+    private void addEmailField() {
         final TextField<String> emailText = new TextField<String>( "email", new PropertyModel<String>( this, "email" ) );
         emailText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -129,6 +157,111 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         } );
         userInfoContainer.add( emailText );
     }
+
+    private void addPhotoFields() {
+        addPhotoImage();
+        addRemoveButton();
+        addUploadFields();
+    }
+
+    private void addPhotoImage() {
+        photoImg = new WebMarkupContainer( "photo" );
+        photoImg.setOutputMarkupId( true );
+        photoImg.add( new AttributeModifier( "src", new PropertyModel( this, "squaredPhotoSrc" ) ) );
+        userInfoContainer.addOrReplace( photoImg );
+    }
+
+    private void addRemoveButton() {
+        removePhotoButton = new ConfirmedAjaxFallbackLink( "removePhoto", "Remove photo?" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                boolean success = removePhoto();
+                adjustFields( target );
+                update( target, Change.message( success ? "Photo removed" : "Could not remove photo" ) );
+                target.add( userInfoContainer );
+            }
+        };
+        removePhotoButton.setOutputMarkupId( true );
+        makeVisible( removePhotoButton, hasPhoto() );
+        userInfoContainer.addOrReplace( removePhotoButton );
+    }
+
+    private boolean  removePhoto() {
+        return userUploadService.removeUserPhoto( getUser() );
+    }
+
+    private void addUploadFields() {
+        uploadContainer = new WebMarkupContainer( "uploadContainer" );
+        uploadContainer.setOutputMarkupId( true );
+        userInfoContainer.addOrReplace( uploadContainer );
+        uploadPhotoField = new FileUploadField(
+                "uploadPhoto", new PropertyModel<List<FileUpload>>( this, "uploads" ) );
+        uploadPhotoField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                makeVisible( uploadButton, true );
+                target.add( uploadButton );
+            }
+        } );
+        uploadContainer.add( uploadPhotoField );
+        // submit
+        uploadButton = new AjaxSubmitLink( "upload" ) {
+            @Override
+            protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
+                resetAll();   // todo - This is never called
+                target.add( UserInfoPanel.this );
+                update( target, new Change( Change.Type.Unknown ) );
+            }
+
+            @Override
+            protected void onError( AjaxRequestTarget target, Form<?> form ) {
+                resetAll();   // todo -but this, is even when submit is successful. I am perplexed.
+                target.add( UserInfoPanel.this );
+                update( target, new Change( Change.Type.Unknown ) );
+                // update( target, Change.message( "Failed to upload photo" ) );
+            }
+        };
+        uploadButton.setOutputMarkupId( true );
+        makeVisible( uploadButton, false );
+        uploadContainer.add( uploadButton );
+        makeVisible( uploadContainer, !hasPhoto() );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void onBeforeRender() {
+        super.onBeforeRender();
+        makeVisible( uploadContainer, !hasPhoto() );
+        makeVisible( removePhotoButton, hasPhoto() );
+    }
+
+
+    public List<FileUpload> getUploads() {
+        return null;
+    }
+
+    public void setUploads( List<FileUpload> uploads ) {
+        /*
+      The file uploads received from the client.
+     */
+        FileUpload upload = uploadPhotoField.getFileUpload();
+        if ( upload != null ) {
+            LoggerFactory.getLogger( getClass() ).info( "Uploading photo for {}", user );
+            userUploadService.uploadUserPhoto( user, upload );
+        }
+    }
+
+
+    public String getSquaredPhotoSrc() {
+        String src = null;
+        ChannelsUser user = getUser();
+        if ( user != null ) {
+            src = userUploadService.getSquareUserIconURL( user );
+        }
+        return src == null ? "images/actor.user.png" : src;
+    }
+
 
     private boolean isValidEmail( String value ) {
         Matcher matcher = emailPattern.matcher( value.toUpperCase() );
@@ -247,18 +380,23 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             LOG.error( "Failed to save user info", e );
             target.appendJavaScript( "alert('Failed to save');" );
             target.add( UserInfoPanel.this );
-        }    }
+        }
+    }
 
     private void adjustFields( AjaxRequestTarget target ) {
         resetErrors();
         addErrors();
         target.add( errorsContainer );
- //       passwordText.setEnabled( newPassword.isEmpty() && repeatNewPassword.isEmpty() );
+        //       passwordText.setEnabled( newPassword.isEmpty() && repeatNewPassword.isEmpty() );
         newPasswordText.setEnabled( passwordOk );
         repeatNewPasswordText.setEnabled( passwordOk );
- //       target.add( passwordText );
+        //       target.add( passwordText );
         target.add( newPasswordText );
         target.add( repeatNewPasswordText );
+        makeVisible( removePhotoButton, hasPhoto() );
+        target.add( removePhotoButton );
+        makeVisible( uploadContainer, !hasPhoto() );
+        target.add( uploadContainer );
     }
 
     private void resetErrors() {
@@ -315,6 +453,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         temp.setFullName( val == null ? "" : val );
     }
 
+    public boolean hasPhoto() {
+        return userDao.getPhoto( getUsername() ) != null;
+    }
+
+
     public String getEmail() {
         return temp.getEmail();
     }
@@ -329,12 +472,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     public void setPassword( String val ) {
         passwordHash = val == null ? "" : ChannelsUserInfo.digestPassword( val.trim() );
-        passwordOk = isValidPassword( );
+        passwordOk = isValidPassword();
         newPassword = "";
         repeatNewPassword = "";
     }
 
-    private boolean isValidPassword(  ) {
+    private boolean isValidPassword() {
         return passwordHash.equals( user.getPassword() );
     }
 

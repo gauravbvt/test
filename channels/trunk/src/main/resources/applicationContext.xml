@@ -85,7 +85,14 @@ CONFIGURATION NOTES:
         <property name="snapshotThreshold" value="10"/>
     </bean>
 
+    <bean id="userUploadService" class="com.mindalliance.channels.core.dao.user.UserUploadServiceImpl">
+        <property name="publicDirectory" value="${channels.home}${file.separator}public"/>
+        <property name="userPhotoUpload" value="users/photos"/>
+        <property name="userPhotoURL" value="photo"/>
+    </bean>
+
     <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager">
+        <property name="dataDirectory" value="${channels.home}${file.separator}data"/>
         <property name="uploadPath" value="uploads/"/>
         <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
         <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
