@@ -215,7 +215,7 @@ public class Home {
 		suite.addTestSuite(MAC0007_UndoPasteTaskUsingCut.class);
 		suite.addTestSuite(MAC0008_UndoPasteTaskUsingCopy.class);
 		suite.addTestSuite(MAC0009_UndoDuplicateTask.class);
-		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
+//		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
 //		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
 //		suite.addTestSuite(MAC0012_UndoMoveTask.class);
 //		suite.addTestSuite(MAC0013_UndoConnectFlow.class);
