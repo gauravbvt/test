@@ -19,7 +19,7 @@
 	<classpath path="${lib.dir}/lib/jacocoant.jar"/></taskdef>
 	
 	<echo>Cleaning classes dir...</echo>  
-  	<target name="clean" description="Delete Earlier Classes">  
+  	<target name="clean" description="Delete Earlier Classes"> 
     	<delete dir="${target.dir}" quiet="yes"/>  
   		<delete dir="${classes.dir}" quiet="yes"/>
   	</target>  
