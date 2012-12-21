@@ -21,5 +21,6 @@ public interface UserUploadService {
 
     File findSquaredUserPhoto( String fileName );
 
-   // boolean removeUserPhoto( ChannelsUser user );
+    // Remove all unreferenced photos
+   void cleanUpPhotos();
 }

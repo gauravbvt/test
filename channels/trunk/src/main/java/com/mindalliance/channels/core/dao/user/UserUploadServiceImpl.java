@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.engine.imaging.ImagingService;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User upload service implementation.
@@ -25,6 +30,9 @@ public class UserUploadServiceImpl implements UserUploadService {
     @Autowired
     private ImagingService imagingService;
 
+    @Autowired
+    private ChannelsUserDao userDao;
+
     /**
      * The logger.
      */
@@ -32,9 +40,12 @@ public class UserUploadServiceImpl implements UserUploadService {
 
     private static final String CACHE = "cache";
 
+    private static final String[] EXT = {"png"};
+
     private Resource publicDirectory;
     private String userPhotoUpload;
     private String userPhotoURL;
+    private static final String SQUARED_PNG = "_squared.png";
 
     public UserUploadServiceImpl() {
     }
@@ -89,7 +100,7 @@ public class UserUploadServiceImpl implements UserUploadService {
             ImageIO.write( image, "png", outputFile );
             imagingService.squarify(
                     outputFile.getAbsolutePath(),
-                    new File( getSquaredDirectory(), fileName + "_squared.png" ) );
+                    new File( getSquaredDirectory(), fileName + SQUARED_PNG ) );
             LOG.info( "Uploaded file into ", outputFile );
             return true;
         } catch ( IOException e ) {
@@ -101,43 +112,37 @@ public class UserUploadServiceImpl implements UserUploadService {
     @Override
     public File findSquaredUserPhoto( String fileName ) {
         if ( fileName != null ) {
-            return new File( getSquaredDirectory(), fileName + "_squared.png" );
+            return new File( getSquaredDirectory(), fileName + SQUARED_PNG );
         } else {
             return null;
         }
     }
 
-/*    @Override
-    public boolean removeUserPhoto( ChannelsUser user ) {
-        boolean exists = user.getPhoto() != null;
-        user.setPhoto( null );
-*//*
-        if ( exists ) {
-            try {
-                File squared = findSquaredUserPhoto( user.getPhoto() );
-                if ( squared != null && squared.exists() ) {
-                    if ( squared.delete() ) {
-                        LOG.info( squared.getAbsolutePath() + " deleted" );
-                    }
-                }
-                String filePath = getUserPhotoUploadPath( user );
-                if ( filePath != null ) {
-                    File photo = new File( filePath );
-                    if ( photo.exists() ) {
-                        if ( photo.delete() ) {
-                            LOG.info( photo.getAbsolutePath() + " deleted" );
-                        }
-                    }
-                }
-            } catch ( Exception e ) {
-                LOG.warn( "Failed to delete photo of user " + user.getUsername(), e );
-            } finally {
-                user.setPhoto( null );
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public void cleanUpPhotos() {
+        LOG.info( "Cleaning up uploaded photos" );
+        int count = 0;
+        Set<String> allPhotos = new HashSet<String>(  );
+        for ( ChannelsUser user : userDao.getUsers() ) {
+            String photo = user.getPhoto();
+            if ( photo != null )
+                allPhotos.add( photo );
+        }
+        for ( File photoFile : (Collection<File>)FileUtils.listFiles( getUserPhotoUploadDir(), EXT, false ) )  {
+             String fileName = StringUtils.removeEnd( photoFile.getName(), ".png" );
+             if ( !allPhotos.contains( fileName ) ) {
+                 if ( photoFile.delete() ) count++;
+             }
+        }
+        for ( File photoFile : (Collection<File>)FileUtils.listFiles( getSquaredDirectory(), EXT, false ) )  {
+            String fileName = StringUtils.removeEnd( photoFile.getName(), SQUARED_PNG );
+            if ( !allPhotos.contains( fileName ) ) {
+                if ( photoFile.delete() ) count++;
             }
         }
-*//*
-        return exists;
-    }*/
+        LOG.info( "Deleted " + count + " unused photos" );
+    }
 
     private String getUserPhotoUploadPath( ChannelsUser user ) {
         String fileName = user.getPhoto(  );
@@ -145,14 +150,19 @@ public class UserUploadServiceImpl implements UserUploadService {
     }
 
     private String getUserPhotoUploadDirPath() {
+        return getUserPhotoUploadDir().getAbsolutePath();
+    }
+
+    private File getUserPhotoUploadDir() {
         String dirPath = getPublicDir().getAbsolutePath()
                 + File.separator + getUserPhotoUpload();
         File dir = new File( dirPath );
         if ( dir.mkdirs() ) {
             LOG.info( "Created " + dirPath );
         }
-        return dir.getAbsolutePath();
+        return dir;
     }
+
 
     @Override
     public String getSquareUserIconURL( ChannelsUser user ) {
@@ -160,8 +170,7 @@ public class UserUploadServiceImpl implements UserUploadService {
         if ( squareIconFile != null ) {
             if ( squareIconFile.exists() ) {
                 return getUserPhotoUpload()
-                        + "/" + user.getPhoto()
-                        + "/" + Long.toString( System.currentTimeMillis() );     // seed to prevent caching
+                        + "/" + user.getPhoto();
             } else {
                 return null;
             }
@@ -172,7 +181,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     private File getSquaredUserFile( ChannelsUser user ) {
         String fileName = user.getPhoto( );
         if ( fileName != null )
-            return new File( getSquaredDirectory(), fileName + "_squared.png" );
+            return new File( getSquaredDirectory(), fileName + SQUARED_PNG );
         else
             return null;
     }

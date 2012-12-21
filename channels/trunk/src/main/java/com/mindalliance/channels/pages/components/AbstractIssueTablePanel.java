@@ -257,8 +257,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                             "images/survey_add_small.png" ) ) );
             image.add( new AttributeModifier( "alt",
                     new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
-            image.add( new AttributeModifier( "title",
-                    new Model<String>( surveyed ? "View survey" : "Create new survey" ) ) );
+            addTipTitle( image, new Model<String>( surveyed ? "View survey" : "Create new survey" ) );
             link.add( image );
         }
     }

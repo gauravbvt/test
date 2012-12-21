@@ -335,7 +335,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                 }
             };
             if ( !titleString.isEmpty() ) {
-                issuesLink.add( new AttributeModifier( "title", titleString ) );
+                addTipTitle( issuesLink, titleString );
             }
             String src = waived ? "images/waived2.png" : "images/warning.png";
             PathIcon issuesPathIcon = new PathIcon( "Issues", src, issuesLink );
@@ -357,7 +357,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                     update( target, change );
                 }
             };
-            surveysLink.add( new AttributeModifier( "title", "Surveys launched or that could be launched" ) );
+            addTipTitle( surveysLink, "Surveys launched or that could be launched" );
             return new PathIcon( "Surveys", "images/surveys.png", surveysLink );
         } else {
             return null;
@@ -373,8 +373,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                     geoLocatables,
                     getQueryService() );
             PathIcon mapPathIcon = new PathIcon( "Map", "images/location.png", geomapLink );
-            geomapLink
-                    .add( new AttributeModifier( "title", getMapTitle() ) );
+            addTipTitle( geomapLink, getMapTitle() );
             mapPathIcon.setVisible( !geoLocatables.isEmpty() );
             return mapPathIcon;
         } else {

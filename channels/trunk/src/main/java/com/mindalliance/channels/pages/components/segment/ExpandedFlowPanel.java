@@ -1015,7 +1015,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 new PropertyModel<String>( this, "name" ),
                 new PropertyModel<List<Node>>( this, "firstChoices" ),
                 new PropertyModel<List<Node>>( this, "secondChoices" ) );
-        otherChoice.add( new AttributeModifier( "title", new Model<String>( getOtherPart().displayString() ) ) );
+        addTipTitle( otherChoice, new Model<String>( getOtherPart().displayString() ) );
         otherChoice.setOutputMarkupId( true );
         addOrReplace( otherChoice );
     }

@@ -6,7 +6,6 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.services.QuestionService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -69,7 +68,7 @@ public class QuestionChoicesPanel extends AbstractUpdatablePanel {
                         "answerLabel",
                         StringUtils.abbreviate( choice, MAX_LENGTH ) );
                 if ( choice.length() > MAX_LENGTH ) {
-                    choiceLabel.add( new AttributeModifier( "title", new Model<String>( choice ) ) );
+                    addTipTitle( choiceLabel, new Model<String>( choice ) );
                 }
                 item.add( choiceLabel );
                 // move up

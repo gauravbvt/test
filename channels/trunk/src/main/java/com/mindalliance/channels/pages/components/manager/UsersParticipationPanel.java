@@ -23,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -61,7 +62,6 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
 
     private static final String[] USER_CHOICES = {ALL_USERS, SUPERVISED, SUPERVISORS, COLLEAGUES, SELF};
 
-
     /**
      * Name index panel.
      */
@@ -77,6 +77,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private static final int MAX_ROWS = 12;
 
     private String userRelationship = ALL_USERS;
+    private boolean showingUnassignedAgents = false;
     private UsersParticipationTable usersParticipationTable;
     private List<UserParticipationWrapper> userParticipationWrappers;
     private WebMarkupContainer assignmentContainer;
@@ -95,6 +96,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private void init() {
         resetUserParticipationWrappers();
         addUsersDropDown();
+        addShowUnassignedAgents();
         addNameRangePanel();
         addUsersParticipationTable();
         addAssigning();
@@ -109,15 +111,33 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         usersRelationshipChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                resetUserParticipationWrappers();
-                nameRange = new NameRange();
-                addNameRangePanel();
-                addUsersParticipationTable();
-                target.add( usersParticipationTable );
+                updateFields( target );
             }
         } );
         add( usersRelationshipChoice );
     }
+
+    private void updateFields( AjaxRequestTarget target ) {
+        resetUserParticipationWrappers();
+        nameRange = new NameRange();
+        addNameRangePanel();
+        addUsersParticipationTable();
+        target.add( usersParticipationTable );
+    }
+
+    private void addShowUnassignedAgents() {
+        AjaxCheckBox showUnassignedCheckBox = new AjaxCheckBox(
+                "unassigned",
+                new PropertyModel<Boolean>( this, "showingUnassignedAgents" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateFields( target );
+            }
+        };
+        add( showUnassignedCheckBox );
+    }
+
 
     private void addNameRangePanel() {
         nameRangePanel = new NameRangePanel(
@@ -197,6 +217,12 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 if ( userParticipationList.isEmpty() ) {
                     userParticipationWrappers.add( new UserParticipationWrapper( user ) );
                 }
+            }
+        }
+        if ( showingUnassignedAgents ) {
+            for ( Agent unassignedAgent
+                    : planCommunity.getParticipationManager().findAllUnassignedAgents( planCommunity ) ) {
+                userParticipationWrappers.add( new UserParticipationWrapper( unassignedAgent ) );
             }
         }
     }
@@ -530,6 +556,14 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         assignmentAgency = null;
     }
 
+    public boolean isShowingUnassignedAgents() {
+        return showingUnassignedAgents;
+    }
+
+    public void setShowingUnassignedAgents( boolean showingUnassignedAgents ) {
+        this.showingUnassignedAgents = showingUnassignedAgents;
+    }
+
     /**
      * User participation wrapper.
      */
@@ -537,6 +571,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
 
         private ChannelsUser user;
         private UserParticipation userParticipation;
+        private Agent agent;
 
         public UserParticipationWrapper( ChannelsUser user ) {
             this.user = user;
@@ -546,6 +581,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             this.user = user;
             this.userParticipation = userParticipation;
         }
+
+        public UserParticipationWrapper( Agent agent ) {
+            this.agent = agent;
+        }
+
 
         public UserParticipation getUserParticipation() {
             return userParticipation;
@@ -560,11 +600,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         }
 
         public String getNormalizedFullName() {
-            return user.getSimpleNormalizedFullName();
+            return user == null ? null : user.getSimpleNormalizedFullName();
         }
 
         public String getEmail() {
-            return user.getEmail();
+            return user == null ? null :user.getEmail();
         }
 
         public String getAgentName() {
@@ -573,15 +613,17 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         }
 
         public Agent getAgent() {
-            return userParticipation != null
-                    ? userParticipation.getAgent( getPlanCommunity() )
-                    : null;
+            return agent != null
+                    ? agent :
+                    userParticipation != null
+                            ? userParticipation.getAgent( getPlanCommunity() )
+                            : null;
         }
 
         public String getAgentDescription() {
             Agent agent = getAgent();
             return agent != null
-                    ? agent.getDescription()
+                    ? agent.getRequirementsDescription( getPlanCommunity() )
                     : null;
         }
 
@@ -639,7 +681,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             else {
                 UserParticipationConfirmationService userParticipationConfirmationService
                         = getPlanCommunity().getUserParticipationConfirmationService();
-                return  userParticipationConfirmationService.isConfirmedByAllSupervisors(
+                return userParticipationConfirmationService.isConfirmedByAllSupervisors(
                         userParticipation,
                         getPlanCommunity() )
                         ? "Yes"
@@ -680,8 +722,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         public String toString() {
             if ( userParticipation != null ) {
                 return userParticipation.asString( getPlanCommunity() );
+            } else if ( user != null ) {
+                return user.getFullName() + " is not assigned";
             } else {
-                return user.getFullName();
+                assert agent != null;
+                return "No one is assigned as " + agent.getName();
             }
         }
     }

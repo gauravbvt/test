@@ -548,10 +548,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                             new AttributeModifier(
                                     "class",
                                     new Model<String>( "invalid-address" ) ) );           // NON-NLS
-                    addressField.add(
-                            new AttributeModifier(
-                                    "title",
-                                    new Model<String>( problem ) ) );
+                    addTipTitle( addressField, new Model<String>( problem ) );
                 }
             }
         }

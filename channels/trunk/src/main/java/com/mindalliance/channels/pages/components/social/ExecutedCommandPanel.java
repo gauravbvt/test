@@ -10,7 +10,6 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.ExecutedCommand;
 import com.mindalliance.channels.social.services.ExecutedCommandService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -129,9 +128,7 @@ public class ExecutedCommandPanel extends AbstractSocialEventPanel {
         }
         Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
         if ( !timeLabelString.isEmpty() ) {
-            timeLabel.add( new AttributeModifier(
-                    "title",
-                    new PropertyModel<String>( this, "longTime" ) ) );
+            addTipTitle( timeLabel, new PropertyModel<String>( this, "longTime" ) );
         }
         socialItemContainer.add( timeLabel );
     }

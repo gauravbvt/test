@@ -185,7 +185,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 if ( titleProperty != null ) {
                     String title = "" + ChannelsUtils.getProperty( bean, titleProperty, null );
                     if ( !title.isEmpty() )
-                        cellItem.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+                        addTipTitle( cellItem, new Model<String>( title ) );
                 }
             }
 
@@ -419,7 +419,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         identifiable = (Identifiable) ChannelsUtils.getProperty( bean, identifiableProperty, null );
         String hint = "";
         if ( titleProperty != null ) {
-            hint = (String)ChannelsUtils.getProperty( bean, titleProperty, "" );
+            hint = (String) ChannelsUtils.getProperty( bean, titleProperty, "" );
         }
         if ( identifiable != null ) {
             String defaultTextValue = findStringValue( bean, defaultText );
@@ -431,13 +431,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     ? ( defaultTextValue == null ? "" : defaultTextValue )
                     : labelText;
             return new FilterableLabel(
-                        id,
-                        new Model<Identifiable>( identifiable ),
-                        new Model<String>( labelText ),
-                        hint,
-                        identifiableProperty,
-                        filterable
-                );
+                    id,
+                    new Model<Identifiable>( identifiable ),
+                    new Model<String>( labelText ),
+                    hint,
+                    identifiableProperty,
+                    filterable
+            );
         } else {
             String defaultTextValue = findStringValue( bean, defaultText );
             return new Label( id, new Model<String>( ( defaultTextValue == null ? "" : defaultTextValue ) ) );
@@ -474,7 +474,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         defaultText,
                         filterable,
                         isMoRefString ) );
-             }
+            }
         };
     }
 
@@ -500,11 +500,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
     protected AbstractColumn<T> makeFilterableColumn( String name,
-                                                          final String identifiableProperty,
-                                                          final String labelProperty,
-                                                          final String defaultText,
-                                                          final String titleProperty,
-                                                          final Filterable filterable ) {
+                                                      final String identifiableProperty,
+                                                      final String labelProperty,
+                                                      final String defaultText,
+                                                      final String titleProperty,
+                                                      final Filterable filterable ) {
         return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -774,18 +774,18 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         return makeActionLinkColumn( name, label, action, null, property, cssClasses, updatable );
     }
 
-        /**
-        * Make actionLink column.
-        *
-        * @param name       column name
-        * @param label      cell content
-        * @param action     action to call on row object
-        * @param confirmationMessage a message to confirm action (no confirmation if null)
-        * @param property   if not null, property which value must be non-null for a link to appear
-        * @param updatable  target of call
-        * @param cssClasses a string
-        * @return a column
-        */
+    /**
+     * Make actionLink column.
+     *
+     * @param name                column name
+     * @param label               cell content
+     * @param action              action to call on row object
+     * @param confirmationMessage a message to confirm action (no confirmation if null)
+     * @param property            if not null, property which value must be non-null for a link to appear
+     * @param updatable           target of call
+     * @param cssClasses          a string
+     * @return a column
+     */
     protected AbstractColumn<T> makeActionLinkColumn(
             String name,
             final String label,
@@ -832,7 +832,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         isActual,
                         updatable
                 );
-                cellContent.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+                addTipTitle( cellContent, new Model<String>( title ) );
                 cellItem.add( cellContent );
             }
         };
@@ -862,7 +862,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         isActual,
                         updatable
                 );
-                cellContent.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+                addTipTitle( cellContent, new Model<String>( title ) );
                 cellItem.add( cellContent );
             }
         };
@@ -892,7 +892,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         action,
                         updatable
                 );
-                cellContent.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+                addTipTitle( cellContent, new Model<String>( title ) );
                 cellItem.add( cellContent );
             }
         };

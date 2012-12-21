@@ -34,6 +34,7 @@ public class AbstractSocialListPanel extends AbstractUpdatablePanel {
                 update( target, change );
             }
         };
+        addTipTitle( hideSocialLink, "Hide this panel" );
         add( hideSocialLink );
         hideSocialLink.setVisible( collapsible );
     }

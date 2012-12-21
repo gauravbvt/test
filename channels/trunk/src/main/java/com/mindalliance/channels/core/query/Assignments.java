@@ -223,7 +223,7 @@ public class Assignments implements Iterable<Assignment>, Serializable {
             do {
                 Integer count = orgCounts.get( organization );
                 orgCounts.put( organization, count == null ? 1 : count + 1 );
-                organization = organization.getParent();
+                organization = organization.getEffectiveParent();
             } while ( organization != null );
         }
 

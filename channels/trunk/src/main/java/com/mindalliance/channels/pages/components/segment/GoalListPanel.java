@@ -127,7 +127,7 @@ public class GoalListPanel extends AbstractCommandablePanel {
                 : "completing phase \"" + phase.getName() + "\" of " )
                 + "event \"" + eventName + "\"";
         WebMarkupContainer atEndHeader = new WebMarkupContainer( "atEnd" );
-        atEndHeader.add( new AttributeModifier( "title", new Model<String>( atEndTitle ) ) );
+        addTipTitle( atEndHeader, new Model<String>( atEndTitle ) );
         return atEndHeader;
     }
 

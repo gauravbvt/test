@@ -223,7 +223,7 @@ public class Channels extends WebApplication
         mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
-        mountResource( "users/photos/${name}/${seed}", new PngReference( UserPhotoPng.class ) );
+        mountResource( "users/photos/${name}", new PngReference( UserPhotoPng.class ) );
         mountResource( "icons/${name}", new PngReference( IconPng.class ) );
         mountResource( "segment.png", new PngReference( FlowMapPng.class ) );
         mountResource( "plan.png", new PngReference( PlanMapPng.class ) );
@@ -234,6 +234,8 @@ public class Channels extends WebApplication
         mountResource( "dissemination.png", new PngReference( DisseminationPng.class ) );
         mountResource( "procedures.png", new PngReference( ProceduresPng.class ) );
         mountResource( "required.png", new PngReference( RequiredNetworkingPng.class ) );
+
+        userUploadService.cleanUpPhotos();
 
     }
 

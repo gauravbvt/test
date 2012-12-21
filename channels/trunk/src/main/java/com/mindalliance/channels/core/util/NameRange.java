@@ -14,6 +14,8 @@ import java.text.Collator;
  * Time: 7:32:35 PM
  */
 public class NameRange implements Serializable {
+
+    private static final int MAX_SIZE = 10;
     /**
      * Upper bound of prior range.
      */
@@ -130,9 +132,9 @@ public class NameRange implements Serializable {
         if ( isEmpty() ) {
             return null;
         } else {
-            return getBoundLabels()[0]
+            return StringUtils.left(getBoundLabels()[0], MAX_SIZE)
                     + "-"
-                    + getBoundLabels()[1];
+                    + StringUtils.left(getBoundLabels()[1], MAX_SIZE);
         }
     }
 

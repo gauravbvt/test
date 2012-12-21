@@ -118,7 +118,7 @@ public class FilterableModelObjectLink extends AbstractUpdatablePanel {
     private void addImage() {
         image = new WebMarkupContainer( "lockImage" );
         image.add( new AttributeModifier( "src", new PropertyModel<String>( this, "imageSource" ) ) );
-        image.add( new AttributeModifier( "title", new PropertyModel<String>( this, "imageTitle" ) ) );
+        addTipTitle( image, new PropertyModel<String>( this, "imageTitle" ) );
         image.setOutputMarkupId( true );
         filterLink.addOrReplace( image );
     }

@@ -9,7 +9,6 @@ import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -135,7 +134,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
                         "questionLabel",
                         StringUtils.abbreviate( questionText, MAX_LENGTH ) );
                 if ( questionText.length() > MAX_LENGTH ) {
-                    questionLabel.add( new AttributeModifier( "title", new Model<String>( question.getText() ) ) );
+                    addTipTitle( questionLabel, new Model<String>( question.getText() ) );
                 }
                 questionLink.add( questionLabel );
                 // move up

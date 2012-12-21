@@ -1055,9 +1055,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         private void initialize() {
             Label moLabel = new Label( "moLabel", new PropertyModel<String>( this, "abbreviatedName" ) );
             if ( isNameAbbreviated() ) {
-                moLabel.add( new AttributeModifier(
-                        "title",
-                        new Model<String>( getFullName() ) ) );
+                addTipTitle( moLabel, new Model<String>( getFullName() ) );
             }
             add( moLabel );
             ListView refList = new ListView<ModelObject>(

@@ -89,13 +89,12 @@ public class CollapsedFlowPanel extends AbstractFlowPanel {
                             : ""
                 )) );
         if ( !summary.isEmpty() ) {
-            warning.add(
-                    new AttributeModifier( "title", new Model<String>( summary ) ) );
+            addTipTitle( warning, new Model<String>( summary ) );
+
         } else {
             if ( hasIssues ) {
                 // All waived issues
-                warning.add(
-                        new AttributeModifier( "title", new Model<String>( "All issues waived" ) ) );
+                addTipTitle( warning, new Model<String>( "All issues waived" ) );
             }
         }
         warning.setVisible( hasIssues );

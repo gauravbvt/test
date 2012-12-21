@@ -2,9 +2,9 @@ package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 
-import javax.jws.WebMethod;
 import java.util.List;
 
 /**
@@ -128,7 +128,6 @@ public interface ParticipationManager {
      * @param userParticipation a plan participation
      * @return a boolean
      */
-    @WebMethod( exclude = true )
     boolean hasAuthorityOverParticipation(
             PlanCommunity planCommunity,
             ChannelsUser user,
@@ -136,4 +135,17 @@ public interface ParticipationManager {
 
     Plan getPlan( String communityUri, int planVersion );
 
+    /**
+     * Find all agents no user participates as.
+     * @param planCommunity a plan community
+     * @return a list of agents
+     */
+    List<Agent> findAllUnassignedAgents( PlanCommunity planCommunity );
+
+    /**
+     * Find all unassigned placeholder organizations.
+     * @param planCommunity a plan community
+     * @return a list of organziations
+     */
+    List<Organization> findAllUnassignedPlaceholders( PlanCommunity planCommunity );
 }

@@ -8,10 +8,12 @@
 <body>
 <wicket:panel>
     <div class="filters">
-        Show
+        Show participation by
         <select wicket:id="users">
             <option>All users</option>
         </select>
+        <input wicket:id="unassigned" type="checkbox"/> and show unassigned agents
+
         <span wicket:id="nameRanges">[name range panel]</span>
     </div>
     <div wicket:id="participationTable">[user participation table]</div>

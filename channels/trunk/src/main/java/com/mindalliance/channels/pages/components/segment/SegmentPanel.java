@@ -217,11 +217,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         taskTitleContainer.add( new AttributeModifier( "class", new Model<String>( cssClasses() ) ) );
         List<String> conceptualCauses = getAnalyst().findConceptualCauses( getQueryService(), getPart() );
         if ( !conceptualCauses.isEmpty() ) {
-            taskTitleContainer.add( new AttributeModifier( "title",
-                                                           new Model<String>(
-                                                                   "Not executable: " + StringUtils.capitalize(
-                                                                           ChannelsUtils.listToString( conceptualCauses,
-                                                                                                       ", and " ) ) ) ) );
+            addTipTitle( taskTitleContainer, new Model<String>(
+                    "Not executable: " + StringUtils.capitalize(
+                            ChannelsUtils.listToString( conceptualCauses,
+                                    ", and " ) ) ) );
         }
         addOrReplace( taskTitleContainer );
     }
@@ -252,7 +251,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         overridesImage.setOutputMarkupId( true );
         if ( overridden || overriding ) {
             overridesImage.add( new AttributeModifier( "src", new Model<String>( "images/" + image ) ) );
-            overridesImage.add( new AttributeModifier( "title", new Model<String>( title ) ) );
+            addTipTitle( overridesImage, new Model<String>( title )  );
         }
         makeVisible( overridesImage, overridden || overriding );
         addOrReplace( overridesImage );
@@ -340,6 +339,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private void addMaximizeControl() {
         // Maximize
         WebMarkupContainer fullscreen = new WebMarkupContainer( "maximized" );
+        addTipTitle( fullscreen, "Maximize" );
         fullscreen.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
@@ -376,8 +376,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         WebMarkupContainer icon = new WebMarkupContainer( "split_icon" );
         icon.add( new AttributeModifier( "src",
                                          new Model<String>( minimized ? "images/split_on.png" : "images/split.png" ) ) );
-        icon.add( new AttributeModifier( "title",
-                                         new Model<String>( minimized ? "Shrink back forms" : "Stretch up forms" ) ) );
+        addTipTitle( icon, new Model<String>( minimized ? "Shrink back forms" : "Stretch up forms" ) );
         shrinkExpand.add( icon );
     }
 

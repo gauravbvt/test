@@ -388,7 +388,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         categoryChoice.setOutputMarkupId( true );
         Part.Category category = getPart().getCategory();
         if ( category != null )
-            categoryChoice.add( new AttributeModifier( "title", new Model<String>( category.getHint() ) ) );
+            addTipTitle( categoryChoice, new Model<String>( category.getHint() ) );
         categoryChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {

@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -13,6 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +31,9 @@ public class RegisteredOrganizationServiceImpl
 
     @Autowired
     OrganizationParticipationService organizationParticipationService;
+
+    @Autowired
+    OrganizationContactInfoService organizationContactInfoService;
 
     public RegisteredOrganizationServiceImpl() {
     }
@@ -87,11 +92,115 @@ public class RegisteredOrganizationServiceImpl
     public boolean removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity ) {
         RegisteredOrganization registered = find( orgName, planCommunity );
         if ( registered != null ) {
-            if ( organizationParticipationService.findRegistrationsFor( registered, planCommunity ).isEmpty() ) {
+            boolean inParticipation = !organizationParticipationService
+                    .findAllParticipationBy( registered, planCommunity ).isEmpty();
+            boolean inOrgContacts = !organizationContactInfoService
+                    .findAllContactInfo( registered ).isEmpty();
+            if ( !inParticipation && !inOrgContacts ) {
                 delete( registered );
                 return true;
             }
         }
         return false;
     }
+
+    @Override
+    @Transactional
+    public List<String> getAllRegisteredNames( PlanCommunity planCommunity ) {
+        List<String> allNames = new ArrayList<String>();
+        for ( RegisteredOrganization registered : getAllRegisteredOrganizations( planCommunity ) ) {
+            String name = registered.getName( planCommunity );
+            if ( name != null ) allNames.add( name );
+        }
+        return allNames;
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean canHaveParent(
+            final String name,
+            String parentName,
+            final PlanCommunity planCommunity ) {
+        if ( parentName == null ) return true;
+        return !parentName.equals( name )
+                && !CollectionUtils.exists(
+                findAncestors( parentName, planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (RegisteredOrganization) object ).getName( planCommunity ).equals( name );
+                    }
+                } );
+    }
+
+    @Override
+    @Transactional
+    public boolean updateWith( ChannelsUser user,
+                               String orgName,
+                               Agency agency,
+                               PlanCommunity planCommunity ) {
+        boolean success = false;
+        RegisteredOrganization registered = find( orgName, planCommunity );
+        if ( registered != null ) {
+            String parentName = agency.getParentName();
+            if ( parentName != null ) {
+                if ( canHaveParent(
+                        agency.getName(),
+                        parentName,
+                        planCommunity ) ) {
+                    RegisteredOrganization registeredParent = find( parentName, planCommunity );
+                    if ( registeredParent == null ) {
+                        registeredParent = new RegisteredOrganization(
+                                user.getUsername(),
+                                parentName,
+                                planCommunity );
+                        save( registeredParent );
+                    }
+                    registered.setParent( registeredParent );
+                }
+            } else {
+                registered.setParent( null );
+            }
+            registered.updateWith( agency );
+            organizationContactInfoService.setChannels( user, registered, agency.getEffectiveChannels(), planCommunity );
+            save( registered );
+            success = true;
+        }
+        return success;
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public List<Channel> getAllChannels( RegisteredOrganization registered, PlanCommunity planCommunity ) {
+        return organizationContactInfoService.getChannels( registered, planCommunity );
+    }
+
+    private List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity ) {
+        List<RegisteredOrganization> visited = new ArrayList<RegisteredOrganization>();
+        RegisteredOrganization registered = find( orgName, planCommunity );
+        if ( registered != null )
+            return safeFindAncestors( registered, planCommunity, visited );
+        else
+            return new ArrayList<RegisteredOrganization>();
+    }
+
+    private List<RegisteredOrganization> safeFindAncestors(
+            RegisteredOrganization registered,
+            PlanCommunity planCommunity,
+            List<RegisteredOrganization> visited ) {
+        List<RegisteredOrganization> ancestors = new ArrayList<RegisteredOrganization>();
+        if ( !visited.contains( registered ) ) {
+            if ( registered != null ) {
+                RegisteredOrganization registeredParent = registered.getEffectiveParent( planCommunity );
+                if ( registeredParent != null && !visited.contains( registeredParent ) ) {
+                    visited.add( registeredParent );
+                    ancestors.add( registeredParent );
+                    ancestors.addAll( safeFindAncestors( registeredParent, planCommunity, visited ) );
+                }
+            }
+        }
+        return ancestors;
+    }
+
+
 }

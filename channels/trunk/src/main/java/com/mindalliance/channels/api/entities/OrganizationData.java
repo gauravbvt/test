@@ -76,8 +76,8 @@ public class OrganizationData extends ModelEntityData {
 
     @XmlElement
     public Long getParentId() {
-        return getOrganization().getParent() != null
-                ? getOrganization().getParent().getId()
+        return getOrganization().getEffectiveParent() != null
+                ? getOrganization().getEffectiveParent().getId()
                 : null;
     }
 

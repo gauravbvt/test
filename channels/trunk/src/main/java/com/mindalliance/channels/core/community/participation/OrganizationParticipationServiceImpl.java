@@ -42,7 +42,7 @@ public class OrganizationParticipationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public List<Agency> listRegisteredAgencies( PlanCommunity planCommunity ) {
+    public List<Agency> listParticipatingAgencies( PlanCommunity planCommunity ) {
         Set<Agency> agencies = new HashSet<Agency>();
         for ( OrganizationParticipation registration : list() ) {
             if ( isValid( registration, planCommunity ) ) {
@@ -65,7 +65,7 @@ public class OrganizationParticipationServiceImpl
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<Agency> listAgenciesRegisteredAs( Organization placeholder, PlanCommunity planCommunity ) {
+    public List<Agency> listAgenciesParticipatingAs( Organization placeholder, PlanCommunity planCommunity ) {
         if ( placeholder.isPlaceHolder() ) {
             Session session = getSession();
             Plan plan = planCommunity.getPlan();
@@ -84,7 +84,7 @@ public class OrganizationParticipationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public boolean canUnregisterAnOrganizationFrom(
+    public boolean canUnassignOrganizationFrom(
             ChannelsUser user,
             Organization placeholder,
             PlanCommunity planCommunity ) {
@@ -94,7 +94,7 @@ public class OrganizationParticipationServiceImpl
 
     @Override
     @Transactional
-    public OrganizationParticipation registerOrganizationAs(
+    public OrganizationParticipation assignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
@@ -131,13 +131,13 @@ public class OrganizationParticipationServiceImpl
 
     @Override
     @Transactional
-    public boolean unregisterOrganizationAs(
+    public boolean unassignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrg,
             Organization placeholder,
             PlanCommunity planCommunity ) {
-        if ( canUnregisterAnOrganizationFrom( user, placeholder, planCommunity ) ) {
-            OrganizationParticipation organizationParticipation = findOrganizationRegistration(
+        if ( canUnassignOrganizationFrom( user, placeholder, planCommunity ) ) {
+            OrganizationParticipation organizationParticipation = findOrganizationParticipation(
                     registeredOrg.getName( planCommunity ),
                     placeholder,
                     planCommunity );
@@ -155,7 +155,7 @@ public class OrganizationParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<OrganizationParticipation> findRegistrationsFor( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
+    public List<OrganizationParticipation> findAllParticipationBy( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
@@ -166,7 +166,7 @@ public class OrganizationParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public OrganizationParticipation findOrganizationRegistration(
+    public OrganizationParticipation findOrganizationParticipation(
             String orgName,
             Organization placeholder,
             PlanCommunity planCommunity ) {

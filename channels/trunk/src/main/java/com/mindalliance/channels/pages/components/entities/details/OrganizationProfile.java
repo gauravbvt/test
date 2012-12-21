@@ -342,8 +342,8 @@ public class OrganizationProfile extends AbstractCommandablePanel {
                 if ( !candidate.ancestors().contains( organization ) )
                     candidateNames.add( candidate.getName() );
             }
-            if ( organization.getParent() != null )
-                candidateNames.add( organization.getParent().getName() );
+            if ( organization.getEffectiveParent() != null )
+                candidateNames.add( organization.getEffectiveParent().getName() );
             Collections.sort( candidateNames );
         }
         return candidateNames;
@@ -399,7 +399,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
      * @return a String
      */
     public String getParentOrganization() {
-        Organization parent = ( getOrganization() ).getParent();
+        Organization parent = ( getOrganization() ).getEffectiveParent();
         return parent == null ? "" : parent.getName();
     }
 

@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.PresenceRecord;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -56,16 +55,12 @@ public class UserPresencePanel extends AbstractSocialEventPanel {
         }
         Label timeLabel = new Label( "time", new Model<String>( timeLabelString ) );
         if ( !timeLabelString.isEmpty() ) {
-            timeLabel.add( new AttributeModifier(
-                    "title",
-                    new PropertyModel<String>( this, "longTime" ) ) );
+            addTipTitle( timeLabel, new PropertyModel<String>( this, "longTime" ) );
         }
         timeLabel.setVisible( isPresent( getPersistentPlanObjectUsername() ) );
         socialItemContainer.add( timeLabel );
         if ( !present & !time.isEmpty() ) {
-            getNameLabel().add( new AttributeModifier(
-                    "title",
-                    new Model<String>( "left " + time ) ) );
+            addTipTitle( getNameLabel(), new Model<String>( "left " + time ) );
         }
     }
 

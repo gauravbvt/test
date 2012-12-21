@@ -8,10 +8,12 @@
 <body>
 <wicket:panel>
     <div class="filters">
-        Show
+        Show participation by
         <select wicket:id="agenciesFilter">
             <option>All agencies</option>
         </select>
+        <input wicket:id="placeholders" type="checkbox"/>
+        and show unassigned placeholders
         <span wicket:id="nameRanges">[name range panel]</span>
     </div>
     <div wicket:id="agenciesTable">[user participation table]</div>
@@ -23,7 +25,8 @@
             <select wicket:id="placeholders"><option>org name</option></select>
         </div>
     </div>
-    <div wicket:id="agencyProfile">[agency profile panel]</div>
+    <div wicket:id="profileDialog" >
+    </div>
 </wicket:panel>
 </body>
 </html>

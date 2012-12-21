@@ -48,7 +48,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
         // Validity
         WebMarkupContainer validityImage = new WebMarkupContainer( "validityImage" );
         validityImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "validityImage" ) ) );
-        validityImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "validityTitle" ) ) );
+        addTipTitle( validityImage, new PropertyModel<String>( this, "validityTitle" ) );
         validityImage.setOutputMarkupId( true );
         evaluation.add( validityImage );
         Label validityLabel = new Label( "validity", new PropertyModel<String>( this, "validityLabel" ) );
@@ -57,8 +57,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
         // Completeness
         WebMarkupContainer completenessImage = new WebMarkupContainer( "completenessImage" );
         completenessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "completenessImage" ) ) );
-        completenessImage.add( new AttributeModifier( "title",
-                                                      new PropertyModel<String>( this, "completenessTitle" ) ) );
+        addTipTitle( completenessImage, new PropertyModel<String>( this, "completenessTitle" ) );
         completenessImage.setOutputMarkupId( true );
         evaluation.add( completenessImage );
         Label completenessLabel = new Label( "completeness", new PropertyModel<String>( this, "completenessLabel" ) );
@@ -67,7 +66,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
         // Robustness
         WebMarkupContainer robustnessImage = new WebMarkupContainer( "robustnessImage" );
         robustnessImage.add( new AttributeModifier( "src", new PropertyModel<String>( this, "robustnessImage" ) ) );
-        robustnessImage.add( new AttributeModifier( "title", new PropertyModel<String>( this, "robustnessTitle" ) ) );
+        addTipTitle( robustnessImage, new PropertyModel<String>( this, "robustnessTitle" ) );
         robustnessImage.setOutputMarkupId( true );
         evaluation.add( robustnessImage );
         Label robustnessLabel = new Label( "robustness", new PropertyModel<String>( this, "robustnessLabel" ) );

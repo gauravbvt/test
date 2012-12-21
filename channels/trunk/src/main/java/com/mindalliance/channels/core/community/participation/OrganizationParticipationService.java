@@ -19,31 +19,31 @@ public interface OrganizationParticipationService extends GenericSqlService<Orga
 
     boolean isValid( OrganizationParticipation registration, PlanCommunity planCommunity );
 
-    List<Agency> listRegisteredAgencies( PlanCommunity planCommunity );
+    List<Agency> listParticipatingAgencies( PlanCommunity planCommunity );
 
-    List<Agency> listAgenciesRegisteredAs( Organization placeholder, PlanCommunity planCommunity );
+    List<Agency> listAgenciesParticipatingAs( Organization placeholder, PlanCommunity planCommunity );
 
-    OrganizationParticipation findOrganizationRegistration(
+    OrganizationParticipation findOrganizationParticipation(
             String orgName,
             Organization placeholder,
             PlanCommunity planCommunity );
 
-    boolean canUnregisterAnOrganizationFrom(
+    boolean canUnassignOrganizationFrom(
             ChannelsUser user,
             Organization placeholder,
             PlanCommunity planCommunity );
 
-    boolean unregisterOrganizationAs(
+    boolean unassignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
             PlanCommunity planCommunity );
 
-    List<OrganizationParticipation> findRegistrationsFor(
+    List<OrganizationParticipation> findAllParticipationBy(
             RegisteredOrganization registeredOrganization,
             PlanCommunity planCommunity );
 
-    OrganizationParticipation registerOrganizationAs(
+    OrganizationParticipation assignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,

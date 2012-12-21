@@ -219,9 +219,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         );
         confirmedCheckBox.setEnabled( wrapper.isModifiable() );
         if ( !wrapper.isModifiable() ) {
-            confirmedCheckBox.add( new AttributeModifier(
-                    "title",
-                    "Standard element of information" ) );
+            addTipTitle( confirmedCheckBox, "Standard element of information" );
         }
         item.addOrReplace( confirmedCheckBox );
     }

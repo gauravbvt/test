@@ -94,14 +94,15 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
 
     private void addHideImage() {
-        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideGuide" ) {
+        AjaxFallbackLink hideGuideLink = new AjaxFallbackLink( "hideGuide" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Channels.GUIDE_ID );
                 change.setMessage( "To re-open, select Guide in the top Show menu." );
                 update( target, change );
             }
         };
-        add( hideSocialLink );
+        addTipTitle( hideGuideLink, "Hide this panel" );
+        add( hideGuideLink );
     }
 
     private void addGuideAccordion() {

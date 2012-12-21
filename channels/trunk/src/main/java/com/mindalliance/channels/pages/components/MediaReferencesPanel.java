@@ -70,8 +70,7 @@ public class MediaReferencesPanel extends AbstractUpdatablePanel {
                         "src", new Model<String>( src ) ) );
                 icon.add(  new AttributeModifier(
                         "alt", new Model<String>( title ) ) );
-                icon.add(  new AttributeModifier(
-                        "title", new Model<String>( attachmentManager.getLabel( getPlan(), attachment ) ) ) );
+                addTipTitle( icon, new Model<String>( attachmentManager.getLabel( getPlan(), attachment ) ) );
                 link.add( icon );
             }
         };

@@ -2306,13 +2306,13 @@ public abstract class DefaultQueryService implements QueryService {
     public Organization.FamilyRelationship findFamilyRelationship( Organization fromOrg, Organization toOrg ) {
         if ( ModelObject.areIdentical( fromOrg, toOrg ) )
             return Organization.FamilyRelationship.Identity;
-        if ( fromOrg.getParent() == null || toOrg.getParent() == null )
+        if ( fromOrg.getEffectiveParent() == null || toOrg.getEffectiveParent() == null )
             return Organization.FamilyRelationship.None;
-        if ( ModelObject.areIdentical( fromOrg, toOrg.getParent() ) )
+        if ( ModelObject.areIdentical( fromOrg, toOrg.getEffectiveParent() ) )
             return Organization.FamilyRelationship.Parent;
-        if ( ModelObject.areIdentical( toOrg, fromOrg.getParent() ) )
+        if ( ModelObject.areIdentical( toOrg, fromOrg.getEffectiveParent() ) )
             return Organization.FamilyRelationship.Child;
-        if ( ModelObject.areIdentical( fromOrg.getParent(), toOrg.getParent() ) )
+        if ( ModelObject.areIdentical( fromOrg.getEffectiveParent(), toOrg.getEffectiveParent() ) )
             return Organization.FamilyRelationship.Sibling;
         List<? extends Hierarchical> toOrgSuperiors = toOrg.getSuperiors();
         if ( toOrgSuperiors.contains( fromOrg ) )

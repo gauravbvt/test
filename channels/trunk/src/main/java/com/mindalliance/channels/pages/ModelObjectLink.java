@@ -60,7 +60,7 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
         };
         add( link );
         if ( hint != null && !hint.isEmpty() ) {
-            link.add( new AttributeModifier( "title", new Model<String>( hint ) ) );
+            addTipTitle( link, new Model<String>( hint ) );
         }
         if ( css != null ) {
             link.add( new AttributeModifier( "class", new Model<String>( css ) ) );

@@ -143,4 +143,5 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         sb.append( getPlaceholderOrganization( planCommunity ).getName() );
         return sb.toString();
     }
+
 }

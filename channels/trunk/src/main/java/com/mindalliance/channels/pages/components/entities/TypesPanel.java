@@ -142,18 +142,14 @@ public class TypesPanel extends AbstractCommandablePanel {
         if ( wrapper.isInherited() || wrapper.isImmutable() )
             entityLink.add(
                     new AttributeModifier( "style", new Model<String>( "font-style:oblique" ) ) );
-        entityLink.add( new AttributeModifier(
-                "title",
-                new Model<String>( wrapper.getTitle() ) ) );
+        addTipTitle( entityLink, new Model<String>( wrapper.getTitle() ) );
         nameContainer.add( entityLink );
         // Universal type
         Label universalLabel = new Label( "universal", new Model<String>( wrapper.getTypeName() ) );
         universalLabel.setVisible( wrapper.isUniversal() );
         universalLabel.add(
                 new AttributeModifier( "style", new Model<String>( "font-style:oblique" ) ) );
-        universalLabel.add( new AttributeModifier(
-                "title",
-                new Model<String>( wrapper.getTitle() ) ) );
+        addTipTitle( universalLabel, new Model<String>( wrapper.getTitle() ) );
         nameContainer.add( universalLabel );
     }
 

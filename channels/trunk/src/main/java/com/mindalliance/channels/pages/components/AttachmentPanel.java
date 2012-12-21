@@ -299,11 +299,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 addDeleteImage( item );
                 item.add( new AttributeModifier(
                         "class", new Model<String>( a.getType().getStyle() ) ) );
-                item.add( new AttributeModifier(
-                        "title",
-                        new Model<String>(
-                                a.getType().getLabel() + " - " + a.getUrl()
-                        ) ) );
+                addTipTitle( item, new Model<String>(
+                        a.getType().getLabel() + " - " + a.getUrl()
+                ) );
             }
         };
         makeVisible( attachmentsContainer, !getAttachments().isEmpty() );

@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.pages.components;
 
+import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
+import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
@@ -397,14 +399,16 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                 analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC ) :
                 analyst.hasIssues( getQueryService(), object, property );
 
-        if ( summary.isEmpty() )
+        if ( summary.isEmpty() ) {
             component.add( new AttributeModifier( "class",
-                    new Model<String>( hasIssues ? "waived" : "no-error" ) ),
-                    new AttributeModifier( "title",
-                            new Model<String>( hasIssues ? "All issues waived" : "" ) ) );
-        else
-            component.add( new AttributeModifier( "class", new Model<String>( "error" ) ),
-                    new AttributeModifier( "title", new Model<String>( summary ) ) );
+                    new Model<String>( hasIssues ? "waived" : "no-error" ) ) );
+            addTipTitle( component, new Model<String>( hasIssues ? "All issues waived" : "" ) );
+
+        }
+        else {
+            component.add( new AttributeModifier( "class", new Model<String>( "error" ) ) );
+            addTipTitle( component, new Model<String>( summary ) );
+        }
     }
 
     public ChannelsUser getUser() {
@@ -466,7 +470,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected Label editedByLabel( String id, final Identifiable identifiable, final String username ) {
         Label label = new Label( id, "(Edited by " + getQueryService().findUserFullName( username ) + ")" );
         label.add( new AttributeModifier( "class", new Model<String>( "disabled pointer" ) ) );
-        label.add( new AttributeModifier( "title", new Model<String>( "Click to send a message" ) ) );
+        addTipTitle( label, new Model<String>( "Click to send a message" ) );
         label.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
@@ -487,7 +491,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                     }
                 }
         );
-        linkMenuItem.add( new AttributeModifier( "title", new Model<String>( "Click to send a message" ) ) );
+        addTipTitle( linkMenuItem, new Model<String>( "Click to send a message" ) );
         return linkMenuItem;
     }
 
@@ -514,7 +518,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                     }
                 }
         );
-        linkMenuItem.add(  new AttributeModifier( "class", "disabled" ) );
+        linkMenuItem.add( new AttributeModifier( "class", "disabled" ) );
         return linkMenuItem;
     }
 
@@ -559,12 +563,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         boolean hasIssues = analyst.hasIssues( getQueryService(), object, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         if ( !summary.isEmpty() ) {
             component.add( new AttributeModifier( "class", new Model<String>( errorClass ) ) );
-            component.add( new AttributeModifier( "title", new Model<String>( summary ) ) );
+            addTipTitle( component, new Model<String>( summary ) );
         } else {
             if ( property == null && hasIssues ) {
                 // All waived issues
                 component.add( new AttributeModifier( "class", new Model<String>( "waived" ) ) );
-                component.add( new AttributeModifier( "title", new Model<String>( "All issues waived" ) ) );
+                addTipTitle( component, new Model<String>( "All issues waived" ) );
             }
         }
     }
@@ -634,6 +638,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected Form getForm() {
         return ( (AbstractChannelsBasicPage) getPage() ).getForm();
+    }
+
+    protected Component addTipTitle( Component component, String title ) {
+        return addTipTitle( component, new Model<String>( title ) );
+    }
+
+    protected Component addTipTitle( Component component, IModel<String> titleModel ) {
+        component.add( new AttributeModifier( "title", titleModel ) );
+        component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" )
+                /*  .edgeOffset( 10 )*/ ) );
+        return component;
     }
 
 

@@ -37,7 +37,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     private RegisteredOrganizationService registeredOrganizationService;
 
     @Autowired
-    private OrganizationParticipationService organizationParticipationServiceService;
+    private OrganizationParticipationService organizationParticipationService;
 
     @Autowired
     private PlanManager planManager;
@@ -56,12 +56,12 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 agencies.add( new Agency( organization ) );
         }
         // registered as placeholder
-        agencies.addAll( organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) );
+        agencies.addAll( organizationParticipationService.listParticipatingAgencies( planCommunity ) );
         // registered by community but not registered as placeholders
         for ( RegisteredOrganization registeredOrganization
                 : registeredOrganizationService.getAllRegisteredOrganizations( planCommunity ) ) {
             if ( !registeredOrganization.isFixedOrganization()
-                    && organizationParticipationServiceService.findRegistrationsFor(
+                    && organizationParticipationService.findAllParticipationBy(
                     registeredOrganization,
                     planCommunity ).isEmpty() ) {
                 agencies.add( new Agency( registeredOrganization, planCommunity ) );
@@ -90,7 +90,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         // Registered agents
-        for ( Agency agency : organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
+        for ( Agency agency : organizationParticipationService.listParticipatingAgencies( planCommunity ) ) {
             if ( agency.isRegisteredByCommunity() )
                 agents.addAll( agency.getAgents( planCommunity ) );
         }
@@ -116,7 +116,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
         }
         // In registered organizations
-        for ( Agency agency : organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
+        for ( Agency agency : organizationParticipationService.listParticipatingAgencies( planCommunity ) ) {
             for ( Agent agent : agency.getAgents( planCommunity ) ) {
                 if ( isParticipationSelfAssignable(
                         agent,
@@ -189,7 +189,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         // in registered organizations
         // When a fixed organization is registered under a placeholder,
         // it has the jobs it derives from the placeholder in addition to the jobs it already defines.
-        for ( Agency agency : organizationParticipationServiceService.listRegisteredAgencies( planCommunity ) ) {
+        for ( Agency agency : organizationParticipationService.listParticipatingAgencies( planCommunity ) ) {
             for ( Job job : agency.getPlaceholderJobs( planCommunity ) ) {
                 if ( new Agent( job.getActor(), agency, planCommunity ).equals( agent ) ) {
                     if ( job.getSupervisor() != null ) {
@@ -318,6 +318,57 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Override
     public Plan getPlan( String communityUri, int planVersion ) {
         return planManager.getPlan( communityUri, planVersion ); // todo - change when single planCommunity is not implied by plan
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Agent> findAllUnassignedAgents( final PlanCommunity planCommunity ) {
+        return (List<Agent>) CollectionUtils.select(
+                getAllKnownAgents( planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        final Agent agent = (Agent) object;
+                        return !CollectionUtils.exists(
+                                userParticipationService.getAllParticipations( planCommunity ),
+                                new Predicate() {
+                                    @Override
+                                    public boolean evaluate( Object object ) {
+                                        return ( (UserParticipation) object ).getAgent( planCommunity ).equals( agent );
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<Organization> findAllPlaceholders( PlanCommunity planCommunity ) {
+        return (List<Organization>) CollectionUtils.select(
+                planCommunity.getPlanService().listActualEntities( Organization.class, true ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Organization) object ).isPlaceHolder();
+                    }
+                } );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Organization> findAllUnassignedPlaceholders( final PlanCommunity planCommunity ) {
+        return (List<Organization>) CollectionUtils.select(
+                findAllPlaceholders( planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Organization placeholder = (Organization)object;
+                        return organizationParticipationService
+                                .listAgenciesParticipatingAs( placeholder, planCommunity ).isEmpty();
+                    }
+                }
+        );
     }
 
 

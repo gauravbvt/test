@@ -478,7 +478,7 @@ public class UserParticipationServiceImpl
     public List<UserParticipation> listUserParticipationIn( OrganizationParticipation organizationParticipation,
                                                             PlanCommunity planCommunity ) {
         OrganizationParticipation orgParticipation = organizationParticipationService
-                .findOrganizationRegistration( organizationParticipation.getRegisteredOrganization().getName( planCommunity ),
+                .findOrganizationParticipation( organizationParticipation.getRegisteredOrganization().getName( planCommunity ),
                         organizationParticipation.getPlaceholderOrganization( planCommunity ),
                         planCommunity );
         if ( orgParticipation == null ) {

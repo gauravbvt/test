@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
+import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
@@ -46,6 +48,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -718,5 +721,17 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     protected Place getPlanLocale() {
         return getPlanService().getPlanLocale();
     }
+
+    protected Component addTipTitle( Component component, String title ) {
+        return addTipTitle( component, new Model<String>( title ) );
+    }
+
+    protected Component addTipTitle( Component component, IModel<String> titleModel ) {
+        component.add( new AttributeModifier( "title", titleModel ) );
+        component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" )
+                /*  .edgeOffset( 10 )*/ ) );
+        return component;
+    }
+
 
 }

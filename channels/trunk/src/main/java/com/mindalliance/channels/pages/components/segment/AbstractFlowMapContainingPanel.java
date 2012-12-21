@@ -30,9 +30,9 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
 
 
     /**
-      * Expected screen resolution.
-      */
-     static private double DPI = 96.0;
+     * Expected screen resolution.
+     */
+    static private double DPI = 96.0;
 
     /**
      * Whether the flow map was resized to fit.
@@ -72,14 +72,13 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
     protected FlowMapDiagramPanel flowMapDiagramPanel;
 
 
-
     public AbstractFlowMapContainingPanel(
             String id,
             IModel<Segment> segmentModel,
             IModel<Part> partModel,
             Set<Long> expansions ) {
         super( id, segmentModel, expansions );
-         this.segmentModel = segmentModel;
+        this.segmentModel = segmentModel;
         this.partModel = partModel;
     }
 
@@ -153,6 +152,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
 
     private void addShowLegendControl() {
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
+        addTipTitle( legend, "legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
@@ -183,11 +183,10 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 new Model<String>( hidingNoop
                         ? "images/hide_noop_on.png"
                         : "images/hide_noop.png" ) ) );
-        icon.add( new AttributeModifier(
-                "title",
+        addTipTitle( icon,
                 new Model<String>( hidingNoop
-                        ? "Show all"
-                        : "Hide not realizable" ) ) );
+                ? "Show all"
+                : "Hide not realizable" ) );
         hideNoop.add( icon );
     }
 
@@ -211,11 +210,11 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 new Model<String>( showingConnectors
                         ? "images/show_connectors_on.png"
                         : "images/show_connectors.png" ) ) );
-        icon.add( new AttributeModifier(
-                "title",
+        addTipTitle(
+                icon,
                 new Model<String>( showingConnectors
                         ? "Hide  info needs and capabilities"
-                        : "Show info needs and capabilities" ) ) );
+                        : "Show info needs and capabilities" ) );
         showConnectors.add( icon );
     }
 
@@ -239,15 +238,15 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 new Model<String>( showingGoals
                         ? "images/show_goals_on.png"
                         : "images/show_goals.png" ) ) );
-        icon.add( new AttributeModifier(
-                "title",
+        addTipTitle(
+                icon,
                 new Model<String>( showingGoals
                         ? "Hide goals"
-                        : "Show goals" ) ) );
-        showGoals.add( icon );
+                        : "Show goals" ) );
+         showGoals.add( icon );
     }
 
-     private void addReduceToFitControl() {
+    private void addReduceToFitControl() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
         reduceToFit.add( new AbstractDefaultAjaxBehavior() {
             @Override
@@ -255,7 +254,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 super.onComponentTag( tag );
                 String domIdentifier = getFlowMapDomId();
                 String script = "wicketAjaxGet('"
-                        + getCallbackUrl(  )
+                        + getCallbackUrl()
                         + "&width='+$('" + domIdentifier + "').width()+'"
                         + "&height='+$('" + domIdentifier + "').height()";
                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
@@ -289,11 +288,9 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
                 new Model<String>( resizedToFit
                         ? "images/fit_on.png"
                         : "images/fit.png" ) ) );
-        icon.add( new AttributeModifier(
-                "title",
-                new Model<String>( resizedToFit
-                        ? "Show flow map at normal size"
-                        : "Reduce flow map to fit" ) ) );
+        addTipTitle( icon, new Model<String>( resizedToFit
+                ? "Show flow map at normal size"
+                : "Reduce flow map to fit" ) );
         reduceToFit.add( icon );
     }
 

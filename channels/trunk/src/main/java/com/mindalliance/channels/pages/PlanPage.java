@@ -605,7 +605,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         */
         String issuesSummary = getSegmentIssuesSummary();
         makeVisible( segmentIssuesLink, !issuesSummary.isEmpty() );
-        segmentIssuesLink.add( new AttributeModifier( "title", issuesSummary ) );
+        addTipTitle( segmentIssuesLink, new Model<String>( issuesSummary ) );
         addPartsMapLink();
     }
 
@@ -758,7 +758,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 StringUtils.abbreviate( planName, PLAN_NAME_MAX_LENGTH )
         );
         if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
-            selectedPlanNameLabel.add( new AttributeModifier( "title", planName ) );
+            addTipTitle( selectedPlanNameLabel, planName );
         }
         selectedPlanLink.add( selectedPlanNameLabel );
     }
@@ -777,7 +777,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 StringUtils.abbreviate( segmentName, SEGMENT_NAME_MAX_LENGTH )
         );
         if ( segmentName.length() > SEGMENT_NAME_MAX_LENGTH ) {
-            selectedSegmentNameLabel.add( new AttributeModifier( "title", segmentName ) );
+            addTipTitle( selectedSegmentNameLabel, segmentName );
         }
         selectedSegmentLink.add( selectedSegmentNameLabel );
     }
@@ -1182,8 +1182,8 @@ PopupSettings.RESIZABLE |
             LOG.debug( "Refresh now requested" );
         }
         makeVisible( refreshNeededComponent, !reasonsToRefresh.isEmpty() );
-        refreshNeededComponent.add( new AttributeModifier( "title", new Model<String>(
-                "Refresh:" + reasonsToRefresh ) ) );
+        addTipTitle( refreshNeededComponent, new Model<String>(
+                "Refresh:" + reasonsToRefresh )  );
     }
 
     private String getReasonsToRefresh() {

@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
+import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -144,5 +145,9 @@ public class PlanCommunity implements Nameable, Identifiable {
 
     public boolean isCommunityLeader( ChannelsUser user ) {
         return user.isPlanner( getPlan().getUri() );   // todo have non-planners be community leaders as well or instead
+    }
+
+    public boolean isOrganizationLeader( ChannelsUser user, RegisteredOrganization registeredOrganization ) {
+        return isCommunityLeader( user ); // todo - change when organization leaders implemented
     }
 }

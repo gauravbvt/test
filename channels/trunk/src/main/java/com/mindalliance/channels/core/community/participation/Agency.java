@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.model.AbstractUnicastChannelable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Nameable;
@@ -21,28 +22,100 @@ import java.util.Set;
  * Date: 12/6/12
  * Time: 10:49 AM
  */
-public class Agency implements Nameable, Identifiable {
+public class Agency extends AbstractUnicastChannelable implements Nameable, Identifiable {
 
     // Only one of fixedOrganization or organizationParticipation or registeredOrganization must be set.
     private Organization fixedOrganization;
     private RegisteredOrganization registeredOrganization;
     private OrganizationParticipation organizationParticipation;
-    private String name;
+    private String name;  // computed and cached
+    private String description;
+    private String mission;
+    private String parentName;
+    private boolean editable = false;
 
     public Agency( Organization fixedOrganization ) {
         assert fixedOrganization.isActual();
         this.fixedOrganization = fixedOrganization;
         name = fixedOrganization.getName();
+        description = fixedOrganization.getDescription();
+        mission = fixedOrganization.getMission();
+        parentName = fixedOrganization.getEffectiveParent() != null
+                ? fixedOrganization.getEffectiveParent().getName()
+                : null;
     }
 
     public Agency( OrganizationParticipation organizationParticipation, PlanCommunity planCommunity ) {
         this.organizationParticipation = organizationParticipation;
         name = organizationParticipation.getRegisteredOrganization().getName( planCommunity );
+        description = organizationParticipation.getRegisteredOrganization().getEffectiveDescription( planCommunity );
+        mission = organizationParticipation.getRegisteredOrganization().getEffectiveMission( planCommunity );
+        parentName = organizationParticipation.getRegisteredOrganization().getParentName( planCommunity );
     }
 
     public Agency( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
         this.registeredOrganization = registeredOrganization;
         name = registeredOrganization.getName( planCommunity );
+        description = registeredOrganization.getEffectiveDescription( planCommunity );
+        mission = registeredOrganization.getEffectiveMission( planCommunity );
+        parentName = registeredOrganization.getParentName( planCommunity );
+    }
+
+    public Agency( Agency agency ) {
+        fixedOrganization = agency.getFixedOrganization();
+        registeredOrganization = agency.getRegisteredOrganization();
+        organizationParticipation = agency.getOrganizationParticipation();
+        name = agency.getName();
+        description = agency.getDescription();
+        mission = agency.getMission();
+        parentName = agency.getParentName();
+    }
+
+    public void setEditable( boolean editable ) {
+        this.editable = editable;
+    }
+
+    public void initChannels( RegisteredOrganizationService registeredOrganizationService,
+                              PlanCommunity planCommunity ) {
+        if ( isFixedOrganization() ) {
+            setChannels( getFixedOrganization().getEffectiveChannels() );
+        } else {
+            setChannels( registeredOrganizationService.getAllChannels( getRegistration(), planCommunity ) );
+        }
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description = description;
+    }
+
+    public String getMission() {
+        return mission;
+    }
+
+    public void setMission( String mission ) {
+        this.mission = mission;
+    }
+
+    public RegisteredOrganization getParentRegistration( PlanCommunity planCommunity ) {
+        if ( isFixedOrganization() ) {
+            return null;
+        } else {
+            RegisteredOrganization registered = getRegistration();
+            RegisteredOrganization parentRegistration = registered.getParent();
+            return parentRegistration == null ? null : parentRegistration;
+        }
+    }
+
+    public String getParentName() {       // can return null
+        return parentName;
     }
 
     public Organization getFixedOrganization() {
@@ -53,8 +126,20 @@ public class Agency implements Nameable, Identifiable {
         return organizationParticipation;
     }
 
+    public RegisteredOrganization getRegistration() {
+        return fixedOrganization != null
+                ? null
+                : registeredOrganization != null
+                ? registeredOrganization
+                : organizationParticipation.getRegisteredOrganization();
+    }
+
     public RegisteredOrganization getRegisteredOrganization() {
         return registeredOrganization;
+    }
+
+    public boolean isFixedOrganization() {
+        return fixedOrganization != null;
     }
 
     public boolean isRegisteredByCommunity() {
@@ -64,7 +149,7 @@ public class Agency implements Nameable, Identifiable {
         if ( organizationParticipation != null )
             return !organizationParticipation.getRegisteredOrganization().isFixedOrganization();
         else
-            throw new IllegalStateException(  );
+            throw new IllegalStateException();
     }
 
     public List<Agent> getAgents( PlanCommunity planCommunity ) {
@@ -95,22 +180,13 @@ public class Agency implements Nameable, Identifiable {
     }
 
     @Override
-    public String getDescription() {
-        return fixedOrganization != null
-                ? fixedOrganization.getDescription()
-                : registeredOrganization != null
-                ? registeredOrganization.getDescription()
-                : organizationParticipation.getDescription();
-    }
-
-    @Override
     public String getTypeName() {
         return "organization";
     }
 
     @Override
     public boolean isModifiableInProduction() {
-        return false;
+        return !isFixedOrganization() && editable;
     }
 
     @Override
@@ -169,5 +245,28 @@ public class Agency implements Nameable, Identifiable {
 
     public String toString() {
         return "Agency " + getName();
+    }
+
+    public void setParentName( String val ) {
+         parentName = val == null || val.isEmpty()
+                 ? null
+                 : val;
+    }
+
+    // Channelable
+
+    @Override
+    public boolean canBeLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean canSetChannels() {
+        return !isFixedOrganization() && isModifiableInProduction();
+    }
+
+    @Override
+    public boolean isModelObject() {
+        return false;
     }
 }

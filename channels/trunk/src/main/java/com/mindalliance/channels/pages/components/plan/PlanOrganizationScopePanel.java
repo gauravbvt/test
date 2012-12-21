@@ -16,7 +16,6 @@ import com.mindalliance.channels.pages.components.AbstractIndexPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -221,9 +220,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
                 "expectationAction",
                 new Model<String>( getExpectationAction() )
         );
-        expectationLabel.add( new AttributeModifier(
-                "title",
-                new Model<String>( getExpectationActionHint() ) ) );
+        addTipTitle( expectationLabel, new Model<String>( getExpectationActionHint() ) );
         expectationActionLink.add( expectationLabel );
         WebMarkupContainer tasksContainer = new WebMarkupContainer( "tasksContainer" );
         tasksContainer.setVisible(

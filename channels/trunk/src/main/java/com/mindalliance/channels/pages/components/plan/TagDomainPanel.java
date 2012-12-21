@@ -10,7 +10,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -220,9 +219,7 @@ public class TagDomainPanel extends AbstractUpdatablePanel implements NameRangea
             add( tagLink );
             Label tagNameLabel = new Label( "name", name );
             if ( !name.equals( getTag().getName() ) ) {
-                tagNameLabel.add( new AttributeModifier(
-                        "title",
-                        new Model<String>( getTag().getName() ) ) );
+                addTipTitle( tagNameLabel, new Model<String>( getTag().getName() ) );
             }
             tagLink.add( tagNameLabel );
         }

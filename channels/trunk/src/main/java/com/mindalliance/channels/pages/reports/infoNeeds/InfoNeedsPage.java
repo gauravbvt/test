@@ -218,9 +218,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 statusContainer.add(
                         new AttributeModifier( "src",
                         new PropertyModel<String>( eoiNeed, "icon" ) ) );
-                statusContainer.add( new AttributeModifier(
-                        "title",
-                        new Model<String>( eoiNeed.getStatusString() ) ) );
+                addTipTitle( statusContainer, new Model<String>( eoiNeed.getStatusString() ) );
                 item.add( statusContainer );
                 item.add( new Label( "eoi.name", eoiNeed.getContentString() ) );
                 item.add( newEoiSources( "eoi.sources", eoiNeed.getEoiSources() ) );

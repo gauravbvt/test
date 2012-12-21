@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 
 import java.util.List;
@@ -23,4 +24,18 @@ public interface RegisteredOrganizationService extends GenericSqlService<Registe
     RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, PlanCommunity planCommunity );
 
     boolean removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity );
+
+    List<String> getAllRegisteredNames( PlanCommunity planCommunity );
+
+    boolean canHaveParent( String orgName,
+                           String parentName,
+                           PlanCommunity planCommunity );
+
+    boolean updateWith( ChannelsUser user,
+                        String orgName,
+                        Agency agency,
+                        PlanCommunity planCommunity );
+
+    List<Channel> getAllChannels( RegisteredOrganization registered,
+                                  PlanCommunity planCommunity );
 }

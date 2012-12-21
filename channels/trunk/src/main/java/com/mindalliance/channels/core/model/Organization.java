@@ -98,7 +98,7 @@ public class Organization extends AbstractUnicastChannelable
         Organization org = (Organization) entity;
         return super.validates( org, locale )
                 && ModelEntity.implies( org.location(), location, locale )
-                && ModelEntity.implies( org.getParent(), parent, locale );
+                && ModelEntity.implies( org.getEffectiveParent(), getEffectiveParent(), locale );
     }
 
     @Override
@@ -189,6 +189,11 @@ public class Organization extends AbstractUnicastChannelable
     public Organization getParent() {
         return parent;
     }
+
+    public Organization getEffectiveParent() {
+        return isPlaceHolder() ? null : parent;
+    }
+
 
     public void setParent( Organization parent ) {
         assert parent == null || isActual() && parent.isActual()
@@ -311,14 +316,14 @@ public class Organization extends AbstractUnicastChannelable
     private void safeAncestors( Set<Organization> visited ) {
         if ( !visited.contains( this ) ) {
             visited.add( this );
-            if ( parent != null )
-                parent.safeAncestors( visited );
+            if ( getEffectiveParent() != null )
+                getEffectiveParent().safeAncestors( visited );
         }
     }
 
     @Override
     public String toString() {
-        return parent == null ? getName()
+        return getEffectiveParent() == null ? getName()
                 : MessageFormat.format( "{0} - {1}", parentage(), getName() );
     }
 
@@ -372,7 +377,11 @@ public class Organization extends AbstractUnicastChannelable
 
     @Override
     public boolean isUndefined() {
-        return super.isUndefined() && parent == null && location == null && jobs.isEmpty();
+        return super.isUndefined()
+                && !isPlaceHolder()
+                && getEffectiveParent() == null
+                && location == null
+                && jobs.isEmpty();
     }
 
     @Override
@@ -396,7 +405,7 @@ public class Organization extends AbstractUnicastChannelable
             return super.getSuperiors();
         } else {
             List<Hierarchical> superiors = new ArrayList<Hierarchical>();
-            if ( parent != null ) superiors.add( parent );
+            if ( getEffectiveParent() != null ) superiors.add( getEffectiveParent() );
             return superiors;
         }
     }
@@ -431,7 +440,7 @@ public class Organization extends AbstractUnicastChannelable
     @Override
     public boolean references( final ModelObject mo ) {
         return super.references( mo )
-                || ModelObject.areIdentical( parent, mo )
+                || ModelObject.areIdentical( getEffectiveParent(), mo )
                 || ModelObject.areIdentical( location, mo )
                 || ModelObject.areIdentical( custodian, mo )
                 ||
@@ -472,7 +481,7 @@ public class Organization extends AbstractUnicastChannelable
      * @return an organization
      */
     public Organization getTopOrganization() {
-        if ( parent == null )
+        if ( getEffectiveParent() == null )
             return this;
         else {
             List<Organization> ancestors = ancestors();
@@ -513,6 +522,19 @@ public class Organization extends AbstractUnicastChannelable
      */
     public boolean isConfirmed( Job job ) {
         return getJobs().contains( job );
+    }
+
+    public String getRequirementsDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "<p><b>" ).append( "Mission: " ).append( "</p><br/>" );
+        sb.append( "<p>" ).append( getMission().isEmpty() ? "Any" : getMission() ).append( "</p><br/>" );
+        sb.append( "<p><b>" ).append( "Inter-organization agreements required: " ).append( "</p><br/>" );
+        sb.append( "<p>" ).append( isAgreementsRequired() ? "Yes" : "No" ).append( "</p><br/>" );
+        sb.append( "<p><b>" ).append( "Custodian: " ).append( "</p><br/>" );
+        sb.append( "<p>" ).append( getCustodian() == null
+                ? "Any planner"
+                : getCustodian().getName() ).append( "</p><br/>" );
+        return sb.toString();
     }
 
     /**

@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -409,5 +410,39 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         return isOpenParticipation()
                 && !isSingularParticipation()
                 && !isSupervisedParticipation();
+    }
+
+    public String getRequirementsDescription( Plan plan ) {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "<p><b>" ).append( isSystem() ? "A system" : "A person" ).append( "</p><br/>" );
+        if ( !getDescription().isEmpty() ) {
+            sb.append( "<p>" ).append( getDescription() ).append( "</p><br/>" );
+        }
+        sb.append( "<p><b>" ).append( "Availability: " ).append( "</b>" );
+        sb.append( getAvailability() ).append( "</p><br/>" );
+        sb.append( "<p><b>" ).append( "Languages: " ).append( "</b>" );
+        sb.append( ChannelsUtils.listToString( getEffectiveLanguages( plan ), ", ", " and " ) )
+                .append( "</p><br/>" );
+        sb.append( "<p><b>" ).append( "Clearances: " ).append( "</b>" );
+        sb.append( getClearances().isEmpty()
+                ? "None"
+                : ChannelsUtils.listToString( getClearances(), ", ", " and " ) );
+        sb.append( "</p><br/>" );
+        sb.append( "<b>" ).append( "Other requirements: " ).append( "</b>" );
+        List<String> qualifications = new ArrayList<String>(  );
+        for ( ModelEntity type : getAllTypes() ) {
+            if ( !type.getDescription().isEmpty() ) {
+                qualifications.add(  type.getDescription() );
+            }
+        }
+        if ( qualifications.isEmpty() )
+            sb.append( "None" );
+        else {
+            for (String qualification : qualifications ) {
+                sb.append( qualification ).append( "<br/>" );
+            }
+        }
+        return sb.toString();
+
     }
 }

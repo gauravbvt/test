@@ -151,4 +151,8 @@ public class Agent implements Nameable, Identifiable {
     public boolean isSupervisedParticipation() {
         return actor.isSupervisedParticipation();
     }
+
+    public String getRequirementsDescription( PlanCommunity planCommunity ) {
+        return getActor().getRequirementsDescription( planCommunity.getPlan() );
+     }
 }

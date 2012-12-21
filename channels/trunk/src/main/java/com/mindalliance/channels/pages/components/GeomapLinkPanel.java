@@ -10,7 +10,7 @@ import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.pages.GeoMapPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
@@ -36,9 +36,10 @@ public class GeomapLinkPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        add( GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
-                .add( new AttributeModifier( "title", hintModel ) )
-                .setVisible( hasMappableContent() ) );
+        Component link = GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
+                .setVisible( hasMappableContent() );
+        addTipTitle( link, hintModel );
+        add( link );
     }
 
     public boolean hasMappableContent() {

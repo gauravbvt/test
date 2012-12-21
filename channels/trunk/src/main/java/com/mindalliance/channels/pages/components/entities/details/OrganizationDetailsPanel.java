@@ -8,7 +8,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -154,9 +153,9 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         } );
         Organization requiringParent = organization.agreementRequiringParent();
         if ( requiringParent != null ) {
-            agreementsRequiredCheckBox.add( new AttributeModifier(
-                    "title",
-                    new Model<String>( "Agreements required by parent organization " + requiringParent.getName() ) ) );
+            addTipTitle(
+                    agreementsRequiredCheckBox,
+                    new Model<String>( "Agreements required by parent organization " + requiringParent.getName() )  );
         }
         agreementsRequiredCheckBox.setEnabled( requiringParent == null && isLockedByUser( organization ) );
         constraintsContainersContainers.add( agreementsRequiredCheckBox );

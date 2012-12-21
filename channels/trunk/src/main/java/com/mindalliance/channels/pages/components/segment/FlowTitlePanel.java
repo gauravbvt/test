@@ -46,11 +46,10 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         List<String> causes = getAnalyst().findConceptualCauses( getQueryService(), flow );
         conceptualImage.setVisible( !causes.isEmpty()  );
         if ( !causes.isEmpty() ) {
-            conceptualImage.add(  new AttributeModifier(
-                    "title",
+            addTipTitle(
+                    conceptualImage,
                     new Model<String>( "Can not be realized: "
-                            + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) )
-            ) );
+                            + StringUtils.capitalize( ChannelsUtils.listToString( causes, ", and " ) ) ) );
         }
         add( conceptualImage );
 
@@ -185,10 +184,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                     "src",
                     new Model<String>( "images/" + image )
             ) );
-            overridesImage.add( new AttributeModifier(
-                    "title",
-                    new Model<String>( title )
-            ) );
+            addTipTitle( overridesImage, new Model<String>( title ) );
         }
         overridesImage.setVisible( overridden || overriding );
         addOrReplace( overridesImage );
