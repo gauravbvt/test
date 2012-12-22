@@ -1,11 +1,9 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.Attachment;
-import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.AttachmentImpl;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -172,6 +170,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                         attachment ) );
             }
         }
+/*
         for ( Organization organization : getQueryService().listActualEntities( Organization.class ) ) {
             List<Agreement> agreements = organization.getAgreements();
             for ( Agreement agreement : agreements ) {
@@ -184,6 +183,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                 }
             }
         }
+*/
         return (List<AttachmentRelationship>) CollectionUtils.select(
                 attachmentRels,
                 new Predicate() {

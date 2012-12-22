@@ -240,7 +240,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UnconfirmedJob"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowToSelf"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.GeonameButNoLocation"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithRoleWithNoKnownActor"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithRoleWithNoKnownActor"/>-->
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentNeverEnds"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NeverTriggeredSpecifiedTask"/>
@@ -260,7 +260,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantPlace"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptyNeedOrCapability"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UnsatisfiedNeed"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.CommitmentWithoutRequiredAgreement"/>
+              <!--  <bean class="com.mindalliance.channels.engine.analysis.detectors.CommitmentWithoutRequiredAgreement"/>-->
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UntimelyDissemination"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.UntimelyNecessarySharing"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnTargetPart"/>
@@ -273,8 +273,8 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowDeclassifies"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SharingWithoutCommitments"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InsufficientClearance"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>
+               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>-->
+               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>-->
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.MediumWithoutMode"/>
                 <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>--> <!-- TODO Apply to plan community -->
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowOverUndersecuredMedium"/>
@@ -295,7 +295,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantChannel"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantEOI"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ContradictoryPolicies"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.ConfirmedAgreementWithoutMOU"/>
+               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.ConfirmedAgreementWithoutMOU"/>-->
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SingleAssignmentToImportantTask"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AvailabilityGapInTaskAssignments"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithoutFailureProtocol"/>

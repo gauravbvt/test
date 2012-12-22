@@ -10075,39 +10075,7 @@
                 <entry><para>No</para></entry>
               </row>
 
-              <row>
-                <entry><para>Sharing agreement encompassed by another</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><para>
-                    <itemizedlist>
-                      <listitem>
-                        <para>Remove either sharing agreement.</para>
-                      </listitem>
-                    </itemizedlist>
-                  </para></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Sharing agreement does not match any sharing commitment</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Remove the sharing agreement </para>
-                    </listitem>
-                    <listitem>
-                      <para>or add flows that imply a commitment covered by the agreement.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
+ 
               <row>
                 <entry><para>Immediate or permanent task is unnecessarily triggered</para></entry>
 
@@ -10208,24 +10176,6 @@
                 <entry><itemizedlist>
                     <listitem>
                       <para>Specify elements of information</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Sharing commitment by an organization without required
-                  agreement</para></entry>
-
-                <entry><para>Low</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Confirm an agreement covering this sharing commitment </para>
-                    </listitem>
-                    <listitem>
-                      <para>or remove the requirement for agreements for the organization.</para>
                     </listitem>
                   </itemizedlist></entry>
 
@@ -10358,23 +10308,6 @@
                   </itemizedlist></entry>
 
                 <entry><para>No</para></entry>
-              </row>
-
-              <row>
-                <entry><para>No known agent in task's named role</para></entry>
-
-                <entry><para>Medium</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Name an agent assigned to the task </para>
-                    </listitem>
-                    <listitem>
-                      <para>or add a participating agent to the plan's scope with this role.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>Yes</para></entry>
               </row>
 
               <row>
@@ -10694,23 +10627,6 @@
                   </itemizedlist></entry>
 
                 <entry><para>Yes</para></entry>
-              </row>
-
-              <row>
-                <entry><para>Confirmed sharing agreement without MOU</para></entry>
-
-                <entry><para>Medium</para></entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para>Attach an MOU to the sharing agreement </para>
-                    </listitem>
-                    <listitem>
-                      <para>or unconfirm the sharing agreement.</para>
-                    </listitem>
-                  </itemizedlist></entry>
-
-                <entry><para>No</para></entry>
               </row>
 
               <row>

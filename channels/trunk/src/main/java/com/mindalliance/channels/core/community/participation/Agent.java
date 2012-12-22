@@ -29,7 +29,10 @@ public class Agent implements Nameable, Identifiable {
         this.actor = actor;
         this.organizationParticipation = organizationParticipation;
         if ( organizationParticipation != null ) {
-            name = actor.getName() + " in " + new Agency( organizationParticipation, planCommunity ).getName();
+            String jobTitle = organizationParticipation.getJobTitle( actor, planCommunity );
+            name = (jobTitle.isEmpty() ? actor.getName() : jobTitle)
+                    + " at "
+                    + new Agency( organizationParticipation, planCommunity ).getName();
         } else {
             name = actor.getName();
         }

@@ -402,15 +402,7 @@ public interface Analyst extends CommandListener {
      */
     Boolean isRobust( QueryService queryService, ModelObject modelObject );
 
-    /**
-     * Whether a commitment could be met based on media deployments.
-     *
-     * @param commitment an info sharing commitment
-     * @param mediaUsed  media used in commitment
-     * @param planLocale a plan locale
-     * @return a boolean
-     */
-    boolean isSomeMediaDeployed( Commitment commitment, List<TransmissionMedium> mediaUsed, Place planLocale );
+//    boolean isSomeMediaDeployed( Commitment commitment, List<TransmissionMedium> mediaUsed, Place planLocale );
 
     /**
      * Whether the model object has no unwaived validity issue.

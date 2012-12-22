@@ -1,10 +1,13 @@
 package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,4 +147,19 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         return sb.toString();
     }
 
+    public String getJobTitle( final Actor actor, PlanCommunity planCommunity ) {
+        List<Job> jobs = getRegisteredOrganization().isFixedOrganization()
+                            ? getFixedJobs( planCommunity )
+                            : getPlaceholderJobs( planCommunity );
+        Job job = (Job)CollectionUtils.find(
+                jobs,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Job)object).getActor().equals( actor );
+                    }
+                }
+        );
+        return job == null ? "" : job.getTitle();
+    }
 }

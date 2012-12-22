@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -336,9 +335,11 @@ public class PlanDao {
             while ( flows.hasNext() )
                 attachables.add( flows.next() );
         }
+/*
         for ( Organization org : list( Organization.class ) )
             for ( Agreement agreement : org.getAgreements() )
                 attachables.add( agreement );
+*/
 
         Set<String> allAttachedUrls = new HashSet<String>();
         for ( Attachable attachable : attachables )

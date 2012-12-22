@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Actor;
@@ -10,14 +9,11 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -37,11 +33,11 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     /**
      * Whether actors are required for each role in the organization.
      */
-    private CheckBox actorsRequiredCheckBox;
+//    private CheckBox actorsRequiredCheckBox;
     /**
      * Whether agreements are required for each sharing commitment from the organization.
      */
-    private CheckBox agreementsRequiredCheckBox;
+//    private CheckBox agreementsRequiredCheckBox;
     /**
      * Container for details.
      */
@@ -67,7 +63,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         this.moDetailsDiv = moDetailsDiv;
         addParticipation();
         addProfile();
-        addConstraintFields();
+//        addConstraintFields();
         adjustFields();
     }
 
@@ -128,7 +124,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
     }
 
 
-    private void addConstraintFields() {
+ /*   private void addConstraintFields() {
         final Organization organization = getOrganization();
         WebMarkupContainer constraintsContainersContainers = new WebMarkupContainer( "constraintsContainers" );
         constraintsContainersContainers.setVisible( organization.isActual() );
@@ -160,10 +156,10 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
         agreementsRequiredCheckBox.setEnabled( requiringParent == null && isLockedByUser( organization ) );
         constraintsContainersContainers.add( agreementsRequiredCheckBox );
     }
-
+*/
     private void adjustFields() {
         Organization org = getOrganization();
-        actorsRequiredCheckBox.setEnabled( isLockedByUser( org ) );
+//        actorsRequiredCheckBox.setEnabled( isLockedByUser( org ) );
         placeHolderCheckbox.setEnabled( isLockedByUser( org ) );
         custodianField.setEnabled( org.isPlaceHolder() && isLockedByUser( org ) );
     }

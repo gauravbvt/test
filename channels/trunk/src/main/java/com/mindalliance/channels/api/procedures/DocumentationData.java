@@ -55,7 +55,7 @@ public class DocumentationData  implements Serializable {
                                 || type.equals( Attachment.Type.Policy.getLabel() )
                                 || type.equals( Attachment.Type.PolicyCant.getLabel() )
                                 || type.equals( Attachment.Type.PolicyMust.getLabel() )
-                                || type.equals( Attachment.Type.MOU.getLabel() )
+                              //  || type.equals( Attachment.Type.MOU.getLabel() )
                                 || type.equals( Attachment.Type.Image.getLabel() );
                     }
                 }

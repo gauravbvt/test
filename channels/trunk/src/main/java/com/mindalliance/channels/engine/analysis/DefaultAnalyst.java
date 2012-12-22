@@ -857,7 +857,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                         if ( availabilitiesCoincideIfRequired.isEmpty() ) {
                             sb.append( "in all sharing commitments, " );
                             sb.append( "agents are never available at the same time as they must to communicate" );
-                        } else {
+                        } /*else {
                             List<Commitment> mediaDeployed =
                                     someMediaDeployedFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
                             if ( mediaDeployed.isEmpty() ) {
@@ -866,7 +866,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                 else
                                     sb.append( ", or " );
                                 sb.append( "agents do not have access to required transmission media" );
-                            } else {
+                            }*/ else {
                                 List<Commitment> reachable =
                                         reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
                                 if ( reachable.isEmpty() ) {
@@ -894,7 +894,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                             sb.append( "agents do not speak a common language" );
                                         }
                                     }
-                                }
+                    //            }
                             }
                         }
                         if ( sb.length() > 0 ) {
@@ -944,13 +944,13 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                         if ( availabilitcoincideIfRequired.isEmpty() ) {
                             remediations.add( "change agent availability to make them coincide" );
                             remediations.add( "add a channel that does not require synchronous communication" );
-                        } else {
+                        }/* else {
                             List<Commitment> mediaDeployed =
                                     someMediaDeployedFilter( availabilitcoincideIfRequired, mediaUsed, locale );
                             if ( mediaDeployed.isEmpty() )
                                 remediations.add( "make sure that the agents that are available"
                                         + " to each other also have access to required transmission media" );
-                            else {
+*/                            else {
                                 List<Commitment> reachable =
                                         reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
                                 if ( reachable.isEmpty() )
@@ -968,7 +968,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                                 + "reachable and qualified to use the transmission media "
                                                 + "can also speak a common language" );
                                     }
-                                }
+                    //            }
                             }
                         }
                     }
@@ -1017,6 +1017,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         } ) );
     }
 
+/*
     // Filter commitments where agent have access to required transmission media.
     @SuppressWarnings( "unchecked" )
     private List<Commitment> someMediaDeployedFilter( List<Commitment> commitments,
@@ -1030,7 +1031,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         } );
     }
+*/
 
+/*
     @Override
     public boolean isSomeMediaDeployed( final Commitment commitment, List<TransmissionMedium> mediaUsed,
                                         final Place planLocale ) {
@@ -1043,6 +1046,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
             }
         } );
     }
+*/
 
     // Filter commitments where agent to eb contacted has known contact info.
     @SuppressWarnings( "unchecked" )
@@ -1130,8 +1134,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         if ( commitment.getSharing().getEffectiveChannels().isEmpty() )
             problems.add( "no channel is identified" );
         else {
-            if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) )
+ /*           if ( !isSomeMediaDeployed( commitment, mediaUsed, planLocale ) )
                 problems.add( "no access to required transmission media" );
+*/
             if ( !isAgentsQualified( commitment, mediaUsed, planLocale ) )
                 problems.add( "insufficient technical qualification" );
             /*if ( !isReachable( commitment, mediaUsed, planLocale ) )

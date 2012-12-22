@@ -63,7 +63,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     private List<OrganizationParticipation> registrationList;
 
     @Transient
-    @OneToMany ( mappedBy = "parent", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "parent", cascade = CascadeType.ALL )
     List<RegisteredOrganization> children;
 
     public RegisteredOrganization() {
@@ -84,7 +84,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
                 registeredOrganization.getPlanUri(),
                 registeredOrganization.getPlanVersion(),
                 registeredOrganization.getUsername() );
-        name = registeredOrganization.getName( );
+        name = registeredOrganization.getName();
         description = registeredOrganization.getDescription();
         mission = registeredOrganization.getMission();
         parent = registeredOrganization.getParent();
@@ -231,6 +231,19 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         }
     }
 
+    public List<Job> getPlaceHolderJobs( PlanCommunity planCommunity ) {
+        if ( isParentRegistered() ) {
+            Organization org = getFixedOrganization( planCommunity );
+            if ( org != null )
+                return Collections.unmodifiableList( org.getJobs() );
+            else
+                return new ArrayList<Job>();
+        } else {
+            return new ArrayList<Job>();
+        }
+    }
+
+
     public boolean isValid( PlanCommunity planCommunity ) {
         return !isFixedOrganization() || getFixedOrganization( planCommunity ) != null;
     }
@@ -277,4 +290,5 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         return parentRegistration == null ? null : parentRegistration.getName( planCommunity );
 
     }
+
 }

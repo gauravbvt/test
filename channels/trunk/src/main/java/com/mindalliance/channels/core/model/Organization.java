@@ -37,19 +37,19 @@ public class Organization extends AbstractUnicastChannelable
     /**
      * Whether roles must have associated actors, else issues.
      */
-    private boolean actorsRequired;
+    private boolean actorsRequired;    // todo - obsolete
     /**
      * Whether each sharing commitments from this organization requires an agreement.
      */
-    private boolean agreementsRequired;
+    private boolean agreementsRequired;                           // todo - obsolete
     /**
      * Confirmed agreement to share information with other organizations.
      */
-    private List<Agreement> agreements = new ArrayList<Agreement>();
+    private List<Agreement> agreements = new ArrayList<Agreement>();   // todo - obsolete
     /**
      * The transmission media not (yet) deployed by an actual organization to its agents.
      */
-    private List<TransmissionMedium> mediaNotDeployed = new ArrayList<TransmissionMedium>();
+    private List<TransmissionMedium> mediaNotDeployed = new ArrayList<TransmissionMedium>();       // todo - obsolete
 
     /**
      * Bogus organization used to signify that the organization is not known...
@@ -130,9 +130,11 @@ public class Organization extends AbstractUnicastChannelable
         return actorsRequired;
     }
 
+/*
     public void setActorsRequired( boolean actorsRequired ) {
         this.actorsRequired = actorsRequired;
     }
+*/
 
     public boolean isAgreementsRequired() {
         return agreementsRequired;
@@ -158,15 +160,11 @@ public class Organization extends AbstractUnicastChannelable
         return agreements;
     }
 
+/*
     public void setAgreements( List<Agreement> agreements ) {
         this.agreements = agreements;
     }
 
-    /**
-     * Add an agreement if unique.
-     *
-     * @param agreement an agreement
-     */
     public void addAgreement( Agreement agreement ) {
         if ( !agreements.contains( agreement ) )
             agreements.add( agreement );
@@ -185,6 +183,7 @@ public class Organization extends AbstractUnicastChannelable
         if ( !mediaNotDeployed.contains( medium ) )
             mediaNotDeployed.add( medium );
     }
+*/
 
     public Organization getParent() {
         return parent;
@@ -415,7 +414,7 @@ public class Organization extends AbstractUnicastChannelable
         List<AttachmentImpl.Type> types = new ArrayList<AttachmentImpl.Type>();
         if ( !hasImage() )
             types.add( AttachmentImpl.Type.Image );
-        types.add( AttachmentImpl.Type.MOU );
+     //   types.add( AttachmentImpl.Type.MOU );
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
@@ -425,8 +424,9 @@ public class Organization extends AbstractUnicastChannelable
         List<AttachmentImpl.Type> types = new ArrayList<AttachmentImpl.Type>();
         if ( !hasImage() )
             types.add( AttachmentImpl.Type.Image );
-        if ( attachablePath.startsWith( "agreements" ) )
+  /*      if ( attachablePath.startsWith( "agreements" ) )
             types.add( AttachmentImpl.Type.MOU );
+*/
         types.addAll( super.getAttachmentTypes() );
         return types;
     }
@@ -501,7 +501,7 @@ public class Organization extends AbstractUnicastChannelable
         );
     }
 
-    public boolean isMediumDeployed( final TransmissionMedium medium, final Place planLocale ) {
+ /*   public boolean isMediumDeployed( final TransmissionMedium medium, final Place planLocale ) {
         return getMediaNotDeployed().isEmpty()
                 || !CollectionUtils.exists(
                 getMediaNotDeployed(),
@@ -513,7 +513,7 @@ public class Organization extends AbstractUnicastChannelable
                 }
         );
     }
-
+*/
     /**
      * Whether a job is confirmed.
      *

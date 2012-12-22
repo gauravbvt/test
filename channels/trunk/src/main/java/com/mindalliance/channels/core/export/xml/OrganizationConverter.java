@@ -1,14 +1,12 @@
 package com.mindalliance.channels.core.export.xml;
 
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -69,6 +67,7 @@ public class OrganizationConverter extends EntityConverter {
             writer.setValue( custodian.getName() );
             writer.endNode();
         }
+/*
         if ( org.isActorsRequired() ) {
             writer.startNode( "actorsRequired" );
             writer.setValue( "true" );
@@ -79,6 +78,7 @@ public class OrganizationConverter extends EntityConverter {
             writer.setValue( "true" );
             writer.endNode();
         }
+*/
         Organization parent = org.getParent();
         if ( parent != null && !parent.getName().trim().isEmpty() ) {
             writer.startNode( "parent" );
@@ -111,18 +111,22 @@ public class OrganizationConverter extends EntityConverter {
             writer.endNode();
         }
         // agreements
+/*
         for ( Agreement agreement : org.getAgreements()) {
             writer.startNode( "agreement" );
             context.convertAnother( agreement );
             writer.endNode();
         }
+*/
         // not deployed transmission media
+/*
         for ( TransmissionMedium medium : org.getMediaNotDeployed() ) {
             writer.startNode( "mediumNotDeployed" );
             writer.addAttribute( "id", Long.toString( medium.getId() ) );
             writer.setValue( medium.getName() );
             writer.endNode();
         }
+*/
     }
 
     /**
@@ -139,10 +143,12 @@ public class OrganizationConverter extends EntityConverter {
         } else if ( nodeName.equals( "custodian" ) ) {
             String id = reader.getAttribute( "id");
             org.setCustodian( findOrCreate( Actor.class, reader.getValue(), id ) );
+/*
         } else if ( nodeName.equals( "actorsRequired" ) ) {
             org.setActorsRequired( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "agreementsRequired" ) ) {
             org.setAgreementsRequired( reader.getValue().equals( "true" ) );
+*/
         } else if ( nodeName.equals( "mission" ) ) {
             org.setMission( reader.getValue() );
         } else if ( nodeName.equals( "parent" ) ) {
@@ -171,12 +177,14 @@ public class OrganizationConverter extends EntityConverter {
         } else if ( nodeName.equals( "job" ) ) {
             Job job = (Job) context.convertAnother( plan, Job.class );
             org.addJob( job );
-        } else if ( nodeName.equals( "agreement" ) ) {
+/*
+        } else if ( nodeName.equals( "agreement" ) ) {   // todo - obsolete
             Agreement agreement = (Agreement) context.convertAnother( plan, Agreement.class );
             org.addAgreement( agreement );
         } else if ( nodeName.equals( "mediumNotDeployed" ) ) {
             String id = reader.getAttribute( "id");
             org.addMediumNotDeployed( findOrCreate( TransmissionMedium.class, reader.getValue(), id ) );
+*/
         } else {
             LOG.debug( "Unknown element " + nodeName );
         }

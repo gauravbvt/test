@@ -9,27 +9,19 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
-import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -67,7 +59,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
      */
     private TextArea missionField;
 
-    private WebMarkupContainer mediaNotDeployedContainer;
+//    private WebMarkupContainer mediaNotDeployedContainer;
     private WebMarkupContainer locationContainer;
 
 
@@ -83,7 +75,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
         addLocationField();
         addLocationLink();
         addContactInfoPanel();
-        addMediaNotDeployedPanel();
+//        addMediaNotDeployedPanel();
         adjustFields();
     }
 
@@ -194,6 +186,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
                 new Model<Channelable>( organization ) ) );
     }
 
+/*
     private void addMediaNotDeployedPanel() {
         mediaNotDeployedContainer = new WebMarkupContainer( "mediaNotDeployedContainer" );
         mediaNotDeployedContainer.setVisible( getOrganization().isActual() );
@@ -321,7 +314,8 @@ public class OrganizationProfile extends AbstractCommandablePanel {
         return choices;
     }
 
-    private void adjustFields() {
+*/
+private void adjustFields() {
         missionField.setEnabled( isLockedByUser( getOrganization() ) );
         actualParentField.setEnabled( isLockedByUser( getOrganization() ) );
         locationField.setEnabled( isLockedByUser( getOrganization() ) );
