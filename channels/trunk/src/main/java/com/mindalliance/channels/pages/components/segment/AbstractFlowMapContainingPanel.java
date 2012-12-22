@@ -152,7 +152,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
 
     private void addShowLegendControl() {
         WebMarkupContainer legend = new WebMarkupContainer( "legend" );
-        addTipTitle( legend, "legend" );
+        addTipTitle( legend, "Legend" );
         legend.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {

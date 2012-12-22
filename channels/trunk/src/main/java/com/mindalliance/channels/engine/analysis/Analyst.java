@@ -247,6 +247,17 @@ public interface Analyst extends CommandListener {
     String getIssuesSummary( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific );
 
     /**
+     * Produces an overview of unwaived issues detected about a model object.
+     *
+     * @param queryService              the query service
+     * @param modelObject               -- the model object being analyzed
+     * @param includingPropertySpecific -- all issues or only those that are not specific to a property
+     * @return an aggregate description of issues or an empty string if none
+     */
+    String getIssuesOverview( QueryService queryService, ModelObject modelObject, Boolean includingPropertySpecific );
+
+
+    /**
      * Produces an aggregate description of unwaived issues detected about an assignment.
      *
      * @param queryService              the query service

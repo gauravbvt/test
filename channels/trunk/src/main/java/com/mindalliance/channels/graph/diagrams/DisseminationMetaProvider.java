@@ -14,8 +14,8 @@ import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Transformation;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.DOTAttributeProvider;
@@ -197,8 +197,8 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                     && getAnalyst().hasUnwaivedIssues( getQueryService(),
                                                        vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( getQueryService(),
-                                                                                                vertex,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getQueryService(),
+                        vertex,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
                 String tooltip = vertex.getTitle();
@@ -287,8 +287,8 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                                                        flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesSummary( getQueryService(),
-                                                                                                flow,
+                list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getQueryService(),
+                        flow,
                         Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             } else {
                 list.add( new DOTAttribute( "tooltip", sanitize( flow.getTitle() ) ) );

@@ -198,7 +198,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String definition = ( (ModelEntity) vertex ).getDescription();
             return sanitize( definition.isEmpty() ? "No definition" : definition );
         } else {
-            return sanitize( getAnalyst().getIssuesSummary( queryService,
+            return sanitize( getAnalyst().getIssuesOverview( queryService,
                     (ModelObject) vertex,
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) );
         }

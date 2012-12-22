@@ -131,11 +131,11 @@ public class UserPage extends AbstractChannelsBasicPage {
                         a.getUrl(), getAttachmentManager().getLabel( getPlan(), a ) );
                 documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
                 item.add( documentLink );
-                item.add( new AttributeModifier(
-                        "title",
+                addTipTitle(
+                        item,
                         new Model<String>(
                                 a.getType().getLabel() + " - " + a.getUrl()
-                        ) ) );
+                        ) );
             }
         };
         referencesContainer.add( attachmentList );
@@ -166,9 +166,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         // Protocols link
         BookmarkablePageLink<? extends WebPage> gotoProtocolsLink =
                 getProtocolsLink( "gotoProtocols", getQueryService(), getPlanCommunity(), user, true );
-        gotoProtocolsLink.add( new AttributeModifier(
-                "title",
-                new Model<String>( getGotoProtocolsDescription( user, plan ) ) ) );
+        addTipTitle( gotoProtocolsLink, new Model<String>( getGotoProtocolsDescription( user, plan ) ) );
         // info needs link
 /*
         BookmarkablePageLink<? extends WebPage> gotoInfoNeedsLink =
@@ -182,39 +180,56 @@ public class UserPage extends AbstractChannelsBasicPage {
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
                 getRFIsLink( "gotoRFIs", getPlan(), true );
         Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, planCommunity ) );
-        gotoRFIsLink.add( gotoRFIsLabel )
-                .add( new AttributeModifier(
-                        "title",
-                        new Model<String>( getGotoRFIsDescription( user, planCommunity ) ) ) );
+        addTipTitle( gotoRFIsLabel,
+                new Model<String>( getGotoRFIsDescription( user, planCommunity ) ));
+        gotoRFIsLink.add( gotoRFIsLabel );
         // Feedback
         BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
                 getFeedbackLink( "gotoFeedback", getPlan(), true );
         Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, planCommunity ) );
-        gotoFeedbackLink.add( gotoFeedbackLabel )
-                .add( new AttributeModifier(
-                        "title",
-                        new Model<String>( getGotoFeedbackDescription( user, planCommunity ) ) ) );
+        addTipTitle(
+                gotoFeedbackLabel,
+                new Model<String>( getGotoFeedbackDescription( user, planCommunity ) )
+        );
+
+        gotoFeedbackLink.add( gotoFeedbackLabel );
         // plan editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
-        gotoModelLink.add( new AttributeModifier(
-                "title",
-                new Model<String>( getGotoModelDescription( user, plan ) ) ) );
+        addTipTitle( gotoModelLink,
+                new Model<String>( getGotoModelDescription( user, plan ) )
+        );
+        BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan );
+        addTipTitle(
+                gotoAdminLink,
+                "Configure Channels, add users, change access privileges, and create, configure, release, or delete plans" );
+        BookmarkablePageLink participationManagerLink = newTargetedLink(
+                "gotoParticipationManager",
+                "",
+                ParticipationManagerPage.class,
+                null,
+                plan );
+        addTipTitle( participationManagerLink, "Manage plan participation"  );
+        BookmarkablePageLink gotoIssuesLink = newTargetedLink(
+                "gotoIssues",
+                "",
+                IssuesPage.class,
+                IssuesPage.createParameters( uri, plan.getVersion() ),
+                null,
+                plan );
+        addTipTitle(
+                gotoIssuesLink,
+                "View a summary of all issues automatically found by Channels or reported by planners" );
         // gotos
         gotoIconsContainer.add(
                 // Goto admin
                 new WebMarkupContainer( "admin" )
-                        .add( newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan ) )
+                        .add( gotoAdminLink )
                         .setVisible( user.isAdmin() )
                         .setOutputMarkupId( true ),
 
                 // Goto participation manager
                 new WebMarkupContainer( "participationManager" )
-                        .add( newTargetedLink(
-                                "gotoParticipationManager",
-                                "",
-                                ParticipationManagerPage.class,
-                                null,
-                                plan ) )
+                        .add( participationManagerLink )
                         .setOutputMarkupId( true ),
 
                 // Goto model
@@ -247,13 +262,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
-                        .add( AbstractChannelsWebPage.newTargetedLink(
-                                "gotoIssues",
-                                "",
-                                IssuesPage.class,
-                                IssuesPage.createParameters( uri, plan.getVersion() ),
-                                null,
-                                plan ) )
+                        .add( gotoIssuesLink )
                         .setVisible( planner || plan.isTemplate() ) )
                 .setOutputMarkupId( true );
 

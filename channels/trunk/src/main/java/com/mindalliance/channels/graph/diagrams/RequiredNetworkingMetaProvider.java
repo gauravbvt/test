@@ -162,7 +162,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( getAnalyst().getIssuesSummary( queryService,
+                        sanitize( getAnalyst().getIssuesOverview( queryService,
                                 vertex,
                                 Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }

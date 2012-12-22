@@ -221,7 +221,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !((Issue)object).isDetected();
+                        return !( (Issue) object ).isDetected();
                     }
                 }
         );
@@ -233,6 +233,14 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<? extends Issue> issues = listUnwaivedIssues( queryService, modelObject, includingPropertySpecific );
         return summarize( issues );
     }
+
+    @Override
+    public String getIssuesOverview( QueryService queryService, ModelObject modelObject,
+                                     Boolean includingPropertySpecific ) {
+        List<? extends Issue> issues = listUnwaivedIssues( queryService, modelObject, includingPropertySpecific );
+        return makeOverview( issues );
+    }
+
 
     @Override
     public String getIssuesSummary( QueryService queryService, Assignment assignment,
@@ -250,7 +258,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     /**
      * Aggregate the descriptions of issues.
      *
-     * @param issues -- an iterator on issues
+     * @param issues -- a list of issues
      * @return a string summarizing the issues
      */
     private String summarize( List<? extends Issue> issues ) {
@@ -262,6 +270,49 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
         return sb.toString();
     }
+
+    /**
+     * Produce an overview of issues.
+     *
+     * @param issues -- a list of issues
+     * @return a string providing an overview of the issues
+     */
+    private String makeOverview( List<? extends Issue> issues ) {
+        StringBuilder sb = new StringBuilder();
+        if ( issues.size() == 1 ) {
+            sb.append( "Issue: " ).append( issues.get( 0 ).getDescription() );
+        } else {
+            int validityCount = 0;
+            int completenessCount = 0;
+            int robustnessCount = 0;
+            for ( Issue issue : issues ) {
+                if ( issue.isValidity() ) validityCount++;
+                else if ( issue.isCompleteness() ) completenessCount++;
+                else if ( issue.isRobustness() ) robustnessCount++;
+            }
+            sb.append(  "Issues: " );
+            if ( validityCount > 0 )
+                sb.append( validityCount ).append( " validity" );
+            if ( completenessCount > 0 ) {
+                sb.append( validityCount > 0
+                        ? robustnessCount == 0
+                        ? " and "
+                        : ", "
+                        : ""
+                );
+                sb.append( completenessCount ).append( " completeness" );
+            }
+            if ( robustnessCount > 0 ) {
+                sb.append( validityCount > 0 || completenessCount > 0
+                        ? " and "
+                        : ""
+                );
+                sb.append( robustnessCount ).append( " robustness" );
+            }
+        }
+        return sb.toString();
+    }
+
 
     @Override
     public List<Issue> findAllIssuesFor( QueryService queryService, ResourceSpec resource, Boolean specific ) {
@@ -658,8 +709,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 .withEntityCommitting( fromEntity, planLocale )
                 .withEntityBenefiting( toEntity, planLocale );
         Set<Flow> entityFlows = new HashSet<Flow>();
-        for( Commitment commitment : commitments ) {
-             entityFlows.add( commitment.getSharing() );
+        for ( Commitment commitment : commitments ) {
+            entityFlows.add( commitment.getSharing() );
         }
         if ( entityFlows.isEmpty() )
             return null;
@@ -695,9 +746,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 .inSegment( segment )
                 .withEntityCommitting( entity, planLocale );
         List<? extends ModelEntity> otherEntities =
-                 entity.isActual()
-                         ? queryService.listActualEntities( entity.getClass() )
-                         : queryService.listTypeEntities( entity.getClass() );
+                entity.isActual()
+                        ? queryService.listActualEntities( entity.getClass() )
+                        : queryService.listTypeEntities( entity.getClass() );
 
         for ( ModelEntity otherEntity : otherEntities ) {
             if ( !otherEntity.isUnknown() && !entity.equals( otherEntity ) ) {
@@ -731,6 +782,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         }
         return rels;
     }
+
     @Override
     public Boolean isEffectivelyConceptual( QueryService queryService, Part part ) {
         return !findConceptualCauses( queryService, part ).isEmpty();

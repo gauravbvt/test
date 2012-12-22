@@ -62,6 +62,7 @@ public class MaximizedFlowPanel extends AbstractFlowMapContainingPanel {
                         props ) );
             }
         } );
+        addTipTitle( minimize, "Restore size" );
         getControlsContainer().add( minimize );
     }
 

@@ -211,7 +211,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 if ( indicateError( vertex, queryService ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
-                                                sanitize( "Issues: " + getAnalyst().getIssuesSummary( queryService,
+                                                sanitize( getAnalyst().getIssuesOverview( queryService,
                                                                                                       vertex,
                                                                                                       Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
@@ -352,8 +352,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
-                                                "Issues: "
-                                                + sanitize( getAnalyst().getIssuesSummary( queryService,
+                                                sanitize( getAnalyst().getIssuesOverview( queryService,
                                                                                            edge,
                                                                                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
