@@ -837,6 +837,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     : overridden
                     ? "overridden"
                     : "";
+        } else if ( modelObject instanceof Organization ) {
+            if ( ((Organization)modelObject).isActual() && ((Organization)modelObject).isPlaceHolder() ) {
+                added = "placeholder";
+            }
         }
         return css + ( added.isEmpty() ? "" : ( " " + added ) );
     }
@@ -974,6 +978,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     ? mo.getClass().getSimpleName()
                     : ( mo instanceof Actor && ( (Actor) mo ).isActual() )
                     ? ( ( (Actor) mo ).isPerson() ? "Person" : "System" )
+                    : mo instanceof Organization && ((Organization) mo).isPlaceHolder()
+                    ? "Placeholder " + mo.getClass().getSimpleName().toLowerCase()
                     : ( (ModelEntity) mo ).isActual()
                     ? "Actual " + mo.getClass().getSimpleName().toLowerCase()
                     : ( ModelEntity.canBeActual( ( (ModelEntity) mo ) )

@@ -3398,6 +3398,10 @@ a.overriding:after {
     content: url('../images/overriding.png');
 }
 
+a.placeholder:after {
+    content: url('../images/placeholder.png');
+}
+
 /* requirements */
 
 .req {

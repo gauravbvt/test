@@ -120,6 +120,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 };
                 item.add( acceptedCheckBox );
                 item.add( new Label( "participation", assignation ) );
+                addTipTitle( item, participationWrapper.getRequirementsDescription( getPlanCommunity()) );
                 item.add( ( new Label(
                         "requester",
                         participationWrapper.isRequested()
@@ -251,6 +252,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 ParticipationWrapper participationWrapper = item.getModelObject();
                 String assignation = getAssignation( participationWrapper.getAgent( getPlanCommunity() ) );
                 item.add( new Label( "participation", assignation ) );
+                addTipTitle( item, participationWrapper.getRequirementsDescription( getPlanCommunity()) );
                 AjaxCheckBox acceptedCheckBox = new AjaxCheckBox(
                         "accepted",
                         new PropertyModel<Boolean>( participationWrapper, "accepted" )
@@ -474,6 +476,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 item.add( new Label( "user", participatingUser.getFullName() ) );
                 item.add( new Label( "email", participatingUser.getEmail() ) );
                 Agent participationAgent = confirmationWrapper.getAgent( getPlanCommunity() );
+                if ( participationAgent != null )
+                    addTipTitle( item, participationAgent.getRequirementsDescription( getPlanCommunity()) );
                 item.add( new Label( "agent", participationAgent == null ? "?" : participationAgent.getName() ) );
             }
         };
@@ -630,6 +634,11 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             return participation == null
                     ? null
                     : participation.getAgent( planCommunity );
+        }
+
+        public String getRequirementsDescription( PlanCommunity planCommunity ) {
+            Agent agent = getAgent( planCommunity );
+            return agent == null ? "" : agent.getRequirementsDescription( planCommunity );
         }
     }
 
