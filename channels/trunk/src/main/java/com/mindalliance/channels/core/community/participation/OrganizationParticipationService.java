@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface OrganizationParticipationService extends GenericSqlService<OrganizationParticipation, Long> {
 
+    List<OrganizationParticipation> getAllOrganizationParticipations( PlanCommunity planCommunity );
+
     boolean isValid( OrganizationParticipation registration, PlanCommunity planCommunity );
 
     List<Agency> listParticipatingAgencies( PlanCommunity planCommunity );

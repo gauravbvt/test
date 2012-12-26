@@ -280,7 +280,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     private String makeOverview( List<? extends Issue> issues ) {
         StringBuilder sb = new StringBuilder();
         if ( issues.size() == 1 ) {
-            sb.append( "Issue: " ).append( issues.get( 0 ).getDescription() );
+            Issue issue = issues.get( 0 );
+            sb.append( issue.getType() )
+                    .append( " issue: " )
+                    .append( issue.getDescription() );
         } else {
             int validityCount = 0;
             int completenessCount = 0;

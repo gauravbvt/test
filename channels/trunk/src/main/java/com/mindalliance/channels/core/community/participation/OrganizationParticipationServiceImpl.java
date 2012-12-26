@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.community.participation;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -44,13 +43,23 @@ public class OrganizationParticipationServiceImpl
     @Transactional( readOnly = true )
     public List<Agency> listParticipatingAgencies( PlanCommunity planCommunity ) {
         Set<Agency> agencies = new HashSet<Agency>();
-        for ( OrganizationParticipation registration : list() ) {
+        for ( OrganizationParticipation registration : getAllOrganizationParticipations( planCommunity ) ) {
             if ( isValid( registration, planCommunity ) ) {
                 Agency agency = new Agency( registration, planCommunity );
                 agencies.add( agency );
             }
         }
         return Collections.unmodifiableList( new ArrayList<Agency>( agencies ) );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    @Transactional( readOnly = true )
+    public List<OrganizationParticipation> getAllOrganizationParticipations( PlanCommunity planCommunity ) {
+        Session session = getSession();
+        Criteria criteria = session.createCriteria( getPersistentClass() );
+        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        return (List<OrganizationParticipation>) criteria.list();
     }
 
     @Override
@@ -68,7 +77,6 @@ public class OrganizationParticipationServiceImpl
     public List<Agency> listAgenciesParticipatingAs( Organization placeholder, PlanCommunity planCommunity ) {
         if ( placeholder.isPlaceHolder() ) {
             Session session = getSession();
-            Plan plan = planCommunity.getPlan();
             Criteria criteria = session.createCriteria( getPersistentClass() );
             criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
             criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );

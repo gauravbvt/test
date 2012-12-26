@@ -96,6 +96,7 @@ public class PlanSummaryData implements Serializable {
         ChannelsUser user = ChannelsUser.current( planCommunity.getUserDao() );
         List<Agent> openAgents = planCommunity.getParticipationManager()
                 .findSelfAssignableOpenAgents( planCommunity, user );
+
         for ( Agent openAgent : openAgents ) {
             openActorList.add( new AgentData( serverUrl, openAgent.getActor(), getPlan() ) ); // todo - agents!
         }
