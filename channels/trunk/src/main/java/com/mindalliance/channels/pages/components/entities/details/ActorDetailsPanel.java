@@ -19,6 +19,8 @@ import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTe
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -28,6 +30,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,6 +45,13 @@ import java.util.Set;
  * Time: 2:15:22 PM
  */
 public class ActorDetailsPanel extends EntityDetailsPanel {
+
+    private final static String AT_MOST_ONE = "At most one";
+    private final static String ANY_NUMBER = "Any number of";
+    private final static String NO_MORE_THAN = "No more than";
+    private final static String[] CARD_OPTIONS = { AT_MOST_ONE, ANY_NUMBER, NO_MORE_THAN };
+
+
     /**
      * The plan manager.
      */
@@ -52,6 +62,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel {
     private WebMarkupContainer moDetailsDiv;
 
     private WebMarkupContainer languagesContainer;
+    private NumberTextField<Integer> cardinalityField;
+    private Label participantLabel;
+    private String cardinalityChoice;
 
     public ActorDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
@@ -207,7 +220,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel {
         participationContainer.setVisible( getActor().isActual() );
         moDetailsDiv.add( participationContainer );
         addOpenParticipationCheckBox( participationContainer );
-        addSingularParticipationCheckBox( participationContainer );
+        addParticipationCardinality( participationContainer );
         addSameEmployerParticipation( participationContainer );
         addSupervisedParticipation( participationContainer );
         addAnonymousParticipation( participationContainer );
@@ -226,17 +239,59 @@ public class ActorDetailsPanel extends EntityDetailsPanel {
         openParticipationCheckBox.setEnabled( isLockedByUser( getActor() ) );
     }
 
-    private void addSingularParticipationCheckBox( WebMarkupContainer participationContainer ) {
-        CheckBox openParticipationCheckBox = new CheckBox(
-                "isOneParticipant",
-                new PropertyModel<Boolean>( this, "singularParticipation" ) );
-        openParticipationCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+    private void addParticipationCardinality( WebMarkupContainer participationContainer ) {
+        addCardinalityChoice( participationContainer );
+        addCardinalityField( participationContainer );
+        addParticipantLabel( participationContainer );
+    }
+
+    private void addCardinalityChoice( final WebMarkupContainer participationContainer ) {
+        int maxParticipation = getActor().getMaxParticipation();
+        cardinalityChoice = maxParticipation == -1
+                ? ANY_NUMBER
+                : maxParticipation == 1
+                ? AT_MOST_ONE
+                : NO_MORE_THAN;
+        DropDownChoice<String> cardinalityChoice = new DropDownChoice<String>(
+                "cardinalityChoice",
+                new PropertyModel<String>( this, "cardinalityChoice"),
+                Arrays.asList(CARD_OPTIONS) );
+        cardinalityChoice.add(  new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getActor(), "singularParticipation" ) );
+                makeVisible( cardinalityField, getCardinalityChoice().equals( NO_MORE_THAN ) );
+                target.add( cardinalityField );
+                addParticipantLabel( participationContainer );
+                target.add( participantLabel );
             }
         } );
-        participationContainer.add( openParticipationCheckBox );
-        openParticipationCheckBox.setEnabled( isLockedByUser( getActor() ) );
+        participationContainer.add( cardinalityChoice );
+    }
+
+    private void addCardinalityField( final WebMarkupContainer participationContainer ) {
+        cardinalityField = new NumberTextField<Integer>(
+                "maxParticipation",
+                new PropertyModel<Integer>( this, "maxParticipation" )
+        );
+        cardinalityField.setMinimum( 2 );
+        cardinalityField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addParticipantLabel( participationContainer );
+                target.add( participantLabel );
+                update( target, new Change( Change.Type.Updated, getActor(), "maxParticipation" ) );
+            }
+        } );
+        makeVisible( cardinalityField, getCardinalityChoice().equals( NO_MORE_THAN ) );
+        participationContainer.add( cardinalityField );
+    }
+
+    private void addParticipantLabel( WebMarkupContainer participationContainer ) {
+        participantLabel = new Label(
+                "participantLabel",
+                isSingularParticipation() ? "participant" : "participants" );
+        participantLabel.setOutputMarkupId( true ) ;
+        participationContainer.addOrReplace( participantLabel );
     }
 
     private void addSameEmployerParticipation( WebMarkupContainer participationContainer ) {
@@ -341,9 +396,32 @@ public class ActorDetailsPanel extends EntityDetailsPanel {
         return getActor().isSingularParticipation();
     }
 
-    public void setSingularParticipation( boolean val ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "singularParticipation", val ) );
+    public String getCardinalityChoice() {
+       return cardinalityChoice;
     }
+
+    public void setCardinalityChoice( String val ) {
+        cardinalityChoice = val;
+        int maxParticipation = val.equals( ANY_NUMBER )
+                ? -1
+                : val.equals( AT_MOST_ONE )
+                ? 1
+                : 0;
+        if ( maxParticipation != 0 ) {
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "maxParticipation", maxParticipation ) );
+        }
+    }
+
+    public int getMaxParticipation() {
+        int val =  getActor().getMaxParticipation();
+        return val < 1 ? 0 : val;
+    }
+
+    public void setMaxParticipation( int val ) {
+        if ( val > 0 )
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(), "maxParticipation", val ) );
+    }
+
 
     /**
      * Whether participation as the actor is open.

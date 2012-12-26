@@ -30,23 +30,16 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
      */
     private boolean system;
 
-     /////////////// OBSOLETE /////////////////
-
-    /**
-     * Whether this (actual) agent is a place holder (to be named by assigned participant).
-     */
-    private boolean placeHolder = false;
-    /**
-     * Whether placeholder is singular.
-     */
-    private boolean placeHolderSingular = false;
-
-    //////////////END OBSOLETE ///////////////////
-
     /**
      * Is participation as this actor open to all users?
      */
     private boolean openParticipation = false;
+
+    /**
+     * Maximum number of participants as this actor.
+     * -1 means no limit.
+     */
+    private int maxParticipation = 1;
     /**
      * Can only one user participate as this actor?
      */
@@ -132,12 +125,20 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         this.openParticipation = openParticipation;
     }
 
-    public boolean isSingularParticipation() {
-        return singularParticipation;
+    public int getMaxParticipation() {
+        return maxParticipation;
     }
 
-    public void setSingularParticipation( boolean singularParticipation ) {
-        this.singularParticipation = singularParticipation;
+    public void setMaxParticipation( int maxParticipation ) {
+        this.maxParticipation = maxParticipation;
+    }
+
+    public boolean isSingularParticipation() {
+        return maxParticipation == 1;
+    }
+
+    public void setSingularParticipation( boolean singularParticipation ) {   // todo - obsolete
+        maxParticipation = singularParticipation ? 1 : -1;
     }
 
     public boolean isParticipationRestrictedToEmployed() {

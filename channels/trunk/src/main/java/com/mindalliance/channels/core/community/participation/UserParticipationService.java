@@ -29,7 +29,7 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
 
     UserParticipation getParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
 
-    boolean canBeParticipatedAs( Agent agent, PlanCommunity planCommunity );
+    boolean isParticipationNotFull( Agent agent, PlanCommunity planCommunity );
 
     boolean isParticipatedAs( Agent agent, PlanCommunity planCommunity );
 

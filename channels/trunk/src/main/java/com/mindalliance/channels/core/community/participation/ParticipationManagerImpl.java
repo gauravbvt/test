@@ -151,7 +151,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 planCommunity );
         return agent.isValid( planCommunity )
                 && !alreadyParticipatingAs( agent, currentParticipations )
-                && !isSingularAndTaken( agent, planCommunity )
+                && !isParticipationFull( agent, planCommunity )
                 && meetsPreEmploymentConstraint( agent, activeParticipations, planCommunity );
     }
 
@@ -241,9 +241,8 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 } );
     }
 
-    private boolean isSingularAndTaken( Agent agent, PlanCommunity planCommunity ) {
-        return agent.isSingularParticipation()
-                && !userParticipationService.getParticipationsAsAgent( agent, planCommunity ).isEmpty();
+    private boolean isParticipationFull( Agent agent, PlanCommunity planCommunity ) {
+        return !userParticipationService.isParticipationNotFull( agent, planCommunity );
     }
 
     @Override

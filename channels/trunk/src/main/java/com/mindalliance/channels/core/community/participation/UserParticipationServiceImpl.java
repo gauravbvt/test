@@ -55,7 +55,7 @@ public class UserParticipationServiceImpl
             Agent agent,
             PlanCommunity planCommunity
     ) {
-        if ( canBeParticipatedAs( agent, planCommunity ) ) {
+        if ( isParticipationNotFull( agent, planCommunity ) ) {
             UserParticipation userParticipation = new UserParticipation(
                     username,
                     participatingUser,
@@ -76,7 +76,7 @@ public class UserParticipationServiceImpl
             Agent agent,
             PlanCommunity planCommunity
     ) {
-        if ( canBeParticipatedAs( agent, planCommunity ) ) {
+        if ( isParticipationNotFull( agent, planCommunity ) ) {
             UserParticipation userParticipation = new UserParticipation(
                     username,
                     participatingUser,
@@ -193,8 +193,9 @@ public class UserParticipationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public boolean canBeParticipatedAs( Agent agent, PlanCommunity planCommunity ) {
-        return !( agent.isSingularParticipation() && isParticipatedAs( agent, planCommunity ) );
+    public boolean isParticipationNotFull( Agent agent, PlanCommunity planCommunity ) {
+        int count = getParticipationsAsAgent( agent, planCommunity ).size();
+        return count < agent.getMaxParticipation();
     }
 
     @Override

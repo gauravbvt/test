@@ -60,9 +60,9 @@ public class ActorConverter extends EntityConverter {
         writer.startNode( "openParticipation" );
         writer.setValue( Boolean.toString( actor.isOpenParticipation() ) );
         writer.endNode();
-        // singular participation
-        writer.startNode( "singularParticipation" );
-        writer.setValue( Boolean.toString( actor.isSingularParticipation() )  );
+        // max participation
+        writer.startNode( "maxParticipation" );
+        writer.setValue( Integer.toString( actor.getMaxParticipation() )  );
         writer.endNode();
         // participation restricted to already employed
         writer.startNode( "participationRestrictedToEmployed" );
@@ -135,8 +135,10 @@ public class ActorConverter extends EntityConverter {
             // actor.setPlaceHolder( val );
         } else if ( nodeName.equals( "openParticipation" ) ) {
             actor.setOpenParticipation( reader.getValue().equals( "true" ) );
-        } else if ( nodeName.equals( "singularParticipation" ) ) {
+        } else if ( nodeName.equals( "singularParticipation" ) ) {     // todo - obsolete
             actor.setSingularParticipation( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "maxParticipation" ) ) {
+            actor.setMaxParticipation( Integer.parseInt( reader.getValue()) );
         } else if ( nodeName.equals( "participationRestrictedToEmployed" ) ) {
             actor.setParticipationRestrictedToEmployed( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "supervisedParticipation" ) ) {

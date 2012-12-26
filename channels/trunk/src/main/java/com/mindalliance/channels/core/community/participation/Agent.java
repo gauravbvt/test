@@ -104,6 +104,10 @@ public class Agent implements Nameable, Identifiable {
         return actor != null && actor.isParticipationUserAssignable();
     }
 
+    public int getMaxParticipation() {
+        return actor == null ? 0 : actor.getMaxParticipation();
+    }
+
     public boolean isSingularParticipation() {
         return actor != null && actor.isSingularParticipation();
     }
