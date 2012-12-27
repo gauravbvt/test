@@ -1834,6 +1834,10 @@ div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0
     margin-top: 10px;
 }
 
+.participation ul {
+    list-style-type: none;
+}
+
 .participation h4 {
     border-bottom: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;

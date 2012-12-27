@@ -39,4 +39,8 @@ public interface UserParticipationConfirmationService extends GenericSqlService<
     boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, PlanCommunity planCommunity );
 
     boolean isConfirmationByUserRequired( UserParticipation userParticipation, ChannelsUser user, PlanCommunity planCommunity );
+
+    List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
+            ChannelsUser user,
+            final PlanCommunity planCommunity );
 }

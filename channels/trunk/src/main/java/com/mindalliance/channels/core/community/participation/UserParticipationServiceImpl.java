@@ -329,7 +329,8 @@ public class UserParticipationServiceImpl
                     public boolean evaluate( Object object ) {
                         UserParticipation userParticipation = (UserParticipation) object;
                         Agent participationAgent = userParticipation.getAgent( planCommunity );
-                        if ( participationAgent == null ) return false;
+                        if ( participationAgent == null
+                                || !participationAgent.isSupervisedParticipation() ) return false;
                         List<Agent> supervisors = participationManager.findAllSupervisorsOf(
                                 participationAgent,
                                 planCommunity );
@@ -491,6 +492,43 @@ public class UserParticipationServiceImpl
             criteria.add( Restrictions.eq( "organizationParticipation", orgParticipation ) );
             return (List<UserParticipation>) criteria.list();
         }
+    }
+
+
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
+            ChannelsUser user,
+            final PlanCommunity planCommunity ) {
+        final List<UserParticipationConfirmation> allConfirmations =
+                planCommunity.getUserParticipationConfirmationService().getParticipationConfirmations( planCommunity );
+        final List<Agent> userAgents = listAgentsUserParticipatesAs(
+                user,
+                planCommunity );
+        return  ( List<UserParticipation>)CollectionUtils.select(
+                        getParticipationsSupervisedByUser( user, planCommunity ),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                final UserParticipation supervisedParticipation = (UserParticipation) object;
+                                return !CollectionUtils.exists(
+                                        allConfirmations,
+                                        new Predicate() {
+                                            @Override
+                                            public boolean evaluate( Object object ) {
+                                                UserParticipationConfirmation confirmation = (UserParticipationConfirmation) object;
+                                                Agent supervisor = confirmation.getSupervisor( planCommunity );
+                                                return confirmation.getUserParticipation()
+                                                        .equals( supervisedParticipation )
+                                                        && supervisor != null
+                                                        && userAgents.contains( supervisor );
+                                            }
+                                        }
+                                );
+                            }
+                        } );
+
     }
 
 

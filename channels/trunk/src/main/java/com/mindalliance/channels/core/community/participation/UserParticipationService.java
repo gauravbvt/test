@@ -80,4 +80,8 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
     List<UserParticipation> listUserParticipationIn(
             OrganizationParticipation organizationParticipation,
             PlanCommunity planCommunity );
+
+   List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
+            ChannelsUser user,
+            PlanCommunity planCommunity);
 }

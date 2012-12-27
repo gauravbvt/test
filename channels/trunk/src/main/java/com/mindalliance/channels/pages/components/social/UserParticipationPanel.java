@@ -6,11 +6,9 @@ import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -77,7 +75,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         addUserRole();
         addOpenAndConfirmedParticipation();
         addToBeConfirmedParticipation();
-        addParticipationToConfirm();
     }
 
     private void addUserRole() {
@@ -451,101 +448,6 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 } );
     }
 
-    private void addParticipationToConfirm() {
-        WebMarkupContainer confirmationsContainer = new WebMarkupContainer( "supervisorParticipationConfirmations" );
-        userParticipationContainer.add( confirmationsContainer );
-        List<ParticipationConfirmationWrapper> confirmationWrappers = participationConfirmationWrappers();
-        ListView<ParticipationConfirmationWrapper> confirmationList = new ListView<ParticipationConfirmationWrapper>(
-                "participationConfirmations",
-                confirmationWrappers
-        ) {
-            @Override
-            protected void populateItem( ListItem<ParticipationConfirmationWrapper> item ) {
-                ParticipationConfirmationWrapper confirmationWrapper = item.getModelObject();
-                AjaxCheckBox confirmedCheckBox = new AjaxCheckBox(
-                        "confirmed",
-                        new PropertyModel<Boolean>( confirmationWrapper, "confirmed" )
-                ) {
-                    @Override
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        resetAllAndUpdate( target );
-                    }
-                };
-                item.add( confirmedCheckBox );
-                ChannelsUserInfo participatingUser = confirmationWrapper.getParticipatingUser();
-                item.add( new Label( "user", participatingUser.getFullName() ) );
-                item.add( new Label( "email", participatingUser.getEmail() ) );
-                Agent participationAgent = confirmationWrapper.getAgent( getPlanCommunity() );
-                if ( participationAgent != null )
-                    addTipTitle( item, participationAgent.getRequirementsDescription( getPlanCommunity()) );
-                item.add( new Label( "agent", participationAgent == null ? "?" : participationAgent.getName() ) );
-            }
-        };
-        confirmationsContainer.add( confirmationList );
-        confirmationsContainer.setVisible( !confirmationWrappers.isEmpty() );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private List<ParticipationConfirmationWrapper> participationConfirmationWrappers() {
-       PlanCommunity planCommunity = getPlanCommunity();
-        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
-        List<ParticipationConfirmationWrapper> wrappers = new ArrayList<ParticipationConfirmationWrapper>();
-        final List<UserParticipationConfirmation> allConfirmations =
-                planCommunity.getUserParticipationConfirmationService().getParticipationConfirmations( planCommunity );
-        final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs(
-                getUser(),
-                planCommunity );
-        // Find all plan participation confirmations made by a supervisor user participates as (= confirmed)
-        List<UserParticipationConfirmation> userConfirmations = (List<UserParticipationConfirmation>) CollectionUtils.select(
-                allConfirmations,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        UserParticipationConfirmation confirmation = (UserParticipationConfirmation) object;
-                        Agent supervisor = confirmation.getSupervisor( getPlanCommunity() );
-                        return supervisor != null && userAgents.contains( supervisor );
-                    }
-                }
-        );
-        for ( UserParticipationConfirmation userConfirmation : userConfirmations ) {
-            wrappers.add( new ParticipationConfirmationWrapper( userConfirmation, true ) );
-        }
-        // Find all plan participation confirmations user needs to confirm as supervisor
-        List<UserParticipation> userParticipationAwaitingUserConfirmation =
-                (List<UserParticipation>) CollectionUtils.select(
-                        userParticipationService
-                                .getParticipationsSupervisedByUser( getUser(), planCommunity ),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                final UserParticipation supervisedParticipation = (UserParticipation) object;
-                                return !CollectionUtils.exists(
-                                        allConfirmations,
-                                        new Predicate() {
-                                            @Override
-                                            public boolean evaluate( Object object ) {
-                                                UserParticipationConfirmation confirmation = (UserParticipationConfirmation) object;
-                                                Agent supervisor = confirmation.getSupervisor( getPlanCommunity() );
-                                                return confirmation.getUserParticipation()
-                                                        .equals( supervisedParticipation )
-                                                        && supervisor != null
-                                                        && userAgents.contains( supervisor );
-                                            }
-                                        }
-                                );
-                            }
-                        } );
-        for ( UserParticipation participationToBeValidated : userParticipationAwaitingUserConfirmation ) {
-            UserParticipationConfirmation confirmationToBe = new UserParticipationConfirmation(
-                    participationToBeValidated,
-                    null,
-                    getUsername() );
-            wrappers.add( new ParticipationConfirmationWrapper( confirmationToBe, false ) );
-        }
-        return wrappers;
-    }
-
-
     public Agency getSelectedAvailableParticipationAgency() {
         return selectedAvailableParticipationAgency;
     }
@@ -641,53 +543,5 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             return agent == null ? "" : agent.getRequirementsDescription( planCommunity );
         }
     }
-
-    public class ParticipationConfirmationWrapper implements Serializable {
-        private UserParticipationConfirmation participationConfirmation;
-        private boolean confirmed;
-
-        public ParticipationConfirmationWrapper(
-                UserParticipationConfirmation participationConfirmation,
-                boolean confirmed ) {
-            this.confirmed = confirmed;
-            this.participationConfirmation = participationConfirmation;
-        }
-
-        public boolean isConfirmed() {
-            return confirmed;
-        }
-
-        public void setConfirmed( boolean confirmed ) {
-            this.confirmed = confirmed;
-            PlanCommunity planCommunity = getPlanCommunity();
-            UserParticipationConfirmationService userParticipationConfirmationService =
-                    planCommunity.getUserParticipationConfirmationService();
-            for ( Agent supervisor : planCommunity.getUserParticipationService().listSupervisorsUserParticipatesAs(
-                    participationConfirmation.getUserParticipation(),
-                    getUser(),
-                    planCommunity
-            ) ) {
-                if ( confirmed ) {
-                    userParticipationConfirmationService.addParticipationConfirmation(
-                            participationConfirmation.getUserParticipation(),
-                            supervisor,
-                            getUser() );
-                } else {
-                    userParticipationConfirmationService.removeParticipationConfirmation(
-                            participationConfirmation.getUserParticipation(),
-                            supervisor );
-                }
-            }
-        }
-
-        public ChannelsUserInfo getParticipatingUser() {
-            return participationConfirmation.getUserParticipation().getParticipant();
-        }
-
-        public Agent getAgent( PlanCommunity planCommunity ) {
-            return participationConfirmation.getUserParticipation().getAgent( planCommunity );
-        }
-    }
-
 
 }

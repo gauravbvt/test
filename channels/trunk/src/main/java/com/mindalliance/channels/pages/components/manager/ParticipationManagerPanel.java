@@ -1,7 +1,9 @@
 package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
@@ -11,6 +13,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,10 @@ import java.util.List;
  */
 public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
+    @SpringBean
+    private UserParticipationService userParticipationService;
+    private AjaxTabbedPanel<ITab> tabbedPanel;
+
     public ParticipationManagerPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
         init();
@@ -35,14 +42,14 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     }
 
     private void addTabPanel() {
-        AjaxTabbedPanel tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() ) {
+        tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() ) {
             @Override
             protected void onAjaxUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.NeedsRefresh ) );
             }
         };
         tabbedPanel.setOutputMarkupId( true );
-        add( tabbedPanel );
+        addOrReplace( tabbedPanel );
     }
 
     private List<ITab> getTabs() {
@@ -59,7 +66,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
         } );
         tabs.add( new AbstractTab( new PropertyModel<String>( this, "todosTitle" ) ) {
             public Panel getPanel( String id ) {
-                return new ParticipationTodosPanel( id, getModel() );
+                return new ParticipationConfirmationsPanel( id, getModel() );
             }
         } );
 
@@ -67,11 +74,22 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
     }
 
     public String getTodosTitle() {
-        return "Todo"; // todo - add count
+        int toConfirmCount = userParticipationService
+                .listUserParticipationsAwaitingConfirmationBy( getUser(), getPlanCommunity() ).size();
+        return "Confirmations (" + toConfirmCount + " pending)";
     }
 
 
     public void updateContent( AjaxRequestTarget target ) {
         // do nothing
+    }
+
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
+        if ( change.isUpdated() ) {
+            int selection = tabbedPanel.getSelectedTab();
+            addTabPanel();
+            tabbedPanel.setSelectedTab( selection );
+            target.add( tabbedPanel );
+        }
     }
 }

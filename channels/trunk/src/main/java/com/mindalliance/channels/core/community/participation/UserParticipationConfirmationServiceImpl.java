@@ -185,4 +185,29 @@ public class UserParticipationConfirmationServiceImpl
         );
     }
 
+    @Override
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
+            ChannelsUser user,
+            final PlanCommunity planCommunity ) {
+        final List<UserParticipationConfirmation> allConfirmations =
+                planCommunity.getUserParticipationConfirmationService().getParticipationConfirmations( planCommunity );
+        final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs(
+                user,
+                planCommunity );
+        // Find all plan participation confirmations made by a supervisor user participates as (= confirmed)
+        return (List<UserParticipationConfirmation>) CollectionUtils.select(
+                allConfirmations,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserParticipationConfirmation confirmation = (UserParticipationConfirmation) object;
+                        Agent supervisor = confirmation.getSupervisor( planCommunity );
+                        return supervisor != null && userAgents.contains( supervisor );
+                    }
+                }
+        );
+    }
+
 }

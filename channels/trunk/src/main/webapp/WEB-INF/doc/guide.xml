@@ -1238,6 +1238,19 @@ If a participation by a user is set by someone else, the user must first accept 
             <step>
                 <description>See also [${helpUrl}/ch02s04s04s02.html this]</description>
             </step>
+            <next group="user-participation" activity="organization-registration"/>
+        </activity>
+        <activity id="organization-registration">
+            <name>Registering organizations into placeholders</name>
+            <step>
+                <description><![CDATA[Organizations defined in a plan can be placeholders for real organizations that are added to (or removed from) the scope after the plan is released.
+
+Planners, or users participating as custodians of a placeholder organization, can register one or more organizations representing the placeholder organization.
+
+A "placed" organization inherits a copy of the agents employed by the placeholder organization. Users can then participate as these agents.
+]]></description>
+            </step>
+            <next group="user-participation" activity="participation"/>
         </activity>
     </group>
     <group id="searching">

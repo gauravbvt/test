@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
@@ -69,6 +70,9 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     @SpringBean
     private FeedbackService feedbackService;
+
+    @SpringBean
+    private UserParticipationService userParticipationService;
 
     private SocialPanel socialPanel;
     private WebMarkupContainer gotoIconsContainer;
@@ -208,7 +212,12 @@ public class UserPage extends AbstractChannelsBasicPage {
                 ParticipationManagerPage.class,
                 null,
                 plan );
-        addTipTitle( participationManagerLink, "Manage plan participation"  );
+        int toConfirmCount = userParticipationService
+                .listUserParticipationsAwaitingConfirmationBy( getUser(), getPlanCommunity() ).size();
+
+        addTipTitle(
+                participationManagerLink,
+                "Manage plan participation (" + toConfirmCount + " to confirm)" );
         BookmarkablePageLink gotoIssuesLink = newTargetedLink(
                 "gotoIssues",
                 "",

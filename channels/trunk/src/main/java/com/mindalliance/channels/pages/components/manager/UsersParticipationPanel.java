@@ -438,10 +438,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 target.add( usersParticipationTable );
                 addAssigning();
                 target.add( assignmentContainer );
-                update( target, Change.message(
-                        addedParticipation != null
-                                ? "Added " + addedParticipation.asString( getPlanCommunity() )
-                                : "Failed to add participation" ) );
+                Change change = new Change( Change.Type.Updated, getPlanCommunity(), "participation" );
+                change.setMessage( addedParticipation != null
+                        ? "Added " + addedParticipation.asString( getPlanCommunity() )
+                        : "Failed to add participation"  );
+                update( target, change );
                 addedParticipation = null;
             }
         } );
@@ -478,10 +479,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 target.add( usersParticipationTable );
                 addAssigning();
                 target.add( assignmentContainer );
-                update( target, Change.message(
-                        success
-                                ? "Removed " + userParticipationString
-                                : "Failed to remove " + userParticipationString ) );
+                Change change = new Change( Change.Type.Updated, getPlanCommunity(), "participation" );
+                change.setMessage( success
+                        ? "Removed " + userParticipationString
+                        : "Failed to remove " + userParticipationString  );
+                update( target, change );
             }
         }
     }
