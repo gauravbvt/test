@@ -2,7 +2,6 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.UserMessage;
 import com.mindalliance.channels.social.services.UserMessageService;
@@ -39,17 +38,15 @@ public class SocialPanel extends AbstractUpdatablePanel {
     public static final String MESSAGES = "Messages";
     public static final String CALENDAR = "Calendar";
     public static final String PARTICIPATION = "Participation";
-    // public static final String SURVEYS = "Surveys";
     public static final String USER = "User";
     public static final String SEND_MESSAGE = "sendMessage";
     public static final String DELETE_MESSAGE = "deleteMessage";
     public static final String EMAIL_MESSAGE = "emailMessage";
 
-    private AjaxTabbedPanel tabbedPanel;
+    private AjaxTabbedPanel<ITab> tabbedPanel;
     private UserMessageListPanel userMessageListPanel;
     private ExecutedCommandsListPanel commandEventListPanel;
     private UserPresenceListPanel plannerPresenceListPanel;
-    // private SurveyListPanel surveyListPanel;
     private CalendarPanel calendarPanel;
     private UserInfoPanel userProfilePanel;
     private UserParticipationPanel userParticipationPanel;
@@ -80,7 +77,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     private void addSocialTabs() {
-        tabbedPanel = new AjaxTabbedPanel( "tabs", getTabs() ) {
+        tabbedPanel = new AjaxTabbedPanel<ITab>( "tabs", getTabs() ) {
             // Override newLink to supply an IndicatingAjaxLink (wait cursor)
             @Override
             protected WebMarkupContainer newLink( String linkId, final int index ) {
@@ -148,15 +145,6 @@ public class SocialPanel extends AbstractUpdatablePanel {
                     return calendarPanel;
                 }
             } );
-        /*  if ( showTabs.contains( SURVEYS ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "Surveys" ) ) {
-                public Panel getPanel( String id ) {
-                    surveyListPanel = new SurveyListPanel( id, SocialPanel.this, collapsible );
-                    return surveyListPanel;
-                }
-            };
-            tabs.add( tab );
-        }*/
         return tabs;
     }
 
@@ -178,7 +166,6 @@ public class SocialPanel extends AbstractUpdatablePanel {
         if ( userMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() ) ) {
             userMessageListPanel.refresh( target, change );
         }
-        Plan plan = getPlan();
         Date whenLastReceived = userMessageService.getWhenLastReceived(
                 getUser().getUsername(),
                 getPlanCommunity() );

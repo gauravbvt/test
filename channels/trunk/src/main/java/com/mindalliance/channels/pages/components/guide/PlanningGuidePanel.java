@@ -350,6 +350,8 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     public void refresh( AjaxRequestTarget target, Change change ) {
         if ( selectedActivity != null ) {
             target.add( getDoc( selectedGroup, selectedActivity ) );
+        } else if ( selectedGroup == null ) {
+            target.add( this );
         }
     }
 

@@ -213,6 +213,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
     private void addNotifier() {
         notifier = new NotifierWebMarkupContainer( "notifier" );
+        makeVisible( notifier, false );
         add( notifier );
     }
 
