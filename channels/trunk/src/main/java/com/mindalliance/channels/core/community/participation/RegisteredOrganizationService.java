@@ -27,10 +27,6 @@ public interface RegisteredOrganizationService extends GenericSqlService<Registe
 
     List<String> getAllRegisteredNames( PlanCommunity planCommunity );
 
-    boolean canHaveParent( String orgName,
-                           String parentName,
-                           PlanCommunity planCommunity );
-
     boolean updateWith( ChannelsUser user,
                         String orgName,
                         Agency agency,
@@ -38,4 +34,6 @@ public interface RegisteredOrganizationService extends GenericSqlService<Registe
 
     List<Channel> getAllChannels( RegisteredOrganization registered,
                                   PlanCommunity planCommunity );
+
+    List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity );
 }

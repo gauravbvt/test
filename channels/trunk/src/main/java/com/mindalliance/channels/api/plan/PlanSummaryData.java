@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.api.entities.AgentData;
+import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agent;
@@ -35,8 +35,8 @@ public class PlanSummaryData implements Serializable {
 
     private List<UserData> planners;
     private List<ParticipationData> participationDataList;
-    private List<AgentData> openActorList;
-    private List<AgentData> underlings;
+    private List<ActorData> openActorList;
+    private List<ActorData> underlings;
     private DocumentationData documentation;
     private PlanIdentifierData planIdentifierData;
     private List<Actor> actors;
@@ -69,9 +69,9 @@ public class PlanSummaryData implements Serializable {
             supervisedSet.addAll( planCommunity.getPlanService().findSupervised(  actor ) );
         }
         List<Actor> supervisedActors = new ArrayList<Actor>( supervisedSet );
-        underlings = new ArrayList<AgentData>();
+        underlings = new ArrayList<ActorData>();
         for ( Actor underling : supervisedActors ) {
-            underlings.add( new AgentData( serverUrl, underling, getPlan() ) );
+            underlings.add( new ActorData( serverUrl, underling, getPlan() ) );
         }
 
     }
@@ -92,13 +92,13 @@ public class PlanSummaryData implements Serializable {
     private void initOpenActors(
             String serverUrl,
             PlanCommunity planCommunity ) {
-        openActorList = new ArrayList<AgentData>();
+        openActorList = new ArrayList<ActorData>();
         ChannelsUser user = ChannelsUser.current( planCommunity.getUserDao() );
         List<Agent> openAgents = planCommunity.getParticipationManager()
                 .findSelfAssignableOpenAgents( planCommunity, user );
 
         for ( Agent openAgent : openAgents ) {
-            openActorList.add( new AgentData( serverUrl, openAgent.getActor(), getPlan() ) ); // todo - agents!
+            openActorList.add( new ActorData( serverUrl, openAgent.getActor(), getPlan() ) ); // todo - agents!
         }
 
     }
@@ -155,12 +155,12 @@ public class PlanSummaryData implements Serializable {
     }
 
     @XmlElement( name = "openAgent" )
-    public List<AgentData> getOpenActors() {
+    public List<ActorData> getOpenActors() {
         return openActorList;
     }
 
     @XmlElement( name = "supervised" )
-    public List<AgentData> getSupervised() {
+    public List<ActorData> getSupervised() {
         return underlings;
     }
 

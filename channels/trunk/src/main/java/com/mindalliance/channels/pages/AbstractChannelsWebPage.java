@@ -29,7 +29,6 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -83,6 +82,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     public static final String VERSION_PARM = "v";
 
+    public static final String COMMUNITY_PARM = "community";
+
     /**
      * Logger.
      */
@@ -101,9 +102,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     @SpringBean
     private PlanManager planManager;
-
-    @SpringBean
-    private PlanServiceFactory planServiceFactory;
 
     private transient QueryService queryService;
 
@@ -159,11 +157,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     //-----------------------------------
-    public static PageParameters createParameters( Specable profile, String uri, int version ) {
+    public static PageParameters createParameters( Specable profile, PlanCommunity planCommunity, int version ) {
 
         PageParameters result = new PageParameters();
-        result.set( "plan", uri );
-        result.set( "v", version );
+        result.set( AbstractChannelsWebPage.PLAN_PARM, planCommunity.getPlanUri() );
+        result.set( AbstractChannelsWebPage.COMMUNITY_PARM, planCommunity.getUri() );
+        result.set( AbstractChannelsWebPage.VERSION_PARM, version );
         if ( profile != null ) {
             if ( profile.getActor() != null )
                 result.set( "agent", profile.getActor().getId() );
@@ -219,7 +218,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     AllProtocolsPage.class,
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
-                            planCommunity.getUri(),
+                            planCommunity,
                             plan.getVersion() ),
                     null,
                     plan );
@@ -230,7 +229,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     ProtocolsPage.class,
                     AbstractParticipantPage.createParameters(
                             actor,
-                            planCommunity.getUri(),
+                            planCommunity,
                             plan.getVersion() ),
                     null,
                     plan );
@@ -257,7 +256,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     AllInfoNeedsPage.class,
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
-                            uri,
+                            planCommunity,
                             plan.getVersion() ),
                     null,
                     plan );
@@ -268,7 +267,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     InfoNeedsPage.class,
                     AbstractParticipantPage.createParameters(
                             actor,
-                            uri,
+                            planCommunity,
                             plan.getVersion() ),
                     null,
                     plan );

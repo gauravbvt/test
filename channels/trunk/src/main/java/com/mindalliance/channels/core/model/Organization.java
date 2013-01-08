@@ -98,7 +98,7 @@ public class Organization extends AbstractUnicastChannelable
         Organization org = (Organization) entity;
         return super.validates( org, locale )
                 && ModelEntity.implies( org.location(), location, locale )
-                && ModelEntity.implies( org.getEffectiveParent(), getEffectiveParent(), locale );
+                && ModelEntity.implies( org.getParent(), getParent(), locale );
     }
 
     @Override
@@ -188,11 +188,6 @@ public class Organization extends AbstractUnicastChannelable
     public Organization getParent() {
         return parent;
     }
-
-    public Organization getEffectiveParent() {
-        return isPlaceHolder() ? null : parent;
-    }
-
 
     public void setParent( Organization parent ) {
         assert parent == null || isActual() && parent.isActual()
@@ -315,14 +310,14 @@ public class Organization extends AbstractUnicastChannelable
     private void safeAncestors( Set<Organization> visited ) {
         if ( !visited.contains( this ) ) {
             visited.add( this );
-            if ( getEffectiveParent() != null )
-                getEffectiveParent().safeAncestors( visited );
+            if ( getParent() != null )
+                getParent().safeAncestors( visited );
         }
     }
 
     @Override
     public String toString() {
-        return getEffectiveParent() == null ? getName()
+        return getParent() == null ? getName()
                 : MessageFormat.format( "{0} - {1}", parentage(), getName() );
     }
 
@@ -378,7 +373,7 @@ public class Organization extends AbstractUnicastChannelable
     public boolean isUndefined() {
         return super.isUndefined()
                 && !isPlaceHolder()
-                && getEffectiveParent() == null
+                && getParent() == null
                 && location == null
                 && jobs.isEmpty();
     }
@@ -404,7 +399,7 @@ public class Organization extends AbstractUnicastChannelable
             return super.getSuperiors();
         } else {
             List<Hierarchical> superiors = new ArrayList<Hierarchical>();
-            if ( getEffectiveParent() != null ) superiors.add( getEffectiveParent() );
+            if ( getParent() != null ) superiors.add( getParent() );
             return superiors;
         }
     }
@@ -440,7 +435,7 @@ public class Organization extends AbstractUnicastChannelable
     @Override
     public boolean references( final ModelObject mo ) {
         return super.references( mo )
-                || ModelObject.areIdentical( getEffectiveParent(), mo )
+                || ModelObject.areIdentical( getParent(), mo )
                 || ModelObject.areIdentical( location, mo )
                 || ModelObject.areIdentical( custodian, mo )
                 ||
@@ -481,7 +476,7 @@ public class Organization extends AbstractUnicastChannelable
      * @return an organization
      */
     public Organization getTopOrganization() {
-        if ( getEffectiveParent() == null )
+        if ( getParent() == null )
             return this;
         else {
             List<Organization> ancestors = ancestors();
@@ -499,6 +494,13 @@ public class Organization extends AbstractUnicastChannelable
                     }
                 }
         );
+    }
+
+    public String getFullAddress() {
+        Place location = getLocation();
+        return location != null
+                ? location.getFullAddress()
+                : "";
     }
 
  /*   public boolean isMediumDeployed( final TransmissionMedium medium, final Place planLocale ) {

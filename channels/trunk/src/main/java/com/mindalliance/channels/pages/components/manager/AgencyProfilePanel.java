@@ -67,6 +67,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         addNameField();
         addDescriptionField();
         addMissionField();
+        addAddressField();
         addParentField();
         addContactInfoPanel();
         addErrorsList();
@@ -146,6 +147,25 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         missionLabel.setVisible( !canBeEdited() );
         add( missionLabel );
     }
+
+    private void addAddressField() {
+        TextArea<String> addressField = new TextArea<String>(
+                "address",
+                new PropertyModel<String>( this, "address" )
+        );
+        addressField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateApplyButton( target );
+            }
+        } );
+        addressField.setVisible( canBeEdited() );
+        add( addressField );
+        //
+        Label addressLabel = new Label( "addressLabel", getAddress() );
+        addressLabel.setVisible( !canBeEdited() );
+        add( addressLabel );
+    }
+
 
     private void addParentField() {
         final List<String> choices = findParentNameChoices();
@@ -278,10 +298,9 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return registeredOrganizationService.canHaveParent(
+                            return planCommunity.canHaveParentAgency(
                                     agency.getName(),
-                                    (String) object,
-                                    planCommunity );
+                                    (String) object );
                         }
                     }
             );
@@ -301,10 +320,9 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             // parent
             String tempParentName = tempAgency.getParentName();
             if ( tempParentName != null ) {
-                if ( !registeredOrganizationService.canHaveParent(
+                if ( !getPlanCommunity().canHaveParentAgency(
                         agency.getName(),
-                        tempParentName,
-                        getPlanCommunity() ) ) {
+                        tempParentName ) ) {
                     errors.add( "The organization can not have \"" + tempParentName + "\" as parent" );
                 }
             }
@@ -345,6 +363,17 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             tempAgency.setMission( val );
         }
     }
+
+    public String getAddress() {
+        return tempAgency.getAddress();
+    }
+
+    public void setAddress( String val ) {
+        if ( val != null && !val.isEmpty() ) {
+            tempAgency.setAddress( val );
+        }
+    }
+
 
     public String getParentName() {
         return tempAgency.getParentName();

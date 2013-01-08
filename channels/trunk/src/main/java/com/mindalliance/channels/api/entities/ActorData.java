@@ -24,12 +24,12 @@ import java.util.List;
 @XmlType( propOrder = {"id", "name", "hasUniqueIdentity", "isAnonymous", "categories", "kind",
         "availability", "languages", "classifications", "documentation", "openParticipationToAll",
         "openParticipationToEmployed", "supervisedParticipation"} )
-public class AgentData extends ModelEntityData {
+public class ActorData extends ModelEntityData {
 
-    public AgentData() {
+    public ActorData() {
     }
 
-    public AgentData( String serverUrl, ModelObject modelObject, Plan plan ) {
+    public ActorData( String serverUrl, ModelObject modelObject, Plan plan ) {
         super( serverUrl, modelObject, plan );
     }
 

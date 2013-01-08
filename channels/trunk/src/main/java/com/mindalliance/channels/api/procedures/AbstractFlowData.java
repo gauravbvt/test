@@ -3,15 +3,16 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.MediumData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
 
@@ -33,7 +34,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private boolean initiating;
     private Flow flow;
     private Level failureSeverity;
-    private List<Employment> allEmployments;
+    private List<CommunityEmployment> allEmployments;
     private DocumentationData documentation;
     private List<MediumData> mediumDataList;
     private List<ChannelData> channelDataList;
@@ -47,7 +48,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             PlanCommunity planCommunity,
             boolean initiating,
             Flow flow,
-            Assignment assignment,
+            CommunityAssignment assignment,
             ChannelsUser user ) {
         super( planCommunity, assignment, user );
         this.serverUrl = serverUrl;
@@ -114,8 +115,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
     private List<ContactData> findContactsFromEmployment(
-            Employment employment,
-            Commitment commitment,
+            CommunityEmployment employment,
+            CommunityCommitment commitment,
             PlanCommunity planCommunity ) {
         return ContactData.findContactsFromEmployment(
                 serverUrl,
@@ -195,16 +196,18 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : findAllEmployments() ) {
-            ids.add( employment.getOrganization().getId() );
+        for ( CommunityEmployment employment : findAllEmployments() ) {
+            Organization organization = employment.getEmployer().getPlanOrganization();
+            if ( organization != null )
+                ids.add( organization.getId() );
         }
         return ids;
     }
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : findAllEmployments() ) {
-            ids.add( employment.getActor().getId() );
+        for ( CommunityEmployment employment : findAllEmployments() ) {
+            ids.add( employment.getAgent().getActor().getId() );
             if ( employment.getSupervisor() != null )
                 ids.add( employment.getSupervisor().getId() );
         }
@@ -217,7 +220,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allRoleIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : findAllEmployments() ) {
+        for ( CommunityEmployment employment : findAllEmployments() ) {
             ids.add( employment.getRole().getId() );
         }
         return ids;
@@ -225,21 +228,21 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public Set<Long> allPlaceIds() {
         Set<Long> ids = new HashSet<Long>();
-        for ( Employment employment : findAllEmployments() ) {
+        for ( CommunityEmployment employment : findAllEmployments() ) {
             if ( employment.getJurisdiction() != null )
                 ids.add( employment.getJurisdiction().getId() );
         }
         return ids;
     }
 
-    private List<Employment> findAllEmployments() {
+    private List<CommunityEmployment> findAllEmployments() {
         if ( allEmployments == null ) {
-            Set<Employment> employmentSet = new HashSet<Employment>();
+            Set<CommunityEmployment> employmentSet = new HashSet<CommunityEmployment>();
             for ( ContactData contactData : getContacts() ) {
                 employmentSet.add( contactData.employment() );
                 employmentSet.addAll( contactData.bypassEmployments() );
             }
-            allEmployments = new ArrayList<Employment>( employmentSet );
+            allEmployments = new ArrayList<CommunityEmployment>( employmentSet );
         }
         return allEmployments;
     }
@@ -268,7 +271,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return flow;
     }
 
-    public abstract List<Employment> findContactEmployments();
+    public abstract List<CommunityEmployment> findContactEmployments();
 
     public Flow flow() {
         return flow;

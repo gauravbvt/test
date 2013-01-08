@@ -2,18 +2,15 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
-import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.core.query.Assignments;
-import com.mindalliance.channels.core.query.Commitments;
-import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,11 +35,11 @@ import java.util.Set;
 @XmlType( propOrder = {"date", "planIdentifier", "userEmail", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
 public class ProceduresData implements Serializable {
 
-    private List<Actor> actors;
+    private List<Agent> agents;
     private ChannelsUser user;
     private List<ProcedureData> procedures;
     private List<EmploymentData> employments;
-    private List<Actor> participatingActors;
+    private List<Agent> participatingAgents;
     private EnvironmentData environmentData;
     private PlanIdentifierData planIdentifierData;
     private String dateVersioned;
@@ -63,9 +60,9 @@ public class ProceduresData implements Serializable {
     public ProceduresData(
             String serverUrl,
             PlanCommunity planCommunity,
-            Actor actor ) {
-        this.actors = new ArrayList<Actor>();
-        actors.add( actor );
+            Agent agent ) {
+        this.agents = new ArrayList<Agent>();
+        agents.add( agent );
         initData( serverUrl, planCommunity );
     }
 
@@ -74,8 +71,8 @@ public class ProceduresData implements Serializable {
             String serverUrl,
             List<UserParticipation> participations,
             PlanCommunity planCommunity ) {
-        initParticipatingActors( serverUrl, participations, planCommunity );
-        this.actors = getActors( participations );
+        initParticipatingAgents( participations, planCommunity );
+        this.agents = getAgents( participations );
         initData( serverUrl, planCommunity );
     }
 
@@ -90,23 +87,23 @@ public class ProceduresData implements Serializable {
 
     private void initEmployments( PlanCommunity planCommunity ) {
         employments = new ArrayList<EmploymentData>();
-        for ( Actor actor : actors )
-            for ( Employment employment : planCommunity.getPlanService().findAllEmploymentsForActor( actor ) ) {
+        for ( Agent agent : agents )
+            for ( CommunityEmployment employment :
+                    planCommunity.getParticipationManager().findAllEmploymentsForAgent( agent, planCommunity ) ) {
                 employments.add( new EmploymentData( employment ) );
             }
     }
 
     private void initProcedures( String serverUrl, PlanCommunity planCommunity ) {
         procedures = new ArrayList<ProcedureData>();
-        PlanService planService = planCommunity.getPlanService();
-        Commitments allCommitments = planService.getAllCommitments( true, false );
-        Set<Assignment> assignments = new HashSet<Assignment>();
-        for ( Actor actor : actors ) {
-            for ( Assignment assignment : getActorAssignments( actor, planService ) ) {
+        CommunityCommitments allCommitments = planCommunity.getAllCommitments( true );   // include commitments to self
+        Set<CommunityAssignment> assignments = new HashSet<CommunityAssignment>();
+        for ( Agent agent : agents ) {
+            for ( CommunityAssignment assignment : getAgentAssignments( agent, planCommunity ) ) {
                 assignments.add( assignment );
             }
         }
-        for ( Assignment assignment : assignments ) {
+        for ( CommunityAssignment assignment : assignments ) {
             procedures.add( new ProcedureData(
                     serverUrl,
                     planCommunity,
@@ -117,15 +114,13 @@ public class ProceduresData implements Serializable {
         }
     }
 
-    private void initParticipatingActors(
-            String serverUrl,
+    private void initParticipatingAgents(
             List<UserParticipation> participations,
             PlanCommunity planCommunity ) {
-        participatingActors = new ArrayList<Actor>();
-        PlanService planService = planCommunity.getPlanService();
+        participatingAgents = new ArrayList<Agent>();
         for ( UserParticipation participation : participations ) {
-            Actor actor = participation.getAgent( planCommunity ).getActor();
-            if ( actor != null ) participatingActors.add( actor );
+            Agent agent = participation.getAgent( planCommunity );
+            if ( agent != null ) participatingAgents.add( agent );
         }
 
     }
@@ -148,15 +143,15 @@ public class ProceduresData implements Serializable {
 
     @XmlElement( name = "agentId" )
     public List<Long> getActorIds() {
-        List<Long> actorIds = new ArrayList<Long>();
-        for ( Actor actor : actors ) {
-            actorIds.add( actor.getId() );
+        List<Long> agentIds = new ArrayList<Long>();
+        for ( Agent agent : agents ) {
+            agentIds.add( agent.getId() );
         }
-        return actorIds;
+        return agentIds;
     }
 
-    private List<Actor> getActors( List<UserParticipation> participations ) {
-        return participatingActors;
+    private List<Agent> getAgents( List<UserParticipation> participations ) {
+        return participatingAgents;
     }
 
     @XmlElement( name = "employment" )
@@ -180,16 +175,16 @@ public class ProceduresData implements Serializable {
         return user.getEmail();
     }
 
-    private Assignments getActorAssignments( Actor actor, PlanService planService ) {
-        return planService.getAssignments().with( new ResourceSpec( actor ) );
+    private CommunityAssignments getAgentAssignments( Agent agent, PlanCommunity planCommunity ) {
+        return planCommunity.getAllAssignments().with( agent );
     }
 
     public ChannelsUser getUser() {
         return user;
     }
 
-    public List<Actor> getParticipatingActors() {
-        return participatingActors;
+    public List<Agent> getParticipatingAgents() {
+        return participatingAgents;
     }
 
     public Set<ContactData> allContacts() {
@@ -200,8 +195,8 @@ public class ProceduresData implements Serializable {
         return allContacts;
     }
 
-    public Set<OrganizationData> allEmployers() {
-        Set<OrganizationData> allEmployers = new HashSet<OrganizationData>();
+    public Set<AgencyData> allEmployers() {
+        Set<AgencyData> allEmployers = new HashSet<AgencyData>();
         for ( ProcedureData procedureData : getProcedures() ) {
             allEmployers.add( procedureData.employer() );
         }

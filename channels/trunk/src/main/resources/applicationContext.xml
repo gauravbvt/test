@@ -316,6 +316,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceholderOrganizationWithoutCustodian"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationHasPlaceholderParent"/>
             </list>
         </property>
     </bean>

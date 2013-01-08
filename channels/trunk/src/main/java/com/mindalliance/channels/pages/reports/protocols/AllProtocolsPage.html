@@ -4,17 +4,17 @@
       xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
       lang="en">
 <head>
-    <title>Channels - IS Protocols</title>
-    <link rel="stylesheet" href="css/reports/responder/all-responders.css" type="text/css" title="Playbook">
+    <title>Channels - Collaboration Protocols</title>
+    <link rel="stylesheet" href="css/reports/responder/all-responders.css" type="text/css" title="Protocols of all participants">
 </head>
 <body>
 <wicket:extend>
         <div id="note" wicket:id="note">
-            <span>As a planner, I can access the IS protocols of all participants.</span>
+            <span>As a planner, I can access the collaboration protocols of all participants.</span>
         </div>
 
         <div wicket:id="activeDiv">
-			<h3>Participation <span wicket:id="participationNote" class="desc">(Users who participate as agents in this plan and thus have their protocols)</span></h3>
+			<h3>Participation <span wicket:id="participationNote" class="desc">(The protocols of all users participating in this community)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr wicket:id="participatingUsers" class="tablecont">
 					<td class="users">
@@ -32,7 +32,7 @@
         </div>
 
         <div wicket:id="agentsDiv">
-			<h3>Agents <span class="desc">(All agents users can participate as in this plan)</span></h3>
+			<h3>Agents <span class="desc">(How users can participate in this community)</span></h3>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr wicket:id="agents" class="tablecont">
 					<td class="agents">

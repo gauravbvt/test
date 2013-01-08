@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -68,6 +69,32 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         return new ArrayList<Agency>( agencies );
+    }
+
+    @Override
+    public Agency findAgencyNamed( String agencyName, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
+        // fixed
+        Organization organization = planService.findActualEntity( Organization.class, agencyName );
+        if ( organization != null && !organization.isPlaceHolder() )
+            return new Agency( organization );
+        // registered as placeholder
+        for ( Agency agency : organizationParticipationService.listParticipatingAgencies( planCommunity ) ) {
+            if ( agency.getName().equals( agencyName ) )
+                return agency;
+        }
+        // registered by community but not registered as placeholders
+        for ( RegisteredOrganization registeredOrganization
+                : registeredOrganizationService.getAllRegisteredOrganizations( planCommunity ) ) {
+            if ( !registeredOrganization.isFixedOrganization()
+                    && organizationParticipationService.findAllParticipationBy(
+                    registeredOrganization,
+                    planCommunity ).isEmpty() ) {
+                if ( registeredOrganization.getName( planCommunity ).equals( agencyName ) )
+                    return new Agency( registeredOrganization, planCommunity );
+            }
+        }
+        return null;
     }
 
     @Override
@@ -222,12 +249,37 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         // registered organization, if one
-        OrganizationParticipation registration = agent.getOrganizationParticipation();
-        if ( registration != null ) {
-            employers.add( new Agency( registration, planCommunity ) );
+        OrganizationParticipation organizationParticipation = agent.getOrganizationParticipation();
+        if ( organizationParticipation != null ) {
+            employers.add( new Agency( organizationParticipation, planCommunity ) );
         }
         return new ArrayList<Agency>( employers );
     }
+
+    @Override
+    public List<CommunityEmployment> findAllEmploymentsForAgent( Agent agent, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
+        List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
+        Organization agencyPlaceholder = agent.isRegistered()
+                ? agent.getOrganizationParticipation().getPlaceholderOrganization( planCommunity )
+                : null;
+        for ( Employment employment : planService.findAllEmploymentsForActor( agent.getActor() ) ) {
+            Organization org = employment.getOrganization();
+            if ( !org.isPlaceHolder() ) {
+                employments.add( new CommunityEmployment( employment, agent, new Agency( org ), planCommunity ) );
+            } else {
+                if ( agencyPlaceholder != null && agencyPlaceholder.equals( org ) ) {
+                    employments.add( new CommunityEmployment(
+                            employment,
+                            agent,
+                            new Agency( agent.getOrganizationParticipation(), planCommunity ),
+                            planCommunity ) );
+                }
+            }
+        }
+        return employments;
+    }
+
 
     private boolean alreadyParticipatingAs( final Agent agent,
                                             List<UserParticipation> currentParticipations ) {
@@ -362,7 +414,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Organization placeholder = (Organization)object;
+                        Organization placeholder = (Organization) object;
                         return organizationParticipationService
                                 .listAgenciesParticipatingAs( placeholder, planCommunity ).isEmpty();
                     }
@@ -370,5 +422,22 @@ public class ParticipationManagerImpl implements ParticipationManager {
         );
     }
 
+    @Override
+    public RegisteredOrganization getTopRegisteredOrganization( RegisteredOrganization registeredOrganization,
+                                                                PlanCommunity planCommunity ) {
+        List<RegisteredOrganization> ancestors = registeredOrganizationService.findAncestors(
+                registeredOrganization.getName( planCommunity ),
+                planCommunity );
+        if ( ancestors.isEmpty() )
+            return registeredOrganization;
+        else
+            return ancestors.get( ancestors.size() - 1 );
+    }
 
+    public List<RegisteredOrganization> ancestorsOf( RegisteredOrganization registeredOrganization,
+                                                     PlanCommunity planCommunity ) {
+        return registeredOrganizationService.findAncestors(
+                registeredOrganization.getName( planCommunity ),
+                planCommunity );
+    }
 }

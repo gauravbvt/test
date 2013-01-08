@@ -336,8 +336,8 @@ private void adjustFields() {
                 if ( !candidate.ancestors().contains( organization ) )
                     candidateNames.add( candidate.getName() );
             }
-            if ( organization.getEffectiveParent() != null )
-                candidateNames.add( organization.getEffectiveParent().getName() );
+            if ( organization.getParent() != null )
+                candidateNames.add( organization.getParent().getName() );
             Collections.sort( candidateNames );
         }
         return candidateNames;
@@ -393,7 +393,7 @@ private void adjustFields() {
      * @return a String
      */
     public String getParentOrganization() {
-        Organization parent = ( getOrganization() ).getEffectiveParent();
+        Organization parent = ( getOrganization() ).getParent();
         return parent == null ? "" : parent.getName();
     }
 

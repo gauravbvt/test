@@ -5,8 +5,11 @@ import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -122,9 +125,20 @@ public class AdminPage extends AbstractChannelsWebPage {
             }
         };
 
+        boolean invalid = CollectionUtils.exists(
+                getAnalyst().findAllUnwaivedIssues( getQueryService() ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Issue) object ).isValidity();
+                    }
+                }
+        );
         ConfirmedAjaxFallbackLink productizeLink = new ConfirmedAjaxFallbackLink(
                 "productize",
-                "Productize the current version?" ) {
+                invalid
+                        ? "Productize the current version even though validity issues are unresolved?"
+                        : "Productize the current version?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 getPlanManager().productize( getPlan() );
@@ -134,6 +148,10 @@ public class AdminPage extends AbstractChannelsWebPage {
 
         };
         productizeLink.setVisible( getPlan().isDevelopment() );
+        // productizeLink.setEnabled( !invalid );
+        if ( invalid ) {
+            addTipTitle( productizeLink, "This version has unresolved validity issues. It should not be put into production." );
+        }
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "deletePlan",
                 "Delete the selected plan?" ) {
@@ -315,8 +333,8 @@ public class AdminPage extends AbstractChannelsWebPage {
             try {
                 String newPlanName =
                         newPlanClient != null && !newPlanClient.isEmpty()
-                            ? (newPlanClient + (newPlanClient.endsWith("s") ? "'" :"'s") + " New Plan")
-                            : "New Plan";
+                                ? ( newPlanClient + ( newPlanClient.endsWith( "s" ) ? "'" : "'s" ) + " New Plan" )
+                                : "New Plan";
                 definitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
                 getPlanManager().assignPlans();
             } catch ( IOException e ) {
@@ -395,7 +413,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                     }
                 },
                 new TextField<String>( "email",
-                        new PropertyModel<String>( userModel, "userInfo.email" ) ){
+                        new PropertyModel<String>( userModel, "userInfo.email" ) ) {
                     @Override
                     protected void onModelChanged() {
                         super.onModelChanged();
@@ -411,7 +429,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                     @Override
                     protected void onModelChanged() {
                         String pwd = getModelObject();
-                        if ( pwd != null && !pwd.trim().isEmpty() )  {
+                        if ( pwd != null && !pwd.trim().isEmpty() ) {
                             item.getModelObject().getUserInfo().setPassword( pwd );
                             userDao.save( item.getModelObject().getUserInfo() );
                         }

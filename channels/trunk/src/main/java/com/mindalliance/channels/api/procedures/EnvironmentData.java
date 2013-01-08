@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.api.entities.AgentData;
+import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
 import com.mindalliance.channels.api.entities.InfoFormatData;
@@ -49,7 +49,7 @@ public class EnvironmentData  implements Serializable {
     private List<EventData> events;
     private List<PhaseData> phases;
     private List<OrganizationData> orgs;
-    private List<AgentData> actors;
+    private List<ActorData> actors;
     private List<PlaceData> places;
     private List<RoleData> roles;
     private List<MediumData> media;
@@ -180,15 +180,15 @@ public class EnvironmentData  implements Serializable {
 
     private void initActors( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
         PlanService planService = planCommunity.getPlanService();
-        actors = new ArrayList<AgentData>();
+        actors = new ArrayList<ActorData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allActorIds() ) {
             Actor actor = planService.find( Actor.class, id );
-            actors.add( new AgentData( serverUrl,actor, getPlan() ) );
+            actors.add( new ActorData( serverUrl,actor, getPlan() ) );
             added.add( id );
             for ( ModelEntity category : actor.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    actors.add( new AgentData( serverUrl,(Actor) category, getPlan() ) );
+                    actors.add( new ActorData( serverUrl,(Actor) category, getPlan() ) );
                     added.add( category.getId() );
                 }
             }
@@ -263,7 +263,7 @@ public class EnvironmentData  implements Serializable {
     }
 
     @XmlElement( name = "agent" )
-    public List<AgentData> getActors() {
+    public List<ActorData> getActors() {
         return actors;
     }
 
@@ -313,7 +313,9 @@ public class EnvironmentData  implements Serializable {
     private Set<Long> allOrganizationIds() {
         Set<Long> allIds = new HashSet<Long>();
         for ( EmploymentData employment : procedures.getEmployments() ) {
-            allIds.add( employment.getOrganizationId() );
+            Long orgId = employment.getOrganizationId();
+            if ( orgId != null )
+                allIds.add( orgId );
         }
         for ( ProcedureData procedure : procedures.getProcedures() ) {
             allIds.addAll( procedure.allOrganizationIds() );

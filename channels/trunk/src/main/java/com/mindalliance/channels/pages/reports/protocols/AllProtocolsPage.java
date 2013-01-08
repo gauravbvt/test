@@ -3,11 +3,12 @@
 
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -44,10 +45,9 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
     }
 
 
-    protected void initComponents( QueryService service, final Plan plan ) {
-        boolean isPlanner = getUser().isPlanner( plan.getUri() );
+    protected void initComponents( QueryService service, final PlanCommunity planCommunity ) {
+        boolean isPlanner = getUser().isPlanner( planCommunity.getPlan().getUri() );
         getContainer().add(
-                new Label( "planName", plan.toString() ),
                 new WebMarkupContainer( "note" ).setVisible( isPlanner ),
                 new WebMarkupContainer( "activeDiv" ).add(
                         new Label( 
@@ -60,7 +60,7 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                             @Override
                             protected void populateItem( ListItem<UserParticipation> item ) {
                                 UserParticipation p = item.getModelObject();
-                                Actor actor = p.getAgent( getPlanCommunity() ).getActor(); // todo - agents!
+                                Agent agent = p.getAgent( getPlanCommunity() );
                                 String participatingUsername = p.getParticipant().getUsername();
                                 ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
                                 item.add(
@@ -69,8 +69,8 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                                                 .add( new Label( "participantName", participatingUser.getFullName() )
                                                         .setRenderBodyOnly( true ) ),
                                         new BookmarkablePageLink<ProtocolsPage>(
-                                                "participation", ProtocolsPage.class, makeActorParameters( participatingUsername, actor ) )
-                                                .add( new Label( "participationName", actor.toString() )
+                                                "participation", ProtocolsPage.class, makeAgentParameters( participatingUsername, agent ) )
+                                                .add( new Label( "participationName", agent.getName() )
                                                         .setRenderBodyOnly( true ) )
                                 );
 
@@ -83,20 +83,26 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
 
                 new WebMarkupContainer( "agentsDiv" ).add(
                         isPlanner() ?
-                                new ListView<Actor>( "agents", getActors() ) {
+                                new ListView<Agent>( "agents", getAgents() ) {
                                     @Override
-                                    protected void populateItem( ListItem<Actor> item ) {
-                                        final Actor actor = item.getModelObject();
+                                    protected void populateItem( ListItem<Agent> item ) {
+                                        final Agent agent = item.getModelObject();
                                         PageParameters parameters =
-                                                ProtocolsPage.createParameters( actor, getUri(), getVersion() );
+                                                ProtocolsPage.createParameters(
+                                                        agent,
+                                                        getPlanCommunityUri(),
+                                                        getPlan().getUri(),
+                                                        getPlanVersion() );
 
                                         item.add(
                                                 new BookmarkablePageLink<ProtocolsPage>(
                                                         "agent", ProtocolsPage.class, parameters )
-                                                        .add( new Label( "agentName", actor.getNormalizedName() )
+                                                        .add( new Label( "agentName", agent.getName() )
                                                                 .setRenderBodyOnly( true ) ),
 
-                                                new Label( "participationPlurality", actor.getParticipationPlurality() )
+                                                new Label(
+                                                        "participationPlurality",
+                                                        agent.getActor().getParticipationPlurality() )
                                         ).setOutputMarkupId( true );
 
                                         if ( item.getIndex() == getViewSize() - 1 )
@@ -106,24 +112,28 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                                     }
                                 }
                                 : new Label( "agents", "" )
-        ).setVisible( !getActors().isEmpty() && isPlanner )
+        ).setVisible( !getAgents().isEmpty() && isPlanner )
         );
     }
 
     private PageParameters makeUserParameters( String username ) {
         PageParameters parameters = new PageParameters();
-        parameters.set( PLAN, getUri() );
-        parameters.set( VERSION, getVersion() );
+        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+        parameters.set( PLAN_PARM, getPlan().getUri() );
+        parameters.set( AbstractChannelsWebPage.VERSION_PARM, getPlanVersion() );
         parameters.set( "user", username );
         return parameters;
     }
 
-    private PageParameters makeActorParameters( String username, Actor actor ) {
+    private PageParameters makeAgentParameters( String username, Agent agent ) {
         PageParameters parameters = new PageParameters();
-        parameters.set( PLAN, getUri() );
-        parameters.set( VERSION, getVersion() );
-        parameters.set( "user", username );
-        parameters.set( "agent", actor.getId() );
+        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+        parameters.set( PLAN_PARM, getPlan().getUri() );
+        parameters.set( AbstractChannelsWebPage.VERSION_PARM, getPlanVersion() );
+        parameters.set( USER, username );
+        parameters.set( AGENT, agent.getId() );
+        if ( agent.getOrganizationParticipation() != null )
+            parameters.set( ORG, agent.getOrganizationParticipation().getId() );
         return parameters;
     }
 

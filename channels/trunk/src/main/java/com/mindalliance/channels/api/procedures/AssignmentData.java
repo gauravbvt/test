@@ -1,11 +1,10 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Place;
@@ -39,7 +38,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     private TaskData taskData;
     private List<DiscoveryData> discoveries;
     private List<ResearchData> allResearch;
-    private OrganizationData employer;
+    private AgencyData employer;
 
     public AssignmentData() {
         // required
@@ -48,7 +47,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     public AssignmentData(
             String serverUrl,
             PlanCommunity planCommunity,
-            Assignment assignment,
+            CommunityAssignment assignment,
             ChannelsUser user,
             ProcedureData procedureData ) {
         super( planCommunity, assignment,  user );
@@ -68,7 +67,7 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
     private void initEmployer( String serverUrl, PlanCommunity planCommunity ) {
-        employer = new OrganizationData( serverUrl, getAssignment().getOrganization(),  planCommunity  );
+        employer = new AgencyData( serverUrl, getAssignment().getAgency(),  planCommunity  );
     }
 
     private void initAllResearch( String serverUrl, PlanCommunity planCommunity ) {
@@ -220,7 +219,7 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( getAssignment().getOrganization().getId() );
+        ids.addAll( employer().allOrganizationIds() );
         for ( AbstractFlowData flowData : getCommunications() ) {
             ids.addAll( flowData.allOrganizationIds() );
         }
@@ -229,9 +228,9 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( getAssignment().getActor().getId() );
+        ids.add( getAssignment().getAgent().getActor().getId() );
         if ( getAssignment().getSupervisor() != null )
-            ids.add( getAssignment().getSupervisor().getId() );
+            ids.add( getAssignment().getSupervisor().getActor().getId() );
         for ( AbstractFlowData flowData : getCommunications() ) {
             ids.addAll( flowData.allActorIds() );
         }
@@ -307,12 +306,12 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> inNotifications() {
         Set<Flow> inNotificationFlows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData
+        for ( CommunityCommitment commitment : procedureData
                 .getBenefitingCommitments()
                 .notifications()
                 .notTriggeringToTarget()
                 .notFrom( getAssignment()
-                        .getActor() )
+                        .getAgent() )
                 ) {
             inNotificationFlows.add( commitment.getSharing() );
         }
@@ -321,11 +320,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> outNotifications() {
         Set<Flow> outNotificationFlows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData
+        for ( CommunityCommitment commitment : procedureData
                 .getCommittingCommitments()
                 .notifications()
                 .notTo( getAssignment()
-                        .getActor() ) ) {
+                        .getAgent() ) ) {
             outNotificationFlows.add( commitment.getSharing() );
         }
         return asSortedFlows( outNotificationFlows );
@@ -333,11 +332,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> outRequests() {    // same as inReplies
         Set<Flow> outRequestFlows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData
+        for ( CommunityCommitment commitment : procedureData
                 .getBenefitingCommitments()
                 .requests()
                 .notFrom( getAssignment()
-                        .getActor() ) ) {
+                        .getAgent() ) ) {
             outRequestFlows.add( commitment.getSharing() );
         }
         return asSortedFlows( outRequestFlows );
@@ -345,12 +344,12 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> inRequests() {   // same meaning as out replies
         Set<Flow> inRequestFlows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData
+        for ( CommunityCommitment commitment : procedureData
                 .getCommittingCommitments()
                 .requests()
                 .notTriggeringToSource()
                 .notTo( getAssignment()
-                        .getActor() ) ) {
+                        .getAgent() ) ) {
             inRequestFlows.add( commitment.getSharing() );
         }
         return asSortedFlows( inRequestFlows );
@@ -358,11 +357,11 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> discoveries() {
         Set<Flow> discoveringFlows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData
+        for ( CommunityCommitment commitment : procedureData
                 .getCommittingCommitments()
                 .notifications()
                 .to( getAssignment()
-                        .getActor() ) ) {
+                        .getAgent() ) ) {
             discoveringFlows.add( commitment.getSharing() );
         }
         return asSortedFlows( discoveringFlows );
@@ -370,10 +369,10 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     private List<Flow> research() {
         Set<Flow> researchFlows = new HashSet<Flow>();
-        for ( Commitment commitment : procedureData.getBenefitingCommitments()
+        for ( CommunityCommitment commitment : procedureData.getBenefitingCommitments()
                 .requests()
-                .to( getAssignment().getActor() )
-                .from( getAssignment().getActor() ) ) {
+                .to( getAssignment().getAgent() )
+                .from( getAssignment().getAgent() ) ) {
             researchFlows.add( commitment.getSharing() );
         }
         return asSortedFlows( researchFlows );
@@ -408,12 +407,12 @@ public class AssignmentData extends AbstractProcedureElementData {
     }
 
 
-    public String getTitleOrRole() {
-        return getAssignment().getEmployment().getTitleOrRole();
+    public String getTitle() {
+        return getAssignment().getEmployment().getTitle();
     }
 
-    public String getOrganizationLabel() {
-        return getAssignment().getEmployment().getOrganization().getName();
+    public String getAgencyLabel() {
+        return getAssignment().getEmployment().getEmployer().getName();
     }
 
 
@@ -445,7 +444,7 @@ public class AssignmentData extends AbstractProcedureElementData {
         return allContacts;
     }
 
-    public OrganizationData employer() {
+    public AgencyData employer() {
          return employer;
     }
 

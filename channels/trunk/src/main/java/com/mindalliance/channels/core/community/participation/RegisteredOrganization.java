@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * An organization participating dynamically in a plan as an instance of a placeholder organization.
- * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * An organization registered by a plan community for participation.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 12/3/12
@@ -47,6 +48,8 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     private String description;
     @Column( length = 2000 )
     private String mission;
+    @Column( length = 2000 )
+    private String address;
     @ManyToOne
     private RegisteredOrganization parent;
     /**
@@ -122,6 +125,14 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         this.mission = mission;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress( String address ) {
+        this.address = address;
+    }
+
     public String getCommunityGivenName() {
         return name;
     }
@@ -140,6 +151,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         name = update.getName();
         description = update.getDescription();
         mission = update.getMission();
+        address = update.getAddress();
     }
 
     public Organization getFixedOrganization( PlanCommunity planCommunity ) {
@@ -231,19 +243,6 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         }
     }
 
-    public List<Job> getPlaceHolderJobs( PlanCommunity planCommunity ) {
-        if ( isParentRegistered() ) {
-            Organization org = getFixedOrganization( planCommunity );
-            if ( org != null )
-                return Collections.unmodifiableList( org.getJobs() );
-            else
-                return new ArrayList<Job>();
-        } else {
-            return new ArrayList<Job>();
-        }
-    }
-
-
     public boolean isValid( PlanCommunity planCommunity ) {
         return !isFixedOrganization() || getFixedOrganization( planCommunity ) != null;
     }
@@ -251,7 +250,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     // Note: Can return a non-persisted registered organization.
     public RegisteredOrganization getEffectiveParent( PlanCommunity planCommunity ) {
         if ( isFixedOrganization() ) {
-            Organization parent = getFixedOrganization( planCommunity ).getEffectiveParent();
+            Organization parent = getFixedOrganization( planCommunity ).getParent();
             if ( parent == null ) {
                 return null;
             } else {
@@ -289,6 +288,19 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         RegisteredOrganization parentRegistration = getParent();
         return parentRegistration == null ? null : parentRegistration.getName( planCommunity );
 
+    }
+
+    public Place getJurisdiction( PlanCommunity planCommunity ) {
+        if ( isFixedOrganization() ) {
+            Organization org = getFixedOrganization( planCommunity );
+            if ( org != null )
+                return org.getJurisdiction();
+        }
+        return null;
+    }
+
+    public String getFullAddress() {
+        return address;
     }
 
 }

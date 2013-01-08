@@ -39,7 +39,7 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public RegisteredOrganization find( final String orgName, final PlanCommunity planCommunity ) {
         return (RegisteredOrganization) CollectionUtils.find(
                 getAllRegisteredOrganizations( planCommunity ),
@@ -53,8 +53,8 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RegisteredOrganization> getAllRegisteredOrganizations( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -116,24 +116,6 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
-    public boolean canHaveParent(
-            final String name,
-            String parentName,
-            final PlanCommunity planCommunity ) {
-        if ( parentName == null ) return true;
-        return !parentName.equals( name )
-                && !CollectionUtils.exists(
-                findAncestors( parentName, planCommunity ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (RegisteredOrganization) object ).getName( planCommunity ).equals( name );
-                    }
-                } );
-    }
-
-    @Override
     @Transactional
     public boolean updateWith( ChannelsUser user,
                                String orgName,
@@ -144,10 +126,9 @@ public class RegisteredOrganizationServiceImpl
         if ( registered != null ) {
             String parentName = agency.getParentName();
             if ( parentName != null ) {
-                if ( canHaveParent(
+                if ( planCommunity.canHaveParentAgency(
                         agency.getName(),
-                        parentName,
-                        planCommunity ) ) {
+                        parentName ) ) {
                     RegisteredOrganization registeredParent = find( parentName, planCommunity );
                     if ( registeredParent == null ) {
                         registeredParent = new RegisteredOrganization(
@@ -175,7 +156,7 @@ public class RegisteredOrganizationServiceImpl
         return organizationContactInfoService.getChannels( registered, planCommunity );
     }
 
-    private List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity ) {
+    public List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity ) {
         List<RegisteredOrganization> visited = new ArrayList<RegisteredOrganization>();
         RegisteredOrganization registered = find( orgName, planCommunity );
         if ( registered != null )

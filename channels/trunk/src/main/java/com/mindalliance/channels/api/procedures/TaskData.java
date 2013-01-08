@@ -3,16 +3,15 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.jws.WebMethod;
@@ -29,11 +28,12 @@ import java.util.List;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"id", "name", "category", "communicatedLocation", "location", "instructions", "teamContacts", "goals", "failureImpact", "documentation"} )
+@XmlType( propOrder = {"id", "name", "category", "communicatedLocation", "location", "instructions",
+        "teamContacts", "goals", "failureImpact", "documentation"} )
 public class TaskData extends AbstractProcedureElementData {
 
     private String failureImpact;
-    private List<Assignment> otherAssignments;
+    private List<CommunityAssignment> otherAssignments;
     private List<ContactData> teamContacts;
     private Level failureLevel;
     private Part part;
@@ -46,14 +46,14 @@ public class TaskData extends AbstractProcedureElementData {
 
     public TaskData(
             String serverUrl,
-            Assignment assignment,
+            CommunityAssignment assignment,
             PlanCommunity planCommunity,
             ChannelsUser user ) {
         super( planCommunity, assignment,  user );
         initData( planCommunity.getPlanService() );
-        initLocation( serverUrl );
+        initLocation( serverUrl, planCommunity );
         initDocumentation( serverUrl );
-        initOtherAssignments( planCommunity.getPlanService() );
+        initOtherAssignments( planCommunity );
         initTeamContacts( serverUrl, planCommunity );
     }
 
@@ -72,7 +72,7 @@ public class TaskData extends AbstractProcedureElementData {
     private void initTeamContacts( String serverUrl, PlanCommunity planCommunity ) {
         teamContacts = new ArrayList<ContactData>();
         if ( getAssignment() != null )
-        for ( Employment employment : getTeamEmployments() ) {
+        for ( CommunityEmployment employment : getTeamEmployments() ) {
             teamContacts.addAll( ContactData.findContactsFromEmployment(
                     serverUrl,
                     employment,
@@ -82,11 +82,11 @@ public class TaskData extends AbstractProcedureElementData {
         }
     }
 
-    private void initOtherAssignments( QueryService queryService ) {
-        otherAssignments = new ArrayList<Assignment>();
+    private void initOtherAssignments( PlanCommunity planCommunity ) {
+        otherAssignments = new ArrayList<CommunityAssignment>();
         Part part = getAssignment().getPart();
         if ( part.isAsTeam() ) {
-            for ( Assignment assign : queryService.findAllAssignments( part, false ) ) {
+            for ( CommunityAssignment assign : planCommunity.getAllAssignments().assignedTo( part ) ) {
                 if ( !assign.equals( getAssignment() ) ) {
                     otherAssignments.add( assign );
                 }
@@ -94,9 +94,9 @@ public class TaskData extends AbstractProcedureElementData {
         }
     }
 
-    private void initLocation( String serverUrl ) {
+    private void initLocation( String serverUrl, PlanCommunity planCommunity ) {
         if ( getAssignment() != null ){
-            Place location = getAssignment().getLocation();
+            Place location = getAssignment().getLocation( planCommunity );
             placeData = location != null
                     ? new PlaceData( serverUrl, location, getPlan() )
                     : null;
@@ -175,7 +175,7 @@ public class TaskData extends AbstractProcedureElementData {
         return documentation;
     }
 
-    private List<Assignment> otherTeamAssignments() {
+    private List<CommunityAssignment> otherTeamAssignments() {
         return otherAssignments;
     }
 
@@ -184,9 +184,9 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     @WebMethod( exclude = true )
-    public List<Employment> getTeamEmployments() {
-        List<Employment> employments = new ArrayList<Employment>();
-        for ( Assignment assignment : otherTeamAssignments() ) {
+    public List<CommunityEmployment> getTeamEmployments() {
+        List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
+        for ( CommunityAssignment assignment : otherTeamAssignments() ) {
             employments.add( assignment.getEmployment() );
         }
         return employments;

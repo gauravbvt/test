@@ -3,11 +3,12 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -35,8 +36,8 @@ import java.util.Set;
         "consumingTask", "impactOnConsumingTask", "documentation"/*, "agreements"*/} )
 public class NotificationData extends AbstractFlowData {
 
-    private List<Commitment> commitments;
-    private List<Employment> contactEmployments;
+    private List<CommunityCommitment> commitments;
+    private List<CommunityEmployment> contactEmployments;
     private List<ContactData> contacts;
     private TaskData consumingTaskData;
     private String impactOnConsumingTask;
@@ -50,7 +51,7 @@ public class NotificationData extends AbstractFlowData {
             PlanCommunity planCommunity,
             Flow notification,
             boolean initiating,
-            Assignment assignment,
+            CommunityAssignment assignment,
             ChannelsUser user ) {
         super( serverUrl,  planCommunity, initiating, notification, assignment, user );
         initData(
@@ -60,7 +61,7 @@ public class NotificationData extends AbstractFlowData {
     }
 
     @Override
-    public List<Employment> findContactEmployments() {
+    public List<CommunityEmployment> findContactEmployments() {
         return contactEmployments;
     }
 
@@ -75,8 +76,8 @@ public class NotificationData extends AbstractFlowData {
     }
 
     private void initCommitments( PlanCommunity planCommunity ) {
-        commitments = new ArrayList<Commitment>();
-        for ( Commitment commitment : planCommunity.getPlanService().findAllCommitments( getSharing(), false, false ) ) {   // no unknown, not to self
+        commitments = new ArrayList<CommunityCommitment>();
+        for ( CommunityCommitment commitment : planCommunity.findAllCommitments( getSharing(), false ) ) {   // no not to self
             if ( isInitiating() ) {
                 if ( commitment.getCommitter().equals( getAssignment() ) ) {
                     commitments.add( commitment );
@@ -93,13 +94,13 @@ public class NotificationData extends AbstractFlowData {
             String serverUrl,
             PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
-        Set<Employment> employments = new HashSet<Employment>();
+        Set<CommunityEmployment> employments = new HashSet<CommunityEmployment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>();
         PlanService planService = planCommunity.getPlanService();
         UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
-        for ( Commitment commitment : commitments ) {
+        for ( CommunityCommitment commitment : commitments ) {
             if ( isInitiating() ) {  // notifying
-                Employment employment = commitment.getBeneficiary().getEmployment();
+                CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
                 employments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
                         serverUrl,
@@ -108,7 +109,7 @@ public class NotificationData extends AbstractFlowData {
                         planCommunity,
                         userInfo ) );
             } else { // being notified
-                Employment employment = commitment.getCommitter().getEmployment();
+                CommunityEmployment employment = commitment.getCommitter().getEmployment();
                 employments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
                         serverUrl,
@@ -118,7 +119,7 @@ public class NotificationData extends AbstractFlowData {
                         userInfo ) );
             }
         }
-        contactEmployments = new ArrayList<Employment>( employments );
+        contactEmployments = new ArrayList<CommunityEmployment>( employments );
         contacts = new ArrayList<ContactData>( contactDataSet );
     }
 

@@ -13,16 +13,18 @@ import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
+import com.mindalliance.channels.core.community.participation.Agency;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
+import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -58,19 +60,19 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private ProceduresData proceduresData;
     private ProtocolsFinder finder;
     private String username;
-    private Long actorId;
-    private Actor actor;
+    private Long agentId;
+    private Long organizationParticipationId;
+    private Agent agent;
     private ChannelsUser protocolsUser;
 
     @SpringBean( name = "planCommunityEndPoint" )
     private PlanCommunityEndPoint planCommunityEndPoint;
 
     @SpringBean
-    private PlanServiceFactory planServiceFactory;
-
-    @SpringBean
     private PlanCommunityManager planCommunityManager;
 
+    @SpringBean
+    private OrganizationParticipationService organizationParticipationService;
 
     private WebMarkupContainer aboutContainer;
     private WebMarkupContainer finderContainer;
@@ -80,6 +82,19 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     public ProtocolsPage( PageParameters parameters ) {
         super( parameters );
     }
+
+    public static PageParameters createParameters( Agent agent, String communityUri, String planUri, int version ) {
+
+        PageParameters result = new PageParameters();
+        result.set( AbstractAllParticipantsPage.COMMUNITY_PARM, communityUri );
+        result.set( AbstractChannelsWebPage.PLAN_PARM, planUri );
+        result.set( AbstractChannelsWebPage.VERSION_PARM, version );
+        result.set( AbstractAllParticipantsPage.AGENT, agent.getId() );
+        if ( agent.getOrganizationParticipation() != null )
+            result.set( AbstractAllParticipantsPage.ORG, agent.getOrganizationParticipation().getId() );
+        return result;
+    }
+
 
     @Override
     protected String getContentsCssClass() {
@@ -100,10 +115,12 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     protected void addContent() {
         try {
             PageParameters parameters = getPageParameters();
-            if ( parameters.getNamedKeys().contains( "agent" ) )
-                actorId = parameters.get( "agent" ).toLong( -1 );
-            if ( parameters.getNamedKeys().contains( "user" ) )
-                username = parameters.get( "user" ).toString();
+            if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.AGENT ) )
+                agentId = parameters.get( AbstractAllParticipantsPage.AGENT ).toLong( -1 );
+            if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.ORG ) )
+                organizationParticipationId = parameters.get( AbstractAllParticipantsPage.ORG ).toLong( -1 );
+            if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.USER ) )
+                username = parameters.get( AbstractAllParticipantsPage.USER ).toString();
             initData();
             doAddContent();
         } catch ( Exception e ) {
@@ -129,32 +146,46 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
 
     private void initData() throws Exception {
-        Plan plan = getPlan();
-        planSummaryData = planCommunityEndPoint.getPlan( plan.getUri(), Integer.toString( plan.getVersion() ) );
-        if ( actorId != null ) {
-            actor = getQueryService().find( Actor.class, actorId );
-            proceduresData = planCommunityEndPoint.getAgentProcedures(
-                    plan.getUri(),
-                    Integer.toString( plan.getVersion() ),
-                    Long.toString( actorId ) );
+        PlanCommunity planCommunity = getPlanCommunity();
+        planSummaryData = planCommunityEndPoint.getPlan(
+                planCommunity.getUri(),
+                Integer.toString( planCommunity.getPlanVersion() ) );
+        if ( agentId != null ) {
+            Actor actor = getQueryService().find( Actor.class, agentId );
+            if ( organizationParticipationId != null ) {
+                OrganizationParticipation organizationParticipation
+                        = organizationParticipationService.load( organizationParticipationId );
+                if ( organizationParticipation == null ) throw new NotFoundException();
+                agent = new Agent( actor, organizationParticipation, getPlanCommunity() );
+                proceduresData = planCommunityEndPoint.getAgentProtocols(
+                        planCommunity.getUri(),
+                        Integer.toString( planCommunity.getPlanVersion() ),
+                        Long.toString( agentId ),
+                        Long.toString( organizationParticipationId ) );
+            } else {
+                agent = new Agent( actor );
+                proceduresData = planCommunityEndPoint.getAgentProcedures(
+                        planCommunity.getUri(),
+                        Integer.toString( planCommunity.getPlanVersion() ),
+                        Long.toString( agentId ) );
+            }
         } else {
             protocolsUser = username == null ? null : getUserDao().getUserNamed( username );
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
-                if ( protocolsUser.isPlanner( getPlan().getUri() ) ) {
+                if ( protocolsUser.isPlanner( planCommunity.getPlan().getUri() ) ) {
                     proceduresData = planCommunityEndPoint.getUserProcedures(
-                            plan.getUri(),
-                            Integer.toString( plan.getVersion() ),
+                            planCommunity.getUri(),
+                            Integer.toString( planCommunity.getPlanVersion() ),
                             username );
                 } else if ( getUser().getUsername().equals( username ) ) {
-                    proceduresData = planCommunityEndPoint.getMyProcedures( getPlan().getUri() );
+                    proceduresData = planCommunityEndPoint.getMyProcedures( planCommunity.getUri() );
                 } else {
                     throw new Exception( "Failed to retrieve protocols" );
                 }
             }
         }
-        PlanCommunity planCommunity = planCommunityManager.makePlanCommunity( getPlan() );
         finder = new ProtocolsFinder(
                 planCommunityEndPoint.getServerUrl(),
                 proceduresData,
@@ -162,7 +193,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 protocolsUser,
                 planCommunityEndPoint,
                 username,
-                actorId );
+                agent );
     }
 
     private void doAddContent() {
@@ -178,7 +209,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     private void addAboutProtocols() {
         PlanIdentifierData planIdentifierData = proceduresData.getPlanIdentifier();
-        getContainer().add( new Label( "planName", planIdentifierData.getName() ) );
+        getContainer().add( new Label( "communityName", planIdentifierData.getName() ) );
         aboutContainer = new WebMarkupContainer( "about" );
         getContainer().add( aboutContainer );
         aboutContainer
@@ -191,8 +222,8 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private String getParticipantName() {
         if ( username != null )
             return getUserDao().getFullName( username );
-        else if ( actor != null )
-            return actor.getName();
+        else if ( agent != null )
+            return agent.getName();
         else
             return "users";
     }
@@ -578,23 +609,29 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private void addDirectory() {
         directoryContainer = new WebMarkupContainer( "directory" );
         getContainer().add( directoryContainer );
-        List<String> orgNames = finder.getSortedOrganizationNames();
+        List<String> agencyNames = finder.getSortedAgencyNames();
         ListView<String> orgContactsListView = new ListView<String>(
-                "orgContacts",
-                orgNames
+                "agencyContacts",
+                agencyNames
         ) {
             @Override
             protected void populateItem( ListItem<String> item ) {
-                final String orgName = item.getModelObject();
-                Organization org = getQueryService().findActualEntity( Organization.class, orgName );
-                if ( org == null ) {
-                    item.add( new Label( "orgContact", "" ) );
+                final String agencyName = item.getModelObject();
+                Agency agency = getPlanCommunity().getParticipationManager()
+                        .findAgencyNamed( agencyName, getPlanCommunity() );
+                if ( agency == null ) {
+                    item.add( new Label( "agencyContact", "" ) );
                 } else {
-                    item.add( new OrganizationContactPanel( "orgContact", org, finder ) );
+                    item.add( new AgencyContactPanel(
+                            "agencyContact",
+                            planCommunityEndPoint.getServerUrl(),
+                            agency,
+                            finder,
+                            getPlanCommunity() ) );
                 }
                 ListView<ContactData> employeeContactsListView = new ListView<ContactData>(
                         "employeeContacts",
-                        finder.getContactsInOrganization( orgName )
+                        finder.getContactsInAgencyNamed( agencyName )
                 ) {
                     @Override
                     protected void populateItem( ListItem<ContactData> subItem ) {
@@ -618,11 +655,6 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             return null;
         }
     }
-
-    private PlanService getPlanService( Plan plan ) {
-        return planServiceFactory.getService( plan );
-    }
-
 
 
 }

@@ -77,10 +77,10 @@ public class MediumData extends ModelEntityData {
     }
 
     @XmlElement
-    public AgentData getQualification() {
+    public ActorData getQualification() {
         return getMedium().getQualification() == null
                 ? null
-                : new AgentData( getServerUrl(), getMedium().getQualification(), getPlan() );
+                : new ActorData( getServerUrl(), getMedium().getQualification(), getPlan() );
     }
 
     @XmlElement

@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -76,15 +75,14 @@ public class OrganizationData extends ModelEntityData {
 
     @XmlElement
     public Long getParentId() {
-        return getOrganization().getEffectiveParent() != null
-                ? getOrganization().getEffectiveParent().getId()
+        return getOrganization().getParent() != null
+                ? getOrganization().getParent().getId()
                 : null;
     }
 
     @XmlElement
     public String getFullAddress() {
-        Place location = getOrganization().getLocation();
-        return location == null ? null : location.getFullAddress();
+        return getOrganization().getFullAddress();
     }
 
     @XmlElement

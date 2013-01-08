@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.api.entities.AgentData;
+import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
@@ -26,7 +26,7 @@ public class ParticipationData  implements Serializable {
 
     private UserParticipation participation;
     private ChannelsUser user;
-    private AgentData agentData;
+    private ActorData agentData;
     private Actor actor;
     private UserData userData;
     private boolean confirmed;
@@ -51,7 +51,7 @@ public class ParticipationData  implements Serializable {
         UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         UserParticipationConfirmationService userParticipationConfirmationService = planCommunity.getUserParticipationConfirmationService();
         actor = participation.getAgent( planCommunity).getActor();
-        agentData = new AgentData( serverUrl, actor, planCommunity.getPlan() );
+        agentData = new ActorData( serverUrl, actor, planCommunity.getPlan() );
         userData = new UserData( user, planService );
         confirmed = userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, planCommunity );
         active = userParticipationService.isActive( participation, planCommunity );
@@ -63,7 +63,7 @@ public class ParticipationData  implements Serializable {
     }
 
     @XmlElement
-    public AgentData getAgent() {
+    public ActorData getAgent() {
         return agentData;
     }
 

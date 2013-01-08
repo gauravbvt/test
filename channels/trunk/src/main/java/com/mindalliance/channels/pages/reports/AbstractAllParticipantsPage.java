@@ -8,12 +8,13 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -26,9 +27,11 @@ import java.util.List;
  */
 public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicPage {
 
-    protected static final String PLAN = "plan";
+    public static final String AGENT = "agent";
 
-    protected static final String VERSION = "v";
+    public static final String ORG = "org";
+
+    public static final String USER = "user";
 
     @SpringBean
     private PlanManager planManager;
@@ -45,13 +48,17 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     @SpringBean
     private UserParticipationService userParticipationService;
 
-    private String uri;
+    @SpringBean
+    private ParticipationManager participationManager;
 
-    private int version;
+
+    private String planCommunityUri;
+
+    private int planVersion;
 
     private List<UserParticipation> participations;
 
-    private List<Actor> actors;
+    private List<Agent> agents;
 
     public AbstractAllParticipantsPage( PageParameters parameters ) {
         super( parameters );
@@ -63,39 +70,39 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     }
 
 
-    protected String getUri() {
-        return uri;
+    protected String getPlanCommunityUri() {
+        return planCommunityUri;
     }
 
-    protected int getVersion() {
-        return version;
+    protected int getPlanVersion() {
+        return planVersion;
     }
 
     protected List<UserParticipation> getParticipations() {
         return participations;
     }
 
-    protected List<Actor> getActors() {
-        return actors;
+    protected List<Agent> getAgents() {
+        return agents;
     }
 
     protected void addContent(  ) {
-        Plan plan = getPlan();
+        PlanCommunity planCommunity = getPlanCommunity();
         QueryService queryService = getQueryService();
-        boolean isPlanner = getUser().isPlanner( plan.getUri() );
-        uri = plan.getUri();
-        version = plan.getVersion();
+        boolean isPlanner = getUser().isPlanner( planCommunity.getPlan().getUri() );
+        planCommunityUri = planCommunity.getUri();
+        planVersion = planCommunity.getPlan().getVersion();
         participations = isPlanner
-                            ? userParticipationService.getAllActiveParticipations( getPlanCommunity() )
-                            : userParticipationService.getActiveUserParticipations( getUser(), getPlanCommunity() );
-        actors = findAssignedActors();
-        initComponents( queryService, plan );
+                            ? userParticipationService.getAllActiveParticipations( planCommunity )
+                            : userParticipationService.getActiveUserParticipations( getUser(), planCommunity );
+        agents = findAssignedAgents();
+        initComponents( queryService, planCommunity );
     }
 
-    protected abstract void initComponents( QueryService service, Plan plan );
+    protected abstract void initComponents( QueryService service, PlanCommunity planCommunity );
 
-    protected List<Actor> findAssignedActors( ) {
-        return getQueryService().getAssignments().getActualKnownActors();
+    protected List<Agent> findAssignedAgents( ) {
+        return participationManager.getAllKnownAgents( getPlanCommunity() );
     }
 
 }

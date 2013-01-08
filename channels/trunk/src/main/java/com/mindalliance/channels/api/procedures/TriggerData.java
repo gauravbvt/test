@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
@@ -26,7 +26,8 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification", "onRequest", "requestingTask", "ongoing"} )
+@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification",
+        "onRequest", "requestingTask", "ongoing"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     private Flow notificationFromOther;
@@ -50,7 +51,7 @@ public class TriggerData extends AbstractProcedureElementData {
     public TriggerData(
             String serverUrl,
             PlanCommunity planCommunity,
-            Assignment assignment, // task assignment being triggered
+            CommunityAssignment assignment, // task assignment being triggered
             ChannelsUser user ) {
         super( planCommunity, assignment, user );
         this.serverUrl = serverUrl;

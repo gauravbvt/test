@@ -2,11 +2,12 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -34,10 +35,10 @@ import java.util.Set;
         "consumingTask", "impactOnConsumingTask", /*"agreements",*/ "documentation"} )
 public class RequestData extends AbstractFlowData {
 
-    private List<Commitment> commitments;
+    private List<CommunityCommitment> commitments;
     private TaskData consumingTaskData;
     private List<ContactData> contacts;
-    private List<Employment> contactEmployments;
+    private List<CommunityEmployment> contactEmployments;
     private String impactOnConsumingTask;
 
     public RequestData() {
@@ -49,7 +50,7 @@ public class RequestData extends AbstractFlowData {
             PlanCommunity planCommunity,
             Flow request,
             boolean initiating,
-            Assignment assignment,
+            CommunityAssignment assignment,
             ChannelsUser user ) {
         super( serverUrl, planCommunity, initiating, request, assignment, user );
         initData(
@@ -59,7 +60,7 @@ public class RequestData extends AbstractFlowData {
     }
 
     @Override
-    public List<Employment> findContactEmployments() {
+    public List<CommunityEmployment> findContactEmployments() {
         return contactEmployments;
     }
 
@@ -74,8 +75,8 @@ public class RequestData extends AbstractFlowData {
     }
 
     private void initCommitments( PlanCommunity planCommunity ) {
-        commitments = new ArrayList<Commitment>(  ) ;
-        for ( Commitment commitment : planCommunity.getPlanService().findAllCommitments( getSharing(), false, false ) ) {   // no unknowns, not to self
+        commitments = new ArrayList<CommunityCommitment>(  ) ;
+        for ( CommunityCommitment commitment : planCommunity.findAllCommitments( getSharing(), false ) ) {   // not to self
             if ( isInitiating() ) {  // requesting
                 if ( commitment.getBeneficiary().equals( getAssignment() ) ) {
                     commitments.add( commitment );
@@ -92,11 +93,11 @@ public class RequestData extends AbstractFlowData {
             String serverUrl,
             PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
-        Set<Employment> contactedEmployments = new HashSet<Employment>();
+        Set<CommunityEmployment> contactedEmployments = new HashSet<CommunityEmployment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>(  );
-        for ( Commitment commitment : commitments ) {
+        for ( CommunityCommitment commitment : commitments ) {
             if ( isInitiating() ) {  // asking
-                Employment employment = commitment.getCommitter().getEmployment();
+                CommunityEmployment employment = commitment.getCommitter().getEmployment();
                 contactedEmployments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
                         serverUrl,
@@ -105,7 +106,7 @@ public class RequestData extends AbstractFlowData {
                         planCommunity,
                         userInfo ) ) ;
             } else { // replying
-                Employment employment = commitment.getBeneficiary().getEmployment();
+                CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
                 contactedEmployments.add( employment );
                 contactDataSet.addAll( ContactData.findContactsFromEmployment(
                         serverUrl,
@@ -115,7 +116,7 @@ public class RequestData extends AbstractFlowData {
                         userInfo ) ) ;
             }
         }
-        contactEmployments = new ArrayList<Employment>( contactedEmployments );
+        contactEmployments = new ArrayList<CommunityEmployment>( contactedEmployments );
         contacts = new ArrayList<ContactData>( contactDataSet );
     }
 

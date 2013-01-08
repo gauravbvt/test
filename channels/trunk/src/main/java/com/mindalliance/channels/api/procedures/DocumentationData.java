@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DocumentationData  implements Serializable {
 
-    private List<DocumentData> documents;
+    private List<DocumentData> documents = new ArrayList<DocumentData>(  );
 
     public DocumentationData() {
         // required

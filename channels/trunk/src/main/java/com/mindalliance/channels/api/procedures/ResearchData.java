@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -36,7 +36,7 @@ public class ResearchData extends AbstractProcedureElementData {
             String serverUrl,
             PlanCommunity planCommunity,
             Flow requestToSelf,
-            Assignment assignment,
+            CommunityAssignment assignment,
             ChannelsUser user ) {
         super( planCommunity, assignment, user );
         this.requestToSelf = requestToSelf;

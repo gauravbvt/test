@@ -49,7 +49,7 @@ public class ExternalSupervisor extends AbstractIssueDetector {
     private static boolean hasExternalSupervisor( Job job, final Organization organization,
                                                   QueryService queryService ) {
         Actor supervisor = job.getSupervisor();
-        final Organization parent = organization.getEffectiveParent();
+        final Organization parent = organization.getParent();
         if ( supervisor == null ) {
             return false;
         } else {

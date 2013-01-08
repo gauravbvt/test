@@ -161,6 +161,7 @@ public abstract class DefaultQueryService implements QueryService {
             Place committerLocation = committer.getLocation();
             Place beneficiaryLocation = beneficiary.getLocation();
             switch ( restriction ) {
+
                 case SameTopOrganization:
                     return ModelObject.isNullOrUnknown( committerOrg )
                             || ModelObject.isNullOrUnknown( beneficiaryOrg )
@@ -190,6 +191,7 @@ public abstract class DefaultQueryService implements QueryService {
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
                             || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
                             || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
+
                 case SameOrganizationAndLocation:
                     return ( ModelObject.isNullOrUnknown( committerLocation )
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
@@ -200,6 +202,7 @@ public abstract class DefaultQueryService implements QueryService {
                                     || ModelObject.isNullOrUnknown( beneficiaryOrg )
                                     || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
                                     || beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
+
                 case DifferentLocations:
                     return ModelObject.isNullOrUnknown( committerLocation )
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
@@ -210,10 +213,12 @@ public abstract class DefaultQueryService implements QueryService {
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
                             || hasSupervisor( committer.getActor(), beneficiary.getActor(), committerOrg );
+
                 case Self:
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
                             || committer.getActor().equals( beneficiary.getActor() );
+
                 case Other:
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
@@ -2306,13 +2311,13 @@ public abstract class DefaultQueryService implements QueryService {
     public Organization.FamilyRelationship findFamilyRelationship( Organization fromOrg, Organization toOrg ) {
         if ( ModelObject.areIdentical( fromOrg, toOrg ) )
             return Organization.FamilyRelationship.Identity;
-        if ( fromOrg.getEffectiveParent() == null || toOrg.getEffectiveParent() == null )
+        if ( fromOrg.getParent() == null || toOrg.getParent() == null )
             return Organization.FamilyRelationship.None;
-        if ( ModelObject.areIdentical( fromOrg, toOrg.getEffectiveParent() ) )
+        if ( ModelObject.areIdentical( fromOrg, toOrg.getParent() ) )
             return Organization.FamilyRelationship.Parent;
-        if ( ModelObject.areIdentical( toOrg, fromOrg.getEffectiveParent() ) )
+        if ( ModelObject.areIdentical( toOrg, fromOrg.getParent() ) )
             return Organization.FamilyRelationship.Child;
-        if ( ModelObject.areIdentical( fromOrg.getEffectiveParent(), toOrg.getEffectiveParent() ) )
+        if ( ModelObject.areIdentical( fromOrg.getParent(), toOrg.getParent() ) )
             return Organization.FamilyRelationship.Sibling;
         List<? extends Hierarchical> toOrgSuperiors = toOrg.getSuperiors();
         if ( toOrgSuperiors.contains( fromOrg ) )

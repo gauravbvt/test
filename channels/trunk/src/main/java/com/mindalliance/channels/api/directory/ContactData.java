@@ -3,17 +3,16 @@ package com.mindalliance.channels.api.directory;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -27,17 +26,19 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Contact data.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"id", "ref", "normalizedContactName", "picture", "employment", "workChannels", "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
+@XmlType( propOrder = {"id", "ref", "normalizedContactName", "picture", "employment", "workChannels",
+        "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
 public class ContactData implements Serializable {
 
-    private Employment employment;
-    private Commitment commitment; // can be null if not in the context of a notification or request
+    private CommunityEmployment employment;
+    private CommunityCommitment commitment; // can be null if not in the context of a notification or request
     private ChannelsUserInfo userInfo;
     private boolean includeSupervisor;
     private List<ChannelData> workChannels;
@@ -45,7 +46,7 @@ public class ContactData implements Serializable {
     private List<ChannelData> organizationChannels;
     private List<ChannelData> personalChannels;
     private List<ContactData> bypassContacts;
-    private List<Employment> bypassEmployments;
+    private List<CommunityEmployment> bypassEmployments;
     private Boolean bypassToAll = null;
     private String pictureUrl;
 
@@ -55,7 +56,7 @@ public class ContactData implements Serializable {
 
     public ContactData(
             String serverUrl,
-            Employment employment,
+            CommunityEmployment employment,
             ChannelsUserInfo userInfo,
             boolean includeSupervisor,
             PlanCommunity planCommunity ) {
@@ -67,8 +68,8 @@ public class ContactData implements Serializable {
 
     public ContactData( // create contact data of employment contacted in commitment
                         String serverUrl,
-                        Employment employment,
-                        Commitment commitment,
+                        CommunityEmployment employment,
+                        CommunityCommitment commitment,
                         ChannelsUserInfo userInfo,
                         boolean includeSupervisor,
                         PlanCommunity planCommunity ) {
@@ -89,13 +90,13 @@ public class ContactData implements Serializable {
      */
     static public List<ContactData> findContactsFromEmployment(
             String serverUrl,
-            Employment employment,
-            Commitment commitment,
+            CommunityEmployment employment,
+            CommunityCommitment commitment,
             PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
         List<ContactData> contactList = new ArrayList<ContactData>();
-        Actor actor = employment.getActor();
-        if ( actor.isAnonymousParticipation() ) {
+        Agent agent = employment.getAgent();
+        if ( agent.isAnonymousParticipation() ) {
             contactList.add( new ContactData(
                     serverUrl,
                     employment,
@@ -105,10 +106,10 @@ public class ContactData implements Serializable {
                     planCommunity ) );
         } else {
             List<UserParticipation> otherParticipations = getOtherParticipations(
-                    actor,
+                    agent,
                     planCommunity,
                     userInfo );
-            if ( otherParticipations.isEmpty() || !actor.isSingularParticipation() ) {
+            if ( otherParticipations.isEmpty() || !agent.isSingularParticipation() ) {
                 contactList.add( new ContactData(
                         serverUrl,
                         employment,
@@ -133,7 +134,7 @@ public class ContactData implements Serializable {
     private void init(
             String serverUrl,
             PlanCommunity planCommunity ) {
-        initWorkChannels( planCommunity.getPlanService() );
+        initActorChannels( planCommunity.getPlanService() );
         initPersonalChannels( planCommunity.getPlanService() );
         initSupervisorContacts( serverUrl, planCommunity );
         initOrganizationChannels( planCommunity.getPlanService() );
@@ -142,8 +143,9 @@ public class ContactData implements Serializable {
     }
 
      private void initPictureUrl( String serverUrl ) {
-        // todo use user picture instead of actor's if available
-        String url = getActor().getImageUrl();
+        String url = userInfo == null
+                        ? getAgent().getActor().getImageUrl()
+                        : userInfo.getPhoto();
         if ( url != null ) {
             String prefix = serverUrl.endsWith( "/" ) ? serverUrl : ( serverUrl + "/" );
             pictureUrl = StringEscapeUtils.escapeXml( url.toLowerCase().startsWith( "http" )
@@ -162,12 +164,11 @@ public class ContactData implements Serializable {
                         queryService ) );
             }
         }
-
     }
 
-    private void initWorkChannels( QueryService queryService ) {
+    private void initActorChannels( QueryService queryService ) {
         workChannels = new ArrayList<ChannelData>();
-        for ( Channel channel : getActor().getEffectiveChannels() ) {
+        for ( Channel channel : getAgent().getActor().getEffectiveChannels() ) {
             workChannels.add( new ChannelData( channel, queryService ) );
         }
     }
@@ -175,32 +176,33 @@ public class ContactData implements Serializable {
 
     private void initOrganizationChannels( QueryService queryService ) {
         organizationChannels = new ArrayList<ChannelData>();
-        for ( Channel channel : getOrganization().getEffectiveChannels() ) {
+        for ( Channel channel : getAgency().getEffectiveChannels() ) {
             organizationChannels.add( new ChannelData( channel, queryService ) );
         }
 
     }
 
     private void initSupervisorContacts( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
         UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         supervisorContacts = new ArrayList<ContactData>();
         if ( includeSupervisor && getSupervisor() != null ) {
-            Actor supervisor = getSupervisor();
-            Employment sameOrgEmployment = null;
-            Employment parentOrgEmployment = null;
-            Iterator<Employment> iter = planService.findAllEmploymentsForActor( supervisor ).iterator();
-            List<Organization> ancestors = getOrganization().ancestors();
+            Agent supervisor = getSupervisor();
+            CommunityEmployment sameOrgEmployment = null;
+            CommunityEmployment parentOrgEmployment = null;
+            Iterator<CommunityEmployment> iter = planCommunity.getParticipationManager()
+                    .findAllEmploymentsForAgent( supervisor, planCommunity )
+                    .iterator();
+            List<Agency> ancestors = getAgency().ancestors( planCommunity );
             while ( sameOrgEmployment == null && iter.hasNext() ) {
-                Employment supervisorEmployment = iter.next();
-                if ( supervisorEmployment.getOrganization().equals( getOrganization() ) ) {
+                CommunityEmployment supervisorEmployment = iter.next();
+                if ( supervisorEmployment.getEmployer().equals( getAgency() ) ) {
                     sameOrgEmployment = supervisorEmployment;
                 } else if ( parentOrgEmployment == null
-                        && ancestors.contains( supervisorEmployment.getOrganization() ) ) {
+                        && ancestors.contains( supervisorEmployment.getEmployer() ) ) {
                     parentOrgEmployment = supervisorEmployment;
                 }
             }
-            Employment supervisorEmployment = sameOrgEmployment != null
+            CommunityEmployment supervisorEmployment = sameOrgEmployment != null
                     ? sameOrgEmployment
                     : parentOrgEmployment;
             if ( supervisorEmployment != null ) {
@@ -213,14 +215,15 @@ public class ContactData implements Serializable {
                             planCommunity ) );
                 } else {
                     List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent(
-                            new Agent( supervisor ),  // todo - agents!
+                            supervisor,
                             planCommunity );
                     for ( UserParticipation participation : participations ) {
                         supervisorContacts.add( new ContactData(
                                 serverUrl,
                                 supervisorEmployment,
                                 participation.getParticipant(),
-                                false,planCommunity ) );
+                                false,
+                                planCommunity ) );
                     }
                 }
             }
@@ -230,10 +233,10 @@ public class ContactData implements Serializable {
     private void initBypassContacts(
             String serverUrl,
             PlanCommunity planCommunity ) {
-        Set<Employment> bypassEmploymentSet = new HashSet<Employment>();
+        Set<CommunityEmployment> bypassEmploymentSet = new HashSet<CommunityEmployment>();
         if ( commitment() != null ) {
             Set<ContactData> bypassContactSet = new HashSet<ContactData>();
-            for ( Employment bypassEmployment : findBypassContactEmployments( planCommunity.getPlanService() ) ) {
+            for ( CommunityEmployment bypassEmployment : findBypassContactEmployments( planCommunity ) ) {
                 bypassEmploymentSet.add( bypassEmployment );
                 bypassContactSet.addAll( findContactsFromEmployment(
                         serverUrl,
@@ -246,16 +249,16 @@ public class ContactData implements Serializable {
         } else {
             bypassContacts = new ArrayList<ContactData>();
         }
-        bypassEmployments = new ArrayList<Employment>( bypassEmploymentSet );
+        bypassEmployments = new ArrayList<CommunityEmployment>( bypassEmploymentSet );
     }
 
-    private List<Employment> findBypassContactEmployments( QueryService queryService ) {
+    private List<CommunityEmployment> findBypassContactEmployments( PlanCommunity planCommunity ) {
         assert commitment != null;
-        Set<Employment> bypassEmployments = new HashSet<Employment>();
+        Set<CommunityEmployment> bypassEmployments = new HashSet<CommunityEmployment>();
         bypassToAll = commitment().getSharing().isAll();
-        List<Commitment> bypassCommitments = queryService
-                .findAllBypassCommitments( commitment.getSharing() );
-        for ( Commitment bypassCommitment : bypassCommitments ) {
+        CommunityCommitments bypassCommitments =
+                planCommunity.findAllBypassCommitments( commitment.getSharing() );
+        for ( CommunityCommitment bypassCommitment : bypassCommitments ) {
             if ( commitment().getSharing().isNotification() ) {
                 if ( bypassCommitment.getCommitter().getEmployment().equals( contactedEmployment() ) ) {
                     bypassEmployments.add( bypassCommitment.getBeneficiary().getEmployment() );
@@ -268,20 +271,20 @@ public class ContactData implements Serializable {
                 }
             }
         }
-        return new ArrayList<Employment>( bypassEmployments );
+        return new ArrayList<CommunityEmployment>( bypassEmployments );
     }
 
 
-    // Find list of participation as actor other than by the user.
+    // Find list of participation as agent other than by the user.
     static private List<UserParticipation> getOtherParticipations(
-            Actor actor,                           // todo - agents!
+            Agent agent,
             PlanCommunity planCommunity,
             ChannelsUserInfo userInfo ) {
         UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         String username = userInfo == null ? null : userInfo.getUsername();
         List<UserParticipation> otherParticipations = new ArrayList<UserParticipation>();
         List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent(
-                new Agent( actor ),
+                agent,
                 planCommunity );
         for ( UserParticipation participation : participations ) {
             if ( username == null || !username.equals( participation.getParticipantUsername() ) ) {
@@ -295,22 +298,22 @@ public class ContactData implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( userInfo == null ? "" : userInfo.getId() );
         sb.append( "_" );
-        sb.append( contactedEmployment().getActor().getId() );
+        sb.append( contactedEmployment().getAgent().getActor().getId() );
         sb.append( "_" );
         sb.append( contactedEmployment().getRole().getId() );
         sb.append( "_" );
-        sb.append( contactedEmployment().getOrganization().getId() );
+        sb.append( contactedEmployment().getEmployer().getId() );
         return sb.toString();
     }
 
-    private Employment contactedEmployment() {
+    private CommunityEmployment contactedEmployment() {
         return employment;
     }
 
     @XmlElement( name = "name" )
     public String getNormalizedContactName() {
         if ( userInfo == null )
-            return getActor().getName();
+            return getAgent().getName();
         else
             return ChannelsUser.normalizeFullName( userInfo.getFullName() );
     }
@@ -327,9 +330,7 @@ public class ContactData implements Serializable {
 
     @XmlElement( name = "identity" )
     public EmploymentData getEmployment() {
-        return userInfo == null
-                ? new EmploymentData( contactedEmployment() )
-                : new EmploymentData( contactedEmployment(), userInfo );
+       return new EmploymentData( contactedEmployment() );
     }
 
     @XmlElement( name = "workChannel" )
@@ -375,15 +376,15 @@ public class ContactData implements Serializable {
         return bypassToAll;
     }
 
-    private Actor getActor() {
-        return contactedEmployment().getActor();
+    private Agent getAgent() {
+        return contactedEmployment().getAgent();
     }
 
-    private Organization getOrganization() {
-        return contactedEmployment().getOrganization();
+    private Agency getAgency() {
+        return contactedEmployment().getEmployer();
     }
 
-    private Actor getSupervisor() {
+    private Agent getSupervisor() {
         return contactedEmployment().getSupervisor();
     }
 
@@ -392,19 +393,19 @@ public class ContactData implements Serializable {
     }
 
     public String getContactName() {
-        return userInfo != null ? userInfo.getFullName() : getActor().getName();
+        return userInfo != null ? userInfo.getFullName() : getAgent().getName();
     }
 
     public String getContactJob() {
-        Employment contacted = contactedEmployment();
+        CommunityEmployment contacted = contactedEmployment();
         StringBuilder sb = new StringBuilder();
-        sb.append( contacted.getTitleOrRole() );
+        sb.append( contacted.getTitle() );
         sb.append( ", " );
         if ( contacted.getJurisdiction() != null ) {
             sb.append( contacted.getJurisdiction().getName() );
             sb.append( ", " );
         }
-        sb.append( contacted.getOrganization().getName() );
+        sb.append( contacted.getEmployer().getName() );
         return sb.toString();
     }
 
@@ -423,15 +424,15 @@ public class ContactData implements Serializable {
         return employment.hashCode();
     }
 
-    public Employment employment() {
+    public CommunityEmployment employment() {
         return employment;
     }
 
-    public Commitment commitment() {
+    public CommunityCommitment commitment() {
         return commitment;
     }
 
-    public List<Employment> bypassEmployments() {
+    public List<CommunityEmployment> bypassEmployments() {
         return bypassEmployments;
     }
 

@@ -10,6 +10,8 @@ import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -20,6 +22,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
@@ -82,6 +85,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     private PlanCommunityManager planCommunityManager;
     @Autowired
     private ParticipationManager participationManager;
+    @Autowired
+    private OrganizationParticipationService organizationParticipationService;
 
     private String serverUrl;
 
@@ -195,20 +200,20 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public ProceduresData getProcedures( String uri, String actorId ) {
-        LOG.info( "Getting user procedures of agent " + actorId + " for community " + uri );
+    public ProceduresData getActorProcedures( String uri, String actorId ) {    // todo - obsolete?
+        LOG.info( "Getting user procedures of actor " + actorId + " for community " + uri );
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             PlanService planService = getPlanService( planCommunity.getPlan() );
-            Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );   // todo - agents!
+            Actor actor = planService.find( Actor.class, Long.parseLong( actorId ) );
             if ( !canSeeProcedures( user, actor, planCommunity ) ) {
                 throw new Exception( "Procedures not visible to " + user.getUsername() + " for community with uri " + uri );
             }
             return new ProceduresData(
                     serverUrl,
                     planCommunity,
-                    actor );
+                    new Agent( actor ) );
         } catch ( Exception e ) {
             LOG.warn( "No procedures available for agent " + actorId, e );
             throw new WebApplicationException(
@@ -278,17 +283,48 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting procedures of agent " + actorId + " for community " + uri + " and plan version " + version );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
-            Actor actor = getPlanService( planCommunity.getPlan() ).find( Actor.class, Long.parseLong( actorId ) );   // todo - agents!
+            Actor actor = getPlanService( planCommunity.getPlan() ).find( Actor.class, Long.parseLong( actorId ) );
             return new ProceduresData(
                     serverUrl,
                     planCommunity,
-                    actor );
+                    new Agent( actor ) );
+
         } catch ( Exception e ) {
             LOG.warn( "No procedures available for agent " + actorId, e );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
                             .entity( "No procedures available for community " + uri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public ProceduresData getAgentProtocols( String uri,
+                                             String version,
+                                             String agentId,
+                                             String orgParticipationId ) {
+        ChannelsUser user = ChannelsUser.current( userDao );
+        LOG.info( "Getting protocols of agent " + agentId
+                + " for organization participation" + orgParticipationId
+                + " in community " + uri
+                + " and plan version " + version );
+        try {
+            PlanCommunity planCommunity = authorize( user, uri, version );
+            Actor actor = getPlanService( planCommunity.getPlan() ).find( Actor.class, Long.parseLong( agentId ) );
+            OrganizationParticipation organizationParticipation =
+                    organizationParticipationService.load( Long.parseLong( orgParticipationId ) );
+            if ( organizationParticipation == null ) throw new NotFoundException();
+            return new ProceduresData(
+                    serverUrl,
+                    planCommunity,
+                    new Agent( actor, organizationParticipation, planCommunity ) );
+        } catch ( Exception e ) {
+            LOG.warn( "No protocols available for agent " + agentId, e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No protocols available for community " + uri )
                             .build() );
         }
     }

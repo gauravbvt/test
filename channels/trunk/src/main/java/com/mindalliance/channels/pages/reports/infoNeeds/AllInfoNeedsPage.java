@@ -1,9 +1,10 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import com.mindalliance.channels.social.model.Feedback;
@@ -45,10 +46,10 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
     }
 
 
-    protected void initComponents( QueryService service, final Plan plan ) {
-        boolean isPlanner = getUser().isPlanner( plan.getUri() );
+    protected void initComponents( QueryService service, final PlanCommunity planCommunity ) {
+        boolean isPlanner = getUser().isPlanner( planCommunity.getPlan().getUri() );
         getContainer().add(
-            new Label( "planName", plan.toString() ),
+            new Label( "planName", planCommunity.getPlan().toString() ),
             new WebMarkupContainer( "note" ).setVisible( isPlanner ),
             new WebMarkupContainer( "activeDiv" ).add(
                     new Label(
@@ -62,8 +63,8 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                     protected void populateItem( ListItem<UserParticipation> item ) {
                         PageParameters parameters = new PageParameters();
                         UserParticipation p = item.getModelObject();
-                        parameters.set( PLAN, getUri() );
-                        parameters.set( VERSION, getVersion() );
+                        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+                        parameters.set( VERSION_PARM, getPlanVersion() );
                         Actor actor = p.getAgent( getPlanCommunity() ).getActor();
                         parameters.set( "agent", actor.getId() );
                         String participantUsername = p.getParticipant().getUsername();
@@ -87,21 +88,21 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
 
             new WebMarkupContainer( "agentsDiv" ).add(
                     isPlanner() ?
-               new ListView<Actor>( "agents", getActors() ) {
+               new ListView<Agent>( "agents", getAgents() ) {
                     @Override
-                    protected void populateItem( ListItem<Actor> item ) {
-                        final Actor actor = item.getModelObject();
+                    protected void populateItem( ListItem<Agent> item ) {
+                        final Agent agent = item.getModelObject();
                         PageParameters parameters =
-                            InfoNeedsPage.createParameters( actor, getUri(), getVersion() );
+                            InfoNeedsPage.createParameters( agent.getActor(), getPlanCommunity(), getPlanVersion() );
 
                         item.add(
 
                             new BookmarkablePageLink<InfoNeedsPage>(
                                 "agent", InfoNeedsPage.class, parameters )
-                                    .add( new Label( "agentName", actor.getNormalizedName() )
+                                    .add( new Label( "agentName", agent.getName() )
                                               .setRenderBodyOnly( true ) ),
 
-                                new Label( "participationPlurality", actor.getParticipationPlurality() )
+                                new Label( "participationPlurality", agent.getActor().getParticipationPlurality() )
                         ).setOutputMarkupId( true );
 
                         if ( item.getIndex() == getViewSize() - 1 )
@@ -111,7 +112,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                     }
                 }
                             : new Label( "agents", "" )
-          ).setVisible( !getActors().isEmpty() && isPlanner )
+          ).setVisible( !getAgents().isEmpty() && isPlanner )
 
         );
     }

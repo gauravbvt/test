@@ -46,7 +46,7 @@ public interface PlanCommunityEndPoint {
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get a plan's summary.
-     * @param uri a plan uri
+     * @param uri a plan community uri
      * @param version a plan version
      * @return plan summary data
      */
@@ -83,15 +83,16 @@ public interface PlanCommunityEndPoint {
 
 
     @GET
-    @Path( "plan/{uri}/agent/{agentId}/procedures" )
+    @Path( "plan/{uri}/actor/{actorId}/org/{orgId}/procedures" )
     @Produces( MediaType.APPLICATION_XML )
     /**
      * Get the procedures of an agent in a plan (for authorized planners or user participating in plan as the agent).
      * @param uri a plan's URI
-     * @param agentId an agent's id
+     * @param actorId an actor's id
      * @return the procedures of the agent from the plan
      */
-    ProceduresData getProcedures( @PathParam( "uri" ) String uri, @PathParam( "agentId" ) String agentId );
+    ProceduresData getActorProcedures( @PathParam( "uri" ) String uri,
+                                       @PathParam( "actorId" ) String actorId );
 
     @GET
     @Path( "plan/{uri}/procedures" )
@@ -127,7 +128,16 @@ public interface PlanCommunityEndPoint {
     @Produces( MediaType.APPLICATION_XML )
     ProceduresData getAgentProcedures( @PathParam("uri") String uri,
                                        @PathParam( "version" ) String version,
-                                       @PathParam("agentId") String agentId );
+                                       @PathParam("agentId") String agentId );   // agent in plan-defined organization
+
+    @GET
+    @Path("plan/{uri}/version/{version}/agent/{agentId}/org/{orgParticipationId}/protocols")
+    @Produces( MediaType.APPLICATION_XML )
+    ProceduresData getAgentProtocols( @PathParam("uri") String uri,
+                                      @PathParam("version") String version,
+                                      @PathParam("agentId") String agentId,
+                                      @PathParam("orgParticipationId") String orgParticipationId );  // agent in dynamically participating organization
+
 
     @GET
     @Path( "plan/{uri}/version/{version}/user/{user}/directory" )
@@ -198,6 +208,7 @@ public interface PlanCommunityEndPoint {
     void removeContactInfo( @PathParam("uri") String uri,
             @PathParam( "mediumId") String mediumId,
             @PathParam("address") String address );
+
 
     /////////
 

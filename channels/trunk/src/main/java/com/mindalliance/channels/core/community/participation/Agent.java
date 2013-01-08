@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Nameable;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
 /**
@@ -162,4 +163,15 @@ public class Agent implements Nameable, Identifiable {
     public String getRequirementsDescription( PlanCommunity planCommunity ) {
         return getActor().getRequirementsDescription( planCommunity.getPlan() );
      }
+
+    public boolean isRegisteredInPlaceholder( Organization organization, PlanCommunity planCommunity ) {
+        return organization.isPlaceHolder()
+                && isRegistered()
+                && getOrganizationParticipation().getPlaceholderOrganization( planCommunity )
+                .equals( organization );
+    }
+
+    public boolean isAnonymousParticipation() {
+        return actor.isAnonymousParticipation();
+    }
 }

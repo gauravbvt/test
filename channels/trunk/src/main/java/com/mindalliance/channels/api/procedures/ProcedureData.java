@@ -1,14 +1,13 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Assignment;
-import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.query.Commitments;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -29,7 +28,7 @@ import java.util.Set;
  * Date: 12/5/11
  * Time: 3:05 PM
  */
-@XmlType( propOrder = {"anchor", "actorId", "triggers", "assignment"} )
+@XmlType( propOrder = {"anchor", "agentName", "actorId", "triggers", "assignment"} )
 public class ProcedureData implements Serializable {
 
     private ChannelsUser user;
@@ -40,15 +39,15 @@ public class ProcedureData implements Serializable {
     /**
      * An assignment of the actor for which this procedure is being marshalled.
      */
-    private Assignment assignment;
+    private CommunityAssignment assignment;
     /**
      * All commitments, including to self, benefiting this assignment.
      */
-    private Commitments benefitingCommitments;
+    private CommunityCommitments benefitingCommitments;
     /**
      * All commitments
      */
-    private Commitments committingCommitments;
+    private CommunityCommitments committingCommitments;
 
     private AssignmentData assignmentData;
 
@@ -59,9 +58,9 @@ public class ProcedureData implements Serializable {
     public ProcedureData(
             String serverUrl,
             PlanCommunity planCommunity,
-            Assignment assignment,
-            Commitments benefitingCommitments,
-            Commitments committingCommitments,
+            CommunityAssignment assignment,
+            CommunityCommitments benefitingCommitments,
+            CommunityCommitments committingCommitments,
             ChannelsUser user ) {
         this.assignment = assignment;
         this.benefitingCommitments = benefitingCommitments;
@@ -124,9 +123,14 @@ public class ProcedureData implements Serializable {
         }
     }
 
+    @XmlElement
+    public String getAgentName() {
+        return assignment.getAgent().getName();
+    }
+
     @XmlElement( name = "agentId" )
     public Long getActorId() {
-        return assignment.getActor().getId();
+        return assignment.getAgent().getActor().getId();
     }
 
 
@@ -148,7 +152,7 @@ public class ProcedureData implements Serializable {
 
     private List<Flow> triggeringNotificationsFromOthers() {
         Set<Flow> triggerNotifications = new HashSet<Flow>();
-        for ( Commitment commitment : benefitingCommitments ) {
+        for ( CommunityCommitment commitment : benefitingCommitments ) {
             Flow flow = commitment.getSharing();
             if ( flow.isNotification() && flow.isTriggeringToTarget() && !commitment.isToSelf() ) {
                 triggerNotifications.add( commitment.getSharing() );
@@ -159,7 +163,7 @@ public class ProcedureData implements Serializable {
 
     private List<Flow> triggeringRequestsFromOthers() {
         Set<Flow> triggerRequests = new HashSet<Flow>();
-        for ( Commitment commitment : committingCommitments ) {
+        for ( CommunityCommitment commitment : committingCommitments ) {
             Flow flow = commitment.getSharing();
             if ( flow.isAskedFor() && flow.isTriggeringToSource() && !commitment.isToSelf() ) {
                 triggerRequests.add( commitment.getSharing() );
@@ -171,7 +175,7 @@ public class ProcedureData implements Serializable {
 
     private List<Flow> triggeringNotificationsToSelf() {
         Set<Flow> triggerNotificationsToSelf = new HashSet<Flow>();
-        for ( Commitment commitment : benefitingCommitments.toSelf() ) {
+        for ( CommunityCommitment commitment : benefitingCommitments.toSelf() ) {
             Flow flow = commitment.getSharing();
             if ( flow.isNotification() && flow.isTriggeringToTarget() && commitment.isToSelf() ) {
                 triggerNotificationsToSelf.add( commitment.getSharing() );
@@ -182,7 +186,7 @@ public class ProcedureData implements Serializable {
 
     private List<Flow> triggeringRequestsToSelf() {
         Set<Flow> triggerRequestsToSelf = new HashSet<Flow>();
-        for ( Commitment commitment : committingCommitments ) {
+        for ( CommunityCommitment commitment : committingCommitments ) {
             Flow flow = commitment.getSharing();
             if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
                 triggerRequestsToSelf.add( commitment.getSharing() );
@@ -193,12 +197,12 @@ public class ProcedureData implements Serializable {
 
 
     @WebMethod( exclude = true )
-    public Commitments getBenefitingCommitments() {
+    public CommunityCommitments getBenefitingCommitments() {
         return benefitingCommitments;
     }
 
     @WebMethod( exclude = true )
-    public Commitments getCommittingCommitments() {
+    public CommunityCommitments getCommittingCommitments() {
         return committingCommitments;
     }
 
@@ -451,11 +455,11 @@ public class ProcedureData implements Serializable {
     }
 
     public String getTitleOrRole() {
-        return getAssignment().getTitleOrRole();
+        return getAssignment().getTitle();
     }
 
     public String getOrganizationLabel() {
-        return getAssignment().getOrganizationLabel();
+        return getAssignment().getAgencyLabel();
     }
 
     @Override
@@ -477,7 +481,7 @@ public class ProcedureData implements Serializable {
         return assignmentData.getTask().part();
     }
 
-    public OrganizationData employer() {
+    public AgencyData employer() {
         return assignmentData.employer();
     }
 

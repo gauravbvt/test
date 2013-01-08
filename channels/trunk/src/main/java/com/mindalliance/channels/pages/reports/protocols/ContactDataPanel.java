@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.entities.AgentData;
+import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -24,7 +24,7 @@ public class ContactDataPanel extends AbstractDataPanel {
     private ContactData contactData;
     private List<ChannelData> workAddresses;
     private List<ChannelData> personalAddresses;
-    private AgentData agentData;
+    private ActorData agentData;
 
 
     public ContactDataPanel( String id, ContactData contactData, ProtocolsFinder finder ) {
@@ -37,7 +37,7 @@ public class ContactDataPanel extends AbstractDataPanel {
     private void initData() {
         workAddresses = contactData.getWorkChannels();
         personalAddresses = contactData.getPersonalChannels();
-        agentData = findInScope( AgentData.class, contactData.getEmployment().getActorId() );
+        agentData = findInScope( ActorData.class, contactData.getEmployment().getActorId() );
     }
 
     private void init() {

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.community.participation;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
@@ -25,6 +26,14 @@ public interface ParticipationManager {
     List<Agency> getAllKnownAgencies( PlanCommunity planCommunity );
 
     /**
+     * Get the agency given unique name.
+     * @param agencyName an agency name
+     * @param planCommunity a plan community
+     * @return an agency or null
+     */
+    Agency findAgencyNamed( String agencyName, PlanCommunity planCommunity );
+
+    /**
      * Get the list of all known agents (from all fixed and registered organizations).
      * @param planCommunity a plan community
      * @return a list of agents
@@ -38,6 +47,14 @@ public interface ParticipationManager {
      * @return a list of agencies
      */
     List<Agency> findAllEmployersOfAgent( Agent agent, PlanCommunity planCommunity );
+
+    /**
+     * Find all employments of an agent in a community.
+     * @param agent an agent
+     * @param planCommunity a plan community
+     * @return a list of community employments
+     */
+    List<CommunityEmployment> findAllEmploymentsForAgent( Agent agent, PlanCommunity planCommunity );
 
     /**
      * Find all agents with unconstrained participation and available to user.
@@ -148,4 +165,23 @@ public interface ParticipationManager {
      * @return a list of organziations
      */
     List<Organization> findAllUnassignedPlaceholders( PlanCommunity planCommunity );
+
+    /**
+     * Get top registered organization given one.
+     * @param registeredOrganization a registered organization
+     * @param planCommunity a plan community
+     * @return a registered organization - the given one if it has no parent
+     */
+    RegisteredOrganization getTopRegisteredOrganization( RegisteredOrganization registeredOrganization,
+                                                         PlanCommunity planCommunity );
+
+    /**
+     * Get ancestors of a given registered organization.
+     * @param registeredOrganization a registered organization
+     * @param planCommunity a plan community
+     * @return a list of registered organizations
+     */
+    List<RegisteredOrganization> ancestorsOf( RegisteredOrganization registeredOrganization,
+                                              PlanCommunity planCommunity );
+
 }

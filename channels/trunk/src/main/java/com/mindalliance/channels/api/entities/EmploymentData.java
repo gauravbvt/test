@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -16,35 +16,48 @@ import java.util.Set;
  * Date: 12/1/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"actorId", "organizationId", "title", "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
+@XmlType( propOrder = {"agentName", "agencyName", "supervisorName", "actorId", "organizationId", "title",
+        "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
 public class EmploymentData implements Serializable {
 
-    private Employment employment;
-    private ChannelsUserInfo userInfo;
+    private CommunityEmployment employment;
 
     public EmploymentData() {
         // required
     }
 
-    public EmploymentData( Employment employment ) {
+    public EmploymentData( CommunityEmployment employment ) {
         this.employment = employment;
     }
 
-    public EmploymentData( Employment employment, ChannelsUserInfo userInfo ) {
-        this.employment = employment;
-        this.userInfo = userInfo;
+    @XmlElement
+    public String getAgentName() {
+        return employment.getAgent().getName();
+    }
+
+    @XmlElement
+    public String getAgencyName() {
+        return employment.getEmployer().getName();
+    }
+
+    @XmlElement
+    public String getSupervisorName() {
+        Agent supervisor = employment.getSupervisor();
+        return supervisor == null
+                ? null
+                : supervisor.getName();
     }
 
     @XmlElement( name = "agentId" )
     public Long getActorId() {
-        return employment.getActor().getId();
+        return employment.getAgent().getActor().getId();
     }
 
     @XmlElement
     public String getTitle() {
         return !employment.getTitle().isEmpty()
                 ? employment.getTitle()
-                : "(" + employment.getRole().getName() + ")";
+                : "(no title)";
     }
 
     @XmlElement
@@ -73,30 +86,31 @@ public class EmploymentData implements Serializable {
 
     @XmlElement
     public Long getOrganizationId() {
-        return employment.getOrganization().getId();
+        return employment.getEmployer().getOrganizationId();
     }
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( employment.getActor().getId() );
+        ids.add( employment.getAgent().getActor().getId() );
         if ( getSupervisorId() != null )
             ids.add( getSupervisorId() );
         return ids;
     }
 
-    public Employment getEmployment() {
+    public CommunityEmployment getEmployment() {
         return employment;
     }
 
     public String getLabel() {
-        return employment.getLabel();
+        Agent agent = employment.getAgent();
+        if ( agent.isRegistered() ) {
+            return agent.getName();
+        } else {
+            return agent.getName() + " for " + employment.getEmployer().getName();
+        }
     }
 
-    public String getOrganizationName() {
-        return getEmployment().getOrganization().getName();
-    }
-
-    @Override
+   @Override
     public boolean equals( Object object ) {
         return object instanceof EmploymentData
                 && employment.equals( ( (EmploymentData) object ).getEmployment() );
