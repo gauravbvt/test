@@ -94,6 +94,15 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         }
     }
 
+    public Organization getOrganizationParticipatedAs( PlanCommunity planCommunity ) {
+        try {
+            return planCommunity.getPlanService().find( Organization.class, placeholderOrgId );
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Placeholder organization not found at " + placeholderOrgId );
+            return null;
+        }
+    }
+
     @Override
     public boolean equals( Object object ) {
         if ( object instanceof OrganizationParticipation ) {

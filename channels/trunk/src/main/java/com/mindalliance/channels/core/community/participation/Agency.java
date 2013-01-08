@@ -395,7 +395,15 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public Organization getPlaceholder( PlanCommunity planCommunity ) {
         if ( organizationParticipation != null ) {
-            return organizationParticipation.getPlaceholderOrganization( planCommunity );
+            return organizationParticipation.getPlaceholderOrganization(  planCommunity );
+        } else {
+            return null;
+        }
+    }
+
+    public Organization getOrganizationParticipatedAs( PlanCommunity planCommunity ) {
+        if ( organizationParticipation != null ) {
+            return organizationParticipation.getOrganizationParticipatedAs(  planCommunity );
         } else {
             return null;
         }

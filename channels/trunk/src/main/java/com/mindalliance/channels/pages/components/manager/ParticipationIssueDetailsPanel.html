@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="issues">
+        <div class="section-title">
+            <h4 wicket:id="kind">Issue kind</h4>
+        </div>
+        <table class="issue-details" summary="Issue details">
+            <tr>
+                <th class="area" align="right"><label>Issue:</label></th>
+                <td><span wicket:id="description" cols="30" rows="3">issue description</span></td>
+            </tr>
+            <tr>
+                <th class="area" align="right" valign="top"><label>Remediation options:</label></th>
+                <td>
+                    <ul>
+                        <li wicket:id="remediationOptions">
+                            <span wicket:id="option">a remediation option</span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</wicket:panel>
+</body>
+</html>

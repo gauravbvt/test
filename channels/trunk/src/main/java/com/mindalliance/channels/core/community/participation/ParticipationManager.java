@@ -26,6 +26,14 @@ public interface ParticipationManager {
     List<Agency> getAllKnownAgencies( PlanCommunity planCommunity );
 
     /**
+     * Get the list of all agencies participating as a given placeholder organization.
+     * @param placeholder an organization
+     * @param planCommunity a plan community
+     * @return a list of agencies
+     */
+    List<Agency> findAgenciesParticipatingAs( Organization placeholder, PlanCommunity planCommunity );
+
+    /**
      * Get the agency given unique name.
      * @param agencyName an agency name
      * @param planCommunity a plan community

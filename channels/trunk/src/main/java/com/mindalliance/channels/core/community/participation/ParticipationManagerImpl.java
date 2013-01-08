@@ -72,6 +72,21 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Agency> findAgenciesParticipatingAs( final Organization placeholder, final PlanCommunity planCommunity ) {
+        return (List<Agency>)CollectionUtils.select(
+                getAllKnownAgencies( planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Organization org = ((Agency)object).getPlaceholder( planCommunity );
+                        return org != null && org.equals( placeholder );
+                    }
+                }
+        );
+    }
+
+    @Override
     public Agency findAgencyNamed( String agencyName, PlanCommunity planCommunity ) {
         PlanService planService = planCommunity.getPlanService();
         // fixed

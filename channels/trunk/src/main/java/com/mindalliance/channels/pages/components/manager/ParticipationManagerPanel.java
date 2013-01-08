@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.participation.issues.ParticipationAnalyst;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -30,6 +31,10 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private UserParticipationService userParticipationService;
+
+    @SpringBean
+    private ParticipationAnalyst participationAnalyst;
+
     private AjaxTabbedPanel<ITab> tabbedPanel;
 
     public ParticipationManagerPanel( String id, IModel<? extends Identifiable> model ) {
@@ -64,19 +69,30 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
                 return new OrganizationsParticipationPanel( id, getModel() );
             }
         } );
-        tabs.add( new AbstractTab( new PropertyModel<String>( this, "todosTitle" ) ) {
+        tabs.add( new AbstractTab( new PropertyModel<String>( this, "toConfirmTitle" ) ) {
             public Panel getPanel( String id ) {
                 return new ParticipationConfirmationsPanel( id, getModel() );
             }
         } );
+        tabs.add( new AbstractTab( new PropertyModel<String>( this, "issuesTitle" ) ) {
+            public Panel getPanel( String id ) {
+                return new ParticipationIssuesPanel( id );
+            }
+        } );
+
 
         return tabs;
     }
 
-    public String getTodosTitle() {
+    public String getToConfirmTitle() {
         int toConfirmCount = userParticipationService
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getPlanCommunity() ).size();
         return "Confirmations (" + toConfirmCount + " pending)";
+    }
+
+    public String getIssuesTitle() {
+        int issuesCount = participationAnalyst.detectAllIssues( getPlanCommunity() ).size();
+        return "Participation issues (" + issuesCount +")";
     }
 
 

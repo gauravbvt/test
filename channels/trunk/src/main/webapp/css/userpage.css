@@ -1850,3 +1850,42 @@ div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0
 .participation input[type='text'] {
     width: 50%;
 }
+
+/* participation issue details */
+
+div.issues {
+    position: relative;
+    border: 3px solid #C9252C;
+    padding: 0;
+    margin-top: 10px;
+}
+
+div.issues div.section-title {
+    background: none repeat scroll 0 0 #C9252C;
+    border-bottom: 1px solid #C25036;
+    float: none;
+    height: 25px;
+    padding: 0;
+}
+
+div.issues h4 {
+    background: url("../images/warning.png") no-repeat scroll 8px 5px transparent;
+    border: medium none;
+    color: #FFFFFF;
+    float: left;
+    margin: 0;
+    padding: 6px 0 4px 30px;
+    text-transform: uppercase;
+}
+
+table.issue-details {
+    margin: 10px 0 0 0;
+}
+
+table.issue-details td {
+    padding: 10px 5px;
+}
+
+.issues li {
+    list-style: none;
+}

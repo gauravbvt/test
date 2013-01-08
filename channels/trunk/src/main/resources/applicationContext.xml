@@ -321,6 +321,17 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
+    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.participation.issues.ParticipationAnalystImpl">
+        <property name="issueDetectors">
+            <list value-type="java.util.ArrayList">
+                 <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.InvalidAgencyParent"/>
+                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.MissingUserParticipation"/>
+                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.MissingOrganizationParticipation"/>
+                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.TooManyUsersParticipatingAsAgent"/>
+            </list>
+        </property>
+    </bean>
+
     <!-- =========================== Prototypes -->
     <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
         <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
