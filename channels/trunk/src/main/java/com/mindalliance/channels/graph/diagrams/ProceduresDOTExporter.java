@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Event;
@@ -69,8 +70,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
     }
 
     @Override
-    protected void beforeExport( QueryService queryService, Graph<Assignment, Commitment> g ) {
-        super.beforeExport( queryService, g );
+    protected void beforeExport( PlanCommunity planCommunity, Graph<Assignment, Commitment> g ) {
+        super.beforeExport( planCommunity, g );
         for ( Assignment assignment : g.vertexSet() ) {
             Part part = assignment.getPart();
             if ( part.isTerminatesEventPhase() )
@@ -78,7 +79,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
             if ( part.isAutoStarted() )
                 put( autoStarters, part.getSegment().getEventPhase(), assignment );
             if ( part.getInitiatedEvent() != null )
-                for ( EventPhase eventPhase : findEventPhases( queryService,
+                for ( EventPhase eventPhase : findEventPhases( planCommunity.getPlanService(),
                                                                part.getInitiatedEvent(),
                                                                Timing.Concurrent ) )
                     put( initiators, eventPhase, assignment );
@@ -131,10 +132,10 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
     }
 
     @Override
-    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Assignment, Commitment> g ) {
+    protected void exportVertices( PlanCommunity planCommunity, PrintWriter out, Graph<Assignment, Commitment> g ) {
         ProceduresMetaProvider metaProvider = (ProceduresMetaProvider) getMetaProvider();
-        if ( !getEventPhaseStarts( queryService ).isEmpty() )
-            exportStarts( queryService, out, metaProvider );
+        if ( !getEventPhaseStarts( planCommunity.getPlanService() ).isEmpty() )
+            exportStarts( planCommunity, out, metaProvider );
         Map<Segment, Set<Assignment>> segmentAssignments = new HashMap<Segment, Set<Assignment>>();
         for ( Assignment assignment : g.vertexSet() ) {
             Segment segment = assignment.getPart().getSegment();
@@ -148,7 +149,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         for ( Segment segment : segmentAssignments.keySet() ) {
             if ( isForEntirePlan() || segment.equals( getSegment() ) ) {
                 exportGoals( segment, out, metaProvider, g );
-                printoutVertices( queryService, out, segmentAssignments.get( segment ) );
+                printoutVertices( planCommunity, out, segmentAssignments.get( segment ) );
             } else {
                 out.println( "subgraph cluster_" + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" ) + " {" );
                 List<DOTAttribute> attributes = new DOTAttribute( "label", "Segment: " + segment.getName() ).asList();
@@ -163,7 +164,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( queryService, out, segmentAssignments.get( segment ) );
+                printoutVertices( planCommunity, out, segmentAssignments.get( segment ) );
                 exportGoals( segment, out, metaProvider, g );
                 out.println( "}" );
             }
@@ -172,9 +173,9 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
             exportStops( out, metaProvider );
     }
 
-    private void exportStarts( QueryService queryService, PrintWriter out,
+    private void exportStarts( PlanCommunity planCommunity, PrintWriter out,
                                AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
-        for ( EventPhase eventPhase : getEventPhaseStarts( queryService ) ) {
+        for ( EventPhase eventPhase : getEventPhaseStarts( planCommunity.getPlanService() ) ) {
             out.print( getIndent() );
             out.print( getStartId( eventPhase ) );
             out.print( "[" );
@@ -245,17 +246,17 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
 
     @Override
     protected void exportEdges(
-            QueryService queryService,
+            PlanCommunity planCommunity,
             PrintWriter out,
             Graph<Assignment, Commitment> g ) throws InterruptedException {
         if ( !initiators.isEmpty() )
             exportInitiations( out, g );
         if ( !autoStarters.isEmpty() )
             exportAutoStarts( out, g );
-        super.exportEdges( queryService, out, g );
+        super.exportEdges( planCommunity, out, g );
         if ( !terminators.isEmpty() )
             exportTerminations( out, g );
-        exportStopToStartEdges( queryService, out, g );
+        exportStopToStartEdges( planCommunity, out, g );
         exportGoalEdges( out, g );
     }
 
@@ -309,10 +310,10 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         }
     }
 
-    private void exportStopToStartEdges( QueryService queryService, PrintWriter out, Graph<Assignment, Commitment> g ) {
+    private void exportStopToStartEdges( PlanCommunity planCommunity, PrintWriter out, Graph<Assignment, Commitment> g ) {
         for ( EventPhase stopped : terminators.keySet() ) {
             if ( stopped.getPhase().isConcurrent() ) {
-                for ( EventPhase started : findEventPhases( queryService, stopped.getEvent(), Timing.PostEvent ) ) {
+                for ( EventPhase started : findEventPhases( planCommunity.getPlanService(), stopped.getEvent(), Timing.PostEvent ) ) {
                     String label = sanitize( "starts " + started.toString() );
                     List<DOTAttribute> attributes = getTimingEdgeAttributes();
                     attributes.add( new DOTAttribute( "label", label ) );

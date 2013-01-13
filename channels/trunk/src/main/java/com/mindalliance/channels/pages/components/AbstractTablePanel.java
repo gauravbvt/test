@@ -2,6 +2,8 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.GeoLocatable;
@@ -225,29 +227,11 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeAnalysisColumn( String name,
-                                                    final String methodName,
-                                                    final String defaultText,
-                                                    final Object... extras ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
-
-            public void populateItem( Item<ICellPopulator<T>> cellItem,
-                                      String id,
-                                      IModel<T> model ) {
-                T bean = model.getObject();
-                String defaultTextValue = findStringValue( bean, defaultText );
-                String text = "" + callAnalyst( methodName, bean, extras );
-                String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
-                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
-            }
-        };
-    }
-
-    protected AbstractColumn<T> makeAnalysisColumn( String name,
-                                                    final String property,
-                                                    final String methodName,
-                                                    final String defaultText,
-                                                    final Object... extras ) {
+    protected AbstractColumn<T> makeParticipationAnalystColumn( String name,
+                                                  final String property,
+                                                  final String methodName,
+                                                  final String defaultText,
+                                                  final Object... extras ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
@@ -257,7 +241,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         ? model.getObject()
                         : (T) ChannelsUtils.getProperty( model.getObject(), property, null );
                 String defaultTextValue = findStringValue( bean, defaultText );
-                String text = "" + callAnalyst( methodName, bean, extras );
+                String text = "" + invokeParticipationAnalyst( methodName, bean, extras );
                 String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }
@@ -265,25 +249,68 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
 
-    private Object callAnalyst( String methodName, Object argument, Object[] extras ) {
+    private Object invokeParticipationAnalyst( String methodName, Object argument, Object[] extras ) {
         try {
-            Analyst delegate = getAnalyst();
+            ParticipationAnalyst analyst = getPlanCommunity().getParticipationAnalyst();
             if ( extras.length > 0 ) {
-                Class[] argTypes = {argument.getClass(), extras.getClass(), QueryService.class};
-                Method method = Analyst.class.getMethod( methodName, argTypes );
-                Object[] args = {argument, extras, getQueryService()};
-                return method.invoke( delegate, args );
+                Class[] argTypes = {argument.getClass(), extras.getClass(), PlanCommunity.class};
+                Method method = analyst.getClass().getMethod( methodName, argTypes );
+                Object[] args = {argument, extras, getPlanCommunity() };
+                return method.invoke( analyst, args );
             } else {
-                Class[] argTypes = {argument.getClass(), QueryService.class};
-                Method method = Analyst.class.getMethod( methodName, argTypes );
-                Object[] args = {argument, getQueryService()};
-                return method.invoke( delegate, args );
+                Class[] argTypes = {argument.getClass(), PlanCommunity.class};
+                Method method = analyst.getClass().getMethod( methodName, argTypes );
+                Object[] args = {argument, getPlanCommunity()};
+                return method.invoke( analyst, args );
             }
         } catch ( Exception e ) {
             LOG.warn( "Delegate method invocation failed.", e );
             return "";
         }
     }
+
+    protected AbstractColumn<T> makeAnalystColumn( String name,
+                                                                final String property,
+                                                                final String methodName,
+                                                                final String defaultText,
+                                                                final Object... extras ) {
+        return new AbstractColumn<T>( new Model<String>( name ) ) {
+
+            public void populateItem( Item<ICellPopulator<T>> cellItem,
+                                      String id,
+                                      IModel<T> model ) {
+                T bean = property == null
+                        ? model.getObject()
+                        : (T) ChannelsUtils.getProperty( model.getObject(), property, null );
+                String defaultTextValue = findStringValue( bean, defaultText );
+                String text = "" + invokeAnalyst( methodName, bean, extras );
+                String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
+                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
+            }
+        };
+    }
+
+
+    private Object invokeAnalyst( String methodName, Object argument, Object[] extras ) {
+        try {
+            Analyst analyst = getPlanCommunity().getAnalyst();
+            if ( extras.length > 0 ) {
+                Class[] argTypes = {argument.getClass(), extras.getClass(), PlanCommunity.class};
+                Method method = analyst.getClass().getMethod( methodName, argTypes );
+                Object[] args = {argument, extras, getPlanCommunity() };
+                return method.invoke( analyst, args );
+            } else {
+                Class[] argTypes = {argument.getClass(), PlanCommunity.class};
+                Method method = analyst.getClass().getMethod( methodName, argTypes );
+                Object[] args = {argument, getPlanCommunity()};
+                return method.invoke( analyst, args );
+            }
+        } catch ( Exception e ) {
+            LOG.warn( "Delegate method invocation failed.", e );
+            return "";
+        }
+    }
+
 
     /**
      * Defines a column containing links to ModelObjects.

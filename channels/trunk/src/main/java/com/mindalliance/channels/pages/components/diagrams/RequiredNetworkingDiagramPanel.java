@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -30,21 +31,21 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
     private static final Logger LOG = LoggerFactory.getLogger( RequiredNetworkingDiagramPanel.class );
     private final Model<Phase.Timing> timingModel;
     private final Model<Event> eventModel;
-    private final Organization selectedOrganization;
+    private final Agency selectedAgency;
     private final RequirementRelationship selectedRequirementRel;
 
     public RequiredNetworkingDiagramPanel(
             String id,
             Model<Phase.Timing> timingModel,
             Model<Event> eventModel,
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequirementRel,
             double[] diagramSize,
             String domIdentifier ) {
         this( id,
                 timingModel,
                 eventModel,
-                selectedOrganization,
+                selectedAgency,
                 selectedRequirementRel,
                 diagramSize,
                 null,
@@ -56,7 +57,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             String id,
             Model<Phase.Timing> timingModel,
             Model<Event> eventModel,
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequirementRel,
             double[] diagramSize,
             String orientation,
@@ -65,7 +66,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
         super( id, new Settings( domIdentifier, orientation, diagramSize, true, withImageMap ) );
         this.timingModel = timingModel;
         this.eventModel = eventModel;
-        this.selectedOrganization = selectedOrganization;
+        this.selectedAgency = selectedAgency;
         this.selectedRequirementRel = selectedRequirementRel;
         init();
     }
@@ -80,7 +81,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
         return getDiagramFactory().newRequiredNetworkingDiagram(
                 getTiming(),
                 getEvent(),
-                selectedOrganization,
+                selectedAgency,
                 selectedRequirementRel,
                 getDiagramSize(),
                 getOrientation() );
@@ -89,8 +90,8 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
     @Override
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "required.png?organization=" );
-        sb.append( selectedOrganization == null ? "NONE" : selectedOrganization.getId() );
+        sb.append( "required.png?agency=" );
+        sb.append( selectedAgency == null ? "NONE" : selectedAgency.getId() );
         sb.append("&connection=");
         sb.append( selectedRequirementRel == null ? "NONE" : selectedRequirementRel.getId() );
         if ( getTiming() != null ) {
@@ -155,7 +156,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             AjaxRequestTarget target ) {
         try {
              Organization org = getQueryService().find( Organization.class, Long.valueOf( vertexId ) );
-             if ( !org.equals( selectedOrganization ) ) {
+             if ( !org.equals( selectedAgency ) ) {
                  String js = scroll( domIdentifier, scrollTop, scrollLeft );
                  Change change = new Change( Change.Type.Selected, org, "organization" );
                  change.setScript( js );
@@ -176,7 +177,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             Map<String, String> extras,
             AjaxRequestTarget target ) {
         RequirementRelationship requirementRelationship = new RequirementRelationship();
-        requirementRelationship.setId( Long.valueOf( edgeId ), null, getQueryService(), getAnalyst() );
+        requirementRelationship.setId(  edgeId, getPlanCommunity() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, requirementRelationship );
         change.setScript( js );

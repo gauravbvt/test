@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 
 import java.util.List;
 
@@ -32,22 +32,22 @@ public interface DOTAttributeProvider<V, E> {
      * Gets a comma-separated style declarations for a vertex
      *
      *
-     * @param queryService
+     * @param planCommunity a plan community
      * @param vertex      -- a vertex
      * @param highlighted -- whether the vertex is to be highlighted
      * @return the style declarations
      */
-    List<DOTAttribute> getVertexAttributes( QueryService queryService, V vertex, boolean highlighted );
+    List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, V vertex, boolean highlighted );
 
     /**
      * Gets a comma-separated style declarations for an edge
      *
      *
-     * @param queryService
+     * @param planCommunity a plan community
      * @param edge        -- an edge
      * @param highlighted -- whether the edge is to be highlighted
      * @return the style declarations
      */
-    List<DOTAttribute> getEdgeAttributes( QueryService queryService, E edge, boolean highlighted );
+    List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, E edge, boolean highlighted );
 
 }

@@ -25,6 +25,7 @@ import java.util.Set;
  */
 public class Agency extends AbstractUnicastChannelable implements Nameable, Identifiable {
 
+    public static final Agency UNKNOWN = new Agency();
     // Only one of fixedOrganization or organizationParticipation or registeredOrganization must be set.
     private Organization fixedOrganization;
     private RegisteredOrganization registeredOrganization;
@@ -36,6 +37,13 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     private String address;
     private boolean editable = false;
     private Organization planOrganization;
+
+    public Agency() {
+        name = "?";
+        description = "Unknown agency";
+        mission = "";
+        fixedOrganization = Organization.UNKNOWN;
+    }
 
     public Agency( Organization fixedOrganization ) {
         assert fixedOrganization.isActual();
@@ -185,6 +193,10 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
             throw new IllegalStateException();
     }
 
+    public boolean isParticipatingAsPlaceholder() {
+        return organizationParticipation != null;
+    }
+
     public List<Agent> getAgents( PlanCommunity planCommunity ) {
         Set<Agent> agents = new HashSet<Agent>();
         for ( Job job : getPlaceholderJobs( planCommunity ) ) {
@@ -284,11 +296,11 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     @Override
     public long getId() {
-        return fixedOrganization != null
-                ? fixedOrganization.getId()
-                : registeredOrganization != null
-                ? registeredOrganization.getId()
-                : organizationParticipation.getId();
+        return isFixedOrganization()
+                ? getFixedOrganization().getId()
+                : organizationParticipation != null
+                    ? organizationParticipation.getId() * -1
+                    : 0;
     }
 
     @Override
@@ -363,7 +375,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public String toString() {
-        return "Agency " + getName();
+        return getName();
     }
 
     public void setParentName( String val ) {
@@ -407,5 +419,9 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         } else {
             return null;
         }
+    }
+
+    public long getPlaceholderId() {
+        return organizationParticipation.getPlaceholderOrgId();
     }
 }

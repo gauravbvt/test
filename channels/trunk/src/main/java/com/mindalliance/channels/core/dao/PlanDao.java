@@ -249,6 +249,7 @@ public class PlanDao {
         InfoProduct.UNKNOWN.makeImmutable();
         InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
         InfoFormat.UNKNOWN.makeImmutable();
+        Requirement.UNKNOWN = findOrCreate( Requirement.class, Requirement.UnknownName, null );
         for ( TransmissionMedium medium : media ) {
             add( medium );
             medium.makeImmutable();

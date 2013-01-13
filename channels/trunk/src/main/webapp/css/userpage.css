@@ -1878,6 +1878,24 @@ div.issues h4 {
     text-transform: uppercase;
 }
 
+div.issues li {
+    font-size: 11px;
+    font-family: Lucida Console, monospace;
+}
+
+div.issues div.section-title ul.menu li a {
+    background: none repeat scroll 0 0 darkRed;
+    color: white;
+    padding: 2px 5px;
+    text-transform: uppercase;
+}
+
+ul.menu {
+    font-weight: normal;
+    list-style: none;
+    white-space: nowrap;
+}
+
 table.issue-details {
     margin: 10px 0 0 0;
 }
@@ -1889,3 +1907,111 @@ table.issue-details td {
 .issues li {
     list-style: none;
 }
+
+div.picture {
+    background: white;
+    overflow: auto;
+}
+
+div.picture img {
+    border: none;
+}
+
+a.button,
+input[type='button'] {
+    background: #e8e8e8;
+    border: 1px solid #A7A9AC;
+    color: #666666;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin: 0 0 0 5px;
+    float: right;
+    text-transform: uppercase;
+    font-family: arial;
+    line-height: 100%;
+}
+
+
+input[type='text'] {
+    width: 97%;
+}
+
+/* requirements */
+
+.req {
+    clear: both;
+}
+
+.req-section {
+    width: 70%;
+}
+
+.req-sections {
+    position: relative;
+    margin-top: 10px;
+}
+
+.req-section-headers {
+    float: left;
+    width: 15em;
+}
+
+.req-section-headers ul {
+    list-style: none;
+}
+
+.req-section-headers li {
+    width: auto;
+    cursor: pointer;
+    padding: 1px 16px 1px 5px;
+    border: 1px solid transparent;
+    color: #333333;
+}
+
+.req-section-headers li:hover, .req-section-headers li.selected {
+    background: url("../images/button-bg.png") repeat-x scroll 0 0 transparent;
+    border: 1px solid #C7C8CA;
+    color: #000000;
+}
+
+.req-section {
+    float: right;  /* was left */
+    margin-top: 10px;
+   /* padding: 5px 10px;*/
+}
+
+.req-defs .button {
+    clear: both;
+}
+
+.req h3 {
+    border-bottom: 2px solid #CCCCCC;
+    text-transform: uppercase;
+}
+
+.req .edited-by {
+    float: right;
+}
+
+.req table {
+    width: 65%;
+}
+
+.req-sections {
+    border-top: 2px solid #CCCCCC;
+    margin-top: 15px;
+}
+
+.req-section-headers {
+    border-right: 1px solid #cccccc;
+    padding: 10px;
+}
+
+.req-section-headers ul {
+    margin: 0;
+    padding: 0;
+}
+
+

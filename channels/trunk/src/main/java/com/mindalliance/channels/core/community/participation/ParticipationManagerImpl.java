@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Job;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
@@ -43,8 +44,19 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Autowired
     private PlanManager planManager;
 
+    @Autowired
+    private ParticipationAnalyst participationAnalyst;
+
 
     public ParticipationManagerImpl() {
+    }
+
+    public ParticipationAnalyst getParticipationAnalyst() {
+        return participationAnalyst;
+    }
+
+    public void setParticipationAnalyst( ParticipationAnalyst participationAnalyst ) {
+        this.participationAnalyst = participationAnalyst;
     }
 
     @Override
@@ -137,6 +149,19 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 agents.addAll( agency.getAgents( planCommunity ) );
         }
         return new ArrayList<Agent>( agents );
+    }
+
+    @Override
+    public Agent findAgentNamed( final String name, PlanCommunity planCommunity ) {
+        return (Agent)CollectionUtils.find(
+                getAllKnownAgents( planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Agent)object).getName().equals( name );
+                    }
+                }
+        );
     }
 
     @Override
@@ -275,7 +300,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     public List<CommunityEmployment> findAllEmploymentsForAgent( Agent agent, PlanCommunity planCommunity ) {
         PlanService planService = planCommunity.getPlanService();
         List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
-        Organization agencyPlaceholder = agent.isRegistered()
+        Organization agencyPlaceholder = agent.isFromOrganizationParticipation()
                 ? agent.getOrganizationParticipation().getPlaceholderOrganization( planCommunity )
                 : null;
         for ( Employment employment : planService.findAllEmploymentsForActor( agent.getActor() ) ) {
@@ -454,5 +479,21 @@ public class ParticipationManagerImpl implements ParticipationManager {
         return registeredOrganizationService.findAncestors(
                 registeredOrganization.getName( planCommunity ),
                 planCommunity );
+    }
+
+    @Override
+    public Agency findAgencyById( long id, PlanCommunity planCommunity ) throws NotFoundException {
+        Agency agency = null;
+        if ( id > 0 ) {
+            Organization org = planCommunity.getPlanService().find( Organization.class, id );
+            agency = new Agency( org );
+        } else {
+            OrganizationParticipation orgParticipation = organizationParticipationService.load( id * -1 );
+            if ( orgParticipation != null ) {
+                agency = new Agency( orgParticipation, planCommunity );
+            }
+        }
+        if ( agency == null ) throw new NotFoundException();
+        return agency;
     }
 }

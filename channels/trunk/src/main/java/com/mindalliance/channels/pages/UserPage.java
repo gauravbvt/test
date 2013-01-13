@@ -9,9 +9,9 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
-import com.mindalliance.channels.core.community.participation.issues.ParticipationAnalyst;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.QueryService;
@@ -63,7 +63,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean(name="surveysDao")
+    @SpringBean(name = "surveysDao")
     private SurveysDAO surveysDAO;
 
     @SpringBean
@@ -115,7 +115,6 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
 
-
     private void addPlanName() {
         getContainer().add( new Label( "planName", getPlan().getName() ) );
     }
@@ -150,7 +149,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         referencesContainer.setVisible( !references.isEmpty() );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Attachment> getReferences() {
         return (List<Attachment>) CollectionUtils.select(
                 getPlan().getAttachments(),
@@ -168,12 +167,14 @@ public class UserPage extends AbstractChannelsBasicPage {
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
+        boolean communityLeader = planCommunity.isCommunityLeader( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
+
         // Protocols link
         BookmarkablePageLink<? extends WebPage> gotoProtocolsLink =
-                getProtocolsLink( "gotoProtocols", getQueryService(), getPlanCommunity(), user, true );
+                getProtocolsLink( "gotoProtocols", getPlanCommunity(), user, true );
         addTipTitle( gotoProtocolsLink, new Model<String>( getGotoProtocolsDescription( user, plan ) ) );
         // info needs link
 /*
@@ -189,8 +190,9 @@ public class UserPage extends AbstractChannelsBasicPage {
                 getRFIsLink( "gotoRFIs", getPlan(), true );
         Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, planCommunity ) );
         addTipTitle( gotoRFIsLabel,
-                new Model<String>( getGotoRFIsDescription( user, planCommunity ) ));
+                new Model<String>( getGotoRFIsDescription( user, planCommunity ) ) );
         gotoRFIsLink.add( gotoRFIsLabel );
+
         // Feedback
         BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
                 getFeedbackLink( "gotoFeedback", getPlan(), true );
@@ -199,17 +201,20 @@ public class UserPage extends AbstractChannelsBasicPage {
                 gotoFeedbackLabel,
                 new Model<String>( getGotoFeedbackDescription( user, planCommunity ) )
         );
-
         gotoFeedbackLink.add( gotoFeedbackLabel );
-        // plan editor link
+
+        // Model editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
         addTipTitle( gotoModelLink,
                 new Model<String>( getGotoModelDescription( user, plan ) )
         );
+
+        // Settings
         BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan );
         addTipTitle(
                 gotoAdminLink,
                 "Configure Channels, add users, change access privileges, and create, configure, release, or delete plans" );
+
         BookmarkablePageLink participationManagerLink = newTargetedLink(
                 "gotoParticipationManager",
                 "",
@@ -225,6 +230,7 @@ public class UserPage extends AbstractChannelsBasicPage {
                         + toConfirmCount + " to confirm, "
                         + issueCount + ( issueCount > 1 ? " issues" : " issue" )
                         + ")" );
+
         BookmarkablePageLink gotoIssuesLink = newTargetedLink(
                 "gotoIssues",
                 "",
@@ -235,6 +241,16 @@ public class UserPage extends AbstractChannelsBasicPage {
         addTipTitle(
                 gotoIssuesLink,
                 "View a summary of all issues automatically found by Channels or reported by planners" );
+
+        BookmarkablePageLink gotoRequirementsLink = getRequirementsLink(
+                "gotoRequirements",
+                getPlanCommunity(),
+                true );
+        addTipTitle(
+                gotoRequirementsLink,
+                "View the collaboration requirements" );
+
+
         // gotos
         gotoIconsContainer.add(
                 // Goto admin
@@ -279,8 +295,15 @@ public class UserPage extends AbstractChannelsBasicPage {
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( gotoIssuesLink )
-                        .setVisible( planner || plan.isTemplate() ) )
-                .setOutputMarkupId( true );
+                        .setVisible( planner || plan.isTemplate() )
+                        .setOutputMarkupId( true ),
+
+                // Goto requirements
+                new WebMarkupContainer( "requirements" )
+                        .add( gotoRequirementsLink )
+                        .setVisible( communityLeader )
+                        .setOutputMarkupId( true )
+        );
 
     }
 
@@ -289,6 +312,7 @@ public class UserPage extends AbstractChannelsBasicPage {
                 ? "Set how users participate in the plan and view their collaboration protocols."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
+
 
     private String getRFIsLabel( ChannelsUser user, PlanCommunity planCommunity ) {
         StringBuilder sb = new StringBuilder();

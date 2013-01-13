@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table summary="Required who">
+        <tr>
+            <th align="right">
+                <label for="agent">Any agent:</label>
+            </th>
+            <td><input type="text" id="agent" wicket:id="agent"/></td>
+        </tr>
+        <tr>
+            <th align="right">
+                <label for="jurisdiction">With jurisdiction:</label>
+            </th>
+            <td><span id="jurisdiction" wicket:id="jurisdiction">[entity reference panel]</span></td>
+        </tr>
+        <tr>
+            <th align="right">
+                <label for="agency">Working for an organization:</label>
+            </th>
+            <td><input type="text" id="agency" wicket:id="agency"/></td>
+        </tr>
+         <tr>
+            <th align="right">
+                <label for="placeholder">Participating as:</label>
+            </th>
+            <td><input type="text" id="placeholder" wicket:id="placeholder"/></td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

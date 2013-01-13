@@ -54,6 +54,9 @@ public class CommandConverter extends AbstractChannelsConverter {
         writer.startNode( "memorable" );
         writer.setValue( "" + command.isMemorable() );
         writer.endNode();
+        writer.startNode( "undoable" );
+        writer.setValue( "" + command.isUndoable() );
+        writer.endNode();
         writer.startNode( "arguments" );
         context.convertAnother( command.getArguments() );
         writer.endNode();
@@ -100,8 +103,9 @@ public class CommandConverter extends AbstractChannelsConverter {
                 command.setUserName( reader.getValue() );
             } else if ( nodeName.equals( "memorable" ) ) {
                 command.setMemorable( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "undoable" ) ) {
+                command.makeUndoable( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "arguments" ) ) {
-                // command.setArguments( (Map) fromJSON( reader.getValue() ) );
                 Map arguments = (Map)context.convertAnother( command, HashMap.class );
                 command.setArguments( arguments );
             } else if ( nodeName.equals( "multi" ) ) {

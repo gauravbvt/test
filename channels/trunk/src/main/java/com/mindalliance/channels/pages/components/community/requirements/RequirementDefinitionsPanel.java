@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.AddRequirement;
@@ -42,12 +42,12 @@ import java.util.Set;
  * Date: 9/29/11
  * Time: 2:13 PM
  */
-public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel implements Filterable {
+public class RequirementDefinitionsPanel extends AbstractCommandablePanel implements Filterable {
 
     /**
      * The logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( PlanRequirementDefinitionsPanel.class );
+    private static final Logger LOG = LoggerFactory.getLogger( RequirementDefinitionsPanel.class );
 
     private Requirement selectedRequirement;
 
@@ -62,13 +62,18 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
     private AjaxLink<String> newButton;
 
 
-    public PlanRequirementDefinitionsPanel(
+    public RequirementDefinitionsPanel( String id, Set<Long> expansions ) {
+        this( id, new Model<Requirement>(Requirement.UNKNOWN), expansions );
+    }
+
+
+    public RequirementDefinitionsPanel(
             String id,
             Model<Requirement> requirementModel,
             Set<Long> expansions
     ) {
         super( id, requirementModel, expansions );
-        init(  );
+        init();
     }
 
     private void init(  ) {
@@ -108,7 +113,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new AddRequirement( getUsername() ) );
-                selectedRequirement = (Requirement) change.getSubject( getQueryService() );
+                setSelectedRequirement( (Requirement) change.getSubject( getQueryService() ) );
                 updateComponents( target );
                 addRequirementsTable();
                 target.add( requirementsTable );
@@ -122,7 +127,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new RemoveRequirement(
                         getUsername(),
-                        selectedRequirement ) );
+                        getSelectedRequirement() ) );
                 addRequirementsTable();
                 target.add( requirementsTable );
                 updateComponents( target );
@@ -130,7 +135,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             }
         };
         // newButton.setEnabled( this.isLockedByUser( getPlan() ) );
-        makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
+        makeVisible( removeButton, selectedRequirement != null/* && isLockedByUser( selectedRequirement )*/ ); // todo re-activate lock check when community objects can be locked
         add( removeButton );
     }
 
@@ -138,7 +143,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         addRequirementsTable();
         addRequirementEditPanel();
         target.add( requirementEditPanel );
-        makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
+        makeVisible( removeButton, selectedRequirement != null /*&& isLockedByUser( selectedRequirement )*/ ); // todo re-activate lock check when community objects can be locked
         // makeVisible( newButton, isLockedByUser( getPlan() ) );
         target.add( newButton );
         target.add( removeButton );
@@ -154,7 +159,8 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !isFilteredOut( (Requirement) object );
+                        Requirement requirement = (Requirement)object;
+                        return !requirement.isUnknown() && !isFilteredOut( requirement );
                     }
                 }
         );
@@ -197,7 +203,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         if ( change.isForInstanceOf( RequirementWrapper.class ) && change.isExpanded() ) {
             RequirementWrapper wrapper = (RequirementWrapper)change.getSubject( getQueryService() );
             Requirement requirement = wrapper.getRequirement();
-            if ( selectedRequirement != null && requirement.equals( selectedRequirement )) {
+            if ( getSelectedRequirement() != null && requirement.equals( getSelectedRequirement() )) {
                 setSelectedRequirement( null );
             } else {
                 if (!isLockedByOtherUser( requirement ))
@@ -209,30 +215,35 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             if ( change.isAdded() ) {
                 setSelectedRequirement( requirement );
             } else if ( change.isRemoved() ) {
-                releaseAnyLockOn( selectedRequirement );
+                unlockRequirement();
                 selectedRequirement = null;
             }
         }
         super.changed( change );
     }
 
-    private void setSelectedRequirement( Requirement requirement ) {
+    public Requirement getSelectedRequirement() {
+        return selectedRequirement;
+    }
+
+
+    public void setSelectedRequirement( Requirement requirement ) {
         unlockRequirement();
-        selectedRequirement = requirement == null || requirement.isUnknown()
+        selectedRequirement = ( requirement == null || requirement.isUnknown() )
                 ? null
                 : requirement;
         lockRequirement();
     }
 
     private void unlockRequirement() {
-        if ( selectedRequirement != null ) {
-            releaseAnyLockOn( selectedRequirement );
+        if ( getSelectedRequirement() != null ) {
+            releaseAnyLockOn( getSelectedRequirement() );
         }
     }
 
     private void lockRequirement() {
-        if ( selectedRequirement != null ) {
-            requestLockOn( selectedRequirement );
+        if ( getSelectedRequirement() != null ) {
+            requestLockOn( getSelectedRequirement() );
         }
     }
 
@@ -243,6 +254,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
             updateComponents( target );
         } else if ( change.isForInstanceOf( Requirement.class ) ) {
             if ( change.isAdded() ||  change.isRemoved() ) {
+                addRequirementsTable();
                 updateComponents( target );
             } else if ( change.isUpdated() ) {
                 target.add( requirementsTable );
@@ -259,6 +271,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         private Requirement requirement;
 
         public RequirementWrapper( Requirement requirement ) {
+            requirement.initialize( getPlanCommunity() );
             this.requirement = requirement;
         }
 
@@ -312,7 +325,7 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         }
 
         public String getExpandLabel() {
-            return selectedRequirement != null && selectedRequirement.equals( requirement )
+            return getSelectedRequirement() != null && getSelectedRequirement().equals( requirement )
                     ? "Close"
                     : isLockedByOtherUser( requirement )
                     ? ( getUserFullName( getLockOwner( requirement ) ) + " editing" )
@@ -345,27 +358,36 @@ public class PlanRequirementDefinitionsPanel extends AbstractCommandablePanel im
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Name", "name", EMPTY ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeFilterableColumn(
                     "Organization(s)",
-                    "committerSpec.organization",
-                    "committerSpec.organization.name",
+                    "committerSpec.agency",
+                    "committerSpec.agency.name",
                     EMPTY,
+                    "committerSpec.agency.description",
                     filterable ) );
             columns.add( makeColumn( "Shall share info", "informationAndEois", EMPTY ) );
             columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeFilterableColumn(
                     "With organization(s)",
-                    "beneficiarySpec.organization",
-                    "beneficiarySpec.organization.name",
+                    "beneficiarySpec.agency",
+                    "beneficiarySpec.agency.name",
                     EMPTY,
+                    "beneficiarySpec.agency.description",
                     filterable ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeFilterableColumn(
                     "In event",
                     "beneficiarySpec.event",
                     "beneficiarySpec.event.name",
                     EMPTY,
+                    "beneficiarySpec.event.description",
                     filterable ) );
-            columns.add( makeAnalysisColumn( "Issues", "requirement", "unwaivedIssuesCount", "?" ) );
+/*
+            columns.add( makeAnalystColumn(
+                    "Issues",
+                    "requirement",
+                    "unwaivedIssuesCount",
+                    "?" ) );
+*/
             columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             List<RequirementWrapper> requirements = requirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",

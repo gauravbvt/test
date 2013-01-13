@@ -153,6 +153,13 @@ public interface Command extends JournalCommand {
     boolean isUndoable();
 
     /**
+     * Set the command's undoability.
+     * Effective only if property is read/write (MultiCommands only)
+     * @param val a boolean
+     */
+    void makeUndoable( boolean val );
+
+    /**
      * Whether no lock is required by the nature of the command.
      *
      * @return a boolean

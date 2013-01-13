@@ -6,11 +6,11 @@
 
 package com.mindalliance.channels.graph;
 
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -197,7 +197,7 @@ public interface DiagramFactory<Vertex, Edge> {
       *
       * @param timing a phase timing or null for all
       * @param event an event or null for any event
-      * @param selectedOrganization an organization
+      * @param selectedAgency an organization
       * @param selectedRequirementRel a requirement relationship
       * @param diagramSize an array of doubles
       * @param orientation a string
@@ -206,7 +206,7 @@ public interface DiagramFactory<Vertex, Edge> {
     Diagram newRequiredNetworkingDiagram(
             Phase.Timing timing,
             Event event,
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequirementRel,
             double[] diagramSize,
             String orientation );

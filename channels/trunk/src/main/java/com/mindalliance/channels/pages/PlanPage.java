@@ -43,7 +43,6 @@ import com.mindalliance.channels.pages.components.plan.floating.PlanClassificati
 import com.mindalliance.channels.pages.components.plan.floating.PlanEvaluationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEventsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanOrganizationsPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanRequirementsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanVersionsFloatingPanel;
@@ -159,10 +158,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     @SpringBean
     private MailSender mailSender;
-    /**
-     * Id of components that are expanded.
-     */
-    private Set<Long> expansions = new HashSet<Long>();
 
     /**
      * Aspects shown.
@@ -301,7 +296,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * All requirements panel.
      */
-    private Component planRequirementsPanel;
+    // private Component planRequirementsPanel;
     private Component allEventsPanel;
     private Component allOrganizationsPanel;
     private Component allSegmentsPanel;
@@ -443,9 +438,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
         commander.releaseAllLocks( getUser().getUsername() );
         setSegment( sc );
         setPart( p );
-        expansions = expanded;
-        expansions.add( Channels.ALL_SEGMENTS );
-        for ( Long id : expansions ) {
+        setExpansions( expanded );
+        addExpansion( Channels.ALL_SEGMENTS );
+        for ( Long id : getExpansions() ) {
             commander.requestLockOn( getUser().getUsername(), id );
         }
         setVersioned( false );
@@ -521,7 +516,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanEditPanel( null );
         addFlowLegendPanel();
         // scoping
-        addRequirementsPanel();
+        // addRequirementsPanel();
         addAllEventsPanel();
         addAllOrganizationsPanel( null );
         addAllSegmentsPanel();
@@ -857,7 +852,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllFeedbackPanel( Feedback feedback ) {
-        if ( !expansions.contains( Feedback.UNKNOWN.getId() ) ) {
+        if ( !getExpansions().contains( Feedback.UNKNOWN.getId() ) ) {
             allFeedbackPanel = new Label( "feedbacks", "" );
             allFeedbackPanel.setOutputMarkupId( true );
             makeVisible( allFeedbackPanel, false );
@@ -874,7 +869,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addDataCollectionPanel( RFISurvey rfiSurvey, Change change ) {
-        if ( !expansions.contains( RFISurvey.UNKNOWN.getId() ) ) {
+        if ( !getExpansions().contains( RFISurvey.UNKNOWN.getId() ) ) {
             allSurveyPanel = new Label( "dataCollection", "" );
             allSurveyPanel.setOutputMarkupId( true );
             makeVisible( allSurveyPanel, false );
@@ -892,11 +887,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( allSurveyPanel );
     }
 
+/*
     private void addRequirementsPanel() {
         addRequirementsPanel( null, null );
     }
+*/
 
-    private void addRequirementsPanel( Requirement requirement, Change change ) {
+/*    private void addRequirementsPanel( Requirement requirement, Change change ) {
         if ( !expansions.contains( Requirement.UNKNOWN.getId() ) ) {
             planRequirementsPanel = new Label( "requirements", "" );
             planRequirementsPanel.setOutputMarkupId( true );
@@ -916,10 +913,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         }
         form.addOrReplace( planRequirementsPanel );
-    }
+    }*/
 
     private void addAllEventsPanel() {
-        if ( !expansions.contains( Channels.ALL_EVENTS ) ) {
+        if ( !getExpansions().contains( Channels.ALL_EVENTS ) ) {
             allEventsPanel = new Label( "allEvents", "" );
             allEventsPanel.setOutputMarkupId( true );
             makeVisible( allEventsPanel, false );
@@ -932,7 +929,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllOrganizationsPanel( Change change ) {
-        if ( !expansions.contains( Channels.ALL_ORGANIZATIONS ) ) {
+        if ( !getExpansions().contains( Channels.ALL_ORGANIZATIONS ) ) {
             allOrganizationsPanel = new Label( "allOrganizations", "" );
             allOrganizationsPanel.setOutputMarkupId( true );
             makeVisible( allOrganizationsPanel, false );
@@ -950,7 +947,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllSegmentsPanel() {
-        if ( !expansions.contains( Channels.ALL_SEGMENTS ) ) {
+        if ( !getExpansions().contains( Channels.ALL_SEGMENTS ) ) {
             allSegmentsPanel = new Label( "allSegments", "" );
             allSegmentsPanel.setOutputMarkupId( true );
             makeVisible( allSegmentsPanel, false );
@@ -963,7 +960,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllClassificationsPanel() {
-        if ( !expansions.contains( Channels.ALL_CLASSIFICATIONS ) ) {
+        if ( !getExpansions().contains( Channels.ALL_CLASSIFICATIONS ) ) {
             allClassificationsPanel = new Label( "classifications", "" );
             allClassificationsPanel.setOutputMarkupId( true );
             makeVisible( allClassificationsPanel, false );
@@ -976,7 +973,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addTaskMoverPanel() {
-        if ( !expansions.contains( Channels.TASK_MOVER ) ) {
+        if ( !getExpansions().contains( Channels.TASK_MOVER ) ) {
             taskMoverPanel = new Label( "taskMover", "" );
             taskMoverPanel.setOutputMarkupId( true );
             makeVisible( taskMoverPanel, false );
@@ -989,7 +986,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addProtocolsMapPanel() {
-        if ( !expansions.contains( Channels.PROTOCOLS_MAP ) ) {
+        if ( !getExpansions().contains( Channels.PROTOCOLS_MAP ) ) {
             protocolsMapPanel = new Label( "protocolsMap", "" );
             protocolsMapPanel.setOutputMarkupId( true );
             makeVisible( protocolsMapPanel, false );
@@ -1002,7 +999,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addPlanEvaluationPanel() {
-        if ( !expansions.contains( Channels.PLAN_EVALUATION ) ) {
+        if ( !getExpansions().contains( Channels.PLAN_EVALUATION ) ) {
             planEvaluationPanel = new Label( "planEvaluation", "" );
             planEvaluationPanel.setOutputMarkupId( true );
             makeVisible( planEvaluationPanel, false );
@@ -1015,7 +1012,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllIssuesPanel() {
-        if ( !expansions.contains( Channels.ALL_ISSUES ) ) {
+        if ( !getExpansions().contains( Channels.ALL_ISSUES ) ) {
             allIssuesPanel = new Label( "allIssues", "" );
             allIssuesPanel.setOutputMarkupId( true );
             makeVisible( allIssuesPanel, false );
@@ -1028,7 +1025,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addPlanVersionsPanel() {
-        if ( !expansions.contains( Channels.PLAN_VERSIONS ) ) {
+        if ( !getExpansions().contains( Channels.PLAN_VERSIONS ) ) {
             planVersionsPanel = new Label( "planVersions", "" );
             planVersionsPanel.setOutputMarkupId( true );
             makeVisible( planVersionsPanel, false );
@@ -1041,7 +1038,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addUserParticipationPanel() {
-        if ( !expansions.contains( Channels.PLAN_PARTICIPATION ) ) {
+        if ( !getExpansions().contains( Channels.PLAN_PARTICIPATION ) ) {
             userParticipationPanel = new Label( "userParticipation", "" );
             userParticipationPanel.setOutputMarkupId( true );
             makeVisible( userParticipationPanel, false );
@@ -1054,7 +1051,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addPlanSearchingPanel( String aspect ) {
-        if ( !expansions.contains( Channels.PLAN_SEARCHING ) ) {
+        if ( !getExpansions().contains( Channels.PLAN_SEARCHING ) ) {
             planSearchingPanel = new Label( "planSearching", "" );
             planSearchingPanel.setOutputMarkupId( true );
             makeVisible( planSearchingPanel, false );
@@ -1197,7 +1194,7 @@ PopupSettings.RESIZABLE |
                 reasons = " -- Plan was modified by " + lastModifier;
 
             // Find expansions that were locked and are now unlocked
-            for ( ModelObject mo : getEditableModelObjects( expansions ) ) {
+            for ( ModelObject mo : getEditableModelObjects( getExpansions() ) ) {
                 if ( !getCommander().isLockedByUser( getUser().getUsername(), mo ) ) {
                     String aspect = getAspectShown( mo );
                     if ( aspect == null || aspectRequiresLock( mo, aspect ) )
@@ -1346,7 +1343,7 @@ PopupSettings.RESIZABLE |
      * Add segment-related components.
      */
     private void addSegmentEditPanel() {
-        boolean showSegmentEdit = expansions.contains( getSegment().getId() );
+        boolean showSegmentEdit = getExpansions().contains( getSegment().getId() );
         if ( showSegmentEdit ) {
             segmentEditPanel = new SegmentEditPanel( "sg-editor",
                     // NON-NLS
@@ -1374,7 +1371,7 @@ PopupSettings.RESIZABLE |
 
     private void addPlanEditPanel( Change change ) {
         Plan plan = getPlan();
-        boolean showPlanEdit = expansions.contains( plan.getId() );
+        boolean showPlanEdit = getExpansions().contains( plan.getId() );
         if ( showPlanEdit ) {
             planEditPanel = new PlanEditPanel( "plan",
                     new Model<Plan>( plan ),
@@ -1390,7 +1387,7 @@ PopupSettings.RESIZABLE |
     }
 
     private ModelEntity findExpandedEntity() {
-        for ( long id : expansions ) {
+        for ( long id : getExpansions() ) {
             try {
                 ModelObject mo = getQueryService().find( ModelObject.class, id );
                 if ( mo.isEntity() )
@@ -1406,7 +1403,7 @@ PopupSettings.RESIZABLE |
         Class clazz = subject instanceof ModelEntity
                 ? ModelEntity.class
                 : subject.getClass();
-        for ( long id : expansions ) {
+        for ( long id : getExpansions() ) {
             try {
                 ModelObject mo = getQueryService().find( ModelObject.class, id );
                 if ( clazz.isAssignableFrom( mo.getClass() ) )
@@ -1698,7 +1695,7 @@ PopupSettings.RESIZABLE |
     private void reacquireLocks() {
         // Part is always "expanded"
         getCommander().requestLockOn( getUser().getUsername(), getPart() );
-        for ( Long id : expansions ) {
+        for ( Long id : getExpansions() ) {
             if ( id >= 0 ) {
                 try {
                     ModelObject expanded = getQueryService().find( ModelObject.class, id );
@@ -1731,7 +1728,7 @@ PopupSettings.RESIZABLE |
                 collapse( new Change( Change.Type.None, previous ) );
             }
         }
-        expansions.add( change.getId() );
+        addExpansion( change.getId() );
     }
 
     private boolean isSingleExpansion( Change change ) {
@@ -1753,7 +1750,7 @@ PopupSettings.RESIZABLE |
 
     private void expandOtherSegmentIfNeeded( Segment toExpand ) {
         Segment expanded = null;
-        Iterator<Long> iter = expansions.iterator();
+        Iterator<Long> iter = getExpansions().iterator();
         Long id = null;
         while ( expanded == null && iter.hasNext() ) {
             try {
@@ -1771,7 +1768,7 @@ PopupSettings.RESIZABLE |
     }
 
     private boolean isExpanded( long id ) {
-        return expansions.contains( id );
+        return getExpansions().contains( id );
     }
 
     private void collapse( Identifiable identifiable ) {
@@ -1781,7 +1778,7 @@ PopupSettings.RESIZABLE |
 
     private void collapse( Change change ) {
         tryReleasingLock( change );
-        expansions.remove( change.getId() );
+        removeExpansion( change.getId() );
         // Close aspects of collapsed object
         if ( change.isForInstanceOf( Flow.class ) ) {
             closeAspect( change, ExpandedFlowPanel.EOIS );
@@ -1892,7 +1889,7 @@ PopupSettings.RESIZABLE |
 
     private void collapseSegmentObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
-        for ( long id : expansions ) {
+        for ( long id : getExpansions() ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( expanded instanceof SegmentObject ) {
@@ -1913,7 +1910,7 @@ PopupSettings.RESIZABLE |
         Flow flowToExpand = (Flow) change.getSubject( getQueryService() );
         // collapse other flows
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
-        for ( long id : expansions ) {
+        for ( long id : getExpansions() ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( expanded instanceof Flow ) {
@@ -1931,7 +1928,7 @@ PopupSettings.RESIZABLE |
 
     private void collapsePartObjects() {
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
-        for ( long id : expansions ) {
+        for ( long id : getExpansions() ) {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( expanded instanceof Flow ) {
@@ -2207,9 +2204,9 @@ PopupSettings.RESIZABLE |
             refreshSegmentPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Feedback.class ) ) {
             refreshAllFeedbackPanel( target, change, updated );
-        } else if ( change.isForInstanceOf( Requirement.class ) ) {
+        } /*else if ( change.isForInstanceOf( Requirement.class ) ) {
             refreshRequirementsPanel( target, change, updated );
-        }
+        }*/
         refreshHeadersMenusAndNavigation( target, change, updated );
     }
 
@@ -2346,7 +2343,7 @@ PopupSettings.RESIZABLE |
         refreshDisseminationPanel( target, change, updated );
         refreshModelObjectSurveysPanel( target, change, updated );
         refreshOverridesPanel( target, change, updated );
-        refreshRequirementsPanel( target, change, updated );
+        // refreshRequirementsPanel( target, change, updated );
         refreshAllEventsPanel( target, change, updated );
         refreshAllOrganizationsPanel( target, change, updated );
         refreshAllSegmentsPanel( target, change, updated );
@@ -2527,6 +2524,7 @@ PopupSettings.RESIZABLE |
         }
     }
 
+/*
     private void refreshRequirementsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getQueryService() );
@@ -2553,6 +2551,7 @@ PopupSettings.RESIZABLE |
                     getAspectShown( Requirement.UNKNOWN ) );
         }
     }
+*/
 
     private void refreshAllEventsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
@@ -2754,14 +2753,6 @@ PopupSettings.RESIZABLE |
         updateWith( target, change, new ArrayList<Updatable>() );
     }
 
-    /**
-     * Get read-only expansions.
-     *
-     * @return a read-only set of Longs
-     */
-    private Set<Long> getReadOnlyExpansions() {
-        return Collections.unmodifiableSet( expansions );
-    }
 
     /**
      * Get read-only aspects.

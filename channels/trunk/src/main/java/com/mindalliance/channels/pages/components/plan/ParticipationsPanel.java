@@ -375,7 +375,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         ParticipationWrapper pw = getParticipation();
         String channelsString = ( pw == null || pw.getAgent() == null )
                 ? "None"
-                : pw.getAgent().isRegistered()
+                : pw.getAgent().isFromOrganizationParticipation()
                     ? "TBD"    // todo - registered agents have their own contact info?
                     : pw.getAgent().getActor().getChannelsString();
         Label label = new Label( "agentChannels", channelsString );

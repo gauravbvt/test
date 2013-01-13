@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import org.jgrapht.Graph;
 
 import java.io.OutputStream;
@@ -37,14 +37,14 @@ public interface GraphRenderer<V, E> {
     void resetHighlight();
 
     /**
-     * @param queryService
+     * @param planCommunity a plan community
      * @param graph       -- a Graph
      * @param dotExporter -- a DOT generator
      * @param format      -- an output format (png, svg, imap etc.)
      * @param ticket      -- a globally unique, use-once string
      * @param output      -- the rendered graph  @throws DiagramException -- if generation fails
      */
-    void render( QueryService queryService, Graph<V, E> graph, StyledDOTExporter<V, E> dotExporter, String format,
+    void render( PlanCommunity planCommunity, Graph<V, E> graph, StyledDOTExporter<V, E> dotExporter, String format,
                  String ticket, OutputStream output ) throws DiagramException;
 
     /**

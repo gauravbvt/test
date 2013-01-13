@@ -7,8 +7,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
-import com.mindalliance.channels.core.model.ResourceSpec;
-import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -150,27 +148,17 @@ public class RequirementConverter extends AbstractChannelsConverter {
             writer.setValue( timing.name() );
             writer.endNode();
         }
-        // resourceSpec
-        ResourceSpec spec = assignmentSpec.getResourceSpec();
-        if ( spec.getRole() != null ) {
-            writer.startNode( "role" );
-            writer.addAttribute( "id", Long.toString( spec.getRole().getId() ) );
-            writer.addAttribute( "kind", "Type" );
-            writer.setValue( spec.getRole().getName() );
-            writer.endNode();
-        }
+        // agent spec
+        Requirement.AgentSpec spec = assignmentSpec.getAgentSpec();
         if ( spec.getActor() != null ) {
             writer.startNode( "actor" );
             writer.addAttribute( "id", Long.toString( spec.getActor().getId() ) );
-            writer.addAttribute( "kind", spec.getActor().isType() ? "Type" : "Actual" );
             writer.setValue( spec.getActor().getName() );
             writer.endNode();
         }
-        if ( spec.getOrganization() != null ) {
-            writer.startNode( "organization" );
-            writer.addAttribute( "id", Long.toString( spec.getOrganization().getId() ) );
-            writer.addAttribute( "kind", spec.getOrganization().isType() ? "Type" : "Actual" );
-            writer.setValue( spec.getOrganization().getName() );
+        if ( spec.getOrgParticipationId() != null ) {
+            writer.startNode( "orgParticipation" );
+            writer.addAttribute( "id", Long.toString( spec.getOrgParticipationId() ) );
             writer.endNode();
         }
         if ( spec.getJurisdiction() != null ) {
@@ -178,6 +166,18 @@ public class RequirementConverter extends AbstractChannelsConverter {
             writer.addAttribute( "id", Long.toString( spec.getJurisdiction().getId() ) );
             writer.addAttribute( "kind", spec.getJurisdiction().isType() ? "Type" : "Actual" );
             writer.setValue( spec.getJurisdiction().getName() );
+            writer.endNode();
+        }
+        if ( spec.getFixedOrgId() != null ) {
+            writer.startNode( "fixedOrg" );
+            writer.addAttribute( "id", Long.toString( spec.getFixedOrgId() ) );
+            writer.endNode();
+        }
+        if ( spec.getPlaceholder() != null ) {
+            writer.startNode( "placeholder" );
+            writer.addAttribute( "id", Long.toString( spec.getPlaceholder().getId() ) );
+            writer.addAttribute( "kind", spec.getPlaceholder().isType() ? "Type" : "Actual" );
+            writer.setValue( spec.getPlaceholder().getName() );
             writer.endNode();
         }
     }
@@ -200,7 +200,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
                 requirement.setInformation( reader.getValue() );
             } else if ( "infoTags".equals( nodeName ) ) {
                 requirement.addInfoTags( reader.getValue() );
-            } else if ( nodeName.equals(  "eoi" )) {
+            } else if ( nodeName.equals( "eoi" ) ) {
                 requirement.addEoi( reader.getValue() );
             } else if ( "minCount".equals( nodeName ) ) {
                 requirement.getCardinality().setMinCount( Integer.parseInt( reader.getValue() ) );
@@ -231,8 +231,8 @@ public class RequirementConverter extends AbstractChannelsConverter {
     private Requirement.AssignmentSpec readAssignmentSpec(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
-        Requirement.AssignmentSpec assignmentSpec = new Requirement.AssignmentSpec();
-        ResourceSpec resourceSpec = assignmentSpec.getResourceSpec();
+        Requirement.AssignmentSpec assignmentSpec = new Requirement().makeNewAssignmentSpec();
+        Requirement.AgentSpec agentSpec = assignmentSpec.getAgentSpec();
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -256,26 +256,24 @@ public class RequirementConverter extends AbstractChannelsConverter {
                         context ) );
             } else if ( nodeName.equals( "timing" ) ) {
                 assignmentSpec.setTiming( Phase.Timing.valueOf( reader.getValue() ) );
-            } else if ( nodeName.equals( "role" ) ) {
-                String idString = reader.getAttribute( "id" );
-                resourceSpec.setRole( getEntity(
-                        Role.class,
-                        reader.getValue(),
-                        Long.parseLong( idString ),
-                        ModelEntity.Kind.Type,
-                        context ) );
             } else if ( nodeName.equals( "actor" ) ) {
                 String idString = reader.getAttribute( "id" );
-                ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
-                resourceSpec.setActor( getEntity(
+                agentSpec.setActor( getEntity(
                         Actor.class,
                         reader.getValue(),
                         Long.parseLong( idString ),
-                        kind, context ) );
-            } else if ( nodeName.equals( "organization" ) ) {
+                        ModelEntity.Kind.Actual,
+                        context ) );
+            } else if ( nodeName.equals( "orgParticipation" ) ) {
+                String idString = reader.getAttribute( "id" );
+                agentSpec.setOrgParticipationId( Long.parseLong( idString ) );
+            } else if ( nodeName.equals( "fixedOrg" ) ) {
+                String idString = reader.getAttribute( "id" );
+                agentSpec.setFixedOrgId( Long.parseLong( idString ) );
+            } else if ( nodeName.equals( "placeholder" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
-                resourceSpec.setOrganization( getEntity(
+                agentSpec.setPlaceholder( getEntity(
                         Organization.class,
                         reader.getValue(),
                         Long.parseLong( idString ),
@@ -283,7 +281,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "jurisdiction" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
-                resourceSpec.setJurisdiction( getEntity(
+                agentSpec.setJurisdiction( getEntity(
                         Place.class,
                         reader.getValue(),
                         Long.parseLong( idString ),

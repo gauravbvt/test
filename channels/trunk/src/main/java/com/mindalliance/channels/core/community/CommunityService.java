@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -23,6 +24,8 @@ public interface CommunityService {
     UserParticipationService getUserParticipationService();
 
     UserParticipationConfirmationService getUserParticipationConfirmationService();
+
+    OrganizationParticipationService getOrganizationParticipationService();
 
     PlanService getPlanService();
 

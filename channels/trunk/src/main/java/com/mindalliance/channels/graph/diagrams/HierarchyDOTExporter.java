@@ -6,12 +6,12 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyRelationship;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.core.model.Hierarchical;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.jgrapht.DirectedGraph;
@@ -30,17 +30,17 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
     }
 
     @Override
-    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Hierarchical, HierarchyRelationship> g ) {
+    protected void exportVertices( PlanCommunity planCommunity, PrintWriter out, Graph<Hierarchical, HierarchyRelationship> g ) {
         DirectedGraph<Hierarchical, HierarchyRelationship> digraph =
                 (DirectedGraph<Hierarchical, HierarchyRelationship>) g;
         List<Hierarchical> roots = findRoots( digraph );
-        printoutRankedVertices( queryService, out, roots );
+        printoutRankedVertices( planCommunity, out, roots );
         List<Hierarchical> ranked = roots;
         List<Hierarchical> placed = new ArrayList<Hierarchical>( ranked );
         while ( !ranked.isEmpty() ) {
             ranked = findAllChildrenOf( ranked, digraph, placed );
             placed.addAll(  ranked );
-            printoutRankedVertices( queryService, out, ranked );
+            printoutRankedVertices( planCommunity, out, ranked );
         }
     }
 
@@ -74,7 +74,7 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
     }
 
 
-    private void printoutRankedVertices( QueryService queryService, PrintWriter out, List<Hierarchical> vertices ) {
+    private void printoutRankedVertices( PlanCommunity planCommunity, PrintWriter out, List<Hierarchical> vertices ) {
         if ( !vertices.isEmpty() ) {
             MetaProvider<Hierarchical, HierarchyRelationship> metaProvider = getMetaProvider();
             out.print( "{ rank=same; " );
@@ -86,7 +86,7 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
                     attributes.add( new DOTAttribute( "label", label ) );
                 }
                 if ( metaProvider.getDOTAttributeProvider() != null ) {
-                    attributes.addAll( metaProvider.getDOTAttributeProvider().getVertexAttributes( queryService,
+                    attributes.addAll( metaProvider.getDOTAttributeProvider().getVertexAttributes( planCommunity,
                                                                                                    v,
                             getHighlightedVertices().contains( v ) ) );
                 }

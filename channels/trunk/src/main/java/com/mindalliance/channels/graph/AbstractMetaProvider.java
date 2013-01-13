@@ -25,15 +25,15 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
     /**
      * Message format as URL template with {1} = graph id.
      */
-    protected static final String GRAPH_URL_FORMAT = "?graph={0,number,0}";
+    protected static final String GRAPH_URL_FORMAT = "?graph={0}";
     /**
      * Message format as URL template with {1} = graph id and {2} = vertex id.
      */
-    protected static final String VERTEX_URL_FORMAT = "?graph={0,number,0}&vertex={1,number,0}";
+    protected static final String VERTEX_URL_FORMAT = "?graph={0}&vertex={1}";
     /**
      * Message format as URL template with {1} = graph id and {2} = edge id.
      */
-    protected static final String EDGE_URL_FORMAT = "?graph={0,number,0}&edge={1,number,0}";
+    protected static final String EDGE_URL_FORMAT = "?graph={0}&edge={1}";
     /**
      * Color used to indicate issues.
      */

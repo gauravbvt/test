@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;

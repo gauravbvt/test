@@ -1,10 +1,9 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
@@ -34,9 +33,8 @@ public class EntitiesNetworkPng extends DiagramPng {
             double[] size,
             String orientation,
             PageParameters parameters,
-            PlanService planService,
-            DiagramFactory diagramFactory,
-            Analyst analyst ) throws DiagramException {
+            PlanCommunity planCommunity,
+            DiagramFactory diagramFactory) throws DiagramException {
         Class entityClass = null;
         Segment segment = null;
         EntityRelationship selectedEntityRel = null;
@@ -54,7 +52,7 @@ public class EntitiesNetworkPng extends DiagramPng {
                 && !parameters.get( "segment" ).toString().equals( "NONE" ) ) {
             long id = Long.parseLong( parameters.get( "segment" ).toString() );
             try {
-                segment = planService.find( Segment.class, id );
+                segment = planCommunity.getPlanService().find( Segment.class, id );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Segment not found", e );
             }
@@ -63,7 +61,7 @@ public class EntitiesNetworkPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.get( "connection" ).toString() );
             selectedEntityRel = new EntityRelationship();
-            selectedEntityRel.setId( scRelId, planService );
+            selectedEntityRel.setId( scRelId, planCommunity.getPlanService() );
         }
        DiagramFactory<ModelEntity, EntityRelationship> factory = diagramFactory;
         return factory.newEntitiesNetworkDiagram(

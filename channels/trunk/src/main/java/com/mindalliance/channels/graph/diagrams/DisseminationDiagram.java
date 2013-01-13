@@ -6,12 +6,12 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.DisseminationGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
@@ -44,11 +44,11 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String outputFormat, String ticket, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         DisseminationGraphBuilder graphBuilder = new DisseminationGraphBuilder( segmentObject, subject, showTargets,
-                                                                                queryService );
+                planCommunity.getPlanService() );
         Graph<Node, Dissemination> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Dissemination> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -58,12 +58,12 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
                                                                                 outputFormat,
                                                                                 diagramFactory.getImageDirectory(),
                                                                                 analyst,
-                                                                                queryService );
+                planCommunity.getPlanService() );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         DisseminationDOTExporter dotExporter = new DisseminationDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, ticket, outputFormat, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, ticket, outputFormat, outputStream );
     }
 }

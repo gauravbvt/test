@@ -1,11 +1,10 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -55,10 +54,9 @@ public class DisseminationPng extends DiagramPng {
             double[] size, 
             String orientation,
             PageParameters parameters,
-            PlanService planService,
-            DiagramFactory diagramFactory,
-            Analyst analyst ) throws DiagramException {
-        Segment segment = PlanPage.findSegment( planService, parameters );
+            PlanCommunity planCommunity,
+            DiagramFactory diagramFactory ) throws DiagramException {
+        Segment segment = PlanPage.findSegment( planCommunity.getPlanService(), parameters );
         SegmentObject segmentObject = null;
         if ( segment != null && parameters.getNamedKeys().contains( OBJECT ) ) {
             try {

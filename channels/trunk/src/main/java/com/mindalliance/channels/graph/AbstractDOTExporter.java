@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 
@@ -80,22 +80,22 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
     /**
      * Pre-processing before exporting.
      *
-     * @param queryService a query service
+     * @param planCommunity a plan community
      * @param g a graph
      */
-    protected void beforeExport( QueryService queryService, Graph<V, E> g ) {
+    protected void beforeExport( PlanCommunity planCommunity, Graph<V, E> g ) {
         // Default is do nothing.
     }
 
     /**
      * Writes a Graph in DOT format.
      *
-     * @param queryService a query service
+     * @param planCommunity plan community
      * @param writer -- where to export
      * @param g -- the graph being exported
      */
-    public void export( QueryService queryService, Writer writer, Graph<V, E> g ) throws InterruptedException {
-        beforeExport( queryService, g );
+    public void export( PlanCommunity planCommunity, Writer writer, Graph<V, E> g ) throws InterruptedException {
+        beforeExport( planCommunity, g );
         PrintWriter out = new PrintWriter( writer );
         // Graph declaration
         if ( g instanceof DirectedGraph )
@@ -105,10 +105,10 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
         if ( metaProvider.getDOTAttributeProvider() != null )
             out.print( asGraphAttributes( metaProvider.getDOTAttributeProvider().getGraphAttributes() ) );
         out.println();
-        exportVertices( queryService, out, g );
+        exportVertices( planCommunity, out, g );
 
         // Edges
-        exportEdges( queryService, out, g );
+        exportEdges( planCommunity, out, g );
         // Close graph
         out.println( "}" );
         out.flush();
@@ -117,12 +117,12 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
     /**
      * Export edges to DOT.
      *
-     * @param queryService a query service
+     * @param planCommunity a plan community
      * @param out a print writer
      * @param g a graph
      * @throws InterruptedException an interrupted exception
      */
-    protected void exportEdges( QueryService queryService, PrintWriter out, Graph<V, E> g ) throws InterruptedException {
+    protected void exportEdges( PlanCommunity planCommunity, PrintWriter out, Graph<V, E> g ) throws InterruptedException {
         MetaProvider<V, E> metaProvider = this.metaProvider;
         String arrow = getArrow( g );
         for ( E e : g.edgeSet() ) {
@@ -133,7 +133,7 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
                 attributes.add( new DOTAttribute( "label", label ) );
             }
             if ( metaProvider.getDOTAttributeProvider() != null ) {
-                attributes.addAll( metaProvider.getDOTAttributeProvider().getEdgeAttributes( queryService,
+                attributes.addAll( metaProvider.getDOTAttributeProvider().getEdgeAttributes( planCommunity,
                                                                                              e,
                                                                                              highlightedEdges.contains(
                                                                                                      e ) ) );
@@ -157,12 +157,12 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
     /**
      * Export vertices to DOT.
      *
-     * @param queryService a query service
+     * @param planCommunity a query service  plan community
      * @param out a print writer
      * @param g a graph
      */
-    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<V, E> g ) {
-        printoutVertices( queryService, out, g.vertexSet() );
+    protected void exportVertices( PlanCommunity planCommunity, PrintWriter out, Graph<V, E> g ) {
+        printoutVertices( planCommunity, out, g.vertexSet() );
     }
 
     protected String getArrow( Graph<V, E> g ) {
@@ -191,11 +191,11 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
     /**
      * Printout vertices.
      *
-     * @param queryService a query service
+     * @param planCommunity a plan community
      * @param out a print writer
      * @param vertices a set of vertices
      */
-    protected void printoutVertices( QueryService queryService, PrintWriter out, Set<V> vertices ) {
+    protected void printoutVertices( PlanCommunity planCommunity, PrintWriter out, Set<V> vertices ) {
         MetaProvider<V, E> metaProvider = this.metaProvider;
         // Vertices
         for ( V v : vertices ) {
@@ -205,7 +205,7 @@ public abstract class AbstractDOTExporter<V, E> implements StyledDOTExporter<V, 
                 attributes.add( new DOTAttribute( "label", label ) );
             }
             if ( metaProvider.getDOTAttributeProvider() != null ) {
-                attributes.addAll( metaProvider.getDOTAttributeProvider().getVertexAttributes( queryService,
+                attributes.addAll( metaProvider.getDOTAttributeProvider().getVertexAttributes( planCommunity,
                                                                                                v,
                                                                                                highlightedVertices.contains(
                                                                                                        v ) ) );

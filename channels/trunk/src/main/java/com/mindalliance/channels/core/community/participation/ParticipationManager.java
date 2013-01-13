@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.community.participation;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 
@@ -17,6 +18,12 @@ import java.util.List;
  * Time: 2:33 PM
  */
 public interface ParticipationManager {
+
+    /**
+     * Get participation analyst;
+     * @return a participation analyst
+     */
+    ParticipationAnalyst getParticipationAnalyst();
 
     /**
      * Get the list of all known agencies (all fixed and registered organizations).
@@ -47,6 +54,14 @@ public interface ParticipationManager {
      * @return a list of agents
      */
     List<Agent> getAllKnownAgents( PlanCommunity planCommunity );
+
+    /**
+     * Get agent given name.
+     * @param name a unique agent name
+     * @param planCommunity a plan community
+     * @return an agent or null
+     */
+    Agent findAgentNamed( String name, PlanCommunity planCommunity );
 
     /**
      * Find all agencies employing a given agent.
@@ -192,4 +207,12 @@ public interface ParticipationManager {
     List<RegisteredOrganization> ancestorsOf( RegisteredOrganization registeredOrganization,
                                               PlanCommunity planCommunity );
 
+    /**
+     * Finds agency by id.
+     * @param agencyId a long - positive if fixed, negative if participation as placeholder
+     * @param planCommunity a plan community
+     * @return an agency
+     * @throws NotFoundException if not found
+     */
+    Agency findAgencyById( long agencyId, PlanCommunity planCommunity ) throws NotFoundException;
 }

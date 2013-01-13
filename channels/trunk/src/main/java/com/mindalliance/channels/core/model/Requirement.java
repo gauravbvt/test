@@ -1,15 +1,22 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.query.Commitments;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
+import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,10 +35,20 @@ import java.util.Map;
  */
 public class Requirement extends ModelObject implements Countable {
 
-    private static String UNNAMED = "UNNAMED";
-    //     public static final RFISurvey UNKNOWN = new RFISurvey( Channels.UNKNOWN_RFI_SURVEY_ID );
+    /**
+     * Class logger.
+     */
+    public static final Logger LOG = LoggerFactory.getLogger( Requirement.class );
 
-    public static final Requirement UNKNOWN = new Requirement( Channels.UNKNOWN_REQUIREMENT_ID );
+
+    private static String UNNAMED = "UNNAMED";
+
+    /**
+     * Name of unknown info format.
+     */
+    public static String UnknownName = "(unknown)";
+
+    public static Requirement UNKNOWN;
 
 
     /**
@@ -96,6 +113,23 @@ public class Requirement extends ModelObject implements Countable {
         super();
         String s = name == null || name.trim().isEmpty() ? UNNAMED : name.trim();
         setName( s );
+    }
+
+    public void initialize( PlanCommunity planCommunity ) {
+        committerSpec.initialize( planCommunity );
+        beneficiarySpec.initialize( planCommunity );
+    }
+
+    public boolean isEmpty() {
+        return information.isEmpty()
+                && infoTags.isEmpty()
+                && eois.isEmpty()
+                && committerSpec.isEmpty()
+                && beneficiarySpec.isEmpty();
+    }
+
+    public AssignmentSpec makeNewAssignmentSpec() {
+        return new AssignmentSpec();
     }
 
     public static String classLabel() {
@@ -202,67 +236,60 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     /**
-     * Whether two resource specs are compatible.
+     * Whether two agent specs are compatible.
      *
-     * @param spec       a resource spec
-     * @param other      a resource spec
+     * @param spec       an agent spec
+     * @param other      an agent spec
      * @param planLocale a place
      * @return a boolean
      */
-    static protected boolean compatible( ResourceSpec spec, ResourceSpec other, Place planLocale ) {
-        return ( ModelEntity.implies( spec.getActor(), other.getActor(), planLocale )
-                || ModelEntity.implies( other.getActor(), spec.getActor(), planLocale ) )
-                && ( ModelEntity.implies( spec.getRole(), other.getRole(), planLocale )
-                || ModelEntity.implies( other.getRole(), spec.getRole(), planLocale ) )
+    static protected boolean compatible( AgentSpec spec, AgentSpec other, Place planLocale ) {
+        return ( spec.getAgent() == null || other.getAgent() == null || spec.getAgent().equals( other.getAgent() ) )
+                && ( spec.getAgency() == null || other.getAgency() == null || spec.getAgency().equals( other.getAgency() ) )
                 && ( ModelEntity.implies( spec.getJurisdiction(), other.getJurisdiction(), planLocale )
                 || ModelEntity.implies( other.getJurisdiction(), spec.getJurisdiction(), planLocale ) )
-                && ( ModelEntity.implies( spec.getOrganization(), other.getOrganization(), planLocale )
-                || ModelEntity.implies( other.getOrganization(), spec.getOrganization(), planLocale ) );
+                && ( ModelEntity.implies( spec.getPlaceholder(), other.getPlaceholder(), planLocale )
+                || ModelEntity.implies( other.getPlaceholder(), spec.getPlaceholder(), planLocale ) );
     }
 
     /**
      * Evaluate the satisfaction of the requirement by an organization as committer or beneficiary in any situation.
      *
-     * @param organization  an organization
+     * @param agency        an agency
      * @param asBeneficiary a boolean
-     * @param queryService  a query service
-     * @param analyst       an analyst
+     * @param planCommunity a plan community
      * @return a satisfaction rating
      */
     public Satisfaction satisfaction(
-            Organization organization,
+            Agency agency,
             boolean asBeneficiary,
-            QueryService queryService,
-            Analyst analyst ) {
-        return satisfaction( organization, asBeneficiary, null, null, queryService, analyst );
+            PlanCommunity planCommunity ) {
+        return satisfaction( agency, asBeneficiary, null, null, planCommunity );
     }
 
     /**
      * Evaluate the satisfaction of the requirement by an organization as committer or beneficiary
      * in a given situation (if timing and/or event are not null).
      *
-     * @param organization  an organization
+     * @param agency        an agency
      * @param asBeneficiary a boolean
      * @param timing        a phase timing
      * @param event         an event
-     * @param queryService  a query service
-     * @param analyst       an analyst
+     * @param planCommunity a plan community
      * @return a satisfaction rating
      */
     public Satisfaction satisfaction(
-            Organization organization,
+            Agency agency,
             boolean asBeneficiary,
             Phase.Timing timing,
             Event event,
-            QueryService queryService,
-            Analyst analyst ) {
+            PlanCommunity planCommunity ) {
         Satisfaction[] satisfactions = getSatisfactions(
-                organization,
+                agency,
                 asBeneficiary,
                 timing,
                 event,
-                queryService,
-                analyst );
+                planCommunity );
         Satisfaction agentCountSatisfaction = satisfactions[0];
         Satisfaction sourcesPerReceiverSatisfaction = asBeneficiary ? satisfactions[1] : null;
         assert agentCountSatisfaction != null;
@@ -280,45 +307,44 @@ public class Requirement extends ModelObject implements Countable {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Satisfaction[] getSatisfactions(
-            Organization organization,
+            Agency agency,
             boolean asBeneficiary,
             final Phase.Timing timing,
             final Event event,
-            final QueryService queryService,
-            final Analyst analyst ) {
+            final PlanCommunity planCommunity ) {
         Satisfaction[] satisfactions = new Satisfaction[2];
         Satisfaction agentCountSatisfaction = null;
         Satisfaction sourcesPerReceiverSatisfaction = null;
-        List<Flow> candidateFlows = findCandidateFlows( organization, asBeneficiary, queryService );
+        List<Flow> candidateFlows = findCandidateFlows( agency, asBeneficiary, planCommunity.getPlanService() );
         if ( candidateFlows.isEmpty() ) {
             satisfactions[0] = Satisfaction.Impossible;
             if ( asBeneficiary ) {
                 satisfactions[1] = Satisfaction.Impossible;
             }
         } else {
-            Commitments commitments = new Commitments( queryService, candidateFlows );
-            final Plan plan = queryService.getPlan();
-            final Place planLocale = queryService.getPlanLocale();
-            Iterator<Commitment> commitmentIterator = (Iterator<Commitment>) IteratorUtils.filteredIterator(
+            final Place communityLocale = planCommunity.getCommunityLocale();
+            CommunityCommitments commitments = planCommunity.getAllCommitments( false )
+                    .withFlows( candidateFlows );
+            Iterator<CommunityCommitment> commitmentIterator = (Iterator<CommunityCommitment>) IteratorUtils.filteredIterator(
                     commitments.iterator(),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            Commitment commitment = (Commitment) object;
-                            return commitment.isInSituation( timing, event, queryService.getPlanLocale() )
-                                    && satisfiedBy( commitment, planLocale )
-                                    && analyst.canBeRealized( commitment, plan, queryService );
+                            CommunityCommitment commitment = (CommunityCommitment) object;
+                            return commitment.isInSituation( timing, event, communityLocale )
+                                    && satisfiedBy( commitment, planCommunity )
+                                    && canBeRealized( commitment, planCommunity );
                         }
                     }
             );
-            Map<Actor, List<Commitment>> groupedCommitments = new HashMap<Actor, List<Commitment>>();
+            Map<Agent, List<CommunityCommitment>> groupedCommitments = new HashMap<Agent, List<CommunityCommitment>>();
             while ( commitmentIterator.hasNext()
                     && ( agentCountSatisfaction == null
                     || ( asBeneficiary && sourcesPerReceiverSatisfaction == null ) ) ) {
-                Commitment commitment = commitmentIterator.next();
-                groupByActor( groupedCommitments, commitment, asBeneficiary );
+                CommunityCommitment commitment = commitmentIterator.next();
+                groupByAgent( groupedCommitments, commitment, asBeneficiary );
                 if ( asBeneficiary ) {
                     agentCountSatisfaction = getAgentCountSatisfaction(
                             groupedCommitments,
@@ -345,33 +371,38 @@ public class Requirement extends ModelObject implements Countable {
         return satisfactions;
     }
 
+    private boolean canBeRealized( CommunityCommitment communityCommitment, PlanCommunity planCommunity ) {
+        return planCommunity.getAnalyst()
+                .findRealizabilityProblems(
+                        planCommunity.getPlan(),
+                        communityCommitment.getCommitment(),
+                        planCommunity.getPlanService() ).isEmpty();
+    }
+
     /**
      * Return the reason a requirement is not satisfied by an organization as committer or beneficiary.
      *
-     * @param organization  an organization
+     * @param agency        an agency
      * @param asBeneficiary a boolean
-     * @param queryService  a query service
-     * @param analyst       an analyst
+     * @param planCommunity a plan community
      * @return a string
      */
     public String dissatisfactionSummary(
-            Organization organization,
+            Agency agency,
             boolean asBeneficiary,
-            QueryService queryService,
-            Analyst analyst ) {
+            PlanCommunity planCommunity ) {
         String dissatisfaction = "";
         Satisfaction[] satisfactions = getSatisfactions(
-                organization,
+                agency,
                 asBeneficiary,
                 null,
                 null,
-                queryService,
-                analyst );
+                planCommunity );
         Satisfaction agentCountSatisfaction = satisfactions[0];
         Satisfaction sourcesPerReceiverSatisfaction = asBeneficiary ? satisfactions[1] : null;
         if ( agentCountSatisfaction == Satisfaction.Impossible ) {
-            dissatisfaction = "No flow in the plan could possibly have "
-                    + organization.getName()
+            dissatisfaction = "No sharing in the plan could possibly have "
+                    + agency.getName()
                     + " satisfy the requirement";
         } else {
             if ( agentCountSatisfaction != Satisfaction.Negative
@@ -382,12 +413,12 @@ public class Requirement extends ModelObject implements Countable {
                     dissatisfaction = "There is not "
                             + cardinality.toString()
                             + " agent(s) in "
-                            + organization.getName()
+                            + agency.getName()
                             + " receiving "
                             + "the specified info";
                 } else {
                     dissatisfaction = "Not all receiving agents in "
-                            + organization.getName()
+                            + agency.getName()
                             + " have "
                             + cardinality.toString()
                             + " alternate source(s) as required";
@@ -397,7 +428,7 @@ public class Requirement extends ModelObject implements Countable {
                 dissatisfaction = "There is not "
                         + cardinality.toString()
                         + " agent(s) in "
-                        + organization.getName()
+                        + agency.getName()
                         + " sharing "
                         + "the specified info";
             }
@@ -406,22 +437,22 @@ public class Requirement extends ModelObject implements Countable {
         return dissatisfaction;
     }
 
-    private void groupByActor( Map<Actor,
-            List<Commitment>> groupedCommitments,
-                               Commitment commitment,
+    private void groupByAgent( Map<Agent,
+            List<CommunityCommitment>> groupedCommitments,
+                               CommunityCommitment commitment,
                                boolean asBeneficiary ) {
-        Actor actor = asBeneficiary
-                ? commitment.getBeneficiary().getActor()
-                : commitment.getCommitter().getActor();
-        List<Commitment> list = groupedCommitments.get( actor );
+        Agent agent = asBeneficiary
+                ? commitment.getBeneficiary().getAgent()
+                : commitment.getCommitter().getAgent();
+        List<CommunityCommitment> list = groupedCommitments.get( agent );
         if ( list == null ) {
-            list = new ArrayList<Commitment>();
-            groupedCommitments.put( actor, list );
+            list = new ArrayList<CommunityCommitment>();
+            groupedCommitments.put( agent, list );
         }
         list.add( commitment );
     }
 
-    private Satisfaction getAgentCountSatisfaction( Map<Actor, List<Commitment>> groupedCommitments,
+    private Satisfaction getAgentCountSatisfaction( Map<Agent, List<CommunityCommitment>> groupedCommitments,
                                                     Cardinality cardinality,
                                                     boolean more ) {
         int agentCount = groupedCommitments.keySet().size();
@@ -455,7 +486,7 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     private Satisfaction getSourcesPerReceiverCountSatisfaction(
-            Map<Actor, List<Commitment>> groupedCommitments,
+            Map<Agent, List<CommunityCommitment>> groupedCommitments,
             boolean more ) {
         int minSourceCount = getMinSourceCount( groupedCommitments );
         int maxSourceCount = getMaxSourceCount( groupedCommitments );
@@ -491,27 +522,27 @@ public class Requirement extends ModelObject implements Countable {
 */
     }
 
-    private int getMinSourceCount( Map<Actor, List<Commitment>> groupedCommitments ) {
+    private int getMinSourceCount( Map<Agent, List<CommunityCommitment>> groupedCommitments ) {
         if ( groupedCommitments.isEmpty() ) return 0;
         int minCount = Integer.MAX_VALUE;
-        for ( List<Commitment> list : groupedCommitments.values() ) {
+        for ( List<CommunityCommitment> list : groupedCommitments.values() ) {
             minCount = Math.min( minCount, list.size() );
         }
         return minCount;
     }
 
-    private int getMaxSourceCount( Map<Actor, List<Commitment>> groupedCommitments ) {
+    private int getMaxSourceCount( Map<Agent, List<CommunityCommitment>> groupedCommitments ) {
         int maxCount = 0;
-        for ( List<Commitment> list : groupedCommitments.values() ) {
+        for ( List<CommunityCommitment> list : groupedCommitments.values() ) {
             maxCount = Math.max( maxCount, list.size() );
         }
         return maxCount;
     }
 
     // Find all flows that match the requirement and where the organization could be the beneficiary or committer.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Flow> findCandidateFlows(
-            final Organization organization,
+            final Agency agency,
             final boolean asBeneficiary,
             QueryService queryService ) {
         final Place planLocale = queryService.getPlanLocale();
@@ -523,7 +554,7 @@ public class Requirement extends ModelObject implements Countable {
                         Flow flow = (Flow) object;
                         return flow.isSharing()
                                 && matchesFlow( (Flow) object, planLocale )
-                                && appliesTo( organization, asBeneficiary, planLocale );
+                                && appliesTo( agency, asBeneficiary, planLocale );
                     }
                 }
         );
@@ -544,12 +575,12 @@ public class Requirement extends ModelObject implements Countable {
 
 
     public boolean appliesTo(
-            Organization organization,
+            Agency agency,
             boolean asBeneficiary,
             Place planLocale ) {
         return asBeneficiary
-                ? beneficiarySpec.appliesTo( organization, planLocale )
-                : committerSpec.appliesTo( organization, planLocale );
+                ? beneficiarySpec.appliesTo( agency )
+                : committerSpec.appliesTo( agency );
     }
 
     private boolean matchesFlow( Flow flow, Place planLocale ) {
@@ -560,7 +591,7 @@ public class Requirement extends ModelObject implements Countable {
                 && matchesEois( flow );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean matchesEois( Flow flow ) {
         if ( information.isEmpty() || eois.isEmpty() ) return true;
         final List<String> flowEoiNames = (List<String>) CollectionUtils.collect(
@@ -588,18 +619,18 @@ public class Requirement extends ModelObject implements Countable {
     /**
      * Whether a commitment satisfies this requirement.
      *
-     * @param commitment a commitment
-     * @param planLocale the plan's locale
+     * @param commitment    a commitment
+     * @param planCommunity a plan community
      * @return a boolean
      */
-    public boolean satisfiedBy( Commitment commitment, Place planLocale ) {
-        ResourceSpec committer = commitment.getCommitter().getResourceSpec();
-        ResourceSpec beneficiary = commitment.getBeneficiary().getResourceSpec();
+    public boolean satisfiedBy( CommunityCommitment commitment, PlanCommunity planCommunity ) {
+        if ( isEmpty() ) return false;
+        Place locale = planCommunity.getCommunityLocale();
         Flow flow = commitment.getSharing();
-        return matchesFlow( flow, planLocale )
-                && beneficiarySpec.appliesToSituation( commitment, planLocale )
-                && committerSpec.appliesTo( committer, planLocale )
-                && beneficiarySpec.appliesTo( beneficiary, planLocale );
+        return matchesFlow( flow, locale )
+                && beneficiarySpec.satisfiesSituation( commitment, locale )
+                && committerSpec.satisfiesTaskAndResources( commitment.getCommitter(), planCommunity )
+                && beneficiarySpec.satisfiesTaskAndResources( commitment.getBeneficiary(), planCommunity );
     }
 
     public Map<String, Object> mapState() {
@@ -613,9 +644,9 @@ public class Requirement extends ModelObject implements Countable {
         return state;
     }
 
-    @SuppressWarnings( "unchecked" )
-    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
-        super.initFromMap( state, queryService );
+    @SuppressWarnings("unchecked")
+    public void initFromMap( Map<String, Object> state, PlanCommunity planCommunity ) {
+        super.initFromMap( state, planCommunity.getPlanService() );
         setInformation( (String) state.get( "information" ) );
         setInfoTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
         setEois( (List<String>) state.get( "eois" ) );
@@ -623,27 +654,27 @@ public class Requirement extends ModelObject implements Countable {
         card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
         setCardinality( card );
         AssignmentSpec cSpec = new AssignmentSpec();
-        cSpec.initFromMap( (Map<String, Object>) state.get( "committerSpec" ), queryService );
+        cSpec.initFromMap( (Map<String, Object>) state.get( "committerSpec" ), planCommunity );
         setCommitterSpec( cSpec );
         AssignmentSpec bSpec = new AssignmentSpec();
-        bSpec.initFromMap( (Map<String, Object>) state.get( "beneficiarySpec" ), queryService );
+        bSpec.initFromMap( (Map<String, Object>) state.get( "beneficiarySpec" ), planCommunity );
         setCommitterSpec( bSpec );
     }
 
-    public Organization getCommitterOrganization() {
-        return committerSpec.getOrganization();
+    public Agency getCommitterAgency() {
+        return committerSpec.getAgency();
     }
 
-    public void setCommitterOrganization( Organization organization ) {
-        committerSpec.setOrganization( organization );
+    public void setCommitterAgency( Agency agency ) {
+        committerSpec.makeApplyTo( agency );
     }
 
-    public Organization getBeneficiaryOrganization() {
-        return beneficiarySpec.getOrganization();
+    public Agency getBeneficiaryAgency() {
+        return beneficiarySpec.getAgency();
     }
 
-    public void setBeneficiaryOrganization( Organization organization ) {
-        beneficiarySpec.setOrganization( organization );
+    public void setBeneficiaryAgency( Agency agency ) {
+        beneficiarySpec.makeApplyTo( agency );
     }
 
     public void setSituationIfAppropriate( Phase.Timing timing, Event event, Place planLocale ) {
@@ -797,12 +828,13 @@ public class Requirement extends ModelObject implements Countable {
             }
             return sb.toString();
         }
+
     }
 
     /**
      * Assignment specification.
      */
-    public static class AssignmentSpec implements Countable {
+    public class AssignmentSpec implements Countable {
         /**
          * Task name.
          */
@@ -813,9 +845,9 @@ public class Requirement extends ModelObject implements Countable {
         private List<Tag> taskTags = new ArrayList<Tag>();
 
         /**
-         * Task resource spec.
+         * Task agent spec.
          */
-        private ResourceSpec resourceSpec = new ResourceSpec();
+        private AgentSpec agentSpec = new AgentSpec();
 
         /**
          * Event.
@@ -841,12 +873,12 @@ public class Requirement extends ModelObject implements Countable {
             this.taskName = taskName == null ? "" : taskName.trim();
         }
 
-        public ResourceSpec getResourceSpec() {
-            return resourceSpec;
+        public AgentSpec getAgentSpec() {
+            return agentSpec;
         }
 
-        public void setResourceSpec( ResourceSpec resourceSpec ) {
-            this.resourceSpec = resourceSpec;
+        public void setAgentSpec( AgentSpec agentSpec ) {
+            this.agentSpec = agentSpec;
         }
 
         public List<Tag> getTaskTags() {
@@ -901,21 +933,9 @@ public class Requirement extends ModelObject implements Countable {
                             partEventPhase.getPhase().getTiming().equals( getTiming() ) ) );
         }
 
-        private boolean matchesTask( Part part, Place planLocale ) {
-            // Match task names if required
-            return ( taskName.isEmpty()
-                    || !Matcher.matches( taskName, part.getTask() ) )
-                    // Match tags if required
-                    && Matcher.matchesAll( getTaskTags(), part.getTags() )
-                    && inRequiredContext( part, planLocale );
-        }
-
-        public boolean appliesTo( Organization organization, Place planLocale ) {
-            Organization orgSpec = getResourceSpec().getOrganization();
-            return orgSpec == null
-                    // when the required organization is actual, use equality only, to avoid "within" match
-                    || ( orgSpec.isActual() && orgSpec.equals( organization ) )
-                    || ( orgSpec.isType() && organization.narrowsOrEquals( orgSpec, planLocale ) );
+        public boolean appliesTo( Agency agency ) {
+            Agency agencySpec = getAgentSpec().getAgency();
+            return agencySpec == null || agency.equals( agencySpec );
         }
 
         public Map<String, Object> mapState() {
@@ -927,51 +947,52 @@ public class Requirement extends ModelObject implements Countable {
                 state.put( "event", event.getName() );
             if ( timing != null )
                 state.put( "timing", timing.name() );
-            state.put( "resourceSpec", getResourceSpec().mapState() );
+            state.put( "agentSpec", getAgentSpec().mapState() );
             return state;
         }
 
-        @SuppressWarnings( "unchecked" )
-        public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+        @SuppressWarnings("unchecked")
+        public void initFromMap( Map<String, Object> state, PlanCommunity planCommunity ) {
             setTaskName( (String) state.get( "taskName" ) );
             setTaskTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
             Cardinality card = new Cardinality();
             card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
             setCardinality( card );
-            ResourceSpec spec = new ResourceSpec();
-            spec.initFromMap( (Map<String, Object>) state.get( "resourceSpec" ), queryService );
+            AgentSpec agentSpec = new AgentSpec();
+            agentSpec.initFromMap( (Map<String, Object>) state.get( "agentSpec" ), planCommunity );
         }
 
-        public Actor getActor() {
-            return resourceSpec.getActor();
+        public Agent getAgent() {
+            return agentSpec.getAgent();
         }
 
-        public void setActor( Actor actor ) {
-            resourceSpec.setActor( actor );
-        }
-
-        public Role getRole() {
-            return resourceSpec.getRole();
-        }
-
-        public void setRole( Role role ) {
-            resourceSpec.setRole( role );
+        public void makeApplyTo( Agent agent ) {
+            agentSpec.makeApplyTo( agent );
         }
 
         public Place getJurisdiction() {
-            return resourceSpec.getJurisdiction();
+            return agentSpec.getJurisdiction();
         }
 
         public void setJurisdiction( Place place ) {
-            resourceSpec.setJurisdiction( place );
+            agentSpec.setJurisdiction( place );
         }
 
-        public Organization getOrganization() {
-            return resourceSpec.getOrganization();
+        public Agency getAgency() {
+            return agentSpec.getAgency();
         }
 
-        public void setOrganization( Organization organization ) {
-            resourceSpec.setOrganization( organization );
+        public void makeApplyTo( Agency agency ) {
+            agentSpec.makeApplyTo( agency );
+        }
+
+
+        public Organization getPlaceholder() {
+            return agentSpec.getPlaceholder();
+        }
+
+        public void setPlaceholder( Organization organization ) {
+            agentSpec.setPlaceholder( organization );
         }
 
         @Override
@@ -982,7 +1003,7 @@ public class Requirement extends ModelObject implements Countable {
                         && ModelObject.areEqualOrNull( event, other.getEvent() )
                         && Matcher.same( taskName, other.getTaskName() )
                         && Matcher.same( Tag.tagsToString( taskTags ), Tag.tagsToString( other.getTaskTags() ) )
-                        && resourceSpec.equals( other.getResourceSpec() )
+                        && agentSpec.equals( other.getAgentSpec() )
                         && cardinality.equals( other.getCardinality() );
             } else {
                 return false;
@@ -996,7 +1017,7 @@ public class Requirement extends ModelObject implements Countable {
             if ( event != null ) result = result * 31 + event.hashCode();
             if ( timing != null ) result = result * 31 + timing.hashCode();
             result = result * 31 + cardinality.hashCode();
-            result = result * 31 + resourceSpec.hashCode();
+            result = result * 31 + agentSpec.hashCode();
             return result;
         }
 
@@ -1005,30 +1026,354 @@ public class Requirement extends ModelObject implements Countable {
             copy.setTaskName( taskName );
             copy.setTaskTags( Tag.copy( taskTags ) );
             copy.setCardinality( cardinality.copy() );
-            copy.setResourceSpec( new ResourceSpec( resourceSpec ) );
+            copy.setAgentSpec( new AgentSpec( agentSpec ) );
             copy.setTiming( timing );
             copy.setEvent( event );
             return copy;
         }
 
-
-        public boolean appliesTo( ResourceSpec spec, Place planLocale ) {
-            return resourceSpec.isAnyone() || spec.narrowsOrEquals( resourceSpec, planLocale );
+        public boolean isEmpty() {
+            return taskName.isEmpty()
+                    && taskTags.isEmpty()
+                    && agentSpec.isAnyone()
+                    && timing == null
+                    && event == null;
         }
 
-        public void setSituationIfAppropriate( Phase.Timing t, Event e, Place planLocale ) {
+
+        public boolean appliesToAgency( Agency agency, PlanCommunity planCommunity ) {
+            return agentSpec.appliesToAgency( agency, planCommunity );
+        }
+
+        public boolean satisfiesTaskAndResources( CommunityAssignment assignment, PlanCommunity planCommunity ) {
+            Part part = assignment.getPart();
+            return ( taskName.isEmpty() || Matcher.same( taskName, part.getTask() ) )
+                    && ( taskTags.isEmpty() || Matcher.matchesAll( taskTags, part.getTags() ) )
+                    && agentSpec.appliesToAssignment( assignment, planCommunity );
+        }
+
+        public void setSituationIfAppropriate( Phase.Timing t, Event e, Place locale ) {
             if ( t != null && timing == null )
                 timing = t;
-            if ( e != null && ( event == null || e.narrowsOrEquals( event, planLocale ) ) )
+            if ( e != null && ( event == null || e.narrowsOrEquals( event, locale ) ) )
                 event = e;
         }
 
-        public boolean appliesToSituation( Commitment commitment, Place planLocale ) {
-            return commitment.isInSituation( timing, event, planLocale );
+        public boolean satisfiesSituation( CommunityCommitment commitment, Place locale ) {
+            return commitment.isInSituation( timing, event, locale );
         }
 
         private boolean references( ModelObject mo ) {
-            return ModelObject.areIdentical( mo, event ) || resourceSpec.references( mo );
+            return ModelObject.areIdentical( mo, event ) || agentSpec.references( mo );
+        }
+
+        public void initialize( PlanCommunity planCommunity ) {
+            agentSpec.initialize( planCommunity );
+        }
+
+    }
+
+    public class AgentSpec implements Serializable {
+
+        // If agent is specified as registered (by actor and orgParticipationId) then agency is implied.
+        // If agency is specified and not implied (by fixedOrgId or orgParticipationId) then placeholder is implied.
+        // Placeholder is either given or implied via specified/implied agency.
+
+        private boolean initialized = false;
+        private Actor actor;
+        private Long orgParticipationId;  // of agent or if, no actor, of agency
+        private Long fixedOrgId; // of agency, if agency not already specified by agent
+        private Place jurisdiction;
+        private Organization placeholder; // meaningful only if fixedOrgId or orgParticipationId not set
+        private Agent agent; // computed and cached
+        private Agency agency; // computed and cached
+
+        public AgentSpec() {
+        }
+
+        public AgentSpec( AgentSpec agentSpec ) {
+            actor = agentSpec.getActor();
+            jurisdiction = agentSpec.getJurisdiction();
+            orgParticipationId = agentSpec.getOrgParticipationId();
+            fixedOrgId = agentSpec.getFixedOrgId();
+            placeholder = agentSpec.getPlaceholder();
+            agent = agentSpec.getAgent();
+            agency = agentSpec.getAgency();
+        }
+
+        public AgentSpec( CommunityAssignment assignment, PlanCommunity planCommunity ) {
+            processAgent( assignment.getAgent() );
+            jurisdiction = assignment.getJurisdiction();
+            processAgency( assignment.getAgency() );
+            placeholder = assignment.getEmployment().getEmployer().getPlaceholder( planCommunity );
+            initialize( planCommunity );
+        }
+
+        private void processAgent( Agent agent ) {
+            actor = agent.getActor();
+            if ( agent.isFromOrganizationParticipation() ) {
+                orgParticipationId = agent.getOrganizationParticipation().getId();
+            }
+        }
+
+        private void processAgency( Agency agency ) {
+            if ( agency.isFixedOrganization() ) {
+                fixedOrgId = agency.getFixedOrganization().getId();
+            } else if ( orgParticipationId == null && agency.isParticipatingAsPlaceholder() ) {
+                orgParticipationId = agency.getOrganizationParticipation().getId();
+            }
+        }
+
+        // MUST BE RUN before accessing agent or agency whenever requirement is created or one of its agentSpecs is updated
+        public void initialize( PlanCommunity planCommunity ) {
+            if ( !initialized ) {
+                agent = null;
+                agency = null;
+                if ( actor != null ) {
+                    if ( orgParticipationId != null ) {
+                        OrganizationParticipation orgParticipation = planCommunity
+                                .getOrganizationParticipationService().load( orgParticipationId );
+                        if ( orgParticipation != null ) {
+                            agent = new Agent( actor, orgParticipation, planCommunity );
+                        }
+                    } else {
+                        agent = new Agent( actor );
+                    }
+                }
+                if ( fixedOrgId != null ) {
+                    assert orgParticipationId == null;
+                    try {
+                        Organization org = planCommunity.getPlanService().find( Organization.class, fixedOrgId );
+                        agency = new Agency( org );
+                        placeholder = null;
+                    } catch ( NotFoundException e ) {
+                        LOG.warn( "Failed to find organization " + fixedOrgId );
+                    }
+                }
+                if ( orgParticipationId != null ) {
+                    assert fixedOrgId == null;
+                    OrganizationParticipation orgParticipation = planCommunity
+                            .getOrganizationParticipationService().load( orgParticipationId );
+                    if ( orgParticipation != null ) {
+                        agency = new Agency( orgParticipation, planCommunity );
+                        placeholder = agency.getPlaceholder( planCommunity );
+                    }
+                }
+            }
+            initialized = true;
+        }
+
+
+        public Agency getAgency() {
+            assert initialized;
+            return agency;
+        }
+
+        public void makeApplyTo( Agency agency ) {
+            if ( agency.isFixedOrganization() ) {
+                setFixedOrgId( agency.getFixedOrganization().getId() );
+            } else {
+                setOrgParticipationId( agency.getOrganizationParticipation().getId() );
+            }
+        }
+
+        public Agent getAgent() {
+            assert initialized;
+            return agent;
+        }
+
+        public void makeApplyTo( Agent agent ) {
+            actor = agent.getActor();
+            if ( agent.isFromOrganizationParticipation() ) {
+                setOrgParticipationId( agent.getOrganizationParticipation().getId() );
+            }
+        }
+
+        public Place getJurisdiction() {
+            return jurisdiction;
+        }
+
+        public void setJurisdiction( Place jurisdiction ) {
+            this.jurisdiction = jurisdiction;
+        }
+
+        public Organization getPlaceholder() {
+            return placeholder;
+        }
+
+        public void setPlaceholder( Organization placeholder ) {
+            this.placeholder = placeholder;
+            if ( placeholder != null ) {
+                fixedOrgId = null;
+            }
+        }
+
+        public Actor getActor() {
+            return actor;
+        }
+
+        public void setActor( Actor actor ) {
+            this.actor = actor;
+            initialized = false;
+        }
+
+        public Long getFixedOrgId() {
+            return fixedOrgId;
+        }
+
+        public void setFixedOrgId( Long fixedOrgId ) {
+            this.fixedOrgId = fixedOrgId;
+            if ( fixedOrgId != null ) {
+                orgParticipationId = null;
+                placeholder = null;
+            }
+            initialized = false;
+        }
+
+        public Long getOrgParticipationId() {
+            return orgParticipationId;
+        }
+
+        public void setOrgParticipationId( Long orgParticipationId ) {
+            this.orgParticipationId = orgParticipationId;
+            if ( orgParticipationId != null ) {
+                fixedOrgId = null;
+                placeholder = null;
+            }
+            initialized = false;
+        }
+
+        ///////
+        @Override
+        public boolean equals( Object object ) {
+            if ( object instanceof AgentSpec ) {
+                AgentSpec other = (AgentSpec) object;
+                return ChannelsUtils.areEqualOrNull( actor, other.getActor() )
+                        && ChannelsUtils.areEqualOrNull( jurisdiction, other.getJurisdiction() )
+                        && ChannelsUtils.areEqualOrNull( orgParticipationId, other.getOrgParticipationId() )
+                        && ChannelsUtils.areEqualOrNull( fixedOrgId, other.getFixedOrgId() )
+                        && ChannelsUtils.areEqualOrNull( placeholder, other.getPlaceholder() );
+
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 1;
+            if ( actor != null )
+                hash = hash + 31 * actor.hashCode();
+            if ( jurisdiction != null )
+                hash = hash + 31 * jurisdiction.hashCode();
+            if ( orgParticipationId != null )
+                hash = hash + 31 * orgParticipationId.hashCode();
+            if ( fixedOrgId != null )
+                hash = hash + 31 * fixedOrgId.hashCode();
+            if ( placeholder != null )
+                hash = hash + 31 * placeholder.hashCode();
+            return hash;
+        }
+
+        public Map<String, Object> mapState() {
+            Map<String, Object> state = new HashMap<String, Object>();
+            if ( actor != null ) state.put( "actor", actor.getId() );
+            if ( jurisdiction != null ) state.put( "jurisdiction", jurisdiction.getId() );
+            if ( orgParticipationId != null ) state.put( "orgParticipationId", orgParticipationId );
+            if ( fixedOrgId != null ) state.put( "fixedOrgId", fixedOrgId );
+            if ( placeholder != null ) state.put( "placeholder", placeholder.getId() );
+            return state;
+        }
+
+        public void initFromMap( Map<String, Object> state, PlanCommunity planCommunity ) {
+            PlanService planService = planCommunity.getPlanService();
+            if ( state.containsKey( "actor" ) ) {
+                Long id = (Long) state.get( "actor" );
+                try {
+                    actor = planService.find( Actor.class, id );
+                } catch ( NotFoundException e ) {
+                    LOG.warn( "Actor not found at " + id );
+                }
+            }
+            if ( state.containsKey( "orgParticipationId" ) ) {
+                orgParticipationId = (Long) state.get( "orgParticipationId" );
+            }
+            if ( state.containsKey( "jurisdiction" ) ) {
+                Long id = (Long) state.get( "jurisdiction" );
+                try {
+                    jurisdiction = planService.find( Place.class, id );
+                } catch ( NotFoundException e ) {
+                    LOG.warn( "Place not found at " + id );
+                }
+            }
+            if ( state.containsKey( "fixedOrgId" ) ) {
+                fixedOrgId = (Long) state.get( "fixedOrgId" );
+            }
+            if ( state.containsKey( "placeholder" ) ) {
+                Long id = (Long) state.get( "placeholder" );
+                try {
+                    placeholder = planService.find( Organization.class, id );
+                } catch ( NotFoundException e ) {
+                    LOG.warn( "Organization not found at " + id );
+                }
+            }
+            initialize( planCommunity );
+        }
+
+        public boolean references( ModelObject mo ) {
+            return ModelObject.areIdentical( jurisdiction, mo )
+                    || ModelObject.areIdentical( placeholder, mo );
+        }
+
+        public boolean isAnyone() {
+            return actor == null
+                    && jurisdiction == null
+                    && orgParticipationId == null
+                    && fixedOrgId == null
+                    && placeholder == null;
+        }
+
+        public boolean narrowsOrEquals( AgentSpec agentSpec, Place locale ) {
+            return ( agentSpec.getAgent() == null
+                    || ( agent != null && agent.equals( agentSpec.getAgent() ) ) )
+                    && ModelEntity.implies( jurisdiction, agentSpec.getJurisdiction(), locale )
+                    && ( agentSpec.getAgency() == null
+                    || ( agency != null && agency.equals( agentSpec.getAgency() ) ) )
+                    && ModelEntity.implies( placeholder, agentSpec.getPlaceholder(), locale );
+        }
+
+        public boolean isAgencyImplied() {
+            return getAgent() != null && getAgent().isFromOrganizationParticipation();
+        }
+
+        public boolean isPlaceholderImplied() {
+            return getAgency() != null;
+        }
+
+        public boolean appliesToAssignment( CommunityAssignment assignment, PlanCommunity planCommunity ) {
+            return isAnyone()
+                    || ( appliesToAgent( assignment.getAgent() )
+                    && appliesToAgency( assignment.getAgency(), planCommunity ) );
+        }
+
+        private boolean appliesToAgent( Agent anAgent ) {
+            if ( getAgent() != null )
+                return getAgent().equals( anAgent );
+            else if ( anAgent.isFromOrganizationParticipation() ) {
+                return getOrgParticipationId() != null
+                        && getOrgParticipationId() == anAgent.getOrganizationParticipation().getId();
+            }
+            return true;
+        }
+
+        public boolean appliesToAgency( Agency anAgency, PlanCommunity planCommunity ) {
+            if ( getAgency() != null )
+                return getAgency().equals( anAgency );
+            else if ( getPlaceholder() != null ) {
+                Organization otherPlaceHolder = anAgency.getPlaceholder( planCommunity );
+                return otherPlaceHolder != null && getPlaceholder().equals( otherPlaceHolder );
+            }
+            return true;
         }
     }
 }

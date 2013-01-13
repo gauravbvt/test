@@ -726,6 +726,42 @@ public class Segment extends ModelObject {
                 CollectionUtils.isEqualCollection( context, other.getContext() );
     }
 
+    /**
+     * Whether timing and event specifications (null means any) apply to the commitments event phase or context.
+     *
+     * @param timing     a phase timing or null
+     * @param event      an event or null
+     * @param planLocale a plan locale
+     * @return a boolean
+     */
+    public boolean isInSituation( Phase.Timing timing, Event event, Place planLocale ) {
+        // matches event phase
+        if ( matchesEventTiming( timing,
+                event,
+                new EventTiming( eventPhase ),
+                planLocale ) ) {
+            return true;
+        } else {
+            // matches any of the event timings in context
+            for ( EventTiming eventTiming : context ) {
+                if ( matchesEventTiming( timing, event, eventTiming, planLocale ) ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean matchesEventTiming(
+            Phase.Timing timing,
+            Event event,
+            EventTiming eventTiming,
+            Place planLocale ) {
+        return ( timing == null || eventTiming.getTiming() == timing )
+                && ( event == null || eventTiming.getEvent().narrowsOrEquals( event, planLocale ) );
+    }
+
+
     public static String classLabel() {
         return "plan segments";
     }
@@ -739,6 +775,7 @@ public class Segment extends ModelObject {
     public boolean isSegmentObject() {
         return false;
     }
+
 
 //=================================================
 

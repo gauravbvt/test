@@ -6,8 +6,9 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.EntityNetworkGraphBuilder;
@@ -37,12 +38,13 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
     }
 
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService )  throws DiagramException {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity )  throws DiagramException {
 
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
+        PlanService planService = planCommunity.getPlanService();
         GraphBuilder<ModelEntity, EntityRelationship> entityNetworkGraphBuilder =
-                new EntityNetworkGraphBuilder( entity, analyst, queryService );
+                new EntityNetworkGraphBuilder( entity, analyst, planService );
         Graph<ModelEntity, EntityRelationship> graph = entityNetworkGraphBuilder.buildDirectedGraph();
         GraphRenderer<ModelEntity, EntityRelationship> graphRenderer = diagramFactory.getGraphRenderer().cloneSelf();
         graphRenderer.setAlgo( "neato" );
@@ -52,12 +54,12 @@ public class EntityNetworkDiagram extends AbstractDiagram<ModelEntity, EntityRel
             graphRenderer.highlightEdge( selectedEntityRel );
         EntityNetworkMetaProvider metaProvider =
                 new EntityNetworkMetaProvider( outputFormat, diagramFactory.getImageDirectory(), analyst,
-                                               queryService );
+                        planService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         EntityNetworkDOTExporter dotExporter = new EntityNetworkDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

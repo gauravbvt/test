@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;

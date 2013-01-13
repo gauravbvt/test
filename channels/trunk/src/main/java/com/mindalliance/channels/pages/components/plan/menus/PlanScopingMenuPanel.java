@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.plan.menus;
 
-import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -28,7 +27,7 @@ public class PlanScopingMenuPanel extends MenuPanel {
     public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
-            menuItems.add( collapsible( Requirement.UNKNOWN, "Hide plan requirements", "Plan requirements" ) );
+            // menuItems.add( collapsible( Requirement.UNKNOWN, "Hide plan requirements", "Plan requirements" ) );
             menuItems.add( collapsible( Channels.ALL_EVENTS, "Hide events in scope", "Events in scope" ) );
             menuItems.add( collapsible( Channels.ALL_ORGANIZATIONS, "Hide organizations in scope", "Organizations in scope" ) );
             menuItems.add( collapsible( Channels.ALL_CLASSIFICATIONS, "Hide classification systems", "Classification systems" ) );

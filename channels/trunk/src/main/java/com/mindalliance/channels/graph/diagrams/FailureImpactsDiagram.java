@@ -6,12 +6,13 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.FailureImpactsGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
@@ -41,11 +42,12 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
+        PlanService planService = planCommunity.getPlanService();
         FailureImpactsGraphBuilder graphBuilder = new FailureImpactsGraphBuilder( segmentObject, assumeFails,
-                                                                                  queryService );
+                planService );
         Graph<Node, Flow> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -57,12 +59,12 @@ public class FailureImpactsDiagram extends AbstractDiagram<Node, Flow> {
                                                                                   outputFormat,
                                                                                   diagramFactory.getImageDirectory(),
                                                                                   analyst,
-                                                                                  queryService );
+                planService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         FailureImpactsDOTExporter dotExporter = new FailureImpactsDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

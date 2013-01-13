@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -136,7 +137,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Hierarchical vertex,
+        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Hierarchical vertex,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), (ModelObject) vertex ) ) );
@@ -150,17 +151,17 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( queryService,
+            if ( getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
                     (ModelObject) vertex,
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
             }
-            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, queryService ) ) );
+            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, planCommunity.getPlanService() ) ) );
             return list;
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, HierarchyRelationship edge,
+        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, HierarchyRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "none" ) );

@@ -6,8 +6,9 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.HierarchyGraphBuilder;
@@ -41,11 +42,12 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
+        PlanService planService = planCommunity.getPlanService();
         GraphBuilder<Hierarchical, HierarchyRelationship> hierarchyGraphBuilder =
-                new HierarchyGraphBuilder( hierarchical, queryService );
+                new HierarchyGraphBuilder( hierarchical, planService );
         Graph<Hierarchical, HierarchyRelationship> graph = hierarchyGraphBuilder.buildDirectedGraph();
         GraphRenderer<Hierarchical, HierarchyRelationship> graphRenderer =
                 diagramFactory.getGraphRenderer().cloneSelf();
@@ -53,12 +55,12 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         graphRenderer.resetHighlight();
         graphRenderer.highlightVertex( hierarchical );
         HierarchyMetaProvider metaProvider =
-                new HierarchyMetaProvider( outputFormat, diagramFactory.getImageDirectory(), analyst, queryService );
+                new HierarchyMetaProvider( outputFormat, diagramFactory.getImageDirectory(), analyst, planService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         HierarchyDOTExporter dotExporter = new HierarchyDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

@@ -1,10 +1,9 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -23,35 +22,34 @@ import java.util.List;
  * Date: 10/6/11
  * Time: 3:53 PM
  */
-public class RequiredNetworkingGraphBuilder implements GraphBuilder<Organization, RequirementRelationship> {
+public class RequiredNetworkingGraphBuilder implements GraphBuilder<Agency, RequirementRelationship> {
 
     private final Phase.Timing timing;
     private final Event event;
-    private final Organization selectedOrganization;
+    private final Agency selectedAgency;
     private final RequirementRelationship selectedRequirementRel;
-    private QueryService queryService;
-    private Analyst analyst;
+    private PlanCommunity planCommunity;
 
     public RequiredNetworkingGraphBuilder(
             Phase.Timing timing,
             Event event,
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequirementRel ) {
         this.timing = timing;
         this.event = event;
-        this.selectedOrganization = selectedOrganization;
+        this.selectedAgency = selectedAgency;
         this.selectedRequirementRel = selectedRequirementRel;
     }
 
     @Override
-    public DirectedGraph<Organization, RequirementRelationship> buildDirectedGraph() {
-        DirectedGraph<Organization, RequirementRelationship> digraph =
-                new DirectedMultigraph<Organization, RequirementRelationship>(
-                        new EdgeFactory<Organization, RequirementRelationship>() {
+    public DirectedGraph<Agency, RequirementRelationship> buildDirectedGraph() {
+        DirectedGraph<Agency, RequirementRelationship> digraph =
+                new DirectedMultigraph<Agency, RequirementRelationship>(
+                        new EdgeFactory<Agency, RequirementRelationship>() {
 
                             @Override
-                            public RequirementRelationship createEdge( Organization fromOrg, Organization toOrg ) {
-                                return new RequirementRelationship( fromOrg, toOrg, timing, event );
+                            public RequirementRelationship createEdge( Agency fromAgency, Agency toAgency ) {
+                                return new RequirementRelationship( fromAgency, toAgency, timing, event );
                             }
                         } );
         populateRequiredNetworkingGraph( digraph );
@@ -59,46 +57,43 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Organization
     }
 
     @SuppressWarnings( "unchecked" )
-    private void populateRequiredNetworkingGraph( DirectedGraph<Organization, RequirementRelationship> graph ) {
-        if ( selectedOrganization == null && selectedRequirementRel == null ) {
-            for ( Organization org : queryService.listActualEntities( Organization.class ) ) {
-                if ( !org.isUnknown() && queryService.isReferenced( org ) )
-                    graph.addVertex( org );
+    private void populateRequiredNetworkingGraph( DirectedGraph<Agency, RequirementRelationship> graph ) {
+ /*       if ( selectedAgency == null && selectedRequirementRel == null ) {
+            for ( Agency agency : planCommunity.getParticipationManager().getAllKnownAgencies( planCommunity ) ) {
+                graph.addVertex( agency );
             }
         }
+*/
         List<RequirementRelationship> reqRels = new ArrayList<RequirementRelationship>();
         if ( selectedRequirementRel != null ) {
             reqRels.add( selectedRequirementRel );
         } else {
             reqRels.addAll( (List<RequirementRelationship>) CollectionUtils.select(
-                    analyst.findRequirementRelationships( timing, event, queryService ),
+                    planCommunity.getParticipationAnalyst().findRequirementRelationships( timing, event, planCommunity ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
                             RequirementRelationship reqRel = (RequirementRelationship) object;
-                            return selectedOrganization == null
-                                || reqRel.getToIdentifiable() == selectedOrganization.getId()
-                                || reqRel.getFromIdentifiable() == selectedOrganization.getId();
+                            return selectedAgency == null
+                                || reqRel.getToAgency( planCommunity ).equals( selectedAgency )
+                                || reqRel.getToAgency( planCommunity ).equals( selectedAgency );
                         }
                     } ) );
         }
         for ( RequirementRelationship reqRel : reqRels ) {
-            Organization fromOrg = reqRel.getFromIdentifiable( queryService );
-            Organization toOrg = reqRel.getToIdentifiable( queryService );
-            graph.addVertex( fromOrg );
-            graph.addVertex( toOrg );
+            Agency fromAgency = reqRel.getFromAgency( planCommunity );
+            Agency toAgency = reqRel.getToAgency( planCommunity );
+            graph.addVertex( fromAgency );
+            graph.addVertex( toAgency );
             graph.addEdge(
-                    reqRel.getFromIdentifiable( queryService ),
-                    reqRel.getToIdentifiable( queryService ),
+                    fromAgency,
+                    toAgency,
                     reqRel );
         }
     }
 
-    public void setQueryService( QueryService queryService ) {
-        this.queryService = queryService;
+    public void setPlanCommunity( PlanCommunity planCommunity ) {
+        this.planCommunity = planCommunity;
     }
 
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
-    }
 }

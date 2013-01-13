@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -32,6 +33,9 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager {
     @Autowired
     private ParticipationManager participationManager;
 
+    @Autowired
+    private OrganizationParticipationService organizationParticipationService;
+
     private Analyst analyst;
     private UserParticipationService userParticipationService;
     private UserParticipationConfirmationService userParticipationConfirmationService;
@@ -59,6 +63,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager {
                 analyst,
                 userParticipationService,
                 userParticipationConfirmationService,
+                organizationParticipationService,
                 participationManager );
     }
 

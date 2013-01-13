@@ -106,8 +106,9 @@ import java.util.List;
                     "beneficiary.organization.name",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( makeAnalysisColumn(
+            columns.add( makeAnalystColumn(
                     "Can be fulfilled?",
+                    null,
                     "realizability",
                     "?"
             ) );

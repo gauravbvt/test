@@ -60,6 +60,12 @@ public abstract class AbstractCommand implements Command {
     private boolean memorable = true;
 
     /**
+     * Whether the command is undoable.
+     * A constant property in most commands. Writable in MultiCommand.
+     */
+    private boolean undoable = true;
+
+    /**
      * A preserved description for the actual subject of the change.
      */
     private String targetDescription = "";
@@ -491,6 +497,14 @@ public abstract class AbstractCommand implements Command {
     // For testing only
     public void setUserName( String userName ) {
         this.userName = userName;
+    }
+
+    public boolean isUndoable() {
+        return undoable;
+    }
+
+    public void makeUndoable( boolean undoable ) {
+        this.undoable = undoable;
     }
 
     @Override

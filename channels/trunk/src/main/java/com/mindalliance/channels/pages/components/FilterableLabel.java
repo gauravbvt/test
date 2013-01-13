@@ -116,8 +116,8 @@ public class FilterableLabel  extends AbstractUpdatablePanel {
      */
     public String getImageSource() {
         return ( filterable.isFiltered( getModel().getObject(), filterProperty ) )
-                ? "../../images/lock.png"
-                : "../../images/lock_open.png";
+                ? "images/lock.png"
+                : "images/lock_open.png";
     }
 
     /**

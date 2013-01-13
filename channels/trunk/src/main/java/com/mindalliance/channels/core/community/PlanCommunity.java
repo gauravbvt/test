@@ -2,6 +2,8 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
+import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
@@ -56,9 +58,16 @@ public class PlanCommunity implements Nameable, Identifiable {
             Analyst analyst,
             UserParticipationService userParticipationService,
             UserParticipationConfirmationService userParticipationConfirmationService,
+            OrganizationParticipationService organizationParticipationService,
             ParticipationManager participationManager ) {
         this.participationManager = participationManager;
-        communityService = new CommunityServiceImpl( this, planService, analyst, userParticipationService, userParticipationConfirmationService );
+        communityService = new CommunityServiceImpl(
+                this,
+                planService,
+                analyst,
+                userParticipationService,
+                userParticipationConfirmationService,
+                organizationParticipationService );
     }
 
     public Place getCommunityLocale() {
@@ -91,6 +100,10 @@ public class PlanCommunity implements Nameable, Identifiable {
 
     public UserParticipationService getUserParticipationService() {
         return communityService.getUserParticipationService();
+    }
+
+    public OrganizationParticipationService getOrganizationParticipationService() {
+        return communityService.getOrganizationParticipationService();
     }
 
     public PlanService getPlanService() {
@@ -403,4 +416,7 @@ public class PlanCommunity implements Nameable, Identifiable {
     }
 
 
+    public ParticipationAnalyst getParticipationAnalyst() {
+        return getParticipationManager().getParticipationAnalyst();
+    }
 }

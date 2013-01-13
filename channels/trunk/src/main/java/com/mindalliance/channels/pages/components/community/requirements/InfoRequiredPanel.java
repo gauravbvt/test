@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
@@ -175,7 +175,9 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
     }
 
     private Requirement getRequirement() {
-        return (Requirement) getModel().getObject();
+        Requirement requirement = (Requirement) getModel().getObject();
+        requirement.initialize( getPlanCommunity() );
+        return requirement;
     }
 
 }

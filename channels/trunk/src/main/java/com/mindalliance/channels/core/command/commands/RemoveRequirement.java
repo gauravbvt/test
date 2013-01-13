@@ -32,6 +32,7 @@ public class RemoveRequirement extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         PlanDao planDao = commander.getPlanDao();
         Requirement requirement = commander.resolve( Requirement.class, (Long) get( "requirement" ) );
+        requirement.initialize( commander.getPlanCommunity() );
         describeTarget( requirement );
         set( "state", requirement.mapState() );
         planDao.remove( requirement );

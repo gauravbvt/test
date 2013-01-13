@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.AssignedLocation;
+import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Part;
@@ -128,6 +129,10 @@ public class CommunityAssignment implements Serializable {
         hash = hash * 31 + employment.hashCode();
         hash = hash * 31 + part.hashCode();
         return hash;
+    }
+
+    public Assignment getAssignment() {
+        return new Assignment( employment.getEmployment(), part );
     }
 
     //////////////////

@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.community.participation.RegisteredOrganiza
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Updatable;
@@ -364,7 +365,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         if ( val == null || val.isEmpty() ) {
             registeredOrgName = null;
         } else {
-            registeredOrgName = val.trim();
+            registeredOrgName = ChannelsUtils.cleanUpName( val );
         }
     }
 

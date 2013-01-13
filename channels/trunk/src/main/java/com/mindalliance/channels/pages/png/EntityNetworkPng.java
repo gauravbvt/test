@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
@@ -30,11 +30,11 @@ public class EntityNetworkPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanService planService,
-                                   DiagramFactory diagramFactory,
-                                   Analyst analyst ) throws DiagramException {
+                                   PlanCommunity planCommunity,
+                                   DiagramFactory diagramFactory ) throws DiagramException {
         ModelEntity entity = null;
         EntityRelationship selectedEntityRel = null;
+        PlanService planService = planCommunity.getPlanService();
         if ( parameters.getNamedKeys().contains( "entity" )
                 && !parameters.get( "entity" ).toString().equals( "NONE" ) ) {
             Long entityId = parameters.get( "entity" ).toLong();

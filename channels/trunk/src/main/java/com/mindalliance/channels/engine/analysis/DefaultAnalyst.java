@@ -9,10 +9,10 @@ package com.mindalliance.channels.engine.analysis;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
@@ -21,7 +21,6 @@ import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
@@ -30,11 +29,11 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.Commitments;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.Play;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.commons.collections.CollectionUtils;
@@ -641,54 +640,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
 
-    @Override
-    public List<RequirementRelationship> findRequirementRelationships(
-            Phase.Timing timing,
-            Event event,
-            QueryService queryService ) {
-        List<RequirementRelationship> rels = new ArrayList<RequirementRelationship>();
-        List<Organization> allOrgs = queryService.listActualEntities( Organization.class );
-        for ( Organization fromOrg : allOrgs ) {
-            for ( Organization toOrg : allOrgs ) {
-                if ( !fromOrg.isUnknown() && !toOrg.isUnknown() && !fromOrg.equals( toOrg ) ) {
-                    RequirementRelationship rel = findRequirementRelationship(
-                            queryService,
-                            fromOrg,
-                            toOrg,
-                            timing,
-                            event );
-                    if ( !rel.isEmpty() ) rels.add( rel );
-                }
-            }
-        }
-        return rels;
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public RequirementRelationship findRequirementRelationship(
-            QueryService queryService,
-            final Organization fromOrg,
-            final Organization toOrg,
-            final Phase.Timing timing,
-            final Event event ) {
-        final Place planLocale = queryService.getPlanLocale();
-        List<Requirement> requirements = (List<Requirement>) CollectionUtils.select(
-                queryService.list( Requirement.class ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Requirement req = (Requirement) object;
-                        return req.appliesTo( timing )
-                                && req.appliesTo( event, planLocale )
-                                && req.getCommitterSpec().appliesTo( fromOrg, planLocale )
-                                && req.getBeneficiarySpec().appliesTo( toOrg, planLocale );
-                    }
-                }
-        );
-        RequirementRelationship rel = new RequirementRelationship( fromOrg, toOrg, timing, event );
-        rel.setRequirements( requirements );
-        return rel;
-    }
 
     @Override
     public Boolean canBeRealized( Commitment commitment, Plan plan, QueryService queryService ) {
@@ -1116,8 +1067,9 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public String realizability( Commitment commitment, QueryService queryService ) {
-        List<String> problems = findRealizabilityProblems( queryService.getPlan(), commitment, queryService );
+    public String realizability( Commitment commitment, PlanCommunity planCommunity ) {
+        PlanService planService = planCommunity.getPlanService();
+        List<String> problems = findRealizabilityProblems( planService.getPlan(), commitment, planService );
         return problems.isEmpty() ?
                 "Yes" :
                 "No: " + StringUtils.capitalize( ChannelsUtils.listToString( problems, ", and " ) );
@@ -1128,8 +1080,10 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
         List<String> problems = new ArrayList<String>();
         List<TransmissionMedium> mediaUsed = commitment.getSharing().transmissionMedia();
         Place planLocale = queryService.getPlanLocale();
+/*
         if ( !queryService.isAgreedToIfRequired( commitment ) )
             problems.add( "sharing not agreed to as required" );
+*/
         if ( !isAvailabilitiesCoincideIfRequired( commitment, mediaUsed, planLocale ) )
             problems.add( "availabilities do not coincide as they must" );
         if ( !commitment.isCommonLanguage( plan ) )
@@ -1166,45 +1120,14 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
+    public int unwaivedIssuesCount( Requirement requirement, PlanCommunity planCommunity) {
+        return unwaivedIssuesCount( requirement, planCommunity.getPlanService() );
+    }
+
+    @Override
     public int allIssuesCount( Requirement requirement, QueryService queryService ) {
         return detectAllIssues( queryService, requirement, null, true ).size();
     }
-
-    @Override
-    public int commitmentsCount( Requirement requirement, Object[] extras, QueryService queryService ) {
-        Phase.Timing timing = (Phase.Timing) extras[0];
-        Event event = (Event) extras[1];
-        return queryService.getAllCommitments().inSituation(
-                timing,
-                event,
-                queryService.getPlanLocale() )
-                .satisfying( requirement ).size();
-    }
-
-    @Override
-    public Requirement.Satisfaction committerSatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            QueryService queryService ) {
-        Phase.Timing timing = (Phase.Timing) extras[0];
-        Event event = (Event) extras[1];
-        Organization org = requirement.getCommitterSpec().getOrganization();
-        assert org.isActual();
-        return requirement.satisfaction( org, false, timing, event, queryService, this );
-    }
-
-    @Override
-    public Requirement.Satisfaction beneficiarySatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            QueryService queryService ) {
-        Phase.Timing timing = (Phase.Timing) extras[0];
-        Event event = (Event) extras[1];
-        Organization org = requirement.getBeneficiarySpec().getOrganization();
-        assert org.isActual();
-        return requirement.satisfaction( org, true, timing, event, queryService, this );
-    }
-
 
     @Override
     public void commandDone( Commander commander, Command command, Change change ) {

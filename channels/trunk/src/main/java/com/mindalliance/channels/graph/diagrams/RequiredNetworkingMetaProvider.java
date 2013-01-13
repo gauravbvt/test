@@ -1,10 +1,9 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.AbstractMetaProvider;
@@ -27,7 +26,7 @@ import java.util.List;
  * Date: 10/6/11
  * Time: 5:05 PM
  */
-public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organization, RequirementRelationship> {
+public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency, RequirementRelationship> {
 
     /**
      * Font for node labels.
@@ -40,22 +39,21 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
     private static final String ORG_FONT_SIZE = "10";
 
 
-    private final Organization selectedOrganization;
+    private final Agency selectedAgency;
     private final RequirementRelationship selectedRequirementRel;
     private final Phase.Timing timing;
     private final Event event;
 
     public RequiredNetworkingMetaProvider(
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequirementRel,
             Phase.Timing timing,
             Event event,
             String outputFormat,
             Resource imageDirectory,
-            Analyst analyst,
-            QueryService queryService ) {
-        super( outputFormat, imageDirectory, analyst, queryService );
-        this.selectedOrganization = selectedOrganization;
+            PlanCommunity planCommunity ) {
+        super( outputFormat, imageDirectory, planCommunity.getAnalyst(), planCommunity.getPlanService() );
+        this.selectedAgency = selectedAgency;
         this.selectedRequirementRel = selectedRequirementRel;
         this.timing = timing;
         this.event = event;
@@ -67,23 +65,23 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
     }
 
     @Override
-    public URLProvider<Organization, RequirementRelationship> getURLProvider() {
-        return new URLProvider<Organization, RequirementRelationship>() {
+    public URLProvider<Agency, RequirementRelationship> getURLProvider() {
+        return new URLProvider<Agency, RequirementRelationship>() {
             @Override
-            public String getGraphURL( Organization org ) {
+            public String getGraphURL( Agency agency ) {
                 return null;
             }
 
             @Override
-            public String getVertexURL( Organization org ) {
-                Object[] args = {0, org.getId()};
+            public String getVertexURL( Agency agency ) {
+                Object[] args = {0, agency.getId()};
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
             @Override
             public String getEdgeURL( RequirementRelationship reqRel ) {
                 // Plan id = 0 for now since there is only one plan
-                Object[] args = {0, reqRel.getId()};
+                Object[] args = {0, reqRel.getRelationshipId()};
                 return MessageFormat.format( EDGE_URL_FORMAT, args );
             }
         };
@@ -101,32 +99,32 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
     }
 
     @Override
-    public VertexNameProvider<Organization> getVertexLabelProvider() {
-        return new VertexNameProvider<Organization>() {
+    public VertexNameProvider<Agency> getVertexLabelProvider() {
+        return new VertexNameProvider<Agency>() {
             @Override
-            public String getVertexName( Organization org ) {
-                String label = getIdentifiableLabel( org ).replaceAll( "\\|", "\\\\n" );
+            public String getVertexName( Agency agency ) {
+                String label = getIdentifiableLabel( agency ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
             }
         };
     }
 
     @Override
-    public VertexNameProvider<Organization> getVertexIDProvider() {
-        return new VertexNameProvider<Organization>() {
+    public VertexNameProvider<Agency> getVertexIDProvider() {
+        return new VertexNameProvider<Agency>() {
             @Override
-            public String getVertexName( Organization org ) {
-                return String.valueOf( org.getId() );
+            public String getVertexName( Agency agency ) {
+                return Long.toString( agency.getId() );
             }
         };
     }
 
     @Override
-    public DOTAttributeProvider<Organization, RequirementRelationship> getDOTAttributeProvider() {
+    public DOTAttributeProvider<Agency, RequirementRelationship> getDOTAttributeProvider() {
         return new RequirementNetworkingDOTAttributeProvider();
     }
 
-    private class RequirementNetworkingDOTAttributeProvider implements DOTAttributeProvider<Organization, RequirementRelationship> {
+    private class RequirementNetworkingDOTAttributeProvider implements DOTAttributeProvider<Agency, RequirementRelationship> {
         @Override
         public List<DOTAttribute> getGraphAttributes() {
             List<DOTAttribute> list = DOTAttribute.emptyList();
@@ -145,7 +143,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Organization vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Agency vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
@@ -157,19 +155,17 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ORG_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ORG_FONT ) );
-            if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
-                    vertex,
-                    Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
+            if ( planCommunity.getParticipationAnalyst().hasIssues( vertex, planCommunity ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( getAnalyst().getIssuesOverview( queryService,
+                        sanitize( planCommunity.getParticipationAnalyst().getIssuesOverview(
                                 vertex,
-                                Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
+                                planCommunity ) ) ) );
             }
             return list;
         }
 
-        private String getIcon( ImagingService service, Organization org ) {
+        private String getIcon( ImagingService service, Agency agency ) {
             String iconName;
             String imagesDirName;
             try {
@@ -177,16 +173,20 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
             } catch ( IOException e ) {
                 throw new RuntimeException( "Unable to get image directory location", e );
             }
-            String label = getIdentifiableLabel( org );
+            String label = getIdentifiableLabel( agency );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = service.findIconName( getPlan(), org );
+            iconName = service.findIconName(
+                    getPlan(),
+                    agency.getPlanOrganization() == null
+                            ? agency
+                            : agency.getPlanOrganization() );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, RequirementRelationship edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, RequirementRelationship edge, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -197,11 +197,11 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Organiz
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            if ( edge.hasUnfulfilledRequirements( timing, event, queryService, getAnalyst() ) ) {
+            if ( edge.hasUnfulfilledRequirements( timing, event, planCommunity ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( edge.getNonFulfillmentSummary( timing, event, queryService, getAnalyst() ) ) ) );
+                        sanitize( edge.getNonFulfillmentSummary( timing, event, planCommunity ) ) ) );
        //         sanitize( queryService.getRequirementNonFulfillmentSummary( edge, timing, event, getAnalyst() ) ) ) );
             }
             return list;

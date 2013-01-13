@@ -6,11 +6,12 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
@@ -53,25 +54,26 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
 
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
+        PlanService planService = planCommunity.getPlanService();
         ProceduresGraphBuilder graphBuilder =
                 new ProceduresGraphBuilder( segment, summarizeByOrgType, summarizeByOrg, summarizeByRole, focusEntity );
-        graphBuilder.setQueryService( queryService );
+        graphBuilder.setQueryService( planService );
         Graph<Assignment, Commitment> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Assignment, Commitment> graphRenderer = diagramFactory.getGraphRenderer();
         ProceduresMetaProvider metaProvider = new ProceduresMetaProvider( segment,
                                                                           outputFormat,
                                                                           diagramFactory.getImageDirectory(),
                                                                           analyst,
-                                                                          queryService );
+                planService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         ProceduresDOTExporter dotExporter = new ProceduresDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

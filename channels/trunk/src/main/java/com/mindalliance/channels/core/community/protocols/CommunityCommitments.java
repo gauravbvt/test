@@ -1,7 +1,12 @@
 package com.mindalliance.channels.core.community.protocols;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Requirement;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -139,6 +144,33 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         return result;
     }
 
+    public CommunityCommitments withFlows( List<Flow> flows ) {
+        CommunityCommitments result = new CommunityCommitments( locale );
+        for ( CommunityCommitment commitment : this ) {
+            if ( flows.contains( commitment.getSharing() ) )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+    public CommunityCommitments inSituation( Phase.Timing timing, Event event, Place planLocale ) {
+        CommunityCommitments result = new CommunityCommitments( locale );
+        for ( CommunityCommitment communityCommitment : this ) {
+            if ( communityCommitment.getCommitment().isInSituation( timing, event, planLocale ) )
+                result.add( communityCommitment );
+        }
+        return result;
+    }
+
+    public CommunityCommitments satisfying( Requirement requirement, PlanCommunity planCommunity ) {
+        CommunityCommitments result = new CommunityCommitments( locale );
+        for ( CommunityCommitment communityCommitment : this ) {
+            if ( requirement.satisfiedBy( communityCommitment, planCommunity ) )
+                result.add( communityCommitment );
+        }
+        return result;
+    }
+
 
     ////////////////////////////
 
@@ -159,4 +191,4 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         return new ArrayList<CommunityCommitment>( commitments );
     }
 
- }
+}

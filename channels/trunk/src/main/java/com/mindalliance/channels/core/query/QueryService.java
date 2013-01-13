@@ -40,8 +40,6 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 
 import java.util.List;
 import java.util.Map;
@@ -1588,21 +1586,6 @@ public interface QueryService {
      * @return a sorted list of strings
      */
     List<String> findAllEoiNames();
-
-    /**
-     * Get summary of requirement relationship non-fulfillment.
-     *
-     * @param requirementRelationship a requirement relationship (between two organizations)
-     * @param timing                  a phase timing
-     * @param event                   an event
-     * @param analyst                 an analyst
-     * @return a string
-     */
-    String getRequirementNonFulfillmentSummary(
-            RequirementRelationship requirementRelationship,
-            Phase.Timing timing,
-            Event event,
-            Analyst analyst );
 
     /**
      * Get user contact info service.

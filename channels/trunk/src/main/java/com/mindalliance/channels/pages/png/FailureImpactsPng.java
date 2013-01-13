@@ -1,12 +1,11 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.graph.Diagram;
-import com.mindalliance.channels.graph.DiagramException;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
+import com.mindalliance.channels.graph.Diagram;
+import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -47,12 +46,11 @@ public class FailureImpactsPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanService planService,
-                                   DiagramFactory diagramFactory,
-                                   Analyst analyst ) throws DiagramException {
+                                   PlanCommunity planCommunity,
+                                   DiagramFactory diagramFactory ) throws DiagramException {
         SegmentObject segmentObject = null;
         boolean assumeFails;
-        Segment segment = PlanPage.findSegment( planService, parameters );
+        Segment segment = PlanPage.findSegment( planCommunity.getPlanService(), parameters );
         if ( segment != null && parameters.getNamedKeys().contains( FAILURE ) ) {
             try {
                 long id = parameters.get( FAILURE ).toLong();

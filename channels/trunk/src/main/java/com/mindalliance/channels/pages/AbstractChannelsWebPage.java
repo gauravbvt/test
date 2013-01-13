@@ -65,8 +65,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Abstract Channels Web Page.
@@ -88,6 +90,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( AbstractChannelsWebPage.class );
+
+    /**
+     * Id of components that are expanded.
+     */
+    private Set<Long> expansions = new HashSet<Long>();
+
 
     @SpringBean
     private CommanderFactory commanderFactory;
@@ -138,6 +146,31 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public AbstractChannelsWebPage( PageParameters parameters ) {
         super( parameters );
         setPlanFromParameters( parameters );
+    }
+
+    public Set<Long> getExpansions() {
+        return expansions;
+    }
+
+    public void setExpansions( Set<Long> expansions ) {
+        this.expansions = expansions;
+    }
+
+    public void addExpansion( long expansion ) {
+        expansions.add( expansion );
+    }
+
+    public void removeExpansion( long expansion ) {
+        expansions.remove( expansion );
+    }
+
+    /**
+     * Get read-only expansions.
+     *
+     * @return a read-only set of Longs
+     */
+    protected Set<Long> getReadOnlyExpansions() {
+        return Collections.unmodifiableSet( getExpansions() );
     }
 
     //-------------------------------
@@ -204,7 +237,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     protected BookmarkablePageLink<? extends WebPage> getProtocolsLink(
             String id,
-            QueryService queryService,
             PlanCommunity planCommunity,
             ChannelsUser user,
             boolean samePage ) {
@@ -308,6 +340,23 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
             feedbackLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return feedbackLink;
     }
+
+    public BookmarkablePageLink<? extends WebPage> getRequirementsLink(
+            String id,
+            PlanCommunity planCommunity,
+            boolean samePage ) {
+        BookmarkablePageLink<? extends WebPage> requirementsLink = newTargetedLink(
+                id,
+                "",
+                RequirementsPage.class,
+                new PageParameters(),
+                null,
+                plan );
+        if ( !samePage )
+            requirementsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return requirementsLink;
+    }
+
 
 
     /**

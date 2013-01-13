@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.manager;
 
-import com.mindalliance.channels.core.community.participation.issues.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
 
-    private static final int MAX_ROWS = 10;
+    private static final int MAX_ROWS = 8;
 
     @SpringBean
     private ParticipationAnalyst participationAnalyst;

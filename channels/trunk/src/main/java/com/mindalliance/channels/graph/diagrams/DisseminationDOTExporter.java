@@ -6,13 +6,13 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Dissemination;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
 import com.mindalliance.channels.graph.MetaProvider;
-import com.mindalliance.channels.core.model.Node;
-import com.mindalliance.channels.core.model.Segment;
 import org.jgrapht.Graph;
 
 import java.io.PrintWriter;
@@ -29,7 +29,7 @@ public class DisseminationDOTExporter extends AbstractDOTExporter<Node, Dissemin
     }
 
     @Override
-    protected void exportVertices( QueryService queryService, PrintWriter out, Graph<Node, Dissemination> g ) {
+    protected void exportVertices( PlanCommunity planCommunity, PrintWriter out, Graph<Node, Dissemination> g ) {
         DisseminationMetaProvider metaProvider = (DisseminationMetaProvider) getMetaProvider();
         Map<Segment, Set<Node>> segmentNodes = new HashMap<Segment, Set<Node>>();
         for ( Node node : g.vertexSet() ) {
@@ -43,7 +43,7 @@ public class DisseminationDOTExporter extends AbstractDOTExporter<Node, Dissemin
         }
         for ( Segment segment : segmentNodes.keySet() ) {
             if ( segment.equals( getSegment() ) )
-                printoutVertices( queryService, out, segmentNodes.get( segment ) );
+                printoutVertices( planCommunity, out, segmentNodes.get( segment ) );
             else {
                 out.println( "subgraph cluster_" + segment.getName().replaceAll( "[^a-zA-Z0-9_]", "_" ) + " {" );
                 List<DOTAttribute> attributes = new DOTAttribute( "label", "Segment: " + segment.getName() ).asList();
@@ -58,7 +58,7 @@ public class DisseminationDOTExporter extends AbstractDOTExporter<Node, Dissemin
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( queryService, out, segmentNodes.get( segment ) );
+                printoutVertices( planCommunity, out, segmentNodes.get( segment ) );
                 out.println( "}" );
             }
         }

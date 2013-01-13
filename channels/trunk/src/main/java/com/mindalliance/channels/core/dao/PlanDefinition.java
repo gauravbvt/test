@@ -35,7 +35,7 @@ public class PlanDefinition extends Observable {
     public static final String DATA_FILE = "data.xml";
 
     /**
-     * Name of file contining last id used in plan or and in journal, if any.
+     * Name of file containing last id used in plan or and in journal, if any.
      */
     public static final String LAST_ID_FILE = "lastid";
 

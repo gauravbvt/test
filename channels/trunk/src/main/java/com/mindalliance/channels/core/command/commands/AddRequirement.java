@@ -37,7 +37,7 @@ public class AddRequirement extends AbstractCommand {
         // State is set when undoing a RemoveRequirement
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         if ( state != null )
-            requirement.initFromMap( state, commander.getQueryService() );
+            requirement.initFromMap( state, commander.getPlanCommunity() );
         set( "requirement", requirement.getId() );
         describeTarget( requirement );
         return new Change( Change.Type.Added, requirement );
@@ -46,6 +46,7 @@ public class AddRequirement extends AbstractCommand {
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         Requirement requirement = commander.resolve( Requirement.class, (Long) get( "requirement" ) );
+        requirement.initialize( commander.getPlanCommunity() );
         return new RemoveRequirement( getUserName(), requirement );
     }
 

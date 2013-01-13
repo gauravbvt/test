@@ -171,9 +171,11 @@ public class PlanConverter extends AbstractChannelsConverter {
 
         // All assignment requirements
         for ( Requirement requirement : planDao.list( Requirement.class ) ) {
-            writer.startNode( "requirement" );
-            context.convertAnother( requirement );
-            writer.endNode();
+            if ( !requirement.isUnknown() ) {
+                writer.startNode( "requirement" );
+                context.convertAnother( requirement );
+                writer.endNode();
+            }
         }
         // Export user issues
         exportUserIssues( plan, writer, context );

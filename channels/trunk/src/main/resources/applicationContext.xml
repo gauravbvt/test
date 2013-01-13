@@ -310,7 +310,6 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumSynchronicity"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartIsOngoingAndStartsWithSegment"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.NoIntermediateToBypass"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.RequirementNotSatisfiedByOrganization"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
@@ -321,7 +320,7 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.participation.issues.ParticipationAnalystImpl">
+    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.participation.ParticipationAnalystImpl">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                  <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.InvalidAgencyParent"/>

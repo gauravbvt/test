@@ -1,7 +1,6 @@
 package com.mindalliance.channels.core.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * A commitment to share information. Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved. Proprietary and
@@ -109,32 +108,7 @@ public class Commitment implements Serializable {
      * @return a boolean
      */
     public boolean isInSituation( Phase.Timing timing, Event event, Place planLocale ) {
-        EventPhase eventPhase = getSegment().getEventPhase();
-        List<EventTiming> context = getSegment().getContext();
-        // matches event phase
-        if ( matchesEventTiming( timing,
-                event,
-                new EventTiming( eventPhase ),
-                planLocale ) ) {
-            return true;
-        } else {
-            // matches any of the event timings in context
-            for ( EventTiming eventTiming : context ) {
-                if ( matchesEventTiming( timing, event, eventTiming, planLocale ) ) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean matchesEventTiming(
-            Phase.Timing timing,
-            Event event,
-            EventTiming eventTiming,
-            Place planLocale ) {
-        return ( timing == null || eventTiming.getTiming() == timing )
-                && ( event == null || eventTiming.getEvent().narrowsOrEquals( event, planLocale ) );
+        return getSegment().isInSituation( timing, event, planLocale );
     }
 
     public Segment getSegment() {

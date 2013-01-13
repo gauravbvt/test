@@ -1,7 +1,7 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.pages.components.AbstractResizableDiagramPanel;
@@ -23,7 +23,7 @@ public class RequiredNetworkingPanel extends AbstractResizableDiagramPanel {
 
     private final Model<Phase.Timing> timingModel;
     private final Model<Event> eventModel;
-    private final Organization selectedOrganization;
+    private final Agency selectedAgency;
     private final RequirementRelationship selectedRequiredNetworkingRel;
     private RequiredNetworkingDiagramPanel requiredNetworkingDiagramPanel;
 
@@ -31,14 +31,14 @@ public class RequiredNetworkingPanel extends AbstractResizableDiagramPanel {
             String id,
             Model<Phase.Timing> timingModel,
             Model<Event> eventModel,
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequiredNetworkingRel,
             Set<Long> expansions,
             String domPrefixIdentifier ) {
         super( id, expansions, domPrefixIdentifier );
         this.timingModel = timingModel;
         this.eventModel = eventModel;
-        this.selectedOrganization = selectedOrganization;
+        this.selectedAgency = selectedAgency;
         this.selectedRequiredNetworkingRel = selectedRequiredNetworkingRel;
         init();
     }
@@ -50,7 +50,7 @@ public class RequiredNetworkingPanel extends AbstractResizableDiagramPanel {
                     WICKET_ID,
                     timingModel,
                     eventModel,
-                    selectedOrganization,
+                    selectedAgency,
                     selectedRequiredNetworkingRel,
                     null,
                     getDomIdentifier()
@@ -61,7 +61,7 @@ public class RequiredNetworkingPanel extends AbstractResizableDiagramPanel {
                     WICKET_ID,
                     timingModel,
                     eventModel,
-                    selectedOrganization,
+                    selectedAgency,
                     selectedRequiredNetworkingRel,
                     getDiagramSize(),
                     getDomIdentifier()

@@ -18,7 +18,7 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 public class Agent implements Nameable, Identifiable {
 
     private Actor actor;
-    private OrganizationParticipation organizationParticipation;
+    private OrganizationParticipation organizationParticipation;  // can be null
     private String name;
 
     public Agent( Actor actor ) {
@@ -60,7 +60,7 @@ public class Agent implements Nameable, Identifiable {
      *
      * @return a boolean
      */
-    public boolean isRegistered() {
+    public boolean isFromOrganizationParticipation() {
         return organizationParticipation != null;
     }
 
@@ -149,7 +149,7 @@ public class Agent implements Nameable, Identifiable {
     }
 
     public String toString() {
-        return "Agent " + getName();
+        return getName();
     }
 
     public String getActorName() {
@@ -166,7 +166,7 @@ public class Agent implements Nameable, Identifiable {
 
     public boolean isRegisteredInPlaceholder( Organization organization, PlanCommunity planCommunity ) {
         return organization.isPlaceHolder()
-                && isRegistered()
+                && isFromOrganizationParticipation()
                 && getOrganizationParticipation().getPlaceholderOrganization( planCommunity )
                 .equals( organization );
     }

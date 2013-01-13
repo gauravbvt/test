@@ -16,7 +16,6 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -182,18 +181,6 @@ public class Commitments implements Serializable, Iterable<Commitment> {
         Commitments result = new Commitments();
         for ( Commitment commitment : commitments ) {
             if ( commitment.isInSituation( timing, event, planLocale ) )
-                result.add( commitment );
-        }
-        return result;
-    }
-
-
-    public Commitments satisfying( Requirement requirement ) {
-        Commitments result = new Commitments( planLocale );
-        Iterator<Commitment> iterator = iterator();
-        while ( iterator.hasNext() ) {
-            Commitment commitment = iterator.next();
-            if ( requirement.satisfiedBy( commitment, planLocale ) )
                 result.add( commitment );
         }
         return result;

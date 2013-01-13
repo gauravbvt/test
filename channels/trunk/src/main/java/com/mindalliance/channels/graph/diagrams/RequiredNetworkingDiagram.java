@@ -1,9 +1,9 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequiredNetworkingGraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -22,23 +22,23 @@ import java.io.OutputStream;
  * Date: 10/6/11
  * Time: 3:19 PM
  */
-public class RequiredNetworkingDiagram extends AbstractDiagram<Organization, RequirementRelationship> {
+public class RequiredNetworkingDiagram extends AbstractDiagram<Agency, RequirementRelationship> {
     private final Phase.Timing timing;
     private final Event event;
-    private final Organization selectedOrganization;
+    private final Agency selectedAgency;
     private final RequirementRelationship selectedRequirementRel;
 
     public RequiredNetworkingDiagram(
             Phase.Timing timing,
             Event event,
-            Organization selectedOrganization,
+            Agency selectedAgency,
             RequirementRelationship selectedRequirementRel,
             double[] diagramSize,
             String orientation ) {
         super( diagramSize, orientation );
         this.timing = timing;
         this.event = event;
-        this.selectedOrganization = selectedOrganization;
+        this.selectedAgency = selectedAgency;
         this.selectedRequirementRel = selectedRequirementRel;
     }
 
@@ -49,34 +49,32 @@ public class RequiredNetworkingDiagram extends AbstractDiagram<Organization, Req
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory,
-            QueryService queryService ) throws DiagramException {
+            PlanCommunity planCommunity ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         RequiredNetworkingGraphBuilder graphBuilder =
-                new RequiredNetworkingGraphBuilder( timing, event, selectedOrganization, selectedRequirementRel );
-        graphBuilder.setQueryService( queryService );
-        graphBuilder.setAnalyst( analyst );
-        Graph<Organization, RequirementRelationship> graph = graphBuilder.buildDirectedGraph();
-        GraphRenderer<Organization, RequirementRelationship> graphRenderer = diagramFactory.getGraphRenderer();
+                new RequiredNetworkingGraphBuilder( timing, event, selectedAgency, selectedRequirementRel );
+        graphBuilder.setPlanCommunity( planCommunity );
+        Graph<Agency, RequirementRelationship> graph = graphBuilder.buildDirectedGraph();
+        GraphRenderer<Agency, RequirementRelationship> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
-        if ( selectedOrganization != null )
-            graphRenderer.highlightVertex( selectedOrganization );
+        if ( selectedAgency != null )
+            graphRenderer.highlightVertex( selectedAgency );
         if ( selectedRequirementRel != null )
             graphRenderer.highlightEdge( selectedRequirementRel );
         RequiredNetworkingMetaProvider metaProvider = new RequiredNetworkingMetaProvider(
-                selectedOrganization,
+                selectedAgency,
                 selectedRequirementRel,
                 timing,
                 event,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                analyst,
-                queryService );
+                planCommunity );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         RequiredNetworkingDOTExporter dotExporter = new RequiredNetworkingDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

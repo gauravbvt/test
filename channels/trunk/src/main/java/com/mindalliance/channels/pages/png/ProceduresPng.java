@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -45,14 +45,14 @@ public class ProceduresPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanService planService,
-                                   DiagramFactory diagramFactory,
-                                   Analyst analyst ) throws DiagramException {
+                                   PlanCommunity planCommunity,
+                                   DiagramFactory diagramFactory ) throws DiagramException {
         Segment segment = null;
         boolean summarizeByOrgType = false;
         boolean summarizeByOrg = false;
         boolean summarizeByRole = false;
         ModelEntity focusEntity = null;
+        PlanService planService = planCommunity.getPlanService();
         segment = PlanPage.findSegment( planService, parameters );
         if ( parameters.getNamedKeys().contains( SUMMARIZE ) ) {
             String summarizeBy = parameters.get( SUMMARIZE ).toString();

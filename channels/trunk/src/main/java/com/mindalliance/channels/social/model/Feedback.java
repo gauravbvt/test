@@ -34,6 +34,7 @@ public class Feedback extends UserStatement {
     public static final String PARTICIPATING = "Participating";
     public static final String ISSUES = "Issues";
     public static final String FEEDBACK = "Feedback";
+    public static final String REQUIREMENTS = "Requirements";
     public static final String CHANNELS = "Channels";
 
 

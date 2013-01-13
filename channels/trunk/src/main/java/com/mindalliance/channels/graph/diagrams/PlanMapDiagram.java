@@ -6,8 +6,10 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.PlanMapGraphBuilder;
@@ -78,13 +80,13 @@ public class PlanMapDiagram extends AbstractDiagram<Segment, SegmentRelationship
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
         GraphRenderer<Segment, SegmentRelationship> renderer = diagramFactory.getGraphRenderer();
-
+        PlanService planService = planCommunity.getPlanService();
         renderer.highlight( selectedSegment, selectedSgRel );
-        renderer.render( queryService,
-                         createGraph( queryService, analyst ),
-                         createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, queryService ),
+        renderer.render( planCommunity,
+                         createGraph( planService, analyst ),
+                         createExporter( outputFormat, diagramFactory.getImageDirectory(), analyst, planService ),
                          outputFormat,
                          ticket,
                          outputStream );

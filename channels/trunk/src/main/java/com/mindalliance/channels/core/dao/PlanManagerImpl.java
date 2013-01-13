@@ -255,7 +255,6 @@ public class PlanManagerImpl implements PlanManager {
      * @param command      the command
      */
     public void onAfterCommand( Plan plan, JournalCommand command ) {
-        // TODO implement proper listener/callback mechanism
         if ( command != null && command.isMemorable() )
             try {
                 PlanDao dao = getDao( plan );

@@ -6,10 +6,11 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.engine.analysis.graph.DirectedMultiGraphWithProperties;
@@ -69,11 +70,12 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, QueryService queryService ) throws DiagramException {
+                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
+        PlanService planService = planCommunity.getPlanService();
         GraphBuilder flowMapGraphBuilder =
-                new FlowMapGraphBuilder( segment, queryService, showingConnectors );
+                new FlowMapGraphBuilder( segment, planService, showingConnectors );
         Graph<Node, Flow> graph = flowMapGraphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Flow> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -86,13 +88,13 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
                                                                     showingGoals,
                                                                     showingConnectors,
                                                                     hidingNoop,
-                                                                    queryService );
+                planService );
         metaProvider.setGraphProperties( ( (DirectedMultiGraphWithProperties) graph ).getProperties() );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         FlowMapDOTExporter dotExporter = new FlowMapDOTExporter( metaProvider );
-        graphRenderer.render( queryService, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

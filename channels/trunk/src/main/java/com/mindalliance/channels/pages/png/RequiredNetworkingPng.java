@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.graph.Diagram;
 import com.mindalliance.channels.graph.DiagramException;
@@ -32,12 +32,12 @@ public class RequiredNetworkingPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanService planService,
-                                   DiagramFactory diagramFactory,
-                                   Analyst analyst ) throws DiagramException {
+                                   PlanCommunity planCommunity,
+                                   DiagramFactory diagramFactory ) throws DiagramException {
         Event event = null;
-        Organization selectedOrganization = null;
+        Agency selectedAgency = null;
         RequirementRelationship selectedRequirementRelationship = null;
+        PlanService planService = planCommunity.getPlanService();
         Phase.Timing timing = null;
         if ( parameters.getNamedKeys().contains( "timing" ) ) {
             String name = parameters.get( "timing" ).toString();
@@ -55,25 +55,25 @@ public class RequiredNetworkingPng extends DiagramPng {
                 LOG.warn( "Selected event not found at :" + eventId, e );
             }
         }
-        if ( parameters.getNamedKeys().contains( "organization" )
-                && !parameters.get( "organization" ).toString().equals( "NONE" ) ) {
-            Long orgId = parameters.get( "organization" ).toLong();
+        if ( parameters.getNamedKeys().contains( "agency" )
+                && !parameters.get( "agency" ).toString().equals( "NONE" ) ) {
+            Long agencyId = parameters.get( "agency" ).toLong();
             try {
-                selectedOrganization = planService.find( Organization.class, orgId );
+                selectedAgency = planCommunity.getParticipationManager().findAgencyById( agencyId, planCommunity );
             } catch ( NotFoundException e ) {
-                LOG.warn( "Selected organization not found at :" + orgId, e );
+                LOG.warn( "Selected organization not found at :" + agencyId, e );
             }
         }
         if ( parameters.getNamedKeys().contains( "connection" )
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
-            Long relId = parameters.get( "connection" ).toLong();
+            String relId = parameters.get( "connection" ).toString();
             selectedRequirementRelationship = new RequirementRelationship();
-            selectedRequirementRelationship.setId( relId, planService );
+            selectedRequirementRelationship.setId( relId, planCommunity );
         }
         return diagramFactory.newRequiredNetworkingDiagram(
                 timing,
                 event,
-                selectedOrganization,
+                selectedAgency,
                 selectedRequirementRelationship,
                 size,
                 orientation );

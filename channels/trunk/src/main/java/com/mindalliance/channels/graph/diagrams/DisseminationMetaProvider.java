@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Flow;
@@ -164,7 +165,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Node vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 if ( vertex.isPart() ) {
@@ -215,7 +216,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, Dissemination edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Dissemination edge, boolean highlighted ) {
             Flow flow = edge.getFlow();
             boolean conceptual = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( getQueryService(),
                                                                                                   flow );

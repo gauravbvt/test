@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.engine.analysis.Analyst;
 
 import java.io.OutputStream;
@@ -38,11 +38,11 @@ public interface  Diagram<V,E> extends Serializable {
      * @param outputStream the output stream
      * @param analyst an analyst
      * @param diagramFactory   a diagram factory
-     * @param queryService a query service
+     * @param planCommunity a plan community
      * @throws DiagramException raised if diagram generation fails
      */
     void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                 DiagramFactory<V, E> diagramFactory, QueryService queryService ) throws DiagramException ;
+                 DiagramFactory<V, E> diagramFactory, PlanCommunity planCommunity ) throws DiagramException ;
 
     /**
      * Produce image map
@@ -51,10 +51,10 @@ public interface  Diagram<V,E> extends Serializable {
      * @param ticket  a per-format use-once ticket
      * @param analyst an analyst
      * @param diagramFactory  a diagram factory
-     * @param queryService
+     * @param planCommunity a plan community
      * @return a String
      * @throws DiagramException if fails
      */
     String makeImageMap( String ticket, Analyst analyst, DiagramFactory<V, E> diagramFactory,
-                         QueryService queryService );
+                         PlanCommunity planCommunity );
 }

@@ -103,7 +103,7 @@ public class EmploymentData implements Serializable {
 
     public String getLabel() {
         Agent agent = employment.getAgent();
-        if ( agent.isRegistered() ) {
+        if ( agent.isFromOrganizationParticipation() ) {
             return agent.getName();
         } else {
             return agent.getName() + " for " + employment.getEmployer().getName();

@@ -59,8 +59,6 @@ import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -3055,38 +3053,6 @@ public abstract class DefaultQueryService implements QueryService {
         return result;
     }
 
-    @Override
-    public String getRequirementNonFulfillmentSummary(
-            RequirementRelationship requirementRelationship,
-            Phase.Timing timing,
-            Event event,
-            Analyst analyst ) {
-        StringBuilder sb = new StringBuilder();
-        Commitments allCommitments = getAllCommitments();
-        List<Requirement> unfulfilled = new ArrayList<Requirement>();
-        Plan plan = getPlan();
-        for ( Requirement requirement : requirementRelationship.getRequirements() ) {
-            Requirement req = requirement.transientCopy();
-            req.setCommitterOrganization( (Organization) requirementRelationship.getFromIdentifiable( this ) );
-            req.setBeneficiaryOrganization( (Organization) requirementRelationship.getToIdentifiable( this ) );
-            if ( allCommitments.satisfying( req )
-                    .inSituation( timing, event, getPlanLocale() )
-                    .realizable( analyst, plan, this ).isEmpty() )
-                unfulfilled.add( req );
-        }
-        if ( !unfulfilled.isEmpty() ) {
-            sb.append( "Unfulfilled " );
-            sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
-            Iterator<Requirement> iter = unfulfilled.iterator();
-            while ( iter.hasNext() ) {
-                sb.append( '"' );
-                sb.append( iter.next().getName() );
-                sb.append( '"' );
-                if ( iter.hasNext() ) sb.append( ", " );
-            }
-        }
-        return sb.toString();
-    }
 
     @Override
     public Boolean isAgreementRequired( Commitment commitment ) {

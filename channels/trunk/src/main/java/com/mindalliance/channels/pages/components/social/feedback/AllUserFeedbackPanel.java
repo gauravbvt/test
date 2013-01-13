@@ -70,7 +70,8 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             Feedback.ISSUES,
             Feedback.PARTICIPATING,
             Feedback.PLANNING,
-            Feedback.SURVEYS
+            Feedback.SURVEYS,
+            Feedback.REQUIREMENTS
     };
 
     @SpringBean

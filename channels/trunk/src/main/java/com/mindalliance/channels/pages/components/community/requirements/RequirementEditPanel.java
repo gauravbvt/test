@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
@@ -9,8 +9,6 @@ import com.mindalliance.channels.core.model.Taggable;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.AttachmentPanel;
-import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
@@ -48,10 +46,14 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     private static final String SENDERS = "Sources";
     private static final String RECEIVERS = "Receivers";
     private static final String CARD = "Sources per receiver";
+
+/*
+    TODO: Re-active requirement attachments and issues
     private static final String ATTACHMENTS = "Attachments";
     private static final String ISSUES = "Issues";
+*/
 
-    private static final String[] HEADERS = {INFO, SENDERS, RECEIVERS, CARD, ATTACHMENTS, ISSUES};
+    private static final String[] HEADERS = {INFO, SENDERS, RECEIVERS, CARD/*, ATTACHMENTS, ISSUES*/};
     private String selectedSection = INFO;
     private TextField<String> nameField;
     private TextArea<String> descField;
@@ -64,6 +66,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        requestLockOn( getRequirement() );
         addEditedBy();
         addName();
         addDescription();
@@ -87,7 +90,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
 
     private void adjustFields() {
         Requirement requirement = getRequirement();
-        nameField.setEnabled( isLockedByUser( requirement ) );
+        nameField.setEnabled( isLockedByUserIfNeeded( requirement ) );
         descField.setEnabled( isLockedByUserIfNeeded( requirement ) );
     }
 
@@ -164,6 +167,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     }
 
     private String makeSectionName( String section ) {
+/*
         if ( section.equals( ISSUES ) ) {
             int allCount = getAnalyst().allIssuesCount( getRequirement(), getQueryService() );
             int unwaivedCount = getAnalyst().unwaivedIssuesCount( getRequirement(), getQueryService() );
@@ -178,6 +182,8 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
         } else {
             return section;
         }
+*/
+        return section;
     }
 
     public List<String> getSectionHeaders() {
@@ -202,11 +208,11 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
                     "reqSection",
                     new Model<Requirement>( requirement ),
                     "cardinality" );
-        } else if ( selectedSection.equals( ATTACHMENTS ) ) {
+        }/* else if ( selectedSection.equals( ATTACHMENTS ) ) {
             sectionPanel = new AttachmentPanel( "reqSection", new Model<Requirement>( requirement ) );
         } else if ( selectedSection.equals( ISSUES ) ) {
             sectionPanel = new IssuesPanel( "reqSection", new Model<Requirement>( requirement ), getExpansions() );
-        } else {
+        }*/ else {
             throw new RuntimeException( "Unknown: " + selectedSection );
         }
         sectionPanel.setOutputMarkupId( true );
@@ -234,7 +240,9 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     }
 
     private Requirement getRequirement() {
-        return (Requirement) getModel().getObject();
+        Requirement requirement = (Requirement) getModel().getObject();
+        requirement.initialize( getPlanCommunity() );
+        return requirement;
     }
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {

@@ -6,14 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.graph.AbstractMetaProvider;
-import com.mindalliance.channels.graph.DOTAttribute;
-import com.mindalliance.channels.graph.DOTAttributeProvider;
-import com.mindalliance.channels.graph.DiagramFactory;
-import com.mindalliance.channels.graph.URLProvider;
-import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -22,6 +15,14 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.graph.AbstractMetaProvider;
+import com.mindalliance.channels.graph.DOTAttribute;
+import com.mindalliance.channels.graph.DOTAttributeProvider;
+import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.graph.URLProvider;
 import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
@@ -246,7 +247,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( QueryService queryService, Assignment assignment,
+        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Assignment assignment,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
@@ -276,7 +277,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( QueryService queryService, Commitment edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Commitment edge, boolean highlighted ) {
             Flow flow = edge.getSharing();
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );

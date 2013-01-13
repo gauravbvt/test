@@ -242,7 +242,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     private StringBuilder createMapHolder( String ticket, Analyst analyst, DiagramFactory diagramFactory ) {
         StringBuilder builder = new StringBuilder();
-        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory, getQueryService() );
+        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory, getPlanCommunity() );
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
         imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );

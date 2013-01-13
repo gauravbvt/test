@@ -1,7 +1,10 @@
-package com.mindalliance.channels.pages.components.plan.requirements;
+package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.participation.Agency;
+import com.mindalliance.channels.core.community.participation.ParticipationManager;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -11,7 +14,6 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -19,7 +21,6 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.pages.components.segment.CommitmentsTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -51,19 +52,19 @@ import java.util.Set;
  * Date: 9/29/11
  * Time: 2:15 PM
  */
-public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implements Filterable {
+public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements Filterable {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( PlanRequiredNetworkingPanel.class );
+    private static final Logger LOG = LoggerFactory.getLogger( RequirementsAnalysisPanel.class );
     private static String ANY_EVENT = "Any event";
     private static final int PAGE_SIZE = 6;
     private static final String DOM_PREFIX_IDENTIFIER = ".req-network";
 
     private Phase.Timing selectedTiming;
     private Event selectedEvent;
-    private Organization selectedOrganization;
+    private Agency selectedAgency;
     private RequirementRelationship selectedRequirementRel;
     private Requirement selectedAppliedRequirement;
     /**
@@ -76,7 +77,12 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
     private RequiredNetworkingPanel requiredNetworkingPanel;
 
 
-    public PlanRequiredNetworkingPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
+    public RequirementsAnalysisPanel( String id, Set<Long> expansions ) {
+        this( id, null, expansions );
+    }
+
+
+    public RequirementsAnalysisPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
         super( id, planModel, expansions );
         init();
     }
@@ -162,7 +168,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                 "reqNetwork",
                 new Model<Phase.Timing>( selectedTiming ),
                 new Model<Event>( selectedEvent ),
-                selectedOrganization,
+                selectedAgency,
                 selectedRequirementRel,
                 null,
                 DOM_PREFIX_IDENTIFIER
@@ -194,12 +200,12 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                 : ( " event " + ChannelsUtils.smartUncapitalize( selectedEvent.getName() ) ) );
         if ( selectedRequirementRel != null ) {
             sb.append( " by " );
-            sb.append( selectedRequirementRel.getFromIdentifiable( getQueryService() ).getName() );
+            sb.append( selectedRequirementRel.getFromAgency( getPlanCommunity() ).getName() );
             sb.append( " with " );
-            sb.append( selectedRequirementRel.getToIdentifiable( getQueryService() ).getName() );
-        } else if ( selectedOrganization != null ) {
+            sb.append( selectedRequirementRel.getToAgency( getPlanCommunity() ).getName() );
+        } else if ( selectedAgency != null ) {
             sb.append( " involving " );
-            sb.append( selectedOrganization.getName() );
+            sb.append( selectedAgency.getName() );
         }
         sb.append( '.' );
         return sb.toString();
@@ -241,7 +247,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !isFilteredOut( (Requirement) object );
+                        Requirement requirement = (Requirement)object;
+                        return !isFilteredOut( requirement );
                     }
                 }
         );
@@ -249,31 +256,35 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
 
     @SuppressWarnings( "unchecked" )
     private List<Requirement> getSelectedAppliedRequirements() {
+       PlanCommunity planCommunity = getPlanCommunity();
         List<RequirementRelationship> reqRels = new ArrayList<RequirementRelationship>();
         if ( selectedRequirementRel != null ) {
             reqRels.add( selectedRequirementRel );
         } else {
             reqRels.addAll( (List<RequirementRelationship>) CollectionUtils.select(
-                    getAnalyst().findRequirementRelationships( selectedTiming, selectedEvent, getQueryService() ),
+                    planCommunity.getParticipationAnalyst().findRequirementRelationships(
+                            selectedTiming,
+                            selectedEvent,
+                            planCommunity ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
                             RequirementRelationship reqRel = (RequirementRelationship) object;
-                            return selectedOrganization == null
-                                    || reqRel.getToIdentifiable() == selectedOrganization.getId()
-                                    || reqRel.getFromIdentifiable() == selectedOrganization.getId();
+                            return selectedAgency == null
+                                    || reqRel.getToAgency( getPlanCommunity() ).equals( selectedAgency )
+                                    || reqRel.getFromAgency( getPlanCommunity() ).equals( selectedAgency );
                         }
                     } ) );
         }
         List<Requirement> applierRequirements = new ArrayList<Requirement>();
-        QueryService queryService = getQueryService();
         Place planLocale = getPlanLocale();
         for ( RequirementRelationship reqRel : reqRels ) {
             for ( Requirement req : reqRel.getRequirements() ) {
                 Requirement appliedReq = req.transientCopy();
-                appliedReq.setCommitterOrganization( (Organization) reqRel.getFromIdentifiable( queryService ) );
-                appliedReq.setBeneficiaryOrganization( (Organization) reqRel.getToIdentifiable( queryService ) );
+                appliedReq.setCommitterAgency( reqRel.getFromAgency( planCommunity ) );
+                appliedReq.setBeneficiaryAgency( reqRel.getToAgency( planCommunity ) );
                 appliedReq.setSituationIfAppropriate( selectedTiming, selectedEvent, planLocale );
+                appliedReq.initialize( getPlanCommunity() );
                 applierRequirements.add( appliedReq );
             }
         }
@@ -285,20 +296,20 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
         commitmentsContainer.setOutputMarkupId( true );
         makeVisible( commitmentsContainer, selectedAppliedRequirement != null );
         addOrReplace( commitmentsContainer );
-        CommitmentsTablePanel commitmentsTablePanel = new CommitmentsTablePanel(
+        CommunityCommitmentsTablePanel commitmentsTablePanel = new CommunityCommitmentsTablePanel(
                 "commitments",
-                new PropertyModel<List<Commitment>>( this, "commitments" )
+                new PropertyModel<List<CommunityCommitment>>( this, "commitments" )
         );
         commitmentsContainer.add( commitmentsTablePanel );
     }
 
-    public List<Commitment> getCommitments() {
+    public List<CommunityCommitment> getCommitments() {
         if ( selectedAppliedRequirement != null ) {
-            return getQueryService().getAllCommitments()
+            return getPlanCommunity().getAllCommitments( false )
                     .inSituation( selectedTiming, selectedEvent, getPlanLocale() )
-                    .satisfying( selectedAppliedRequirement ).toList();
+                    .satisfying( selectedAppliedRequirement, getPlanCommunity() ).toList();
         } else {
-            return new ArrayList<Commitment>();
+            return new ArrayList<CommunityCommitment>();
         }
     }
 
@@ -336,16 +347,16 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
     public void changed( Change change ) {
         if ( change.isSelected() ) {
             if ( change.isForInstanceOf( Organization.class ) ) {
-                selectedOrganization = (Organization) change.getSubject( getQueryService() );
+                selectedAgency = (Agency) change.getSubject( getQueryService() );
                 selectedRequirementRel = null;
                 selectedAppliedRequirement = null;
             } else if ( change.isForInstanceOf( RequirementRelationship.class ) ) {
                 selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
-                selectedOrganization = null;
+                selectedAgency = null;
                 selectedAppliedRequirement = null;
             } else if ( change.isForInstanceOf( Plan.class ) ) {
                 selectedRequirementRel = null;
-                selectedOrganization = null;
+                selectedAgency = null;
                 selectedAppliedRequirement = null;
             } else {
                 super.changed( change );
@@ -361,16 +372,17 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
 
     private Requirement makeAppliedRequirement( Requirement requirement, Map<String, Serializable> qualifiers ) {
         try {
+            ParticipationManager participationManager = getPlanCommunity().getParticipationManager();
             Requirement appliedReq = requirement.transientCopy();
-            if ( qualifiers.containsKey( "committerOrganization.id" ) ) {
-                Long id = (Long) qualifiers.get( "committerOrganization.id" );
-                Organization committerOrg = getQueryService().find( Organization.class, id );
-                appliedReq.setCommitterOrganization( committerOrg );
+            if ( qualifiers.containsKey( "committerAgency.id" ) ) {
+                Long id = (Long) qualifiers.get( "committerAgency.id" );
+                Agency committerOrg = participationManager.findAgencyById( id, getPlanCommunity() );
+                appliedReq.setCommitterAgency( committerOrg );
             }
-            if ( qualifiers.containsKey( "beneficiaryOrganization.id" ) ) {
-                Long id = (Long) qualifiers.get( "beneficiaryOrganization.id" );
-                Organization beneficiaryOrg = getQueryService().find( Organization.class, id );
-                appliedReq.setBeneficiaryOrganization( beneficiaryOrg );
+            if ( qualifiers.containsKey( "beneficiaryAgency.id" ) ) {
+                Long id = (Long) qualifiers.get( "beneficiaryAgency.id" );
+                Agency beneficiaryOrg = participationManager.findAgencyById( id, getPlanCommunity() );
+                appliedReq.setBeneficiaryAgency( beneficiaryOrg );
             }
             if ( qualifiers.containsKey( "timing" ) ) {
                 Phase.Timing timing = (Phase.Timing) qualifiers.get( "timing" );
@@ -381,6 +393,7 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                 Event event = getQueryService().find( Event.class, id );
                 appliedReq.setSituationIfAppropriate( null, event, getPlanLocale() );
             }
+            appliedReq.initialize( getPlanCommunity() );
             return appliedReq;
         } catch ( NotFoundException e ) {
             LOG.warn( "Organization to which requirement is applied was not found" );
@@ -437,38 +450,45 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
             columns.add( makeColumn( "Requirement", "name", EMPTY ) );
             columns.add( makeColumn( "to share info", "informationAndEois", EMPTY ) );
             columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeFilterableColumn(
                     "By organization",
-                    "committerSpec.organization",
-                    "committerSpec.organization.name",
+                    "committerSpec.agency",
+                    "committerSpec.agency.name",
                     EMPTY,
+                    "committerSpec.agency.description",
                     filterable ) );
-            columns.add( makeAnalysisColumn(
+            columns.add( makeParticipationAnalystColumn(
                     "Satisfied?",
+                    null,
                     "committerSatisfaction",
                     "?",
                     selectedTiming,
-                    selectedEvent ) );
-            columns.add( makeFilterableLinkColumn(
+                    selectedEvent
+            ) );
+            columns.add( makeFilterableColumn(
                     "With organization",
-                    "beneficiarySpec.organization",
-                    "beneficiarySpec.organization.name",
+                    "beneficiarySpec.agency",
+                    "beneficiarySpec.agency.name",
                     EMPTY,
+                    "beneficiarySpec.agency.description",
                     filterable ) );
-            columns.add( makeAnalysisColumn(
+            columns.add( makeParticipationAnalystColumn(
                     "Satisfied?",
+                    null,
                     "beneficiarySatisfaction",
                     "?",
                     selectedTiming,
                     selectedEvent ) );
-            columns.add( makeFilterableLinkColumn(
+            columns.add( makeFilterableColumn(
                     "In event",
                     "beneficiarySpec.event",
                     "beneficiarySpec.event.name",
                     EMPTY,
+                    "beneficiarySpec.event.description",
                     filterable ) );
-            columns.add( makeAnalysisColumn(
+            columns.add( makeParticipationAnalystColumn(
                     "Commitments",
+                    null,
                     "commitmentsCount",
                     "?",
                     selectedTiming,
@@ -477,8 +497,8 @@ public class PlanRequiredNetworkingPanel extends AbstractUpdatablePanel implemen
                     "",
                     "",
                     "view",
-                    "committerOrganization.id",
-                    "beneficiaryOrganization.id",
+                    "committerAgency.id",
+                    "beneficiaryAgency.id",
                     "beneficiarySpec.timing",
                     "beneficiarySpec.event" ) );
             List<Requirement> requirements = appliedRequirementsModel.getObject();

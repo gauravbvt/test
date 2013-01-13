@@ -49,6 +49,8 @@ public class MultiCommand extends AbstractCommand {
      */
     private String name = "multiple commands";
 
+    private Change change = new Change(); // Change to be returned on end of execution
+
     //-------------------------------
 
     public MultiCommand() {
@@ -57,12 +59,19 @@ public class MultiCommand extends AbstractCommand {
 
     public MultiCommand( String userName ) {
         super( userName );
-        setTop( false );
     }
 
     public MultiCommand( String userName, String name ) {
         this( userName );
         this.name = name;
+    }
+
+    public Change getChange() {
+        return change;
+    }
+
+    public void setChange( Change change ) {
+        this.change = change;
     }
 
     //-------------------------------
@@ -105,12 +114,7 @@ public class MultiCommand extends AbstractCommand {
             executed.add( command );
         }
         LOG.info( "END multicommand " + getName() );
-        return new Change();
-    }
-
-    @Override
-    public boolean isUndoable() {
-        return true;
+        return getChange();
     }
 
     @Override

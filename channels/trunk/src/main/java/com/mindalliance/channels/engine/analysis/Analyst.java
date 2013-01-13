@@ -7,17 +7,15 @@
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.command.CommandListener;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
-import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelEntity.Kind;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
@@ -26,7 +24,6 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
-import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 
@@ -169,35 +166,6 @@ public interface Analyst extends CommandListener {
     List<EntityRelationship> findEntityRelationships( QueryService queryService, Segment segment,
                                                       Class<? extends ModelEntity> entityClass, Kind kind );
 
-    /**
-     * Find requirement relationships between organizations.
-     *
-     * @param timing       a phase timing or null
-     * @param event        an event or null
-     * @param queryService a query service
-     * @return a list of requirement relationships
-     */
-    List<RequirementRelationship> findRequirementRelationships(
-            Phase.Timing timing,
-            Event event,
-            QueryService queryService );
-
-    /**
-     * Find requirement relationship from one organization to another.
-     *
-     * @param queryService a query service
-     * @param fromOrg      an organization
-     * @param toOrg        an organization
-     * @param timing       a phase timing or null
-     * @param event        an event or null
-     * @return a requirement relationship
-     */
-    RequirementRelationship findRequirementRelationship(
-            QueryService queryService,
-            Organization fromOrg,
-            Organization toOrg,
-            Phase.Timing timing,
-            Event event );
 
     /**
      * Whether a commitment can be realized.
@@ -536,10 +504,10 @@ public interface Analyst extends CommandListener {
      * Diagnostic about whether a commitment can be realized or is conceptual.
      *
      * @param commitment   an info sharing commitment
-     * @param queryService a queryService
+     * @param planCommunity a plan community
      * @return a string
      */
-    String realizability( Commitment commitment, QueryService queryService );
+    String realizability( Commitment commitment, PlanCommunity planCommunity );
 
     /**
      * Number of unwaived issues on a requirement..
@@ -551,6 +519,15 @@ public interface Analyst extends CommandListener {
     int unwaivedIssuesCount( Requirement requirement, QueryService queryService );
 
     /**
+     * Number of unwaived issues on a requirement..
+     *
+     * @param requirement  a requirement
+     * @param planCommunity a plan community
+     * @return a string
+     */
+    int unwaivedIssuesCount( Requirement requirement, PlanCommunity planCommunity );
+
+    /**
      * Number of issues on a requirement..
      *
      * @param requirement  a requirement
@@ -559,40 +536,7 @@ public interface Analyst extends CommandListener {
      */
     int allIssuesCount( Requirement requirement, QueryService queryService );
 
-    /**
-     * Number of commitments that fulfill a given requirement.
-     * @param requirement a requirement
-     * @param extras extra parameters
-     * @param queryService a query service
-     * @return an int
-     */
-    int commitmentsCount( Requirement requirement, Object[] extras, QueryService queryService);
-
-    /**
-     * The level of satisfaction of a requirement by committer organization.
-     * @param requirement a requirement
-     * @param extras extra parameters
-     * @param queryService a query service
-     * @return a requirement satisfaction
-     */
-    Requirement.Satisfaction committerSatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            QueryService queryService);
-
-    /**
-     * The level of satisfaction of a requirement by beneficiary organization.
-     * @param requirement a requirement
-     * @param extras extra parameters
-     * @param queryService a query service
-     * @return a requirement satisfaction
-     */
-    Requirement.Satisfaction beneficiarySatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            QueryService queryService);
-
-    /**
+     /**
      * Sets issue scanner.
      *
      * @param issueScanner an issue scanner

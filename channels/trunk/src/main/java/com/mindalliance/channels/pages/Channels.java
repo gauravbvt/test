@@ -4,6 +4,7 @@ import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
 import com.google.code.jqwicket.JQContributionConfig;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -55,7 +56,7 @@ import org.springframework.security.core.session.SessionIdentifierAware;
  * Application object for Channels.
  * Initialized in /WEB-INF/applicationContext.xml.
  *
- * TODO split into a bone fide service-level object
+ * TODO split into a bona fide service-level object
  */
 public class Channels extends WebApplication
         implements ApplicationListener, ApplicationContextAware {
@@ -129,6 +130,8 @@ public class Channels extends WebApplication
     private AttachmentManager attachmentManager;
     
     private ChannelsUserDao userDao;
+
+    private PlanCommunityManager planCommunityManager;
 
     private Exception exception = null;
 
@@ -220,6 +223,8 @@ public class Channels extends WebApplication
         mountPage( "home", UserPage.class );
         mountPage( "surveys", RFIsPage.class );
         mountPage( "feedback", FeedbackPage.class );
+        mountPage( "requirements", RequirementsPage.class );
+        mountPage(  "participation", ParticipationManagerPage.class );
         mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
@@ -355,6 +360,14 @@ public class Channels extends WebApplication
 
     public ChannelsUserDao getUserDao() {
         return userDao;
+    }
+
+    public PlanCommunityManager getPlanCommunityManager() {
+        return planCommunityManager;
+    }
+
+    public void setPlanCommunityManager( PlanCommunityManager planCommunityManager ) {
+        this.planCommunityManager = planCommunityManager;
     }
 
     // FOR TESTING ONLY

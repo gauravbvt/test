@@ -1,6 +1,7 @@
 package com.mindalliance.channels.engine.imaging;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
@@ -434,6 +435,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                         ? ( (Actor) modelObject ).isSystem() ? "system" : "person"
                         : modelObject instanceof Role ? "role"
                         : modelObject instanceof Organization ? "organization"
+                        : modelObject instanceof Agency ? "organization"
                         : modelObject instanceof Plan ? "plan"
                         : modelObject instanceof com.mindalliance.channels.core.model.Event ? "event"
                         : modelObject instanceof Place ? "place"

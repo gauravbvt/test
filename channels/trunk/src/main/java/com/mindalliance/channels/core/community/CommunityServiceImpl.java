@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -33,18 +34,21 @@ public class CommunityServiceImpl implements CommunityService {
     private Analyst analyst;
     private final UserParticipationService userParticipationService;
     private UserParticipationConfirmationService userParticipationConfirmationService;
+    private OrganizationParticipationService organizationParticipationService;
 
     public CommunityServiceImpl(
             PlanCommunity planCommunity,
             PlanService planService,
             Analyst analyst,
             UserParticipationService userParticipationService,
-            UserParticipationConfirmationService userParticipationConfirmationService ) {
+            UserParticipationConfirmationService userParticipationConfirmationService,
+            OrganizationParticipationService organizationParticipationService ) {
         this.planCommunity = planCommunity;
         this.planService = planService;
         this.analyst = analyst;
         this.userParticipationService = userParticipationService;
         this.userParticipationConfirmationService = userParticipationConfirmationService;
+        this.organizationParticipationService = organizationParticipationService;
     }
 
     @Override
@@ -55,6 +59,10 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public UserParticipationConfirmationService getUserParticipationConfirmationService() {
         return userParticipationConfirmationService;
+    }
+
+    public OrganizationParticipationService getOrganizationParticipationService() {
+        return organizationParticipationService;
     }
 
     @Override

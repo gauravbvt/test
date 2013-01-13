@@ -1,6 +1,10 @@
 package com.mindalliance.channels.core.community.protocols;
 
+import com.mindalliance.channels.core.model.Commitment;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
 
 import java.io.Serializable;
 
@@ -34,6 +38,14 @@ public class CommunityCommitment implements Serializable {
 
     public Flow getSharing() {
         return sharing;
+    }
+
+    public Commitment getCommitment() {
+        return new Commitment(
+                committer.getAssignment(),
+                beneficiary.getAssignment(),
+                sharing
+        );
     }
 
 
@@ -72,4 +84,7 @@ public class CommunityCommitment implements Serializable {
         return hash;
     }
 
- }
+    public boolean isInSituation( Phase.Timing timing, Event event, Place locale ) {
+        return sharing.getSegment().isInSituation( timing, event, locale );
+    }
+}
