@@ -68,7 +68,7 @@ public class RequiredNetworkingPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             String relId = parameters.get( "connection" ).toString();
             selectedRequirementRelationship = new RequirementRelationship();
-            selectedRequirementRelationship.setId( relId, planCommunity );
+            selectedRequirementRelationship.setRelationshipId( relId, planCommunity );
         }
         return diagramFactory.newRequiredNetworkingDiagram(
                 timing,

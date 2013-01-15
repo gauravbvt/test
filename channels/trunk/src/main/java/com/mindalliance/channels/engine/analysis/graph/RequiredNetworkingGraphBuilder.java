@@ -76,7 +76,7 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Agency, Requ
                             RequirementRelationship reqRel = (RequirementRelationship) object;
                             return selectedAgency == null
                                 || reqRel.getToAgency( planCommunity ).equals( selectedAgency )
-                                || reqRel.getToAgency( planCommunity ).equals( selectedAgency );
+                                || reqRel.getFromAgency( planCommunity ).equals( selectedAgency );
                         }
                     } ) );
         }

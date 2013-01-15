@@ -446,4 +446,8 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         return sb.toString();
 
     }
+
+    public boolean isAnyNumberOfParticipants() {
+        return maxParticipation == -1;
+    }
 }

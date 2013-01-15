@@ -53,6 +53,11 @@ public abstract class ModelObject
      */
     private List<String> waivedIssueDetections = new ArrayList<String>();
 
+    /**
+     * Whether the model object is persisted.
+     */
+    private boolean persistent = true;
+
     //=============================
     protected ModelObject() {
     }
@@ -491,5 +496,13 @@ public abstract class ModelObject
 
     public static boolean isUnknownModelObject( Identifiable identifiable ) {
         return identifiable instanceof ModelObject && ((ModelObject)identifiable).isUnknown();
+    }
+
+    public boolean isTransient() {
+        return !persistent ;
+    }
+
+    public void makeTransient() {
+        persistent = false;
     }
 }

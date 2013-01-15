@@ -70,7 +70,7 @@ public class ModelObjectRef implements Serializable {
         id = identifiable.getId();
         className = identifiable.getClass().getName();
         typeName = identifiable.getTypeName();
-        if ( identifiable instanceof ModelObject ) {
+        if ( identifiable instanceof ModelObject && !((ModelObject)identifiable).isTransient() ) {
             if ( ( (ModelObject) identifiable ).isUnknown() ) {
                 this.identifiable = identifiable;
             } else {

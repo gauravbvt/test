@@ -224,6 +224,7 @@ public class Requirement extends ModelObject implements Countable {
 
     public Requirement transientCopy() {
         Requirement copy = new Requirement( getName() );
+        copy.makeTransient();
         copy.setDescription( getDescription() );
         copy.setId( getId() ); // requirement must never be persisted!
         copy.setInformation( information );

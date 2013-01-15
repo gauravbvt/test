@@ -38,11 +38,11 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
      */
     private static final String ORG_FONT_SIZE = "10";
 
-
     private final Agency selectedAgency;
     private final RequirementRelationship selectedRequirementRel;
     private final Phase.Timing timing;
     private final Event event;
+    private static final String REQUIREMENT_EDGE_URL_FORMAT = "?graph={0,number,0}&edge={1}";
 
     public RequiredNetworkingMetaProvider(
             Agency selectedAgency,
@@ -74,7 +74,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
             @Override
             public String getVertexURL( Agency agency ) {
-                Object[] args = {0, agency.getId()};
+                Object[] args = {0, agency.getId() };
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
@@ -82,7 +82,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             public String getEdgeURL( RequirementRelationship reqRel ) {
                 // Plan id = 0 for now since there is only one plan
                 Object[] args = {0, reqRel.getRelationshipId()};
-                return MessageFormat.format( EDGE_URL_FORMAT, args );
+                return MessageFormat.format( REQUIREMENT_EDGE_URL_FORMAT, args );
             }
         };
     }

@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
@@ -33,12 +34,11 @@ public class RequirementRelationship implements Identifiable {
     public static final Logger LOG = LoggerFactory.getLogger( RequirementRelationship.class );
 
 
-    private static final String SEPARATOR = "=>";
+    private static final String SEPARATOR = ",";  // must be a comma
     /**
      * Requirements for an agency to share information with another.
      */
 
-    private long id;
     private String relationshipId;
     private List<Requirement> requirements = new ArrayList<Requirement>();
     private Phase.Timing timing = null;
@@ -52,9 +52,7 @@ public class RequirementRelationship implements Identifiable {
             Agency toAgency,
             Phase.Timing timing,
             Event event ) {
-        id = Math.min( fromAgency.getId(), Long.MAX_VALUE / 2 )
-                + Math.min( toAgency.getId(), Long.MAX_VALUE / 2 ) ;
-        relationshipId = fromAgency.getName() + SEPARATOR + toAgency.getName();
+        relationshipId = fromAgency.getId() + SEPARATOR + toAgency.getId();
         this.timing = timing;
         this.event = event;
     }
@@ -76,7 +74,7 @@ public class RequirementRelationship implements Identifiable {
         return relationshipId;
     }
 
-    public void setId( String id, PlanCommunity planCommunity ) {
+    public void setRelationshipId( String id, PlanCommunity planCommunity ) {
         this.relationshipId = id;
         ParticipationAnalyst analyst = planCommunity.getParticipationAnalyst();
         RequirementRelationship reqRel =
@@ -105,9 +103,9 @@ public class RequirementRelationship implements Identifiable {
     public Agency getFromAgency( PlanCommunity planCommunity ) {
         try {
             String[] names = parseId( relationshipId );
-            return getAgency( names[0], planCommunity );
+            return getAgency( Long.parseLong( names[0] ), planCommunity );
         } catch ( Exception e ) {
-            LOG.warn( "Failed to get from agency from relationship " + relationshipId );
+            LOG.warn( "Failed to get from-agency from relationship " + relationshipId );
             return Agency.UNKNOWN;
         }
     }
@@ -115,15 +113,20 @@ public class RequirementRelationship implements Identifiable {
     public Agency getToAgency( PlanCommunity planCommunity ) {
         try {
             String[] names = parseId( relationshipId );
-            return getAgency( names[1], planCommunity );
+            return getAgency( Long.parseLong( names[1] ), planCommunity );
         } catch ( Exception e ) {
-            LOG.warn( "Failed to get to agency from relationship " + relationshipId );
+            LOG.warn( "Failed to get to-agency from relationship " + relationshipId );
             return Agency.UNKNOWN;
         }
     }
 
-    private Agency getAgency( String name, PlanCommunity planCommunity ) {
-        return planCommunity.getParticipationManager().findAgencyNamed( name, planCommunity );
+    private Agency getAgency( Long id, PlanCommunity planCommunity ) {
+        try {
+            return planCommunity.getParticipationManager().findAgencyById( id, planCommunity );
+        } catch ( NotFoundException e ) {
+            LOG.warn(  "Agency not found at " + id );
+            return null;
+        }
     }
 
     public boolean hasUnfulfilledRequirements(
@@ -186,7 +189,7 @@ public class RequirementRelationship implements Identifiable {
 
     @Override
     public long getId() {
-        return id;
+        return 0;
     }
 
     @Override

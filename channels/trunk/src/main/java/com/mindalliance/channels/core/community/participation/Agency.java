@@ -91,6 +91,11 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         address = agency.getAddress();
     }
 
+    @Override
+    public boolean isTransient() {
+        return true;
+    }
+
     public void setEditable( boolean editable ) {
         this.editable = editable;
     }
@@ -299,7 +304,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return isFixedOrganization()
                 ? getFixedOrganization().getId()
                 : organizationParticipation != null
-                    ? organizationParticipation.getId() * -1
+                    ? (Long.MAX_VALUE / 2) + organizationParticipation.getId()
                     : 0;
     }
 

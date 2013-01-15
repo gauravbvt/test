@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -346,7 +345,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( Organization.class ) ) {
+            if ( change.isForInstanceOf( Agency.class ) ) {
                 selectedAgency = (Agency) change.getSubject( getQueryService() );
                 selectedRequirementRel = null;
                 selectedAppliedRequirement = null;
@@ -354,7 +353,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                 selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
                 selectedAgency = null;
                 selectedAppliedRequirement = null;
-            } else if ( change.isForInstanceOf( Plan.class ) ) {
+            } else if ( change.isForInstanceOf( PlanCommunity.class ) ) {
                 selectedRequirementRel = null;
                 selectedAgency = null;
                 selectedAppliedRequirement = null;
@@ -404,9 +403,9 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( Organization.class )
+            if ( change.isForInstanceOf( Agency.class )
                     || change.isForInstanceOf( RequirementRelationship.class )
-                    || change.isForInstanceOf( Plan.class ) ) {
+                    || change.isForInstanceOf( PlanCommunity.class ) ) {
                 addRequiredNetworkPanel();
                 target.add( requiredNetworkingPanel );
                 refreshAppliedRequirements( target );

@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.graph.Diagram;
@@ -93,7 +92,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
         sb.append( "required.png?agency=" );
         sb.append( selectedAgency == null ? "NONE" : selectedAgency.getId() );
         sb.append("&connection=");
-        sb.append( selectedRequirementRel == null ? "NONE" : selectedRequirementRel.getId() );
+        sb.append( selectedRequirementRel == null ? "NONE" : selectedRequirementRel.getRelationshipId() );
         if ( getTiming() != null ) {
             sb.append( "&timing=" );
             sb.append( getTiming().name() );
@@ -131,7 +130,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
 
     @Override
     protected void onClick( AjaxRequestTarget target ) {
-        update( target, new Change( Change.Type.Selected, getPlan() ) );
+        update( target, new Change( Change.Type.Selected, getPlanCommunity() ) );
     }
 
     @Override
@@ -155,10 +154,13 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             Map<String, String> extras,
             AjaxRequestTarget target ) {
         try {
-             Organization org = getQueryService().find( Organization.class, Long.valueOf( vertexId ) );
-             if ( !org.equals( selectedAgency ) ) {
+            Long agencyId = Long.parseLong( vertexId );
+             Agency agency = getPlanCommunity().getParticipationManager().findAgencyById(
+                     agencyId,
+                     getPlanCommunity() );
+             if ( !agency.equals( selectedAgency ) ) {
                  String js = scroll( domIdentifier, scrollTop, scrollLeft );
-                 Change change = new Change( Change.Type.Selected, org, "organization" );
+                 Change change = new Change( Change.Type.Selected, agency, "agency" );
                  change.setScript( js );
                  update( target, change );
              }
@@ -177,7 +179,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             Map<String, String> extras,
             AjaxRequestTarget target ) {
         RequirementRelationship requirementRelationship = new RequirementRelationship();
-        requirementRelationship.setId(  edgeId, getPlanCommunity() );
+        requirementRelationship.setRelationshipId( edgeId, getPlanCommunity() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, requirementRelationship );
         change.setScript( js );

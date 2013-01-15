@@ -174,4 +174,8 @@ public class Agent implements Nameable, Identifiable {
     public boolean isAnonymousParticipation() {
         return actor.isAnonymousParticipation();
     }
+
+    public boolean isAnyNumberOfParticipants() {
+        return actor != null && actor.isAnyNumberOfParticipants();
+    }
 }

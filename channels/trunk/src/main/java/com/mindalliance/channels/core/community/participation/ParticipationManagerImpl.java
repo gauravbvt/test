@@ -484,11 +484,11 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Override
     public Agency findAgencyById( long id, PlanCommunity planCommunity ) throws NotFoundException {
         Agency agency = null;
-        if ( id > 0 ) {
+        if ( id < Long.MAX_VALUE / 2 ) {
             Organization org = planCommunity.getPlanService().find( Organization.class, id );
             agency = new Agency( org );
         } else {
-            OrganizationParticipation orgParticipation = organizationParticipationService.load( id * -1 );
+            OrganizationParticipation orgParticipation = organizationParticipationService.load( id - ( Long.MAX_VALUE / 2) );
             if ( orgParticipation != null ) {
                 agency = new Agency( orgParticipation, planCommunity );
             }
