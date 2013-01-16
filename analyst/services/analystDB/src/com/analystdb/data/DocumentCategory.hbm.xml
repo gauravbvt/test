@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.DocumentCategory" table="document_category" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="integer">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="45" not-null="true"/>
+        </property>
+        <property name="sequence" type="short">
+            <column name="sequence"/>
+        </property>
+        <set name="documentses" inverse="true" cascade="">
+            <key>
+                <column name="category"/>
+            </key>
+            <one-to-many class="com.analystdb.data.Documents"/>
+        </set>
+    </class>
+</hibernate-mapping>

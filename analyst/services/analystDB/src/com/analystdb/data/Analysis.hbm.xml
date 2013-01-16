@@ -1,0 +1,27 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.Analysis" table="analysis" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="long">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="127" not-null="true"/>
+        </property>
+        <property name="version" type="integer">
+            <column name="version"/>
+        </property>
+        <many-to-one name="project" class="com.analystdb.data.Project">
+            <column name="project" not-null="true"/>
+        </many-to-one>
+        <set name="plans" inverse="true" cascade="">
+            <key>
+                <column name="analysis" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.Plan"/>
+        </set>
+    </class>
+</hibernate-mapping>

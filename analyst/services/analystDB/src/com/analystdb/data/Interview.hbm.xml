@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.Interview" table="interview" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="long">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="scheduled" type="timestamp">
+            <column name="scheduled" length="19" not-null="true"/>
+        </property>
+        <property name="notes" type="string">
+            <column name="notes" length="65535"/>
+        </property>
+        <property name="done" type="boolean">
+            <column name="done" not-null="true"/>
+        </property>
+        <property name="version" type="integer">
+            <column name="version"/>
+        </property>
+        <many-to-one name="resource" class="com.analystdb.data.Resource">
+            <column name="resource" not-null="true"/>
+        </many-to-one>
+        <set name="approachs" inverse="true" cascade="">
+            <key>
+                <column name="interview" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.Approach"/>
+        </set>
+        <set name="issueComments" inverse="true" cascade="">
+            <key>
+                <column name="interview" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueComment"/>
+        </set>
+        <set name="flows" inverse="true" cascade="">
+            <key>
+                <column name="interview" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.Flow"/>
+        </set>
+    </class>
+</hibernate-mapping>

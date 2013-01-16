@@ -1,0 +1,132 @@
+{
+	"methods": [{
+		"name": "approachIssueCount",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.ApproachIssueCountRtnType]"
+	}, {
+		"name": "approachIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "approach",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.ApproachIssuesRtnType]"
+	}, {
+		"name": "availableApproaches",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "issue",
+			"type": "java.lang.Long"
+		}, {
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Approach]"
+	}, {
+		"name": "documentCategoryIssueCounts",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.DocumentCategoryIssueCountsRtnType]"
+	}, {
+		"name": "documentIssueCount",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "category",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.analystdb.data.output.DocumentIssueCountRtnType]"
+	}, {
+		"name": "documentIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "document",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.analystdb.data.output.DocumentIssuesRtnType]"
+	}, {
+		"name": "flowsByProject",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Flow]"
+	}, {
+		"name": "interviewIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "resource",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.InterviewIssuesRtnType]"
+	}, {
+		"name": "issueCategoryCounts",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.IssueCategoryCountsRtnType]"
+	}, {
+		"name": "projectPlans",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.ProjectPlansRtnType]"
+	}, {
+		"name": "recentInterviews",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.RecentInterviewsRtnType]"
+	}, {
+		"name": "resourceKeywords",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.ResourceKeywordsRtnType]"
+	}, {
+		"name": "resourceValues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "keyword",
+			"type": "java.lang.String"
+		}],
+		"returnType": "[com.analystdb.data.output.ResourceValuesRtnType]"
+	}, {
+		"name": "upcomingInterviews",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.UpcomingInterviewsRtnType]"
+	}],
+	"serviceType": "JSON-RPC",
+	"serviceURL": "analystDB.json"
+}

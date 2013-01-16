@@ -1,0 +1,111 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <meta attribute="@design.default-queries"/>
+    <query name="resourceValues">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="keyword" type="java.lang.String"/>
+        select distinct k.val from ResourceAttribute k where k.resource.project.id = :project and k.name = :keyword order by  k.val
+    </query>
+    <query name="projectPlans">
+        <query-param name="project" type="java.lang.Long"/>
+        select p as plan, p.analysis.name as analysis
+from Plan p
+where p.analysis.project.id = :project
+order by p.name
+    </query>
+    <query name="issueCategoryCounts">
+        <query-param name="project" type="java.lang.Long"/>
+        select iic.issueCategory as category, iic.issueCategory.name as name, count(iic.issue.id) as issues
+from IssueIssueCategory iic
+where iic.issue.project.id = :project
+group by iic.issueCategory
+order by iic.issueCategory.name
+    </query>
+    <query name="documentIssueCount">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="category" type="java.lang.Integer"/>
+        select f.documents.id as id, f.documents.document as doc, count(distinct icf.issueComment.issue.id) as issues
+from Flow f
+join f.issueCommentFlowses icf
+where f.interview.resource.project.id = :project
+and f.documents.documentCategory.id = :category
+group by f.documents
+order by f.documents.document
+    </query>
+    <query name="availableApproaches">
+        <query-param name="issue" type="java.lang.Long"/>
+        <query-param name="project" type="java.lang.Long"/>
+        from Approach a
+where a.interview.resource.project.id =  :project and a.id not in (select ia.id.approachId from IssueApproach ia where ia.id.issueId = :issue)
+order by a.name
+    </query>
+    <query name="documentCategoryIssueCounts">
+        <query-param name="project" type="java.lang.Long"/>
+        select distinct f.documents.documentCategory as category,  f.documents.documentCategory.name as phase,count(icf.issueComment.issue.id) as issues
+from Flow f
+join f.issueCommentFlowses icf
+where f.interview.resource.project.id = :project
+group by f.documents.documentCategory
+order by f.documents.documentCategory.sequence
+    </query>
+    <query name="interviewIssues">
+        <query-param name="resource" type="java.lang.Long"/>
+        select ic.interview.resource.id, ic.interview.resource.name, ic.issue.sequence as  issue, ic.issue.description  as description
+from IssueComment ic
+where ic.interview.resource.id = :resource
+order by ic.interview.resource.name
+    </query>
+    <query name="approachIssueCount">
+        <query-param name="project" type="java.lang.Long"/>
+        select a as approach, (select count(ia.issue) from IssueApproach ia where ia.approach=a.id) as issues
+from Approach a
+where a.interview.resource.project.id = :project
+order by a.name
+    </query>
+    <query name="recentInterviews">
+        <query-param name="project" type="java.lang.Long"/>
+        select  i.id as id, i.resource.name as resource, i as interview, count(distinct a.id) as approaches, count(distinct f.id) as flows, count(distinct ic.id) as issues
+from Interview i  left join i.flows f left join i.approachs a left join i.issueComments ic
+where i.resource.project.id = :project
+and i.done = 1
+and i.scheduled in (select max(s.scheduled) from Interview s where s.resource = i.resource and s.done = 1)
+group by i.resource
+order by i.resource.name
+    </query>
+    <query name="approachIssues">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="approach" type="java.lang.Long"/>
+        select ia.issue as issue
+from IssueApproach ia
+where ia.issue.project.id = :project
+and ia.approach.id = :approach
+order by ia.issue.sequence
+    </query>
+    <query name="documentIssues">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="document" type="java.lang.Integer"/>
+        select distinct icf.issueComment.issue
+from Flow f
+join f.issueCommentFlowses icf
+where f.interview.resource.project.id = :project
+and f.documents.id = :document
+order by icf.issueComment.issue.sequence
+    </query>
+    <query name="upcomingInterviews">
+        <query-param name="project" type="java.lang.Long"/>
+        select i as interview, i.scheduled as scheduled, i.resource.name as name from Interview i
+where i.done = 0
+and i.resource.project.id = :project
+order by i.scheduled
+    </query>
+    <query name="resourceKeywords">
+        <query-param name="project" type="java.lang.Long"/>
+        select distinct k.name from ResourceAttribute k where k.resource.project.id = :project order by k.name
+    </query>
+    <query name="flowsByProject">
+        <query-param name="project" type="java.lang.Long"/>
+        from Flow f
+where f.interview.resource.project.id = :project
+order by f.fromActor, f.toActor, f.name
+    </query>
+</hibernate-mapping>

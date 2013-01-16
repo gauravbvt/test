@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.IssueComment" table="issue_comment" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="long">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="applicableToMe" type="boolean">
+            <column name="applicable_to_me"/>
+        </property>
+        <property name="fixed" type="boolean">
+            <column name="fixed"/>
+        </property>
+        <property name="version" type="integer">
+            <column name="version"/>
+        </property>
+        <many-to-one name="interview" class="com.analystdb.data.Interview">
+            <column name="interview" not-null="true"/>
+        </many-to-one>
+        <many-to-one name="issue" class="com.analystdb.data.Issue">
+            <column name="issue" not-null="true"/>
+        </many-to-one>
+        <set name="issueCommentFlowses" inverse="true" cascade="">
+            <key>
+                <column name="issues" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueCommentFlows"/>
+        </set>
+        <set name="issueAttributes" inverse="true" cascade="">
+            <key>
+                <column name="issue_comment" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueAttribute"/>
+        </set>
+    </class>
+</hibernate-mapping>

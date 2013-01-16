@@ -1,0 +1,29 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.IssueIssueCategory" table="issue_issue_category" dynamic-insert="false" dynamic-update="false">
+        <composite-id name="id" class="com.analystdb.data.IssueIssueCategoryId">
+            <key-property name="issueId" type="long">
+                <column name="issue_id"/>
+            </key-property>
+            <key-property name="issueCategoryId" type="long">
+                <column name="issue_category_id"/>
+            </key-property>
+        </composite-id>
+        <many-to-one
+            name="issue"
+            class="com.analystdb.data.Issue"
+            update="false"
+            insert="false"
+            fetch="select">
+            <column name="issue_id" not-null="true"/>
+        </many-to-one>
+        <many-to-one
+            name="issueCategory"
+            class="com.analystdb.data.IssueCategory"
+            update="false"
+            insert="false"
+            fetch="select">
+            <column name="issue_category_id" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

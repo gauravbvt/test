@@ -1,0 +1,127 @@
+.wm_notheme .banner {
+    background: url("resources/images/global-header-bg.png") repeat scroll 0 0 #C3D9FF;
+    font-size: 12px;
+    height: 51px;
+    border-bottom: 1px solid #999999 !important;
+}
+
+.wm_notheme .back {
+    background: url("resources/images/global-bg.png") repeat scroll 0 0 transparent;
+    color: #333333;
+}
+
+.wm_notheme .back, .wmlabel {
+    font-family: Arial,Helvetica,sans-serif !important;
+    font-size: 13px !important;
+}
+
+.wm_notheme .container {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border-left: 1px solid #999999 !important;
+    border-right: 1px solid #999999 !important;
+    border-bottom: 1px solid #999999 !important;
+}
+
+/* -------------------------------- Tab bar */
+.wm_notheme .wmtablayers-tabbar, .wm_notheme .dialogtitlebar {
+  background: url("resources/images/headerbar-bg.png") repeat-x scroll 0 0 transparent !important;
+  float: left;
+  font-family: Arial,Helvetica,sans-serif !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+}
+
+.wm_notheme #wizard_projectLayers_tabsControl.wmtablayers-tabbar {
+  border-top: 1px solid #999999 !important;
+  border-bottom: 1px solid #999999 !important;
+}
+
+.wm_notheme .wmtablayers-tabbar.wmTabLayers-tabsControl {
+    background: url("resources/images/tab-bg.png") repeat-x scroll 0 0 transparent !important;
+    float: left;
+    line-height: normal;
+    margin: 2px 0 0 !important;
+    padding: 5px 0 1px !important;
+    width: 100%;
+}
+
+/* -------------------------------- Tabs */
+.wm_notheme .wmtablayers-tab {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    color: #666666;
+    display: block;
+    font-weight: bold;
+    height: 20px;
+    margin: 0 0 0 5px;
+    padding: 3px 10px;
+    text-decoration: none;
+    white-space: nowrap;
+    float: left;
+}
+
+.wm_notheme .wmtablayers-tab.wmtablayers-selected {
+    background: none repeat scroll 0 0 #F6F6F6;
+    border-bottom: 1px solid #F6F6F6;
+    color: #000000;
+}
+
+/* -------------------------------- Breadcrumbs */
+.wm_notheme .wmtablayers-tabbar .wmbreadcrumblayers-tab.wmbreadcrumblayers-selected {
+  background: none repeat scroll 0 0 transparent;
+}
+
+.wm_notheme .wmtablayers-tabbar .wmbreadcrumblayers-tab:hover {
+    color: #333333;
+}
+
+.wm_notheme .wmtablayers-tabbar .wmbreadcrumblayers-tab {
+  background: url("resources/images/pathway-arrow.png") no-repeat scroll right center transparent;
+  float: left;
+  list-style: none outside none;
+  margin: 0 5px 0 0 !important;
+  padding: 3px 12px 0 0 !important;
+  text-decoration: none;
+  color: #727272;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* -------------------------------- Custom html */
+.wm_notheme div.wmhtml {
+    margin: 5px !important;
+}
+
+.wm_notheme .dojoxGridCell {
+    vertical-align: top;
+}
+
+.wm_notheme div.note {
+  background: url("resources/images/gains.png") no-repeat scroll 5px 4px #FEF2B0;
+  border: 1px solid #C5B351;
+  color: #000000;
+  font-size: 12px;
+  margin: 5px 0 15px;
+  padding: 5px 5px 5px 25px;
+}
+
+.wm_notheme .wmDesignableDialog-dialogTitleLabel {
+  color: #727272;
+  font-weight: bold;
+  font-size: 11px !important;
+}
+
+.wm_notheme .wmdialogcontainer {
+  font-size: 13px !important;
+  background: #fbfbfb;
+}
+
+.wm_notheme .iconButton {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none !important;
+}
+
+.wm_notheme .wmbutton-disabled:hover {
+  background-color: #DFE5F1;
+}
+

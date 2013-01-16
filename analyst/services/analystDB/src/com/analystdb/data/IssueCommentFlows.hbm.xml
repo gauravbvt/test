@@ -1,0 +1,29 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.IssueCommentFlows" table="issue_comment_flows" dynamic-insert="false" dynamic-update="false">
+        <composite-id name="id" class="com.analystdb.data.IssueCommentFlowsId">
+            <key-property name="issues" type="long">
+                <column name="issues"/>
+            </key-property>
+            <key-property name="flows" type="long">
+                <column name="flows"/>
+            </key-property>
+        </composite-id>
+        <many-to-one
+            name="issueComment"
+            class="com.analystdb.data.IssueComment"
+            update="false"
+            insert="false"
+            fetch="select">
+            <column name="issues" not-null="true"/>
+        </many-to-one>
+        <many-to-one
+            name="flow"
+            class="com.analystdb.data.Flow"
+            update="false"
+            insert="false"
+            fetch="select">
+            <column name="flows" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.Flow" table="flow" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="long">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="fromActor" type="string">
+            <column name="from_actor"/>
+        </property>
+        <property name="toActor" type="string">
+            <column name="to_actor"/>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="127" not-null="true"/>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="version" type="integer">
+            <column name="version"/>
+        </property>
+        <many-to-one name="interview" class="com.analystdb.data.Interview">
+            <column name="interview" not-null="true"/>
+        </many-to-one>
+        <many-to-one name="documents" class="com.analystdb.data.Documents">
+            <column name="document"/>
+        </many-to-one>
+        <set name="issueCommentFlowses" inverse="true" cascade="">
+            <key>
+                <column name="flows" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueCommentFlows"/>
+        </set>
+        <set name="flowAttributes" inverse="true" cascade="">
+            <key>
+                <column name="flow" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.FlowAttribute"/>
+        </set>
+    </class>
+</hibernate-mapping>

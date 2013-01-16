@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.Issue" table="issue" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="long">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="sequence" type="integer">
+            <column name="sequence" not-null="true"/>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="127" not-null="true"/>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535"/>
+        </property>
+        <property name="version" type="integer">
+            <column name="version"/>
+        </property>
+        <many-to-one name="project" class="com.analystdb.data.Project">
+            <column name="project" not-null="true"/>
+        </many-to-one>
+        <set name="issueApproachs" inverse="true" cascade="">
+            <key>
+                <column name="issue_id" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueApproach"/>
+        </set>
+        <set name="issueComments" inverse="true" cascade="">
+            <key>
+                <column name="issue" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueComment"/>
+        </set>
+        <set name="issueIssueCategories" inverse="true" cascade="">
+            <key>
+                <column name="issue_id" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.IssueIssueCategory"/>
+        </set>
+    </class>
+</hibernate-mapping>
