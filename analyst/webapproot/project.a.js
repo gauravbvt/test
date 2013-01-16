@@ -2070,7 +2070,7 @@ wm.types = {
 	}
 };
 wm.Application.themeData['wm_notheme'] = {"wm.Control":{"borderColor":"#FBFBFB"},"wm.ToggleButton":{"border":"1","borderColor":"#ABB8CF"},"wm.ToggleButtonPanel":{"border":"1","borderColor":"#ABB8CF"},"wm.Button":{"border":"1","borderColor":"#ABB8CF","height":"32px"},"wm.RoundedButton":{"border":"0","borderColor":"#ABB8CF"},"wm.Layout":{"border":"0"},"wm.Bevel":{"bevelSize":4,"border":"0"},"wm.Splitter":{"bevelSize":"4","border":"0"},"wm.AccordionDecorator":{"captionBorder":"0,0,1,0","captionBorderColor":"#FBFBFB"},"wm.AccordionLayers":{"border":"0"},"wm.FancyPanel":{"margin":"2","innerBorder":"2","border":"0","labelHeight":"30"},"wm.TabLayers":{"layersType":"Tabs","margin":"0,2,0,2","border":"0","borderColor":"","clientBorder":"0","clientBorderColor":"#FBFBFB"},"wm.WizardLayers":{"margin":"0,2,0,2","border":"0","clientBorder":"0","clientBorderColor":"#FBFBFB"},"wm.Layer":{},"wm.Dialog":{"border":"0","titlebarBorder":"1","titlebarBorderColor":"#FBFBFB","footerBorder":"1","footerBorderColor":"#FBFBFB","titlebarHeight":"23"},"wm.GenericDialog":{"border":"1","titlebarBorder":"1","titlebarBorderColor":"#FBFBFB","footerBorder":"1","footerBorderColor":"#FBFBFB"},"wm.RichTextDialog":{"border":"1","titlebarBorder":"1","titlebarBorderColor":"#FBFBFB","footerBorder":"1","footerBorderColor":"#FBFBFB"},"wm.PageDialog":{"border":"1","titlebarBorder":"1","titlebarBorderColor":"#FBFBFB","footerBorder":"1","footerBorderColor":"#FBFBFB","noBevel":true},"wm.DesignableDialog":{"border":"1","titlebarBorder":"1","titlebarBorderColor":"#FBFBFB","footerBorder":"1","footerBorderColor":"#FBFBFB","noBevel":true},"wm.DojoMenu":{"padding":"0","border":"0","borderColor":"#000000"},"wm.List":{"margin":"0","border":"0"},"wm.dijit.ProgressBar":{"border":"0"},"wm.RichText":{"border":"0","borderColor":"#B3B3B3"},"wm.DataGrid":{"border":"0"},"wm.Label":{},"wm.Picture":{},"wm.Spacer":{},"wm.Layers":{"border":"0"},"wm.PageContainer":{},"wm.Panel":{},"wm.CheckBoxEditor":{},"wm.CurrencyEditor":{},"wm.Text":{"border":undefined},"wm.SelectMenu":{},"wm.dijit.Calendar":{"border":"0"},"wm.DojoGrid":{"border":"0"}};
-dojo.declare("Analyst1", wm.Application, {
+dojo.declare("Analyst", wm.Application, {
 	"disableDirtyEditorTracking": false, 
 	"eventDelay": 0, 
 	"i18n": false, 
@@ -2096,11 +2096,11 @@ dojo.declare("Analyst1", wm.Application, {
 	_end: 0
 });
 
-Analyst1.extend({
+Analyst.extend({
 
 	_end: 0
 });
-Analyst1.prototype._css = '.wm_notheme .banner {\
+Analyst.prototype._css = '.wm_notheme .banner {\
 background: url("resources/images/global-header-bg.png") repeat scroll 0 0 #C3D9FF;\
 font-size: 12px;\
 height: 51px;\
