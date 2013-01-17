@@ -1722,7 +1722,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             setOther( (Node) change.getSubject( getQueryService() ) );
             Flow newFlow = getFlow();
             if ( newFlow != null ) adjustFields( newFlow );
-            update( target, new Change( Change.Type.Updated, getNode() ) );
+            update( target, new Change( Change.Type.Updated, getFlow() ) ); // was getNode()
             if ( getFlow() != null && oldFlow != null && !getFlow().equals( oldFlow ) ) {
                 update( target, new Change( Change.Type.Collapsed, oldFlow.getId() ) );
                 update( target, new Change( Change.Type.Expanded, newFlow ) );

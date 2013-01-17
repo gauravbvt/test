@@ -214,8 +214,9 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
                 if ( isUnknownOtherSelected() || selectedOtherNode.equals( nodeModel.getObject() ) ) {
                     selectedOtherNode = otherNodeModel.getObject();
                 }
-                if ( isOtherNodeChanged() )
+                if ( isOtherNodeChanged() ) {
                     update( target, new Change( Change.Type.Selected, selectedOtherNode, "other" ) );
+                }
                 target.add( firstChoiceInput );
                 target.add( secondChoice );
             }

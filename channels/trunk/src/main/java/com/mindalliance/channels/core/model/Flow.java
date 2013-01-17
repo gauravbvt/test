@@ -1006,7 +1006,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSharing() {
-        return getSource().isPart() && getTarget().isPart();
+        return  getSource().isPart() && getTarget().isPart();
     }
 
     /**

@@ -280,6 +280,9 @@ public class FlowListPanel extends AbstractCommandablePanel {
     public void changed( Change change ) {
         if ( change.isUpdated() ) {
             setSelectedFlowUpdated( true );
+            if ( change.isForInstanceOf( Flow.class ) ) {
+                selectedFlow = (Flow)change.getSubject( getQueryService() );
+            }
         } else {
             if ( change.isForInstanceOf( Flow.class ) ) {
                 Flow flow = (Flow) change.getSubject( getQueryService() );

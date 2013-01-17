@@ -264,6 +264,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         };
         applyButton.setOutputMarkupId( true );
+        applyButton.setVisible( !agency.isFixedOrganization() );
         add( applyButton );
     }
 
