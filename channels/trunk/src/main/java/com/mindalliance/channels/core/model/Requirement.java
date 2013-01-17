@@ -459,7 +459,7 @@ public class Requirement extends ModelObject implements Countable {
 
     private boolean matchesFlow( Flow flow, Place planLocale ) {
         return ( information.isEmpty()
-                || Matcher.matches( flow.getName(), information ) )
+                || Matcher.contains( flow.getName(), information ) )
                 // Match tags if required
                 && Matcher.matchesAll( getInfoTags(), flow.getTags() )
                 && matchesEois( flow );
@@ -467,7 +467,7 @@ public class Requirement extends ModelObject implements Countable {
 
     @SuppressWarnings( "unchecked" )
     private boolean matchesEois( Flow flow ) {
-        if ( information.isEmpty() || eois.isEmpty() ) return true;
+        if ( eois.isEmpty() ) return true;
         final List<String> flowEoiNames = (List<String>) CollectionUtils.collect(
                 flow.getEffectiveEois(),
                 new Transformer() {
@@ -1280,7 +1280,7 @@ public class Requirement extends ModelObject implements Countable {
 
         public boolean appliesToAssignment( CommunityAssignment assignment, PlanCommunity planCommunity ) {
             return isAnyone()
-                    || ( appliesToAgent( assignment.getAgent() )
+                    || ( appliesToAgent( assignment.getAgent() )      // todo - deal with jurisdiction matching when re-enabled
                             && appliesToAgency( assignment.getAgency(), planCommunity ) );
         }
 

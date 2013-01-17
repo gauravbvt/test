@@ -48,7 +48,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
 
     private void init() {
         addAgentField();
-        addJurisdictionField();
+//        addJurisdictionField();
         addAgencyField();
         addPlaceholderField();
         adjustFields();
@@ -92,7 +92,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         agentField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addJurisdictionField();
+                // addJurisdictionField();
                 addAgencyField();
                 addPlaceholderField();
                 adjustFields( target );
@@ -102,7 +102,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         addOrReplace( agentField );
     }
 
-    private void addJurisdictionField() {
+ /*   private void addJurisdictionField() {
         final List<String> choices = getAllJurisdictionNames();
         jurisdictionField = new AutoCompleteTextField<String>(
                 "jurisdiction",
@@ -129,7 +129,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         } );
         addOrReplace( jurisdictionField );
     }
-
+*/
     private void addAgencyField() {
         final List<String> choices = getAllAgencyNames();
         agencyField = new AutoCompleteTextField<String>(
@@ -366,6 +366,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         requirement.initialize( planCommunity );
     }
 
+/*
     public String getJurisdictionName() {
         Place jurisdiction = getAgentSpec().getJurisdiction();
         return jurisdiction == null ? null : jurisdiction.getName();
@@ -385,6 +386,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                 jurisdiction ) );
         requirement.initialize( planCommunity );
     }
+*/
 
 
     public Requirement getRequirement() {

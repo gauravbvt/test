@@ -196,4 +196,13 @@ public final class Matcher {
         );
     }
 
+    /**
+     * Whether a given text contains a given phrase, irrespective of case or punctuation etc.
+     * @param text a string
+     * @param phrase a string
+     * @return a boolean
+     */
+    public static boolean contains( String text, String phrase ) {
+        return StringUtils.contains( removeNoise( text ), removeNoise( phrase ) );
+    }
 }

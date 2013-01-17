@@ -709,4 +709,5 @@ public final class ChannelsUtils {
         return ( object == null && other == null ) ||
                 (object != null && other != null && object.equals( other ) );
     }
+
 }
