@@ -20,6 +20,9 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
@@ -164,6 +167,67 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         expansions.remove( expansion );
     }
 
+    protected void expand( Identifiable identifiable ) {
+        if ( identifiable != null )
+            expand( new Change( Change.Type.None, identifiable ) );
+    }
+
+    protected void expand( Change change ) {
+        tryAcquiringLock( change );
+        if ( isSingleExpansion( change ) ) {
+            ModelObject subject = (ModelObject) change.getSubject( getQueryService() );
+            ModelObject previous = findExpanded( subject );
+            if ( previous != null && !previous.equals( subject ) ) {
+                collapse( new Change( Change.Type.None, previous ) );
+            }
+        }
+        addExpansion( change.getId() );
+    }
+
+    private ModelObject findExpanded( ModelObject subject ) {
+        Class clazz = subject instanceof ModelEntity
+                ? ModelEntity.class
+                : subject.getClass();
+        for ( long id : getExpansions() ) {
+            try {
+                ModelObject mo = getQueryService().find( ModelObject.class, id );
+                if ( clazz.isAssignableFrom( mo.getClass() ) )
+                    return ( mo );
+            } catch ( NotFoundException ignored ) {
+                // ignore
+            }
+        }
+        return null;
+    }
+
+
+    private boolean isSingleExpansion( Change change ) {
+        return change.isForInstanceOf( ModelEntity.class );
+    }
+
+
+    protected void collapse( Change change ) {
+        tryReleasingLock( change );
+        removeExpansion( change.getId() );
+    }
+
+    protected void tryReleasingLock( Change change ) {
+        getCommander().releaseAnyLockOn( getUser().getUsername(), change.getId() );
+    }
+
+    protected void tryAcquiringLock( Change change ) {
+        if ( change.isByIdOnly() && getPlan().isDevelopment() ) {
+            getCommander().requestLockOn( getUser().getUsername(), change.getId() );
+        } else if ( change.isForInstanceOf( Identifiable.class ) ) {
+            Identifiable identifiable = change.getSubject( getQueryService() );
+            if ( !ModelObject.isUnknownModelObject( identifiable )
+                    && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+                    && getCommander().isLockable( change.getClassName() ) ) {
+                getCommander().requestLockOn( getUser().getUsername(), change.getId() );
+            }
+        }
+    }
+
     /**
      * Get read-only expansions.
      *
@@ -228,7 +292,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return planCommunityManager.makePlanCommunity( plan );
+        return planCommunityManager.getPlanCommunityFor( plan );
     }
 
     private PlanService getPlanService() {

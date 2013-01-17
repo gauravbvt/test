@@ -4,8 +4,11 @@ import com.mindalliance.channels.core.community.participation.OrganizationPartic
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 
@@ -29,7 +32,11 @@ public interface CommunityService {
 
     PlanService getPlanService();
 
+    void setPlanService( PlanService planService );
+
     Analyst getAnalyst();
+
+    void setPlanCommunity( PlanCommunity planCommunity );
 
     /**
      * Find all users that participate a a given actor.
@@ -45,8 +52,16 @@ public interface CommunityService {
      * @param activeParticipations  a list of active participations
      * @return  a boolean -- not cached
      */
-    boolean meetsPreEmploymentConstraint( Actor actor, // todo -- obsolete
+    Boolean meetsPreEmploymentConstraint( Actor actor, // todo -- obsolete
                                           List<UserParticipation> activeParticipations );
 
+    CommunityCommitments getAllCommitments( Boolean includeToSelf );
 
+    CommunityCommitments findAllCommitments( Flow flow, Boolean includeToSelf );
+
+    CommunityAssignments getAllAssignments();
+
+    CommunityCommitments findAllBypassCommitments( final Flow flow );
+
+    void clearCache();
 }

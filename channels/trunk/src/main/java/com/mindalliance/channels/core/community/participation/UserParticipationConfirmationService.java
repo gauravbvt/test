@@ -25,16 +25,18 @@ public interface UserParticipationConfirmationService extends GenericSqlService<
     void addParticipationConfirmation(
             UserParticipation userParticipation,
             Agent supervisor,
-            ChannelsUser user
+            ChannelsUser user,
+            PlanCommunity planCommunity
     );
 
     void removeParticipationConfirmation(
             UserParticipation userParticipation,
-            Agent supervisor );
+            Agent supervisor,
+            PlanCommunity planCommunity );
 
     boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor );
 
-    void deleteConfirmations( UserParticipation participation );
+    void deleteConfirmations( UserParticipation participation, PlanCommunity planCommunity );
 
     boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, PlanCommunity planCommunity );
 

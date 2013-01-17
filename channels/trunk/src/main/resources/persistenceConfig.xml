@@ -32,6 +32,7 @@
         <property name="cacheKey" value="results"/>
     </bean>
 
+
     <bean id="cacheSet" class="com.mindalliance.channels.core.query.CacheAdvice">
         <property name="cache" ref="resultCache"/>
     </bean>
@@ -50,6 +51,21 @@
     <bean id="permClear" class="com.mindalliance.channels.core.query.CacheResetAdvice">
         <property name="cache" ref="permCache"/>
     </bean>
+
+    <bean id="communityCache" class="com.mindalliance.channels.core.query.ResultCache">
+        <property name="cacheKey" value="community"/>
+    </bean>
+
+    <bean id="communitySet" class="com.mindalliance.channels.core.query.CacheAdvice">
+        <property name="cache" ref="communityCache"/>
+    </bean>
+
+    <bean id="communityClear" class="com.mindalliance.channels.core.query.CacheResetAdvice">
+        <property name="cache" ref="communityCache"/>
+    </bean>
+
+
+
 
     <aop:config proxy-target-class="true">
      <!--   <aop:advisor pointcut="execution( void org.springframework.security.web.authentication.AuthenticationSuccessHandler.onAuthenticationSuccess(*) )"
@@ -106,5 +122,13 @@
                      advice-ref="permSet" order="1"/>
         <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.core.nlp.SemanticMatcher.lookupBaseForm(..))"
                      advice-ref="permSet" order="1"/>
+
+        <!-- Community caching -->
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityAssignments com.mindalliance.channels.core.community.CommunityService.*(..))"
+                     advice-ref="communitySet" order="1"/>
+         <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityCommitments com.mindalliance.channels.core.community.CommunityService.*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
+
     </aop:config>
 </beans>

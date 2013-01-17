@@ -74,7 +74,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
             @Override
             public String getVertexURL( Agency agency ) {
-                Object[] args = {0, agency.getId() };
+                Object[] args = {0, agency.getId()};
                 return MessageFormat.format( VERTEX_URL_FORMAT, args );
             }
 
@@ -161,6 +161,8 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
                         sanitize( planCommunity.getParticipationAnalyst().getIssuesOverview(
                                 vertex,
                                 planCommunity ) ) ) );
+            } else {
+                list.add( new DOTAttribute( "tooltip", vertex.getDescription() ) );
             }
             return list;
         }
@@ -186,7 +188,9 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, RequirementRelationship edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity,
+                                                     RequirementRelationship edge,
+                                                     boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -200,10 +204,11 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             if ( edge.hasUnfulfilledRequirements( timing, event, planCommunity ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
-                list.add( new DOTAttribute( "tooltip",
-                        sanitize( edge.getNonFulfillmentSummary( timing, event, planCommunity ) ) ) );
-       //         sanitize( queryService.getRequirementNonFulfillmentSummary( edge, timing, event, getAnalyst() ) ) ) );
             }
+            int count = edge.getRequirements().size();
+            list.add( new DOTAttribute(
+                    "tooltip",
+                    count + ( count > 1 ? " requirements apply" : " requirement applies" ) ) );
             return list;
         }
     }

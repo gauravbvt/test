@@ -3,19 +3,18 @@ package com.mindalliance.channels.engine.analysis.graph;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
-import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
+import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -44,6 +43,8 @@ public class RequirementRelationship implements Identifiable {
     private Phase.Timing timing = null;
     private Event event = null;
 
+    private String label;
+
     public RequirementRelationship() {
     }
 
@@ -55,6 +56,7 @@ public class RequirementRelationship implements Identifiable {
         relationshipId = fromAgency.getId() + SEPARATOR + toAgency.getId();
         this.timing = timing;
         this.event = event;
+        this.label = "Requirement relationship from " + fromAgency.getName() + " to " + toAgency.getName();
     }
 
 
@@ -64,6 +66,18 @@ public class RequirementRelationship implements Identifiable {
 
     public void setRequirements( List<Requirement> requirements ) {
         this.requirements = requirements;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public Phase.Timing getTiming() {
+        return timing;
+    }
+
+    public void addRequirement( Requirement req ) {
+        getRequirements().add( req );
     }
 
     public boolean isEmpty() {
@@ -86,6 +100,7 @@ public class RequirementRelationship implements Identifiable {
                         planCommunity );
         if ( reqRel != null ) {
             requirements = reqRel.getRequirements();
+            label = reqRel.toString();
         }
     }
 
@@ -130,53 +145,18 @@ public class RequirementRelationship implements Identifiable {
     }
 
     public boolean hasUnfulfilledRequirements(
-            Phase.Timing timing,
-            Event event,
-            PlanCommunity planCommunity ) {
-        /*String summary = queryService.getRequirementNonFulfillmentSummary( this, timing, event, analyst );
-        return !summary.isEmpty();*/
-        return !getNonFulfillmentSummary( timing, event, planCommunity ).isEmpty();
-    }
-
-    public String getNonFulfillmentSummary(
-            Phase.Timing timing,
-            Event event,
-            PlanCommunity planCommunity ) {
-        StringBuilder sb = new StringBuilder();
-        CommunityCommitments allCommitments = planCommunity.getAllCommitments( false );
-        List<Requirement> unfulfilled = new ArrayList<Requirement>();
-        Place locale = planCommunity.getCommunityLocale();
-        for ( Requirement requirement : getRequirements() ) {
-            Requirement req = requirement.transientCopy();
-            req.setCommitterAgency( getFromAgency( planCommunity ) );
-            req.setBeneficiaryAgency( getFromAgency( planCommunity ) );
-            req.initialize( planCommunity );
-            Iterator<CommunityCommitment> commitmentIterator = allCommitments.iterator();
-            boolean fulfilled = false;
-            while ( !fulfilled && commitmentIterator.hasNext() ) {
-                CommunityCommitment communityCommitment = commitmentIterator.next();
-                fulfilled = communityCommitment.isInSituation( timing, event, locale )
-                        && req.satisfiedBy( communityCommitment, planCommunity )
-                        && planCommunity.getAnalyst().canBeRealized(
-                        communityCommitment.getCommitment(),
-                        planCommunity.getPlan(),
-                        planCommunity.getPlanService() );
-            }
-            if ( !fulfilled )
-                unfulfilled.add( req );
-        }
-        if ( !unfulfilled.isEmpty() ) {
-            sb.append( "Unfulfilled " );
-            sb.append( unfulfilled.size() == 1 ? "requirement: " : "requirements: " );
-            Iterator<Requirement> iter = unfulfilled.iterator();
-            while ( iter.hasNext() ) {
-                sb.append( '"' );
-                sb.append( iter.next().getName() );
-                sb.append( '"' );
-                if ( iter.hasNext() ) sb.append( ", " );
-            }
-        }
-        return sb.toString();
+            final Phase.Timing timing,
+            final Event event,
+            final PlanCommunity planCommunity ) {
+        return CollectionUtils.exists(
+                getRequirements(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Requirement)object).measureSatisfaction( timing, event, planCommunity ).isFailed();
+                    }
+                }
+        );
     }
 
     //////
@@ -211,4 +191,33 @@ public class RequirementRelationship implements Identifiable {
     public String getName() {
         return "Requirement " + relationshipId;
     }
+
+    @Override
+    public String toString() {
+        return label;
+    }
+
+    @Override
+    public boolean equals( Object object ) {
+        if ( object instanceof RequirementRelationship ) {
+            RequirementRelationship other = (RequirementRelationship)object;
+          return relationshipId.equals( other.getRelationshipId() )
+                  && ChannelsUtils.areEqualOrNull( timing, other.getTiming() )
+                  && ChannelsUtils.areEqualOrNull( event, other.getEvent() );
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash + 31 * relationshipId.hashCode();
+        if ( timing != null )
+            hash = hash + 31 * timing.hashCode();
+        if ( event != null )
+            hash = hash + 31 * event.hashCode();
+        return hash;
+    }
+
 }

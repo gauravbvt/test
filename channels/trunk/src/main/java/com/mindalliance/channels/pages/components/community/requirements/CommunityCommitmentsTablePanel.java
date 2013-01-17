@@ -103,7 +103,8 @@ public class CommunityCommitmentsTablePanel  extends AbstractFilterableTablePane
                 "Can be fulfilled?",
                 null,
                 "realizability",
-                "?"
+                "?",
+                null
         ) );
         // provider and table
         addOrReplace( new AjaxFallbackDefaultDataTable(

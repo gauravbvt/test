@@ -8,22 +8,15 @@ import com.mindalliance.channels.core.community.participation.ParticipationManag
 import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
-import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
-import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
-import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
-import com.mindalliance.channels.core.model.Job;
-import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
@@ -47,27 +40,17 @@ public class PlanCommunity implements Nameable, Identifiable {
 
     private static final String UNNAMED = "UNNAMED";
 
-    private CommunityServiceImpl communityService;
+    private CommunityService communityService;
     private String name;
     private String description;
     private Place communityLocale;
     private ParticipationManager participationManager;
 
-    public PlanCommunity(  // todo - should only be invoked once per community instantiated.
-            PlanService planService,
-            Analyst analyst,
-            UserParticipationService userParticipationService,
-            UserParticipationConfirmationService userParticipationConfirmationService,
-            OrganizationParticipationService organizationParticipationService,
+    public PlanCommunity(
+            CommunityService communityService,
             ParticipationManager participationManager ) {
         this.participationManager = participationManager;
-        communityService = new CommunityServiceImpl(
-                this,
-                planService,
-                analyst,
-                userParticipationService,
-                userParticipationConfirmationService,
-                organizationParticipationService );
+        this.communityService = communityService;
     }
 
     public Place getCommunityLocale() {
@@ -94,7 +77,7 @@ public class PlanCommunity implements Nameable, Identifiable {
         this.name = name;
     }
 
-    public CommunityServiceImpl getCommunityService() {
+    public CommunityService getCommunityService() {
         return communityService;
     }
 
@@ -182,184 +165,21 @@ public class PlanCommunity implements Nameable, Identifiable {
     }
 
     public CommunityAssignments getAllAssignments() {
-        CommunityAssignments assignments = new CommunityAssignments( getCommunityLocale() );
-        List<Agent> allAgents = participationManager.getAllKnownAgents( this );
-        for ( Assignment planAssignment : getPlanService().getAssignments( false, false ) ) {
-            Actor actor = planAssignment.getActor();
-            Organization employer = planAssignment.getOrganization();
-            for ( Agent agent : allAgents ) {
-                if ( agent.getActor().equals( actor ) ) {
-                    CommunityEmployment employment;
-                    if ( agent.isRegisteredInPlaceholder( employer, this ) ) {
-                        employment = new CommunityEmployment(
-                                planAssignment.getEmployment(),
-                                agent,
-                                new Agency( agent.getOrganizationParticipation(), this ),
-                                this );
-                    } else {
-                        employment = new CommunityEmployment(
-                                planAssignment.getEmployment(),
-                                agent,
-                                new Agency( employer ),
-                                this );
-                    }
-                    CommunityAssignment assignment = new CommunityAssignment(
-                            employment,
-                            planAssignment.getPart() );
-                    assignments.add( assignment );
-                }
-            }
-        }
-        return assignments;
+        return communityService.getAllAssignments();
     }
 
     public CommunityCommitments getAllCommitments( boolean includeToSelf ) {
-        CommunityCommitments commitments = new CommunityCommitments( getCommunityLocale() );
-        CommunityAssignments allAssignments = getAllAssignments();
-        for ( Flow flow: getPlanService().findAllFlows() ) {
-            if ( flow.isSharing() && !flow.isProhibited() ) {
-                CommunityAssignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
-                for ( CommunityAssignment committer : allAssignments.assignedTo( (Part) flow.getSource() ) ) {
-                    Agent committerAgent = committer.getAgent();
-                    for ( CommunityAssignment beneficiary : beneficiaries ) {
-                        if ( ( includeToSelf || !committerAgent.equals( beneficiary.getAgent() ) )
-                                && allowsCommitment( committer, beneficiary, flow.getRestriction() ) ) {
-                            commitments.add( new CommunityCommitment( committer, beneficiary, flow ) );
-                        }
-                    }
-                }
-
-            }
-        }
-        return commitments;
+        return communityService.getAllCommitments( includeToSelf );
     }
 
     public CommunityCommitments findAllCommitments( Flow flow, boolean includeToSelf ) {
-        CommunityCommitments commitments = new CommunityCommitments( getCommunityLocale() );
-        CommunityAssignments allAssignments = getAllAssignments();
-            if ( flow.isSharing() && !flow.isProhibited() ) {
-                CommunityAssignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
-                for ( CommunityAssignment committer : allAssignments.assignedTo( (Part) flow.getSource() ) ) {
-                    Agent committerAgent = committer.getAgent();
-                    for ( CommunityAssignment beneficiary : beneficiaries ) {
-                        if ( ( includeToSelf || !committerAgent.equals( beneficiary.getAgent() ) )
-                                && allowsCommitment( committer, beneficiary, flow.getRestriction() ) ) {
-                            commitments.add( new CommunityCommitment( committer, beneficiary, flow ) );
-                        }
-                    }
-                }
-
-            }
-        return commitments;
+        return communityService.findAllCommitments( flow, includeToSelf );
     }
 
 
     @SuppressWarnings( "unchecked" )
     public CommunityCommitments findAllBypassCommitments( final Flow flow ) {
-        assert flow.isSharing();
-        CommunityCommitments commitments = new CommunityCommitments( getCommunityLocale() );
-        if ( flow.isCanBypassIntermediate() ) {
-            List<Flow> bypassFlows;
-            if ( flow.isNotification() ) {
-                Part intermediate = (Part) flow.getTarget();
-                bypassFlows = (List<Flow>) CollectionUtils.select(
-                        intermediate.getAllSharingSends(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return flow.containsAsMuchAs( ( (Flow) object ) );
-                            }
-                        }
-                );
-            } else { // request-reply
-                Part intermediate = (Part) flow.getSource();
-                bypassFlows = (List<Flow>) CollectionUtils.select(
-                        intermediate.getAllSharingReceives(),
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ( (Flow) object ).containsAsMuchAs( flow );
-                            }
-                        }
-                );
-            }
-            for ( Flow byPassFlow : bypassFlows ) {
-                commitments.addAll( findAllCommitments( byPassFlow, true ) );
-            }
-        }
-        return commitments;
-    }
-
-
-    private boolean allowsCommitment( CommunityAssignment committer,
-                                      CommunityAssignment beneficiary,
-                                      Flow.Restriction restriction ) {
-        if ( restriction != null ) {
-            Agency committerAgency = committer.getAgency();
-            Agency beneficiaryAgency = beneficiary.getAgency();
-            Place committerLocation = committer.getLocation( this );
-            Place beneficiaryLocation = beneficiary.getLocation( this );
-            switch( restriction ) {
-
-                case SameTopOrganization:
-                    return committerAgency.getTopAgency( this )
-                        .equals( beneficiaryAgency.getTopAgency( this ) );
-
-                case SameOrganization:
-                    return committerAgency.equals( beneficiaryAgency );
-
-                case DifferentOrganizations:
-                    return !committerAgency.equals( beneficiaryAgency );
-
-                case DifferentTopOrganizations:
-                    return !committerAgency.getTopAgency( this )
-                            .equals( beneficiaryAgency.getTopAgency( this ));
-
-                case SameLocation:
-                    return ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || committerLocation.narrowsOrEquals( beneficiaryLocation, getCommunityLocale() )
-                            || beneficiaryLocation.narrowsOrEquals( committerLocation, getCommunityLocale() );
-
-                case SameOrganizationAndLocation:
-                    return committerAgency.equals( beneficiaryAgency )
-                            && ( ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || committerLocation.narrowsOrEquals( beneficiaryLocation, getCommunityLocale() )
-                            || beneficiaryLocation.narrowsOrEquals( committerLocation, getCommunityLocale() ) );
-
-                case DifferentLocations:
-                    return ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || !committerLocation.narrowsOrEquals( beneficiaryLocation, getCommunityLocale() )
-                            || !beneficiaryLocation.narrowsOrEquals( committerLocation, getCommunityLocale() );
-
-                case Supervisor:
-                    return hasSupervisor( committer.getAgent(), beneficiary.getAgent(), committerAgency );
-
-                case Self:
-                    return committer.getAgent().equals( beneficiary.getAgent() );
-
-                case Other:
-                    return !committer.getAgent().equals( beneficiary.getAgent() );
-            }
-        }
-        return true;
-    }
-
-    private boolean hasSupervisor( final Agent agent, final Agent supervisor, Agency agency ) {
-        return CollectionUtils.exists(
-                agency.getAllJobs( this ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Job job = (Job) object;
-                        return job.getActor().equals( agent.getActor() )
-                                && job.getSupervisor() != null
-                                && job.getSupervisor().equals( supervisor.getActor() );
-                    }
-                }
-        );
+        return communityService.findAllBypassCommitments( flow );
     }
 
 
@@ -419,4 +239,9 @@ public class PlanCommunity implements Nameable, Identifiable {
     public ParticipationAnalyst getParticipationAnalyst() {
         return getParticipationManager().getParticipationAnalyst();
     }
+
+    public void clearCache() {
+        communityService.clearCache();
+    }
+
 }

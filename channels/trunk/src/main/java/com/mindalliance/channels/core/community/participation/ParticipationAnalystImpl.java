@@ -45,7 +45,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
 
     @Override
     public List<ParticipationIssue> detectAllIssues( PlanCommunity planCommunity ) {
-        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>(  );
+        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
         Iterator<Identifiable> scope = issueAnalysisScope( planCommunity );
         while ( scope.hasNext() ) {
             Identifiable identifiable = scope.next();
@@ -56,7 +56,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
 
     @Override
     public List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity ) {
-        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>(  );
+        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
         for ( ParticipationIssueDetector detector : issueDetectors ) {
             if ( detector.appliesTo( identifiable ) ) {
                 issues.addAll( detector.detectIssues( identifiable, planCommunity ) );
@@ -69,7 +69,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
     public boolean hasIssues( final Identifiable identifiable, final PlanCommunity planCommunity ) {
         for ( ParticipationIssueDetector detector : issueDetectors ) {
             if ( detector.appliesTo( identifiable ) ) {
-                if( !detector.detectIssues( identifiable, planCommunity ).isEmpty() )
+                if ( !detector.detectIssues( identifiable, planCommunity ).isEmpty() )
                     return true;
             }
         }
@@ -93,7 +93,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
         scope.addAll( findAllOrganizationPlaceholders( planCommunity ) );
         scope.addAll( planCommunity.getParticipationManager().getAllKnownAgencies( planCommunity ) );
         scope.addAll( planCommunity.getParticipationManager().getAllKnownAgents( planCommunity ) );
-        scope.addAll( planCommunity.getPlanService().listActualEntities( Actor.class,  true ) );
+        scope.addAll( planCommunity.getPlanService().listActualEntities( Actor.class, true ) );
         return scope.iterator();
     }
 
@@ -104,7 +104,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Organization)object).isPlaceHolder();
+                        return ( (Organization) object ).isPlaceHolder();
                     }
                 }
         );
@@ -133,6 +133,44 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
         return rels;
     }
 
+    private List<RequirementRelationship> findRequirementRelationships( Requirement requirement,
+                                                                        PlanCommunity planCommunity ) {
+        List<RequirementRelationship> rels = new ArrayList<RequirementRelationship>();
+        List<Agency> allAgencies = planCommunity.getParticipationManager().getAllKnownAgencies( planCommunity );
+        for ( Agency fromAgency : allAgencies ) {
+            for ( Agency toAgency : allAgencies ) {
+                if ( !fromAgency.equals( toAgency ) ) {
+                    RequirementRelationship rel = makeRequirementRelationship(
+                            fromAgency,
+                            toAgency,
+                            requirement,
+                            planCommunity );
+                    if ( rel != null ) rels.add( rel );
+                }
+            }
+        }
+        return rels;
+    }
+
+    private RequirementRelationship makeRequirementRelationship( Agency fromAgency,
+                                                                 Agency toAgency,
+                                                                 Requirement requirement,
+                                                                 PlanCommunity planCommunity ) {
+        if ( requirement.getCommitterSpec().appliesToAgency( fromAgency, planCommunity )
+                && requirement.getBeneficiarySpec().appliesToAgency( toAgency, planCommunity ) ) {
+            RequirementRelationship reqRel = new RequirementRelationship( fromAgency, toAgency, null, null );
+            Requirement req = requirement.transientCopy();
+            req.setCommitterAgency( fromAgency );
+            req.setBeneficiaryAgency( toAgency );
+            req.initialize( planCommunity );
+            reqRel.addRequirement( req );
+            return reqRel;
+        } else {
+            return null;
+        }
+    }
+
+
     @SuppressWarnings( "unchecked" )
     @Override
     public RequirementRelationship findRequirementRelationship(
@@ -142,50 +180,38 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
             final Event event,
             final PlanCommunity planCommunity ) {
         final Place locale = planCommunity.getCommunityLocale();
-        List<Requirement> requirements = (List<Requirement>) CollectionUtils.select(
-                planCommunity.getPlanService().list( Requirement.class ), // todo get requirements from the community, not the plan
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        Requirement req = (Requirement) object;
-                        req.initialize( planCommunity );
-                        return !req.isUnknown() && !req.isEmpty()
-                                && req.appliesTo( timing )
-                                && req.appliesTo( event, locale )
-                                && req.getCommitterSpec().appliesToAgency( fromAgency, planCommunity )
-                                && req.getBeneficiarySpec().appliesToAgency( toAgency, planCommunity );
-                    }
-                }
-        );
+        List<Requirement> relationshipRequirements = new ArrayList<Requirement>();
+        for ( Requirement req : planCommunity.getPlanService().list( Requirement.class ) ) {  // todo get requirements from the community, not the plan
+            req.initialize( planCommunity );
+            if ( !req.isUnknown() && !req.isEmpty()
+                    && req.appliesTo( timing )
+                    && req.appliesTo( event, locale )
+                    && req.getCommitterSpec().appliesToAgency( fromAgency, planCommunity )
+                    && req.getBeneficiarySpec().appliesToAgency( toAgency, planCommunity ) ) {
+                Requirement requirement = req.transientCopy();
+                requirement.setCommitterAgency( fromAgency );
+                requirement.setBeneficiaryAgency( toAgency );
+                requirement.initialize( planCommunity );
+                relationshipRequirements.add( requirement );
+            }
+        }
         RequirementRelationship rel = new RequirementRelationship( fromAgency, toAgency, timing, event );
-        rel.setRequirements( requirements );
+        rel.setRequirements( relationshipRequirements );
         return rel;
     }
 
     @Override
-    public Requirement.Satisfaction committerSatisfaction(
+    public Requirement.Satisfaction requirementSatisfaction(
             Requirement requirement,
             Object[] extras,
             PlanCommunity planCommunity ) {
         Phase.Timing timing = (Phase.Timing) extras[0];
         Event event = (Event) extras[1];
-        Agency agency = requirement.getCommitterSpec().getAgency();
-        return requirement.satisfaction( agency, false, timing, event, planCommunity );
+        return requirement.measureSatisfaction( timing, event, planCommunity );
     }
 
     @Override
-    public Requirement.Satisfaction beneficiarySatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            PlanCommunity planCommunity ) {
-        Phase.Timing timing = (Phase.Timing) extras[0];
-        Event event = (Event) extras[1];
-        Agency agency = requirement.getBeneficiarySpec().getAgency();
-        return requirement.satisfaction( agency, true, timing, event, planCommunity );
-    }
-
-    @Override
-    public int commitmentsCount( Requirement requirement, Object[] extras, PlanCommunity planCommunity ) {
+    public int requiredCommitmentsCount( Requirement requirement, Object[] extras, PlanCommunity planCommunity ) {
         Phase.Timing timing = (Phase.Timing) extras[0];
         Event event = (Event) extras[1];
         PlanService planService = planCommunity.getPlanService();
@@ -197,10 +223,32 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
     }
 
     @Override
+    public String satisfactionSummary( Requirement requirement, Object[] extras, PlanCommunity planCommunity ) {
+        Phase.Timing timing = (Phase.Timing) extras[0];
+        Event event = (Event) extras[1];
+        return requirement.satisfactionSummary( timing, event, planCommunity );
+    }
+
+    @Override
+    public String percentSatisfaction( Requirement requirement, PlanCommunity planCommunity ) {
+        List<RequirementRelationship> reqRels = findRequirementRelationships( requirement, planCommunity );
+        if ( reqRels.isEmpty() ) return null;
+        int satisfiedCount = 0;
+        for ( RequirementRelationship reqRel : reqRels ) {
+             Requirement req = reqRel.getRequirements().get( 0 );
+            assert requirement.getId() == req.getId();
+            if ( !req.measureSatisfaction( null, null, planCommunity ).isFailed() ) {
+                satisfiedCount++;
+            }
+        }
+        int percent = satisfiedCount * 100 / reqRels.size();
+        return percent + "%";
+    }
+
+    @Override
     public String realizability( CommunityCommitment communityCommitment, PlanCommunity planCommunity ) {
         return planCommunity.getAnalyst().realizability( communityCommitment.getCommitment(), planCommunity );
     }
-
 
 
 }

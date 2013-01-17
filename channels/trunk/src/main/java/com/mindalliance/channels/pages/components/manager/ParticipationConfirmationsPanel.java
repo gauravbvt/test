@@ -147,11 +147,13 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
                     userParticipationConfirmationService.addParticipationConfirmation(
                             participationConfirmation.getUserParticipation(),
                             supervisor,
-                            getUser() );
+                            getUser(),
+                            planCommunity );
                 } else {
                     userParticipationConfirmationService.removeParticipationConfirmation(
                             participationConfirmation.getUserParticipation(),
-                            supervisor );
+                            supervisor,
+                            planCommunity );
                 }
             }
         }

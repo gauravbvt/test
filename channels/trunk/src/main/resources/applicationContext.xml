@@ -212,6 +212,13 @@ CONFIGURATION NOTES:
         <constructor-arg ref="surveysDao"/>
         <property name="serverUrl" value="${server.url}"/>
     </bean>
+    
+    <bean id="communityService" class="com.mindalliance.channels.core.community.CommunityServiceImpl" scope="prototype" autowire="no">
+        <constructor-arg ref="analyst"/>
+        <constructor-arg ref="userParticipationService"/>
+        <constructor-arg ref="userParticipationConfirmationService"/>
+        <constructor-arg ref="organizationParticipationService"/>
+    </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/templates"/>

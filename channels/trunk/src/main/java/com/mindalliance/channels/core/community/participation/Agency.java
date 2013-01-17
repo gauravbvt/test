@@ -8,6 +8,8 @@ import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -269,7 +271,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
             } else {
                 RegisteredOrganization registeredParent = getParentRegistration( planCommunity );
                 if ( registeredParent != null ) {
-                    return new Agency(registeredParent, planCommunity );
+                    return new Agency( registeredParent, planCommunity );
                 }
             }
         }
@@ -277,7 +279,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public List<Agency> ancestors( PlanCommunity planCommunity ) {
-        List<Agency> ancestors = new ArrayList<Agency>(  );
+        List<Agency> ancestors = new ArrayList<Agency>();
         if ( isRegisteredByCommunity() ) {
             for ( RegisteredOrganization registered
                     : planCommunity.getParticipationManager().ancestorsOf( this.getRegistration(), planCommunity ) ) {
@@ -304,8 +306,8 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return isFixedOrganization()
                 ? getFixedOrganization().getId()
                 : organizationParticipation != null
-                    ? (Long.MAX_VALUE / 2) + organizationParticipation.getId()
-                    : 0;
+                ? ( Long.MAX_VALUE / 2 ) + organizationParticipation.getId()
+                : 0;
     }
 
     @Override
@@ -348,7 +350,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public List<Job> getAllJobs( PlanCommunity planCommunity ) {
-        List<Job> jobs = new ArrayList<Job>(  );
+        List<Job> jobs = new ArrayList<Job>();
         jobs.addAll( getFixedJobs( planCommunity ) );
         jobs.addAll( getPlaceholderJobs( planCommunity ) );
         return jobs;
@@ -384,9 +386,9 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public void setParentName( String val ) {
-         parentName = val == null || val.isEmpty()
-                 ? null
-                 : val;
+        parentName = val == null || val.isEmpty()
+                ? null
+                : val;
     }
 
     // Channelable
@@ -406,13 +408,15 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return false;
     }
 
+    /////////
+
     public Long getOrganizationId() {
         return getPlanOrganization() != null ? getPlanOrganization().getId() : null;
     }
 
     public Organization getPlaceholder( PlanCommunity planCommunity ) {
         if ( organizationParticipation != null ) {
-            return organizationParticipation.getPlaceholderOrganization(  planCommunity );
+            return organizationParticipation.getPlaceholderOrganization( planCommunity );
         } else {
             return null;
         }
@@ -420,7 +424,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public Organization getOrganizationParticipatedAs( PlanCommunity planCommunity ) {
         if ( organizationParticipation != null ) {
-            return organizationParticipation.getOrganizationParticipatedAs(  planCommunity );
+            return organizationParticipation.getOrganizationParticipatedAs( planCommunity );
         } else {
             return null;
         }
@@ -429,4 +433,42 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     public long getPlaceholderId() {
         return organizationParticipation.getPlaceholderOrgId();
     }
+
+    public boolean hasAncestor( final Agency agency, PlanCommunity planCommunity ) {
+        return CollectionUtils.exists(
+                ancestors( planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Agency ancestor = (Agency) object;
+                        return ancestor.sameAs( agency );
+                    }
+                }
+        );
+    }
+
+    private boolean sameAs( Agency other ) {
+        return this.equals( other )
+                || ( getRegistration() != null
+                && other.getRegistration() != null
+                && getRegistration().equals( other.getRegistration() ) );
+    }
+
+    public boolean hasAncestorWithPlaceholder( final Organization placeholder, final PlanCommunity planCommunity ) {
+        final OrganizationParticipationService organizationParticipationService
+                = planCommunity.getOrganizationParticipationService();
+        return isRegisteredByCommunity()
+                && CollectionUtils.exists(
+                ancestors( planCommunity ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        RegisteredOrganization registration = ((Agency) object).getRegistration();
+                        return registration != null
+                            && organizationParticipationService.isAgencyRegisteredAs( registration, placeholder, planCommunity );
+                    }
+                }
+        );
+    }
 }
+

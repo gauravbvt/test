@@ -1399,22 +1399,6 @@ PopupSettings.RESIZABLE |
         return null;
     }
 
-    private ModelObject findExpanded( ModelObject subject ) {
-        Class clazz = subject instanceof ModelEntity
-                ? ModelEntity.class
-                : subject.getClass();
-        for ( long id : getExpansions() ) {
-            try {
-                ModelObject mo = getQueryService().find( ModelObject.class, id );
-                if ( clazz.isAssignableFrom( mo.getClass() ) )
-                    return ( mo );
-            } catch ( NotFoundException ignored ) {
-                // ignore
-            }
-        }
-        return null;
-    }
-
 
     public List<Segment> getAllSegments() {
         List<Segment> allSegments = new ArrayList<Segment>( getQueryService().list( Segment.class ) );
@@ -1714,39 +1698,6 @@ PopupSettings.RESIZABLE |
         }
     }
 
-    private void expand( Identifiable identifiable ) {
-        if ( identifiable != null )
-            expand( new Change( Change.Type.None, identifiable ) );
-    }
-
-    private void expand( Change change ) {
-        tryAcquiringLock( change );
-        if ( isSingleExpansion( change ) ) {
-            ModelObject subject = (ModelObject) change.getSubject( getQueryService() );
-            ModelObject previous = findExpanded( subject );
-            if ( previous != null && !previous.equals( subject ) ) {
-                collapse( new Change( Change.Type.None, previous ) );
-            }
-        }
-        addExpansion( change.getId() );
-    }
-
-    private boolean isSingleExpansion( Change change ) {
-        return change.isForInstanceOf( ModelEntity.class );
-    }
-
-    private void tryAcquiringLock( Change change ) {
-        if ( change.isByIdOnly() && getPlan().isDevelopment() ) {
-            getCommander().requestLockOn( getUser().getUsername(), change.getId() );
-        } else if ( change.isForInstanceOf( Identifiable.class ) ) {
-            Identifiable identifiable = change.getSubject( getQueryService() );
-            if ( !ModelObject.isUnknownModelObject( identifiable )
-                    && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
-                    && getCommander().isLockable( change.getClassName() ) ) {
-                getCommander().requestLockOn( getUser().getUsername(), change.getId() );
-            }
-        }
-    }
 
     private void expandOtherSegmentIfNeeded( Segment toExpand ) {
         Segment expanded = null;
@@ -1776,18 +1727,13 @@ PopupSettings.RESIZABLE |
             collapse( new Change( Change.Type.None, identifiable ) );
     }
 
-    private void collapse( Change change ) {
-        tryReleasingLock( change );
-        removeExpansion( change.getId() );
+    protected void collapse( Change change ) {
+        super.collapse( change );
         // Close aspects of collapsed object
         if ( change.isForInstanceOf( Flow.class ) ) {
             closeAspect( change, ExpandedFlowPanel.EOIS );
         } else if ( !( change.isForInstanceOf( Part.class ) ) )
             closeAspect( change, null );
-    }
-
-    private void tryReleasingLock( Change change ) {
-        getCommander().releaseAnyLockOn( getUser().getUsername(), change.getId() );
     }
 
     private void tryAcquiringLockForAspect( Change change, String aspect ) {

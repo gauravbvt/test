@@ -275,19 +275,17 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                         }
                     } ) );
         }
-        List<Requirement> applierRequirements = new ArrayList<Requirement>();
+        List<Requirement> appliedRequirements = new ArrayList<Requirement>();
         Place planLocale = getPlanLocale();
         for ( RequirementRelationship reqRel : reqRels ) {
             for ( Requirement req : reqRel.getRequirements() ) {
                 Requirement appliedReq = req.transientCopy();
-                appliedReq.setCommitterAgency( reqRel.getFromAgency( planCommunity ) );
-                appliedReq.setBeneficiaryAgency( reqRel.getToAgency( planCommunity ) );
                 appliedReq.setSituationIfAppropriate( selectedTiming, selectedEvent, planLocale );
                 appliedReq.initialize( getPlanCommunity() );
-                applierRequirements.add( appliedReq );
+                appliedRequirements.add( appliedReq );
             }
         }
-        return applierRequirements;
+        return appliedRequirements;
     }
 
     private void addRequiredCommitments() {
@@ -342,33 +340,6 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
         }
     }
 
-    @Override
-    public void changed( Change change ) {
-        if ( change.isSelected() ) {
-            if ( change.isForInstanceOf( Agency.class ) ) {
-                selectedAgency = (Agency) change.getSubject( getQueryService() );
-                selectedRequirementRel = null;
-                selectedAppliedRequirement = null;
-            } else if ( change.isForInstanceOf( RequirementRelationship.class ) ) {
-                selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
-                selectedAgency = null;
-                selectedAppliedRequirement = null;
-            } else if ( change.isForInstanceOf( PlanCommunity.class ) ) {
-                selectedRequirementRel = null;
-                selectedAgency = null;
-                selectedAppliedRequirement = null;
-            } else {
-                super.changed( change );
-            }
-        } else if ( change.isExpanded() && change.isForInstanceOf( Requirement.class ) ) {
-            selectedAppliedRequirement = makeAppliedRequirement(
-                    (Requirement) change.getSubject( getQueryService() ),
-                    change.getQualifiers() );
-        } else {
-            super.changed( change );
-        }
-    }
-
     private Requirement makeAppliedRequirement( Requirement requirement, Map<String, Serializable> qualifiers ) {
         try {
             ParticipationManager participationManager = getPlanCommunity().getParticipationManager();
@@ -400,6 +371,37 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
         }
     }
 
+
+    @Override
+    public void changed( Change change ) {
+        if ( change.isSelected() ) {  // in diagram
+            if ( change.isForInstanceOf( Agency.class ) ) {
+                selectedAgency = (Agency) change.getSubject( getQueryService() );
+                selectedRequirementRel = null;
+                selectedAppliedRequirement = null;
+            } else if ( change.isForInstanceOf( PlanCommunity.class ) ) {
+                selectedRequirementRel = null;
+                selectedAgency = null;
+                selectedAppliedRequirement = null;
+            } else if ( change.isForInstanceOf( RequirementRelationship.class ) ) {
+                selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
+                selectedAgency = null;
+                selectedAppliedRequirement = null;
+            } else {
+                super.changed( change );
+            }
+        } else if ( change.isExpanded() ) {  // from table of requirements
+            if ( change.isForInstanceOf( Requirement.class ) ) {
+                Requirement req = (Requirement) change.getSubject( getQueryService() );
+                selectedAppliedRequirement = selectedAppliedRequirement != null && selectedAppliedRequirement.equals( req )
+                        ? null
+                        : req;
+            }
+        } else {
+            super.changed( change );
+        }
+    }
+
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() ) {
@@ -408,6 +410,8 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                     || change.isForInstanceOf( PlanCommunity.class ) ) {
                 addRequiredNetworkPanel();
                 target.add( requiredNetworkingPanel );
+                addRequiredCommitments();
+                target.add( commitmentsContainer );
                 refreshAppliedRequirements( target );
             } else {
                 super.updateWith( target, change, updated );
@@ -456,14 +460,6 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                     EMPTY,
                     "committerSpec.agency.description",
                     filterable ) );
-            columns.add( makeParticipationAnalystColumn(
-                    "Satisfied?",
-                    null,
-                    "committerSatisfaction",
-                    "?",
-                    selectedTiming,
-                    selectedEvent
-            ) );
             columns.add( makeFilterableColumn(
                     "With organization",
                     "beneficiarySpec.agency",
@@ -471,13 +467,6 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                     EMPTY,
                     "beneficiarySpec.agency.description",
                     filterable ) );
-            columns.add( makeParticipationAnalystColumn(
-                    "Satisfied?",
-                    null,
-                    "beneficiarySatisfaction",
-                    "?",
-                    selectedTiming,
-                    selectedEvent ) );
             columns.add( makeFilterableColumn(
                     "In event",
                     "beneficiarySpec.event",
@@ -486,10 +475,19 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                     "beneficiarySpec.event.description",
                     filterable ) );
             columns.add( makeParticipationAnalystColumn(
-                    "Commitments",
+                    "Satisfied?",
                     null,
-                    "commitmentsCount",
+                    "requirementSatisfaction",
                     "?",
+                    "satisfactionSummary",
+                    selectedTiming,
+                    selectedEvent ) );
+            columns.add( makeParticipationAnalystColumn(
+                    "By commitments",
+                    null,
+                    "requiredCommitmentsCount",
+                    "?",
+                    null,
                     selectedTiming,
                     selectedEvent ) );
             columns.add( makeExpandLinkColumn(

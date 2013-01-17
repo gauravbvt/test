@@ -50,4 +50,9 @@ public interface OrganizationParticipationService extends GenericSqlService<Orga
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
             PlanCommunity planCommunity );
+
+    boolean isAgencyRegisteredAs(
+            RegisteredOrganization registeredOrg,
+            Organization placeholder,
+            PlanCommunity planCommunity );
 }

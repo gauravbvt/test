@@ -171,6 +171,22 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         return result;
     }
 
+    public CommunityCommitments canBeRealized( PlanCommunity planCommunity ) {
+        CommunityCommitments result = new CommunityCommitments( locale );
+        for ( CommunityCommitment communityCommitment : this ) {
+            boolean realizable = planCommunity.getAnalyst()
+                    .findRealizabilityProblems(
+                            planCommunity.getPlan(),
+                            communityCommitment.getCommitment(),
+                            planCommunity.getPlanService() ).isEmpty();
+            if ( realizable ) {
+                result.add( communityCommitment );
+            }
+        }
+        return result;
+    }
+
+
 
     ////////////////////////////
 

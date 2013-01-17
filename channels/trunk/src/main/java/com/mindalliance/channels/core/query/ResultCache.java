@@ -40,7 +40,7 @@ public class ResultCache {
      */
     public void cache( MethodInvocation invocation, Object result ) {
 
-        Plan plan = ChannelsUser.plan();
+        Plan plan = ChannelsUser.plan();  // todo use plan or planCommunity uri
         LOG.trace(
             MessageFormat.format(
                 "Caching result {0} of {1} in {2}",
@@ -66,7 +66,7 @@ public class ResultCache {
      * @return null when no previous value was found
      */
     public Element getCached( MethodInvocation invocation ) {
-        String key = getKey( invocation, ChannelsUser.plan() );
+        String key = getKey( invocation, ChannelsUser.plan() );  // todo use plan or planCommunity uri
         Element element = null;
         try {
             element = getCache().get( key );
@@ -92,12 +92,12 @@ public class ResultCache {
      * @param invocation the invocation
      */
     public void forget( MethodInvocation invocation ) {
-        getCache().remove( getKey( invocation, ChannelsUser.plan() ) );
+        getCache().remove( getKey( invocation, ChannelsUser.plan() ) );   // todo use plan or planCommunity uri
     }
 
     /** Forget all cached results. */
     public void forgetAll() {
-        LOG.info( "***Clearing cache" );
+        LOG.info( "***Clearing cache " + getCacheKey() );
         getCache().removeAll();
     }
 

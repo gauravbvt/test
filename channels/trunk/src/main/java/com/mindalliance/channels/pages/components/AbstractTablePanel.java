@@ -229,8 +229,9 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     protected AbstractColumn<T> makeParticipationAnalystColumn( String name,
                                                   final String property,
-                                                  final String methodName,
+                                                  final String labelMethodName,
                                                   final String defaultText,
+                                                  final String titleMethodName,
                                                   final Object... extras ) {
         return new AbstractColumn<T>( new Model<String>( name ) ) {
 
@@ -241,9 +242,15 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                         ? model.getObject()
                         : (T) ChannelsUtils.getProperty( model.getObject(), property, null );
                 String defaultTextValue = findStringValue( bean, defaultText );
-                String text = "" + invokeParticipationAnalyst( methodName, bean, extras );
+                String text = "" + invokeParticipationAnalyst( labelMethodName, bean, extras );
+                String title = "";
+                if ( titleMethodName != null && !titleMethodName.isEmpty() ) {
+                     title = "" + invokeParticipationAnalyst( titleMethodName, bean, extras );
+                }
                 String labelText = ( text.isEmpty() ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : text;
-                cellItem.add( new Label( id, new Model<String>( labelText ) ) );
+                Label label = new Label( id, new Model<String>( labelText ) );
+                addTipTitle( label, title );
+                cellItem.add( label );
             }
         };
     }

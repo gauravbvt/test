@@ -76,7 +76,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
             Commander cmd = commanders.get( planCommunityUri );
             if ( cmd != null )
                 return cmd;
-
+            planCommunity.clearCache();
             DefaultCommander newCommander = new DefaultCommander();
             commanders.put( planCommunityUri, newCommander );
             newCommander.setPlanCommunity( planCommunity );

@@ -30,7 +30,7 @@ public interface ParticipationAnalyst {
     List<ParticipationIssue> detectAllIssues( PlanCommunity planCommunity );
 
     /**
-     *  Detect all issues of a given identifiable.
+     * Detect all issues of a given identifiable.
      *
      * @param identifiable  an identifiable
      * @param planCommunity a plan community
@@ -87,49 +87,53 @@ public interface ParticipationAnalyst {
             Event event,
             PlanCommunity planCommunity );
 
-
     /**
-     * The level of satisfaction of a requirement by committer organization.
+     * The level of satisfaction of a requirement.
      *
      * @param requirement   a requirement
-     * @param extras        extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
+     * @param extras        extra parameters -- 0=>Phase.Timing, 1=>Event
      * @param planCommunity a plan community
      * @return a requirement satisfaction
      */
-    Requirement.Satisfaction committerSatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            PlanCommunity planCommunity );
-
-    /**
-     * The level of satisfaction of a requirement by beneficiary organization.
-     *
-     * @param requirement   a requirement
-     * @param extras        extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
-     * @param planCommunity a plan community
-     * @return a requirement satisfaction
-     */
-    Requirement.Satisfaction beneficiarySatisfaction(
-            Requirement requirement,
-            Object[] extras,
-            PlanCommunity planCommunity );
+    Requirement.Satisfaction requirementSatisfaction( Requirement requirement,
+                                                      Object[] extras,
+                                                      PlanCommunity planCommunity );
 
     /**
      * Number of commitments that fulfill a given requirement.
+     *
      * @param requirement a requirement
-     * @param extras extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
+     * @param extras      extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
      * @return an int
      */
-    int commitmentsCount( Requirement requirement, Object[] extras,  PlanCommunity planCommunity );
+    int requiredCommitmentsCount( Requirement requirement, Object[] extras, PlanCommunity planCommunity );
+
+    /**
+     * Summary of why given requirement not fully satisfied.
+     * Empty if requirement fully satisfied.
+     *
+     * @param requirement a requirement
+     * @param extras      extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
+     * @return an int
+     */
+    String satisfactionSummary( Requirement requirement, Object[] extras, PlanCommunity planCommunity );
+
+    /**
+     * The percentage by which the requirement is satisfied by pairs of agencies it applies to
+     * @param requirement a requirement
+     * @param planCommunity a plan community
+     * @return a string - e.g. "25%"
+     */
+    String percentSatisfaction( Requirement requirement, PlanCommunity planCommunity );
 
     /**
      * Diagnostic about whether a commitment can be realized or is conceptual.
      *
-     * @param commitment   an info sharing commitment in a plan community
+     * @param commitment    an info sharing commitment in a plan community
      * @param planCommunity a plan community
      * @return a string
      */
-    String realizability( CommunityCommitment commitment,  PlanCommunity planCommunity );
+    String realizability( CommunityCommitment commitment, PlanCommunity planCommunity );
 
 
 }

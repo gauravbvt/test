@@ -82,18 +82,20 @@ public class UserParticipationConfirmationServiceImpl
     @Transactional
     public void addParticipationConfirmation( UserParticipation userParticipation,
                                               Agent supervisor,
-                                              ChannelsUser user ) {
+                                              ChannelsUser user,
+                                              PlanCommunity planCommunity ) {
         UserParticipationConfirmation validation = new UserParticipationConfirmation(
                 userParticipation,
                 supervisor,
                 user.getUsername() );
         save( validation );
+        planCommunity.clearCache();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional
-    public void removeParticipationConfirmation( UserParticipation userParticipation, Agent supervisor ) {
+    public void removeParticipationConfirmation( UserParticipation userParticipation, Agent supervisor, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "userParticipation", userParticipation ) );
@@ -105,6 +107,7 @@ public class UserParticipationConfirmationServiceImpl
         for ( UserParticipationConfirmation validation : (List<UserParticipationConfirmation>) criteria.list() ) {
             delete( validation );
         }
+        planCommunity.clearCache();
     }
 
     @Override
@@ -123,10 +126,11 @@ public class UserParticipationConfirmationServiceImpl
 
     @Override
     @Transactional
-    public void deleteConfirmations( UserParticipation participation ) {
+    public void deleteConfirmations( UserParticipation participation, PlanCommunity planCommunity ) {
         for ( UserParticipationConfirmation validation : getParticipationConfirmations( participation ) ) {
             delete( validation );
         }
+        planCommunity.clearCache();
     }
 
     @Override

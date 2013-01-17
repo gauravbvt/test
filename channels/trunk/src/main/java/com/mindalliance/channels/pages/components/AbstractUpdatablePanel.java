@@ -625,7 +625,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return planCommunityManager.makePlanCommunity( getPlan() );
+        return planCommunityManager.getPlanCommunityFor( getPlan() );
     }
 
     protected PlanService getPlanService() {

@@ -83,6 +83,7 @@ public class RegisteredOrganizationServiceImpl
                 );
             }
             save( registered );
+            planCommunity.clearCache();
         }
         return registered;
     }

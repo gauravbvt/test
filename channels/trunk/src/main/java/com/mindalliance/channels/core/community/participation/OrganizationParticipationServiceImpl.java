@@ -115,6 +115,7 @@ public class OrganizationParticipationServiceImpl
                         placeholder,
                         planCommunity );
                 save( registration );
+                planCommunity.clearCache();
                 return registration;
             } else {
                 return null;
@@ -124,8 +125,9 @@ public class OrganizationParticipationServiceImpl
         }
     }
 
+
     @SuppressWarnings( "unchecked" )
-    private boolean isAgencyRegisteredAs(
+    public boolean isAgencyRegisteredAs(
             RegisteredOrganization registeredOrg,
             Organization placeholder,
             PlanCommunity planCommunity ) {
@@ -154,6 +156,7 @@ public class OrganizationParticipationServiceImpl
                     organizationParticipation,
                     planCommunity ).isEmpty() ) {
                 delete( organizationParticipation );
+                planCommunity.clearCache();
                 return true;
             }
         }

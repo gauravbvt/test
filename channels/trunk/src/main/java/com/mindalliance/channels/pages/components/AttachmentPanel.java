@@ -174,6 +174,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addSubmit() {
         submit = new AjaxButton( "submit" ) {
             protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
+                addAttachmentList();
+                refresh( target );
                 update( target, new Change( Change.Type.Unknown ) );
             }
 

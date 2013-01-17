@@ -25,7 +25,7 @@ public interface OrganizationContactInfoService extends GenericSqlService<Organi
                       List<Channel> channels,
                       PlanCommunity planCommunity );
 
-    void removeAllContactInfoOf( RegisteredOrganization registered );
+    void removeAllContactInfoOf( RegisteredOrganization registered, PlanCommunity planCommunity );
 
     List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered );
 }

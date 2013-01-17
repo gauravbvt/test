@@ -71,9 +71,9 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
     boolean deleteParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
 
 
-    void accept( UserParticipation participation );
+    void accept( UserParticipation participation, PlanCommunity planCommunity );
 
-    void refuse( UserParticipation participation );
+    void refuse( UserParticipation participation, PlanCommunity planCommunity );
 
     boolean isUserParticipatingAs( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
 

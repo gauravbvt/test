@@ -1,18 +1,18 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Plan community manager.
@@ -22,68 +22,58 @@ import java.util.List;
  * Date: 11/30/12
  * Time: 3:03 PM
  */
-public class PlanCommunityManagerImpl implements PlanCommunityManager {
+public class PlanCommunityManagerImpl implements PlanCommunityManager, ApplicationContextAware {
 
-    @Autowired
-    private PlanServiceFactory planServiceFactory;
+    private ApplicationContext applicationContext;
+    private Map<Plan,PlanCommunity> planCommunities = new HashMap<Plan,PlanCommunity>();
 
     @Autowired
     private PlanManager planManager;
 
     @Autowired
-    private ParticipationManager participationManager;
+    private PlanServiceFactory planServiceFactory;
 
     @Autowired
-    private OrganizationParticipationService organizationParticipationService;
-
-    private Analyst analyst;
-    private UserParticipationService userParticipationService;
-    private UserParticipationConfirmationService userParticipationConfirmationService;
+    private ParticipationManager participationManager;
 
     public PlanCommunityManagerImpl( ) {
 
     }
 
-    public void setAnalyst( Analyst analyst ) {
-        this.analyst = analyst;
+    @Override
+    public synchronized void setApplicationContext( ApplicationContext applicationContext ) {
+        this.applicationContext = applicationContext;
     }
 
-    public void setUserParticipationService( UserParticipationService userParticipationService ) {
-        this.userParticipationService = userParticipationService;
-    }
-
-    public void setUserParticipationConfirmationService(
-            UserParticipationConfirmationService userParticipationConfirmationService ) {
-        this.userParticipationConfirmationService = userParticipationConfirmationService;
-    }
-
-    public PlanCommunity makePlanCommunity( Plan plan ) {
-        return new PlanCommunity(
-                getPlanService( plan ),
-                analyst,
-                userParticipationService,
-                userParticipationConfirmationService,
-                organizationParticipationService,
-                participationManager );
+    public PlanCommunity getPlanCommunityFor( Plan plan ) {    // todo: temporary plan implies plan community
+        PlanCommunity planCommunity = planCommunities.get( plan );
+        if ( planCommunity == null ) {
+            CommunityService communityService = (CommunityService)applicationContext.getBean( "communityService" ); // prototype bean
+            communityService.setPlanService( getPlanService( plan ) );
+            planCommunity = new PlanCommunity( communityService, participationManager );
+            communityService.setPlanCommunity( planCommunity);
+            planCommunities.put( plan, planCommunity );
+        }
+        return planCommunity;
     }
 
     @Override
     public PlanCommunity findPlanCommunity( String uri ) {       // todo - don't assume one implied community per plan
         Plan plan = planManager.findProductionPlan( uri );
-        return plan == null ? null : makePlanCommunity( plan );
+        return plan == null ? null : getPlanCommunityFor( plan );
     }
 
     @Override
     public PlanCommunity findPlanCommunity( String uri, int planVersion ) { // todo - don't assume one implied community per plan
         Plan plan = planManager.getPlan( uri, planVersion );
-        return plan == null ? null : makePlanCommunity( plan );
+        return plan == null ? null : getPlanCommunityFor( plan );
     }
 
     @Override
     public List<PlanCommunity> getPlanCommunities() {
         List<PlanCommunity> planCommunities = new ArrayList<PlanCommunity>(  );
         for ( Plan plan : planManager.getPlans() ) {
-             planCommunities.add( makePlanCommunity( plan ) );
+             planCommunities.add( getPlanCommunityFor( plan ) );
         }
         return planCommunities;
     }

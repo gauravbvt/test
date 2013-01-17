@@ -365,10 +365,14 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         if ( change.isNone() ) {
         } else if ( change.isCommunicated() ) {
             // do something?
+        } else if ( change.isCollapsed() || change.isRemoved() )
+            collapse( change );
+        else if ( change.isExpanded() || change.isAdded() ) {
+                expand( change );
         }
     }
 
-    @Override
+        @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isUpdated()
                 && change.isForInstanceOf( Plan.class ) ) {

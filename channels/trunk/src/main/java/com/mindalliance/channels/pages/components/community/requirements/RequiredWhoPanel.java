@@ -8,11 +8,9 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -40,6 +38,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     private AutoCompleteTextField<String> agencyField;
     private AutoCompleteTextField<String> placeholderField;
     private AutoCompleteTextField<String> agentField;
+    private AutoCompleteTextField<String> jurisdictionField;
 
     public RequiredWhoPanel( String id, Model<Requirement> requirementModel, boolean isBeneficiary ) {
         super( id, requirementModel );
@@ -104,13 +103,31 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     }
 
     private void addJurisdictionField() {
-        EntityReferencePanel<Place> field = new EntityReferencePanel<Place>(
+        final List<String> choices = getAllJurisdictionNames();
+        jurisdictionField = new AutoCompleteTextField<String>(
                 "jurisdiction",
-                new PropertyModel<Part>( this, "requirement" ),
-                getAllPlaceNames(),
-                getAgentSpecPath( "jurisdiction" ),
-                Place.class );
-        addOrReplace( field );
+                new PropertyModel<String>( this, "jurisdictionName" )
+        ) {
+            @Override
+            protected Iterator<String> getChoices( String input ) {
+                List<String> candidates = new ArrayList<String>();
+                for ( String choice : choices ) {
+                    if ( input.trim().isEmpty() || Matcher.matches( choice, input ) ) {
+                        candidates.add( choice );
+                    }
+                }
+                return candidates.iterator();
+            }
+        };
+        jurisdictionField.setOutputMarkupId( true );
+        jurisdictionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields( target );
+                update( target, new Change( Change.Type.Updated, getRequirement() ) );
+            }
+        } );
+        addOrReplace( jurisdictionField );
     }
 
     private void addAgencyField() {
@@ -185,6 +202,17 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         Collections.sort( names );
         return names;
     }
+
+    private List<String> getAllJurisdictionNames() {
+        List<String> names = new ArrayList<String>();
+        for ( Place place : getPlanCommunity().getPlanService().listActualEntities( Place.class, true ) ) {
+            if ( !place.isUnknown() )
+                names.add( place.getName() );
+        }
+        Collections.sort( names );
+        return names;
+    }
+
 
     @SuppressWarnings( "unchecked" )
     private List<String> getAllAgencyNames() {
@@ -337,6 +365,27 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                 placeholder ) );
         requirement.initialize( planCommunity );
     }
+
+    public String getJurisdictionName() {
+        Place jurisdiction = getAgentSpec().getJurisdiction();
+        return jurisdiction == null ? null : jurisdiction.getName();
+    }
+
+    public void setJurisdictionName( String name ) {
+        PlanCommunity planCommunity = getPlanCommunity();
+        Requirement requirement = getRequirement();
+        Place jurisdiction = null;
+        if ( name != null && !name.isEmpty() ) {
+            jurisdiction = planCommunity.getPlanService().findActualEntity( Place.class, name );
+        }
+        doCommand( new UpdatePlanObject(
+                getUsername(),
+                requirement,
+                getAgentSpecPath( "jurisdiction" ),
+                jurisdiction ) );
+        requirement.initialize( planCommunity );
+    }
+
 
     public Requirement getRequirement() {
         Requirement req = (Requirement) getModel().getObject();

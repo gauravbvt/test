@@ -1732,7 +1732,7 @@ span.menuitem ul li ul li:last-child a {
     border-bottom: 1px solid #A7A9AC;
 }
 
-/* Added by JF */
+/* Added by JF -- much copied from channels.css -- TODO: CLEAN UP*/
 
     /* name range filter */
 
@@ -1851,7 +1851,7 @@ div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0
     width: 50%;
 }
 
-/* participation issue details */
+/* issue details */
 
 div.issues {
     position: relative;
@@ -1883,6 +1883,15 @@ div.issues li {
     font-family: Lucida Console, monospace;
 }
 
+div.issues div.section-title ul.menu {
+    padding: 4px 3px 0 0;
+    margin: 0;
+}
+
+div.issues div.section-title ul.menu li {
+    border: none;
+}
+
 div.issues div.section-title ul.menu li a {
     background: none repeat scroll 0 0 darkRed;
     color: white;
@@ -1890,15 +1899,39 @@ div.issues div.section-title ul.menu li a {
     text-transform: uppercase;
 }
 
+div.issues div.section-title ul.menu li a:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #8b0000;
+}
+
+div.issues ol li table span a.menubar {
+    background: none repeat scroll 0 0 #8b0000;
+    color: #FFFFFF;
+    font-family: Lucida Console, monospace;
+    padding: 3px 5px;
+    text-transform: uppercase;
+    border: 1px solid #ffffff;
+}
+
+div.issues ol li table span a.menubar:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #8B0000;
+    color: #8B0000;
+}
+
+table.issue-details {
+    margin: 10px 0 0 0;
+}
+
+
+/***/
+
 ul.menu {
     font-weight: normal;
     list-style: none;
     white-space: nowrap;
 }
 
-table.issue-details {
-    margin: 10px 0 0 0;
-}
 
 table.issue-details td {
     padding: 10px 5px;
@@ -2013,5 +2046,78 @@ input[type='text'] {
     margin: 0;
     padding: 0;
 }
+
+/* attachments */
+
+div.issues ul.attach li ul.menu li {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+ul.attach ul.menu {
+    padding-top: 2px;
+    padding-right: 8px;
+}
+
+ul.attach {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.attach {
+    border-bottom: 1px dotted #999999;
+    margin: 0 0 10px 0;
+    padding: 0 10px 5px;
+}
+
+td.grouped > ul.attach {
+    padding: 0 0 5px 0;
+}
+
+ul.attach li {
+    margin: 0 0 5px;
+    padding: 0 0 0 25px;
+}
+
+ul.attach li.controls {
+    padding: 0;
+}
+
+ul.attach li a {
+    float: right;
+    font-weight: bold;
+}
+
+ul.attach li a:hover {
+    border-bottom: 1px dotted #4F2D87;
+}
+
+ul.attach li ul.menu,
+ul.attach li ul.menu li {
+    margin: 0;
+    padding: 0;
+}
+
+ul.attach li ul.menu li a {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    color: #ffffff;
+    background: #999999;
+    padding: 1px 3px;
+}
+
+ul.attach li ul.menu li:first-child a {
+    margin-right: 3px;
+}
+
+ul.attach li ul.menu li a:hover {
+    color: #e8e8e8;
+}
+
 
 

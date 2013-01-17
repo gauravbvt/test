@@ -19,7 +19,7 @@ public interface PlanCommunityManager {
      * @param plan a plan
      * @return a plan community
      */
-    PlanCommunity makePlanCommunity( Plan plan );  // todo - change when no longer a single plan community implied by a plan.
+    PlanCommunity getPlanCommunityFor( Plan plan );  // todo - change when no longer a single plan community implied by a plan.
 
     /**
      * Find plan community with production plan.

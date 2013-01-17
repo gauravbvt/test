@@ -108,7 +108,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 user.setPlan( plan );
                 result.add( new PlanSummaryData(
                         serverUrl,
-                        planCommunityManager.makePlanCommunity( plan ) ) );
+                        planCommunityManager.getPlanCommunityFor( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -167,7 +167,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 user.setPlan( plan );
                 result.add( new PlanSummaryData(
                         serverUrl,
-                        planCommunityManager.makePlanCommunity( plan ) ) );
+                        planCommunityManager.getPlanCommunityFor( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -485,7 +485,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                         user,
                         new Agent( actor ),
                         planCommunity );
-                userParticipationService.accept( participation );
+                userParticipationService.accept( participation, planCommunity );
             } else {
                 throw new Exception( "Participation was not accepted" );
             }
@@ -511,7 +511,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     planCommunity
             );
             if ( userParticipation != null ) {
-                userParticipationService.refuse( userParticipation );
+                userParticipationService.refuse( userParticipation, planCommunity );
             } else {
                 throw new Exception( "Participation was not refused" );
             }
@@ -627,7 +627,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     private PlanCommunity getPlanCommunity( Plan plan ) {
-        return planCommunityManager.makePlanCommunity( plan );
+        return planCommunityManager.getPlanCommunityFor( plan );
     }
 
 }

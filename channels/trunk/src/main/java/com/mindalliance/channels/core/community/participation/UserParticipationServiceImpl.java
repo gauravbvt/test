@@ -62,6 +62,7 @@ public class UserParticipationServiceImpl
                     agent,
                     planCommunity );
             save( userParticipation );
+            planCommunity.clearCache();
             return userParticipation;
         } else {
             return null;
@@ -84,6 +85,7 @@ public class UserParticipationServiceImpl
                     planCommunity );
             userParticipation.setAccepted( true );
             save( userParticipation );
+            planCommunity.clearCache();
             return userParticipation;
         } else {
             return null;
@@ -221,6 +223,7 @@ public class UserParticipationServiceImpl
         for ( UserParticipation userParticipation : (List<UserParticipation>) criteria.list() ) {
             delete( userParticipation );
         }
+        planCommunity.clearCache();
     }
 
     @Override
@@ -416,8 +419,9 @@ public class UserParticipationServiceImpl
         if ( agent != null ) {
             for ( UserParticipation participation : getParticipationsAsAgent( agent, planCommunity ) ) {
                 if ( participation.getParticipantUsername().equals( user.getUsername() ) ) {
-                    userParticipationConfirmationService.deleteConfirmations( participation );
+                    userParticipationConfirmationService.deleteConfirmations( participation, planCommunity );
                     delete( participation );
+                    planCommunity.clearCache();
                     success = true;
                 }
 
@@ -443,7 +447,7 @@ public class UserParticipationServiceImpl
 
     @Override
     @Transactional
-    public void accept( UserParticipation participation ) {
+    public void accept( UserParticipation participation, PlanCommunity planCommunity ) {
         List<UserParticipation> matches = listMatching( participation );
         if ( matches.isEmpty() ) {
             UserParticipation userParticipation = new UserParticipation( participation );
@@ -455,20 +459,22 @@ public class UserParticipationServiceImpl
                 save( userParticipation );
             }
         }
-
+        planCommunity.clearCache();
     }
 
     @Override
     @Transactional
-    public void refuse( UserParticipation participation ) {
+    public void refuse( UserParticipation participation, PlanCommunity planCommunity ) {
         for ( UserParticipation userParticipation : listMatching( participation ) ) {
             if ( participation.isRequested() ) {
                 userParticipation.setAccepted( false );
                 save( userParticipation );
             } else {
                 delete( userParticipation );
+                planCommunity.clearCache();
             }
         }
+        planCommunity.clearCache();
     }
 
     @Override

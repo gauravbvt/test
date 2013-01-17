@@ -49,7 +49,7 @@ public class OrganizationContactInfoServiceImpl
                              RegisteredOrganization registered,
                              List<Channel> channels,
                              PlanCommunity planCommunity ) {
-        removeAllContactInfoOf( registered );
+        removeAllContactInfoOf( registered, planCommunity );
         for ( Channel channel : channels ) {
             OrganizationContactInfo contactInfo = new OrganizationContactInfo(
                     user.getUsername(),
@@ -58,6 +58,7 @@ public class OrganizationContactInfoServiceImpl
                     planCommunity);
             save( contactInfo );
         }
+        planCommunity.clearCache();
     }
 
     @Override
@@ -72,10 +73,11 @@ public class OrganizationContactInfoServiceImpl
 
     @Override
     @Transactional
-    public void removeAllContactInfoOf( RegisteredOrganization registered ) {
+    public void removeAllContactInfoOf( RegisteredOrganization registered, PlanCommunity planCommunity ) {
         for ( OrganizationContactInfo contactInfo : findAllContactInfo( registered ) ) {
             delete( contactInfo );
         }
+        planCommunity.clearCache();
     }
 
 }

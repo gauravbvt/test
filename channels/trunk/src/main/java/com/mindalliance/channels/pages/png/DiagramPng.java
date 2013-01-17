@@ -128,7 +128,7 @@ public abstract class DiagramPng extends ChannelsDynamicImageResource {
 
     protected PlanCommunity getPlanCommunity() {
         Channels channels = (Channels)Channels.get();
-        return channels.getPlanCommunityManager().makePlanCommunity( ChannelsUser.plan() ); // TODO - change when ChannelsUser.planCommunityUri()
+        return channels.getPlanCommunityManager().getPlanCommunityFor( ChannelsUser.plan() ); // TODO - change when ChannelsUser.planCommunityUri()
     }
 
     private void writeErrorImage( OutputStream output ) throws DiagramException {

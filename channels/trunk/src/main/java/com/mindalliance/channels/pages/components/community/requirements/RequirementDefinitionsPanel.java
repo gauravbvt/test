@@ -358,22 +358,16 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeColumn( "Name", "name", EMPTY ) );
-            columns.add( makeFilterableColumn(
-                    "Organization(s)",
-                    "committerSpec.agency",
-                    "committerSpec.agency.name",
-                    EMPTY,
-                    "committerSpec.agency.description",
-                    filterable ) );
+            columns.add( makeColumn(
+                    "Agents",
+                    "committerSpec.agentSpec.label",
+                    EMPTY ) );
             columns.add( makeColumn( "Shall share info", "informationAndEois", EMPTY ) );
             columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
-            columns.add( makeFilterableColumn(
-                    "With organization(s)",
-                    "beneficiarySpec.agency",
-                    "beneficiarySpec.agency.name",
-                    EMPTY,
-                    "beneficiarySpec.agency.description",
-                    filterable ) );
+            columns.add( makeColumn(
+                    "With agents",
+                    "beneficiarySpec.agentSpec.label",
+                    EMPTY ) );
             columns.add( makeFilterableColumn(
                     "In event",
                     "beneficiarySpec.event",
@@ -381,13 +375,18 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
                     EMPTY,
                     "beneficiarySpec.event.description",
                     filterable ) );
-/*
             columns.add( makeAnalystColumn(
                     "Issues",
                     "requirement",
                     "unwaivedIssuesCount",
                     "?" ) );
-*/
+            columns.add( makeParticipationAnalystColumn(
+                    "% satisfaction",
+                    "requirement",
+                    "percentSatisfaction",
+                    "?",
+                    null
+            ) );
             columns.add( makeExpandLinkColumn( "", "", "@expandLabel" ) );
             List<RequirementWrapper> requirements = requirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",

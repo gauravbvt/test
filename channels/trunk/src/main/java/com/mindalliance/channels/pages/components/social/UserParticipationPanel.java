@@ -500,10 +500,10 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             PlanCommunity planCommunity = getPlanCommunity();
             UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
             if ( accepted ) {
-                userParticipationService.accept( participation );
+                userParticipationService.accept( participation, planCommunity );
             } else {
                 if ( isRequested() ) {
-                    userParticipationService.refuse( participation );
+                    userParticipationService.refuse( participation, planCommunity );
                 } else {
                     userParticipationService.deleteParticipation(
                             new ChannelsUser( participation.getParticipant(), planCommunity ),
