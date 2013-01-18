@@ -1,0 +1,52 @@
+Index: webapproot/pages/wizard/wizard.widgets.js
+===================================================================
+--- webapproot/pages/wizard/wizard.widgets.js	(revision 4654)
++++ webapproot/pages/wizard/wizard.widgets.js	(working copy)
+@@ -651,27 +651,43 @@
+ 							wire1: ["wm.Wire", {"expression":undefined,"source":"summaryIssuesGrid1.isRowSelected","targetProperty":"showing"}, {}],
+ 							wire: ["wm.Wire", {"expression":"\"I-\" + ${summaryIssuesGrid1.selectedItem.issue.sequence}","targetProperty":"caption"}, {}]
+ 						}],
+-						pageContainer1: ["wm.PageContainer", {"deferLoad":true}, {}]
++						pageContainer1: ["wm.PageContainer", {"deferLoad":true,"pageName":"IssueForm","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{"liveForm1DataSet":"issueForm.dataSet","issueFormReadonly":"issueForm.readonly"}}, {}, {
++							binding: ["wm.Binding", {}, {}, {
++								wire: ["wm.Wire", {"expression":undefined,"source":"summaryIssuesGrid1.selectedItem.issue","targetProperty":"liveForm1DataSet"}, {}]
++							}]
++						}]
+ 					}],
+ 					View_Flow: ["wm.Layer", {"borderColor":"","caption":"Flow","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
+ 						binding: ["wm.Binding", {}, {}, {
+ 							wire: ["wm.Wire", {"expression":undefined,"source":"summaryFlowsGrid1.isRowSelected","targetProperty":"showing"}, {}]
+ 						}],
+-						pageContainer2: ["wm.PageContainer", {"deferLoad":true}, {}]
++						pageContainer2: ["wm.PageContainer", {"deferLoad":true,"pageName":"FlowForm","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{"flowFormDataSet":"flowForm.dataSet"}}, {}, {
++							binding: ["wm.Binding", {}, {}, {
++								wire: ["wm.Wire", {"expression":undefined,"source":"summaryFlowsGrid1.selectedItem","targetProperty":"flowFormDataSet"}, {}]
++							}]
++						}]
+ 					}],
+ 					View_Issue: ["wm.Layer", {"borderColor":"","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
+ 						binding: ["wm.Binding", {}, {}, {
+ 							wire: ["wm.Wire", {"expression":undefined,"source":"summaryAppIssuesGrid1.isRowSelected","targetProperty":"showing"}, {}],
+ 							wire1: ["wm.Wire", {"expression":"\"I-\" + ${summaryAppIssuesGrid1.selectedItem.issue.sequence}","targetProperty":"caption"}, {}]
+ 						}],
+-						pageContainer3: ["wm.PageContainer", {"deferLoad":true}, {}]
++						pageContainer3: ["wm.PageContainer", {"deferLoad":true,"pageName":"IssueForm","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{"liveForm1DataSet":"issueForm.dataSet","issueFormReadonly":"issueForm.readonly"}}, {}, {
++							binding: ["wm.Binding", {}, {}, {
++								wire: ["wm.Wire", {"expression":undefined,"source":"summaryAppIssuesGrid1.selectedItem.issue","targetProperty":"liveForm1DataSet"}, {}]
++							}]
++						}]
+ 					}],
+ 					View_Issue1: ["wm.Layer", {"borderColor":"","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
+ 						binding: ["wm.Binding", {}, {}, {
+ 							wire: ["wm.Wire", {"expression":undefined,"source":"summaryDocIssuesGrid1.isRowSelected","targetProperty":"showing"}, {}],
+ 							wire1: ["wm.Wire", {"expression":"\"I-\" + ${summaryDocIssuesGrid1.selectedItem.c0.sequence}","targetProperty":"caption"}, {}]
+ 						}],
+-						pageContainer4: ["wm.PageContainer", {"deferLoad":true}, {}]
++						pageContainer4: ["wm.PageContainer", {"deferLoad":true,"pageName":"IssueForm","subpageEventlist":{},"subpageMethodlist":{},"subpageProplist":{"liveForm1DataSet":"issueForm.dataSet","issueFormReadonly":"issueForm.readonly"}}, {}, {
++							binding: ["wm.Binding", {}, {}, {
++								wire: ["wm.Wire", {"expression":undefined,"source":"summaryDocIssuesGrid1.selectedItem.c0","targetProperty":"liveForm1DataSet"}, {}]
++							}]
++						}]
+ 					}],
+ 					Edit_Plan: ["wm.Layer", {"autoScroll":true,"borderColor":"","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
+ 						binding: ["wm.Binding", {}, {}, {
