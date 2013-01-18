@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Web Service data element for the procedures of an actor according to a plan.
+ * Web Service data element for the procedures of an agent or user according to a plan.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -32,7 +32,8 @@ import java.util.Set;
  * Time: 12:25 PM
  */
 @XmlRootElement( name = "procedures", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "planIdentifier", "userEmail", "dateVersioned", "actorIds", "employments", "procedures", "environment"} )
+@XmlType( propOrder = {"date", "planIdentifier", "userEmail", "userFullName", "dateVersioned", "actorIds",
+        "employments", "procedures", "environment"} )
 public class ProceduresData implements Serializable {
 
     private List<Agent> agents;
@@ -174,6 +175,12 @@ public class ProceduresData implements Serializable {
     public String getUserEmail() {
         return user.getEmail();
     }
+
+    @XmlElement
+    public String getUserFullName() {
+        return user.getFullName();
+    }
+
 
     private CommunityAssignments getAgentAssignments( Agent agent, PlanCommunity planCommunity ) {
         return planCommunity.getAllAssignments().with( agent );

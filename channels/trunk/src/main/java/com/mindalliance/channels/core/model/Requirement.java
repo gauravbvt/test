@@ -1048,17 +1048,30 @@ public class Requirement extends ModelObject implements Countable {
             }
         }
 
+
         // MUST BE RUN before accessing agent or agency whenever requirement is created or one of its agentSpecs is updated
+        // Makes sure all agent specs are valid, else nulled.
         public void initialize( PlanCommunity planCommunity ) {
             if ( !initialized ) {
                 agent = null;
                 agency = null;
+                if ( actor != null ) {   // verify actor still valid
+                    try {
+                        actor = planCommunity.getPlanService().find( Actor.class, actor.getId() );
+                        assert actor.isActual();
+                    } catch ( Exception e ) {
+                        LOG.warn( "Failed to find actor " + actor.getId() );
+                        actor = null;
+                    }
+                }
                 if ( actor != null ) {
                     if ( orgParticipationId != null ) {
                         OrganizationParticipation orgParticipation = planCommunity
                                 .getOrganizationParticipationService().load( orgParticipationId );
                         if ( orgParticipation != null ) {
                             agent = new Agent( actor, orgParticipation, planCommunity );
+                        } else {
+                            LOG.warn( "Invalid organization participation " + orgParticipationId );
                         }
                     } else {
                         agent = new Agent( actor );
@@ -1068,10 +1081,13 @@ public class Requirement extends ModelObject implements Countable {
                     assert orgParticipationId == null;
                     try {
                         Organization org = planCommunity.getPlanService().find( Organization.class, fixedOrgId );
-                        agency = new Agency( org );
+                        if ( org != null && !org.isUnknown() ) {
+                            agency = new Agency( org );
+                        }
                         placeholder = null;
                     } catch ( NotFoundException e ) {
                         LOG.warn( "Failed to find organization " + fixedOrgId );
+                        fixedOrgId = null;
                     }
                 }
                 if ( orgParticipationId != null ) {
@@ -1081,7 +1097,14 @@ public class Requirement extends ModelObject implements Countable {
                     if ( orgParticipation != null ) {
                         agency = new Agency( orgParticipation, planCommunity );
                         placeholder = agency.getPlaceholder( planCommunity );
+                    } else {
+                        LOG.warn( "Invalid organization participation " + orgParticipationId );
+                        orgParticipationId = null;
                     }
+                }
+                if ( placeholder != null && !placeholder.isPlaceHolder() ) {
+                    LOG.warn( placeholder.getName() + " no longer a placeholder" );
+                    placeholder = null;
                 }
             }
             initialized = true;
@@ -1247,7 +1270,8 @@ public class Requirement extends ModelObject implements Countable {
 
         public boolean references( ModelObject mo ) {
             return ModelObject.areIdentical( jurisdiction, mo )
-                    || ModelObject.areIdentical( placeholder, mo );
+                    || ModelObject.areIdentical( placeholder, mo )
+                    || ModelObject.areIdentical( actor, mo );
         }
 
         public boolean isAnyone() {

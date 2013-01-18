@@ -6,6 +6,7 @@ import com.mindalliance.channels.api.plan.PlanReleaseData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
+import com.mindalliance.channels.api.procedures.AllProceduresData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
@@ -52,7 +53,7 @@ import java.util.List;
  * Date: 11/29/11
  * Time: 11:34 AM
  */
-@Path( "/isp" )
+@Path("/isp")
 @WebService(
         endpointInterface = "com.mindalliance.channels.api.PlanCommunityEndPoint"
 )
@@ -278,6 +279,34 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
+    public AllProceduresData getAllProcedures( String uri, String version ) {
+        ChannelsUser user = ChannelsUser.current( userDao );
+        LOG.info( "Getting all user procedures for all participants in community " + uri );
+        try {
+            PlanCommunity planCommunity = authorize( user, uri, version );
+            AllProceduresData allProceduresData = new AllProceduresData();
+            for ( ChannelsUser channelsUser : userDao.getUsers( uri ) ) {
+                List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
+                        channelsUser,
+                        planCommunity
+                );
+                if ( !participationList.isEmpty() ) {
+                    ProceduresData proceduresData = getUserProcedures( uri, version, channelsUser.getUsername() );
+                    allProceduresData.addProceduresData( proceduresData );
+                }
+            }
+            return allProceduresData;
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No procedures available for community " + uri )
+                            .build() );
+        }
+    }
+
+    @Override
     public ProceduresData getAgentProcedures( String uri, String version, String actorId ) {
         ChannelsUser user = ChannelsUser.current( userDao );
         LOG.info( "Getting procedures of agent " + actorId + " for community " + uri + " and plan version " + version );
@@ -408,6 +437,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 || ( plan.isDevelopment() && !user.isPlanner( uri ) )
                 || ( plan.isProduction() && !user.isParticipant( uri ) ) )
             throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
+        user.setPlan( plan );
         return planCommunity;
     }
 
@@ -611,12 +641,12 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     //////////////////////////////////////////////////////////
 
-    @WebMethod( exclude = true )
+    @WebMethod(exclude = true)
     public void setServerUrl( String serverUrl ) {
         this.serverUrl = serverUrl;
     }
 
-    @WebMethod( exclude = true )
+    @WebMethod(exclude = true)
     public String getServerUrl() {
         return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" );

@@ -6,6 +6,7 @@ import com.mindalliance.channels.api.plan.PlanReleaseData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
+import com.mindalliance.channels.api.procedures.AllProceduresData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 
 import javax.jws.WebMethod;
@@ -100,9 +101,22 @@ public interface PlanCommunityEndPoint {
     /**
      * Get the procedures of the user if he/she participates in the identified plan as one or more agents.
      * @param uri a plan's URI
-     * @return the procedures of the agent representing the user in the plan
+     * @return the procedures of the agents representing the user in the plan
      */
     ProceduresData getMyProcedures( @PathParam( "uri" ) String uri );
+
+    @GET
+    @Path( "plan/{uri}/version/{version}/allProcedures" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get the procedures of every participating users.
+     * @param uri a plan's URI
+     * @param version a plan's version
+     * @return the procedures of all users participating in the plan
+     */
+    AllProceduresData getAllProcedures( @PathParam( "uri" ) String uri,
+                                     @PathParam( "version" ) String version );
+
 
     @GET
     @Path( "plan/{uri}/version/{version}/issues" )
