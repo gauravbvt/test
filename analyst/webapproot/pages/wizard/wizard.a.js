@@ -312,7 +312,7 @@ container: ["wm.Panel", {"_classes":{"domNode":["container"]},"height":"100%","h
 header: ["wm.Panel", {"_classes":{"domNode":["banner"]},"height":"51px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 logo: ["wm.Picture", {"height":"51px","source":"resources/images/rf-logo.png","width":"291px"}, {}],
 button1Panel: ["wm.Panel", {"height":"34px","horizontalAlign":"right","verticalAlign":"top","width":"100%"}, {}, {
-logoutButton: ["wm.Button", {"caption":"Logout","margin":"4"}, {"onclick":"logoutVariable1"}]
+logoutButton: ["wm.Button", {"caption":"Logout","imageIndex":42,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"logoutVariable1"}]
 }]
 }],
 projectLivePanel1: ["wm.LivePanel", {"autoScroll":false,"horizontalAlign":"left","verticalAlign":"top"}, {}, {
@@ -341,17 +341,22 @@ html4: ["wm.Html", {"autoSizeHeight":true,"height":"22px","html":"Manage global 
 }],
 Edit_Project: ["wm.Layer", {"autoScroll":true,"borderColor":"","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"nameEditor1.dataValue","targetProperty":"caption"}, {}]
+wire: ["wm.Wire", {"expression":"if ( ${projectDojoGrid.emptySelection} ) { \"(New Project)\"; } else { ${nameEditor1.dataValue}; }","targetProperty":"caption"}, {}]
 }],
-projectLiveForm1: ["wm.LiveForm", {"alwaysPopulateEditors":true,"captionSize":"100px","height":"100%","horizontalAlign":"left","liveEditing":false,"margin":"4","verticalAlign":"top"}, {"onDeleteData":"Project_List","onInsertData":"analysisInsert","onSuccess":"projectLivePanel1.popupLiveFormSuccess"}, {
+projectLiveForm1: ["wm.LiveForm", {"alwaysPopulateEditors":true,"captionSize":"100px","confirmDelete":"Are you sure you want to delete this entire project?","height":"100%","horizontalAlign":"left","liveEditing":false,"margin":"4","verticalAlign":"top"}, {"onDeleteData":"Project_List","onInsertData":"analysisInsert","onSuccess":"projectLivePanel1.popupLiveFormSuccess"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.selectedItem","targetProperty":"dataSet"}, {}]
 }],
 nameEditor1Panel: ["wm.Panel", {"height":"34px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-nameEditor1: ["wm.Text", {"border":"0","caption":"Name","changeOnKey":true,"dataValue":"Phase 2","desktopHeight":"26px","emptyValue":"emptyString","formField":"name","height":"26px","required":true,"width":"100%"}, {}],
+nameEditor1: ["wm.Text", {"border":"0","caption":"Name","changeOnKey":true,"dataValue":"Phase 2","desktopHeight":"26px","emptyValue":"emptyString","formField":"name","height":"26px","maxChars":"30","required":true,"width":"100%"}, {}],
+button17: ["wm.Button", {"caption":"Cancel","imageIndex":21,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"projectLiveForm1.cancelEdit","onclick1":"Project_List"}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.emptySelection","targetProperty":"showing"}, {}]
+}]
+}],
 projectDeleteButton: ["wm.Button", {"caption":"Delete","hint":"Delete this project","imageIndex":21,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"projectLiveForm1.deleteData"}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"source":"projectDojoGrid.emptySelection","targetId":null,"targetProperty":"disabled"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.isRowSelected","targetProperty":"showing"}, {}]
 }]
 }],
 projectSaveButton: ["wm.Button", {"caption":"Save","imageIndex":0,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"projectLiveForm1.saveDataIfValid"}, {
@@ -365,7 +370,7 @@ panel1: ["wm.Panel", {"height":"100%","horizontalAlign":"left","margin":"15,0,0,
 button1: ["wm.Panel", {"fitToContentHeight":true,"height":"34px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 button2: ["wm.Button", {"caption":"Interviews","imageIndex":27,"imageList":"app.silkIconList","margin":"4","width":"100px"}, {"onclick":"recentInterviewsVariable1","onclick1":"upcomingInterviewsVariable1","onclick2":"resourcesVariable1","onclick3":"Edit_Interviews"}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"projectLiveForm1.isDirty","targetProperty":"disabled"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.emptySelection","targetProperty":"disabled"}, {}]
 }]
 }],
 html1: ["wm.Html", {"autoSizeHeight":true,"height":"22px","html":"Schedule and do some interviews to gather issues and flows.","minDesktopHeight":15,"padding":"5,0,0"}, {}]
@@ -373,7 +378,7 @@ html1: ["wm.Html", {"autoSizeHeight":true,"height":"22px","html":"Schedule and d
 button3: ["wm.Panel", {"fitToContentHeight":true,"height":"34px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 button4: ["wm.Button", {"caption":"Summary","imageIndex":23,"imageList":"app.silkIconList","margin":"4","width":"100px"}, {"onclick":"docCatIssuesVariable1","onclick1":"issueCategoryCount","onclick2":"flowsByProjectVariable1","onclick3":"approachIssueCountVariable1","onclick4":"issueLiveVariable1","onclick5":"Edit_Summary"}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"projectLiveForm1.isDirty","targetProperty":"disabled"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.emptySelection","targetProperty":"disabled"}, {}]
 }]
 }],
 html2: ["wm.Html", {"autoSizeHeight":true,"height":"22px","html":"Make sense of the interview data.","minDesktopHeight":15,"padding":"5,0,0"}, {}]
@@ -381,7 +386,7 @@ html2: ["wm.Html", {"autoSizeHeight":true,"height":"22px","html":"Make sense of 
 button5: ["wm.Panel", {"fitToContentHeight":true,"height":"34px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 button8: ["wm.Button", {"caption":"Solutions","imageIndex":19,"imageList":"app.silkIconList","margin":"4","width":"100px"}, {"onclick":"plansVariable1","onclick1":"Edit_Solutions"}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"projectLiveForm1.isDirty","targetProperty":"disabled"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.emptySelection","targetProperty":"disabled"}, {}]
 }]
 }],
 html3: ["wm.Html", {"autoSizeHeight":true,"height":"22px","html":"Manage implementation plans for selected approaches.","minDesktopHeight":15,"padding":"5,0,0"}, {}]
@@ -746,7 +751,7 @@ wire1: ["wm.Wire", {"expression":undefined,"source":"analysisDojoGrid.selectedIt
 wire: ["wm.Wire", {"expression":undefined,"source":"planDojoGrid.selectedItem.plan","targetProperty":"dataSet"}, {}]
 }],
 nameEditor3Panel: ["wm.Panel", {"height":"34px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-nameEditor3: ["wm.Text", {"border":"0","caption":"Name","captionSize":"140px","changeOnKey":true,"dataValue":"Short-term solution","desktopHeight":"26px","emptyValue":"emptyString","formField":"name","height":"26px","required":true,"width":"100%"}, {}],
+nameEditor3: ["wm.Text", {"border":"0","caption":"Name","captionSize":"140px","changeOnKey":true,"dataValue":"","desktopHeight":"26px","emptyValue":"emptyString","formField":"name","height":"26px","required":true,"width":"100%"}, {}],
 planDeleteButton: ["wm.Button", {"caption":"Delete","imageIndex":21,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"planLiveForm1.deleteData"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"source":"planDojoGrid.emptySelection","targetId":null,"targetProperty":"disabled"}, {}]
@@ -759,7 +764,7 @@ wire: ["wm.Wire", {"expression":"${planLiveForm1.invalid} || !${planLiveForm1.is
 }]
 }],
 descriptionEditor3Panel: ["wm.Panel", {"height":"96px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-descriptionEditor3: ["wm.LargeTextArea", {"border":"0","caption":"Description","captionAlign":"right","captionPosition":"left","captionSize":"140px","changeOnKey":true,"dataValue":"What can be done quickly","emptyValue":"emptyString","formField":"description","width":"100%"}, {}],
+descriptionEditor3: ["wm.LargeTextArea", {"border":"0","caption":"Description","captionAlign":"right","captionPosition":"left","captionSize":"140px","changeOnKey":true,"dataValue":"","emptyValue":"emptyString","formField":"description","width":"100%"}, {}],
 approvedEditor1: ["wm.Checkbox", {"caption":"Approved","captionSize":"140px","desktopHeight":"26px","displayValue":false,"formField":"approved","height":"26px","width":"159px"}, {}]
 }]
 }],
@@ -774,7 +779,7 @@ wire: ["wm.Wire", {"expression":undefined,"source":"approachLiveVariable1","targ
 }],
 layer11: ["wm.Layer", {"caption":"Timings and Costs","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
 html16: ["wm.Html", {"autoSizeHeight":true,"height":"48px","html":"<div class=\"note\">Enter some specifics for each approaches.</div>","minDesktopHeight":15}, {}],
-costGrid: ["wm.DojoGrid", {"columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","editorProps":{"restrictValues":true},"expression":"\"<div class='MobileRowTitle'>Name: \" + ${name} + \"</div>\"\n+ \"<div class='MobileRow'>Start: \" + wm.List.prototype.dateFormatter({}, null,null,null,${Start}) + \"</div>\"\n+ \"<div class='MobileRow'>End: \" + wm.List.prototype.dateFormatter({}, null,null,null,${End}) + \"</div>\"\n+ \"<div class='MobileRow'>Cost: \" + wm.List.prototype.currencyFormatter({\"currency\":\"USD\"}, null,null,null,${Cost}) + \"</div>\"\n","mobileColumn":true},{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","editorProps":null,"mobileColumn":false},{"show":true,"field":"Start","title":"Start","width":"25%","align":"left","formatFunc":"wm_date_formatter","fieldType":"dojox.grid.cells.DateTextBox","editorProps":{"restrictValues":true},"isCustomField":true,"mobileColumn":false},{"show":true,"field":"End","title":"End","width":"25%","align":"left","formatFunc":"wm_date_formatter","fieldType":"dojox.grid.cells.DateTextBox","editorProps":{"restrictValues":true},"isCustomField":true,"mobileColumn":false},{"show":true,"field":"Cost","title":"Cost","width":"25%","align":"left","formatFunc":"wm_currency_formatter","formatProps":{"currency":"USD"},"fieldType":"dojox.grid.cells.NumberTextBox","constraints":{"min":0},"editorProps":{"restrictValues":true},"isCustomField":true,"mobileColumn":false},{"show":false,"field":"id","title":"Id","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":false,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"version","title":"Version","width":"80px","align":"right","formatFunc":"","mobileColumn":false}],"dsType":"com.analystdb.data.Approach","height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+costGrid: ["wm.DojoGrid", {"columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","editorProps":{"restrictValues":true},"expression":"\"<div class='MobileRowTitle'>Start: \" + wm.List.prototype.dateFormatter({}, null,null,null,${Start}) + \"</div>\"\n+ \"<div class='MobileRow'>End: \" + wm.List.prototype.dateFormatter({}, null,null,null,${End}) + \"</div>\"\n+ \"<div class='MobileRow'>Cost: \" + wm.List.prototype.currencyFormatter({\"currency\":\"USD\"}, null,null,null,${Cost}) + \"</div>\"\n","mobileColumn":true},{"show":true,"field":"Start","title":"Start","width":"25%","align":"left","formatFunc":"wm_date_formatter","fieldType":"dojox.grid.cells.DateTextBox","editorProps":{"restrictValues":true},"isCustomField":true,"mobileColumn":false},{"show":true,"field":"End","title":"End","width":"25%","align":"left","formatFunc":"wm_date_formatter","fieldType":"dojox.grid.cells.DateTextBox","editorProps":{"restrictValues":true},"isCustomField":true,"mobileColumn":false},{"show":true,"field":"Cost","title":"Cost","width":"25%","align":"left","formatFunc":"wm_currency_formatter","formatProps":{"currency":"USD"},"fieldType":"dojox.grid.cells.NumberTextBox","constraints":{"min":0},"editorProps":{"restrictValues":true},"isCustomField":true,"mobileColumn":false},{"show":false,"field":"id","title":"Id","width":"80px","displayType":"Number","align":"right","formatFunc":""},{"show":false,"field":"name","title":"Name","width":"100%","displayType":"Text","align":"left","formatFunc":""},{"show":false,"field":"description","title":"Description","width":"100%","displayType":"Text","align":"left","formatFunc":""},{"show":false,"field":"version","title":"Version","width":"80px","displayType":"Number","align":"right","formatFunc":""}],"dsType":"com.analystdb.data.Approach","height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"dojoGrid9.selectedItem","targetProperty":"dataSet"}, {}]
 }]

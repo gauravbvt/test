@@ -1,4 +1,4 @@
-dojo.declare("Analyst1", wm.Application, {
+dojo.declare("Analyst", wm.Application, {
 	"disableDirtyEditorTracking": false, 
 	"eventDelay": 0, 
 	"i18n": false, 
@@ -10,7 +10,7 @@ dojo.declare("Analyst1", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "0.alpha28", 
+	"projectSubVersion": "0.alpha0", 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 
@@ -24,7 +24,7 @@ dojo.declare("Analyst1", wm.Application, {
 	_end: 0
 });
 
-Analyst1.extend({
+Analyst.extend({
 
 	_end: 0
 });
