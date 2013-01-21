@@ -145,7 +145,7 @@ public class UserParticipationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
 //        criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
-        criteria.add( Restrictions.eq( "actorId", agent.getActor().getId() ) );
+        criteria.add( Restrictions.eq( "actorId", agent.getActorId() ) );
         if ( agent.getOrganizationParticipation() == null )
             criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
@@ -166,7 +166,7 @@ public class UserParticipationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "participant", user.getUserInfo() ) );
-        criteria.add( Restrictions.eq( "actorId", agent.getActor().getId() ) );
+        criteria.add( Restrictions.eq( "actorId", agent.getActorId() ) );
         if ( agent.getOrganizationParticipation() == null )
             criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
@@ -397,7 +397,7 @@ public class UserParticipationServiceImpl
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
-        criteria.add( Restrictions.eq( "actorId", agent.getActor().getId() ) );
+        criteria.add( Restrictions.eq( "actorId", agent.getActorId() ) );
         if ( agent.getOrganizationParticipation() == null )
             criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else

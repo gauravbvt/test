@@ -50,7 +50,7 @@ public class EmploymentData implements Serializable {
 
     @XmlElement( name = "agentId" )
     public Long getActorId() {
-        return employment.getAgent().getActor().getId();
+        return employment.getAgent().getActorId();
     }
 
     @XmlElement
@@ -75,7 +75,7 @@ public class EmploymentData implements Serializable {
     @XmlElement
     public Long getSupervisorId() {
         return employment.getSupervisor() != null
-                ? employment.getSupervisor().getId()
+                ? employment.getSupervisor().getActorId()
                 : null;
     }
 
@@ -91,7 +91,7 @@ public class EmploymentData implements Serializable {
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( employment.getAgent().getActor().getId() );
+        ids.add( employment.getAgent().getActorId() );
         if ( getSupervisorId() != null )
             ids.add( getSupervisorId() );
         return ids;

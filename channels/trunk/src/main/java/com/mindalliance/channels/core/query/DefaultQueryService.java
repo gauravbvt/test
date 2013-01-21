@@ -515,8 +515,10 @@ public abstract class DefaultQueryService implements QueryService {
         else if ( clazz.isAssignableFrom( InfoProduct.class )
                 && ModelEntity.getUniversalTypeFor( InfoProduct.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( InfoProduct.class );
-        else
+        else  {
+            LOG.warn( clazz.getName() + " " + id + " not found" );
             throw new NotFoundException();
+        }
     }
 
     @Override

@@ -130,7 +130,7 @@ public class ProcedureData implements Serializable {
 
     @XmlElement( name = "agentId" )
     public Long getActorId() {
-        return assignment.getAgent().getActor().getId();
+        return assignment.getAgent().getActorId();
     }
 
 

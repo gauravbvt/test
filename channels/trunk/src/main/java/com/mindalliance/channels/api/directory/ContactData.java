@@ -298,7 +298,7 @@ public class ContactData implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append( userInfo == null ? "" : userInfo.getId() );
         sb.append( "_" );
-        sb.append( contactedEmployment().getAgent().getActor().getId() );
+        sb.append( contactedEmployment().getAgent().getActorId() );
         sb.append( "_" );
         sb.append( contactedEmployment().getRole().getId() );
         sb.append( "_" );

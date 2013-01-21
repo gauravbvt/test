@@ -228,9 +228,9 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public Set<Long> allActorIds() {
         Set<Long> ids = new HashSet<Long>();
-        ids.add( getAssignment().getAgent().getActor().getId() );
+        ids.add( getAssignment().getAgent().getActorId() );
         if ( getAssignment().getSupervisor() != null )
-            ids.add( getAssignment().getSupervisor().getActor().getId() );
+            ids.add( getAssignment().getSupervisor().getActorId() );
         for ( AbstractFlowData flowData : getCommunications() ) {
             ids.addAll( flowData.allActorIds() );
         }
