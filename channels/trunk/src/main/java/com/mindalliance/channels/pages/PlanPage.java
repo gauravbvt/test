@@ -1157,7 +1157,7 @@ PopupSettings.RESIZABLE |
             }
         }
         segmentPanel.updateSocialPanel( target );
-        segmentPanel.updateGuidePanel( target );   // Webkit browsers and JQuery accordion seem to have timing conflicts. Force a timed redisplay.
+        // segmentPanel.updateGuidePanel( target );   // Webkit browsers and JQuery accordion seem to have timing conflicts. Force a timed redisplay. -->  Does not work.
     }
 
     private void showNewPlanVersionWarningDialog( AjaxRequestTarget target ) {
