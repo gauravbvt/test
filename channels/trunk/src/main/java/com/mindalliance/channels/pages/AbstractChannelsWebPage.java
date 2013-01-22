@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
+import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
@@ -838,7 +840,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     protected Component addTipTitle( Component component, IModel<String> titleModel ) {
         component.add( new AttributeModifier( "title", titleModel ) );
-//        component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" ) ) );
+        component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" ) ) );
         return component;
     }
 

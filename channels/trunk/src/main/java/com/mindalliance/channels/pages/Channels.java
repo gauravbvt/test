@@ -204,7 +204,7 @@ public class Channels extends WebApplication
 
         /*JQContributionConfig jqContributionConfig = new JQContributionConfig().withDefaultJQueryUi();*/
 
-        JQContributionConfig jqContributionConfig = new JQContributionConfig( "http://code.jquery.com/jquery-1.8.3.min.js" );
+        JQContributionConfig jqContributionConfig = new JQContributionConfig( "http://code.jquery.com/jquery-1.7.2.min.js" );
         jqContributionConfig
                 .withJQueryUiJs( "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" )
                 .withJQueryUiCss( "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" );
