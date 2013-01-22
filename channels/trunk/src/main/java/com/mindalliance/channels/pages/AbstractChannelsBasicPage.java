@@ -226,7 +226,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
 
-    private void doTimedUpdate( AjaxRequestTarget target ) {
+    protected void doTimedUpdate( AjaxRequestTarget target ) {
         getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
         updateContent( target );
     }
@@ -242,7 +242,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
 
-    private void addPagePath() {
+    protected void addPagePath() {
         pagePath = new WebMarkupContainer( "planPath" );
         pagePath.setOutputMarkupId( true );
         form.addOrReplace( pagePath );
