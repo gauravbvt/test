@@ -3,7 +3,6 @@
 <html lang="en" xmlns:wicket="http://wicket.apache.org/">
 <head>
     <title wicket:id="sg-title">Title</title>
-    <script type="text/javascript" src="jquery-1.7.1.js"></script>
     <link rel="stylesheet" href="css/userpage.css" type="text/css"/>
     <script type="text/javascript">
         function channels_keypress( kc, t, target ) {
@@ -103,7 +102,7 @@
         </div>
     </div>
 </form>
-<div id="notifier" wicket:id="notifier">
+<div id="notifier" wicket:id="notifier" style="display:none">
     <div id="basic-template">
         <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
         <h1>#{title}</h1>
