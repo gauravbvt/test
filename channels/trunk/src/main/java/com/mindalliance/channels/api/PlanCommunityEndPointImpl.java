@@ -256,6 +256,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             ChannelsUser protocolsUser = userDao.getUserNamed( username );
             PlanCommunity planCommunity = authorize( user, uri, version );
+            protocolsUser.setPlan( planCommunity.getPlan() );
             List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                     protocolsUser,
                     planCommunity
@@ -286,6 +287,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             PlanCommunity planCommunity = authorize( user, uri, version );
             AllProceduresData allProceduresData = new AllProceduresData();
             for ( ChannelsUser channelsUser : userDao.getUsers( uri ) ) {
+                channelsUser.setPlan( planCommunity.getPlan() );
                 List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                         channelsUser,
                         planCommunity
