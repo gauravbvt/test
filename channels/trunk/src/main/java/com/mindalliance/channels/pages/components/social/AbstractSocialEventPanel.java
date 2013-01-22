@@ -250,7 +250,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     public String getPhotoUrl() {
         String src = null;
-        ChannelsUser user = getUser();
+        ChannelsUser user = getSocialEventUser();
         if ( user != null ) {
             src = userUploadService.getSquareUserIconURL( user );
         }
@@ -302,5 +302,8 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return poModel.getObject();
     }
 
+    protected ChannelsUser getSocialEventUser() {
+        return userDao.getUserNamed( getPersistentPlanObjectUsername() );
+    }
 
 }
