@@ -201,9 +201,17 @@ public class Channels extends WebApplication
         getApplicationSettings().setPageExpiredErrorPage( ExpiredPage.class );
 
         // JQuery Wicket initialization
-        //getComponentPreOnBeforeRenderListeners().add( new JQComponentOnBeforeRenderListener() );
-        getComponentPreOnBeforeRenderListeners().add( new JQComponentOnBeforeRenderListener(
-                new JQContributionConfig().withDefaultJQueryUi() ) );
+
+        /*JQContributionConfig jqContributionConfig = new JQContributionConfig().withDefaultJQueryUi();*/
+
+        JQContributionConfig jqContributionConfig = new JQContributionConfig( "http://code.jquery.com/jquery-1.8.3.min.js" );
+        jqContributionConfig
+                .withJQueryUiJs( "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" )
+                .withJQueryUiCss( "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" );
+
+        getComponentPreOnBeforeRenderListeners()
+                .add( new JQComponentOnBeforeRenderListener( jqContributionConfig ) );
+
 
         getComponentInstantiationListeners().add( getInjector() );
 
