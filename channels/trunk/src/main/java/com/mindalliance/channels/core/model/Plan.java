@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
+import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.model.Phase.Timing;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -22,7 +23,7 @@ import java.util.Set;
  * Date: Apr 30, 2009
  * Time: 3:43:39 PM
  */
-public class Plan extends ModelObject {
+public class Plan extends ModelObject implements ModelObjectContext {
 
     /** Logger. */
     // private static final Logger LOG = LoggerFactory.getLogger( Plan.class );

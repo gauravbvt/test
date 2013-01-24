@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.Attachable;
-import com.mindalliance.channels.core.Attachment;
+import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
@@ -12,8 +12,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InternalFlow;
-import com.mindalliance.channels.core.model.InvalidEntityKindException;
-import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -26,37 +24,23 @@ import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.model.UserIssue;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.iterators.IteratorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Wrapper for per-plan dao-related operations.
  */
-public class PlanDao {
+public class PlanDao extends AbstractModelObjectDao {
 
-    /**
-     * Lowest id for mutable model objects.
-     */
-    public static final long IMMUTABLE_RANGE = -1000L;
 
     /**
      * Name of the default event.
@@ -68,17 +52,6 @@ public class PlanDao {
      */
     private static final Logger LOG = LoggerFactory.getLogger( PlanDao.class );
 
-    private IdGenerator idGenerator;
-
-    /**
-     * ModelObjects indexed by id.
-     */
-    private final Map<Long, ModelObject> indexMap = Collections.synchronizedMap( new HashMap<Long, ModelObject>() );
-
-    /**
-     * Pending commands attached to wrapped plan.
-     */
-    private Journal journal = new Journal();
 
     /**
      * The wrapped plan.
@@ -99,25 +72,16 @@ public class PlanDao {
         this.version = version;
     }
 
-    public void add( ModelObject object ) {
-        add( object, null );
+    @Override
+    protected ModelObjectContext getModelObjectContext() {
+        return getPlan();
     }
 
-    public void add( ModelObject object, Long id ) {
-        synchronized ( indexMap ) {
-            if ( id != null && indexMap.containsKey( id ) )
-                throw new DuplicateKeyException();
 
-            assignId( object, id, idGenerator );
-            indexMap.put( object.getId(), object );
-            if ( object instanceof Segment )
-                getPlan().addSegment( (Segment) object );
-        }
-    }
-
-    private <T extends ModelObject> T assignId( T object, Long id, IdGenerator generator ) {
-        object.setId( generator.assignId( id, getPlan() ) );
-        return object;
+    @Override
+    protected void addSpecific( ModelObject object, Long id ) {
+        if ( object instanceof Segment )
+            getPlan().addSegment( (Segment) object );
     }
 
     public Flow connect( Node source, Node target, String name, Long id ) {
@@ -143,28 +107,28 @@ public class PlanDao {
     }
 
     public Connector createConnector( Segment segment, Long id ) {
-        return segment.addNode( assignId( new Connector(), id, idGenerator ) );
+        return segment.addNode( assignId( new Connector(), id, getIdGenerator() ) );
     }
 
     public ExternalFlow createExternalFlow( Node source, Node target, String name, Long id ) {
-        return assignId( new ExternalFlow( source, target, name ), id, idGenerator );
+        return assignId( new ExternalFlow( source, target, name ), id, getIdGenerator() );
     }
 
     public InternalFlow createInternalFlow( Node source, Node target, String name, Long id ) {
-        return assignId( new InternalFlow( source, target, name ), id, idGenerator );
+        return assignId( new InternalFlow( source, target, name ), id, getIdGenerator() );
     }
 
     public Part createPart( Segment segment, Long id ) {
-        return segment.addNode( assignId( new Part(), id, idGenerator ) );
+        return segment.addNode( assignId( new Part(), id, getIdGenerator() ) );
     }
 
-    public Requirement createRequirement() {
+    public Requirement createRequirement() {   // todo - COMMUNITY - move to CommnunityDao
         return createRequirement( null );
     }
 
-    public Requirement createRequirement( Long id ) {
+    public Requirement createRequirement( Long id ) {   // todo - COMMUNITY - move to CommnunityDao
         Requirement requirement = new Requirement();
-        assignId( requirement, id, idGenerator );
+        assignId( requirement, id, getIdGenerator() );
         add( requirement, id );
         return requirement;
     }
@@ -202,15 +166,9 @@ public class PlanDao {
         return connect( node, createConnector( node.getSegment(), null ), Node.DEFAULT_FLOW_NAME, null );
     }
 
-    /**
-     * Define all immutable entities (not plan dependent).
-     *
-     * @param media predefined media
-     */
-    public void defineImmutableEntities( List<TransmissionMedium> media ) {
-        // TODO cleanup UNKNOWN mess
-        long id = idGenerator.getLastAssignedId( plan );
-        idGenerator.setLastAssignedId( IMMUTABLE_RANGE, plan );
+    @Override
+    public synchronized void defineImmutableEntities() {
+        getIdGenerator().setImmutableMode();
         Actor.UNKNOWN = findOrCreate( Actor.class, Actor.UnknownName, null );
         Actor.UNKNOWN.makeImmutable();
         Event.UNKNOWN = findOrCreateType( Event.class, Event.UnknownName, null );
@@ -249,12 +207,23 @@ public class PlanDao {
         InfoProduct.UNKNOWN.makeImmutable();
         InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
         InfoFormat.UNKNOWN.makeImmutable();
+        // todo - COMMUNITY - move to CommnunityDao
         Requirement.UNKNOWN = findOrCreate( Requirement.class, Requirement.UnknownName, null );
+        getIdGenerator().setMutableMode();
+    }
+
+    /**
+     * Define all immutable entities (not plan dependent).
+     *
+     * @param media predefined media
+     */
+    public synchronized void defineImmutableMedia( List<TransmissionMedium> media ) {
+        getIdGenerator().setImmutableMode();
         for ( TransmissionMedium medium : media ) {
             add( medium );
             medium.makeImmutable();
         }
-        idGenerator.setLastAssignedId( id, plan );
+        getIdGenerator().setMutableMode();
     }
 
     public void disconnect( Connector connector ) {
@@ -306,27 +275,8 @@ public class PlanDao {
         }
     }
 
-    @SuppressWarnings( {"unchecked"} )
-    public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        return (T) find( id );
-    }
-
-    public <T extends ModelObject> T find( Class<T> clazz, String name ) {
-        for ( T object : list( clazz ) )
-            if ( name.equals( object.getName() ) )
-                return object;
-
-        return null;
-    }
-
-    /**
-     * Find urls of all attachments.
-     *
-     * @return a list of strings
-     */
-    public List<String> findAllAttached() {
-
-        Set<Attachable> attachables = new HashSet<Attachable>( list( ModelObject.class ) );
+    public Set<Attachable> findAllAttachables() {
+        Set<Attachable> attachables = super.findAllAttachables();
         for ( Segment segment : list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() )
@@ -341,67 +291,17 @@ public class PlanDao {
             for ( Agreement agreement : org.getAgreements() )
                 attachables.add( agreement );
 */
-
-        Set<String> allAttachedUrls = new HashSet<String>();
-        for ( Attachable attachable : attachables )
-            for ( Attachment attachment : attachable.getAttachments() )
-                allAttachedUrls.add( attachment.getUrl() );
-
-        return new ArrayList<String>( allAttachedUrls );
+       return attachables;
     }
 
-    public List<UserIssue> findAllUserIssues( ModelObject modelObject ) {
-        List<UserIssue> foundIssues = new ArrayList<UserIssue>();
-        for ( UserIssue userIssue : list( UserIssue.class ) ) {
-            if ( userIssue.getAbout().getId() == modelObject.getId() )
-                foundIssues.add( userIssue );
-        }
-        return foundIssues;
-    }
 
-    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
-        T result = null;
 
-        if ( name != null && !name.isEmpty() ) {
-
-            result = find( clazz, name );
-            boolean newId = false;
-            if ( result == null && id != null )
-                try {
-                    ModelObject modelObject = find( id );
-                    if ( modelObject.getClass().isAssignableFrom( clazz ) )
-                        result = (T) modelObject;
-                    else
-                        newId = true;
-                } catch ( NotFoundException ignored ) {
-                    // fall through and create new
-                }
-
-            if ( result == null )
-                try {
-                    // Create new entity with name
-                    result = clazz.getConstructor().newInstance();
-                    result.setName( name );
-                    add( result, newId ? null : id );
-                } catch ( InstantiationException e ) {
-                    throw new RuntimeException( e );
-                } catch ( IllegalAccessException e ) {
-                    throw new RuntimeException( e );
-                } catch ( NoSuchMethodException e ) {
-                    throw new RuntimeException( e );
-                } catch ( InvocationTargetException e ) {
-                    throw new RuntimeException( e );
-                }
-        }
-
-        return result;
-    }
-
-    private ModelObject find( long id ) throws NotFoundException {
+    @Override
+    protected ModelObject find( long id ) throws NotFoundException {
         if ( getPlan().getId() == id )
             return getPlan();
 
-        ModelObject result = indexMap.get( id );
+        ModelObject result = getIndexMap().get( id );
         if ( result == null ) {
             Iterator<Segment> iterator = list( Segment.class ).iterator();
             while ( result == null && iterator.hasNext() ) {
@@ -422,18 +322,6 @@ public class PlanDao {
             throw new NotFoundException();
         return result;
     }
-    //---------------- findOrCreate
-
-    public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
-        T entityType = ModelEntity.getUniversalType( name, clazz );
-        if ( entityType == null ) {
-            entityType = findOrCreate( clazz, name, id );
-            if ( entityType.isActual() )
-                throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
-            entityType.setType();
-        }
-        return entityType;
-    }
 
     public Segment findSegment( String name ) throws NotFoundException {
         for ( Segment s : list( Segment.class ) )
@@ -443,123 +331,62 @@ public class PlanDao {
         throw new NotFoundException();
     }
 
+
     public ChannelsUserDao getUserDetailsService() {
         return userDao;
     }
 
+    @Override
     public synchronized boolean isLoaded() {
         return plan != null;
     }
 
-    @SuppressWarnings( {"unchecked"} )
-    public Iterator<ModelEntity> iterateEntities() {
-        Set<? extends ModelObject> referencers = getReferencingObjects();
-        Class<?>[] classes = {
-                TransmissionMedium.class, Actor.class, Role.class, Place.class, Organization.class, Event.class,
-                Phase.class
-        };
-
-        Iterator<? extends ModelEntity>[] iterators = new Iterator[classes.length];
-        for ( int i = 0; i < classes.length; i++ ) {
-            Class<? extends ModelEntity> clazz = (Class<? extends ModelEntity>) classes[i];
-            iterators[i] = listReferencedEntities( clazz, referencers ).iterator();
-        }
-        return (Iterator<ModelEntity>) new IteratorChain( iterators );
+    @Override
+    @SuppressWarnings({"unchecked", "RawUseOfParameterizedType"})
+    protected boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
+        return plan.references( mo )
+                || super.isReferenced( mo, referencingObjects );
     }
 
-    @SuppressWarnings( {"unchecked"} )
-    public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
-        synchronized ( indexMap ) {
-            return (List<T>) CollectionUtils.select( indexMap.values(), new Predicate() {
-                @Override
-                public boolean evaluate( Object object ) {
-                    return clazz.isAssignableFrom( object.getClass() );
-                }
-            } );
-        }
+
+
+
+    @Override
+    protected void afterLoad() {
+        add( plan, plan.getId() );
     }
 
-    private <T extends ModelEntity> List<T> listReferencedEntities(
-            Class<T> clazz, Set<? extends ModelObject> referencers ) {
-
-        Collection<T> inputCollection = list( clazz );
-        List<T> answer = new ArrayList<T>( inputCollection.size() );
-
-        for ( T item : inputCollection )
-            if ( item.isImmutable() && !item.isUnknown() || isReferenced( item, referencers ) )
-                answer.add( item );
-
-        return answer;
+    @Override
+    protected long getLastAssignedId()  throws IOException {
+        return version.getLastId();
     }
 
-    @SuppressWarnings( {"unchecked", "RawUseOfParameterizedType"} )
-    private boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
-        if ( plan.references( mo ) )
-            return true;
-
-        for ( ModelObject object : referencingObjects )
-            if ( object.references( mo ) )
-                return true;
-
-        return false;
+    @Override
+    protected File getDataFile()  throws IOException {
+        return version.getDataFile();
     }
 
-    /**
-     * Load persisted plan.
-     *
-     * @param importer what to use for importing
-     * @return the loaded plan
-     * @throws IOException on error
-     */
-    public synchronized Plan load( Importer importer ) throws IOException {
-        FileInputStream in = null;
-        try {
-            idGenerator.setLastAssignedId( version.getLastId(), plan );
-            File dataFile = version.getDataFile();
-            if ( dataFile.exists() ) {
-                LOG.info( "Importing snapshot for plan {} from {}", plan, dataFile.getAbsolutePath() );
-                in = new FileInputStream( dataFile );
-                importer.importPlan( in );
-
-                journal = loadJournal( importer );
-            }
-            add( plan, plan.getId() );
-            validate();
-        } finally {
-            if ( in != null )
-                in.close();
-        }
-
-        return plan;
+    @Override
+    protected File getJournalFile() throws IOException {
+        return version.getJournalFile();
     }
 
-    private Journal loadJournal( Importer importer ) throws IOException {
-        FileInputStream inputStream = null;
-        if ( version.isDevelopment() && importer != null )
-            try {
-                File journalFile = version.getJournalFile();
-                if ( journalFile.length() > 0L ) {
-                    inputStream = new FileInputStream( journalFile );
-                    return importer.importJournal( inputStream );
-                }
-            } finally {
-                if ( inputStream != null )
-                    inputStream.close();
-            }
-
-        return new Journal();
+    @Override
+    protected boolean isJournaled() {
+        return version.isDevelopment();
     }
 
+    @Override
     public void remove( ModelObject object ) {
         if ( object instanceof Segment )
             removeSegment( (Segment) object );
         else
-            indexMap.remove( object.getId() );
+            super.remove( object );
     }
 
     private void removeSegment( Segment segment ) {
         if ( list( Segment.class ).size() > 1 ) {
-            indexMap.remove( segment.getId() );
+            getIndexMap().remove( segment.getId() );
             disconnect( segment );
         }
     }
@@ -597,7 +424,7 @@ public class PlanDao {
     }
 
     void resetPlan() {
-        plan = version.createPlan( idGenerator );
+        plan = version.createPlan( getIdGenerator() );
     }
 
     /**
@@ -608,10 +435,10 @@ public class PlanDao {
      */
     public synchronized void save( Exporter exporter ) throws IOException {
         if ( isLoaded() ) {
-            version.setLastId( idGenerator.getLastAssignedId( plan ) );
+            version.setLastId( getIdGenerator().getLastAssignedId( plan.getUri() ) );
             takeSnapshot( exporter );
             version.getJournalFile().delete();
-            journal.reset();
+            getJournal().reset();
         }
     }
 
@@ -647,7 +474,7 @@ public class PlanDao {
         version.getJournalFile().delete();
         FileOutputStream out = null;
         try {
-            version.setLastId( idGenerator.getLastAssignedId( plan ) );
+            version.setLastId( getIdGenerator().getLastAssignedId( plan.getUri() ) );
             out = new FileOutputStream( version.getJournalFile() );
             exporter.export( getJournal(), out );
         } finally {
@@ -660,8 +487,6 @@ public class PlanDao {
         this.userDao = userDao;
     }
 
-    public void update( ModelObject object ) {
-    }
 
     /**
      * Validate the underlying plan.
@@ -728,17 +553,6 @@ public class PlanDao {
         plan.addPhase( phase );
     }
 
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
-    }
-
-    public void setIdGenerator( IdGenerator idGenerator ) {
-        this.idGenerator = idGenerator;
-    }
-
-    public synchronized Journal getJournal() {
-        return journal;
-    }
 
     public synchronized Plan getPlan() {
         if ( plan == null )
@@ -746,16 +560,8 @@ public class PlanDao {
         return plan;
     }
 
-    @SuppressWarnings( {"unchecked"} )
-    private Set<? extends ModelObject> getReferencingObjects() {
-        Set<? extends ModelObject> referencingObjects = new HashSet<ModelObject>();
-        for ( Class refClass : ModelObject.referencingClasses() )
-            referencingObjects.addAll( findAllModelObjects( refClass ) );
-        return referencingObjects;
-    }
-
-    @SuppressWarnings( {"unchecked"} )
-    private <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
+     @SuppressWarnings({"unchecked"})
+    protected <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
         List<T> domain;
         boolean isPart = Part.class.isAssignableFrom( clazz );
         boolean isFlow = Flow.class.isAssignableFrom( clazz );
@@ -768,8 +574,7 @@ public class PlanDao {
                     domain.add( items.next() );
             }
         } else
-            domain = list( clazz );
-
+            domain = super.findAllModelObjects( clazz );
         return domain;
     }
 }

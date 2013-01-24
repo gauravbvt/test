@@ -45,7 +45,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         this.applicationContext = applicationContext;
     }
 
-    public PlanCommunity getPlanCommunityFor( Plan plan ) {    // todo: temporary plan implies plan community
+    public PlanCommunity getPlanCommunityFor( Plan plan ) {    // todo - COMMUNITY - change that plan implies plan community
         PlanCommunity planCommunity = planCommunities.get( plan );
         if ( planCommunity == null ) {
             CommunityService communityService = (CommunityService)applicationContext.getBean( "communityService" ); // prototype bean
@@ -58,13 +58,13 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     }
 
     @Override
-    public PlanCommunity findPlanCommunity( String uri ) {       // todo - don't assume one implied community per plan
+    public PlanCommunity findPlanCommunity( String uri ) {       // todo - COMMUNITY - only assume one implied community per plan when modeling
         Plan plan = planManager.findProductionPlan( uri );
         return plan == null ? null : getPlanCommunityFor( plan );
     }
 
     @Override
-    public PlanCommunity findPlanCommunity( String uri, int planVersion ) { // todo - don't assume one implied community per plan
+    public PlanCommunity findPlanCommunity( String uri, int planVersion ) { // todo - COMMUNITY - don't assume one implied community per plan
         Plan plan = planManager.getPlan( uri, planVersion );
         return plan == null ? null : getPlanCommunityFor( plan );
     }

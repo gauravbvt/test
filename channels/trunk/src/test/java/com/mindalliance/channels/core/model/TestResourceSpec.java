@@ -77,8 +77,10 @@ public class TestResourceSpec {
         planDao = planManager.getDao( "test", true );
 
         // Assume others are null too
-        if ( Actor.UNKNOWN == null )
-            planDao.defineImmutableEntities( new ArrayList<TransmissionMedium>() );
+        if ( Actor.UNKNOWN == null ) {
+            planDao.defineImmutableEntities();
+            planDao.defineImmutableMedia( new ArrayList<TransmissionMedium>() );
+        }
 
         setUpObjects();
     }

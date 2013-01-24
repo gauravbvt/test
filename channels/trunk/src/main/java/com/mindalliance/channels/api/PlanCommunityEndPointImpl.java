@@ -256,7 +256,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             ChannelsUser protocolsUser = userDao.getUserNamed( username );
             PlanCommunity planCommunity = authorize( user, uri, version );
-            protocolsUser.setPlan( planCommunity.getPlan() );
+            protocolsUser.setPlanCommunity( planCommunity );
             List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                     protocolsUser,
                     planCommunity
@@ -287,7 +287,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             PlanCommunity planCommunity = authorize( user, uri, version );
             AllProceduresData allProceduresData = new AllProceduresData();
             for ( ChannelsUser channelsUser : userDao.getUsers( uri ) ) {
-                channelsUser.setPlan( planCommunity.getPlan() );
+                channelsUser.setPlanCommunity( planCommunity );
                 List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                         channelsUser,
                         planCommunity
@@ -423,10 +423,10 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     private PlanCommunity authorizeParticipant( ChannelsUser user, String uri ) throws Exception {
         PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri );
         Plan plan = planCommunity.getPlan();
-        if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
+        if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) { // todo - COMMUNITY - authorize for community not plan
             throw new Exception( user.getUsername() + " is not authorized to access community " + uri );
         }
-        user.setPlan( plan ); // todo set plan community, not plan
+        user.setPlanCommunity( planCommunity );
         return planCommunity;
     }
 
@@ -439,7 +439,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 || ( plan.isDevelopment() && !user.isPlanner( uri ) )
                 || ( plan.isProduction() && !user.isParticipant( uri ) ) )
             throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
-        user.setPlan( plan );
+        user.setPlanCommunity( planCommunity );
         return planCommunity;
     }
 

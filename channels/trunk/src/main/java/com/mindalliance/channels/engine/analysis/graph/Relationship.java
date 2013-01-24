@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -32,7 +31,7 @@ public class Relationship<T extends Identifiable> implements Identifiable {
      */
     private Long toIdentifiable;
 
-    private static final long SEED = 100000000 - ( 2 * PlanDao.IMMUTABLE_RANGE );
+    private static final long SEED = 100000000 - ( 2 * -1000L );
 
     public Relationship() {
     }

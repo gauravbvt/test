@@ -1,7 +1,5 @@
 package com.mindalliance.channels.core.dao;
 
-import com.mindalliance.channels.core.model.Plan;
-
 /**
  * a simple implementation of an id generator.
  */
@@ -16,7 +14,7 @@ public class SimpleIdGenerator implements IdGenerator {
     /**
      * {@inheritDoc}
      */
-    public synchronized long assignId( Long id, Plan plan ) {
+    public synchronized long assignId( Long id, String uri ) {
         if ( id == null )
             return lastAssignedId++;
         else {
@@ -25,17 +23,27 @@ public class SimpleIdGenerator implements IdGenerator {
         }
     }
 
+    @Override
+    public void setImmutableMode() {
+        // do nothing
+    }
+
+    @Override
+    public void setMutableMode() {
+        // do nothing
+    }
+
     /**
      * {@inheritDoc}
      */
-    public synchronized long getLastAssignedId( Plan plan ) {
+    public synchronized long getLastAssignedId( String uri ) {
         return lastAssignedId;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized void setLastAssignedId( long id, Plan plan ) {
+    public synchronized void setLastAssignedId( long id, String uri ) {
         lastAssignedId = id;
     }
 

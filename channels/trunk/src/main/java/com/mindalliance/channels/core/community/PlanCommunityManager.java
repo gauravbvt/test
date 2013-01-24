@@ -12,14 +12,14 @@ import java.util.List;
  * Date: 11/30/12
  * Time: 3:15 PM
  */
-public interface PlanCommunityManager {
+public interface PlanCommunityManager {  // todo - COMMUNITY - extends CommandListener  - mirror PlanManager
 
     /**
      * For now, there is exactly one implied, unnamed plan community per plan per instance of Channels.
      * @param plan a plan
      * @return a plan community
      */
-    PlanCommunity getPlanCommunityFor( Plan plan );  // todo - change when no longer a single plan community implied by a plan.
+    PlanCommunity getPlanCommunityFor( Plan plan );  // todo - COMMUNITY - change when no longer a single plan community implied by a plan.
 
     /**
      * Find plan community with production plan.

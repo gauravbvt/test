@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
@@ -36,7 +37,7 @@ import java.util.List;
  * Date: 11/29/12
  * Time: 3:23 PM
  */
-public class PlanCommunity implements Nameable, Identifiable {
+public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext {
 
     private static final String UNNAMED = "UNNAMED";
 

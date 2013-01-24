@@ -32,6 +32,7 @@ import java.util.Set;
  */
 public class DefinitionManager implements InitializingBean, Iterable<PlanDefinition> {
 
+    // todo - COMMUNITY - mirror with CommunityDefinitionManager
 
     /**
      * Logger.

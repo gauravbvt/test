@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
+import com.google.code.jqwicket.JQComponentOnBeforeRenderListenerFix;
 import com.google.code.jqwicket.JQContributionConfig;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
@@ -40,6 +40,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.slf4j.Logger;
@@ -85,7 +87,7 @@ public class Channels extends WebApplication
     public static final long PLAN_VERSIONS = -11;
     public static final long PLAN_PARTICIPATION = -12;
     public static final long PLAN_SEARCHING = -13;
-    public static final long BIBLIOGRAPHY = -17;
+    public static final long BIBLIOGRAPHY = -17;  // todo - check reference to -17 in guide
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;
@@ -158,7 +160,7 @@ public class Channels extends WebApplication
      * Get the home page for the current user.
      */
     @Override
-    public Class<? extends WebPage> getHomePage() {
+    public Class<? extends WebPage> getHomePage() {         // todo - COMMUNITY - change to point to HomePage
         ChannelsUser user = ChannelsUser.current( userDao );
         Plan plan = user.getPlan();
         if ( plan == null ) {
@@ -205,14 +207,17 @@ public class Channels extends WebApplication
         /*JQContributionConfig jqContributionConfig = new JQContributionConfig().withDefaultJQueryUi();*/
 
         JQContributionConfig jqContributionConfig =
-                new JQContributionConfig( "http://code.jquery.com/jquery-1.7.2.min.js" );
-        jqContributionConfig
-                .withJQueryUiJs( "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" )
-                .withJQueryUiCss( "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" );
+                new JQContributionConfig( new JavaScriptResourceReference(Channels.class, "res/jquery-1.7.2.min.js"  ) )
+                        .withJQueryUiJs( new JavaScriptResourceReference(Channels.class, "res/jquery-1.8.16-ui.min.js"  ) )
+                        .withJQueryUiCss( new CssResourceReference( Channels.class, "res/jquery-1.8.16-ui.css" ) );
 
+        /*
         getComponentPreOnBeforeRenderListeners()
                 .add( new JQComponentOnBeforeRenderListener( jqContributionConfig ) );
+       */
 
+        getComponentPreOnBeforeRenderListeners()
+                .add( new JQComponentOnBeforeRenderListenerFix( jqContributionConfig ) );   // todo - remove temporary FIX when JQWicket issue #29 fixed
 
         getComponentInstantiationListeners().add( getInjector() );
 

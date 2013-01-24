@@ -84,11 +84,15 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
      */
     @Transient
     private Map<String, String> planAccess;
+
+    // todo - COMMUNITY - private Map<String, String> communityAccess; // (ROLE_USER|ROLE_PLANNER)
     /**
      * Plan accesses as string.
      */
     @Column(length=2000)
     private String planAccesses;
+
+    // todo - COMMUNITY - private String communityAccesses;
 
     @Column(length=1000)
     private String photo;

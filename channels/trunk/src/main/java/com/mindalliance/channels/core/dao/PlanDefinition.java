@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
 /**
  * A plan definition with all its versions.
  */
-public class PlanDefinition extends Observable {
+public class PlanDefinition extends Observable { // todo - COMMUNITY - mirror with CommunityDefinition
 
     /**
      * Name of persisted data file.
@@ -411,7 +411,7 @@ public class PlanDefinition extends Observable {
         Plan createPlan( IdGenerator idGenerator ) {
             Plan plan = new Plan();
 
-            plan.setId( idGenerator.assignId( null, plan ) );
+            plan.setId( idGenerator.assignId( null, uri ) );
             plan.setName( name );
             plan.setUri( uri );
             plan.setVersion( number );

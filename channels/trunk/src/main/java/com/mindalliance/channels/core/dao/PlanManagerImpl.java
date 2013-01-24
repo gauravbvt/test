@@ -209,7 +209,8 @@ public class PlanManagerImpl implements PlanManager {
             dao.setUserDetailsService( userDao );
             dao.setIdGenerator( definitionManager.getIdGenerator() );
             dao.resetPlan();
-            dao.defineImmutableEntities( builtInMedia );
+            dao.defineImmutableEntities();
+            dao.defineImmutableMedia( builtInMedia );
             if ( importExportFactory != null )
                 dao.load( importExportFactory.createImporter( "daemon", dao ) );
             else

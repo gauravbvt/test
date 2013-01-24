@@ -256,7 +256,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            ChannelsUser.current().setPlan( planCommunity.getPlan() );
+            ChannelsUser.current().setPlanCommunity( planCommunity );
             UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
             PlanService planService = planCommunity.getPlanService();
             for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( planCommunity ) ) {
@@ -288,7 +288,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     public void notifyOfParticipationRequest() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             PlanService planService = planCommunity.getPlanService();
-            ChannelsUser.current().setPlan( planCommunity.getPlan() );
+            ChannelsUser.current().setPlanCommunity( planCommunity );
             UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
             for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( planCommunity ) ) {
                 if ( userParticipation.isRequested()

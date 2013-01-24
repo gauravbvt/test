@@ -77,12 +77,21 @@ public class ChannelsUser implements UserDetails {
         plan = planCommunity.getPlan();
     }
 
-    public Plan getPlan() {   // todo - replace usage by getPlanCommunity()
+    /**
+     * Returns the "best practices" plan i.e. collaboration model.
+     * @return a plan
+     */
+    public Plan getPlan() {
         return plan;
     }
 
-    public void setPlan( Plan plan ) {   // todo - replace by setPlanCommunity(...)
+    public void setPlan( Plan plan ) {
         this.plan = plan;
+    }
+
+    public void setPlanCommunity( PlanCommunity planCommunity ) {
+        setPlan( planCommunity.getPlan() );
+        setPlanCommunityUri( planCommunity.getUri() );
     }
 
     public String getPlanCommunityUri() {
