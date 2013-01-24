@@ -647,7 +647,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     protected Component addTipTitle( Component component, IModel<String> titleModel ) {
         component.add( new AttributeModifier( "title", titleModel ) );
         component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" ) ) );
-        component.add( new TipTipBehavior( new TipTipOptions().keepAlive( true ) ) );
+ //       component.add( new TipTipBehavior( new TipTipOptions().keepAlive( true ) ) );
         return component;
     }
 

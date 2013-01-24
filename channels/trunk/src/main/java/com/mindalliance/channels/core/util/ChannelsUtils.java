@@ -699,7 +699,7 @@ public final class ChannelsUtils {
             }
             Velocity.evaluate( new VelocityContext( context ), writer, "",  template );
         } catch ( Exception e ) {
-            LOG.warn( "Invalid templating ", e );
+            LOG.warn( "Invalid template: " + template , e );
             return template;
         }
         return writer.toString();

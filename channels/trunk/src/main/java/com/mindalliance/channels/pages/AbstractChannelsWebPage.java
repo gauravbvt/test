@@ -841,7 +841,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     protected Component addTipTitle( Component component, IModel<String> titleModel ) {
         component.add( new AttributeModifier( "title", titleModel ) );
         component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" ) ) );
-        component.add( new TipTipBehavior( new TipTipOptions().keepAlive( true ) ) );
+//        component.add( new TipTipBehavior( new TipTipOptions().keepAlive( true ) ) );
         return component;
     }
 
