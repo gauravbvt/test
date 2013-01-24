@@ -31,7 +31,7 @@ CREATE TABLE `analysis` (
   PRIMARY KEY (`id`),
   KEY `FKC2F032DC749CCDC9` (`project`),
   CONSTRAINT `FKC2F032DC749CCDC9` FOREIGN KEY (`project`) REFERENCES `project` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +205,7 @@ CREATE TABLE `interview` (
   PRIMARY KEY (`id`),
   KEY `FK1DFCD1816D624365` (`resource`),
   CONSTRAINT `FK1DFCD1816D624365` FOREIGN KEY (`resource`) REFERENCES `resource` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -261,8 +261,8 @@ CREATE TABLE `issue_approach` (
   PRIMARY KEY (`issue_id`,`approach_id`),
   KEY `fk_issue_has_approach_approach1` (`approach_id`),
   KEY `fk_issue_has_approach_issue1` (`issue_id`),
-  CONSTRAINT `fk_issue_has_approach_approach1` FOREIGN KEY (`approach_id`) REFERENCES `approach` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_issue_has_approach_issue1` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_issue_has_approach_issue1` FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_issue_has_approach_approach1` FOREIGN KEY (`approach_id`) REFERENCES `approach` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -466,8 +466,8 @@ CREATE TABLE `plan_approach` (
   PRIMARY KEY (`plan_id`,`approach_id`),
   KEY `fk_plan_has_approach_approach1` (`approach_id`),
   KEY `fk_plan_has_approach_plan1` (`plan_id`),
-  CONSTRAINT `fk_plan_has_approach_approach1` FOREIGN KEY (`approach_id`) REFERENCES `approach` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_plan_has_approach_plan1` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_plan_has_approach_plan1` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_plan_has_approach_approach1` FOREIGN KEY (`approach_id`) REFERENCES `approach` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -489,12 +489,12 @@ DROP TABLE IF EXISTS `project`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(127) NOT NULL,
+  `name` varchar(30) NOT NULL,
   `description` text,
   `version` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=173 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -550,7 +550,7 @@ CREATE TABLE `resource` (
   PRIMARY KEY (`id`),
   KEY `FKEBABC40E749CCDC9` (`project`),
   CONSTRAINT `FKEBABC40E749CCDC9` FOREIGN KEY (`project`) REFERENCES `project` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -559,7 +559,7 @@ CREATE TABLE `resource` (
 
 LOCK TABLES `resource` WRITE;
 /*!40000 ALTER TABLE `resource` DISABLE KEYS */;
-INSERT INTO `resource` VALUES (2,'Andrea Ace',NULL,162,NULL),(3,'Ashvin Dayal',NULL,162,NULL),(6,'Benjamin de la Pena',NULL,162,NULL),(7,'Brinda Ganguly',NULL,162,NULL),(8,'Carolyn Wendrowski',NULL,162,NULL),(10,'Charlanne Burke',NULL,162,NULL),(12,'Claudia Juech',NULL,162,NULL),(14,'Donna Dean',NULL,162,NULL),(15,'Edwin Torres',NULL,162,NULL),(16,'Ellen Taus',NULL,162,NULL),(19,'Evan Michaelson',NULL,162,NULL),(25,'Gary Toenniessen',NULL,162,NULL),(26,'Heather Grady',NULL,162,NULL),(27,'Hilary Castillo',NULL,162,NULL),(31,'Irena DiMario',NULL,162,NULL),(32,'Jeanette Vega',NULL,162,NULL),(33,'John Irons',NULL,162,NULL),(34,'Judith Rodin',NULL,162,NULL),(35,'Karl Brown',NULL,162,NULL),(36,'Keisha Senter',NULL,162,NULL),(38,'Laura Gordon',NULL,162,NULL),(39,'Margot Brandenburg',NULL,162,NULL),(40,'Michael Myers',NULL,162,NULL),(41,'Nancy Kete',NULL,162,NULL),(42,'Nancy MacPherson',NULL,162,NULL),(43,'Neill McG Coleman',NULL,162,NULL),(44,'Nicholas Turner',NULL,162,NULL),(49,'Pamela Foster',NULL,162,NULL),(50,'Paul Szeto',NULL,162,NULL),(51,'Peter Madonia',NULL,162,NULL),(52,'Pilar Palacià',NULL,162,NULL),(56,'Robert Garris',NULL,162,NULL),(57,'Samantha Gilbert',NULL,162,NULL),(58,'Sarah Troup',NULL,162,NULL),(59,'Scott Ceniza-Levine',NULL,162,NULL),(62,'Shari Patrick',NULL,162,NULL),(64,'Zia Khan',NULL,162,NULL),(84,'Info Issue Document','',162,NULL);
+INSERT INTO `resource` VALUES (2,'Andrea Ace',NULL,162,NULL),(3,'Ashvin Dayal',NULL,162,NULL),(6,'Benjamin de la Pena',NULL,162,NULL),(7,'Brinda Ganguly',NULL,162,NULL),(8,'Carolyn Wendrowski',NULL,162,NULL),(10,'Charlanne Burke',NULL,162,NULL),(12,'Claudia Juech',NULL,162,NULL),(14,'Donna Dean',NULL,162,NULL),(15,'Edwin Torres',NULL,162,NULL),(16,'Ellen Taus',NULL,162,NULL),(19,'Evan Michaelson',NULL,162,NULL),(25,'Gary Toenniessen',NULL,162,NULL),(26,'Heather Grady',NULL,162,NULL),(27,'Hilary Castillo',NULL,162,NULL),(31,'Irena DiMario',NULL,162,NULL),(32,'Jeanette Vega',NULL,162,NULL),(33,'John Irons',NULL,162,NULL),(34,'Judith Rodin',NULL,162,NULL),(35,'Karl Brown',NULL,162,NULL),(36,'Keisha Senter',NULL,162,NULL),(38,'Laura Gordon',NULL,162,NULL),(39,'Margot Brandenburg',NULL,162,NULL),(40,'Michael Myers',NULL,162,NULL),(41,'Nancy Kete',NULL,162,NULL),(42,'Nancy MacPherson',NULL,162,NULL),(43,'Neil McG Coleman',NULL,162,NULL),(44,'Nicholas Turner',NULL,162,NULL),(49,'Pamela Foster',NULL,162,NULL),(50,'Paul Szeto',NULL,162,NULL),(51,'Peter Madonia',NULL,162,NULL),(52,'Pilar Palacià',NULL,162,NULL),(56,'Robert Garris',NULL,162,NULL),(57,'Samantha Gilbert',NULL,162,NULL),(58,'Sarah Troup',NULL,162,NULL),(59,'Scott Ceniza-Levine',NULL,162,NULL),(62,'Shari Patrick',NULL,162,NULL),(64,'Zia Khan',NULL,162,NULL),(84,'Info Issue Document','',162,NULL);
 /*!40000 ALTER TABLE `resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -578,8 +578,8 @@ CREATE TABLE `resource_attribute` (
   `version` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK77512FAB6D624365` (`resource`),
-  CONSTRAINT `FK77512FAB6D624365` FOREIGN KEY (`resource`) REFERENCES `resource` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FK77512FAB6D624365` FOREIGN KEY (`resource`) REFERENCES `resource` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -637,4 +637,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-01-16  6:39:51
+-- Dump completed on 2013-01-24 10:30:53

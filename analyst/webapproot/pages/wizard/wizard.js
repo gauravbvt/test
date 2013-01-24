@@ -1,3 +1,5 @@
+var interviewing = false;
+
 dojo.declare("wizard", wm.Page, {
 	"preferredDevice": "desktop",
 	start: function() {
@@ -16,7 +18,6 @@ dojo.declare("wizard", wm.Page, {
     },
 	scheduleButtonClick: function(inSender) {
         var who  = this.resourceLookup1.dataValue;
-        
         if ( !who ) {
             // Create a resource
             var resVar = this.resourceInsert1;
@@ -46,19 +47,41 @@ dojo.declare("wizard", wm.Page, {
         live.update();
 	},
 	interviewButtonClick: function(inSender) {
-    	var interview = this.upcomingGrid1.selectedItem.data.interview;
-        interview.data.done = true;
+    	var interview = this.upcomingGrid1.selectedItem.data.interview.data;
+        interviewing = true;
+        interview.done = true;
         var live = this.interviewLiveVariable1;
         live.setOperation("update");
-        live.sourceData.setData( interview.data );
+        live.sourceData.setData( interview );
         live.update();
-        this.interviewForm1.setDataSet(interview);
 	},
 	button12Click: function(inSender) {
-		this.dataGrid1.deleteRow(this.dataGrid1.getSelectedIndex());
+        this.resourceattributeDojoGrid.deleteRow(this.resourceattributeDojoGrid.getSelectedIndex());
+        inSender.disable();
 	},
 	text1ReadOnlyNodeFormat: function(inSender, inValue) {
 		return "I-" + inValue;
+	},
+	interviewLiveVariable1Success2: function(inSender, inDeprecated) {
+        if ( interviewing ) {
+            this.recentInterviewsVariable1.update();            
+        }		
+	},
+	recentInterviewsVariable1Success: function(inSender, inDeprecated) {
+		if ( interviewing ) {
+            var id = this.interviewLiveVariable1.sourceData.data.id;
+            this.interviewing = false;
+            var recents = this.interviewDojoGrid1.dataSet.data._list;
+            for ( i=0; i<recents.length && id !== recents[i].data.id ; i++){                
+            }
+            this.interviewDojoGrid1.select(i);
+		}
+	},
+	resourceattributeNewButtonClick1: function(inSender) {
+        var variable = this.interviewForm1.dataOutput.data.resource;
+        var resource = variable.data;
+		this.resourceattributeDojoGrid.addRow({id:0,resource:resource,name:'',val:''}, true)
+        
 	},
 	_end: 0
 });
