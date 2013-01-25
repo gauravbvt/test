@@ -4,6 +4,7 @@ package com.analystdb;
 import java.util.List;
 import com.analystdb.data.Approach;
 import com.analystdb.data.Flow;
+import com.analystdb.data.IssueComment;
 import com.analystdb.data.output.ApproachIssueCountRtnType;
 import com.analystdb.data.output.ApproachIssuesRtnType;
 import com.analystdb.data.output.DocumentCategoryIssueCountsRtnType;
@@ -28,7 +29,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  *  Operations for service "analystDB"
- *  01/20/2013 15:41:11
+ *  01/24/2013 20:55:26
  * 
  */
 @SuppressWarnings("unchecked")
@@ -53,6 +54,10 @@ public class AnalystDB
 
     public List<DocumentIssueCountRtnType> documentIssueCount(Long project, Integer category, PagingOptions pagingOptions) {
         return ((List<DocumentIssueCountRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.documentIssueCountQueryName), project, category, pagingOptions));
+    }
+
+    public List<IssueComment> otherFlowIssues(Long flow, PagingOptions pagingOptions) {
+        return ((List<IssueComment> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherFlowIssuesQueryName), flow, pagingOptions));
     }
 
     public List<Approach> availableApproaches(Long issue, Long project, PagingOptions pagingOptions) {

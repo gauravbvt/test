@@ -108,4 +108,9 @@ order by i.scheduled
 where f.interview.resource.project.id = :project
 order by f.fromActor, f.toActor, f.name
     </query>
+    <query name="otherFlowIssues">
+        <query-param name="flow" type="java.lang.Long"/>
+        from IssueComment ic join fetch ic.issue
+where not ic.id in (select icf.issueComment.id from IssueCommentFlows icf where icf.flow.id = :flow)
+    </query>
 </hibernate-mapping>

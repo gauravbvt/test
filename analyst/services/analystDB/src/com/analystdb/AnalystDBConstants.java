@@ -5,7 +5,7 @@ package com.analystdb;
 
 /**
  *  Query names for service "analystDB"
- *  01/20/2013 15:41:11
+ *  01/24/2013 20:55:26
  * 
  */
 public class AnalystDBConstants {
@@ -14,6 +14,7 @@ public class AnalystDBConstants {
     public final static String projectPlansQueryName = "projectPlans";
     public final static String issueCategoryCountsQueryName = "issueCategoryCounts";
     public final static String documentIssueCountQueryName = "documentIssueCount";
+    public final static String otherFlowIssuesQueryName = "otherFlowIssues";
     public final static String availableApproachesQueryName = "availableApproaches";
     public final static String documentCategoryIssueCountsQueryName = "documentCategoryIssueCounts";
     public final static String interviewIssuesQueryName = "interviewIssues";

@@ -84,6 +84,14 @@
 		}],
 		"returnType": "[com.analystdb.data.output.IssueCategoryCountsRtnType]"
 	}, {
+		"name": "otherFlowIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "flow",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.IssueComment]"
+	}, {
 		"name": "projectPlans",
 		"operationType": "hqlquery",
 		"parameters": [{

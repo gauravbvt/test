@@ -18,6 +18,10 @@
         <parameter name="category" typeRef="java.lang.Integer" isList="false"/>
         <return typeRef="com.analystdb.data.output.DocumentIssueCountRtnType" isList="true"/>
     </operation>
+    <operation operationType="hqlquery" name="otherFlowIssues">
+        <parameter name="flow" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.IssueComment" isList="true"/>
+    </operation>
     <operation operationType="hqlquery" name="availableApproaches">
         <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
@@ -364,26 +368,6 @@
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
             <element name="resource" typeRef="com.analystdb.data.Resource" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
-            <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-            <element name="approachId" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-        </dataobject>
         <dataobject javaType="com.analystdb.data.IssueCommentFlowsId" name="id" supportsQuickData="false">
             <element name="issues" typeRef="java.lang.Long" isList="false" allowNull="false">
                 <require>delete</require>
@@ -415,6 +399,26 @@
                 <noChange>update</noChange>
             </element>
             <element name="issueCategoryId" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
+            <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element name="approachId" typeRef="java.lang.Long" isList="false" allowNull="false">
                 <require>delete</require>
                 <require>read</require>
                 <require>update</require>
