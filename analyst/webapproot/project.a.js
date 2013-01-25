@@ -2075,7 +2075,7 @@ dojo.declare("Analyst", wm.Application, {
 	"eventDelay": 0, 
 	"i18n": false, 
 	"isLoginPageEnabled": true, 
-	"isSecurityEnabled": false, 
+	"isSecurityEnabled": true, 
 	"main": "wizard", 
 	"manageHistory": true, 
 	"manageURL": true, 
