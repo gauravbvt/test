@@ -24,9 +24,9 @@
                         <value>com.analystdb.data.ProjectFiles</value>
                         <value>com.analystdb.data.Resource</value>
                         <value>com.analystdb.data.ResourceAttribute</value>
+                        <value>com.analystdb.data.IssueApproachId</value>
                         <value>com.analystdb.data.IssueCommentFlowsId</value>
                         <value>com.analystdb.data.IssueIssueCategoryId</value>
-                        <value>com.analystdb.data.IssueApproachId</value>
                         <value>com.analystdb.data.output.InterviewIssuesRtnType</value>
                         <value>com.analystdb.data.output.DocumentIssuesRtnType</value>
                         <value>com.analystdb.data.output.DocumentIssueCountRtnType</value>

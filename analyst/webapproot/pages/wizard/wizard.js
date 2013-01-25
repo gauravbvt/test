@@ -89,36 +89,55 @@ dojo.declare("wizard", wm.Page, {
             inData.interview = this.interviewDojoGrid1.selectedItem.data.interview;
 		}
 	},
-	flowLiveForm1Success: function(inSender, inData) {
-	},
 	addButton2Click: function(inSender) {
         var availableGrid = this.availableGrid2;
-        //var selectedGrid = this.selectedGrid2;
-
         var selected = availableGrid.selectedItem.dataSet.data;
-        var flow = this.flowDojoGrid.selectedItem.dataSet.data;
         availableGrid.deleteRow(availableGrid.getSelectedIndex());
-        //selectedGrid.addRow({id:0,flow:flow,issueComment:selected},true);
-        this.flowIssuesVariable.operation = "insert";
-        this.flowIssuesVariable.sourceData.setData({id:{issues:selected.id,flows:flow.id},flow:flow,issueComment:selected});
-        this.flowIssuesVariable.update();
-        this.flowIssuesVariable.sourceData.setData(null);
-        this.flowIssuesVariable.operation = "read";
-        this.flowIssuesVariable.update();
-        inSender.disable();
-        
-	},
-	removeButton2Click: function(inSender) {
-        var availableGrid = this.availableGrid2;
-        var selectedGrid = this.selectedGrid2;
 
+        var flow = this.flowDojoGrid.selectedItem.dataSet.data;
+        var data = {id:{issues:selected.id,flows:flow.id},flow:flow,issueComment:selected};
+
+        var live = this.flowIssuesVariable;
+        live.operation = "insert";
+        live.sourceData.setData(data);
+        live.update();
+        live.sourceData.setData(null);
+        live.operation = "read";
+        live.update();
+        inSender.disable();
+	},
+    allRemoveButtonClick: function(inSender,availableGrid,selectedGrid,live) {
         var selected = selectedGrid.selectedItem.dataSet.data;
-        this.flowIssuesVariable.operation = "delete";
-        this.flowIssuesVariable.sourceData.setData(selected);
-        this.flowIssuesVariable.update();
-        this.flowIssuesVariable.sourceData.setData(null);
-        this.flowIssuesVariable.operation = "read";
-        this.flowIssuesVariable.update();
+        live.operation = "delete";
+        live.sourceData.setData(selected);
+        live.update();
+        live.sourceData.setData(null);
+        while ( !live.canUpdate ) {}
+        live.operation = "read";
+        live.update();
+        inSender.disable();
+	},
+    removeButton2Click: function(inSender) {
+        this.allRemoveButtonClick(inSender,this.availableGrid2,this.selectedGrid2,this.flowIssuesVariable);
+    },
+    removeButtonClick: function(inSender) {
+        this.allRemoveButtonClick(inSender,this.availableGrid,this.selectedGrid,this.approachIssuesVariable);
+    },
+	addButtonClick: function(inSender) {
+        var availableGrid = this.availableGrid;
+        var selected = availableGrid.selectedItem.dataSet.data;
+        availableGrid.deleteRow(availableGrid.getSelectedIndex());
+
+        var approach = this.approachDojoGrid.selectedItem.dataSet.data;
+        var data = {id:{issueId:selected.id,approachId:approach.id},approach:approach,issue:selected};
+
+        var live = this.approachIssuesVariable;
+        live.operation = "insert";
+        live.sourceData.setData(data);
+        live.update();
+        live.sourceData.setData(null);
+        live.operation = "read";
+        live.update();
         inSender.disable();
 	},
 	_end: 0

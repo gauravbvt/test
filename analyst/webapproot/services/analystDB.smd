@@ -84,10 +84,24 @@
 		}],
 		"returnType": "[com.analystdb.data.output.IssueCategoryCountsRtnType]"
 	}, {
+		"name": "otherApproachIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "approach",
+			"type": "java.lang.Long"
+		}, {
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Issue]"
+	}, {
 		"name": "otherFlowIssues",
 		"operationType": "hqlquery",
 		"parameters": [{
 			"name": "flow",
+			"type": "java.lang.Long"
+		}, {
+			"name": "project",
 			"type": "java.lang.Long"
 		}],
 		"returnType": "[com.analystdb.data.IssueComment]"

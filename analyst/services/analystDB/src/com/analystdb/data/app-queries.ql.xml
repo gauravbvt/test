@@ -110,7 +110,16 @@ order by f.fromActor, f.toActor, f.name
     </query>
     <query name="otherFlowIssues">
         <query-param name="flow" type="java.lang.Long"/>
+        <query-param name="project" type="java.lang.Long"/>
         from IssueComment ic join fetch ic.issue
-where not ic.id in (select icf.issueComment.id from IssueCommentFlows icf where icf.flow.id = :flow)
+where ic.issue.project.id = :project and not ic.id in (select icf.issueComment.id from IssueCommentFlows icf where icf.flow.id = :flow)
+order by ic.issue.sequence
+    </query>
+    <query name="otherApproachIssues">
+        <query-param name="approach" type="java.lang.Long"/>
+        <query-param name="project" type="java.lang.Long"/>
+        from Issue i
+where i.project.id = :project and not i.id in (select ia.issue.id from IssueApproach ia where ia.approach.id = :approach)
+order by i.sequence
     </query>
 </hibernate-mapping>

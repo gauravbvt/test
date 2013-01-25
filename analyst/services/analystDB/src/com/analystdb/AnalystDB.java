@@ -4,6 +4,7 @@ package com.analystdb;
 import java.util.List;
 import com.analystdb.data.Approach;
 import com.analystdb.data.Flow;
+import com.analystdb.data.Issue;
 import com.analystdb.data.IssueComment;
 import com.analystdb.data.output.ApproachIssueCountRtnType;
 import com.analystdb.data.output.ApproachIssuesRtnType;
@@ -29,7 +30,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  *  Operations for service "analystDB"
- *  01/24/2013 20:55:26
+ *  01/25/2013 16:28:55
  * 
  */
 @SuppressWarnings("unchecked")
@@ -56,8 +57,8 @@ public class AnalystDB
         return ((List<DocumentIssueCountRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.documentIssueCountQueryName), project, category, pagingOptions));
     }
 
-    public List<IssueComment> otherFlowIssues(Long flow, PagingOptions pagingOptions) {
-        return ((List<IssueComment> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherFlowIssuesQueryName), flow, pagingOptions));
+    public List<IssueComment> otherFlowIssues(Long flow, Long project, PagingOptions pagingOptions) {
+        return ((List<IssueComment> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherFlowIssuesQueryName), flow, project, pagingOptions));
     }
 
     public List<Approach> availableApproaches(Long issue, Long project, PagingOptions pagingOptions) {
@@ -74,6 +75,10 @@ public class AnalystDB
 
     public List<ApproachIssueCountRtnType> approachIssueCount(Long project, PagingOptions pagingOptions) {
         return ((List<ApproachIssueCountRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.approachIssueCountQueryName), project, pagingOptions));
+    }
+
+    public List<Issue> otherApproachIssues(Long approach, Long project, PagingOptions pagingOptions) {
+        return ((List<Issue> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherApproachIssuesQueryName), approach, project, pagingOptions));
     }
 
     public List<RecentInterviewsRtnType> recentInterviews(Long project, PagingOptions pagingOptions) {
