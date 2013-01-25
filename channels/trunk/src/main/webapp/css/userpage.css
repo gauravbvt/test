@@ -1126,6 +1126,17 @@ float: right;
 	padding:0 0 2px 0;
 }
 
+#social div.userInfo ul.check-list {
+	list-style: none outside none;
+	margin: 0 0 0 5px;
+	padding: 0;
+}
+
+#social div.userInfo ul.check-list li {
+	margin: 0;
+	padding: 5px 0;
+}
+
 #social div.userInfo ol {
 	margin:6px 0 0 20px;
 	padding: 0;
@@ -1171,6 +1182,7 @@ float: right;
 #social div.userInfo div.buttons {
     padding: 5px 0;
     text-align: right;
+    height: 20px;
 }
 
 #social div.userInfo div.buttons input {
@@ -1443,6 +1455,22 @@ a.more:hover {
 
 /* ----- Data Tables - Controls ----- */
 
+div.filters.large {
+    height: 30px;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #999999;
+    border-top: none;
+}
+
+div.filters-group {
+    float: left;
+    padding: 5px 0 0 2px;
+}
+
+div.filters.large input[type='text'] {
+    padding: 0;
+}
+
 div.filters {
     background: #E8E8E8;
     border-top: 1px solid #999999;
@@ -1450,7 +1478,7 @@ div.filters {
     font-size: 10px;
     font-weight: bold;
     padding: 5px;
-    line-height: 2.5em;
+    height: 19px;
 }
 
 div.filters select {
@@ -1462,10 +1490,58 @@ div.filters select {
     color: #333333;
 }
 
-div.filters input[type="checkbox"] {
+thead tr.navigation {
+    background: #E8E8E8;
+    border-bottom: 1px solid #999999;
+}
+
+thead tr.navigation td {
+    font-weight: bold;
+    padding: 1px 5px 0 5px;
+    font-size: 9px;
+    border-top: 1px solid #999999;
+    font-size: 10px;
+    font-weight: bold;
+    height: 21px;
+}
+
+div.navigator a,
+div.filters ul.ranges li a {
+    background: #F6F6F6;
+    border: 1px solid #BCBEC0;
+    color: #666666;
+    font-weight: bold;
+    line-height: 100%;
+    padding: 0 3px;
+}
+
+div.navigator a:hover,
+div.filters ul.ranges li a:hover {
+    background: #F6F6F6;
+    border: 1px solid #999999;
+    color: #333333;
+}
+
+div.navigator em,
+div.filters ul.ranges li a.selected {
+    background: none repeat scroll 0 0 #DCDDDE;
+    border: 1px solid #BCBEC0;
+    color: #999999;
+    font-style: normal;
+    font-weight: bold;
+    padding: 0 3px;
+}
+
+div.filters ul.ranges {
+    list-style: none;
     margin: 0;
     padding: 0;
-    vertical-align: middle;
+    text-align: right;
+    float: right;
+}
+
+div.filters ul.ranges li {
+    display: inline;
 }
 
 
