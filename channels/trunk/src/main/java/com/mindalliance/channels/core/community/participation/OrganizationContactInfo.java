@@ -77,8 +77,10 @@ public class OrganizationContactInfo extends AbstractPersistentChannelsObject {
 
     public Channel asChannel( PlanCommunity planCommunity ) {
         try {
-            TransmissionMedium medium = planCommunity.getPlanService()
-                    .find( TransmissionMedium.class, transmissionMediumId );
+            TransmissionMedium medium = planCommunity.find(
+                    TransmissionMedium.class,
+                    transmissionMediumId,
+                    getCreated() );
             return new Channel( medium, address );
         } catch ( NotFoundException e ) {
             return null;

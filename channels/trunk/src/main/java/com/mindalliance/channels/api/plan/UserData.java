@@ -1,10 +1,10 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -31,20 +31,20 @@ public class UserData  implements Serializable {
         // required
     }
 
-    public UserData( ChannelsUser user, QueryService queryService ) {
+    public UserData( ChannelsUser user, PlanCommunity planCommunity ) {
         this.user = user;
-        initPersonalChannels( queryService );
+        initPersonalChannels( planCommunity );
     }
 
-    private void initPersonalChannels( QueryService queryService ) {
+    private void initPersonalChannels( PlanCommunity planCommunity ) {
         ChannelsUserInfo userInfo = user.getUserInfo();
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
-            for ( Channel channel : queryService.getUserContactInfoService().findChannels( userInfo, queryService ) ) {
+            for ( Channel channel : planCommunity.getPlanService().getUserContactInfoService().findChannels( userInfo, planCommunity ) ) {
                 personalChannels.add( new ChannelData(
                         channel.getMedium().getId(),
                         channel.getAddress(),
-                        queryService ) );
+                        planCommunity ) );
             }
         }
 

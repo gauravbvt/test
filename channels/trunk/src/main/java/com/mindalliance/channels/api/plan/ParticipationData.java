@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.community.participation.UserParticipationC
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.query.PlanService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -47,12 +46,11 @@ public class ParticipationData  implements Serializable {
     }
 
     private void init( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
         UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
         UserParticipationConfirmationService userParticipationConfirmationService = planCommunity.getUserParticipationConfirmationService();
         actor = participation.getAgent( planCommunity).getActor();
         agentData = new ActorData( serverUrl, actor, planCommunity.getPlan() );
-        userData = new UserData( user, planService );
+        userData = new UserData( user, planCommunity );
         confirmed = userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, planCommunity );
         active = userParticipationService.isActive( participation, planCommunity );
     }

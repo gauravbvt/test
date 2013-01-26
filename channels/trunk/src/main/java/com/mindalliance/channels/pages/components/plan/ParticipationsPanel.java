@@ -388,7 +388,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         String channelsString = pw != null
                 ? Channel.toString( userContactInfoService.findChannels(
                 pw.getParticipatingUserInfo(),
-                getQueryService() ) )
+                getPlanCommunity() ) )
                 : "None";
         Label label = new Label( "userChannels", channelsString );
         label.setOutputMarkupId( true );

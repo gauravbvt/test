@@ -86,7 +86,7 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
 
     public Organization getPlaceholderOrganization( PlanCommunity planCommunity ) {
         try {
-            Organization organization = planCommunity.getPlanService().find( Organization.class, placeholderOrgId );
+            Organization organization = planCommunity.find( Organization.class, placeholderOrgId, getCreated() );
             return organization.isPlaceHolder() ? organization : null;
         } catch ( NotFoundException e ) {
             LOG.warn( "Placeholder organization not found at " + placeholderOrgId );
@@ -96,7 +96,7 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
 
     public Organization getOrganizationParticipatedAs( PlanCommunity planCommunity ) {
         try {
-            return planCommunity.getPlanService().find( Organization.class, placeholderOrgId );
+            return planCommunity.find( Organization.class, placeholderOrgId, getCreated() );
         } catch ( NotFoundException e ) {
             LOG.warn( "Placeholder organization not found at " + placeholderOrgId );
             return null;

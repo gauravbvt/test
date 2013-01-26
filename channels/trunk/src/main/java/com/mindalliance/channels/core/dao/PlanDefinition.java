@@ -363,7 +363,7 @@ public class PlanDefinition extends Observable { // todo - COMMUNITY - mirror wi
          * @throws IOException if unable to read the file
          */
         public synchronized long getLastId() throws IOException {
-            Long lastId = 0L;
+            Long lastId = IdGenerator.MUTABLE_LOW;
             File lastIdFile = getLastIdFile();
             if ( lastIdFile.exists() ) {
                 BufferedReader reader = new BufferedReader( new FileReader( lastIdFile ) );

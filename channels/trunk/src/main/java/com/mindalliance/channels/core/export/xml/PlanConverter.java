@@ -65,7 +65,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.setValue( new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() ) );
         writer.endNode();
         writer.startNode( "lastId" );
-        writer.setValue( String.valueOf( planDao.getIdGenerator().getLastAssignedId( getContext().getPlan().getUri() ) ) );
+        writer.setValue( String.valueOf( planDao.getIdGenerator().getIdCounter( getContext().getPlan().getUri() ) ) );
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
@@ -198,6 +198,7 @@ public class PlanConverter extends AbstractChannelsConverter {
         plan.setUri( uri );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         plan.setId( id );
+        getPlanDao().loadingModelContextWithId( id ); // can set a shift in all ids to prevent overshadowing of IDs in subDaos
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();

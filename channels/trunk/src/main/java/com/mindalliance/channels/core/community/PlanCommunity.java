@@ -11,12 +11,15 @@ import com.mindalliance.channels.core.community.participation.UserParticipationC
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Nameable;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -27,7 +30,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A plan community.
@@ -41,6 +47,13 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
 
     private static final String UNNAMED = "UNNAMED";
 
+    /**
+     * History of shifts in assignable id lower bounds.
+     */
+    private Map<Date,Long> idShifts = new HashMap<Date, Long>();
+
+
+
     private CommunityService communityService;
     private String name;
     private String description;
@@ -53,6 +66,31 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
         this.participationManager = participationManager;
         this.communityService = communityService;
     }
+
+    @Override
+    public void recordIdShift( long lowerBound ) {
+        idShifts.put( new Date(), lowerBound  );
+    }
+
+    public Map<Date, Long> getIdShifts() {
+        return idShifts;
+    }
+
+    public void setIdShifts( Map<Date, Long> idShifts ) {
+        this.idShifts = idShifts;
+    }
+
+    @Override
+    public long getIdShiftSince( Date dateOfRecord ) {
+        long shift = 0;
+        for ( Date shiftDate : getIdShifts().keySet() ) {
+            if ( dateOfRecord.before( shiftDate ) ) {
+                shift = shift + idShifts.get( shiftDate );
+            }
+        }
+        return shift;
+    }
+
 
     public Place getCommunityLocale() {
         return communityLocale;
@@ -90,7 +128,7 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
         return communityService.getOrganizationParticipationService();
     }
 
-    public PlanService getPlanService() {
+    public PlanService getPlanService() { // Todo - COMMUNITY - many calls bypass community DAO
         return communityService.getPlanService();
     }
 
@@ -119,7 +157,7 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
     }
 
     public String getUri() {
-        return getPlan().getUri(); // todo - change when not only one implied community per plan
+        return getPlan().getUri(); // todo - COMMUNITY - change when not only one implied community per plan
     }
 
     public int getPlanVersion() {
@@ -245,4 +283,11 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
         communityService.clearCache();
     }
 
+    public <T extends ModelObject> T find( Class<T> clazz, long id, Date dateOfRecord ) throws NotFoundException {
+        return (T)getModelObjectContextDao().find( clazz, id, dateOfRecord );
+    }
+
+    private AbstractModelObjectDao getModelObjectContextDao() {   // Todo - COMMUNITY - go through community's DAO chained to planService Dao
+        return getPlanService().getDao();
+    }
 }

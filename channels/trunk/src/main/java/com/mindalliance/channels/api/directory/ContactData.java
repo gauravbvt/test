@@ -13,7 +13,6 @@ import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -134,10 +133,10 @@ public class ContactData implements Serializable {
     private void init(
             String serverUrl,
             PlanCommunity planCommunity ) {
-        initActorChannels( planCommunity.getPlanService() );
-        initPersonalChannels( planCommunity.getPlanService() );
+        initActorChannels( planCommunity );
+        initPersonalChannels( planCommunity );
         initSupervisorContacts( serverUrl, planCommunity );
-        initOrganizationChannels( planCommunity.getPlanService() );
+        initOrganizationChannels( planCommunity );
         initBypassContacts( serverUrl, planCommunity );
         initPictureUrl( serverUrl );
     }
@@ -154,30 +153,31 @@ public class ContactData implements Serializable {
         }
     }
 
-    private void initPersonalChannels( QueryService queryService  ) {
+    private void initPersonalChannels( PlanCommunity planCommunity  ) {
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
-            for ( Channel channel : queryService.getUserContactInfoService().findChannels( userInfo, queryService ) ) {
+            for ( Channel channel : planCommunity.getPlanService()
+                    .getUserContactInfoService().findChannels( userInfo, planCommunity ) ) {
                 personalChannels.add( new ChannelData(
                         channel.getMedium().getId(),
                         channel.getAddress(),
-                        queryService ) );
+                        planCommunity ) );
             }
         }
     }
 
-    private void initActorChannels( QueryService queryService ) {
+    private void initActorChannels( PlanCommunity planCommunity ) {
         workChannels = new ArrayList<ChannelData>();
         for ( Channel channel : getAgent().getActor().getEffectiveChannels() ) {
-            workChannels.add( new ChannelData( channel, queryService ) );
+            workChannels.add( new ChannelData( channel, planCommunity ) );
         }
     }
 
 
-    private void initOrganizationChannels( QueryService queryService ) {
+    private void initOrganizationChannels( PlanCommunity planCommunity ) {
         organizationChannels = new ArrayList<ChannelData>();
         for ( Channel channel : getAgency().getEffectiveChannels() ) {
-            organizationChannels.add( new ChannelData( channel, queryService ) );
+            organizationChannels.add( new ChannelData( channel, planCommunity ) );
         }
 
     }

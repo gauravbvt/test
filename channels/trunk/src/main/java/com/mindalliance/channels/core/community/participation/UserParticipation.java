@@ -134,7 +134,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
 
     private Actor getActor( PlanCommunity planCommunity ) {
         try {
-            return planCommunity.getPlanService().find( Actor.class, getActorId() );
+            return planCommunity.find( Actor.class, getActorId(), getCreated() );
         } catch ( NotFoundException e ) {
             return null;
         }

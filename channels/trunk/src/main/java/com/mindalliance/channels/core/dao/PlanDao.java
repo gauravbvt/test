@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,6 +69,11 @@ public class PlanDao extends AbstractModelObjectDao {
 
     PlanDao( Version version ) {
         this.version = version;
+    }
+
+    @Override
+    protected <T extends ModelObject> void setContextKindOf( T object ) {
+        object.setInModel();
     }
 
     @Override
@@ -301,7 +305,7 @@ public class PlanDao extends AbstractModelObjectDao {
         if ( getPlan().getId() == id )
             return getPlan();
 
-        ModelObject result = getIndexMap().get( id );
+        ModelObject result = lookUp( id, getIdGenerator() );
         if ( result == null ) {
             Iterator<Segment> iterator = list( Segment.class ).iterator();
             while ( result == null && iterator.hasNext() ) {
@@ -357,7 +361,7 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     @Override
-    protected long getLastAssignedId()  throws IOException {
+    protected long getRecordedLastAssignedId()  throws IOException {
         return version.getLastId();
     }
 
@@ -386,7 +390,7 @@ public class PlanDao extends AbstractModelObjectDao {
 
     private void removeSegment( Segment segment ) {
         if ( list( Segment.class ).size() > 1 ) {
-            getIndexMap().remove( segment.getId() );
+            super.remove( segment );
             disconnect( segment );
         }
     }
@@ -427,60 +431,24 @@ public class PlanDao extends AbstractModelObjectDao {
         plan = version.createPlan( getIdGenerator() );
     }
 
-    /**
-     * Save the plan to the file repository.
-     *
-     * @param exporter where to export
-     * @throws IOException on errors
-     */
-    public synchronized void save( Exporter exporter ) throws IOException {
-        if ( isLoaded() ) {
-            version.setLastId( getIdGenerator().getLastAssignedId( plan.getUri() ) );
-            takeSnapshot( exporter );
-            version.getJournalFile().delete();
-            getJournal().reset();
-        }
+    @Override
+    protected void beforeSnapshot() throws IOException {
+        version.setLastId( getIdGenerator().getIdCounter( plan.getUri() ) );
     }
 
-    private void takeSnapshot( Exporter exporter ) throws IOException {
-        LOG.info( "Taking snapshot of plan {}", plan.getUri() );
-
-        // Make backup
-        File dataFile = version.getDataFile();
-        if ( dataFile.length() > 0L ) {
-            String backupPath = dataFile.getAbsolutePath() + '_' + System.currentTimeMillis();
-            File backup = new File( backupPath );
-            dataFile.renameTo( backup );
-        }
-
-        // snap
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream( version.getDataFile() );
-            exporter.export( out );
-        } finally {
-            if ( out != null )
-                out.close();
-        }
-    }
-
-    /**
-     * Save outstanding journal entries.
-     *
-     * @param exporter the persistence mechanism
-     * @throws IOException on errors
-     */
-    void saveJournal( Exporter exporter ) throws IOException {
+    @Override
+    protected void afterSnapshot() throws IOException  {
         version.getJournalFile().delete();
-        FileOutputStream out = null;
-        try {
-            version.setLastId( getIdGenerator().getLastAssignedId( plan.getUri() ) );
-            out = new FileOutputStream( version.getJournalFile() );
-            exporter.export( getJournal(), out );
-        } finally {
-            if ( out != null )
-                out.close();
-        }
+    }
+
+    @Override
+    protected void beforeSaveJournal() throws IOException {
+        version.setLastId( getIdGenerator().getIdCounter( getModelObjectContext().getUri() ) );
+    }
+
+    @Override
+    protected void afterSaveJournal() throws IOException {
+        // do nothing
     }
 
     public void setUserDetailsService( ChannelsUserDao userDao ) {
@@ -561,7 +529,7 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
      @SuppressWarnings({"unchecked"})
-    protected <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
+    protected <T extends ModelObject> List<T> findAllLocalModelObjects( Class<T> clazz ) {
         List<T> domain;
         boolean isPart = Part.class.isAssignableFrom( clazz );
         boolean isFlow = Flow.class.isAssignableFrom( clazz );
@@ -574,7 +542,7 @@ public class PlanDao extends AbstractModelObjectDao {
                     domain.add( items.next() );
             }
         } else
-            domain = super.findAllModelObjects( clazz );
+            domain = super.findAllLocalModelObjects( clazz );
         return domain;
     }
 }

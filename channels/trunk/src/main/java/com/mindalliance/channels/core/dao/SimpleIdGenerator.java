@@ -33,17 +33,32 @@ public class SimpleIdGenerator implements IdGenerator {
         // do nothing
     }
 
+    @Override
+    public void setTemporaryIdShift( long idShift ) {
+        // do nothing
+    }
+
+    @Override
+    public long getIdShift() {
+        return 0;
+    }
+
+    @Override
+    public void cancelTemporaryIdShift() {
+        // do nothing
+    }
+
     /**
      * {@inheritDoc}
      */
-    public synchronized long getLastAssignedId( String uri ) {
+    public synchronized long getIdCounter( String uri ) {
         return lastAssignedId;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized void setLastAssignedId( long id, String uri ) {
+    public synchronized void setIdCounter( long id, String uri ) {
         lastAssignedId = id;
     }
 

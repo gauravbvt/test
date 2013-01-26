@@ -19,11 +19,6 @@ public class PerPlanIdGenerator implements IdGenerator {
     private static final long IMMUTABLE_LOW = -1000L; // WARNING: Assumes no more than 1000 immutable objects!
 
     /**
-     * Start id for mutable (constant) model objects.
-     */
-    private static final long MUTABLE_LOW = 0L;
-
-    /**
      * Use mutable object id range by default.
      */
     private boolean mutableModeSet = true;
@@ -31,11 +26,13 @@ public class PerPlanIdGenerator implements IdGenerator {
     /**
      * Last assigned ids for mutable objects.
      */
-    private Map<String, Long> lastIds = new HashMap<String, Long>();
+    private Map<String, Long> idCounters = new HashMap<String, Long>();
     /**
      * Last assigned ids for immutable objects.
      */
-    private Map<String, Long> lastImmutableIds = new HashMap<String, Long>();
+    private Map<String, Long> immutableIdCounters = new HashMap<String, Long>();
+
+    private long idShift = 0L;
 
     public PerPlanIdGenerator() {
     }
@@ -44,21 +41,22 @@ public class PerPlanIdGenerator implements IdGenerator {
         return mutableModeSet;
     }
 
-    public long getLastAssignedId( String uri ) {
-        return getLastId( uri );
+    public long getIdCounter( String uri ) {
+        return getIdCountFor( uri );
     }
 
-    public void setLastAssignedId( long id, String uri ) {
-        setLastId( id, uri );
+    public void setIdCounter( long id, String uri ) {
+        setIdCountFor( id, uri );
     }
 
     public synchronized long assignId( Long id, String uri ) {
-        long lastId = id == null ? getLastId( uri ) + 1L
-                                 : Math.max( getLastId( uri ), id );
+        Long shiftedId = id == null ? null : id + getIdShift();
+        long lastId = shiftedId == null ? getIdCountFor( uri ) + 1L
+                                 : Math.max( getIdCountFor( uri ), shiftedId );
 
-        setLastId( lastId, uri );
+        setIdCountFor( lastId, uri );
 
-        return id == null ? lastId : id;
+        return shiftedId == null ? lastId : shiftedId;
     }
 
     @Override
@@ -71,21 +69,36 @@ public class PerPlanIdGenerator implements IdGenerator {
         mutableModeSet = true;
     }
 
-    private Map<String, Long> getLastIds() {
-        return mutableModeSet ? lastIds : lastImmutableIds;
+    @Override
+    public void setTemporaryIdShift( long idShift ) {
+        this.idShift = idShift;
     }
 
-    private synchronized long getLastId( String uri ) {
-        Long lastId = getLastIds().get( uri );
+    @Override
+    public void cancelTemporaryIdShift() {
+        idShift = 0;
+    }
+
+    @Override
+    public long getIdShift() {
+        return mutableModeSet ? idShift : 0L;
+    }
+
+    private Map<String, Long> getIdCounters() {
+        return mutableModeSet ? idCounters : immutableIdCounters;
+    }
+
+    private synchronized long getIdCountFor( String uri ) {
+        Long lastId = getIdCounters().get( uri );
         if ( lastId == null ) {
             lastId = mutableModeSet ? MUTABLE_LOW : IMMUTABLE_LOW;
-            getLastIds().put( uri, lastId );
+            getIdCounters().put( uri, lastId );
         }
         return lastId;
     }
 
-    private synchronized void setLastId( Long id, String uri ) {
-        getLastId( uri );
-        getLastIds().put( uri, id );
+    private synchronized void setIdCountFor( Long id, String uri ) {
+        getIdCountFor( uri );
+        getIdCounters().put( uri, id );
     }
 }

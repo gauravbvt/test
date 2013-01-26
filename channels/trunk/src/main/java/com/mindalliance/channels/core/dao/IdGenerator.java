@@ -5,19 +5,21 @@ package com.mindalliance.channels.core.dao;
  */
 public interface IdGenerator {
 
+    static final long MUTABLE_LOW = 0L;
+
     /**
      * @param uri a string
      * @return the last id generated.
      */
-    long getLastAssignedId( String uri );
+    long getIdCounter( String uri );
 
     /**
-     * Set the id counter to a new value.
+     * Set the id counter to a new value. Next assigned id will be that + 1.
      *
      * @param id   the value
      * @param uri a string
      */
-    void setLastAssignedId( long id, String uri );
+    void setIdCounter( long id, String uri );
 
     /**
      * Assign a new id.
@@ -37,4 +39,22 @@ public interface IdGenerator {
      * Use id range for mutable object (default)
      */
     void setMutableMode();
+
+    /**
+     * Shift on all assigned ids on load by given value.
+     * Used temporarily on loading a model object context (plan or community).
+     * @param idShift a long
+     */
+    void setTemporaryIdShift( long idShift );
+
+    /**
+     * The current, temporary shift on ids being applied.
+     * @return a long
+     */
+    long getIdShift();
+
+    /**
+     * Cancel temporary id shift.
+     */
+    void cancelTemporaryIdShift();
 }

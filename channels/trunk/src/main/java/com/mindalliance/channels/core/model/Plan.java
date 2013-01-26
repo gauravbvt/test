@@ -10,9 +10,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -116,6 +118,11 @@ public class Plan extends ModelObject implements ModelObjectContext {
     private Status status;
 
     /**
+     * History of shifts in assignable id lower bounds.
+     */
+    private Map<Date,Long> idShifts = new HashMap<Date, Long>();
+
+    /**
      * Version number.
      * Implied from folder where persisted
      */
@@ -175,6 +182,30 @@ public class Plan extends ModelObject implements ModelObjectContext {
 
     //-----------------------------
     public Plan() {
+    }
+
+    @Override
+    public void recordIdShift( long lowerBound ) {
+        idShifts.put( new Date(), lowerBound  );
+    }
+
+    public Map<Date, Long> getIdShifts() {
+        return idShifts;
+    }
+
+    public void setIdShifts( Map<Date, Long> idShifts ) {
+        this.idShifts = idShifts;
+    }
+
+    @Override
+    public long getIdShiftSince( Date dateOfRecord ) {
+        long shift = 0;
+        for ( Date shiftDate : getIdShifts().keySet() ) {
+            if ( dateOfRecord.before( shiftDate ) ) {
+                shift = shift + idShifts.get( shiftDate );
+            }
+        }
+        return shift;
     }
 
     @Override

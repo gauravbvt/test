@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface UserContactInfoService extends GenericSqlService<UserContactInfo, Long> {
 
-    List<Channel> findChannels( ChannelsUserInfo channelsUserInfo, QueryService queryService );
+    List<Channel> findChannels( ChannelsUserInfo channelsUserInfo, PlanCommunity planCommunity );
 
     /**
      * Change the address in an existing contact info.

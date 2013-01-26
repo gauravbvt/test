@@ -60,14 +60,14 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         PlanService planService = planCommunity.getPlanService();
         initFailureSeverity( planService );
         initMediumDataList( serverUrl, planService );
-        initChannelDataList( planService );
+        initChannelDataList( planCommunity );
         documentation = new DocumentationData( serverUrl, getSharing() );
     }
 
-    private void initChannelDataList( PlanService planService ) {
+    private void initChannelDataList( PlanCommunity planCommunity ) {
         channelDataList = new ArrayList<ChannelData>();
         for ( Channel channel : getSharing().getChannels() ) {
-            channelDataList.add( new ChannelData( channel, planService ) );
+            channelDataList.add( new ChannelData( channel, planCommunity ) );
         }
     }
 

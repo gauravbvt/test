@@ -1,10 +1,10 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
-import com.mindalliance.channels.core.query.QueryService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -33,7 +33,7 @@ public class UserContactInfoServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<Channel> findChannels( ChannelsUserInfo channelsUserInfo, QueryService queryService ) {
+    public List<Channel> findChannels( ChannelsUserInfo channelsUserInfo, PlanCommunity planCommunity ) {
         List<Channel> channels = new ArrayList<Channel>();
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -41,9 +41,12 @@ public class UserContactInfoServiceImpl
         for ( UserContactInfo contactInfo : (List<UserContactInfo>) criteria.list() ) {
             try {
                 TransmissionMedium medium = TransmissionMedium.getUNKNOWN();
-                if ( queryService != null ) {
+                if ( planCommunity != null ) {
                     // check if medium still valid
-                    medium = queryService.find( TransmissionMedium.class, contactInfo.getTransmissionMediumId() );
+                    medium = planCommunity.find(
+                            TransmissionMedium.class,
+                            contactInfo.getTransmissionMediumId(),
+                            contactInfo.getCreated() );
                 }
                 channels.add( new Channel( medium, contactInfo.getAddress() ) );
             } catch ( NotFoundException e ) {

@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-import com.mindalliance.channels.core.query.PlanService;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -52,7 +51,7 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
     }
 
     public Agent getSupervisor( PlanCommunity planCommunity ) {
-        Actor actor = getSupervisorActor( planCommunity.getPlanService() );
+        Actor actor = getSupervisorActor( planCommunity );
         if ( actor == null ) return null;
         if ( organizationParticipation == null ) {
             return new Agent( actor );
@@ -61,10 +60,10 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
         }
     }
 
-    private Actor getSupervisorActor( PlanService planService ) {
+    private Actor getSupervisorActor( PlanCommunity planCommunity ) {
         if ( supervisorId == -1 ) return null;
         try {
-            return planService.find( Actor.class, supervisorId );
+            return planCommunity.find( Actor.class, supervisorId, getCreated() );
         } catch ( NotFoundException e ) {
             return null;
         }

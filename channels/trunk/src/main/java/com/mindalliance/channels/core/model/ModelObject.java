@@ -25,6 +25,12 @@ public abstract class ModelObject
     
     public static final List<String> CLASS_LABELS;
 
+    public static enum Context {  // order is important: MODEL < COMMUNITY < USER
+        MODEL,
+        COMMUNITY,
+        USER
+    }
+
     static {
         CLASS_LABELS = classLabels();
     }
@@ -33,6 +39,11 @@ public abstract class ModelObject
      * Unique id of this object.
      */
     private long id;
+
+    /**
+     * The uri of the context in which the object is persisted.
+     */
+    private String contextUri;
 
     /**
      * Name of this object.
@@ -58,6 +69,13 @@ public abstract class ModelObject
      */
     private boolean persistent = true;
 
+    /**
+     * The context for the model object.
+     */
+    private Context context = Context.MODEL;   // default is model context
+
+
+
     //=============================
     protected ModelObject() {
     }
@@ -70,6 +88,42 @@ public abstract class ModelObject
     protected ModelObject( String name ) {
         this();
         setName( name );
+    }
+
+    public Context getContextType() {
+        return context;
+    }
+
+    public boolean isInModel() {
+        return context == Context.MODEL;
+    }
+
+    public void setInModel() {
+        context = Context.MODEL;
+    }
+
+    public boolean isInCommunity() {
+        return context == Context.COMMUNITY;
+    }
+
+    public void setInCommunity() {
+        context = Context.COMMUNITY;
+    }
+
+    public boolean isInUser() {
+        return context == Context.USER;
+    }
+
+    public void setInUser() {
+        context = Context.USER;
+    }
+
+    public void setContextUri( String contextUri ) {
+        this.contextUri = contextUri;
+    }
+
+    public String getContextUri() {
+        return contextUri;
     }
 
     /**
@@ -198,12 +252,16 @@ public abstract class ModelObject
         return this == obj
                 || obj != null
                 && getClass().equals( obj.getClass() )
+                && context == ( (ModelObject) obj ).getContextType()
                 && id == ( (ModelObject) obj ).getId();
     }
 
     @Override
     public int hashCode() {
-        return Long.valueOf( id ).hashCode();
+        int hash = 1;
+        hash = hash + 31 *  Long.valueOf( id ).hashCode();
+        hash = hash + 31 * getContextType().hashCode();
+        return hash;
     }
 
     /**
@@ -386,7 +444,7 @@ public abstract class ModelObject
 
     /**
      * Return a list of all classes of model object participating in reference counts.
-     * UserIssue is purposely left out.
+     * Plan and UserIssue are purposely left out.
      *
      * @return a list of model object classes
      */

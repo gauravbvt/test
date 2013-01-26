@@ -485,7 +485,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     public Agency findAgencyById( long id, PlanCommunity planCommunity ) throws NotFoundException {
         Agency agency = null;
         if ( id < Long.MAX_VALUE / 2 ) {
-            Organization org = planCommunity.getPlanService().find( Organization.class, id );
+            Organization org = planCommunity.getPlanService().find( Organization.class, id ); // todo - COMMUNITY - id could have shifted since recorded
             agency = new Agency( org );
         } else {
             OrganizationParticipation orgParticipation = organizationParticipationService.load( id - ( Long.MAX_VALUE / 2) );

@@ -31,8 +31,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.model.InfoFormat;
-import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
@@ -45,7 +43,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
@@ -451,75 +448,22 @@ public abstract class DefaultQueryService implements QueryService {
         return entity != null && entity.getKind().equals( kind );
     }
 
+    // TODO - COMMUNITY - belongs to AbstractModelObjectDao
+
     @Override
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
         try {
             return getDao().find( clazz, id );
         } catch ( NotFoundException exc ) {
             try {
-                return findUnknown( clazz, id );
+                return getDao().findUnknown( clazz, id );
             } catch ( NotFoundException e ) {
-                return findUniversal( clazz, id );
+                return getDao().findUniversal( clazz, id );
             }
         }
     }
 
-    @SuppressWarnings( "unchecked" )
-    private static <T extends ModelObject> T findUnknown( Class<T> clazz, long id ) throws
-            NotFoundException {
-        if ( clazz.isAssignableFrom( Actor.class ) && Actor.UNKNOWN.getId() == id )
-            return (T) Actor.UNKNOWN;
-        else if ( clazz.isAssignableFrom( Event.class ) && Event.UNKNOWN.getId() == id )
-            return (T) Event.UNKNOWN;
-        else if ( clazz.isAssignableFrom( Organization.class ) && Organization.UNKNOWN.getId() == id )
-            return (T) Organization.UNKNOWN;
-        else if ( clazz.isAssignableFrom( Place.class ) && Place.UNKNOWN.getId() == id )
-            return (T) Place.UNKNOWN;
-        else if ( clazz.isAssignableFrom( Role.class ) && Role.UNKNOWN.getId() == id )
-            return (T) Role.UNKNOWN;
-        else if ( clazz.isAssignableFrom( TransmissionMedium.class ) && TransmissionMedium.UNKNOWN.getId() == id )
-            return (T) TransmissionMedium.UNKNOWN;
-        else if ( clazz.isAssignableFrom( Requirement.class ) && Requirement.UNKNOWN.getId() == id )
-            return (T) Requirement.UNKNOWN;
-        else if ( clazz.isAssignableFrom( InfoProduct.class ) && InfoProduct.UNKNOWN.getId() == id )
-            return (T) InfoProduct.UNKNOWN;
-        else if ( clazz.isAssignableFrom( InfoFormat.class ) && InfoFormat.UNKNOWN.getId() == id )
-            return (T) InfoFormat.UNKNOWN;
-        else
-            throw new NotFoundException();
-    }
 
-    @SuppressWarnings( "unchecked" )
-    private static <T extends ModelObject> T findUniversal( Class<T> clazz, long id ) throws NotFoundException {
-        if ( clazz.isAssignableFrom( Actor.class )
-                && ModelEntity.getUniversalTypeFor( Actor.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( Actor.class );
-        else if ( clazz.isAssignableFrom( Event.class )
-                && ModelEntity.getUniversalTypeFor( Event.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( Event.class );
-        else if ( clazz.isAssignableFrom( Organization.class )
-                && ModelEntity.getUniversalTypeFor( Organization.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( Organization.class );
-        else if ( clazz.isAssignableFrom( Place.class )
-                && ModelEntity.getUniversalTypeFor( Place.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( Place.class );
-        else if ( clazz.isAssignableFrom( Role.class )
-                && ModelEntity.getUniversalTypeFor( Role.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( Role.class );
-        else if ( clazz.isAssignableFrom( TransmissionMedium.class )
-                && ModelEntity.getUniversalTypeFor( TransmissionMedium.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( TransmissionMedium.class );
-        else if ( clazz.isAssignableFrom( InfoFormat.class )
-                && ModelEntity.getUniversalTypeFor( InfoFormat.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( InfoFormat.class );
-        else if ( clazz.isAssignableFrom( InfoProduct.class )
-                && ModelEntity.getUniversalTypeFor( InfoProduct.class ).getId() == id )
-            return (T) ModelEntity.getUniversalTypeFor( InfoProduct.class );
-        else  {
-            LOG.warn( clazz.getName() + " " + id + " not found" );
-            throw new NotFoundException();
-        }
-    }
 
     @Override
     public List<Part> findAchievers( Segment segment, Goal goal ) {
@@ -534,6 +478,8 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return achievers;
     }
+
+    // TODO - COMMUNITY - belongs to AbstractModelObjectDao
 
     @Override
     public <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name ) {
@@ -1620,6 +1566,8 @@ public abstract class DefaultQueryService implements QueryService {
         }
         return allModelObjects;
     }
+
+    // TODO - COMMUNITY - belongs to AbstractModelObjectDao
 
     @Override
     @SuppressWarnings( "unchecked" )

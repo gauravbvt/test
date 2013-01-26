@@ -48,7 +48,7 @@ public class AgencyData implements Serializable {
         }
         channelDataList = new ArrayList<ChannelData>();
         for ( Channel channel : agency.getEffectiveChannels() ) {
-            channelDataList.add( new ChannelData( channel, planCommunity.getPlanService() ) );
+            channelDataList.add( new ChannelData( channel, planCommunity ) );
         }
     }
 

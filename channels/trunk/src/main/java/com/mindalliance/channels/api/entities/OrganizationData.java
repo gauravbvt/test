@@ -40,7 +40,7 @@ public class OrganizationData extends ModelEntityData {
         participating = planService.getPlan().isInScope( getOrganization() );
         channelsDataList = new ArrayList<ChannelData>(  );
         for ( Channel channel : getOrganization().getEffectiveChannels() ) {
-            channelsDataList.add( new ChannelData( channel, planService ) );
+            channelsDataList.add( new ChannelData( channel, planCommunity ) );
         }
     }
 

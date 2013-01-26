@@ -195,7 +195,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             Long id = rfi.getOrganizationId();
             if ( id != null ) {
                 try {
-                    org = getQueryService().find( Organization.class, rfi.getOrganizationId() );
+                    org = getPlanCommunity().find( Organization.class, rfi.getOrganizationId(), rfi.getCreated() );
                 } catch ( NotFoundException e ) {
                     // do nothing
                 }

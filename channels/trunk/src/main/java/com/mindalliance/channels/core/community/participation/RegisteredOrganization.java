@@ -157,7 +157,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     public Organization getFixedOrganization( PlanCommunity planCommunity ) {
         if ( fixedOrganizationId == -1 ) return null;
         try {
-            return planCommunity.getPlanService().find( Organization.class, fixedOrganizationId );
+            return planCommunity.find( Organization.class, fixedOrganizationId, getCreated() );
         } catch ( NotFoundException e ) {
             if ( fixedOrganizationId > -1 )
                 LOG.warn( "Organization not found at " + fixedOrganizationId );

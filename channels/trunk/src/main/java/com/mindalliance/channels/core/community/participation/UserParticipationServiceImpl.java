@@ -272,8 +272,7 @@ public class UserParticipationServiceImpl
         for ( UserParticipation userParticipation : userParticipations ) {
             try {
                 if ( userParticipation.getParticipant() != null ) {
-                    if ( planService != null )
-                        planService.find( Actor.class, userParticipation.getActorId() ); // exception if not found
+                    planCommunity.find( Actor.class, userParticipation.getActorId(), userParticipation.getCreated() ); // exception if not found
                     results.add( userParticipation );
                 }
             } catch ( NotFoundException e ) {
