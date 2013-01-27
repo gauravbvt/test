@@ -1346,6 +1346,23 @@ wm.types = {
 			"liveService": true,
 			"service": "analystDB"
 		},
+		"com.analystdb.data.output.AllIssuesRtnType": {
+			"fields": {
+				"issue": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Issue"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
 		"com.analystdb.data.output.ApproachIssueCountRtnType": {
 			"fields": {
 				"approach": {
@@ -1559,6 +1576,23 @@ wm.types = {
 					"noChange": [],
 					"required": true,
 					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.output.MaxIssueSequenceRtnType": {
+			"fields": {
+				"last": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Integer"
 				}
 			},
 			"internal": false,

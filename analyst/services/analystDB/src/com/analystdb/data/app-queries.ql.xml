@@ -122,4 +122,32 @@ order by ic.issue.sequence
 where i.project.id = :project and not i.id in (select ia.issue.id from IssueApproach ia where ia.approach.id = :approach)
 order by i.sequence
     </query>
+    <query name="otherIssueApproaches">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="issue" type="java.lang.Long"/>
+        from Approach a
+where a.interview.resource.project.id = :project
+and not a.id in (select ia.approach.id from IssueApproach ia where ia.issue.id = :issue)
+order by a.name
+    </query>
+    <query name="otherIssueFlows">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="issueComment" type="java.lang.Long"/>
+        from Flow f
+where f.interview.resource.project.id = :project and not f.id in (select icf.flow.id from IssueCommentFlows icf where icf.issueComment.id = :issueComment)
+order by f.fromActor,f.toActor,f.name
+    </query>
+    <query name="maxIssueSequence">
+        <query-param name="project" type="java.lang.Long"/>
+        select max(i.sequence) as last
+from Issue i
+where i.project.id = :project
+    </query>
+    <query name="allIssues">
+        <query-param name="project" type="java.lang.Long"/>
+        select i as issue
+from Issue i
+where i.project.id = :project and exists (from IssueComment ic where ic.issue = i)
+order by i.sequence
+    </query>
 </hibernate-mapping>

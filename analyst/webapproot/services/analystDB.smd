@@ -1,5 +1,13 @@
 {
 	"methods": [{
+		"name": "allIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.AllIssuesRtnType]"
+	}, {
 		"name": "approachIssueCount",
 		"operationType": "hqlquery",
 		"parameters": [{
@@ -84,6 +92,14 @@
 		}],
 		"returnType": "[com.analystdb.data.output.IssueCategoryCountsRtnType]"
 	}, {
+		"name": "maxIssueSequence",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "com.analystdb.data.output.MaxIssueSequenceRtnType"
+	}, {
 		"name": "otherApproachIssues",
 		"operationType": "hqlquery",
 		"parameters": [{
@@ -105,6 +121,28 @@
 			"type": "java.lang.Long"
 		}],
 		"returnType": "[com.analystdb.data.IssueComment]"
+	}, {
+		"name": "otherIssueApproaches",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "issue",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Approach]"
+	}, {
+		"name": "otherIssueFlows",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "issueComment",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Flow]"
 	}, {
 		"name": "projectPlans",
 		"operationType": "hqlquery",

@@ -25,19 +25,21 @@
                         <value>com.analystdb.data.Resource</value>
                         <value>com.analystdb.data.ResourceAttribute</value>
                         <value>com.analystdb.data.IssueApproachId</value>
-                        <value>com.analystdb.data.IssueCommentFlowsId</value>
                         <value>com.analystdb.data.IssueIssueCategoryId</value>
-                        <value>com.analystdb.data.output.InterviewIssuesRtnType</value>
+                        <value>com.analystdb.data.IssueCommentFlowsId</value>
+                        <value>com.analystdb.data.output.MaxIssueSequenceRtnType</value>
                         <value>com.analystdb.data.output.DocumentIssuesRtnType</value>
-                        <value>com.analystdb.data.output.DocumentIssueCountRtnType</value>
-                        <value>com.analystdb.data.output.ResourceKeywordsRtnType</value>
                         <value>com.analystdb.data.output.UpcomingInterviewsRtnType</value>
+                        <value>com.analystdb.data.output.ResourceKeywordsRtnType</value>
                         <value>com.analystdb.data.output.RecentInterviewsRtnType</value>
-                        <value>com.analystdb.data.output.DocumentCategoryIssueCountsRtnType</value>
-                        <value>com.analystdb.data.output.ResourceValuesRtnType</value>
-                        <value>com.analystdb.data.output.ApproachIssueCountRtnType</value>
                         <value>com.analystdb.data.output.ProjectPlansRtnType</value>
+                        <value>com.analystdb.data.output.DocumentIssueCountRtnType</value>
+                        <value>com.analystdb.data.output.InterviewIssuesRtnType</value>
+                        <value>com.analystdb.data.output.ResourceValuesRtnType</value>
+                        <value>com.analystdb.data.output.DocumentCategoryIssueCountsRtnType</value>
+                        <value>com.analystdb.data.output.ApproachIssueCountRtnType</value>
                         <value>com.analystdb.data.output.IssueCategoryCountsRtnType</value>
+                        <value>com.analystdb.data.output.AllIssuesRtnType</value>
                         <value>com.analystdb.data.output.ApproachIssuesRtnType</value>
                     </list>
                 </entry>

@@ -5,7 +5,7 @@ import com.analystdb.data.DocumentCategory;
 
 
 /**
- * Generated for query "documentCategoryIssueCounts" on 01/25/2013 16:28:50
+ * Generated for query "documentCategoryIssueCounts" on 01/27/2013 17:30:33
  * 
  */
 public class DocumentCategoryIssueCountsRtnType {
