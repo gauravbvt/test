@@ -116,7 +116,7 @@ public class InfoProduct extends ModelEntity implements EOIsHolder {
 
     @Override
     public String getTypeName() {
-        return "information product";
+        return "infoproduct";
     }
 
     @Override

@@ -253,7 +253,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "requirement", Requirement.class );
             stream.alias( "assignedLocation", AssignedLocation.class );
             stream.alias( "infoproduct", InfoProduct.class );
-            stream.alias( "infoformat", InfoFormat.class );
+            stream.alias( "format", InfoFormat.class );
         }
 
         @Override
