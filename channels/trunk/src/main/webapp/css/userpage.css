@@ -1961,6 +1961,8 @@ div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0
 
 div.issues table.issue-details {
 	width: 100%;
+	font-family: Lucida Console,monospace;
+	font-size: 11px;
 }
 
 div.issues {
