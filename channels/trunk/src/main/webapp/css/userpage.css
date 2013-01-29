@@ -839,13 +839,13 @@ float: right;
 
 #social div.social-list div.joining span.name,
 #social div.social-list div.leaving span.name {
-	font-size:9px;
-	font-weight:bold;
-	color:#333333;
-	padding:0;
-	text-transform:capitalize;
-	float:left;
-	display:block;
+    color: #333333;
+    display: block;
+    float: left;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 0;
+    text-transform: uppercase;
 }
 
 #social div.social-list div.even img.present,
@@ -862,11 +862,13 @@ float: right;
 }
 
 #social div.social-list td.jobtitle span.titles {
-	display:block;
-	font-size:10px;
-	font-weight:bold;
-	color:#666666;
-	float:left;
+    color: #999999;
+    display: block;
+    float: left;
+    font-family: Georgia;
+    font-size: 11px;
+    font-style: italic;
+    line-height: 150%;
 }
 
 #social div.social-list td.info-container {
@@ -996,26 +998,27 @@ float: right;
 /* ----- Social - Messages ----- */
 
 #social div.social-list.messages div span.name {
-	padding:9px 0 2px 0;
+	padding:7px 0 0;
 }
 
 #social div.social-list.messages img.present {
 	padding:11px 0 0 5px;
 }
-
+/*
 #social div.social-list.messages td.jobtitle span.titles {
-	padding:0 0 4px 0;
+	padding:0 0 6px;
 }
-
+*/
 #social div.social-list.messages td.info-container {
-	padding:3px 0 8px 0;
+	padding:6px 0 8px;
+   border-top: 2px dotted #CCCCCC;
 }
 
 /* ----- Social - New Message ----- */
 
 #social div.new-message {
     background: lightgray;
-    border-top: 1px solid #CCCCCC;
+    border-top: 1px solid #999;
     float: left;
     font-size: 11px;
     height: 109px;
@@ -1085,8 +1088,11 @@ float: right;
 #social div.userInfo h3 {
     background: url("../images/headerbar-bg.png") repeat-x scroll 0 0 transparent;
     border-bottom: 1px solid #CCCCCC;
+    border-top: medium none;
     color: #333333;
     font-size: 11px;
+    letter-spacing: 0;
+    line-height: 100%;
     margin: 0;
     padding: 5px 7px;
     text-transform: uppercase;
@@ -1490,6 +1496,10 @@ div.filters select {
     color: #333333;
 }
 
+div.filters input[type="text"] {
+	width: auto;
+}
+
 thead tr.navigation {
     background: #E8E8E8;
     border-bottom: 1px solid #999999;
@@ -1658,16 +1668,36 @@ td.photo-cont {
     margin: 0 10px 0 0;
 }
 
+td.photo-cont img.photo {
+	background:#dadada;
+	border:1px solid #999999;
+	padding:2px;
+	margin:9px;
+	width:32px;
+	height:32px;
+	float:left;
+}
+
 td.name-title-icon-menu {
-    border-bottom: 1px solid #CCCCCC;
+    color: #666666;
     font-size: 12px;
     font-weight: bold;
     padding: 3px 0;
     text-transform: uppercase;
 }
 
-td.info-container {
+td.jobtitle {
+    color: #999999;
+    font-family: georgia;
     font-size: 12px;
+    font-style: italic;
+    line-height: 150%;
+    padding: 0 0 5px;
+}
+
+td.info-container {
+    border-top: 2px dotted #CCCCCC;
+    font-size: 14px;
     line-height: 1.5em;
     padding: 7px 0 12px;
 }
@@ -1929,11 +1959,20 @@ div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0
 
 /* issue details */
 
+div.issues table.issue-details {
+	width: 100%;
+}
+
 div.issues {
     position: relative;
     border: 3px solid #C9252C;
     padding: 0;
     margin-top: 10px;
+}
+
+div.issues span.menuitem {
+    display: block;
+    float: right;
 }
 
 div.issues div.section-title {
@@ -1944,13 +1983,18 @@ div.issues div.section-title {
     padding: 0;
 }
 
+div.issues span.issues-container {
+    display: block;
+    padding: 10px 0 0 10px;
+}
+
 div.issues h4 {
     background: url("../images/warning.png") no-repeat scroll 8px 5px transparent;
     border: medium none;
     color: #FFFFFF;
     float: left;
     margin: 0;
-    padding: 6px 0 4px 30px;
+    padding: 4px 0 4px 30px;
     text-transform: uppercase;
 }
 
@@ -1960,8 +2004,9 @@ div.issues li {
 }
 
 div.issues div.section-title ul.menu {
-    padding: 4px 3px 0 0;
+    float: right;
     margin: 0;
+    padding: 6px 5px 0 0;
 }
 
 div.issues div.section-title ul.menu li {
@@ -2018,12 +2063,55 @@ table.issue-details td {
 }
 
 div.picture {
-    background: white;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #E8E8E8 #E8E8E8 -moz-use-text-color;
+    border-style: solid solid none;
+    border-width: 5px 5px medium;
     overflow: auto;
 }
 
 div.picture img {
     border: none;
+}
+
+div.zoom {
+    background: none repeat scroll 0 0 #E8E8E8;
+    cursor: auto;
+    height: 23px;
+    left: 0;
+    line-height: 22px;
+    margin-bottom: 10px;
+    padding: 0 5px;
+    position: relative;
+    text-align: right;
+    text-transform: uppercase;
+    top: 0;
+    z-index: 1;	
+}
+
+div.zoom span {
+    color: #666666;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+div.controls select {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #999999;
+    color: #333333;
+    font-size: 10px;
+    margin: 0 5px;
+    padding: 0;
+}
+
+div.controls {
+    background: none repeat scroll 0 0 #E8E8E8;
+    color: #666666;
+    font-size: 10px;
+    font-weight: bold;
+    padding:10px 5px 5px;
 }
 
 a.button,
@@ -2051,10 +2139,49 @@ input[type='text'] {
 
 .req {
     clear: both;
+    padding: 15px 0 0;
+}
+
+.req label {
+	font-size: 11px;
+}
+
+.req textarea,
+.req select,
+.req input[type="text"] {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    font-size: 11px;
+    margin: 0;
+    padding: 3px;
+}
+
+.req input[type="text"] {
+    width: 97%;
+}
+
+.req table {
+    width: 100%;
+    font-size: 11px;
+}
+
+/*
+.req table th {
+    padding: 12px 5px 0 10px;
+}
+*/
+
+.req table td {
+    border-bottom: 1px dotted #999999;
+    padding: 10px 5px;
 }
 
 .req-section {
     width: 70%;
+}
+
+.req-section table {
+	width: 65%;
 }
 
 .req-sections {
@@ -2077,6 +2204,7 @@ input[type='text'] {
     padding: 1px 16px 1px 5px;
     border: 1px solid transparent;
     color: #333333;
+    margin: 0 0 5px;
 }
 
 .req-section-headers li:hover, .req-section-headers li.selected {
@@ -2093,20 +2221,34 @@ input[type='text'] {
 
 .req-defs .button {
     clear: both;
+    margin: 10px 0 0;
 }
 
-.req h3 {
-    border-bottom: 2px solid #CCCCCC;
+h3 {
+    background: none repeat scroll 0 0 #DCDDDE;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    color: #333333;
+    display: block;
+    font-size: 13px;
+    letter-spacing: 1px;
+    line-height: 18px;
+    margin-bottom: 10px;
+    padding: 10px;
+    position: relative;
     text-transform: uppercase;
+    z-index: 2;
 }
 
 .req .edited-by {
     float: right;
 }
 
+/*
 .req table {
     width: 65%;
 }
+*/
 
 .req-sections {
     border-top: 2px solid #CCCCCC;
@@ -2137,24 +2279,24 @@ ul.attach ul.menu {
 }
 
 ul.attach {
-    list-style: none;
-    margin: 0;
+    display: block;
+    float: left;
+    margin: 10px 0 0 20px;
     padding: 0;
 }
-
+/*
 ul.attach {
     border-bottom: 1px dotted #999999;
     margin: 0 0 10px 0;
     padding: 0 10px 5px;
 }
-
+*/
 td.grouped > ul.attach {
     padding: 0 0 5px 0;
 }
 
 ul.attach li {
     margin: 0 0 5px;
-    padding: 0 0 0 25px;
 }
 
 ul.attach li.controls {
@@ -2162,7 +2304,7 @@ ul.attach li.controls {
 }
 
 ul.attach li a {
-    float: right;
+    float: left;
     font-weight: bold;
 }
 
@@ -2172,7 +2314,8 @@ ul.attach li a:hover {
 
 ul.attach li ul.menu,
 ul.attach li ul.menu li {
-    margin: 0;
+    float: right;
+    margin: 0 0 0 5px;
     padding: 0;
 }
 
