@@ -1,0 +1,23 @@
+<?xml version="1.0"?>  
+<project name="abc" default="run-graph" basedir=".">
+
+<property name="test.dir" value="D:\channels\Mind-AllianceConcurrentTestProject\PerformanceTest"/>
+<import file="${test.dir}/common.xml"/>
+
+<target name="run">
+<antcall target="run-test" >
+<param name="jmeter.file" value="Mind-Alliance Revision 4299"/>
+<!-- here 'Mind-Alliance Revision 4299' is the jmx file name -->
+<param name="test.dir" value="${ant.file}/.."/>
+<param name="request.threads" value="1"/>
+<param name="request.loop" value="1"/>
+</antcall>
+</target>
+
+<target name="run-graph" depends="run">
+<antcall target="create-graphs">
+</antcall>
+</target>
+
+
+</project>

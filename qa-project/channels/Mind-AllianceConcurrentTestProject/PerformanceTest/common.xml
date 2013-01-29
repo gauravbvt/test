@@ -1,0 +1,65 @@
+<project name="jmeter-test-common" default="run" basedir="." xmlns:ac="antlib:net.sf.antcontrib">
+
+<property name="jmeter.dir" value="E:\apache-jmeter-2.7"/>
+<property name="test.dir" value="D:\channels\Mind-AllianceConcurrentTestProject\PerformanceTest"/>
+<property name="jmeter.file" value="Mind-Alliance Revision 4299"/>
+<taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
+
+
+<target name="run-test">
+
+<echo message="${jmeter.dir}"/>
+<jmeter jmeterhome="${jmeter.dir}"
+testplan="${test.dir}/${jmeter.file}.jmx"
+resultlog="${basedir}/Perfromance Result/JMeterResults.xml">
+
+<property name="jmeter.save.saveservice.output_format" value="xml"/>
+<property name="jmeter.save.saveservice.assertion_results" value="all"/>
+<property name="request.threads" value="${request.threads}"/>
+<property name="request.loop" value="${request.loop}"/>
+<jvmarg value="-Duser.dir=${test.dir}"/>
+</jmeter>
+
+<echo message="Generating Report ..."/>
+
+<xslt in="${test.dir}/Perfromance Result/JMeterResults.xml"
+out="${test.dir}/Perfromance Result/${jmeter.file}_summary.html"
+style="${jmeter.dir}/extras/jmeter-results-report_21.xsl"/>
+
+<xslt in="${test.dir}/Perfromance Result/JMeterResults.xml"
+out="${test.dir}/Perfromance Result/${jmeter.file}_detailed.html"
+style="${jmeter.dir}/extras/jmeter-results-detail-report_21.xsl"/>
+</target>
+
+ <target name="create-reports" depends="run-test">
+    <xslt
+	in="${test.dir}/Perfromance Result/JMeterResults.xml"
+    out="${test.dir}/Perfromance Result/JMeterResults_Createreports.html"
+   style="${jmeter.dir}/extras/jmeter-results-detail-report_21.xsl"/>
+  </target>
+
+  
+
+<target name="create-graphs" depends="create-reports">
+    <ac:for param="reportType" list="TimesVsThreads,ResponseTimesOverTime,ThreadsStateOverTime">
+      <sequential>
+        <java jar="${jmeter.dir}/lib/ext/CMDRunner.jar" fork="true">
+          <arg value="--tool"/>
+          <arg value="Reporter"/>
+          <arg value="--generate-png"/>
+          <arg value="${test.dir}/Perfromance Result/@{reportType}.png"/>
+          <arg value="--input-jtl"/>
+          <arg value="${test.dir}/Perfromance Result/JMeterResults.xml"/>
+          <arg value="--plugin-type"/>
+          <arg value="@{reportType}"/>
+          <arg value="--width"/>
+          <arg value="800"/>
+          <arg value="--height"/>
+          <arg value="600"/>
+        </java>
+      </sequential>
+    </ac:for>
+  </target>
+
+
+</project>
