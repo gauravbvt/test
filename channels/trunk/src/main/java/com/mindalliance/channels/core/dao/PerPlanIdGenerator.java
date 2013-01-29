@@ -50,9 +50,9 @@ public class PerPlanIdGenerator implements IdGenerator {
     }
 
     public synchronized long assignId( Long id, String uri ) {
-        Long shiftedId = id == null ? null : id + getIdShift();
+        Long shiftedId = id == null ? null : getShiftedId( id );
         long lastId = shiftedId == null ? getIdCountFor( uri ) + 1L
-                                 : Math.max( getIdCountFor( uri ), shiftedId );
+                                 : Math.max( getIdCountFor( uri ) + 1L, shiftedId );
 
         setIdCountFor( lastId, uri );
 
@@ -76,11 +76,15 @@ public class PerPlanIdGenerator implements IdGenerator {
 
     @Override
     public void cancelTemporaryIdShift() {
-        idShift = 0;
+        idShift = 0L;
     }
 
     @Override
-    public long getIdShift() {
+    public long getShiftedId( long id ) {
+        return id + ( id >= MUTABLE_LOW ? getIdShift() : 0L );
+    }
+
+    private long getIdShift() {
         return mutableModeSet ? idShift : 0L;
     }
 

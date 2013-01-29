@@ -172,47 +172,50 @@ public class PlanDao extends AbstractModelObjectDao {
 
     @Override
     public synchronized void defineImmutableEntities() {
+        // WARNING: Don't change the order and only add at the end!
         getIdGenerator().setImmutableMode();
-        Actor.UNKNOWN = findOrCreate( Actor.class, Actor.UnknownName, null );
-        Actor.UNKNOWN.makeImmutable();
-        Event.UNKNOWN = findOrCreateType( Event.class, Event.UnknownName, null );
-        Event.UNKNOWN.makeImmutable();
-        Organization.UNKNOWN = findOrCreate( Organization.class, Organization.UnknownName, null );
-        Organization.UNKNOWN.setActual();
-        Organization.UNKNOWN.makeImmutable();
-        Phase.UNKNOWN = findOrCreate( Phase.class, Phase.UnknownName, null );
-        Phase.UNKNOWN.makeImmutable();
-        // Unknown place
-        Place.UNKNOWN = findOrCreate( Place.class, Place.UnknownPlaceName, null );
-        Place.UNKNOWN.makeImmutable();
-        // Administrative area types
-        Place administrativeArea = findOrCreateType( Place.class, Place.ADMINISTRATIVE_AREA, null );
-        administrativeArea.makeImmutable();
-        Place.Country = findOrCreateType( Place.class, Place.COUNTRY, null );
-        Place.Country.addType( administrativeArea );
-        Place.Country.makeImmutable();
-        Place.State = findOrCreateType( Place.class, Place.STATE, null );
-        Place.State.addType( administrativeArea );
-        Place.State.setWithin( Place.Country );
-        Place.State.makeImmutable();
-        Place.County = findOrCreateType( Place.class, Place.COUNTY, null );
-        Place.County.addType( administrativeArea );
-        Place.County.setWithin( Place.State );
-        Place.County.makeImmutable();
-        Place.City = findOrCreateType( Place.class, Place.CITY, null );
-        Place.City.addType( administrativeArea );
-        Place.City.setWithin( Place.County );
-        Place.City.makeImmutable();
-        Role.UNKNOWN = findOrCreate( Role.class, Role.UnknownName, null );
-        Role.UNKNOWN.makeImmutable();
-        TransmissionMedium.UNKNOWN = findOrCreateType( TransmissionMedium.class, TransmissionMedium.UnknownName, null );
-        TransmissionMedium.UNKNOWN.makeImmutable();
-        InfoProduct.UNKNOWN = findOrCreateType( InfoProduct.class, InfoProduct.UnknownName, null );
-        InfoProduct.UNKNOWN.makeImmutable();
-        InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
-        InfoFormat.UNKNOWN.makeImmutable();
-        // todo - COMMUNITY - move to CommnunityDao
-        Requirement.UNKNOWN = findOrCreate( Requirement.class, Requirement.UnknownName, null );
+        if ( Actor.UNKNOWN == null ) {  // only create unknowns once
+            Actor.UNKNOWN = findOrCreateActual( Actor.class, Actor.UnknownName, null );
+            Actor.UNKNOWN.makeImmutable();
+            Event.UNKNOWN = findOrCreateType( Event.class, Event.UnknownName, null );
+            Event.UNKNOWN.makeImmutable();
+            Organization.UNKNOWN = findOrCreateActual( Organization.class, Organization.UnknownName, null );
+            Organization.UNKNOWN.setActual();
+            Organization.UNKNOWN.makeImmutable();
+            Phase.UNKNOWN = findOrCreateActual( Phase.class, Phase.UnknownName, null );
+            Phase.UNKNOWN.makeImmutable();
+            // Unknown place
+            Place.UNKNOWN = findOrCreateActual( Place.class, Place.UnknownPlaceName, null );
+            Place.UNKNOWN.makeImmutable();
+            // Administrative area types
+            Place administrativeArea = findOrCreateType( Place.class, Place.ADMINISTRATIVE_AREA, null );
+            administrativeArea.makeImmutable();
+            Place.Country = findOrCreateType( Place.class, Place.COUNTRY, null );
+            Place.Country.addType( administrativeArea );
+            Place.Country.makeImmutable();
+            Place.State = findOrCreateType( Place.class, Place.STATE, null );
+            Place.State.addType( administrativeArea );
+            Place.State.setWithin( Place.Country );
+            Place.State.makeImmutable();
+            Place.County = findOrCreateType( Place.class, Place.COUNTY, null );
+            Place.County.addType( administrativeArea );
+            Place.County.setWithin( Place.State );
+            Place.County.makeImmutable();
+            Place.City = findOrCreateType( Place.class, Place.CITY, null );
+            Place.City.addType( administrativeArea );
+            Place.City.setWithin( Place.County );
+            Place.City.makeImmutable();
+            Role.UNKNOWN = findOrCreateType( Role.class, Role.UnknownName, null );  // was findOrCreate
+            Role.UNKNOWN.makeImmutable();
+            TransmissionMedium.UNKNOWN = findOrCreateType( TransmissionMedium.class, TransmissionMedium.UnknownName, null );
+            TransmissionMedium.UNKNOWN.makeImmutable();
+            InfoProduct.UNKNOWN = findOrCreateType( InfoProduct.class, InfoProduct.UnknownName, null );
+            InfoProduct.UNKNOWN.makeImmutable();
+            InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
+            InfoFormat.UNKNOWN.makeImmutable();
+            // todo - COMMUNITY - move to CommnunityDao
+            Requirement.UNKNOWN = findOrCreate( Requirement.class, Requirement.UnknownName, null );
+        }
         getIdGenerator().setMutableMode();
     }
 
@@ -224,7 +227,7 @@ public class PlanDao extends AbstractModelObjectDao {
     public synchronized void defineImmutableMedia( List<TransmissionMedium> media ) {
         getIdGenerator().setImmutableMode();
         for ( TransmissionMedium medium : media ) {
-            add( medium );
+            add( medium, medium.getId() );
             medium.makeImmutable();
         }
         getIdGenerator().setMutableMode();
@@ -295,9 +298,8 @@ public class PlanDao extends AbstractModelObjectDao {
             for ( Agreement agreement : org.getAgreements() )
                 attachables.add( agreement );
 */
-       return attachables;
+        return attachables;
     }
-
 
 
     @Override
@@ -346,13 +348,11 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "RawUseOfParameterizedType"})
+    @SuppressWarnings( {"unchecked", "RawUseOfParameterizedType"} )
     protected boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
         return plan.references( mo )
                 || super.isReferenced( mo, referencingObjects );
     }
-
-
 
 
     @Override
@@ -361,12 +361,12 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     @Override
-    protected long getRecordedLastAssignedId()  throws IOException {
+    protected long getRecordedLastAssignedId() throws IOException {
         return version.getLastId();
     }
 
     @Override
-    protected File getDataFile()  throws IOException {
+    protected File getDataFile() throws IOException {
         return version.getDataFile();
     }
 
@@ -437,7 +437,7 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     @Override
-    protected void afterSnapshot() throws IOException  {
+    protected void afterSnapshot() throws IOException {
         version.getJournalFile().delete();
     }
 
@@ -528,7 +528,7 @@ public class PlanDao extends AbstractModelObjectDao {
         return plan;
     }
 
-     @SuppressWarnings({"unchecked"})
+    @SuppressWarnings( {"unchecked"} )
     protected <T extends ModelObject> List<T> findAllLocalModelObjects( Class<T> clazz ) {
         List<T> domain;
         boolean isPart = Part.class.isAssignableFrom( clazz );

@@ -345,12 +345,14 @@ CONFIGURATION NOTES:
 
     <!-- =========================== Transmission Media -->
     <bean id="phone" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-951"/>
         <property name="name" value="Phone"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="landline" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-950"/>
         <property name="name" value="Landline"/>
         <property name="kind" value="Type"/>
         <property name="types">
@@ -361,6 +363,7 @@ CONFIGURATION NOTES:
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="fax" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-949"/>
         <property name="name" value="Fax"/>
         <property name="kind" value="Type"/>
         <!--
@@ -374,6 +377,7 @@ CONFIGURATION NOTES:
         <property name="synchronous" value="false"/>
     </bean>
     <bean id="cell" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-948"/>
         <property name="name" value="Cell"/>
         <property name="kind" value="Type"/>
         <property name="types">
@@ -384,6 +388,7 @@ CONFIGURATION NOTES:
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="pager" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-947"/>
         <property name="name" value="Pager"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
@@ -391,6 +396,7 @@ CONFIGURATION NOTES:
         <property name="synchronous" value="false"/>
     </bean>
     <bean id="conferenceCall" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-946"/>
         <property name="name" value="Conference call"/>
         <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
         <property name="cast" value="Multicast"/>
@@ -401,6 +407,7 @@ CONFIGURATION NOTES:
         </property>
     </bean>
     <bean id="email" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-945"/>
         <property name="name" value="Email"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
@@ -416,6 +423,7 @@ CONFIGURATION NOTES:
         </bean>
     -->
     <bean id="notificationSystem" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-944"/>
         <property name="name" value="Notification system"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
@@ -428,36 +436,42 @@ CONFIGURATION NOTES:
         </property>
     </bean>
     <bean id="im" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-943"/>
         <property name="name" value="IM"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Unicast"/>
     </bean>
     <bean id="chat" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-942"/>
         <property name="name" value="Online chat"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Multicast"/>
     </bean>
     <bean id="radio" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-941"/>
         <property name="name" value="Radio"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".*"/>
         <property name="cast" value="Broadcast"/>
     </bean>
     <bean id="twoWayRadio" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-940"/>
         <property name="name" value="Two way radio"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".*"/>
         <property name="cast" value="Multicast"/>
     </bean>
     <bean id="television" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-939"/>
         <property name="name" value="Television"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".*"/>
         <property name="cast" value="Broadcast"/>
     </bean>
     <bean id="courier" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-938"/>
         <property name="name" value="Courier"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
@@ -465,6 +479,7 @@ CONFIGURATION NOTES:
         <property name="synchronous" value="false"/>
     </bean>
     <bean id="mail" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-937"/>
         <property name="name" value="Mail"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
@@ -472,6 +487,7 @@ CONFIGURATION NOTES:
         <property name="synchronous" value="false"/>
     </bean>
     <bean id="faceToFace" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-936"/>
         <property name="name" value="Face to face"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".*"/>
@@ -479,18 +495,21 @@ CONFIGURATION NOTES:
         <property name="direct" value="true"/>
     </bean>
     <bean id="meeting" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-935"/>
         <property name="name" value="Meeting"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Multicast"/>
     </bean>
     <bean id="paSystem" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-934"/>
         <property name="name" value="PA System"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
         <property name="cast" value="Broadcast"/>
     </bean>
     <bean id="home" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-933"/>
         <property name="name" value="Home"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>
@@ -502,6 +521,7 @@ CONFIGURATION NOTES:
         </property>
     </bean>
     <bean id="work" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-932"/>
         <property name="name" value="Work"/>
         <property name="kind" value="Type"/>
         <property name="addressPattern" value=".+"/>

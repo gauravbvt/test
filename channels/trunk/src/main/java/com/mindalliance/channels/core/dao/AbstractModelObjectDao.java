@@ -155,12 +155,8 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         computeAndSetIdShift( modelContextId, getIdGenerator() );
     }
 
-    private long getIdShift() {
-       return getIdGenerator().getIdShift();
-    }
-
     private boolean isIdAssigned( Long id ) {
-        return getIndexMap().containsKey( id + getIdShift() );
+        return getIndexMap().containsKey( getIdGenerator().getShiftedId( id ) );
     }
 
     protected <T extends ModelObject> T assignId( T object, Long id, IdGenerator generator ) {
@@ -184,7 +180,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
     }
 
     protected ModelObject lookUp( long id, IdGenerator generator ) {
-        return getIndexMap().get( id + generator.getIdShift() );
+        return getIndexMap().get( generator.getShiftedId( id ) );     // todo don't shift for immutables
     }
 
     @SuppressWarnings( {"unchecked"} )
@@ -338,6 +334,15 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
 
         return result;
     }
+
+    public <T extends ModelEntity> T findOrCreateActual( Class<T> clazz, String name, Long id ) {
+        T actualEntity = (T)findOrCreate( clazz, name, id );
+            if ( actualEntity.isType() )
+                throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
+            actualEntity.setActual();
+        return actualEntity;
+    }
+
 
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = ModelEntity.getUniversalType( name, clazz );
@@ -583,7 +588,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
                 && ModelEntity.getUniversalTypeFor( InfoProduct.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( InfoProduct.class );
         else  {
-            LOG.warn( clazz.getName() + " " + id + " not found" );
+            LOG.debug( "Universal " + clazz.getName() + " " + id + " not found" );
             throw new NotFoundException();
         }
     }

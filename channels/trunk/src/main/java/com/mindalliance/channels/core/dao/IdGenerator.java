@@ -48,13 +48,14 @@ public interface IdGenerator {
     void setTemporaryIdShift( long idShift );
 
     /**
-     * The current, temporary shift on ids being applied.
-     * @return a long
-     */
-    long getIdShift();
-
-    /**
      * Cancel temporary id shift.
      */
     void cancelTemporaryIdShift();
+
+    /**
+     * Get shifted id.
+     * @param id  an id
+     * @return a long
+     */
+    long getShiftedId( long id );
 }

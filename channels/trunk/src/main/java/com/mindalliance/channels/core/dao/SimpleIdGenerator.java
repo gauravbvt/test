@@ -39,13 +39,13 @@ public class SimpleIdGenerator implements IdGenerator {
     }
 
     @Override
-    public long getIdShift() {
-        return 0;
+    public void cancelTemporaryIdShift() {
+        // do nothing
     }
 
     @Override
-    public void cancelTemporaryIdShift() {
-        // do nothing
+    public long getShiftedId( long id ) {
+        return id;
     }
 
     /**
