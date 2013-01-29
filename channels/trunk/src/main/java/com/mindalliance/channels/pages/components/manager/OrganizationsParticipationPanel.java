@@ -36,6 +36,7 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
@@ -396,7 +397,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     private void addAgencyProfile() {
-        profileDialog = new ModalWindow( "profileDialog" );
+        profileDialog = new OrgProfileModalWindow( "profileDialog" );
         profileDialog.setOutputMarkupId( true );
         profileDialog.setTitle( "Organization profile" );
         profileDialog.setCookieName( "channels-agency-profile" );
@@ -405,7 +406,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 target.add( OrganizationsParticipationPanel.this );
             }
         } );
-
+        // profileDialog.setCssClassName(  );
         if ( profiledAgency == null ) {
             Label agencyProfileLabel = new Label( profileDialog.getContentId(), "" );
             profileDialog.setContent( agencyProfileLabel );
@@ -666,5 +667,19 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
             target.add( this );
         }
 
+    }
+
+    /**
+     * Modal window without its CSS contribution.
+     */
+    public class OrgProfileModalWindow extends ModalWindow {
+        public OrgProfileModalWindow( String profileDialog ) {
+            super( profileDialog );
+        }
+
+        @Override
+        protected ResourceReference newCssResource() {
+            return null;
+        }
     }
 }

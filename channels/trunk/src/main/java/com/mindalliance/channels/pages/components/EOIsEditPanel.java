@@ -97,7 +97,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         WebMarkupContainer timeSensitivityHeaderContainer =
                 new WebMarkupContainer( "timeSensitivityContainer" );
         timeSensitivityHeaderContainer.setOutputMarkupId( true );
-        timeSensitivityHeaderContainer.setVisible( getEOIHolder().isTimeSensitive() );
+        timeSensitivityHeaderContainer.setVisible( !canTransform && getEOIHolder().canSetTimeSensitivity() );
         eoisContainer.addOrReplace( timeSensitivityHeaderContainer );
         WebMarkupContainer classificationsHeaderContainer =
                 new WebMarkupContainer( "classificationsHeaderContainer" );
@@ -248,7 +248,6 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
     private void addTimeSensitive( ListItem<EOIWrapper> item ) {
         WebMarkupContainer timeSensitiveContainer = new WebMarkupContainer( "timeSensitiveContainer" );
         timeSensitiveContainer.setOutputMarkupId( true );
-        timeSensitiveContainer.setVisible( getEOIHolder().isTimeSensitive() );
         item.addOrReplace( timeSensitiveContainer );
         EOIWrapper wrapper = item.getModelObject();
         CheckBox timeSensitiveCheckBox = new CheckBox(
@@ -261,7 +260,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             }
         } );
         makeVisible(
-                timeSensitiveCheckBox,
+                timeSensitiveContainer,
                 !canTransform && getEOIHolder().canSetTimeSensitivity() && !wrapper.isMarkedForCreation() );
         timeSensitiveCheckBox.setEnabled( !isReadOnly() );
         timeSensitiveContainer.add( timeSensitiveCheckBox );
