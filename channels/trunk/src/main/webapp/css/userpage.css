@@ -2142,13 +2142,17 @@ input[type='text'] {
     padding: 15px 0 0;
 }
 
-.req label {
+.req label,
+.w_content_container label {
 	font-size: 11px;
 }
 
 .req textarea,
 .req select,
-.req input[type="text"] {
+.req input[type="text"],
+.w_content_container textarea,
+.w_content_container select,
+.w_content_container input[type="text"] {
     background: none repeat scroll 0 0 #E8E8E8;
     border: 1px solid #999999;
     font-size: 11px;
@@ -2156,11 +2160,13 @@ input[type='text'] {
     padding: 3px;
 }
 
-.req input[type="text"] {
+.req input[type="text"],
+.w_content_container input[type="text"] {
     width: 97%;
 }
 
-.req table {
+.req table,
+.w_content_container table {
     width: 100%;
     font-size: 11px;
 }
@@ -2171,9 +2177,14 @@ input[type='text'] {
 }
 */
 
-.req table td {
+.req table td,
+.w_content_container table td {
     border-bottom: 1px dotted #999999;
     padding: 10px 5px;
+}
+
+.w_content_container table th {
+	text-align: right;
 }
 
 .req-section {
