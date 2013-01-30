@@ -111,7 +111,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// USER MESSAGES ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
     @Transactional
     public void notifyOfUserMessages() {
         LOG.debug( "Sending out user messages" );
@@ -125,7 +125,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                         EXCLUDE_INTERNAL_MESSAGES,
                         planCommunity );
                 // success = at least one message went out. No retries. Todo: retry each messaging failure?
-                if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                     userMessageService.markSent( messageToSend );
                 }
             }
@@ -135,7 +135,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// FEEDBACK ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
     @Transactional
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
@@ -147,7 +147,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                         UserStatement.TEXT,
                         !EXCLUDE_INTERNAL_MESSAGES,
                         planCommunity );
-                if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                     urgentFeedback.setWhenNotified( new Date() );
                     feedbackService.save( urgentFeedback );
                 }
@@ -188,7 +188,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// SURVEYS ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
     @Transactional
     public void notifyOfSurveys() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -202,11 +202,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private void sendNags( PlanCommunity planCommunity ) {
         LOG.debug( "Sending out nags about overdue RFIs" );
         List<RFI> nagRFIs = rfiService.listRequestedNags( planCommunity );
+        SurveysDAO surveysDAO = planCommunity.getPlanService().getSurveysDAO();
         for ( RFI nagRfi : nagRFIs ) {
-            List<String> successes = sendMessages( nagRfi, RFI.NAG, planCommunity );
-            if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
-                nagRfi.nagged();
-                rfiService.save( nagRfi );
+            if ( !surveysDAO.isCompleted( nagRfi ) ) {
+                List<String> successes = sendMessages( nagRfi, RFI.NAG, planCommunity );
+                if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                    nagRfi.nagged();
+                    rfiService.save( nagRfi );
+                }
             }
         }
     }
@@ -215,11 +218,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private void sendDeadlineApproachingNotifications( PlanCommunity planCommunity ) {
         LOG.debug( "Sending RFI deadline warnings" );
         List<RFI> deadlineRFIs = rfiService.listApproachingDeadline( planCommunity, WARNING_DELAY );
+        SurveysDAO surveysDAO = planCommunity.getPlanService().getSurveysDAO();
         for ( RFI deadlineRFI : deadlineRFIs ) {
-            List<String> successes = sendMessages( deadlineRFI, RFI.DEADLINE, planCommunity );
-            if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
-                deadlineRFI.addNotification( RFI.DEADLINE );
-                rfiService.save( deadlineRFI );
+            if ( !surveysDAO.isCompleted( deadlineRFI ) ) {
+                List<String> successes = sendMessages( deadlineRFI, RFI.DEADLINE, planCommunity );
+                if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                    deadlineRFI.addNotification( RFI.DEADLINE );
+                    rfiService.save( deadlineRFI );
+                }
             }
         }
     }
@@ -229,7 +235,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         List<RFI> newRFIs = rfiService.listNewRFIs( planCommunity );
         for ( RFI newRFI : newRFIs ) {
             List<String> successes = sendMessages( newRFI, RFI.NEW, planCommunity );
-            if  ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+            if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
                 newRFI.addNotification( RFI.NEW );
                 rfiService.save( newRFI );
             }
@@ -252,7 +258,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
     @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -283,7 +289,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
     @Transactional
     public void notifyOfParticipationRequest() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {

@@ -18,6 +18,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.ChannelsModalWindow;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
@@ -36,7 +37,6 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
@@ -397,7 +397,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     private void addAgencyProfile() {
-        profileDialog = new OrgProfileModalWindow( "profileDialog" );
+        profileDialog = new ChannelsModalWindow( "profileDialog" );
         profileDialog.setOutputMarkupId( true );
         profileDialog.setTitle( "Organization profile" );
         profileDialog.setCookieName( "channels-agency-profile" );
@@ -669,17 +669,4 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     }
 
-    /**
-     * Modal window without its CSS contribution.
-     */
-    public class OrgProfileModalWindow extends ModalWindow {
-        public OrgProfileModalWindow( String profileDialog ) {
-            super( profileDialog );
-        }
-
-        @Override
-        protected ResourceReference newCssResource() {
-            return null;
-        }
-    }
 }

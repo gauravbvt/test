@@ -396,6 +396,8 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         if ( change.isForInstanceOf( Channelable.class ) ) {
             updateApplyButton( target );
         }
-        super.updateWith( target, change, updatables );
+        if ( !change.isForProperty( "modifiableChannels" ) ) {
+            super.updateWith( target, change, updatables );
+        }
     }
 }

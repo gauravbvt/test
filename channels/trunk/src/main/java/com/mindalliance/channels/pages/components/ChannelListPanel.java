@@ -538,7 +538,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 String problem = getChannelable().validate( channel );
                 if ( problem == null ) {
                     for ( Channel c : getChannelable().getModifiableChannels() ) {
-                        if ( c != channel && c.equals( channel ) ) {
+                        if ( !c.equals( channel ) && c.getAddress().equals( channel.getAddress() ) ) {
                             problem = "Repeated";
                         }
                     }

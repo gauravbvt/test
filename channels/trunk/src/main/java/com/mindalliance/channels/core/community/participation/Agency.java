@@ -98,6 +98,11 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return true;
     }
 
+    @Override
+    public boolean hasAddresses() {
+        return true;
+    }
+
     public void setEditable( boolean editable ) {
         this.editable = editable;
     }
