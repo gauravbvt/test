@@ -153,6 +153,8 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
             return null;
         } else {
             RegisteredOrganization registered = getRegistration();
+            if ( registered == null )
+                return null;
             RegisteredOrganization parentRegistration = registered.getParent();
             if ( parentRegistration == null ) {
                 return null;

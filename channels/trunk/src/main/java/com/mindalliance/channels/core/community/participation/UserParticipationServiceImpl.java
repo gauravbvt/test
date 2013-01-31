@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
@@ -99,13 +98,14 @@ public class UserParticipationServiceImpl
             ChannelsUser user,
             PlanCommunity planCommunity ) {
         Session session = getSession();
-        Plan plan = planCommunity.getPlan();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        if ( plan != null )  // null means wild card
+        if ( planCommunity != null )  // null means wild card
             criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.add( Restrictions.eq( "participant", user.getUserInfo() ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return validParticipations( (List<UserParticipation>) criteria.list(), planCommunity );
+        return planCommunity == null
+                ? (List<UserParticipation>) criteria.list()
+                : validParticipations( (List<UserParticipation>) criteria.list(), planCommunity );
     }
 
     @Override
@@ -204,14 +204,14 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public boolean isParticipatedAs( Agent agent, PlanCommunity planCommunity ) {
         return !getParticipationsAsAgent( agent, planCommunity ).isEmpty();
     }
 
     @Override
     @Transactional
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void removeParticipation( String username, UserParticipation participation, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -227,8 +227,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getAllParticipations( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -238,8 +238,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getAllActiveParticipations( final PlanCommunity planCommunity ) {
         return (List<UserParticipation>) CollectionUtils.select(
                 getAllParticipations( planCommunity ),

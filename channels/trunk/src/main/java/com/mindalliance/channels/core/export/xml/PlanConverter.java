@@ -44,6 +44,8 @@ public class PlanConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( PlanConverter.class );
 
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
+
     public PlanConverter( XmlStreamer.Context context ) {
         super( context );
     }
@@ -60,12 +62,18 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.addAttribute( "id", String.valueOf( plan.getId() ) );
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
-        writer.addAttribute( "date", new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() ) );
+        writer.addAttribute( "date", DATE_FORMAT.format( new Date() ) );
         writer.startNode( "whenVersioned" );
-        writer.setValue( new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( plan.getWhenVersioned() ) );
+        writer.setValue( DATE_FORMAT.format( plan.getWhenVersioned() ) );
         writer.endNode();
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf( planDao.getIdGenerator().getIdCounter( getContext().getPlan().getUri() ) ) );
+        for ( Date date : plan.getIdShifts().keySet() ) {
+            writer.startNode( "idShift" );
+            writer.addAttribute( "date", DATE_FORMAT.format( date ) );
+            writer.addAttribute( "shift", Long.toString( plan.getIdShifts().get( date ) ) );
+            writer.endNode();
+        }
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( plan.getName() );
@@ -212,8 +220,16 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setTemplate( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "whenVersioned" ) ) {
                 try {
-                    Date whenVersion = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).parse( reader.getValue() );
+                    Date whenVersion = DATE_FORMAT.parse( reader.getValue() );
                     plan.setWhenVersioned( whenVersion );
+                } catch ( ParseException e ) {
+                    throw new RuntimeException( e );
+                }
+            } else if ( nodeName.equals( "idShift" ) ) {
+                try {
+                    Date date = DATE_FORMAT.parse( reader.getAttribute( "date" ) );
+                    Long shift = Long.parseLong( reader.getAttribute( "shift" ) );
+                    plan.getIdShifts().put( date, shift );
                 } catch ( ParseException e ) {
                     throw new RuntimeException( e );
                 }
