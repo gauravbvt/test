@@ -47,7 +47,7 @@ public class Plan extends ModelObject implements ModelObjectContext {
     /**
      * Whether the plan is meant as a template.
      */
-    private boolean template;
+    private boolean viewableByAll;
 
     /**
      * Return a "directory-safe" equivalent name.
@@ -459,16 +459,16 @@ public class Plan extends ModelObject implements ModelObjectContext {
         producers.remove( username );
     }
 
-    public boolean isTemplate() {
-        return template;
+    public boolean isViewableByAll() {
+        return viewableByAll;
     }
 
-    public void setTemplate( boolean template ) {
-        this.template = template;
+    public void setViewableByAll( boolean val ) {
+        this.viewableByAll = val;
     }
 
     public boolean isVisibleToUsers() {
-        return isTemplate() && isProduction();
+        return isViewableByAll() && isProduction();
     }
 
     /**

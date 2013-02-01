@@ -259,7 +259,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
             list.add( new DOTAttribute( "fontname", SEGMENT_FONT ) );
             list.add( new DOTAttribute( "tooltip",
                                         sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
-            if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
+            if ( !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
                                                                             vertex,
                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
             {
@@ -287,7 +287,7 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
             }
             // Issue coloring
-            if ( !getPlan().isTemplate() && edge.hasIssues( getAnalyst(), planCommunity.getPlanService() ) ) {
+            if ( !getPlan().isViewableByAll() && edge.hasIssues( getAnalyst(), planCommunity.getPlanService() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",

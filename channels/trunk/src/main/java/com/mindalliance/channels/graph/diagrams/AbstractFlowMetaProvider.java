@@ -218,7 +218,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
             if ( hidingNoop && getAnalyst().isEffectivelyConceptual( getQueryService(), part ) )
                 iconName = "blank";
             else {
-                negated = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( getQueryService(),
+                negated = !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( getQueryService(),
                                                                                            part )
                                         ? ImagingService.NEGATED
                                         : "";

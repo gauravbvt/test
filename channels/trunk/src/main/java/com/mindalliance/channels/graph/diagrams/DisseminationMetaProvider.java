@@ -194,7 +194,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            if ( !getPlan().isTemplate()
+            if ( !getPlan().isViewableByAll()
                     && getAnalyst().hasUnwaivedIssues( getQueryService(),
                                                        vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
@@ -218,7 +218,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         @Override
         public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Dissemination edge, boolean highlighted ) {
             Flow flow = edge.getFlow();
-            boolean conceptual = !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( getQueryService(),
+            boolean conceptual = !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( getQueryService(),
                                                                                                   flow );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
@@ -283,7 +283,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( !getPlan().isTemplate()
+            if ( !getPlan().isViewableByAll()
                     && getAnalyst().hasUnwaivedIssues( getQueryService(),
                                                        flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );

@@ -250,13 +250,13 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
 
         private boolean indicateError( Node vertex, QueryService queryService ) {
             return getAnalyst().hasUserIssues( queryService, vertex ) ||
-                    !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
+                    !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( queryService,
                                                                                 vertex,                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean indicateError( Flow edge, QueryService queryService ) {
             return getAnalyst().hasUserIssues( queryService, edge ) ||
-                    !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( queryService,
+                    !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( queryService,
                                                                                 edge,
                                                                                 Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
@@ -283,7 +283,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         @Override
         public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Flow edge, boolean highlighted ) {
             boolean conceptual =
-                    !getPlan().isTemplate() && getAnalyst().isEffectivelyConceptual( planCommunity.getPlanService(),
+                    !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( planCommunity.getPlanService(),
                                                                                      edge );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "color",

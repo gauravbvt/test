@@ -68,7 +68,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         addUri();
         addName();
         addDescription();
-        addIsTemplate();
+        addIsViewableByAll();
         addPhases();
         addLocale();
         addDefaultLanguage();
@@ -104,11 +104,11 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                 .setEnabled( isLockedByUser( getPlan() ) ) );
     }
 
-    private void addIsTemplate() {
+    private void addIsViewableByAll() {
         final Plan plan = getPlan();
         add( new AjaxCheckBox(
-                "template",
-                new PropertyModel<Boolean>( this, "template" ) ) {
+                "viewableByAll",
+                new PropertyModel<Boolean>( this, "viewableByAll" ) ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Updated, plan ) );
@@ -251,15 +251,15 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
                             UpdateObject.Action.Set ) );
     }
 
-    public boolean isTemplate() {
-        return getPlan().isTemplate();
+    public boolean isViewableByAll() {
+        return getPlan().isViewableByAll();
     }
 
-    public void setTemplate( boolean val ) {
-        if ( val != isTemplate() ) {
+    public void setTemplateViewableByAll( boolean val ) {
+        if ( val != isViewableByAll() ) {
             doCommand(
                     new UpdatePlanObject( getUser().getUsername(), getPlan(),
-                            "template",
+                            "viewableByAll",
                             val,
                             UpdateObject.Action.Set )
             );

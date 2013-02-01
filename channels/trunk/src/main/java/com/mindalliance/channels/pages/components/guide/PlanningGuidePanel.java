@@ -74,6 +74,7 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
     private AccordionWebMarkupContainer accordion;
     private Map<Activity, WebMarkupContainer> activityDocs = new HashMap<Activity, WebMarkupContainer>();
     private Map<Activity, Component> groupDivs = new HashMap<Activity, Component>();
+    private AjaxFallbackLink hideGuideLink;
 
     public PlanningGuidePanel( String id ) {
         super( id );
@@ -94,14 +95,14 @@ public class PlanningGuidePanel extends AbstractUpdatablePanel {
 
 
     private void addHideImage() {
-        AjaxFallbackLink hideGuideLink = new AjaxFallbackLink( "hideGuide" ) {
+        hideGuideLink = new AjaxFallbackLink( "hideGuide" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Channels.GUIDE_ID );
                 change.setMessage( "To re-open, select Guide in the top Show menu." );
                 update( target, change );
             }
         };
-        addTipTitle( hideGuideLink, "Hide this panel" );
+//        addTipTitle( hideGuideLink, "Hide this panel", true );   // Does not go away because its container is closed before it can fade out
         add( hideGuideLink );
     }
 

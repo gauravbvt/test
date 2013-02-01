@@ -328,6 +328,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         boolean guideExpanded = getExpansions().contains( Channels.GUIDE_ID );
         makeVisible( planningGuidePanel, guideExpanded );
         planningGuidePanel.refresh( target, new Change( Change.Type.Refresh ) );
+        resizeSocialAndGuidePanels( target, new Change( Change.Type.Unknown ) );
     }
 
 

@@ -466,7 +466,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     private boolean canSeeProcedures( ChannelsUser user, Actor actor, PlanCommunity planCommunity ) { // todo -agents and agencies
         // Planner can see any actor's procedures
         Plan plan = planCommunity.getPlan();
-        if ( plan.isTemplate() || user.isPlanner( plan.getUri() ) )
+        if ( plan.isViewableByAll() || user.isPlanner( plan.getUri() ) )
             return true;
         // Participating user can see own procedures. Supervisor can procedures of supervised.
         List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(

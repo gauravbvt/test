@@ -147,7 +147,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( !getPlan().isTemplate() && getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
+            if ( !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
                                                                             vertex,
                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
             {
@@ -173,7 +173,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            if ( !getPlan().isTemplate() && edge.hasIssues( getAnalyst(), planCommunity.getPlanService() ) ) {
+            if ( !getPlan().isViewableByAll() && edge.hasIssues( getAnalyst(), planCommunity.getPlanService() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",

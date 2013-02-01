@@ -295,7 +295,7 @@ public class UserPage extends AbstractChannelsBasicPage {
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( gotoIssuesLink )
-                        .setVisible( planner || plan.isTemplate() )
+                        .setVisible( planner || plan.isViewableByAll() )
                         .setOutputMarkupId( true ),
 
                 // Goto requirements

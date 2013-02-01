@@ -1743,7 +1743,7 @@
         </listitem>
 
         <listitem>
-          <para>if a version of a plan is marked as a "template"<itemizedlist>
+          <para>if a version of a plan is marked as a "viewable by all"<itemizedlist>
               <listitem>
                 <para>view (but not modify) the details of that version</para>
               </listitem>

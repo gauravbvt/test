@@ -111,8 +111,8 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.startNode( "surveyDefaultEmailAddress" );
         writer.setValue( plan.getSurveyDefaultEmailAddress() );
         writer.endNode();
-        writer.startNode( "template" );
-        writer.setValue( Boolean.toString( plan.isTemplate() ) );
+        writer.startNode( "viewableByAll" );
+        writer.setValue( Boolean.toString( plan.isViewableByAll() ) );
         writer.endNode();
         writer.startNode( "defaultLanguage" );
         writer.setValue( plan.getDefaultLanguage() );
@@ -216,8 +216,8 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setName( reader.getValue() );
             } else if ( nodeName.equals( "defaultLanguage" ) ) {
                 plan.setDefaultLanguage( reader.getValue() );
-            } else if ( nodeName.equals( "template" ) ) {
-                plan.setTemplate( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "template" ) || nodeName.equals( "viewableByAll" ) ) { // todo - "template" is deprecated
+                plan.setViewableByAll( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "whenVersioned" ) ) {
                 try {
                     Date whenVersion = DATE_FORMAT.parse( reader.getValue() );
