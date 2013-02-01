@@ -116,8 +116,8 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                     }
                 };
                 deleteLink.setVisible(
-                        isLockedByUser( getPlan() )
-                                && !isReferenced( classification ) );
+                        /*isLockedByUser( getPlan() )
+                                && */!isReferenced( classification ) );
                 item.add( deleteLink );
                 // css
                 int count = getClassifications().size();

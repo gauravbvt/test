@@ -1,9 +1,17 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.command.MultiCommand;
+import com.mindalliance.channels.core.command.commands.UpdateObject;
+import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Classification;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -69,18 +77,43 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                 new PropertyModel<List<String>>( this, "classificationSystems" )
         ) {
             protected void populateItem( ListItem<String> item ) {
-                final String name = item.getModelObject();
-                Label nameLabel = new Label( "name", name );
+                final String systemName = item.getModelObject();
+                Label nameLabel = new Label( "name", systemName );
                 item.add( nameLabel );
+                // details
                 AjaxFallbackLink details = new AjaxFallbackLink( "details" ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        addClassificationSystemPanel( name );
+                        addClassificationSystemPanel( systemName );
                         target.add( classificationSystemPanel );
                         addClassificationSystemsList();
                         target.add( classificationSystemsContainer );
                     }
                 };
                 item.add( details );
+                // delete
+                ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                        "delete",
+                        "Are you sure you want to delete classification system \""
+                                + systemName
+                                +"\"? (Can't be undone)") {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        deleteSystem( systemName );
+                        addClassificationSystemsList();
+                        target.add( classificationSystemsContainer );
+                        if ( selectedClassificationSystem != null && selectedClassificationSystem.equals( systemName ) ) {
+                            selectedClassificationSystem = null;
+                        }
+                        addClassificationSystemPanel( selectedClassificationSystem );
+                        target.add( classificationSystemPanel );
+                        update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
+                    }
+                };
+                deleteLink.setVisible(
+                        /*isLockedByUser( getPlan() )
+                                && */!isReferenced( systemName ) );
+                item.add( deleteLink );
+
                 int count = getClassificationSystems().size();
                 item.add( new AttributeModifier(
                         "class",
@@ -167,5 +200,38 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
         }
         super.update( target, change );
     }
+
+    private void deleteSystem( String systemName ) {
+        MultiCommand multiCommand = new MultiCommand( getUsername(), "Remove classification system"  );
+        multiCommand.setChange( new Change( Change.Type.Updated, getPlan(), "classifications") );
+        multiCommand.makeUndoable( false );
+        Plan plan = getPlan();
+        for ( Classification classification : plan.classificationsFor( systemName ) ) {
+            multiCommand.addCommand( new UpdatePlanObject(
+                    getUsername(),
+                    plan,
+                    "classifications",
+                    classification,
+                    UpdateObject.Action.Remove
+            ) );
+        }
+
+        doCommand( multiCommand );
+    }
+
+    private boolean isReferenced( String systemName ) {
+        final QueryService queryService = getQueryService();
+        return CollectionUtils.exists(
+                getPlan().classificationsFor( systemName ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return queryService.isReferenced( (Classification)object );
+                    }
+                }
+        );
+    }
+
+
 
 }
