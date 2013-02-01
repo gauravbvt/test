@@ -28,6 +28,8 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,13 +47,18 @@ import java.util.Map;
  */
 public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( PlanCommunity.class );
+
+
     private static final String UNNAMED = "UNNAMED";
 
     /**
      * History of shifts in assignable id lower bounds.
      */
-    private Map<Date,Long> idShifts = new HashMap<Date, Long>();
-
+    private Map<Date, Long> idShifts = new HashMap<Date, Long>();
 
 
     private CommunityService communityService;
@@ -69,7 +76,7 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
 
     @Override
     public void recordIdShift( long lowerBound ) {
-        idShifts.put( new Date(), lowerBound  );
+        idShifts.put( new Date(), lowerBound );
     }
 
     public Map<Date, Long> getIdShifts() {
@@ -224,29 +231,29 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
 
     public boolean canHaveParentAgency( final String name, String parentName ) {
 
-            if ( parentName == null ) return true;
-            // circularity test
-            boolean nonCircular = !parentName.equals( name )
-                    && !CollectionUtils.exists(
-                    findAncestors( parentName ),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (Agency) object ).getName( ).equals( name );
-                        }
-                    } );
-            if ( !nonCircular ) return false;
-            // placeholder parent test
-            Agency agency = getParticipationManager().findAgencyNamed( name, this );
-            Agency parentAgency = getParticipationManager().findAgencyNamed( parentName, this );
-            if ( agency == null || parentAgency == null ) return false; // should not happen
-            Organization placeholder = agency.getPlaceholder( this );
-            if ( placeholder != null ) {
-                Organization parentPlaceholder = parentAgency.getPlaceholder( this );
-                return ChannelsUtils.areEqualOrNull( placeholder.getParent(), parentPlaceholder );
-            }
-            return true;
+        if ( parentName == null ) return true;
+        // circularity test
+        boolean nonCircular = !parentName.equals( name )
+                && !CollectionUtils.exists(
+                findAncestors( parentName ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Agency) object ).getName().equals( name );
+                    }
+                } );
+        if ( !nonCircular ) return false;
+        // placeholder parent test
+        Agency agency = getParticipationManager().findAgencyNamed( name, this );
+        Agency parentAgency = getParticipationManager().findAgencyNamed( parentName, this );
+        if ( agency == null || parentAgency == null ) return false; // should not happen
+        Organization placeholder = agency.getPlaceholder( this );
+        if ( placeholder != null ) {
+            Organization parentPlaceholder = parentAgency.getPlaceholder( this );
+            return ChannelsUtils.areEqualOrNull( placeholder.getParent(), parentPlaceholder );
         }
+        return true;
+    }
 
     public List<Agency> findAncestors( String agencyName ) {
         List<Agency> visited = new ArrayList<Agency>();
@@ -284,10 +291,19 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
     }
 
     public <T extends ModelObject> T find( Class<T> clazz, long id, Date dateOfRecord ) throws NotFoundException {
-        return (T)getModelObjectContextDao().find( clazz, id, dateOfRecord );
+        return (T) getModelObjectContextDao().find( clazz, id, dateOfRecord );
     }
 
     private AbstractModelObjectDao getModelObjectContextDao() {   // Todo - COMMUNITY - go through community's DAO chained to planService Dao
         return getPlanService().getDao();
+    }
+
+    public boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord ) {
+        try {
+            return id != null && find( clazz, id, dateOfRecord ) != null;
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Does not exist: " + clazz.getSimpleName() + " at " + id + " recorded on " + dateOfRecord );
+            return false;
+        }
     }
 }

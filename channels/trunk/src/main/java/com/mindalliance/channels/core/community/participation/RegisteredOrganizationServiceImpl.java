@@ -39,7 +39,7 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public RegisteredOrganization find( final String orgName, final PlanCommunity planCommunity ) {
         return (RegisteredOrganization) CollectionUtils.find(
                 getAllRegisteredOrganizations( planCommunity ),
@@ -53,14 +53,14 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<RegisteredOrganization> getAllRegisteredOrganizations( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return (List<RegisteredOrganization>) criteria.list();
+        return validate( (List<RegisteredOrganization>) criteria.list(), planCommunity );
     }
 
     @Override
@@ -96,7 +96,7 @@ public class RegisteredOrganizationServiceImpl
             boolean inParticipation = !organizationParticipationService
                     .findAllParticipationBy( registered, planCommunity ).isEmpty();
             boolean inOrgContacts = !organizationContactInfoService
-                    .findAllContactInfo( registered ).isEmpty();
+                    .findAllContactInfo( registered, planCommunity ).isEmpty();
             if ( !inParticipation && !inOrgContacts ) {
                 delete( registered );
                 return true;
@@ -184,5 +184,28 @@ public class RegisteredOrganizationServiceImpl
         return ancestors;
     }
 
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isValid( RegisteredOrganization registeredOrg, PlanCommunity planCommunity ) {
+        return registeredOrg != null
+                && !( registeredOrg.isFixedOrganization() && registeredOrg.getFixedOrganization( planCommunity ) == null )
+                && ( registeredOrg.getParent() == null || isValid( registeredOrg.getParent(), planCommunity ) );
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private List<RegisteredOrganization> validate(
+            List<RegisteredOrganization> registeredOrganizations,
+            final PlanCommunity planCommunity ) {
+        return (List<RegisteredOrganization>) CollectionUtils.select(
+                registeredOrganizations,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isValid( (RegisteredOrganization) object, planCommunity );
+                    }
+                }
+        );
+    }
 
 }

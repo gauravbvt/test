@@ -59,16 +59,17 @@ public class OrganizationParticipationServiceImpl
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
-        return (List<OrganizationParticipation>) criteria.list();
+        return validate( (List<OrganizationParticipation>) criteria.list(), planCommunity );
     }
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isValid( OrganizationParticipation registration, PlanCommunity planCommunity ) {
-        Organization placeholder = registration.getPlaceholderOrganization( planCommunity );
+    public boolean isValid( OrganizationParticipation orgParticipation, PlanCommunity planCommunity ) {
+        if ( orgParticipation == null ) return false;
+        Organization placeholder = orgParticipation.getPlaceholderOrganization( planCommunity );
         return placeholder != null
                 && placeholder.isPlaceHolder()
-                && registration.getRegisteredOrganization().isValid( planCommunity );
+                && orgParticipation.getRegisteredOrganization().isValid( planCommunity );
     }
 
     @Override
@@ -81,8 +82,9 @@ public class OrganizationParticipationServiceImpl
             criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
             criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
             List<Agency> agencies = new ArrayList<Agency>();
-            for ( OrganizationParticipation registration : (List<OrganizationParticipation>) criteria.list() ) {
-                agencies.add( new Agency( registration, planCommunity ) );
+            for ( OrganizationParticipation orgParticipation
+                    : validate( (List<OrganizationParticipation>) criteria.list(), planCommunity ) ) {
+                agencies.add( new Agency( orgParticipation, planCommunity ) );
             }
             return agencies;
         } else {
@@ -107,7 +109,7 @@ public class OrganizationParticipationServiceImpl
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
             PlanCommunity planCommunity ) {
-        if ( planCommunity.isCustodianOf( user, placeholder )) {
+        if ( planCommunity.isCustodianOf( user, placeholder ) ) {
             if ( !isAgencyRegisteredAs( registeredOrganization, placeholder, planCommunity ) ) {
                 OrganizationParticipation registration = new OrganizationParticipation(
                         user.getUsername(),
@@ -203,12 +205,12 @@ public class OrganizationParticipationServiceImpl
     private List<OrganizationParticipation> validate(
             List<OrganizationParticipation> organizationRegistrations,
             final PlanCommunity planCommunity ) {
-        return (List<OrganizationParticipation>)CollectionUtils.select(
+        return (List<OrganizationParticipation>) CollectionUtils.select(
                 organizationRegistrations,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isValid( (OrganizationParticipation) object , planCommunity );
+                        return isValid( (OrganizationParticipation) object, planCommunity );
                     }
                 }
         );

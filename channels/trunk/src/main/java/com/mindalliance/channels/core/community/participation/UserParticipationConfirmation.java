@@ -23,7 +23,7 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
     private UserParticipation userParticipation;
     private long supervisorId;
     @ManyToOne
-    private OrganizationParticipation organizationParticipation;
+    private OrganizationParticipation organizationParticipation;  // for supervisor
 
     public UserParticipationConfirmation() {
     }

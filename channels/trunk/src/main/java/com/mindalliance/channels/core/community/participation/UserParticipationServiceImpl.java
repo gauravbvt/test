@@ -4,9 +4,7 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
@@ -92,8 +90,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> getUserParticipations(
             ChannelsUser user,
             PlanCommunity planCommunity ) {
@@ -105,12 +103,12 @@ public class UserParticipationServiceImpl
         criteria.addOrder( Order.desc( "created" ) );
         return planCommunity == null
                 ? (List<UserParticipation>) criteria.list()
-                : validParticipations( (List<UserParticipation>) criteria.list(), planCommunity );
+                : validate( (List<UserParticipation>) criteria.list(), planCommunity );
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> getActiveUserParticipations(
             ChannelsUser user,
             final PlanCommunity planCommunity ) {
@@ -126,7 +124,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public boolean isActive( UserParticipation userParticipation, PlanCommunity planCommunity ) {
         Agent agent = userParticipation.getAgent( planCommunity );
         if ( agent == null || !userParticipation.isAccepted() ) return false;
@@ -138,8 +136,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> getParticipationsAsAgent( Agent agent, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -151,13 +149,13 @@ public class UserParticipationServiceImpl
         else
             criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return validParticipations( (List<UserParticipation>) criteria.list(), planCommunity );
+        return validate( (List<UserParticipation>) criteria.list(), planCommunity );
     }
 
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public UserParticipation getParticipation(
             ChannelsUser user,
             Agent agent,
@@ -172,7 +170,7 @@ public class UserParticipationServiceImpl
         else
             criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
         criteria.addOrder( Order.desc( "created" ) );
-        List<UserParticipation> participations = validParticipations(
+        List<UserParticipation> participations = validate(
                 (List<UserParticipation>) criteria.list(),
                 planCommunity );
         if ( participations.isEmpty() )
@@ -182,7 +180,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public List<Agent> listAgentsParticipatedAs( PlanCommunity planCommunity ) {
         Set<Agent> agents = new HashSet<Agent>();
         for ( UserParticipation userParticipation : list() ) {
@@ -194,7 +192,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public boolean isParticipationNotFull( Agent agent, PlanCommunity planCommunity ) {
         if ( agent.isAnyNumberOfParticipants() ) return true;
         else {
@@ -204,14 +202,14 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public boolean isParticipatedAs( Agent agent, PlanCommunity planCommunity ) {
         return !getParticipationsAsAgent( agent, planCommunity ).isEmpty();
     }
 
     @Override
     @Transactional
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void removeParticipation( String username, UserParticipation participation, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -227,19 +225,19 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> getAllParticipations( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
         //       criteria.add( Restrictions.eq( "planVersion", plan.getVersion() ) );
-        return validParticipations( (List<UserParticipation>) criteria.list(), planCommunity );
+        return validate( (List<UserParticipation>) criteria.list(), planCommunity );
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> getAllActiveParticipations( final PlanCommunity planCommunity ) {
         return (List<UserParticipation>) CollectionUtils.select(
                 getAllParticipations( planCommunity ),
@@ -267,19 +265,7 @@ public class UserParticipationServiceImpl
     public List<UserParticipation> validParticipations(
             List<UserParticipation> userParticipations,
             PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
-        List<UserParticipation> results = new ArrayList<UserParticipation>();
-        for ( UserParticipation userParticipation : userParticipations ) {
-            try {
-                if ( userParticipation.getParticipant() != null ) {
-                    planCommunity.find( Actor.class, userParticipation.getActorId(), userParticipation.getCreated() ); // exception if not found
-                    results.add( userParticipation );
-                }
-            } catch ( NotFoundException e ) {
-                // ignore
-            }
-        }
-        return results;
+        return validate( userParticipations, planCommunity );
     }
 
     // User already participates as an agent that has an employer in common with the agent of given participation of his/hers.
@@ -311,7 +297,7 @@ public class UserParticipationServiceImpl
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, PlanCommunity planCommunity ) {
         Set<Agent> agents = new HashSet<Agent>();
         List<UserParticipation> participationList = getActiveUserParticipations( user, planCommunity );
@@ -322,8 +308,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> getParticipationsSupervisedByUser(
             final ChannelsUser user,
             final PlanCommunity planCommunity ) {
@@ -347,8 +333,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<Agent> listSupervisorsUserParticipatesAs(
             UserParticipation userParticipation,
             ChannelsUser user,
@@ -367,7 +353,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public List<String> listSupervisorsToNotify( UserParticipation userParticipation, PlanCommunity planCommunity ) {
         List<String> usernames = new ArrayList<String>();
         if ( userParticipation.isSupervised( planCommunity ) ) {
@@ -390,8 +376,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<ChannelsUserInfo> findUsersParticipatingAs( Agent agent, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -401,7 +387,7 @@ public class UserParticipationServiceImpl
             criteria.add( Restrictions.isNull( "organizationParticipation" ) );
         else
             criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
-        List<UserParticipation> participations = (List<UserParticipation>) criteria.list();
+        List<UserParticipation> participations = validate( (List<UserParticipation>) criteria.list(), planCommunity );
         Set<ChannelsUserInfo> userInfos = new HashSet<ChannelsUserInfo>();
         for ( UserParticipation participation : participations ) {
             if ( isActive( participation, planCommunity ) ) {
@@ -429,8 +415,8 @@ public class UserParticipationServiceImpl
         return success;
     }
 
-    @SuppressWarnings("unchecked")
-    private List<UserParticipation> listMatching( UserParticipation participation ) {
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> listMatching( UserParticipation participation, PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", participation.getCommunityUri() ) );
@@ -441,13 +427,13 @@ public class UserParticipationServiceImpl
         } else {
             criteria.add( Restrictions.eq( "organizationParticipation", participation.getOrganizationParticipation() ) );
         }
-        return (List<UserParticipation>) criteria.list();
+        return validate( (List<UserParticipation>) criteria.list(), planCommunity );
     }
 
     @Override
     @Transactional
     public void accept( UserParticipation participation, PlanCommunity planCommunity ) {
-        List<UserParticipation> matches = listMatching( participation );
+        List<UserParticipation> matches = listMatching( participation, planCommunity );
         if ( matches.isEmpty() ) {
             UserParticipation userParticipation = new UserParticipation( participation );
             userParticipation.setAccepted( true );
@@ -464,7 +450,7 @@ public class UserParticipationServiceImpl
     @Override
     @Transactional
     public void refuse( UserParticipation participation, PlanCommunity planCommunity ) {
-        for ( UserParticipation userParticipation : listMatching( participation ) ) {
+        for ( UserParticipation userParticipation : listMatching( participation, planCommunity ) ) {
             if ( participation.isRequested() ) {
                 userParticipation.setAccepted( false );
                 save( userParticipation );
@@ -477,14 +463,14 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional( readOnly = true )
     public boolean isUserParticipatingAs( ChannelsUser user, Agent agent, PlanCommunity planCommunity ) {
         return listAgentsUserParticipatesAs( user, planCommunity ).contains( agent );
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> listUserParticipationIn( OrganizationParticipation organizationParticipation,
                                                             PlanCommunity planCommunity ) {
         OrganizationParticipation orgParticipation = organizationParticipationService
@@ -498,14 +484,14 @@ public class UserParticipationServiceImpl
             Criteria criteria = session.createCriteria( getPersistentClass() );
             criteria.add( Restrictions.eq( "communityUri", organizationParticipation.getCommunityUri() ) );
             criteria.add( Restrictions.eq( "organizationParticipation", orgParticipation ) );
-            return (List<UserParticipation>) criteria.list();
+            return validate( (List<UserParticipation>) criteria.list(), planCommunity );
         }
     }
 
 
     @Override
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
+    @Transactional( readOnly = true )
+    @SuppressWarnings( "unchecked" )
     public List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
             ChannelsUser user,
             final PlanCommunity planCommunity ) {
@@ -537,6 +523,31 @@ public class UserParticipationServiceImpl
                     }
                 } );
 
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isValid( UserParticipation userParticipation, PlanCommunity planCommunity ) {
+        return userParticipation != null
+                && userParticipation.getParticipant() != null
+                && planCommunity.exists( Actor.class, userParticipation.getActorId(), userParticipation.getCreated() )
+                && ( userParticipation.getOrganizationParticipation() == null
+                || organizationParticipationService.isValid( userParticipation.getOrganizationParticipation(), planCommunity ) );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipation> validate(
+            List<UserParticipation> userParticipations,
+            final PlanCommunity planCommunity ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                userParticipations,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isValid( (UserParticipation) object, planCommunity );
+                    }
+                }
+        );
     }
 
 

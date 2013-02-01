@@ -27,5 +27,7 @@ public interface OrganizationContactInfoService extends GenericSqlService<Organi
 
     void removeAllContactInfoOf( RegisteredOrganization registered, PlanCommunity planCommunity );
 
-    List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered );
+    List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered, PlanCommunity planCommunity );
+
+    boolean isValid( OrganizationContactInfo orgContactInfo, PlanCommunity planCommunity );
 }

@@ -84,4 +84,6 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
    List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
             ChannelsUser user,
             PlanCommunity planCommunity);
+
+    boolean isValid( UserParticipation userParticipation, PlanCommunity planCommunity );
 }

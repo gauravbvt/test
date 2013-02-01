@@ -36,4 +36,6 @@ public interface RegisteredOrganizationService extends GenericSqlService<Registe
                                   PlanCommunity planCommunity );
 
     List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity );
+
+    boolean isValid( RegisteredOrganization registeredOrg, PlanCommunity planCommunity );
 }

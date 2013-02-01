@@ -200,7 +200,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
-    @Override
+ /*   @Override
     public ProceduresData getActorProcedures( String uri, String actorId ) {    // todo - obsolete?
         LOG.info( "Getting user procedures of actor " + actorId + " for community " + uri );
         try {
@@ -224,7 +224,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                             .build() );
         }
     }
-
+*/
     @Override
     public ProceduresData getMyProcedures( String uri ) {
         LOG.info( "Getting user procedures for community " + uri );
@@ -308,6 +308,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
+
     @Override
     public ProceduresData getAgentProcedures( String uri, String version, String actorId ) {
         ChannelsUser user = ChannelsUser.current( userDao );
@@ -360,6 +361,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
+
     @Override
     public DirectoryData getUserDirectory(
             String uri,
@@ -378,6 +380,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
+/*
     @Override
     public DirectoryData getAgentDirectory(
             String uri,
@@ -395,6 +398,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                             .build() );
         }
     }
+*/
 
     @Override
     public DirectoryData getMyDirectory( String uri ) {

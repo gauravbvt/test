@@ -33,6 +33,9 @@ public class UserParticipationConfirmationServiceImpl
     @Autowired
     private ParticipationManager participationManager;
 
+    @Autowired
+    private OrganizationParticipationService organizationParticipationService;
+
     public UserParticipationConfirmationServiceImpl() {
     }
 
@@ -213,5 +216,31 @@ public class UserParticipationConfirmationServiceImpl
                 }
         );
     }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isValid( UserParticipationConfirmation confirmation, PlanCommunity planCommunity ) {
+        return confirmation != null &&
+                userParticipationService.isValid( confirmation.getUserParticipation(), planCommunity )
+                && confirmation.getSupervisor( planCommunity ) != null
+                && organizationParticipationService.isValid( confirmation.getOrganizationParticipation(), planCommunity );
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private List<UserParticipationConfirmation> validate(
+            List<UserParticipationConfirmation> userParticipationConfirmation,
+            final PlanCommunity planCommunity ) {
+        return (List<UserParticipationConfirmation>) CollectionUtils.select(
+                userParticipationConfirmation,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isValid( (UserParticipationConfirmation) object, planCommunity );
+                    }
+                }
+        );
+    }
+
 
 }
