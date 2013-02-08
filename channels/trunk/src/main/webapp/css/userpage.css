@@ -1143,18 +1143,22 @@ float: right;
 	padding: 5px 0;
 }
 
-#social div.userInfo ol {
+#social div.userInfo ol,
+ol.channels {
 	margin:6px 0 0 20px;
 	padding: 0;
 }
 
-#social div.userInfo ol li {
+#social div.userInfo ol li,
+ol.channels li {
 	font-weight: bold;
 	margin: 0;
 	padding: 0 0 10px;
+	text-align: left;
 }
 
-#social div.userInfo ol li input[type="checkbox"] {
+#social div.userInfo ol li input[type="checkbox"],
+ol.channels li input[type="checkbox"] {
     margin: 0;
     padding: 0;
     vertical-align: middle;

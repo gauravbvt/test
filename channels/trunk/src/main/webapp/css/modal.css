@@ -227,6 +227,10 @@ div.rfi-container input[type='text'] {
     width: 98%;
 }
 
+div.wicket-modal select {
+	width: 100%;
+}
+
 div.wicket-modal div.dialog {
 	text-align: left;
 }
@@ -352,6 +356,22 @@ table.question-answers ul {
     list-style: square outside none;
     margin: 0;
     padding: 0 0 0 15px;
+}
+
+div.wicket-modal a.button,
+div.wicket-modal input[type='button'] {
+    background: #ffffff;
+    border: 1px solid #A7A9AC;
+    color: #666666;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin: 10px 0 20px 10px;
+    float: right;
+    text-transform: uppercase;
+    font-family: arial;
+    line-height: 100%;
 }
 
 
