@@ -15,14 +15,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * ...
  */
 public class TestDefinitionManager {
 
-    private DefinitionManager definitionManager;
+    private PlanDefinitionManager planDefinitionManager;
 
     private File props;
 
@@ -36,34 +41,34 @@ public class TestDefinitionManager {
         FileUtils.deleteDirectory( dataDir );
         props = new File( dataDir, "plans.properties" );
 
-        definitionManager = new DefinitionManager( new FileSystemResource( dataDir ), new FileSystemResource( props ) );
+        planDefinitionManager = new PlanDefinitionManager( new FileSystemResource( dataDir ), new FileSystemResource( props ) );
         generator = new SimpleIdGenerator();
-        definitionManager.setIdGenerator( generator );
+        planDefinitionManager.setIdGenerator( generator );
     }
 
     @Test
     public void testEmpty() throws IOException {
-        definitionManager.afterPropertiesSet();
+        planDefinitionManager.afterPropertiesSet();
         assertTrue( dataDir.exists() );
         assertTrue( props.exists() );
-        assertTrue( definitionManager.exists( "Default Plan" ) );
-        assertFalse( definitionManager.exists( "bla" ) );
+        assertTrue( planDefinitionManager.exists( "Default Plan" ) );
+        assertFalse( planDefinitionManager.exists( "bla" ) );
 
-        assertEquals( 1, definitionManager.getPlanNames().size() );
-        assertNotNull( definitionManager.get( "default" ) );
-        assertNotNull( definitionManager.get( "default", true ) );
-        assertNull( definitionManager.get( "default", false ) );
+        assertEquals( 1, planDefinitionManager.getPlanNames().size() );
+        assertNotNull( planDefinitionManager.get( "default" ) );
+        assertNotNull( planDefinitionManager.get( "default", true ) );
+        assertNull( planDefinitionManager.get( "default", false ) );
 
     }
 
     @Test
     public void testAutosave() throws IOException {
-        definitionManager.afterPropertiesSet();
+        planDefinitionManager.afterPropertiesSet();
 
-        PlanDefinition definition = definitionManager.getOrCreate( "default", "New name", "Noone" );
+        PlanDefinition definition = planDefinitionManager.getOrCreate( "default", "New name", "Noone" );
         assertEquals( "Noone", definition.getClient() );
-        assertTrue( definitionManager.exists( "New name" ) );
-        assertFalse( definitionManager.exists( "Default Plan" ) );
+        assertTrue( planDefinitionManager.exists( "New name" ) );
+        assertFalse( planDefinitionManager.exists( "Default Plan" ) );
 
         assertEquals( "New name|Noone", readProps().getProperty( "default" ) );
 
@@ -83,34 +88,34 @@ public class TestDefinitionManager {
 
     @Test
     public void testReload() throws IOException {
-        definitionManager.afterPropertiesSet();
-        definitionManager.load();
-        assertNotNull( definitionManager.get( "default" ) );
+        planDefinitionManager.afterPropertiesSet();
+        planDefinitionManager.load();
+        assertNotNull( planDefinitionManager.get( "default" ) );
     }
 
     @Test
     public void testLoadDefaults() throws IOException {
-        definitionManager.setDefaultProperties( new FileSystemResource( "src/main/webapp/WEB-INF/samples/plans.properties" ) );
-        definitionManager.afterPropertiesSet();
-        assertNotNull( definitionManager.get( "mindalliance.com/channels/plans/demo" ) );
+        planDefinitionManager.setDefaultProperties( new FileSystemResource( "src/main/webapp/WEB-INF/samples/plans.properties" ) );
+        planDefinitionManager.afterPropertiesSet();
+        assertNotNull( planDefinitionManager.get( "mindalliance.com/channels/plans/demo" ) );
     }
 
     @Test
     public void testBadProps() throws IOException {
-        definitionManager = new DefinitionManager( new FileSystemResource( dataDir ), new FileSystemResource( dataDir ) );
-        definitionManager.load();
+        planDefinitionManager = new PlanDefinitionManager( new FileSystemResource( dataDir ), new FileSystemResource( dataDir ) );
+        planDefinitionManager.load();
     }
 
     @Test
     public void testAccessors() {
-        definitionManager.setSnapshotThreshold( 5 );
-        assertEquals( 5, definitionManager.getSnapshotThreshold() );
+        planDefinitionManager.setSnapshotThreshold( 5 );
+        assertEquals( 5, planDefinitionManager.getSnapshotThreshold() );
 
-        assertSame( generator,definitionManager.getIdGenerator() );
+        assertSame( generator, planDefinitionManager.getIdGenerator() );
 
         Resource resource = new InMemoryResource( "bla" );
-        definitionManager.setDefaultProperties( resource );
-        assertSame( resource, definitionManager.getDefaultProperties() );
-        assertFalse( definitionManager.iterator().hasNext() );
+        planDefinitionManager.setDefaultProperties( resource );
+        assertSame( resource, planDefinitionManager.getDefaultProperties() );
+        assertFalse( planDefinitionManager.iterator().hasNext() );
     }
 }

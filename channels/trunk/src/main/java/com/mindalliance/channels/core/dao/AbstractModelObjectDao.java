@@ -18,6 +18,8 @@ import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.IteratorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,7 @@ import java.util.Set;
  * Date: 1/23/13
  * Time: 1:02 PM
  */
-public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create CommunityDao extending this
+public abstract class AbstractModelObjectDao {
 
     /**
      * The logger.
@@ -76,7 +78,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
 
     protected abstract <T extends ModelObject> void setContextKindOf( T object );
 
-    protected abstract ModelObjectContext getModelObjectContext();
+    public abstract ModelObjectContext getModelObjectContext();
 
     protected abstract void addSpecific( ModelObject object, Long id );
 
@@ -102,7 +104,10 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
 
     protected abstract void beforeSaveJournal() throws IOException;
 
-    abstract void validate();
+    public abstract void validate();
+
+    protected abstract void importModelObjectContext( Importer importer, FileInputStream in ) throws IOException;
+
 
     public void setSubDao( AbstractModelObjectDao subDao ) {
         try {
@@ -180,13 +185,21 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
     }
 
     protected ModelObject lookUp( long id, IdGenerator generator ) {
-        return getIndexMap().get( generator.getShiftedId( id ) );     // todo don't shift for immutables
+        return getIndexMap().get( generator.getShiftedId( id ) );
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     // finding by id is always local
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        return (T) find( id );
+        try {
+            return (T) find( id );
+        } catch ( NotFoundException exc ) {
+            try {
+                return findUnknown( clazz, id );
+            } catch ( NotFoundException e ) {
+                return findUniversal( clazz, id );
+            }
+        }
     }
 
     // Delegate to subDao if not found locally
@@ -205,14 +218,15 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
     /**
      * Find by id recorded as of a given date.
      * The id may have shifted since.
-     * @param clazz a model object class
-     * @param id a possibly dated id
+     *
+     * @param clazz        a model object class
+     * @param id           a possibly dated id
      * @param dateOfRecord the date the id was recorded
-     * @param <T> class parameter
+     * @param <T>          class parameter
      * @return a model object of class T
      * @throws NotFoundException if not found
      */
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public <T extends ModelObject> T find( Class<T> clazz, long id, Date dateOfRecord ) throws NotFoundException {
         return (T) find( id, dateOfRecord );
     }
@@ -244,7 +258,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         return null;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     // Listing by class traverses the chain of DAOs, from local to subDao
     public <T extends ModelObject> List<T> list( final Class<T> clazz ) {
         List<T> results = listLocal( clazz );
@@ -254,7 +268,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         return results;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     // Listing by class. Local model object only
     public <T extends ModelObject> List<T> listLocal( final Class<T> clazz ) {
         List<T> results = new ArrayList<T>();
@@ -267,6 +281,213 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         }
         return results;
     }
+
+
+    ////////////////////
+
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !( (T) object ).isUnknown();
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( {"unchecked"} )
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
+        return mustBeReferenced
+                ? (List<T>) CollectionUtils.select(
+                listReferencedEntities( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (T) object ).isActual();
+                    }
+                } )
+                : listActualEntities( clazz );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (T) object ).isActual();
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( {"unchecked"} )
+    public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select( list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        ModelEntity entity = (ModelEntity) object;
+                        return entity.isImmutable() && !entity.isUnknown()
+                                || isReferenced( entity );
+                    }
+                } );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public Boolean isReferenced( final ModelObject mo ) {
+        // Optimized form for return this.countReferences( mo ) > 0;
+        boolean hasReference = false;
+        Iterator classes = ModelObject.referencingClasses().iterator();
+        while ( !hasReference && classes.hasNext() ) {
+            List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
+            hasReference = CollectionUtils.exists(
+                    mos,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (ModelObject) object ).references( mo );
+                        }
+                    }
+            );
+        }
+        return hasReference;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
+        return list( clazz );
+    }
+
+    @SuppressWarnings( {"unchecked"} )
+    public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity, final Place locale ) {
+        return (List<T>) CollectionUtils.select(
+                list( entity.getClass() ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (ModelEntity) object ).narrowsOrEquals( entity, locale );
+                    }
+                }
+        );
+    }
+
+    public Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
+        ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
+        if ( entity == null ) entity = find( clazz, name );
+        return entity != null && entity.getKind().equals( kind );
+    }
+
+    public <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name ) {
+        T result = null;
+        T entity = find( entityClass, name );
+        if ( entity != null ) {
+            if ( entity.isActual() ) result = entity;
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
+            Class<T> entityClass,
+            final T entityType,
+            final Place locale ) {
+        assert entityType.isType();
+        return (List<T>) CollectionUtils.select(
+                findAllModelObjects( entityClass ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        T entity = (T) object;
+                        return entity.isActual() && entity.narrowsOrEquals( entityType, locale );
+                    }
+                }
+        );
+    }
+
+    public <T extends ModelEntity> List<T> listKnownEntities(
+            Class<T> entityClass,
+            Boolean mustBeReferenced,
+            Boolean includeImmutables ) {
+        return mustBeReferenced
+                ? listReferencedEntities( entityClass, includeImmutables )
+                : listKnownEntities( entityClass );
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz, final boolean includeImmutables ) {
+        return (List<T>) CollectionUtils.select( list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        ModelEntity entity = (ModelEntity) object;
+                        return includeImmutables && entity.isImmutable() && !entity.isUnknown()
+                                || isReferenced( entity );
+                    }
+                } );
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
+        return (List<T>) CollectionUtils.select(
+                list( clazz ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (T) object ).isType();
+                    }
+                }
+        );
+    }
+
+    public <T extends ModelEntity> T retrieveEntity(
+            Class<T> entityClass, Map<String, Object> state, String key ) {
+        Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();
+        String name = (String) vals[0];
+        boolean type = (Boolean) vals[1];
+        if ( type ) {
+            return findOrCreateType( entityClass, name );
+        } else {
+            return findOrCreate( entityClass, name );
+        }
+    }
+
+    public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name ) {
+        return findOrCreateType( clazz, name, null );
+    }
+
+    public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name ) {
+        return findOrCreate( clazz, name, null );
+    }
+
+    public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
+        T result;
+        // If entity can only be a type, find or create a type.
+        if ( !ModelEntity.canBeActualOrType( clazz )
+                && ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) )
+            result = findOrCreateType( clazz, name, id );
+
+        else if ( ModelEntity.getUniversalType( name, clazz ) == null ) {
+            result = findOrCreateModelObject( clazz, name, id );
+            if ( result.isType() ) {
+                throw new InvalidEntityKindException(
+                        clazz.getSimpleName() + ' ' + name + " is a type" );
+            }
+            result.setActual();
+
+        } else
+            throw new InvalidEntityKindException(
+                    clazz.getSimpleName() + ' ' + name + " is a type" );
+
+        return result;
+    }
+
+
+    //////////////////////
 
 
     /**
@@ -297,7 +518,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
     }
 
     // Creating by name always looks locally and in subDao(s) before creating locally if not found.
-    public <T extends ModelObject> T findOrCreate( Class<T> clazz, String name, Long id ) {
+    public <T extends ModelObject> T findOrCreateModelObject( Class<T> clazz, String name, Long id ) {
         T result = null;
 
         if ( name != null && !name.isEmpty() ) {
@@ -336,10 +557,10 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
     }
 
     public <T extends ModelEntity> T findOrCreateActual( Class<T> clazz, String name, Long id ) {
-        T actualEntity = (T)findOrCreate( clazz, name, id );
-            if ( actualEntity.isType() )
-                throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
-            actualEntity.setActual();
+        T actualEntity = (T) findOrCreate( clazz, name, id );
+        if ( actualEntity.isType() )
+            throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
+        actualEntity.setActual();
         return actualEntity;
     }
 
@@ -347,7 +568,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
         T entityType = ModelEntity.getUniversalType( name, clazz );
         if ( entityType == null ) {
-            entityType = findOrCreate( clazz, name, id );
+            entityType = findOrCreateModelObject( clazz, name, id );
             if ( entityType.isActual() )
                 throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
             entityType.setType();
@@ -355,7 +576,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         return entityType;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     // An entity not referenced with the model object context (e.g. plan or planCommunity) will not be persisted.
     public Iterator<ModelEntity> iterateEntities() {
         Set<? extends ModelObject> referencers = getReferencingObjects();
@@ -372,7 +593,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         return (Iterator<ModelEntity>) new IteratorChain( iterators );
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     private Set<? extends ModelObject> getReferencingObjects() {
         Set<? extends ModelObject> referencingObjects = new HashSet<ModelObject>();
         for ( Class refClass : ModelObject.referencingClasses() )
@@ -380,7 +601,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         return referencingObjects;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     protected <T extends ModelObject> List<T> findAllLocalModelObjects( Class<T> clazz ) {
         return listLocal( clazz );
     }
@@ -398,7 +619,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         return answer;
     }
 
-    @SuppressWarnings( {"unchecked", "RawUseOfParameterizedType"} )
+    @SuppressWarnings({"unchecked", "RawUseOfParameterizedType"})
     protected boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
         for ( ModelObject object : referencingObjects ) {
             if ( object.references( mo ) ) {
@@ -440,7 +661,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
                         "Importing snapshot for {} from {}",
                         getModelObjectContext().getUri(), dataFile.getAbsolutePath() );
                 in = new FileInputStream( dataFile );
-                importer.importPlan( in );
+                importModelObjectContext( importer, in );
                 setJournal( loadJournal( importer ) );
             }
             afterLoad();
@@ -520,7 +741,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
      * @param exporter the persistence mechanism
      * @throws IOException on errors
      */
-    void saveJournal( Exporter exporter ) throws IOException {    // todo generalize
+    public void saveJournal( Exporter exporter ) throws IOException {    // todo generalize
         getJournalFile().delete();
         FileOutputStream out = null;
         try {
@@ -536,7 +757,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
 
     // /////////////////////
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static <T extends ModelObject> T findUnknown( Class<T> clazz, long id ) throws
             NotFoundException {
         if ( clazz.isAssignableFrom( Actor.class ) && Actor.UNKNOWN.getId() == id )
@@ -561,7 +782,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
             throw new NotFoundException();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static <T extends ModelObject> T findUniversal( Class<T> clazz, long id ) throws NotFoundException {
         if ( clazz.isAssignableFrom( Actor.class )
                 && ModelEntity.getUniversalTypeFor( Actor.class ).getId() == id )
@@ -587,7 +808,7 @@ public abstract class AbstractModelObjectDao {   // todo - COMMUNITY - create Co
         else if ( clazz.isAssignableFrom( InfoProduct.class )
                 && ModelEntity.getUniversalTypeFor( InfoProduct.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( InfoProduct.class );
-        else  {
+        else {
             LOG.debug( "Universal " + clazz.getName() + " " + id + " not found" );
             throw new NotFoundException();
         }

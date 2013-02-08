@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -54,9 +54,9 @@ public class DisseminationPng extends DiagramPng {
             double[] size, 
             String orientation,
             PageParameters parameters,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             DiagramFactory diagramFactory ) throws DiagramException {
-        Segment segment = PlanPage.findSegment( planCommunity.getPlanService(), parameters );
+        Segment segment = PlanPage.findSegment( communityService.getPlanService(), parameters );
         SegmentObject segmentObject = null;
         if ( segment != null && parameters.getNamedKeys().contains( OBJECT ) ) {
             try {

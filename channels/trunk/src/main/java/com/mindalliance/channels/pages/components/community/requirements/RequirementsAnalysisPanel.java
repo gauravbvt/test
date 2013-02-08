@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
@@ -199,9 +200,9 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                 : ( " event " + ChannelsUtils.smartUncapitalize( selectedEvent.getName() ) ) );
         if ( selectedRequirementRel != null ) {
             sb.append( " by " );
-            sb.append( selectedRequirementRel.getFromAgency( getPlanCommunity() ).getName() );
+            sb.append( selectedRequirementRel.getFromAgency( getCommunityService() ).getName() );
             sb.append( " with " );
-            sb.append( selectedRequirementRel.getToAgency( getPlanCommunity() ).getName() );
+            sb.append( selectedRequirementRel.getToAgency( getCommunityService() ).getName() );
         } else if ( selectedAgency != null ) {
             sb.append( " involving " );
             sb.append( selectedAgency.getName() );
@@ -255,23 +256,23 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
 
     @SuppressWarnings( "unchecked" )
     private List<Requirement> getSelectedAppliedRequirements() {
-       PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         List<RequirementRelationship> reqRels = new ArrayList<RequirementRelationship>();
         if ( selectedRequirementRel != null ) {
             reqRels.add( selectedRequirementRel );
         } else {
             reqRels.addAll( (List<RequirementRelationship>) CollectionUtils.select(
-                    planCommunity.getParticipationAnalyst().findRequirementRelationships(
+                    communityService.getParticipationAnalyst().findRequirementRelationships(
                             selectedTiming,
                             selectedEvent,
-                            planCommunity ),
+                            communityService ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
                             RequirementRelationship reqRel = (RequirementRelationship) object;
                             return selectedAgency == null
-                                    || reqRel.getToAgency( getPlanCommunity() ).equals( selectedAgency )
-                                    || reqRel.getFromAgency( getPlanCommunity() ).equals( selectedAgency );
+                                    || reqRel.getToAgency( getCommunityService() ).equals( selectedAgency )
+                                    || reqRel.getFromAgency( getCommunityService() ).equals( selectedAgency );
                         }
                     } ) );
         }
@@ -281,7 +282,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
             for ( Requirement req : reqRel.getRequirements() ) {
                 Requirement appliedReq = req.transientCopy();
                 appliedReq.setSituationIfAppropriate( selectedTiming, selectedEvent, planLocale );
-                appliedReq.initialize( getPlanCommunity() );
+                appliedReq.initialize( getCommunityService() );
                 appliedRequirements.add( appliedReq );
             }
         }
@@ -302,9 +303,9 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
 
     public List<CommunityCommitment> getCommitments() {
         if ( selectedAppliedRequirement != null ) {
-            return getPlanCommunity().getAllCommitments( false )
+            return getCommunityService().getAllCommitments( false )
                     .inSituation( selectedTiming, selectedEvent, getPlanLocale() )
-                    .satisfying( selectedAppliedRequirement, getPlanCommunity() ).toList();
+                    .satisfying( selectedAppliedRequirement, getCommunityService() ).toList();
         } else {
             return new ArrayList<CommunityCommitment>();
         }
@@ -342,16 +343,16 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
 
     private Requirement makeAppliedRequirement( Requirement requirement, Map<String, Serializable> qualifiers ) {
         try {
-            ParticipationManager participationManager = getPlanCommunity().getParticipationManager();
+            ParticipationManager participationManager = getCommunityService().getParticipationManager();
             Requirement appliedReq = requirement.transientCopy();
             if ( qualifiers.containsKey( "committerAgency.id" ) ) {
                 Long id = (Long) qualifiers.get( "committerAgency.id" );
-                Agency committerOrg = participationManager.findAgencyById( id, getPlanCommunity() );
+                Agency committerOrg = participationManager.findAgencyById( id, getCommunityService() );
                 appliedReq.setCommitterAgency( committerOrg );
             }
             if ( qualifiers.containsKey( "beneficiaryAgency.id" ) ) {
                 Long id = (Long) qualifiers.get( "beneficiaryAgency.id" );
-                Agency beneficiaryOrg = participationManager.findAgencyById( id, getPlanCommunity() );
+                Agency beneficiaryOrg = participationManager.findAgencyById( id, getCommunityService() );
                 appliedReq.setBeneficiaryAgency( beneficiaryOrg );
             }
             if ( qualifiers.containsKey( "timing" ) ) {
@@ -363,7 +364,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                 Event event = getQueryService().find( Event.class, id );
                 appliedReq.setSituationIfAppropriate( null, event, getPlanLocale() );
             }
-            appliedReq.initialize( getPlanCommunity() );
+            appliedReq.initialize( getCommunityService() );
             return appliedReq;
         } catch ( NotFoundException e ) {
             LOG.warn( "Organization to which requirement is applied was not found" );

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -32,12 +32,12 @@ public class RequiredNetworkingPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanCommunity planCommunity,
+                                   CommunityService communityService,
                                    DiagramFactory diagramFactory ) throws DiagramException {
         Event event = null;
         Agency selectedAgency = null;
         RequirementRelationship selectedRequirementRelationship = null;
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         Phase.Timing timing = null;
         if ( parameters.getNamedKeys().contains( "timing" ) ) {
             String name = parameters.get( "timing" ).toString();
@@ -59,7 +59,7 @@ public class RequiredNetworkingPng extends DiagramPng {
                 && !parameters.get( "agency" ).toString().equals( "NONE" ) ) {
             Long agencyId = parameters.get( "agency" ).toLong();
             try {
-                selectedAgency = planCommunity.getParticipationManager().findAgencyById( agencyId, planCommunity );
+                selectedAgency = communityService.getParticipationManager().findAgencyById( agencyId, communityService );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected organization not found at :" + agencyId, e );
             }
@@ -68,7 +68,7 @@ public class RequiredNetworkingPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             String relId = parameters.get( "connection" ).toString();
             selectedRequirementRelationship = new RequirementRelationship();
-            selectedRequirementRelationship.setRelationshipId( relId, planCommunity );
+            selectedRequirementRelationship.setRelationshipId( relId, communityService );
         }
         return diagramFactory.newRequiredNetworkingDiagram(
                 timing,

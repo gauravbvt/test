@@ -100,12 +100,27 @@
         <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.graph.DiagramFactory.*(..))"
                      advice-ref="cacheSet" order="1"/>
 
-        <!-- Temporary caching trigger -->
+        <!-- Community caching -->
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityAssignments com.mindalliance.channels.core.community.CommunityService.*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityCommitments com.mindalliance.channels.core.community.CommunityService.*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
+
+
+        <!-- Temporary cache clearing triggers -->
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandDone(..))" advice-ref="cacheClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandUndone(..))" advice-ref="cacheClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandRedone(..))" advice-ref="cacheClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.started(..))" advice-ref="cacheClear" order="1"/>
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.clearCache(..))" advice-ref="cacheClear" order="1"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandDone(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandUndone(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandRedone(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.started(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.clearCache(..))" advice-ref="communityClear" order="1"/>
+
 
         <!-- Permanent caching -->
         <aop:advisor pointcut="execution(String com.mindalliance.channels.engine.geo.GeoService.*(..))"
@@ -123,12 +138,5 @@
         <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.core.nlp.SemanticMatcher.lookupBaseForm(..))"
                      advice-ref="permSet" order="1"/>
 
-        <!-- Community caching -->
-        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityAssignments com.mindalliance.channels.core.community.CommunityService.*(..))"
-                     advice-ref="communitySet" order="1"/>
-         <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityCommitments com.mindalliance.channels.core.community.CommunityService.*(..))"
-                     advice-ref="communitySet" order="1"/>
-        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
-
-    </aop:config>
+   </aop:config>
 </beans>

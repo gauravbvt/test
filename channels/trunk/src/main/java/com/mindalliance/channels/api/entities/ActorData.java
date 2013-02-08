@@ -2,10 +2,10 @@ package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.lang.StringUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -29,8 +29,8 @@ public class ActorData extends ModelEntityData {
     public ActorData() {
     }
 
-    public ActorData( String serverUrl, ModelObject modelObject, Plan plan ) {
-        super( serverUrl, modelObject, plan );
+    public ActorData( String serverUrl, ModelObject modelObject, CommunityService communityService ) {
+        super( serverUrl, modelObject, communityService );
     }
 
     @Override

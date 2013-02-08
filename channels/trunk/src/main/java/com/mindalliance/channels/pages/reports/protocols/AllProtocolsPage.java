@@ -3,7 +3,7 @@
 
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -45,8 +45,8 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
     }
 
 
-    protected void initComponents( QueryService service, final PlanCommunity planCommunity ) {
-        boolean isPlanner = getUser().isPlanner( planCommunity.getPlan().getUri() );
+    protected void initComponents( QueryService service, final CommunityService communityService ) {
+        boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
         getContainer().add(
                 new WebMarkupContainer( "note" ).setVisible( isPlanner ),
                 new WebMarkupContainer( "activeDiv" ).add(
@@ -60,7 +60,7 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                             @Override
                             protected void populateItem( ListItem<UserParticipation> item ) {
                                 UserParticipation p = item.getModelObject();
-                                Agent agent = p.getAgent( getPlanCommunity() );
+                                Agent agent = p.getAgent( getCommunityService() );
                                 String participatingUsername = p.getParticipant().getUsername();
                                 ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
                                 item.add(

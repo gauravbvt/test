@@ -89,6 +89,11 @@ public class Serializer implements Importer, Exporter {
         //Todo
     }
 
+    @Override
+    public void importPlanCommunity( FileInputStream stream ) throws IOException {
+        // Todo
+    }
+
     /**
      * {@inheritDoc}
      */

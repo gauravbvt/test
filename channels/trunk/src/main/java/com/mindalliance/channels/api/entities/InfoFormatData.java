@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.InfoFormat;
-import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -23,8 +23,8 @@ public class InfoFormatData extends ModelEntityData {
         // required
     }
 
-    public InfoFormatData( String serverUrl, InfoFormat infoFormat, Plan plan ) {
-        super( serverUrl, infoFormat, plan );
+    public InfoFormatData( String serverUrl, InfoFormat infoFormat, CommunityService communityService ) {
+        super( serverUrl, infoFormat, communityService );
     }
 
     @Override

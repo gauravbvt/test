@@ -77,7 +77,7 @@ public interface PlanManager extends CommandListener {
      */
     PlanDao getDao( String uri, boolean development );
 
-    DefinitionManager getDefinitionManager();
+    PlanDefinitionManager getPlanDefinitionManager();
 
     /**
      * Get all loaded plans managed, development and production.
@@ -247,6 +247,7 @@ public interface PlanManager extends CommandListener {
 
     /**
      * Clear the cache.
+     * Via AOP.
      */
     void clearCache();
 

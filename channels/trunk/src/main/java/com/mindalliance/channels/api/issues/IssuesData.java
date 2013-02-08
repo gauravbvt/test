@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.issues;
 
 import com.mindalliance.channels.api.plan.PlanSummaryData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.PlanService;
@@ -34,22 +34,22 @@ public class IssuesData  implements Serializable {
     public IssuesData() {
     }
 
-     public IssuesData( String serverUrl, PlanCommunity planCommunity ) {
-        init( serverUrl, planCommunity );
+     public IssuesData( String serverUrl, CommunityService communityService ) {
+        init( serverUrl, communityService );
     }
 
     private void init(
             String serverUrl,
-            PlanCommunity planCommunity ) {
-        planSummaryData = new PlanSummaryData( serverUrl, planCommunity );
-        planMetricsData = new PlanMetricsData( planCommunity );
-        initIssues( planCommunity );
+            CommunityService communityService ) {
+        planSummaryData = new PlanSummaryData( serverUrl, communityService );
+        planMetricsData = new PlanMetricsData( communityService );
+        initIssues( communityService );
     }
 
-    private void initIssues( PlanCommunity planCommunity ) {
+    private void initIssues( CommunityService communityService ) {
         issues = new ArrayList<IssueData>();
-        PlanService planService = planCommunity.getPlanService();
-        Analyst analyst = planCommunity.getAnalyst();
+        PlanService planService = communityService.getPlanService();
+        Analyst analyst = communityService.getAnalyst();
         for ( ModelObject mo : planService.list( ModelObject.class ) ) {
             for ( Issue issue : analyst.listIssues( planService, mo, true ) ) {
                 issues.add( new IssueData( issue, mo ) );

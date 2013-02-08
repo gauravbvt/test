@@ -48,7 +48,7 @@ public class PlanManagerImpl implements PlanManager {
     private final Listeners listeners = new Listeners();
 
     /** Plan persistence manager. */
-    private final DefinitionManager definitionManager;
+    private final PlanDefinitionManager planDefinitionManager;
     /**
      * All the plans, indexed by version uri (uri:version).
      */
@@ -97,8 +97,8 @@ public class PlanManagerImpl implements PlanManager {
         this( null );
     }
 
-    public PlanManagerImpl( DefinitionManager definitionManager ) {
-        this.definitionManager = definitionManager;
+    public PlanManagerImpl( PlanDefinitionManager planDefinitionManager ) {
+        this.planDefinitionManager = planDefinitionManager;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public Version getVersion( Plan plan ) {
-        return definitionManager.get( plan.getUri(), plan.isDevelopment() );
+        return planDefinitionManager.get( plan.getUri(), plan.isDevelopment() );
     }
 
     @Override
@@ -189,7 +189,7 @@ public class PlanManagerImpl implements PlanManager {
     @Override
     public PlanDao getDao( String uri, boolean development ) {
         synchronized ( daoIndex ) {
-            Version version = definitionManager.get( uri, development );
+            Version version = planDefinitionManager.get( uri, development );
             if ( version == null )
                 return null;
 
@@ -207,7 +207,7 @@ public class PlanManagerImpl implements PlanManager {
         try {
             PlanDao dao = new PlanDao( version );
             dao.setUserDetailsService( userDao );
-            dao.setIdGenerator( definitionManager.getIdGenerator() );
+            dao.setIdGenerator( planDefinitionManager.getIdGenerator() );
             dao.resetPlan();
             dao.defineImmutableEntities();
             dao.defineImmutableMedia( builtInMedia );
@@ -225,15 +225,15 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    public DefinitionManager getDefinitionManager() {
-        return definitionManager;
+    public PlanDefinitionManager getPlanDefinitionManager() {
+        return planDefinitionManager;
     }
 
     @Override
     public List<Plan> getPlans() {
         List<Plan> result = new ArrayList<Plan>( daoIndex.size() );
-        synchronized ( definitionManager ) {
-            for ( PlanDefinition definition : definitionManager ) {
+        synchronized ( planDefinitionManager ) {
+            for ( PlanDefinition definition : planDefinitionManager ) {
                 String uri = definition.getUri();
                 PlanDao devDao = getDao( uri, true );
                 if ( devDao != null )
@@ -249,33 +249,6 @@ public class PlanManagerImpl implements PlanManager {
         return Collections.unmodifiableList( result );
     }
 
-    /**
-     * Callback after a command was executed.
-     *
-     * @param plan         the plan
-     * @param command      the command
-     */
-    public void onAfterCommand( Plan plan, JournalCommand command ) {
-        if ( command != null && command.isMemorable() )
-            try {
-                PlanDao dao = getDao( plan );
-                Exporter exporter = importExportFactory.createExporter( "daemon", dao );
-                synchronized ( dao ) {
-                    Journal journal = dao.getJournal();
-                    if ( command.forcesSnapshot()
-                         || journal.size() >= getDefinitionManager().getSnapshotThreshold()
-                         || plan.isProduction() )
-                        dao.save( exporter );
-                    else {
-                        journal.addCommand( command );
-                        dao.saveJournal( exporter );
-                    }
-                }
-
-            } catch ( IOException e ) {
-                throw new RuntimeException( "Failed to save journal", e );
-            }
-    }
 
     @Override
     public void save( Plan plan ) {
@@ -324,7 +297,7 @@ public class PlanManagerImpl implements PlanManager {
     @Override
     public Plan getPlan( String uri, int version ) {
 
-        PlanDefinition definition = definitionManager.get( uri );
+        PlanDefinition definition = planDefinitionManager.get( uri );
         if ( definition != null ) {
             Version v = definition.get( version );
             if ( v != null )
@@ -378,7 +351,7 @@ public class PlanManagerImpl implements PlanManager {
             }
         }
 
-        definitionManager.delete( uri );
+        planDefinitionManager.delete( uri );
         LOG.info( "Deleted {}", plan );
     }
 
@@ -510,13 +483,13 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public Plan getDefaultPlan( ChannelsUser user ) {
-        for ( PlanDefinition planDefinition : definitionManager ) {
+        for ( PlanDefinition planDefinition : planDefinitionManager ) {
             String uri = planDefinition.getUri();
             if ( user.isPlanner( uri ) )
                 return getDao( uri, true ).getPlan();
         }
 
-        for ( PlanDefinition planDefinition : definitionManager ) {
+        for ( PlanDefinition planDefinition : planDefinitionManager ) {
             String uri = planDefinition.getUri();
             PlanDao dao = getDao( uri, false );
             if ( dao != null && user.isParticipant( uri ) )
@@ -563,7 +536,7 @@ public class PlanManagerImpl implements PlanManager {
     @Override
     public void commandDone( Commander commander, Command command, Change change ) {
         if ( !commander.isReplaying() && command.isTop() && !change.isNone() )
-            onAfterCommand( commander.getPlan(), command );
+            onAfterCommand( commander.getPlanService().getPlan(), command );
     }
 
     @Override
@@ -585,7 +558,33 @@ public class PlanManagerImpl implements PlanManager {
         // clearing done via aspect
     }
 
+    /**
+     * Callback after a command was executed.
+     *
+     * @param plan         the plan
+     * @param command      the command
+     */
+    private void onAfterCommand( Plan plan, JournalCommand command ) {
+        if ( command != null && command.isMemorable() )
+            try {
+                PlanDao dao = getDao( plan );
+                Exporter exporter = importExportFactory.createExporter( "daemon", dao );
+                synchronized ( dao ) {
+                    Journal journal = dao.getJournal();
+                    if ( command.forcesSnapshot()
+                            || journal.size() >= getPlanDefinitionManager().getSnapshotThreshold()
+                            || plan.isProduction() )
+                        dao.save( exporter );
+                    else {
+                        journal.addCommand( command );
+                        dao.saveJournal( exporter );
+                    }
+                }
 
+            } catch ( IOException e ) {
+                throw new RuntimeException( "Failed to save journal", e );
+            }
+    }
 
     /**
      * Listener event management.

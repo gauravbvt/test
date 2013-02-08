@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -206,12 +207,12 @@ public class Feedback extends UserStatement {
     }
 
     @Override
-    protected String getTextContent( Format format, PlanCommunity planCommunity ) {
+    protected String getTextContent( Format format, CommunityService communityService ) {
         // Ignore format
         return "Plan: " + getPlanUri()
                 + ":"
                 + getPlanVersion()
-                + "\nUser: " + planCommunity.getUserDao().getFullName( getUsername() )
+                + "\nUser: " + communityService.getUserDao().getFullName( getUsername() )
                 + "\n"
                 + DATE_FORMAT.format( getCreated() )
                 + aboutString(  )
@@ -249,7 +250,7 @@ public class Feedback extends UserStatement {
         }
     }
 
-    protected String getTextSubject( Format format, PlanCommunity planCommunity ) {
+    protected String getTextSubject( Format format, CommunityService communityService ) {
         // Ignore format
         StringBuilder sb = new StringBuilder();
         sb.append( "Feedback" );

@@ -168,7 +168,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
         }
         Date whenLastReceived = userMessageService.getWhenLastReceived(
                 getUser().getUsername(),
-                getPlanCommunity() );
+                getCommunityService() );
         if ( whenLastReceived != null && whenLastReceived.after( whenLastRefreshed ) ) {
             update( target, Change.message( "New message" ) );
         }

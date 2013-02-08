@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.Organization;
@@ -196,7 +196,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
 
     private List<String> getAllAgentNames() {
         List<String> names = new ArrayList<String>();
-        for ( Agent agent : getPlanCommunity().getParticipationManager().getAllKnownAgents( getPlanCommunity() ) ) {
+        for ( Agent agent : getCommunityService().getParticipationManager().getAllKnownAgents( getCommunityService() ) ) {
             names.add( agent.getName() );
         }
         Collections.sort( names );
@@ -205,7 +205,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
 
     private List<String> getAllJurisdictionNames() {
         List<String> names = new ArrayList<String>();
-        for ( Place place : getPlanCommunity().getPlanService().listActualEntities( Place.class, true ) ) {
+        for ( Place place : getCommunityService().getPlanService().listActualEntities( Place.class, true ) ) {
             if ( !place.isUnknown() )
                 names.add( place.getName() );
         }
@@ -218,7 +218,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     private List<String> getAllAgencyNames() {
         List<String> names = new ArrayList<String>();
         for ( Agency agency :
-                getPlanCommunity().getParticipationManager().getAllKnownAgencies( getPlanCommunity() ) ) {
+                getCommunityService().getParticipationManager().getAllKnownAgencies( getCommunityService() ) ) {
             if ( agency.isFixedOrganization() || agency.isParticipatingAsPlaceholder() ) {
                 names.add( agency.getName() );
             }
@@ -230,7 +230,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     @SuppressWarnings( "unchecked" )
     private List<String> getAllPlaceholderNames() {
         List<String> names = new ArrayList<String>();
-        for ( Organization organization : getPlanCommunity().getPlanService().listActualEntities( Organization.class ) ) {
+        for ( Organization organization : getCommunityService().getPlanService().listActualEntities( Organization.class ) ) {
             if ( organization.isPlaceHolder() ) {
                 names.add( organization.getName() );
             }
@@ -256,10 +256,10 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     }
 
     public void setAgentName( String name ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         Requirement requirement = getRequirement();
         if ( name != null && !name.isEmpty() ) {
-            Agent agent = planCommunity.getParticipationManager().findAgentNamed( name, planCommunity );
+            Agent agent = communityService.getParticipationManager().findAgentNamed( name, communityService );
             if ( agent != null ) {
                 MultiCommand multiCommand = new MultiCommand( getUsername(), "Set required agent" );
                 multiCommand.makeUndoable( false );
@@ -291,7 +291,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                     getAgentSpecPath( "actor" ),
                     null ) );
         }
-        requirement.initialize( planCommunity );
+        requirement.initialize( communityService );
     }
 
     public String getAgencyName() {
@@ -300,10 +300,10 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     }
 
     public void setAgencyName( String name ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         Requirement requirement = getRequirement();
         if ( name != null && !name.isEmpty() ) {
-            Agency agency = planCommunity.getParticipationManager().findAgencyNamed( name, planCommunity );
+            Agency agency = communityService.getParticipationManager().findAgencyNamed( name, communityService );
             if ( agency != null ) {
                 if ( agency.isFixedOrganization() ) {
                     doCommand( new UpdatePlanObject(
@@ -341,7 +341,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
             }
             doCommand( multiCommand );
         }
-        requirement.initialize( planCommunity );
+        requirement.initialize( communityService );
     }
 
     public String getPlaceholderName() {
@@ -350,11 +350,11 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     }
 
     public void setPlaceholderName( String name ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         Requirement requirement = getRequirement();
         Organization placeholder = null;
         if ( name != null && !name.isEmpty() ) {
-            placeholder = planCommunity.getPlanService().findActualEntity( Organization.class, name );
+            placeholder = communityService.getPlanService().findActualEntity( Organization.class, name );
             if ( placeholder != null )
                 placeholder = placeholder.isPlaceHolder() ? placeholder : null;
         }
@@ -363,7 +363,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                 requirement,
                 getAgentSpecPath( "placeholder" ),
                 placeholder ) );
-        requirement.initialize( planCommunity );
+        requirement.initialize( communityService );
     }
 
 /*
@@ -373,7 +373,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
     }
 
     public void setJurisdictionName( String name ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        PlanCommunity planCommunity = getCommunityService();
         Requirement requirement = getRequirement();
         Place jurisdiction = null;
         if ( name != null && !name.isEmpty() ) {
@@ -391,7 +391,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
 
     public Requirement getRequirement() {
         Requirement req = (Requirement) getModel().getObject();
-        req.initialize( getPlanCommunity() );
+        req.initialize( getCommunityService() );
         return req;
     }
 }

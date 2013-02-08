@@ -1,12 +1,13 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
-import com.mindalliance.channels.core.dao.DefinitionManager;
+import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -69,7 +70,7 @@ public class AdminPage extends AbstractChannelsWebPage {
      * The plan definition manager.
      */
     @SpringBean
-    private DefinitionManager definitionManager;
+    private PlanDefinitionManager planDefinitionManager;
 
     /**
      * The user service.
@@ -165,7 +166,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                 }
             }
         };
-        deleteLink.setVisible( definitionManager.getSize() >= 1 );
+        deleteLink.setVisible( planDefinitionManager.getSize() >= 1 );
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
         managePlanSubmit.setVisible( getPlan().isDevelopment() );
         add(
@@ -201,7 +202,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 .add( new AbstractValidator<String>() {
                                     @Override
                                     protected void onValidate( IValidatable<String> validatable ) {
-                                        if ( !definitionManager.isNewPlanUriValid( validatable.getValue() ) )
+                                        if ( !planDefinitionManager.isNewPlanUriValid( validatable.getValue() ) )
                                             error( validatable, "NonUniqueUri" );
                                     }
                                 } )
@@ -335,7 +336,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                         newPlanClient != null && !newPlanClient.isEmpty()
                                 ? ( newPlanClient + ( newPlanClient.endsWith( "s" ) ? "'" : "'s" ) + " New Plan" )
                                 : "New Plan";
-                definitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
+                planDefinitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
                 getPlanManager().assignPlans();
             } catch ( IOException e ) {
                 LOG.error( "Unable to create plan", e );
@@ -387,7 +388,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     }
 
     public void setNewPlanUri( String newPlanUri ) {
-        this.newPlanUri = Plan.sanitize( newPlanUri );
+        this.newPlanUri = ChannelsUtils.sanitize( newPlanUri );
     }
 
     private MarkupContainer createUserRow( IModel<String> uriModel, final ListItem<ChannelsUser> item ) {

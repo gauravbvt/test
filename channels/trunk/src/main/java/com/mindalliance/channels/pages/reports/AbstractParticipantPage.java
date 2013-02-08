@@ -197,7 +197,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                     List<UserParticipation> supervisorParticipations =
                             getUserParticipationService().getParticipationsAsAgent(
                                     new Agent( supervisorEmp.getActor() ),  // todo - agents!
-                                    getPlanCommunity() );
+                                    getCommunityService() );
                     supervisor = new AggregatedContact(
                             service,
                             supervisorEmp,
@@ -258,7 +258,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                 return getUserParticipationService().getParticipation(
                         user,
                         new Agent( actor ),  // todo - agents!
-                        getPlanCommunity() );
+                        getCommunityService() );
         }
 
         public String getAvailability() {

@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -42,10 +42,10 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) {
+                        DiagramFactory diagramFactory, CommunityService communityService ) {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         GraphBuilder<Hierarchical, HierarchyRelationship> hierarchyGraphBuilder =
                 new HierarchyGraphBuilder( hierarchical, planService );
         Graph<Hierarchical, HierarchyRelationship> graph = hierarchyGraphBuilder.buildDirectedGraph();
@@ -61,6 +61,6 @@ public class HierarchyDiagram extends AbstractDiagram<Hierarchical, HierarchyRel
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         HierarchyDOTExporter dotExporter = new HierarchyDOTExporter( metaProvider );
-        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( communityService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

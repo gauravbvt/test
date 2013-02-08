@@ -155,9 +155,9 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             AjaxRequestTarget target ) {
         try {
             Long agencyId = Long.parseLong( vertexId );
-             Agency agency = getPlanCommunity().getParticipationManager().findAgencyById(
+             Agency agency = getCommunityService().getParticipationManager().findAgencyById(
                      agencyId,
-                     getPlanCommunity() );
+                     getCommunityService() );
              if ( !agency.equals( selectedAgency ) ) {
                  String js = scroll( domIdentifier, scrollTop, scrollLeft );
                  Change change = new Change( Change.Type.Selected, agency, "agency" );
@@ -179,7 +179,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             Map<String, String> extras,
             AjaxRequestTarget target ) {
         RequirementRelationship requirementRelationship = new RequirementRelationship();
-        requirementRelationship.setRelationshipId( edgeId, getPlanCommunity() );
+        requirementRelationship.setRelationshipId( edgeId, getCommunityService() );
         String js = scroll( domIdentifier, scrollTop, scrollLeft );
         Change change = new Change( Change.Type.Selected, requirementRelationship );
         change.setScript( js );

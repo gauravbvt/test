@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Nameable;
@@ -26,21 +26,21 @@ public class Agent implements Nameable, Identifiable {
         name = actor.getName();
     }
 
-    public Agent( Actor actor, OrganizationParticipation organizationParticipation, PlanCommunity planCommunity ) {
+    public Agent( Actor actor, OrganizationParticipation organizationParticipation, CommunityService communityService ) {
         this.actor = actor;
         this.organizationParticipation = organizationParticipation;
         if ( organizationParticipation != null ) {
-            String jobTitle = organizationParticipation.getJobTitle( actor, planCommunity );
+            String jobTitle = organizationParticipation.getJobTitle( actor, communityService );
             name = (jobTitle.isEmpty() ? actor.getName() : jobTitle)
                     + " at "
-                    + new Agency( organizationParticipation, planCommunity ).getName();
+                    + new Agency( organizationParticipation, communityService ).getName();
         } else {
             name = actor.getName();
         }
     }
 
-    public Agent( Actor actor, Agency agency, PlanCommunity planCommunity ) {
-        this( actor, agency.getOrganizationParticipation(), planCommunity );
+    public Agent( Actor actor, Agency agency, CommunityService communityService ) {
+        this( actor, agency.getOrganizationParticipation(), communityService );
     }
 
     public Actor getActor() {
@@ -95,9 +95,9 @@ public class Agent implements Nameable, Identifiable {
         return false;
     }
 
-    public boolean isValid( PlanCommunity planCommunity ) {
+    public boolean isValid( CommunityService communityService ) {
         return actor != null
-                && ( planCommunity.getPlanService().listActualEntities( Actor.class ).contains(  actor ))/*
+                && ( communityService.getPlanService().listActualEntities( Actor.class ).contains(  actor ))/*
                 && ( organizationParticipation == null || organizationParticipation.isValidAgent( this, planCommunity ) )*/;
     }
 
@@ -160,14 +160,14 @@ public class Agent implements Nameable, Identifiable {
         return actor.isSupervisedParticipation();
     }
 
-    public String getRequirementsDescription( PlanCommunity planCommunity ) {
-        return getActor().getRequirementsDescription( planCommunity.getPlan() );
+    public String getRequirementsDescription( CommunityService communityService ) {
+        return getActor().getRequirementsDescription( communityService.getPlan() );   // todo - COMMUNITY - move to community
      }
 
-    public boolean isRegisteredInPlaceholder( Organization organization, PlanCommunity planCommunity ) {
+    public boolean isRegisteredInPlaceholder( Organization organization, CommunityService communityService ) {
         return organization.isPlaceHolder()
                 && isFromOrganizationParticipation()
-                && getOrganizationParticipation().getPlaceholderOrganization( planCommunity )
+                && getOrganizationParticipation().getPlaceholderOrganization( communityService )
                 .equals( organization );
     }
 

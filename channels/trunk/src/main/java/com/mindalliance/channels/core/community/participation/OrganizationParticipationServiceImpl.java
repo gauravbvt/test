@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
@@ -41,11 +41,11 @@ public class OrganizationParticipationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public List<Agency> listParticipatingAgencies( PlanCommunity planCommunity ) {
+    public List<Agency> listParticipatingAgencies( CommunityService communityService ) {
         Set<Agency> agencies = new HashSet<Agency>();
-        for ( OrganizationParticipation registration : getAllOrganizationParticipations( planCommunity ) ) {
-            if ( isValid( registration, planCommunity ) ) {
-                Agency agency = new Agency( registration, planCommunity );
+        for ( OrganizationParticipation registration : getAllOrganizationParticipations( communityService ) ) {
+            if ( isValid( registration, communityService ) ) {
+                Agency agency = new Agency( registration, communityService );
                 agencies.add( agency );
             }
         }
@@ -55,36 +55,36 @@ public class OrganizationParticipationServiceImpl
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<OrganizationParticipation> getAllOrganizationParticipations( PlanCommunity planCommunity ) {
+    public List<OrganizationParticipation> getAllOrganizationParticipations( CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
-        return validate( (List<OrganizationParticipation>) criteria.list(), planCommunity );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
+        return validate( (List<OrganizationParticipation>) criteria.list(), communityService );
     }
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isValid( OrganizationParticipation orgParticipation, PlanCommunity planCommunity ) {
+    public boolean isValid( OrganizationParticipation orgParticipation, CommunityService communityService ) {
         if ( orgParticipation == null ) return false;
-        Organization placeholder = orgParticipation.getPlaceholderOrganization( planCommunity );
+        Organization placeholder = orgParticipation.getPlaceholderOrganization( communityService );
         return placeholder != null
                 && placeholder.isPlaceHolder()
-                && orgParticipation.getRegisteredOrganization().isValid( planCommunity );
+                && orgParticipation.getRegisteredOrganization().isValid( communityService );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<Agency> listAgenciesParticipatingAs( Organization placeholder, PlanCommunity planCommunity ) {
+    public List<Agency> listAgenciesParticipatingAs( Organization placeholder, CommunityService communityService ) {
         if ( placeholder.isPlaceHolder() ) {
             Session session = getSession();
             Criteria criteria = session.createCriteria( getPersistentClass() );
-            criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+            criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
             criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
             List<Agency> agencies = new ArrayList<Agency>();
             for ( OrganizationParticipation orgParticipation
-                    : validate( (List<OrganizationParticipation>) criteria.list(), planCommunity ) ) {
-                agencies.add( new Agency( orgParticipation, planCommunity ) );
+                    : validate( (List<OrganizationParticipation>) criteria.list(), communityService ) ) {
+                agencies.add( new Agency( orgParticipation, communityService ) );
             }
             return agencies;
         } else {
@@ -97,9 +97,9 @@ public class OrganizationParticipationServiceImpl
     public boolean canUnassignOrganizationFrom(
             ChannelsUser user,
             Organization placeholder,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         return placeholder.isPlaceHolder()
-                && planCommunity.isCustodianOf( user, placeholder );
+                && communityService.isCustodianOf( user, placeholder );
     }
 
     @Override
@@ -108,16 +108,16 @@ public class OrganizationParticipationServiceImpl
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
-            PlanCommunity planCommunity ) {
-        if ( planCommunity.isCustodianOf( user, placeholder ) ) {
-            if ( !isAgencyRegisteredAs( registeredOrganization, placeholder, planCommunity ) ) {
+            CommunityService communityService ) {
+        if ( communityService.isCustodianOf( user, placeholder ) ) {
+            if ( !isAgencyRegisteredAs( registeredOrganization, placeholder, communityService ) ) {
                 OrganizationParticipation registration = new OrganizationParticipation(
                         user.getUsername(),
                         registeredOrganization,
                         placeholder,
-                        planCommunity );
+                        communityService.getPlanCommunity() );
                 save( registration );
-                planCommunity.clearCache();
+                communityService.clearCache();
                 return registration;
             } else {
                 return null;
@@ -132,13 +132,13 @@ public class OrganizationParticipationServiceImpl
     public boolean isAgencyRegisteredAs(
             RegisteredOrganization registeredOrg,
             Organization placeholder,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
         criteria.add( Restrictions.eq( "registeredOrganization", registeredOrg ) );
-        return !validate( (List<OrganizationParticipation>) criteria.list(), planCommunity ).isEmpty();
+        return !validate( (List<OrganizationParticipation>) criteria.list(), communityService ).isEmpty();
     }
 
     @Override
@@ -147,18 +147,18 @@ public class OrganizationParticipationServiceImpl
             ChannelsUser user,
             RegisteredOrganization registeredOrg,
             Organization placeholder,
-            PlanCommunity planCommunity ) {
-        if ( canUnassignOrganizationFrom( user, placeholder, planCommunity ) ) {
+            CommunityService communityService ) {
+        if ( canUnassignOrganizationFrom( user, placeholder, communityService ) ) {
             OrganizationParticipation organizationParticipation = findOrganizationParticipation(
-                    registeredOrg.getName( planCommunity ),
+                    registeredOrg.getName( communityService ),
                     placeholder,
-                    planCommunity );
+                    communityService );
             if ( organizationParticipation != null
                     && userParticipationService.listUserParticipationIn(
                     organizationParticipation,
-                    planCommunity ).isEmpty() ) {
+                    communityService ).isEmpty() ) {
                 delete( organizationParticipation );
-                planCommunity.clearCache();
+                communityService.clearCache();
                 return true;
             }
         }
@@ -168,12 +168,12 @@ public class OrganizationParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<OrganizationParticipation> findAllParticipationBy( RegisteredOrganization registeredOrganization, PlanCommunity planCommunity ) {
+    public List<OrganizationParticipation> findAllParticipationBy( RegisteredOrganization registeredOrganization, CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.eq( "registeredOrganization", registeredOrganization ) );
-        return validate( (List<OrganizationParticipation>) criteria.list(), planCommunity );
+        return validate( (List<OrganizationParticipation>) criteria.list(), communityService );
     }
 
     @Override
@@ -182,15 +182,15 @@ public class OrganizationParticipationServiceImpl
     public OrganizationParticipation findOrganizationParticipation(
             String orgName,
             Organization placeholder,
-            PlanCommunity planCommunity ) {
-        RegisteredOrganization registeredOrg = registeredOrganizationService.find( orgName, planCommunity );
+            CommunityService communityService ) {
+        RegisteredOrganization registeredOrg = registeredOrganizationService.find( orgName, communityService );
         if ( registeredOrg != null ) {
             Session session = getSession();
             Criteria criteria = session.createCriteria( getPersistentClass() );
-            criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+            criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
             criteria.add( Restrictions.eq( "placeholderOrgId", placeholder.getId() ) );
             criteria.add( Restrictions.eq( "registeredOrganization", registeredOrg ) );
-            List<OrganizationParticipation> registrations = validate( (List<OrganizationParticipation>) criteria.list(), planCommunity );
+            List<OrganizationParticipation> registrations = validate( (List<OrganizationParticipation>) criteria.list(), communityService );
             if ( !registrations.isEmpty() ) {
                 return registrations.get( 0 );
             } else {
@@ -204,13 +204,13 @@ public class OrganizationParticipationServiceImpl
     @SuppressWarnings( "unchecked" )
     private List<OrganizationParticipation> validate(
             List<OrganizationParticipation> organizationRegistrations,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         return (List<OrganizationParticipation>) CollectionUtils.select(
                 organizationRegistrations,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isValid( (OrganizationParticipation) object, planCommunity );
+                        return isValid( (OrganizationParticipation) object, communityService );
                     }
                 }
         );

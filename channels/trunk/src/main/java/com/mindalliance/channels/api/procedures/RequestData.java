@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
@@ -47,15 +47,15 @@ public class RequestData extends AbstractFlowData {
 
     public RequestData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Flow request,
             boolean initiating,
             CommunityAssignment assignment,
             ChannelsUser user ) {
-        super( serverUrl, planCommunity, initiating, request, assignment, user );
+        super( serverUrl, communityService, initiating, request, assignment, user );
         initData(
                 serverUrl,
-                planCommunity,
+                communityService,
                 user == null ? null : user.getUserInfo() );
     }
 
@@ -66,17 +66,17 @@ public class RequestData extends AbstractFlowData {
 
     protected void initData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUserInfo userInfo  ) {
-        initCommitments( planCommunity );
-        initContactEmployments( serverUrl, planCommunity, userInfo );
-        initConsumingTask( serverUrl, planCommunity );
-        initOtherData( planCommunity );
+        initCommitments( communityService );
+        initContactEmployments( serverUrl, communityService, userInfo );
+        initConsumingTask( serverUrl, communityService );
+        initOtherData( communityService );
     }
 
-    private void initCommitments( PlanCommunity planCommunity ) {
+    private void initCommitments( CommunityService communityService ) {
         commitments = new ArrayList<CommunityCommitment>(  ) ;
-        for ( CommunityCommitment commitment : planCommunity.findAllCommitments( getSharing(), false ) ) {   // not to self
+        for ( CommunityCommitment commitment : communityService.findAllCommitments( getSharing(), false ) ) {   // not to self
             if ( isInitiating() ) {  // requesting
                 if ( commitment.getBeneficiary().equals( getAssignment() ) ) {
                     commitments.add( commitment );
@@ -91,7 +91,7 @@ public class RequestData extends AbstractFlowData {
 
     private void initContactEmployments(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUserInfo userInfo ) {
         Set<CommunityEmployment> contactedEmployments = new HashSet<CommunityEmployment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>(  );
@@ -103,7 +103,7 @@ public class RequestData extends AbstractFlowData {
                         serverUrl,
                         employment,
                         commitment,
-                        planCommunity,
+                        communityService,
                         userInfo ) ) ;
             } else { // replying
                 CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
@@ -112,7 +112,7 @@ public class RequestData extends AbstractFlowData {
                         serverUrl,
                          employment,
                         commitment,
-                        planCommunity,
+                        communityService,
                         userInfo ) ) ;
             }
         }
@@ -120,11 +120,11 @@ public class RequestData extends AbstractFlowData {
         contacts = new ArrayList<ContactData>( contactDataSet );
     }
 
-    private void initConsumingTask( String serverUrl, PlanCommunity planCommunity ) {
+    private void initConsumingTask( String serverUrl, CommunityService communityService ) {
         if ( !isInitiating() )  {
             consumingTaskData = new TaskData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     (Part)getSharing().getTarget(),
                     getUser() );
             if ( flow().isTerminatingToTarget() )

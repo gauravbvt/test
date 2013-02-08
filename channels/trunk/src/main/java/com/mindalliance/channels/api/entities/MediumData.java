@@ -2,8 +2,8 @@ package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.SecurityClassificationData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Classification;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -22,12 +22,30 @@ import java.util.List;
 @XmlType( propOrder = {"name", "id", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"} )
 public class MediumData extends ModelEntityData {
 
+    private ActorData actorData;
+    private List<MediumData> delegates;
+    private PlaceData reach;
+
     public MediumData() {
         // required
     }
 
-    public MediumData( String serverUrl, TransmissionMedium medium, Plan plan ) {
-        super( serverUrl, medium, plan );
+    public MediumData( String serverUrl, TransmissionMedium medium, CommunityService communityService ) {
+        super( serverUrl, medium, communityService );
+        init( communityService );
+    }
+
+    private void init( CommunityService communityService ) {
+       actorData = getMedium().getQualification() == null
+               ? null
+               : new ActorData( getServerUrl(), getMedium().getQualification(), communityService );
+        delegates = new ArrayList<MediumData>(  );
+        for ( TransmissionMedium delegate : getMedium().getEffectiveDelegatedToMedia() ) {
+            delegates.add(  new MediumData( getServerUrl(), delegate, communityService ) );
+        }
+        reach = getMedium().getReach() == null
+                ? null
+                : new PlaceData( getServerUrl(), getMedium().getReach(), communityService );
     }
 
     @Override
@@ -71,24 +89,16 @@ public class MediumData extends ModelEntityData {
 
     @XmlElement
     public PlaceData getReach() {
-        return getMedium().getReach() == null
-                ? null
-                : new PlaceData( getServerUrl(), getMedium().getReach(), getPlan() );
+        return reach;
     }
 
     @XmlElement
     public ActorData getQualification() {
-        return getMedium().getQualification() == null
-                ? null
-                : new ActorData( getServerUrl(), getMedium().getQualification(), getPlan() );
+        return actorData;
     }
 
     @XmlElement
     public List<MediumData> getDelegatesTo() {
-        List<MediumData> delegates = new ArrayList<MediumData>(  );
-        for ( TransmissionMedium delegate : getMedium().getEffectiveDelegatedToMedia() ) {
-            delegates.add(  new MediumData( getServerUrl(), delegate, getPlan() ) );
-        }
         return delegates;
     }
 

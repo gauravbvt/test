@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
@@ -72,8 +72,8 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     @Override
-    protected void beforeExport( PlanCommunity planCommunity, Graph<Node, Flow> g ) {
-        super.beforeExport( planCommunity, g );
+    protected void beforeExport( CommunityService communityService, Graph<Node, Flow> g ) {
+        super.beforeExport( communityService, g );
         Segment segment = getSegment();
         for ( Node node : g.vertexSet() ) {
             if ( node.isPart() ) {
@@ -90,7 +90,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
             }
         }
         for ( EventTiming eventTiming : segment.getContext() ) {
-            for ( Part part : planCommunity.getPlanService().findAllInitiators( eventTiming ) ) {
+            for ( Part part : communityService.getPlanService().findAllInitiators( eventTiming ) ) {
                 Set<Part> parts = contextInitiators.get( eventTiming );
                 if ( parts == null ) {
                     parts = new HashSet<Part>();
@@ -102,7 +102,7 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
     }
 
     @Override
-    protected void exportVertices( PlanCommunity planCommunity, PrintWriter out, Graph<Node, Flow> g ) {
+    protected void exportVertices( CommunityService communityService, PrintWriter out, Graph<Node, Flow> g ) {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         if ( !( initiators.isEmpty() && autoStarters.isEmpty() ) )
             exportStart( out, metaProvider );
@@ -133,14 +133,14 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( planCommunity, out, segmentNodes.get( segment ) );
+                printoutVertices( communityService, out, segmentNodes.get( segment ) );
                 if ( metaProvider.isShowingGoals() )
                     exportGoals( out, metaProvider, g, segment );
                 out.println( "}" );
             } else {
                 if ( metaProvider.isShowingGoals() )
                     exportGoals( out, metaProvider, g, segment );
-                printoutVertices( planCommunity, out, segmentNodes.get( segment ) );
+                printoutVertices( communityService, out, segmentNodes.get( segment ) );
             }
         }
         if ( !terminators.isEmpty() )
@@ -277,13 +277,13 @@ public class FlowMapDOTExporter extends AbstractDOTExporter<Node, Flow> {
 
     @Override
     protected void exportEdges(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             PrintWriter out,
             Graph<Node, Flow> g ) throws InterruptedException {
         FlowMapMetaProvider metaProvider = (FlowMapMetaProvider) getMetaProvider();
         if ( !( initiators.isEmpty() && contextInitiators.isEmpty() ) ) exportInitiations( out, g );
         if ( !autoStarters.isEmpty() ) exportAutoStarts( out, g );
-        super.exportEdges( planCommunity, out, g );
+        super.exportEdges( communityService, out, g );
         if ( !eventStarters.isEmpty() ) exportEventStarts( out, g );
         if ( !terminators.isEmpty() ) exportTerminations( out, g );
         if ( metaProvider.isShowingGoals() ) exportGoalEdges( out, g );

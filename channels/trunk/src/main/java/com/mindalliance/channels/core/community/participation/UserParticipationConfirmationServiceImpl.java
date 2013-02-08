@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -43,10 +43,10 @@ public class UserParticipationConfirmationServiceImpl
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
     public List<UserParticipationConfirmation> getParticipationConfirmations(
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (List<UserParticipationConfirmation>) criteria.list();
     }
@@ -68,10 +68,10 @@ public class UserParticipationConfirmationServiceImpl
     @Transactional( readOnly = true )
     public List<UserParticipationConfirmation> getParticipationConfirmations(
             Agent supervisor,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.eq( "supervisorId", supervisor.getActorId() ) );
         if ( supervisor.getOrganizationParticipation() == null )
             criteria.add( Restrictions.isNull( "organizationParticipation" ) );
@@ -86,19 +86,19 @@ public class UserParticipationConfirmationServiceImpl
     public void addParticipationConfirmation( UserParticipation userParticipation,
                                               Agent supervisor,
                                               ChannelsUser user,
-                                              PlanCommunity planCommunity ) {
+                                              CommunityService communityService ) {
         UserParticipationConfirmation validation = new UserParticipationConfirmation(
                 userParticipation,
                 supervisor,
                 user.getUsername() );
         save( validation );
-        planCommunity.clearCache();
+        communityService.clearCache();
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional
-    public void removeParticipationConfirmation( UserParticipation userParticipation, Agent supervisor, PlanCommunity planCommunity ) {
+    public void removeParticipationConfirmation( UserParticipation userParticipation, Agent supervisor, CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "userParticipation", userParticipation ) );
@@ -110,7 +110,7 @@ public class UserParticipationConfirmationServiceImpl
         for ( UserParticipationConfirmation validation : (List<UserParticipationConfirmation>) criteria.list() ) {
             delete( validation );
         }
-        planCommunity.clearCache();
+        communityService.clearCache();
     }
 
     @Override
@@ -129,22 +129,22 @@ public class UserParticipationConfirmationServiceImpl
 
     @Override
     @Transactional
-    public void deleteConfirmations( UserParticipation participation, PlanCommunity planCommunity ) {
+    public void deleteConfirmations( UserParticipation participation, CommunityService communityService ) {
         for ( UserParticipationConfirmation validation : getParticipationConfirmations( participation ) ) {
             delete( validation );
         }
-        planCommunity.clearCache();
+        communityService.clearCache();
     }
 
     @Override
     @Transactional( readOnly = true )
     public boolean isConfirmedByAllSupervisors(
             UserParticipation userParticipation,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         // Find all supervisors for participation's agent
-        Agent agent = userParticipation.getAgent( planCommunity );
+        Agent agent = userParticipation.getAgent( communityService );
         if ( agent == null ) return false;
-        List<Agent> supervisors = participationManager.findAllSupervisorsOf( agent, planCommunity );
+        List<Agent> supervisors = participationManager.findAllSupervisorsOf( agent, communityService );
         boolean validatedByAll = true;
         final List<UserParticipationConfirmation> validations = getParticipationConfirmations( userParticipation );
         // Verify that each supervisor (some user participating as that supervisor) has
@@ -158,7 +158,7 @@ public class UserParticipationConfirmationServiceImpl
                         @Override
                         public boolean evaluate( Object object ) {
                             return ( (UserParticipationConfirmation) object )
-                                    .getSupervisor( planCommunity ).equals( supervisor );
+                                    .getSupervisor( communityService ).equals( supervisor );
                         }
                     }
             );
@@ -171,14 +171,14 @@ public class UserParticipationConfirmationServiceImpl
     public boolean isConfirmationByUserRequired(
             final UserParticipation userParticipation,
             ChannelsUser user,
-            PlanCommunity planCommunity ) {
-        if ( !userParticipation.isSupervised( planCommunity ) ) return false;
+            CommunityService communityService ) {
+        if ( !userParticipation.isSupervised( communityService ) ) return false;
         // Find all supervisors user is assigned to that supervise the participation.
-        if ( userParticipation.getAgent( planCommunity ) == null ) return false;
+        if ( userParticipation.getAgent( communityService ) == null ) return false;
         List<Agent> supervisors = userParticipationService.listSupervisorsUserParticipatesAs(
                 userParticipation,
                 user,
-                planCommunity );
+                communityService );
         // Verify that the participation is not confirmed by all the supervisors the user participates as.
         return CollectionUtils.exists(
                 supervisors,
@@ -197,12 +197,12 @@ public class UserParticipationConfirmationServiceImpl
     @SuppressWarnings( "unchecked" )
     public List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
             ChannelsUser user,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         final List<UserParticipationConfirmation> allConfirmations =
-                planCommunity.getUserParticipationConfirmationService().getParticipationConfirmations( planCommunity );
+                communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
         final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs(
                 user,
-                planCommunity );
+                communityService );
         // Find all plan participation confirmations made by a supervisor user participates as (= confirmed)
         return (List<UserParticipationConfirmation>) CollectionUtils.select(
                 allConfirmations,
@@ -210,7 +210,7 @@ public class UserParticipationConfirmationServiceImpl
                     @Override
                     public boolean evaluate( Object object ) {
                         UserParticipationConfirmation confirmation = (UserParticipationConfirmation) object;
-                        Agent supervisor = confirmation.getSupervisor( planCommunity );
+                        Agent supervisor = confirmation.getSupervisor( communityService );
                         return supervisor != null && userAgents.contains( supervisor );
                     }
                 }
@@ -219,24 +219,24 @@ public class UserParticipationConfirmationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isValid( UserParticipationConfirmation confirmation, PlanCommunity planCommunity ) {
+    public boolean isValid( UserParticipationConfirmation confirmation, CommunityService communityService ) {
         return confirmation != null &&
-                userParticipationService.isValid( confirmation.getUserParticipation(), planCommunity )
-                && confirmation.getSupervisor( planCommunity ) != null
-                && organizationParticipationService.isValid( confirmation.getOrganizationParticipation(), planCommunity );
+                userParticipationService.isValid( confirmation.getUserParticipation(), communityService )
+                && confirmation.getSupervisor( communityService ) != null
+                && organizationParticipationService.isValid( confirmation.getOrganizationParticipation(), communityService );
     }
 
 
     @SuppressWarnings( "unchecked" )
     private List<UserParticipationConfirmation> validate(
             List<UserParticipationConfirmation> userParticipationConfirmation,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         return (List<UserParticipationConfirmation>) CollectionUtils.select(
                 userParticipationConfirmation,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isValid( (UserParticipationConfirmation) object, planCommunity );
+                        return isValid( (UserParticipationConfirmation) object, communityService );
                     }
                 }
         );

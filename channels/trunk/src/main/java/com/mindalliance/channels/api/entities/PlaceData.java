@@ -1,9 +1,9 @@
 package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -25,8 +25,8 @@ public class PlaceData extends ModelEntityData {
         // required
     }
 
-    public PlaceData( String serverUrl, ModelObject modelObject, Plan plan ) {
-        super( serverUrl, modelObject, plan );
+    public PlaceData( String serverUrl, ModelObject modelObject, CommunityService communityService ) {
+        super( serverUrl, modelObject, communityService );
     }
 
     //-------------------------------

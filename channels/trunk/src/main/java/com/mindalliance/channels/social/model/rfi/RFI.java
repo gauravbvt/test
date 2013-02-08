@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -215,21 +216,21 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         this.answerSets = answerSets;
     }
 
-    public boolean isLate( PlanCommunity planCommunity ) {
+    public boolean isLate( CommunityService communityService ) {
         return !isDeclined()
                 && getDeadline() != null
                 && new Date().after( getDeadline() )
-                && getRfiSurvey().isOngoing( planCommunity );
+                && getRfiSurvey().isOngoing( communityService );
     }
 
-    public boolean isActive( PlanCommunity planCommunity ) {
+    public boolean isActive( CommunityService communityService ) {
         return !isDeclined()
-                && isOngoing( planCommunity );
+                && isOngoing( communityService );
     }
 
-    public boolean isOngoing( PlanCommunity planCommunity ) {
+    public boolean isOngoing( CommunityService communityService ) {
         RFISurvey survey = getRfiSurvey();
-        return survey.isOngoing( planCommunity );
+        return survey.isOngoing( communityService );
     }
 
     public long getTimeLeft() {
@@ -337,7 +338,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     }
 
     @Override
-    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
+    public List<String> getToUserNames( String topic, CommunityService communityService ) {
         List<String> usernames = new ArrayList<String>();
         usernames.add(  getToUsername(  topic  ) );
         return usernames;
@@ -357,14 +358,14 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     public String getContent(
             String topic,
             Format format,
-            PlanCommunity planCommunity ) {
-        SurveysDAO surveysDAO = planCommunity.getPlanService().getSurveysDAO();
+            CommunityService communityService ) {
+        SurveysDAO surveysDAO = communityService.getPlanService().getSurveysDAO();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
-            return getNagContent( format, planCommunity, surveysDAO );
+            return getNagContent( format, communityService, surveysDAO );
         else if ( topic.equals( TODO ) )
-            return getTodoContent( format, planCommunity, surveysDAO );
+            return getTodoContent( format, communityService, surveysDAO );
         else if ( topic.equals( NEW ) )
-            return getNewRFIContent( format, planCommunity, surveysDAO );
+            return getNewRFIContent( format, communityService, surveysDAO );
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }
@@ -373,8 +374,8 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     public String getSubject(
             String topic,
             Format format,
-            PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+            CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, planService );
         else if ( topic.equals( NEW ) )
@@ -397,7 +398,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
 
     private String getNagContent(
             Format format,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
         boolean overdue = getDeadline() != null && new Date().after( getDeadline() );
@@ -419,11 +420,11 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                 .append( "% of all required questions. Completing this survey would be greatly appreciated!\n\n" )
                 .append( "Regards,\n\n" )
                 .append( "The planners of " )
-                .append( planCommunity.getName() );
+                .append( communityService.getPlanCommunity().getName() );
         return sb.toString();
     }
 
-    private String getTodoContent( Format format, PlanCommunity planCommunity, SurveysDAO surveysDAO ) {
+    private String getTodoContent( Format format, CommunityService communityService, SurveysDAO surveysDAO ) {
         // Ignore format
         StringBuilder sb = new StringBuilder();
         sb.append( getRFILabel(  ) );
@@ -439,7 +440,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                 .append( percentComplete )
                 .append( "% complete.\n\n" );
         sb.append( "Your participation was requested by " )
-                .append( planCommunity.getUserDao().getFullName( getUsername() ) )
+                .append( communityService.getUserDao().getFullName( getUsername() ) )
                 .append( ".\n\n" );
         int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( this );
         int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( this );
@@ -456,7 +457,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                 .append( " optional " )
                 .append( optionalQuestionsCount > 1 ? "questions" : "question" )
                 .append( ".\n\n" );
-        int surveyCompletionCount = surveysDAO.findAllCompletedRFIs( planCommunity, getRfiSurvey() ).size();
+        int surveyCompletionCount = surveysDAO.findAllCompletedRFIs( communityService, getRfiSurvey() ).size();
         sb.append( surveyCompletionCount )
                 .append( " other " )
                 .append( surveyCompletionCount > 1 ? "participants" : "participant" )
@@ -469,9 +470,9 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         return "New survey: " + getName();
     }
 
-    private String getNewRFIContent( Format format, PlanCommunity planCommunity, SurveysDAO surveysDAO ) {
+    private String getNewRFIContent( Format format, CommunityService communityService, SurveysDAO surveysDAO ) {
         // ignore format
-        Plan plan = planCommunity.getPlan();
+        Plan plan = communityService.getPlan();
         StringBuilder sb = new StringBuilder();
         sb.append( plan.getClient() );
         sb.append( " invites you to participate in a survey about the \"" )
@@ -482,18 +483,18 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                     .append( plan.getDescription() )
                     .append( "\n" );
         }
-        if ( planCommunity.getCommunityLocale() != null ) {
+        if ( communityService.getPlanCommunity().getCommunityLocale() != null ) {
             sb.append( "Targeted location: " )
-                    .append( planCommunity.getCommunityLocale().getName() )
+                    .append( communityService.getPlanCommunity().getCommunityLocale().getName() )
                     .append( "\n" );
         }
         sb.append( "\n" );
         sb.append( getRFILabel(  ) ).append( "\n" );
         sb.append( "can be accessed here: " )
-                .append( surveysDAO.makeURL( planCommunity.getPlanService(), this ) )
+                .append( surveysDAO.makeURL( communityService.getPlanService(), this ) )
                 .append( "\n\n" );
         // New account login instructions
-        ChannelsUser surveyedUser = planCommunity.getUserDao().getUserNamed( getSurveyedUsername() );
+        ChannelsUser surveyedUser = communityService.getUserDao().getUserNamed( getSurveyedUsername() );
         if ( surveyedUser != null ) {
             sb.append( "To login, use your email address as user name" )
                     .append( surveyedUser.getEmail() );

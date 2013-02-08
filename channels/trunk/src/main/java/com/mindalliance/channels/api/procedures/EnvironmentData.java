@@ -10,7 +10,7 @@ import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.entities.RoleData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.InfoFormat;
@@ -20,7 +20,6 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanService;
@@ -62,51 +61,49 @@ public class EnvironmentData implements Serializable {
     private List<MediumData> media;
     private List<InfoProductData> infoProducts;
     private List<InfoFormatData> infoFormats;
-    private Plan plan;
 
     public EnvironmentData() {
         // required
     }
 
-    public EnvironmentData( String serverUrl, ProceduresData procedures, PlanCommunity planCommunity ) {
+    public EnvironmentData( String serverUrl, ProceduresData procedures, CommunityService communityService ) {
         this.procedures = procedures;
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
-    private void initData( String serverUrl, PlanCommunity planCommunity ) {
-        plan = planCommunity.getPlan();
+    private void initData( String serverUrl, CommunityService communityService ) {
         try {
-            initEvents( serverUrl, planCommunity );
-            initPhases( serverUrl, planCommunity );
-            initOrgs( serverUrl, planCommunity );
-            initActors( serverUrl, planCommunity );
-            initPlaces( serverUrl, planCommunity );
-            initRoles( serverUrl, planCommunity );
-            initMedia( serverUrl, planCommunity );
-            initInfoProducts( serverUrl, planCommunity );
-            initInfoFormats( serverUrl, planCommunity );
+            initEvents( serverUrl, communityService );
+            initPhases( serverUrl, communityService );
+            initOrgs( serverUrl, communityService );
+            initActors( serverUrl, communityService );
+            initPlaces( serverUrl, communityService );
+            initRoles( serverUrl, communityService );
+            initMedia( serverUrl, communityService );
+            initInfoProducts( serverUrl, communityService );
+            initInfoFormats( serverUrl, communityService );
         } catch ( NotFoundException e ) {
             throw new RuntimeException( e );
         }
     }
 
-    private void initMedia( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initMedia( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         media = new ArrayList<MediumData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allMediumIds() ) {
             TransmissionMedium medium = planService.find( TransmissionMedium.class, id );
-            media.add( new MediumData( serverUrl, medium, getPlan() ) );
+            media.add( new MediumData( serverUrl, medium, communityService ) );
             added.add( id );
             for ( ModelEntity category : medium.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    media.add( new MediumData( serverUrl, (TransmissionMedium) category, getPlan() ) );
+                    media.add( new MediumData( serverUrl, (TransmissionMedium) category, communityService ) );
                     added.add( category.getId() );
                 }
             }
             for ( TransmissionMedium delegate : medium.getEffectiveDelegatedToMedia() ) {
                 if ( !added.contains( delegate.getId() ) ) {
-                    media.add( new MediumData( serverUrl, delegate, getPlan() ) );
+                    media.add( new MediumData( serverUrl, delegate, communityService ) );
                     added.add( delegate.getId() );
                 }
             }
@@ -114,35 +111,35 @@ public class EnvironmentData implements Serializable {
         }
     }
 
-    private void initRoles( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initRoles( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         roles = new ArrayList<RoleData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allRoleIds() ) {
             Role role = planService.find( Role.class, id );
-            roles.add( new RoleData( serverUrl, role, getPlan() ) );
+            roles.add( new RoleData( serverUrl, role, communityService ) );
             added.add( id );
             for ( ModelEntity category : role.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    roles.add( new RoleData( serverUrl, (Role) category, getPlan() ) );
+                    roles.add( new RoleData( serverUrl, (Role) category, communityService ) );
                     added.add( category.getId() );
                 }
             }
         }
     }
 
-    private void initInfoProducts( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initInfoProducts( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         infoProducts = new ArrayList<InfoProductData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allInfoProductIds() ) {
             try {
                 InfoProduct infoProduct = planService.find( InfoProduct.class, id );
-                infoProducts.add( new InfoProductData( serverUrl, infoProduct, getPlan() ) );
+                infoProducts.add( new InfoProductData( serverUrl, infoProduct, communityService ) );
                 added.add( id );
                 for ( ModelEntity category : infoProduct.getAllTypes() ) {
                     if ( !added.contains( category.getId() ) ) {
-                        infoProducts.add( new InfoProductData( serverUrl, (InfoProduct) category, getPlan() ) );
+                        infoProducts.add( new InfoProductData( serverUrl, (InfoProduct) category, communityService ) );
                         added.add( category.getId() );
                     }
                 }
@@ -152,18 +149,18 @@ public class EnvironmentData implements Serializable {
         }
     }
 
-    private void initInfoFormats( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initInfoFormats( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         infoFormats = new ArrayList<InfoFormatData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allInfoFormatIds() ) {
             try {
             InfoFormat infoFormat = planService.find( InfoFormat.class, id );
-            infoFormats.add( new InfoFormatData( serverUrl, infoFormat, getPlan() ) );
+            infoFormats.add( new InfoFormatData( serverUrl, infoFormat, communityService ) );
             added.add( id );
             for ( ModelEntity category : infoFormat.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    infoFormats.add( new InfoFormatData( serverUrl, (InfoFormat) category, getPlan() ) );
+                    infoFormats.add( new InfoFormatData( serverUrl, (InfoFormat) category, communityService ) );
                     added.add( category.getId() );
                 }
             }
@@ -174,17 +171,17 @@ public class EnvironmentData implements Serializable {
     }
 
 
-    private void initPlaces( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initPlaces( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         places = new ArrayList<PlaceData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allPlaceIds() ) {
             Place place = planService.find( Place.class, id );
-            places.add( new PlaceData( serverUrl, place, getPlan() ) );
+            places.add( new PlaceData( serverUrl, place, communityService ) );
             added.add( id );
             for ( ModelEntity category : place.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    places.add( new PlaceData( serverUrl, (Place) category, getPlan() ) );
+                    places.add( new PlaceData( serverUrl, (Place) category, communityService ) );
                     added.add( category.getId() );
                 }
             }
@@ -192,18 +189,18 @@ public class EnvironmentData implements Serializable {
 
     }
 
-    private void initActors( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initActors( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         actors = new ArrayList<ActorData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allActorIds() ) {
             try {
                 Actor actor = planService.find( Actor.class, id );
-                actors.add( new ActorData( serverUrl, actor, getPlan() ) );
+                actors.add( new ActorData( serverUrl, actor, communityService ) );
                 added.add( id );
                 for ( ModelEntity category : actor.getAllTypes() ) {
                     if ( !added.contains( category.getId() ) ) {
-                        actors.add( new ActorData( serverUrl, (Actor) category, getPlan() ) );
+                        actors.add( new ActorData( serverUrl, (Actor) category, communityService ) );
                         added.add( category.getId() );
                     }
                 }
@@ -214,24 +211,24 @@ public class EnvironmentData implements Serializable {
 
     }
 
-    private void initOrgs( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initOrgs( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         orgs = new ArrayList<OrganizationData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allOrganizationIds() ) {
             try {
                 Organization org = planService.find( Organization.class, id );
-                orgs.add( new OrganizationData( serverUrl, org, planCommunity ) );
+                orgs.add( new OrganizationData( serverUrl, org, communityService ) );
                 added.add( id );
                 for ( ModelEntity category : org.getAllTypes() ) {
                     if ( !added.contains( category.getId() ) ) {
-                        orgs.add( new OrganizationData( serverUrl, (Organization) category, planCommunity ) );
+                        orgs.add( new OrganizationData( serverUrl, (Organization) category, communityService ) );
                         added.add( category.getId() );
                     }
                 }
                 for ( Organization parent : org.ancestors() ) {
                     if ( !added.contains( parent.getId() ) ) {
-                        orgs.add( new OrganizationData( serverUrl, parent, planCommunity ) );
+                        orgs.add( new OrganizationData( serverUrl, parent, communityService ) );
                         added.add( parent.getId() );
                     }
                 }
@@ -242,17 +239,17 @@ public class EnvironmentData implements Serializable {
 
     }
 
-    private void initPhases( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initPhases( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         phases = new ArrayList<PhaseData>();
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allPhaseIds() ) {
             Phase phase = planService.find( Phase.class, id );
-            phases.add( new PhaseData( serverUrl, phase, getPlan() ) );
+            phases.add( new PhaseData( serverUrl, phase, communityService ) );
             added.add( id );
             for ( ModelEntity category : phase.getAllTypes() ) {
                 if ( !added.contains( category.getId() ) ) {
-                    phases.add( new PhaseData( serverUrl, (Phase) category, getPlan() ) );
+                    phases.add( new PhaseData( serverUrl, (Phase) category, communityService ) );
                     added.add( category.getId() );
                 }
             }
@@ -260,12 +257,12 @@ public class EnvironmentData implements Serializable {
 
     }
 
-    private void initEvents( String serverUrl, PlanCommunity planCommunity ) throws NotFoundException {
-        PlanService planService = planCommunity.getPlanService();
+    private void initEvents( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
         events = new ArrayList<EventData>();
         for ( Long eventId : allEventIds() ) {
             Event event = planService.find( Event.class, eventId );
-            events.add( new EventData( serverUrl, event, getPlan() ) );
+            events.add( new EventData( serverUrl, event, communityService ) );
         }
     }
 
@@ -405,7 +402,4 @@ public class EnvironmentData implements Serializable {
     }
 
 
-    private Plan getPlan() {
-        return plan;
-    }
 }

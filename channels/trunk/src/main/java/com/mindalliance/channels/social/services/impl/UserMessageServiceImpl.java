@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -69,14 +69,14 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public Iterator<UserMessage> getReceivedMessages( final String username, final PlanCommunity planCommunity ) {
+    public Iterator<UserMessage> getReceivedMessages( final String username, final CommunityService communityService ) {
         String[] toValues = new String[3];
         toValues[0] = username;
         toValues[1] = ChannelsUserInfo.PLANNERS;
         toValues[2] = ChannelsUserInfo.USERS;
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.in( "toUsername", toValues ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (Iterator<UserMessage>) IteratorUtils.filteredIterator(
@@ -85,8 +85,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
                     @Override
                     public boolean evaluate( Object object ) {
                         UserMessage userMessage = (UserMessage) object;
-                        return ( !userMessage.isToAllPlanners() || userDao.isPlanner( username, planCommunity.getPlan().getUri() ) )
-                                && ( !userMessage.isToAllUsers() || userDao.isParticipant( username, planCommunity.getPlan().getUri() ) );
+                        return ( !userMessage.isToAllPlanners() || userDao.isPlanner( username, communityService.getPlan().getUri() ) )
+                                && ( !userMessage.isToAllUsers() || userDao.isParticipant( username, communityService.getPlan().getUri() ) );
                     }
                 } );
     }
@@ -94,10 +94,10 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public Iterator<UserMessage> getSentMessages( String username, PlanCommunity planCommunity ) {
+    public Iterator<UserMessage> getSentMessages( String username, CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.eq( "username", username ) );
         criteria.addOrder( Order.desc( "created" ) );
         return (Iterator<UserMessage>) criteria.list().iterator();
@@ -124,10 +124,10 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     }
 
     @Override
-    public int countNewFeedbackReplies( PlanCommunity planCommunity, ChannelsUser user ) {
+    public int countNewFeedbackReplies( CommunityService communityService, ChannelsUser user ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.eq( "toUsername", user.getUsername() ) );
         criteria.add( Restrictions.isNotNull( "feedback" ) );
         criteria.add( Restrictions.eq( "read", false ) );
@@ -149,8 +149,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
 
     @Override
     @Transactional( readOnly = true )
-    public Date getWhenLastReceived( String username, PlanCommunity planCommunity ) {
-        Iterator<UserMessage> received = getReceivedMessages( username, planCommunity );
+    public Date getWhenLastReceived( String username, CommunityService communityService ) {
+        Iterator<UserMessage> received = getReceivedMessages( username, communityService );
         if ( received.hasNext() ) {
             return received.next().getCreated();
         } else {

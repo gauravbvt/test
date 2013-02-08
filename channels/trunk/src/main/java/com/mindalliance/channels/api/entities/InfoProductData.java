@@ -2,9 +2,9 @@ package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.InfoProduct;
-import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -29,8 +29,8 @@ public class InfoProductData extends ModelEntityData {
         // required
     }
 
-    public InfoProductData( String serverUrl, InfoProduct infoProduct, Plan plan ) {
-        super( serverUrl, infoProduct, plan );
+    public InfoProductData( String serverUrl, InfoProduct infoProduct, CommunityService communityService ) {
+        super( serverUrl, infoProduct, communityService );
     }
 
     @Override

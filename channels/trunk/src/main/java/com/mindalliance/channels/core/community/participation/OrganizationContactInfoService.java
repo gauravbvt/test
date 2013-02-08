@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -18,16 +18,17 @@ import java.util.List;
 public interface OrganizationContactInfoService extends GenericSqlService<OrganizationContactInfo, Long> {
 
     List<Channel> getChannels( RegisteredOrganization registered,
-                              PlanCommunity planCommunity );
+                               CommunityService communityService );
 
     void setChannels( ChannelsUser user,
                       RegisteredOrganization registered,
                       List<Channel> channels,
-                      PlanCommunity planCommunity );
+                      CommunityService communityService );
 
-    void removeAllContactInfoOf( RegisteredOrganization registered, PlanCommunity planCommunity );
+    void removeAllContactInfoOf( RegisteredOrganization registered, CommunityService communityService );
 
-    List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered, PlanCommunity planCommunity );
+    List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered,
+                                                      CommunityService communityService );
 
-    boolean isValid( OrganizationContactInfo orgContactInfo, PlanCommunity planCommunity );
+    boolean isValid( OrganizationContactInfo orgContactInfo, CommunityService communityService );
 }

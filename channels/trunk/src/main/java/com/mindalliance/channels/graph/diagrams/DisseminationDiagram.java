@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
@@ -44,11 +44,11 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String outputFormat, String ticket, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
+                        DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         DisseminationGraphBuilder graphBuilder = new DisseminationGraphBuilder( segmentObject, subject, showTargets,
-                planCommunity.getPlanService() );
+                communityService.getPlanService() );
         Graph<Node, Dissemination> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Node, Dissemination> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -58,12 +58,12 @@ public class DisseminationDiagram extends AbstractDiagram<Node, Dissemination> {
                                                                                 outputFormat,
                                                                                 diagramFactory.getImageDirectory(),
                                                                                 analyst,
-                planCommunity.getPlanService() );
+                communityService.getPlanService() );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         DisseminationDOTExporter dotExporter = new DisseminationDOTExporter( metaProvider );
-        graphRenderer.render( planCommunity, graph, dotExporter, ticket, outputFormat, outputStream );
+        graphRenderer.render( communityService, graph, dotExporter, ticket, outputFormat, outputStream );
     }
 }

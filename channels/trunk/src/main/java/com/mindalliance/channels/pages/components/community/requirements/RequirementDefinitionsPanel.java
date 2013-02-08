@@ -271,7 +271,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
         private Requirement requirement;
 
         public RequirementWrapper( Requirement requirement ) {
-            requirement.initialize( getPlanCommunity() );
+            requirement.initialize( getCommunityService() );
             this.requirement = requirement;
         }
 

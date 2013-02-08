@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,12 +62,12 @@ public abstract class AbstractDiagram<V, E> implements Diagram {
 
     @Override
     public String makeImageMap( String ticket, Analyst analyst, DiagramFactory diagramFactory,
-                                PlanCommunity planCommunity ) {
+                                CommunityService communityService ) {
         if ( imageMap == null || imageMap.isEmpty() ) {
             LOG.debug( "Making image map for " + this.getClass().getSimpleName() );
             try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            render( ticket, DiagramFactory.IMAGE_MAP, baos, analyst, diagramFactory, planCommunity );
+            render( ticket, DiagramFactory.IMAGE_MAP, baos, analyst, diagramFactory, communityService );
             // System.out.println( "*** Image map generated at " + System.currentTimeMillis() );
             imageMap = baos.toString();
             // System.out.println( imageMap );

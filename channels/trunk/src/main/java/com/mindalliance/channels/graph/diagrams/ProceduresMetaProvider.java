@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -247,7 +247,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Assignment assignment,
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService, Assignment assignment,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
@@ -277,7 +277,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Commitment edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, Commitment edge, boolean highlighted ) {
             Flow flow = edge.getSharing();
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );

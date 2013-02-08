@@ -7,7 +7,7 @@
 package com.mindalliance.channels.engine.analysis;
 
 import com.mindalliance.channels.core.command.CommandListener;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.Flow;
@@ -504,10 +504,10 @@ public interface Analyst extends CommandListener {
      * Diagnostic about whether a commitment can be realized or is conceptual.
      *
      * @param commitment   an info sharing commitment
-     * @param planCommunity a plan community
+     * @param communityService a community service
      * @return a string
      */
-    String realizability( Commitment commitment, PlanCommunity planCommunity );
+    String realizability( Commitment commitment, CommunityService communityService );
 
     /**
      * Number of unwaived issues on a requirement..
@@ -522,10 +522,10 @@ public interface Analyst extends CommandListener {
      * Number of unwaived issues on a requirement..
      *
      * @param requirement  a requirement
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a string
      */
-    int unwaivedIssuesCount( Requirement requirement, PlanCommunity planCommunity );
+    int unwaivedIssuesCount( Requirement requirement, CommunityService communityService );
 
     /**
      * Number of issues on a requirement..

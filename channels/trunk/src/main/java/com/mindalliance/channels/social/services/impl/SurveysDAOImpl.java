@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -89,18 +89,18 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Transactional
     public RFISurvey getOrCreateRemediationSurvey(
             String username,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Issue issue ) {
         RFISurvey survey = rfiSurveyService.findRemediationSurvey(
-                planCommunity,
+                communityService,
                 issue
         );
         if ( survey == null ) {
             Questionnaire questionnaire = findOrCreateRemediationQuestionnaire(
                     username,
-                    planCommunity,
+                    communityService,
                     issue );
-            survey = new RFISurvey( planCommunity, username );
+            survey = new RFISurvey( communityService.getPlanCommunity(), username );
             survey.setQuestionnaire( questionnaire );
             survey.setMoRef( issue.getAbout() );
             rfiSurveyService.save( survey );
@@ -110,11 +110,11 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     private Questionnaire findOrCreateRemediationQuestionnaire(
             String username,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Issue issue ) {
-        Questionnaire questionnaire = questionnaireService.findRemediationQuestionnaire( planCommunity, issue );
+        Questionnaire questionnaire = questionnaireService.findRemediationQuestionnaire( communityService, issue );
         if ( questionnaire == null ) {
-            questionnaire = new Questionnaire( planCommunity, username );
+            questionnaire = new Questionnaire( communityService.getPlanCommunity(), username );
             questionnaire.setName( Questionnaire.makeRemediationName( issue ) );
             questionnaire.setAbout( Questionnaire.makeRemediationAbout( issue ) );
             questionnaire.setStatus( Questionnaire.Status.ACTIVE );
@@ -211,9 +211,9 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
-    public int countUnanswered( PlanCommunity planCommunity, ChannelsUser user ) {
+    public int countUnanswered( CommunityService communityService, ChannelsUser user ) {
         return CollectionUtils.select(
-                rfiService.listUserActiveRFIs( planCommunity, user ),
+                rfiService.listUserActiveRFIs( communityService, user ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -231,20 +231,20 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
-    public int countIncomplete( PlanCommunity planCommunity, ChannelsUser user ) {
-        return findIncompleteRFIs( planCommunity, user ).size();
+    public int countIncomplete( CommunityService communityService, ChannelsUser user ) {
+        return findIncompleteRFIs( communityService, user ).size();
     }
 
     @Override
     @Transactional( readOnly = true )
-    public int countLate( final PlanCommunity planCommunity, ChannelsUser user ) {
+    public int countLate( final CommunityService communityService, ChannelsUser user ) {
         return CollectionUtils.select(
-                rfiService.listUserActiveRFIs( planCommunity, user ),
+                rfiService.listUserActiveRFIs( communityService, user ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         RFI rfi = (RFI) object;
-                        return isOverdue( planCommunity, rfi);
+                        return isOverdue( communityService, rfi);
                     }
                 }
         ).size();
@@ -253,9 +253,9 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> findIncompleteRFIs( PlanCommunity planCommunity, ChannelsUser user ) {
+    public List<RFI> findIncompleteRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
-                rfiService.listUserActiveRFIs( planCommunity, user ),
+                rfiService.listUserActiveRFIs( communityService, user ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -268,9 +268,9 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> findCompletedRFIs( PlanCommunity planCommunity, ChannelsUser user ) {
+    public List<RFI> findCompletedRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
-                rfiService.listUserActiveRFIs( planCommunity, user ),
+                rfiService.listUserActiveRFIs( communityService, user ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -311,9 +311,9 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> findDeclinedRFIs( PlanCommunity planCommunity, ChannelsUser user ) {
+    public List<RFI> findDeclinedRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
-                rfiService.listOngoingUserRFIs( planCommunity, user ),
+                rfiService.listOngoingUserRFIs( communityService, user ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -393,8 +393,8 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
-    public Map<String, Integer> findResponseMetrics( PlanCommunity planCommunity, final RFISurvey rfiSurvey ) {
-        List<RFI> surveyedRFIs = rfiService.select( planCommunity, rfiSurvey );
+    public Map<String, Integer> findResponseMetrics( CommunityService communityService, final RFISurvey rfiSurvey ) {
+        List<RFI> surveyedRFIs = rfiService.select( communityService, rfiSurvey );
         Map<String, Integer> metrics = new HashMap<String, Integer>();
         int completed = CollectionUtils.countMatches(
                 surveyedRFIs,
@@ -437,8 +437,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFI> findAnsweringRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
-        List<RFI> rfis = rfiService.select( planCommunity, rfiSurvey );
+    public List<RFI> findAnsweringRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
+        List<RFI> rfis = rfiService.select( communityService, rfiSurvey );
         return (List<RFI>) CollectionUtils.select(
                 rfis,
                 new Predicate() {
@@ -471,21 +471,21 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isOverdue( PlanCommunity planCommunity, RFI rfi ) {
-        return rfi.isLate( planCommunity )
+    public boolean isOverdue( CommunityService communityService, RFI rfi ) {
+        return rfi.isLate( communityService )
                 && !isCompleted( rfi );
     }
 
     @Override
     @Transactional( readOnly = true )
     public Map<String, Set<String>> processAnswers(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             RFISurvey rfiSurvey,
             Question question,
             boolean sharedOnly,
             String excludedUsername ) {
         Map<String, Set<String>> results = new HashMap<String, Set<String>>();
-        List<RFI> rfis = findAnsweringRFIs( planCommunity, rfiSurvey );
+        List<RFI> rfis = findAnsweringRFIs( communityService, rfiSurvey );
         List<Answer> openAnswers = new ArrayList<Answer>();
         List<Answer> anonymousAnswers = new ArrayList<Answer>();
         // collect answers
@@ -560,8 +560,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> listIncompleteActiveRFIs( PlanCommunity planCommunity ) {
-        List<RFI> activeRFIs = rfiService.listActiveRFIs( planCommunity );
+    public List<RFI> listIncompleteActiveRFIs( CommunityService communityService ) {
+        List<RFI> activeRFIs = rfiService.listActiveRFIs( communityService );
         return (List<RFI>) CollectionUtils.select(
                 activeRFIs,
                 new Predicate() {
@@ -575,9 +575,9 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> findAllCompletedRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
+    public List<RFI> findAllCompletedRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
-                rfiService.select( planCommunity, rfiSurvey ),
+                rfiService.select( communityService, rfiSurvey ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -589,9 +589,9 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> findAllIncompleteRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
+    public List<RFI> findAllIncompleteRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
-                rfiService.select( planCommunity, rfiSurvey ),
+                rfiService.select( communityService, rfiSurvey ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -604,9 +604,9 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFI> findAllDeclinedRFIs( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
+    public List<RFI> findAllDeclinedRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
-                rfiService.select( planCommunity, rfiSurvey ),
+                rfiService.select( communityService, rfiSurvey ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -619,28 +619,28 @@ public class SurveysDAOImpl implements SurveysDAO {
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RFIForward> findAllRFIForwards( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
-        return rfiForwardService.select( planCommunity, rfiSurvey );
+    public List<RFIForward> findAllRFIForwards( CommunityService communityService, RFISurvey rfiSurvey ) {
+        return rfiForwardService.select( communityService, rfiSurvey );
     }
 
     @Override
     @Transactional
     public List<String> forwardRFI(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUser user,
             RFI rfi,
             List<String> forwardedTo,
             String message ) {
         List<String> alreadyForwardedTo = rfiForwardService.findForwardedTo( rfi );
-        List<String> emailsOfParticipants = getParticipantsEmails( planCommunity, rfi.getRfiSurvey() );
+        List<String> emailsOfParticipants = getParticipantsEmails( communityService, rfi.getRfiSurvey() );
         List<String> actualForwards = new ArrayList<String>();
         for ( String email : forwardedTo ) {
             if ( !alreadyForwardedTo.contains( email ) && !emailsOfParticipants.contains( email ) ) {
-                RFIForward forward = new RFIForward( planCommunity, user, rfi, email, message );
+                RFIForward forward = new RFIForward( communityService.getPlanCommunity(), user, rfi, email, message );
                 actualForwards.add( email );
                 alreadyForwardedTo.add( email );
                 // Create new user if needed. Remember generated password.
-                ChannelsUserInfo forwardedToUser = userDao.getOrMakeUserFromEmail( email, planCommunity.getPlanService() );
+                ChannelsUserInfo forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
                 if ( forwardedToUser != null ) {
                     RFI newRFI = new RFI( rfi );
                     newRFI.setSurveyedUsername( userDao.getUserNamed( email ).getUsername() );
@@ -693,9 +693,9 @@ public class SurveysDAOImpl implements SurveysDAO {
                 + "=" + rfi.getId();
     }
 
-    private List<String> getParticipantsEmails( PlanCommunity planCommunity, RFISurvey rfiSurvey ) {
+    private List<String> getParticipantsEmails( CommunityService communityService, RFISurvey rfiSurvey ) {
         List<String> emails = new ArrayList<String>();
-        List<RFI> rfis = rfiService.select( planCommunity, rfiSurvey );
+        List<RFI> rfis = rfiService.select( communityService, rfiSurvey );
         for ( RFI rfi : rfis ) {
             ChannelsUser user = userDao.getUserNamed( rfi.getSurveyedUsername() );
             if ( user != null ) emails.add( user.getEmail() );

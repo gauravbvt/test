@@ -31,13 +31,13 @@ public class AddRequirement extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        PlanDao planDao = commander.getPlanDao();
+        PlanDao planDao = commander.getPlanDao(); // todo - COMMUNITY - get community dao
         Long priorId = (Long) get( "requirement" );   // set when undoing a RemoveRequirement
         Requirement requirement = planDao.createRequirement( priorId );
         // State is set when undoing a RemoveRequirement
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         if ( state != null )
-            requirement.initFromMap( state, commander.getPlanCommunity() );
+            requirement.initFromMap( state, commander.getCommunityService() );
         set( "requirement", requirement.getId() );
         describeTarget( requirement );
         return new Change( Change.Type.Added, requirement );
@@ -46,7 +46,7 @@ public class AddRequirement extends AbstractCommand {
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         Requirement requirement = commander.resolve( Requirement.class, (Long) get( "requirement" ) );
-        requirement.initialize( commander.getPlanCommunity() );
+        requirement.initialize( commander.getCommunityService() );
         return new RemoveRequirement( getUserName(), requirement );
     }
 

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.PlanManagerImpl;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import junit.framework.TestCase;
@@ -29,13 +29,13 @@ public class TestExternalFlow extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        DefinitionManager definitionManager = new DefinitionManager(
+        PlanDefinitionManager planDefinitionManager = new PlanDefinitionManager(
             new FileSystemResource( new File( "target/channel-test-data" ) ), null );
-        definitionManager.afterPropertiesSet();
-        PlanManagerImpl planManager = new PlanManagerImpl( definitionManager );
+        planDefinitionManager.afterPropertiesSet();
+        PlanManagerImpl planManager = new PlanManagerImpl( planDefinitionManager );
         planManager.assignPlans();
 
-        assertEquals( 1, planManager.getDefinitionManager().getPlanNames().size() );
+        assertEquals( 1, planManager.getPlanDefinitionManager().getPlanNames().size() );
         Plan plan = planManager.getPlans().get( 0 );
 
         planDao = planManager.getDao( plan );

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
@@ -48,15 +48,15 @@ public class NotificationData extends AbstractFlowData {
 
     public NotificationData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Flow notification,
             boolean initiating,
             CommunityAssignment assignment,
             ChannelsUser user ) {
-        super( serverUrl,  planCommunity, initiating, notification, assignment, user );
+        super( serverUrl,  communityService, initiating, notification, assignment, user );
         initData(
                 serverUrl,
-                planCommunity,
+                communityService,
                 user == null ? null : user.getUserInfo() );
     }
 
@@ -67,17 +67,17 @@ public class NotificationData extends AbstractFlowData {
 
     protected void initData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUserInfo userInfo ) {
-        initCommitments( planCommunity );
-        initContactEmployments( serverUrl, planCommunity, userInfo );
-        initConsumingTask( serverUrl, planCommunity );
-        initOtherData( planCommunity );
+        initCommitments( communityService );
+        initContactEmployments( serverUrl, communityService, userInfo );
+        initConsumingTask( serverUrl, communityService );
+        initOtherData( communityService );
     }
 
-    private void initCommitments( PlanCommunity planCommunity ) {
+    private void initCommitments( CommunityService communityService ) {
         commitments = new ArrayList<CommunityCommitment>();
-        for ( CommunityCommitment commitment : planCommunity.findAllCommitments( getSharing(), false ) ) {   // no not to self
+        for ( CommunityCommitment commitment : communityService.findAllCommitments( getSharing(), false ) ) {   // no not to self
             if ( isInitiating() ) {
                 if ( commitment.getCommitter().equals( getAssignment() ) ) {
                     commitments.add( commitment );
@@ -92,12 +92,12 @@ public class NotificationData extends AbstractFlowData {
 
     private void initContactEmployments(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUserInfo userInfo ) {
         Set<CommunityEmployment> employments = new HashSet<CommunityEmployment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>();
-        PlanService planService = planCommunity.getPlanService();
-        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
+        PlanService planService = communityService.getPlanService();
+        UserParticipationService userParticipationService = communityService.getUserParticipationService();
         for ( CommunityCommitment commitment : commitments ) {
             if ( isInitiating() ) {  // notifying
                 CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
@@ -106,7 +106,7 @@ public class NotificationData extends AbstractFlowData {
                         serverUrl,
                         employment,
                         commitment,
-                        planCommunity,
+                        communityService,
                         userInfo ) );
             } else { // being notified
                 CommunityEmployment employment = commitment.getCommitter().getEmployment();
@@ -115,7 +115,7 @@ public class NotificationData extends AbstractFlowData {
                         serverUrl,
                         employment,
                         commitment,
-                        planCommunity,
+                        communityService,
                         userInfo ) );
             }
         }
@@ -123,14 +123,14 @@ public class NotificationData extends AbstractFlowData {
         contacts = new ArrayList<ContactData>( contactDataSet );
     }
 
-    private void initConsumingTask( String serverUrl, PlanCommunity planCommunity ) {
+    private void initConsumingTask( String serverUrl, CommunityService communityService ) {
         if ( !isInitiating() )
             consumingTaskData = null;
         else {
             Part consumingPart = (Part) getNotification().getTarget();
             consumingTaskData = new TaskData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     consumingPart,
                     getUser() );
             if ( flow().isTriggeringToTarget() )

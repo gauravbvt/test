@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -258,16 +258,16 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     private Object invokeParticipationAnalyst( String methodName, Object argument, Object[] extras ) {
         try {
-            ParticipationAnalyst analyst = getPlanCommunity().getParticipationAnalyst();
+            ParticipationAnalyst analyst = getCommunityService().getParticipationAnalyst();
             if ( extras.length > 0 ) {
-                Class[] argTypes = {argument.getClass(), extras.getClass(), PlanCommunity.class};
+                Class[] argTypes = {argument.getClass(), extras.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );
-                Object[] args = {argument, extras, getPlanCommunity() };
+                Object[] args = {argument, extras, getCommunityService() };
                 return method.invoke( analyst, args );
             } else {
-                Class[] argTypes = {argument.getClass(), PlanCommunity.class};
+                Class[] argTypes = {argument.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );
-                Object[] args = {argument, getPlanCommunity()};
+                Object[] args = {argument, getCommunityService()};
                 return method.invoke( analyst, args );
             }
         } catch ( Exception e ) {
@@ -300,16 +300,16 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     private Object invokeAnalyst( String methodName, Object argument, Object[] extras ) {
         try {
-            Analyst analyst = getPlanCommunity().getAnalyst();
+            Analyst analyst = getCommunityService().getAnalyst();
             if ( extras.length > 0 ) {
-                Class[] argTypes = {argument.getClass(), extras.getClass(), PlanCommunity.class};
+                Class[] argTypes = {argument.getClass(), extras.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );
-                Object[] args = {argument, extras, getPlanCommunity() };
+                Object[] args = {argument, extras, getCommunityService() };
                 return method.invoke( analyst, args );
             } else {
-                Class[] argTypes = {argument.getClass(), PlanCommunity.class};
+                Class[] argTypes = {argument.getClass(), CommunityService.class};
                 Method method = analyst.getClass().getMethod( methodName, argTypes );
-                Object[] args = {argument, getPlanCommunity()};
+                Object[] args = {argument, getCommunityService()};
                 return method.invoke( analyst, args );
             }
         } catch ( Exception e ) {

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services.impl;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFIForward;
@@ -64,10 +64,10 @@ public class RFIForwardServiceImpl extends GenericSqlServiceImpl<RFIForward, Lon
     @Override
     @SuppressWarnings( "unchecked" )
     @Transactional( readOnly = true )
-    public List<RFIForward> select( PlanCommunity planCommunity, final RFISurvey rfiSurvey ) {
+    public List<RFIForward> select( CommunityService communityService, final RFISurvey rfiSurvey ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         return (List<RFIForward>) CollectionUtils.select(
                 criteria.list(),
                 new Predicate() {

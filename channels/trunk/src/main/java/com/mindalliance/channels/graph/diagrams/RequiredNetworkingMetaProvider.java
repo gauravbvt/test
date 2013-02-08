@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;
@@ -51,8 +51,8 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             Event event,
             String outputFormat,
             Resource imageDirectory,
-            PlanCommunity planCommunity ) {
-        super( outputFormat, imageDirectory, planCommunity.getAnalyst(), planCommunity.getPlanService() );
+            CommunityService communityService ) {
+        super( outputFormat, imageDirectory, communityService.getAnalyst(), communityService.getPlanService() );
         this.selectedAgency = selectedAgency;
         this.selectedRequirementRel = selectedRequirementRel;
         this.timing = timing;
@@ -143,7 +143,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Agency vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService, Agency vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
@@ -155,12 +155,12 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ORG_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ORG_FONT ) );
-            if ( planCommunity.getParticipationAnalyst().hasIssues( vertex, planCommunity ) ) {
+            if ( communityService.getParticipationAnalyst().hasIssues( vertex, communityService ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                        sanitize( planCommunity.getParticipationAnalyst().getIssuesOverview(
+                        sanitize( communityService.getParticipationAnalyst().getIssuesOverview(
                                 vertex,
-                                planCommunity ) ) ) );
+                                communityService ) ) ) );
             } else {
                 list.add( new DOTAttribute( "tooltip", vertex.getDescription() ) );
             }
@@ -188,7 +188,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity,
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService,
                                                      RequirementRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
@@ -201,7 +201,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            if ( edge.hasUnfulfilledRequirements( timing, event, planCommunity ) ) {
+            if ( edge.hasUnfulfilledRequirements( timing, event, communityService ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
             }

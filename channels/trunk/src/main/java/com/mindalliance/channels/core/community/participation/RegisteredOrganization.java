@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -137,11 +138,11 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         return name;
     }
 
-    public String getName( PlanCommunity planCommunity ) {
+    public String getName( CommunityService communityService ) {
         if ( name != null ) {
             return name;
         } else {
-            Organization org = getFixedOrganization( planCommunity );
+            Organization org = getFixedOrganization( communityService );
             assert org == null || org.isActual();
             return org == null ? "?" : org.getName();
         }
@@ -154,10 +155,10 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         address = update.getAddress();
     }
 
-    public Organization getFixedOrganization( PlanCommunity planCommunity ) {
+    public Organization getFixedOrganization( CommunityService communityService ) {
         if ( fixedOrganizationId == -1 ) return null;
         try {
-            return planCommunity.find( Organization.class, fixedOrganizationId, getCreated() );
+            return communityService.find( Organization.class, fixedOrganizationId, getCreated() );
         } catch ( NotFoundException e ) {
             if ( fixedOrganizationId > -1 )
                 LOG.warn( "Organization not found at " + fixedOrganizationId );
@@ -232,9 +233,9 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
 
-    public List<Job> getFixedJobs( PlanCommunity planCommunity ) {
+    public List<Job> getFixedJobs( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
-            Organization org = getFixedOrganization( planCommunity );
+            Organization org = getFixedOrganization( communityService );
             if ( org != null )
                 return Collections.unmodifiableList( org.getJobs() );
             else
@@ -244,21 +245,21 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         }
     }
 
-    public boolean isValid( PlanCommunity planCommunity ) {
-        return !isFixedOrganization() || getFixedOrganization( planCommunity ) != null;
+    public boolean isValid( CommunityService communityService ) {
+        return !isFixedOrganization() || getFixedOrganization( communityService ) != null;
     }
 
     // Note: Can return a non-persisted registered organization.
-    public RegisteredOrganization getEffectiveParent( PlanCommunity planCommunity ) {
+    public RegisteredOrganization getEffectiveParent( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
-            Organization parent = getFixedOrganization( planCommunity ).getParent();
+            Organization parent = getFixedOrganization( communityService ).getParent();
             if ( parent == null ) {
                 return null;
             } else {
                 return new RegisteredOrganization(
                         getUsername(),
                         parent.getId(),
-                        planCommunity
+                        communityService.getPlanCommunity()
                 );
             }
         } else {
@@ -267,33 +268,33 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         }
     }
 
-    public String getEffectiveDescription( PlanCommunity planCommunity ) {
+    public String getEffectiveDescription( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
-            Organization org = getFixedOrganization( planCommunity );
+            Organization org = getFixedOrganization( communityService );
             return org == null ? "" : org.getDescription();
         } else {
             return description == null ? "" : description;
         }
     }
 
-    public String getEffectiveMission( PlanCommunity planCommunity ) {
+    public String getEffectiveMission( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
-            Organization org = getFixedOrganization( planCommunity );
+            Organization org = getFixedOrganization( communityService );
             return org == null ? "" : org.getMission();
         } else {
             return mission == null ? "" : mission;
         }
     }
 
-    public String getParentName( PlanCommunity planCommunity ) {
+    public String getParentName( CommunityService communityService ) {
         RegisteredOrganization parentRegistration = getParent();
-        return parentRegistration == null ? null : parentRegistration.getName( planCommunity );
+        return parentRegistration == null ? null : parentRegistration.getName( communityService );
 
     }
 
-    public Place getJurisdiction( PlanCommunity planCommunity ) {
+    public Place getJurisdiction( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
-            Organization org = getFixedOrganization( planCommunity );
+            Organization org = getFixedOrganization( communityService );
             if ( org != null )
                 return org.getJurisdiction();
         }

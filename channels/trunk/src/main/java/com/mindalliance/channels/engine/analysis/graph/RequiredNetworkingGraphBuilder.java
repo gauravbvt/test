@@ -1,6 +1,6 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;
@@ -28,7 +28,7 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Agency, Requ
     private final Event event;
     private final Agency selectedAgency;
     private final RequirementRelationship selectedRequirementRel;
-    private PlanCommunity planCommunity;
+    private CommunityService communityService;
 
     public RequiredNetworkingGraphBuilder(
             Phase.Timing timing,
@@ -69,20 +69,20 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Agency, Requ
             reqRels.add( selectedRequirementRel );
         } else {
             reqRels.addAll( (List<RequirementRelationship>) CollectionUtils.select(
-                    planCommunity.getParticipationAnalyst().findRequirementRelationships( timing, event, planCommunity ),
+                    communityService.getParticipationAnalyst().findRequirementRelationships( timing, event, communityService ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
                             RequirementRelationship reqRel = (RequirementRelationship) object;
                             return selectedAgency == null
-                                || reqRel.getToAgency( planCommunity ).equals( selectedAgency )
-                                || reqRel.getFromAgency( planCommunity ).equals( selectedAgency );
+                                || reqRel.getToAgency( communityService ).equals( selectedAgency )
+                                || reqRel.getFromAgency(communityService).equals( selectedAgency );
                         }
                     } ) );
         }
         for ( RequirementRelationship reqRel : reqRels ) {
-            Agency fromAgency = reqRel.getFromAgency( planCommunity );
-            Agency toAgency = reqRel.getToAgency( planCommunity );
+            Agency fromAgency = reqRel.getFromAgency( communityService );
+            Agency toAgency = reqRel.getToAgency( communityService );
             graph.addVertex( fromAgency );
             graph.addVertex( toAgency );
             graph.addEdge(
@@ -92,8 +92,8 @@ public class RequiredNetworkingGraphBuilder implements GraphBuilder<Agency, Requ
         }
     }
 
-    public void setPlanCommunity( PlanCommunity planCommunity ) {
-        this.planCommunity = planCommunity;
+    public void setCommunityService( CommunityService communityService ) {
+        this.communityService = communityService;
     }
 
 }

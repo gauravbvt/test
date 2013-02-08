@@ -19,4 +19,6 @@ public interface PlanServiceFactory {
      * @return the service
      */
     PlanService getService( Plan plan );
+
+    PlanService getService( String planUri, int planVersion );
 }

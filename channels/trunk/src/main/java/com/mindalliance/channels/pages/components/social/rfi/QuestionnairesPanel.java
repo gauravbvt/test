@@ -182,7 +182,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         };
         deleteButton.setVisible( selectedQuestionnaire != null
                 && !selectedQuestionnaire.isActive()
-                && rfiSurveyService.findSurveys( getPlanCommunity(), selectedQuestionnaire ).isEmpty()
+                && rfiSurveyService.findSurveys( getCommunityService(), selectedQuestionnaire ).isEmpty()
         );
         questionnaireContainer.add( deleteButton );
         // activate
@@ -229,7 +229,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
 
     private void deleteQuestionnaire() {
         if ( selectedQuestionnaire != null ) {
-            questionnaireService.deleteIfNotUsed( getPlanCommunity(), selectedQuestionnaire );
+            questionnaireService.deleteIfNotUsed( getCommunityService(), selectedQuestionnaire );
             selectedQuestionnaire = null;
         }
     }
@@ -251,7 +251,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
     public List<QuestionnaireWrapper> getFilteredQuestionnaires() {
         List<QuestionnaireWrapper> wrappers = new ArrayList<QuestionnaireWrapper>();
         List<Questionnaire> questionnaires = questionnaireService.select(
-                getPlanCommunity(),
+                getCommunityService(),
                 getAbout().equals( ANYTHING ) ? null : getAbout(),
                 getStatus().equals( ALL ) ? null : Questionnaire.Status.valueOf( getStatus().toUpperCase() ),
                 isRemediation()
@@ -465,11 +465,11 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         }
 
         public int getRfiCount() {
-            return rfiService.getRFICount( getPlanCommunity(), questionnaire );
+            return rfiService.getRFICount( getCommunityService(), questionnaire );
         }
 
         public int getSurveyCount() {
-            return rfiSurveyService.findSurveys( getPlanCommunity(), questionnaire ).size();
+            return rfiSurveyService.findSurveys( getCommunityService(), questionnaire ).size();
         }
 
         public String getExpandLabel() {

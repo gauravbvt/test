@@ -2,7 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.PlaceData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -47,21 +47,21 @@ public class TaskData extends AbstractProcedureElementData {
     public TaskData(
             String serverUrl,
             CommunityAssignment assignment,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUser user ) {
-        super( planCommunity, assignment,  user );
-        initData( planCommunity.getPlanService() );
-        initLocation( serverUrl, planCommunity );
+        super( communityService, assignment,  user );
+        initData( communityService.getPlanService() );
+        initLocation( serverUrl, communityService );
         initDocumentation( serverUrl );
-        initOtherAssignments( planCommunity );
-        initTeamContacts( serverUrl, planCommunity );
+        initOtherAssignments( communityService );
+        initTeamContacts( serverUrl, communityService );
     }
 
 
-    public TaskData( String serverUrl, PlanCommunity planCommunity, Part part, ChannelsUser user ) {
-        super( planCommunity, null,  user );
+    public TaskData( String serverUrl, CommunityService communityService, Part part, ChannelsUser user ) {
+        super( communityService, null,  user );
         this.part = part;
-        initData( planCommunity.getPlanService() );
+        initData( communityService.getPlanService() );
     }
 
     private void initData( PlanService planService ) {
@@ -69,7 +69,7 @@ public class TaskData extends AbstractProcedureElementData {
         failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
     }
 
-    private void initTeamContacts( String serverUrl, PlanCommunity planCommunity ) {
+    private void initTeamContacts( String serverUrl, CommunityService communityService ) {
         teamContacts = new ArrayList<ContactData>();
         if ( getAssignment() != null )
         for ( CommunityEmployment employment : getTeamEmployments() ) {
@@ -77,16 +77,16 @@ public class TaskData extends AbstractProcedureElementData {
                     serverUrl,
                     employment,
                     null,
-                    planCommunity,
+                    communityService,
                     ChannelsUser.current().getUserInfo() ) );
         }
     }
 
-    private void initOtherAssignments( PlanCommunity planCommunity ) {
+    private void initOtherAssignments( CommunityService communityService ) {
         otherAssignments = new ArrayList<CommunityAssignment>();
         Part part = getAssignment().getPart();
         if ( part.isAsTeam() ) {
-            for ( CommunityAssignment assign : planCommunity.getAllAssignments().assignedTo( part ) ) {
+            for ( CommunityAssignment assign : communityService.getAllAssignments().assignedTo( part ) ) {
                 if ( !assign.equals( getAssignment() ) ) {
                     otherAssignments.add( assign );
                 }
@@ -94,11 +94,11 @@ public class TaskData extends AbstractProcedureElementData {
         }
     }
 
-    private void initLocation( String serverUrl, PlanCommunity planCommunity ) {
+    private void initLocation( String serverUrl, CommunityService communityService ) {
         if ( getAssignment() != null ){
-            Place location = getAssignment().getLocation( planCommunity );
+            Place location = getAssignment().getLocation( communityService );
             placeData = location != null
-                    ? new PlaceData( serverUrl, location, getPlan() )
+                    ? new PlaceData( serverUrl, location, communityService )
                     : null;
         }
     }

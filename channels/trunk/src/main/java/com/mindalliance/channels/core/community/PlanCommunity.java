@@ -1,40 +1,14 @@
 package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.ModelObjectContext;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
-import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
-import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
-import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Nameable;
-import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.engine.analysis.Analyst;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,15 +19,12 @@ import java.util.Map;
  * Date: 11/29/12
  * Time: 3:23 PM
  */
-public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext {
-
-    /**
-     * Class logger.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger( PlanCommunity.class );
-
+public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     private static final String UNNAMED = "UNNAMED";
+
+    private long id = -1;
+    private String uri;
 
     /**
      * History of shifts in assignable id lower bounds.
@@ -61,17 +32,39 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
     private Map<Date, Long> idShifts = new HashMap<Date, Long>();
 
 
-    private CommunityService communityService;
     private String name;
     private String description;
     private Place communityLocale;
-    private ParticipationManager participationManager;
+    private String planUri;
+    private int planVersion;
 
-    public PlanCommunity(
-            CommunityService communityService,
-            ParticipationManager participationManager ) {
-        this.participationManager = participationManager;
-        this.communityService = communityService;
+    private String plannerSupportCommunity = "";
+    private String userSupportCommunity;
+    private String communityCalendar = "";
+    private String communityCalendarHost = "";
+    private String communityCalendarPrivateTicket = "";
+    private boolean development;
+
+    public PlanCommunity() {
+
+    }
+
+    public PlanCommunity( // Plan community for domain planners
+            Plan plan ) {
+        uri = plan.getUri();
+        planUri = plan.getUri();
+        planVersion = plan.getVersion();
+        id = plan.getId();
+        name = plan.getName();
+        development = plan.isDevelopment();
+    }
+
+    public void setId( long id ) {
+        this.id = id;
+    }
+
+    public void setUri( String uri ) {
+        this.uri = uri;
     }
 
     @Override
@@ -123,61 +116,81 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
         this.name = name;
     }
 
-    public CommunityService getCommunityService() {
-        return communityService;
-    }
-
-    public UserParticipationService getUserParticipationService() {
-        return communityService.getUserParticipationService();
-    }
-
-    public OrganizationParticipationService getOrganizationParticipationService() {
-        return communityService.getOrganizationParticipationService();
-    }
-
-    public PlanService getPlanService() { // Todo - COMMUNITY - many calls bypass community DAO
-        return communityService.getPlanService();
-    }
-
-    public ChannelsUserDao getUserDao() {
-        return getPlanService().getUserDao();
-    }
-
-    public Analyst getAnalyst() {
-        return communityService.getAnalyst();
-    }
-
-    public Plan getPlan() {
-        return getPlanService().getPlan();
-    }
-
-    public UserParticipationConfirmationService getUserParticipationConfirmationService() {
-        return communityService.getUserParticipationConfirmationService();
-    }
-
-    public boolean isCustodianOf( ChannelsUser user, Organization placeholder ) {
-        if ( !placeholder.isPlaceHolder() ) return false;
-        if ( user.isPlanner( getPlan().getUri() ) ) return true;
-        Actor custodian = placeholder.getCustodian();
-        return custodian != null
-                && getUserParticipationService().isUserParticipatingAs( user, new Agent( custodian ), this );
-    }
 
     public String getUri() {
-        return getPlan().getUri(); // todo - COMMUNITY - change when not only one implied community per plan
+        return uri;
     }
 
     public int getPlanVersion() {
-        return getPlan().getVersion();
-    }
-
-    public ParticipationManager getParticipationManager() {
-        return participationManager;
+        return planVersion;
     }
 
     public String getPlanUri() {
-        return getPlan().getUri();
+        return planUri;
     }
+
+    public String getCommunityCalendar() {
+        return communityCalendar == null ? "" : communityCalendar;
+    }
+
+    public void setCommunityCalendar( String communityCalendar ) {
+        this.communityCalendar = communityCalendar;
+    }
+
+    public String getCommunityCalendarHost() {
+        return communityCalendarHost == null ? "" : communityCalendarHost;
+    }
+
+    public void setCommunityCalendarHost( String communityCalendarHost ) {
+        this.communityCalendarHost = communityCalendarHost;
+    }
+
+    public String getUserSupportCommunity() {
+        return userSupportCommunity == null ? "" : userSupportCommunity;
+    }
+
+    public void setUserSupportCommunity( String supportCommunity ) {
+        this.userSupportCommunity = supportCommunity;
+    }
+
+    public String getUserSupportCommunity( String defaultName ) {
+        String name = getUserSupportCommunity();
+        return name.isEmpty() ? defaultName : name;
+    }
+
+    public String getPlannerSupportCommunity() {
+        return plannerSupportCommunity == null ? "" : plannerSupportCommunity;
+    }
+
+    public void setPlannerSupportCommunity( String plannerSupportCommunity ) {
+        this.plannerSupportCommunity = plannerSupportCommunity;
+    }
+
+    public String getCommunityCalendar( String defaultCalendar ) {
+        String name = getCommunityCalendar();
+        return name.isEmpty() ? defaultCalendar : name;
+    }
+
+    public String getCommunityCalendarHost( String defaultCalendarHost ) {
+        String name = getCommunityCalendarHost();
+        return name.isEmpty() ? defaultCalendarHost : name;
+    }
+
+    public String getCommunityCalendarPrivateTicket(
+            String defaultCommunityCalendarPrivateTicket ) {
+
+        String ticket = getCommunityCalendarPrivateTicket();
+        return ticket.isEmpty() ? defaultCommunityCalendarPrivateTicket : ticket;
+    }
+
+    public String getCommunityCalendarPrivateTicket() {
+        return communityCalendarPrivateTicket == null ? "" : communityCalendarPrivateTicket;
+    }
+
+    public void setCommunityCalendarPrivateTicket( String communityCalendarPrivateTicket ) {
+        this.communityCalendarPrivateTicket = communityCalendarPrivateTicket;
+    }
+
 
     ////////
 
@@ -189,7 +202,7 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
 
     @Override
     public long getId() {
-        return getPlan().getId();
+        return id;
     }
 
     @Override
@@ -203,107 +216,38 @@ public class PlanCommunity implements Nameable, Identifiable, ModelObjectContext
     }
 
     public boolean isCommunityLeader( ChannelsUser user ) {
-        return user.isPlanner( getPlan().getUri() );   // todo have non-planners be community leaders as well or instead
+        return user.isPlanner( getPlanUri() );   // todo have non-planners be community leaders as well or instead
     }
 
     public boolean isOrganizationLeader( ChannelsUser user, RegisteredOrganization registeredOrganization ) {
         return isCommunityLeader( user ); // todo - change when organization leaders implemented
     }
 
-    public CommunityAssignments getAllAssignments() {
-        return communityService.getAllAssignments();
+    public void setPlanUri( String planUri ) {
+        this.planUri = planUri;
     }
 
-    public CommunityCommitments getAllCommitments( boolean includeToSelf ) {
-        return communityService.getAllCommitments( includeToSelf );
+    public void setPlanVersion( int planVersion ) {
+        this.planVersion = planVersion;
     }
 
-    public CommunityCommitments findAllCommitments( Flow flow, boolean includeToSelf ) {
-        return communityService.findAllCommitments( flow, includeToSelf );
+    public boolean isDomainCommunity() {
+        return getUri().equals( getPlanUri() );
     }
 
+    //////////////////
 
-    @SuppressWarnings( "unchecked" )
-    public CommunityCommitments findAllBypassCommitments( final Flow flow ) {
-        return communityService.findAllBypassCommitments( flow );
+
+    @Override
+    public boolean isSegmentObject() {
+        return false;
     }
 
-
-    public boolean canHaveParentAgency( final String name, String parentName ) {
-
-        if ( parentName == null ) return true;
-        // circularity test
-        boolean nonCircular = !parentName.equals( name )
-                && !CollectionUtils.exists(
-                findAncestors( parentName ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Agency) object ).getName().equals( name );
-                    }
-                } );
-        if ( !nonCircular ) return false;
-        // placeholder parent test
-        Agency agency = getParticipationManager().findAgencyNamed( name, this );
-        Agency parentAgency = getParticipationManager().findAgencyNamed( parentName, this );
-        if ( agency == null || parentAgency == null ) return false; // should not happen
-        Organization placeholder = agency.getPlaceholder( this );
-        if ( placeholder != null ) {
-            Organization parentPlaceholder = parentAgency.getPlaceholder( this );
-            return ChannelsUtils.areEqualOrNull( placeholder.getParent(), parentPlaceholder );
-        }
-        return true;
+    public boolean isDevelopment() {
+        return development;
     }
 
-    public List<Agency> findAncestors( String agencyName ) {
-        List<Agency> visited = new ArrayList<Agency>();
-        Agency agency = participationManager.findAgencyNamed( agencyName, this );
-        if ( agency != null )
-            return safeFindAncestors( agency, visited );
-        else
-            return new ArrayList<Agency>();
-    }
-
-    private List<Agency> safeFindAncestors(
-            Agency agency,
-            List<Agency> visited ) {
-        List<Agency> ancestors = new ArrayList<Agency>();
-        if ( !visited.contains( agency ) ) {
-            if ( agency != null ) {
-                Agency parentAgency = agency.getParent( this );
-                if ( parentAgency != null && !visited.contains( parentAgency ) ) {
-                    visited.add( parentAgency );
-                    ancestors.add( parentAgency );
-                    ancestors.addAll( safeFindAncestors( parentAgency, visited ) );
-                }
-            }
-        }
-        return ancestors;
-    }
-
-
-    public ParticipationAnalyst getParticipationAnalyst() {
-        return getParticipationManager().getParticipationAnalyst();
-    }
-
-    public void clearCache() {
-        communityService.clearCache();
-    }
-
-    public <T extends ModelObject> T find( Class<T> clazz, long id, Date dateOfRecord ) throws NotFoundException {
-        return (T) getModelObjectContextDao().find( clazz, id, dateOfRecord );
-    }
-
-    private AbstractModelObjectDao getModelObjectContextDao() {   // Todo - COMMUNITY - go through community's DAO chained to planService Dao
-        return getPlanService().getDao();
-    }
-
-    public boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord ) {
-        try {
-            return id != null && find( clazz, id, dateOfRecord ) != null;
-        } catch ( NotFoundException e ) {
-            LOG.warn( "Does not exist: " + clazz.getSimpleName() + " at " + id + " recorded on " + dateOfRecord );
-            return false;
-        }
+    public void setDevelopment( boolean development ) {
+        this.development = development;
     }
 }

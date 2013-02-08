@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -46,10 +46,10 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
     }
 
 
-    protected void initComponents( QueryService service, final PlanCommunity planCommunity ) {
-        boolean isPlanner = getUser().isPlanner( planCommunity.getPlan().getUri() );
+    protected void initComponents( QueryService service, final CommunityService communityService ) {
+        boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
         getContainer().add(
-            new Label( "planName", planCommunity.getPlan().toString() ),
+            new Label( "planName", communityService.getPlan().toString() ),
             new WebMarkupContainer( "note" ).setVisible( isPlanner ),
             new WebMarkupContainer( "activeDiv" ).add(
                     new Label(
@@ -65,7 +65,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         UserParticipation p = item.getModelObject();
                         parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
                         parameters.set( VERSION_PARM, getPlanVersion() );
-                        Actor actor = p.getAgent( getPlanCommunity() ).getActor();
+                        Actor actor = p.getAgent(getCommunityService()).getActor();
                         parameters.set( "agent", actor.getId() );
                         String participantUsername = p.getParticipant().getUsername();
                         parameters.set( "user", participantUsername );

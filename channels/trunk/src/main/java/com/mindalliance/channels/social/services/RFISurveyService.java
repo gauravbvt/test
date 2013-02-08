@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -22,58 +22,58 @@ public interface RFISurveyService extends GenericSqlService<RFISurvey, Long> {
     /**
      * List all active surveys in a plan.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @return a list of surveys
      */
-    List<RFISurvey> listActive( PlanCommunity planCommunity );
+    List<RFISurvey> listActive( CommunityService communityService );
 
     /**
      * Get all surveys for a plan, possibly restricting to open ones about a given what the questionnaire is about.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param onlyOpen a boolean
      * @param about    a string
      * @return a list of surveys
      */
-    List<RFISurvey> select( PlanCommunity planCommunity, boolean onlyOpen, String about );
+    List<RFISurvey> select( CommunityService communityService, boolean onlyOpen, String about );
 
     /**
      * Get all surveys on a model object.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param modelObject a model object
      * @return a list of surveys
      */
-    List<RFISurvey> select( PlanCommunity planCommunity, ModelObject modelObject );
+    List<RFISurvey> select( CommunityService communityService, ModelObject modelObject );
 
     /**
      * Creates (i.e. launches) an RFISurvey on a model object using a questionnaire.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param username      a string
      * @param questionnaire a questionnaire
      * @param modelObject   a model object
      * @return a survey
      */
-    RFISurvey launch( PlanCommunity planCommunity, String username, Questionnaire questionnaire, ModelObject modelObject );
+    RFISurvey launch( CommunityService communityService, String username, Questionnaire questionnaire, ModelObject modelObject );
 
     /**
      * Whether remediation of an issue is already surveyed (closed or ongoing).
      *
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @param issue        an issue
      * @return a rfi survey
      */
-    RFISurvey findRemediationSurvey( PlanCommunity planCommunity, final Issue issue );
+    RFISurvey findRemediationSurvey( CommunityService communityService, final Issue issue );
 
     /**
      * Find surveys using a given questionnaire.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param questionnaire a questionnaire
      * @return a list of surveys
      */
-    List<RFISurvey> findSurveys( PlanCommunity planCommunity, Questionnaire questionnaire );
+    List<RFISurvey> findSurveys( CommunityService communityService, Questionnaire questionnaire );
 
     /**
      * Toggle the activation status of a survey.

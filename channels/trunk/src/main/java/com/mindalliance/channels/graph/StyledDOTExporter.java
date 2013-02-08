@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import org.jgrapht.Graph;
 
 import java.io.Writer;
@@ -20,6 +20,6 @@ public interface StyledDOTExporter<V,E> {
 
     void setHighlightedEdges( Set<E> edges);
 
-    void export( PlanCommunity planCommunity, Writer writer, Graph<V, E> graph ) throws InterruptedException;
+    void export( CommunityService communityService, Writer writer, Graph<V, E> graph ) throws InterruptedException;
 
 }

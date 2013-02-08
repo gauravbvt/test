@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.protocols;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.AssignedLocation;
@@ -50,14 +50,14 @@ public class CommunityAssignment implements Serializable {
      *
      * @return a place
      */
-    public Place getLocation( PlanCommunity planCommunity ) {
+    public Place getLocation( CommunityService communityService ) {
         AssignedLocation assignedLocation = part.getLocation();
         if ( assignedLocation.isNamed() )
             return assignedLocation.getNamedPlace();
         else if ( assignedLocation.isAgentJurisdiction() )
             return getEmployment().getJurisdiction();
         else if ( assignedLocation.isOrganizationJurisdiction() )
-            return getAgency().getJurisdiction( planCommunity );
+            return getAgency().getJurisdiction( communityService );
         else
             return null;
     }

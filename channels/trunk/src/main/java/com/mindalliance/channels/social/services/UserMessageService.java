@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 import com.mindalliance.channels.social.model.Feedback;
@@ -22,13 +22,13 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
     
     void deleteMessage( UserMessage message );
     
-    Iterator<UserMessage> getReceivedMessages( String username, PlanCommunity planCommunity );
+    Iterator<UserMessage> getReceivedMessages( String username, CommunityService communityService );
 
-    Iterator<UserMessage> getSentMessages( String username, PlanCommunity planCommunity );
+    Iterator<UserMessage> getSentMessages( String username, CommunityService communityService );
     
     Date getWhenLastChanged( String planUri );
     
-    Date getWhenLastReceived( String username, PlanCommunity planCommunity );
+    Date getWhenLastReceived( String username, CommunityService communityService );
 
     void markSent( UserMessage message );
 
@@ -36,7 +36,7 @@ public interface UserMessageService extends GenericSqlService<UserMessage, Long>
 
     void markToNotify( UserMessage message );
 
-    int countNewFeedbackReplies( PlanCommunity planCommunity, ChannelsUser user );
+    int countNewFeedbackReplies( CommunityService communityService, ChannelsUser user );
 
     void markFeedbackRepliesRead( Feedback feedback );
 }

@@ -729,7 +729,6 @@ Note that all profile attributes are optional.]]>
                 <description>See also [${helpUrl}/ch02s06s13s03.html this]</description>
             </step>
             <next group="profiling" activity="profiling-organization"/>
-            <next group="user-participation" activity="participation"/>
         </activity>
         <activity id="profiling-place">
             <name>Profile a place</name>
@@ -915,7 +914,7 @@ Note that all profile attributes are optional.]]>
             <step>
                 <description>See also [${helpUrl}/ch03s03s03s05.html this]</description>
             </step>
-            <next group="user-participation" activity="launch-remediation-survey"/>
+            <next group="learning" activity="launch-remediation-survey"/>
         </activity>
         <activity id="moving-tasks">
             <name>Move tasks across segments</name>
@@ -1038,8 +1037,8 @@ The other parties to the commitments can be aggregated by role, organization typ
             <next group="improving" activity="verify-taxonomy"/>
         </activity>
     </group>
-    <group id="user-participation">
-        <name>User participation</name>
+    <group id="learning">
+        <name>Learning</name>
         <activity id="compose-questionnaire">
             <name>Compose a questionnaire</name>
             <step>
@@ -1066,7 +1065,7 @@ Questionnaires can be activated and deactivated. They can be extended while they
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s19s02.html this]</description>
             </step>
-            <next group="user-participation" activity="launch-survey"/>
+            <next group="learning" activity="launch-survey"/>
         </activity>
         <activity id="launch-survey">
             <name>Launch a survey</name>
@@ -1107,8 +1106,8 @@ Questionnaires can be activated and deactivated. They can be extended while they
             <step>
                 <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="user-participation" activity="add-survey-participants"/>
-            <next group="user-participation" activity="compose-questionnaire"/>
+            <next group="learning" activity="add-survey-participants"/>
+            <next group="learning" activity="compose-questionnaire"/>
         </activity>
         <activity id="launch-remediation-survey">
             <name>Launch an issue remediation survey</name>
@@ -1139,8 +1138,8 @@ Note that the issue remediation questionnaires are by default not shown in the l
             <step>
                 <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="user-participation" activity="add-survey-participants"/>
-            <next group="user-participation" activity="compose-questionnaire"/>
+            <next group="learning" activity="add-survey-participants"/>
+            <next group="learning" activity="compose-questionnaire"/>
         </activity>
         <activity id="add-survey-participants">
             <name>Invite participation to a survey</name>
@@ -1170,7 +1169,7 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="user-participation" activity="survey-results"/>
+            <next group="learning" activity="survey-results"/>
         </activity>
         <activity id="survey-results">
             <name>Lookup the results of a survey</name>
@@ -1193,7 +1192,7 @@ Results can be viewed by opening the survey and selecting the ''results'' tabs.<
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </step>
-            <next group="user-participation" activity="add-survey-participants"/>
+            <next group="learning" activity="add-survey-participants"/>
         </activity>
         <activity id="feedback">
             <name>Manage user feedback</name>
@@ -1213,44 +1212,6 @@ Planners can see this feedback and reply to it. The user can then reply back etc
             <step>
                 <description>For more information, see [${helpUrl}/ch02s06s20.html this]</description>
             </step>
-        </activity>
-        <activity id="participation">
-            <name>Set user participation</name>
-            <step>
-                <description><![CDATA[The protocols generated for a user are those of the agents the user participates as in the plan.
-                    
-A planner can associate a user with one or more agents and add contact information specific to the user's participation as that agent.
-
-Users can self-associate with so called "open" agents. The participation may require confirmation by supervisors before it becomes effective.
-
-If a participation by a user is set by someone else, the user must first accept it for the participation to become effective.]]></description>
-                <script>
-                    <action>Set user participation as agents</action>
-                    <change>
-                        <subjectId>-12</subjectId>
-                        <type>Expanded</type>
-                    </change>
-                </script>
-            </step>
-            <step>
-                <description>For more information, see [${helpUrl}/ch02s06s11s16.html this]</description>
-            </step>
-            <step>
-                <description>See also [${helpUrl}/ch02s04s04s02.html this]</description>
-            </step>
-            <next group="user-participation" activity="organization-registration"/>
-        </activity>
-        <activity id="organization-registration">
-            <name>Registering organizations into placeholders</name>
-            <step>
-                <description><![CDATA[Organizations defined in a plan can be placeholders for real organizations that are added to (or removed from) the scope after the plan is released.
-
-Planners, or users participating as custodians of a placeholder organization, can register one or more organizations representing the placeholder organization.
-
-A "placed" organization inherits a copy of the agents employed by the placeholder organization. Users can then participate as these agents.
-]]></description>
-            </step>
-            <next group="user-participation" activity="participation"/>
         </activity>
     </group>
     <group id="searching">

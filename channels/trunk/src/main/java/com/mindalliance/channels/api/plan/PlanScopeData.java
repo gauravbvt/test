@@ -7,7 +7,7 @@ import com.mindalliance.channels.api.entities.OrganizationData;
 import com.mindalliance.channels.api.entities.PhaseData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.api.entities.RoleData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -53,76 +53,76 @@ public class PlanScopeData implements Serializable {
         // required for JAXB
     }
 
-    public PlanScopeData( String serverUrl, PlanCommunity planCommunity ) {
+    public PlanScopeData( String serverUrl, CommunityService communityService ) {
         cache = new HashMap<Long, ModelObjectData>();
-        init( serverUrl, planCommunity );
+        init( serverUrl, communityService );
     }
 
-    private void init( String serverUrl, PlanCommunity planCommunity ) {
-        planIdentifierData = new PlanIdentifierData( planCommunity );
-        initPhases( serverUrl, planCommunity );
-        initPlaces( serverUrl, planCommunity );
-        initEvents( serverUrl, planCommunity );
-        initRoles( serverUrl, planCommunity );
-        initOrgs( serverUrl, planCommunity );
-        initActors( serverUrl, planCommunity );
+    private void init( String serverUrl, CommunityService communityService ) {
+        planIdentifierData = new PlanIdentifierData( communityService );
+        initPhases( serverUrl, communityService );
+        initPlaces( serverUrl, communityService );
+        initEvents( serverUrl, communityService );
+        initRoles( serverUrl, communityService );
+        initOrgs( serverUrl, communityService );
+        initActors( serverUrl, communityService );
     }
 
-    private void initActors( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    private void initActors( String serverUrl, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         actors = new ArrayList<ActorData>();
         for ( Actor actor : planService.list( Actor.class ) ) {
             if ( !actor.isUnknown() && !actor.isUniversal() )
-                actors.add( cache( actor, new ActorData( serverUrl, actor, planCommunity.getPlan() ) ) );
+                actors.add( cache( actor, new ActorData( serverUrl, actor, communityService ) ) );
         }
 
     }
 
-    private void initOrgs( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    private void initOrgs( String serverUrl, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         orgs = new ArrayList<OrganizationData>();
         for ( Organization org : planService.list( Organization.class ) ) {
             if ( !org.isUnknown() && !org.isUniversal() )
-                orgs.add( cache( org, new OrganizationData( serverUrl, org, planCommunity ) ) );
+                orgs.add( cache( org, new OrganizationData( serverUrl, org, communityService ) ) );
         }
 
     }
 
-    private void initRoles( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    private void initRoles( String serverUrl, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         roles = new ArrayList<RoleData>();
         for ( Role role : planService.list( Role.class ) ) {
             if ( !role.isUnknown() && !role.isUniversal() )
-                roles.add( cache( role, new RoleData( serverUrl, role, planCommunity.getPlan() ) ) );
+                roles.add( cache( role, new RoleData( serverUrl, role, communityService ) ) );
         }
 
     }
 
-    private void initEvents( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    private void initEvents( String serverUrl, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         events = new ArrayList<EventData>();
         for ( Event event : planService.list( Event.class ) ) {
             if ( !event.isUnknown() && !event.isUniversal() )
-                events.add( cache( event, new EventData( serverUrl, event, planCommunity.getPlan() ) ) );
+                events.add( cache( event, new EventData( serverUrl, event, communityService ) ) );
         }
 
     }
 
-    private void initPlaces( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    private void initPlaces( String serverUrl, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         places = new ArrayList<PlaceData>();
         for ( Place place : planService.list( Place.class ) ) {
             if ( !place.isUnknown() && !place.isUniversal() )
-                places.add( cache( place, new PlaceData( serverUrl, place, planCommunity.getPlan() ) ) );
+                places.add( cache( place, new PlaceData( serverUrl, place, communityService ) ) );
         }
     }
 
-    private void initPhases( String serverUrl, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    private void initPhases( String serverUrl, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         phases = new ArrayList<PhaseData>();
         for ( Phase phase : planService.list( Phase.class ) ) {
             if ( !phase.isUnknown() && !phase.isUniversal() )
-                phases.add( cache( phase, new PhaseData( serverUrl, phase, planCommunity.getPlan() ) ) );
+                phases.add( cache( phase, new PhaseData( serverUrl, phase, communityService ) ) );
         }
     }
 

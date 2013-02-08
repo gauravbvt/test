@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -134,7 +134,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, ModelEntity vertex,
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService, ModelEntity vertex,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
@@ -147,13 +147,13 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
                 list.add( new DOTAttribute( "shape", "none" ) );
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
+            if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
                                                                             vertex,
                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
             {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( getAnalyst().getIssuesOverview( planCommunity.getPlanService(),
+                                            sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
                                                     vertex,
                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
@@ -161,7 +161,7 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, EntityRelationship edge,
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, EntityRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
@@ -173,11 +173,11 @@ public class EntityNetworkMetaProvider extends AbstractMetaProvider {
             list.add( new DOTAttribute( "weight", "2.0" ) );
             if ( highlighted )
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
-            if ( !getPlan().isViewableByAll() && edge.hasIssues( getAnalyst(), planCommunity.getPlanService() ) ) {
+            if ( edge.hasIssues( getAnalyst(), communityService.getPlanService() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( edge.getIssuesSummary( getAnalyst(), planCommunity.getPlanService() ) ) ) );
+                                            sanitize( edge.getIssuesSummary( getAnalyst(), communityService.getPlanService() ) ) ) );
             }
             return list;
         }

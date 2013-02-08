@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.social;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -212,13 +212,13 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
 
     public String getJobTitles() {
         StringBuilder sb = new StringBuilder(  );
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
                 getUser(),
-                getPlanCommunity()
+                communityService
         );
         for ( UserParticipation participation : participations ) {
-            Agent agent = participation.getAgent( planCommunity );
+            Agent agent = participation.getAgent( communityService );
             if ( agent != null ) {
                 String s = agent.getName();
                 sb.append( s );

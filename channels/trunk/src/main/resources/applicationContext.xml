@@ -78,12 +78,19 @@ CONFIGURATION NOTES:
     <bean id="idGenerator" class="com.mindalliance.channels.core.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.engine.analysis.IssueScanner"/>
 
-    <bean id="definitionManager" class="com.mindalliance.channels.core.dao.DefinitionManager">
+    <bean id="planDefinitionManager" class="com.mindalliance.channels.core.dao.PlanDefinitionManager">
         <constructor-arg value="${channels.home}${file.separator}data"/>
         <constructor-arg value="${channels.home}${file.separator}plans.properties"/>
         <property name="defaultProperties" value="/WEB-INF/plans.properties"/>
         <property name="snapshotThreshold" value="10"/>
     </bean>
+
+    <bean id="communityDefinitionManager" class="com.mindalliance.channels.core.community.CommunityDefinitionManager">
+        <constructor-arg value="${channels.home}${file.separator}communities"/>
+        <constructor-arg value="${channels.home}${file.separator}communities.properties"/>
+        <property name="snapshotThreshold" value="10"/>
+    </bean>
+
 
     <bean id="userUploadService" class="com.mindalliance.channels.core.dao.user.UserUploadServiceImpl">
         <property name="publicDirectory" value="${channels.home}${file.separator}public"/>
@@ -113,8 +120,16 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
+    <bean id="planCommunityManager" class="com.mindalliance.channels.core.community.PlanCommunityManagerImpl">
+        <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
+        <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
+        <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
+        <property name="defaultCommunityCalendarPrivateTicket" value="2eeb23a44773bca4cf51901c486a2275"/>
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+
     <bean id="planManager" class="com.mindalliance.channels.core.dao.PlanManagerImpl" lazy-init="true">
-        <constructor-arg ref="definitionManager"/>
+        <constructor-arg ref="planDefinitionManager"/>
         <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
         <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
         <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
@@ -153,7 +168,6 @@ CONFIGURATION NOTES:
     <bean id="organizationParticipationService" class="com.mindalliance.channels.core.community.participation.OrganizationParticipationServiceImpl"/>
     <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>
     <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
-    <bean id="planCommunityManager" class="com.mindalliance.channels.core.community.PlanCommunityManagerImpl"/>
     <bean id="participationManager" class="com.mindalliance.channels.core.community.participation.ParticipationManagerImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
@@ -186,20 +200,13 @@ CONFIGURATION NOTES:
 
     <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
         <property name="timeout" value="300"/>
-        <!--       <property name="commonListeners">
-                    <list value-type="com.mindalliance.channels.core.command.CommandListener">
-                        <ref bean="planManager"/>
-                        <ref bean="analyst"/>
-                    </list>
-                </property>
-                <property name="presenceListeners">
-                    <list value-type="com.mindalliance.channels.social.PresenceListener">
-                    </list>
-                </property>
-        -->
-    </bean>
+     </bean>
 
     <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"
+          destroy-method="destroy">
+    </bean>
+
+    <bean id="communityServiceFactory" class="com.mindalliance.channels.core.community.CommunityServiceFactoryImpl"
           destroy-method="destroy">
     </bean>
 
@@ -218,6 +225,9 @@ CONFIGURATION NOTES:
         <constructor-arg ref="userParticipationService"/>
         <constructor-arg ref="userParticipationConfirmationService"/>
         <constructor-arg ref="organizationParticipationService"/>
+        <constructor-arg ref="planCommunityManager"/>
+        <constructor-arg ref="participationManager"/>
+        <constructor-arg ref="userDao"/>
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">

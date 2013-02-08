@@ -15,18 +15,18 @@ public interface ImportExportFactory {
      * Create an import context.
      *
      * @param userName the user doing the import
-     * @param planDao the plan dao
+     * @param modelObjectDao the model object dao
      * @return an importer
      */
-    Importer createImporter( String userName, PlanDao planDao );
+    Importer createImporter( String userName, AbstractModelObjectDao modelObjectDao );
 
     /**
      * Create an export context.
      *
      * @param userName the user doing the export
-     * @param planDao the plan dao
+     * @param modelObjectDao the model object dao
      * @return an exporter
      */
-    Exporter createExporter( String userName, PlanDao planDao );
+    Exporter createExporter( String userName, AbstractModelObjectDao modelObjectDao );
 
 }

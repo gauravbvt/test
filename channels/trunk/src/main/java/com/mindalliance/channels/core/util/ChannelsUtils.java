@@ -710,4 +710,15 @@ public final class ChannelsUtils {
                 (object != null && other != null && object.equals( other ) );
     }
 
+    /**
+     * Return a "directory-safe" equivalent name.
+     *
+     * @param name original name
+     * @return safe version
+     */
+    public static String sanitize( String name ) {
+        return name.replaceAll( "\\W", "_" );
+    }
+
+
 }

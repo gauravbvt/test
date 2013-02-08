@@ -17,7 +17,7 @@ import org.apache.wicket.model.IModel;
  * Date: 7/4/12
  * Time: 6:55 PM
  */
-public class UserParticipationFloatingPanel extends AbstractFloatingCommandablePanel {
+public class UserParticipationFloatingPanel extends AbstractFloatingCommandablePanel {  // todo - COMMUNITY - remove
 
     public UserParticipationFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );

@@ -3,7 +3,7 @@ package com.mindalliance.channels.api.procedures;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
@@ -51,63 +51,63 @@ public class ProceduresData implements Serializable {
 
     public ProceduresData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             List<UserParticipation> participations,
             ChannelsUser user ) {
         this.user = user;
-        initData( serverUrl, participations, planCommunity );
+        initData( serverUrl, participations, communityService );
     }
 
     public ProceduresData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Agent agent ) {
         this.agents = new ArrayList<Agent>();
         agents.add( agent );
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
 
     private void initData(
             String serverUrl,
             List<UserParticipation> participations,
-            PlanCommunity planCommunity ) {
-        initParticipatingAgents( participations, planCommunity );
+            CommunityService communityService ) {
+        initParticipatingAgents( participations, communityService );
         this.agents = getAgents( participations );
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
-    private void initData( String serverUrl, PlanCommunity planCommunity ) {
-        initProcedures( serverUrl, planCommunity );
-        initEmployments( planCommunity );
-        environmentData = new EnvironmentData( serverUrl, this, planCommunity );
-        planIdentifierData = new PlanIdentifierData( planCommunity );
+    private void initData( String serverUrl, CommunityService communityService ) {
+        initProcedures( serverUrl, communityService );
+        initEmployments( communityService );
+        environmentData = new EnvironmentData( serverUrl, this, communityService );
+        planIdentifierData = new PlanIdentifierData( communityService );
         dateVersioned = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" )
-                .format( planCommunity.getPlan().getWhenVersioned() );
+                .format( communityService.getPlan().getWhenVersioned() );
     }
 
-    private void initEmployments( PlanCommunity planCommunity ) {
+    private void initEmployments( CommunityService communityService ) {
         employments = new ArrayList<EmploymentData>();
         for ( Agent agent : agents )
             for ( CommunityEmployment employment :
-                    planCommunity.getParticipationManager().findAllEmploymentsForAgent( agent, planCommunity ) ) {
+                    communityService.getParticipationManager().findAllEmploymentsForAgent( agent, communityService ) ) {
                 employments.add( new EmploymentData( employment ) );
             }
     }
 
-    private void initProcedures( String serverUrl, PlanCommunity planCommunity ) {
+    private void initProcedures( String serverUrl, CommunityService communityService ) {
         procedures = new ArrayList<ProcedureData>();
-        CommunityCommitments allCommitments = planCommunity.getAllCommitments( true );   // include commitments to self
+        CommunityCommitments allCommitments = communityService.getAllCommitments( true );   // include commitments to self
         Set<CommunityAssignment> assignments = new HashSet<CommunityAssignment>();
         for ( Agent agent : agents ) {
-            for ( CommunityAssignment assignment : getAgentAssignments( agent, planCommunity ) ) {
+            for ( CommunityAssignment assignment : getAgentAssignments( agent, communityService ) ) {
                 assignments.add( assignment );
             }
         }
         for ( CommunityAssignment assignment : assignments ) {
             procedures.add( new ProcedureData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     assignment,
                     allCommitments.benefiting( assignment ),
                     allCommitments.committing( assignment ),
@@ -117,10 +117,10 @@ public class ProceduresData implements Serializable {
 
     private void initParticipatingAgents(
             List<UserParticipation> participations,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         participatingAgents = new ArrayList<Agent>();
         for ( UserParticipation participation : participations ) {
-            Agent agent = participation.getAgent( planCommunity );
+            Agent agent = participation.getAgent( communityService );
             if ( agent != null ) participatingAgents.add( agent );
         }
 
@@ -182,8 +182,8 @@ public class ProceduresData implements Serializable {
     }
 
 
-    private CommunityAssignments getAgentAssignments( Agent agent, PlanCommunity planCommunity ) {
-        return planCommunity.getAllAssignments().with( agent );
+    private CommunityAssignments getAgentAssignments( Agent agent, CommunityService communityService ) {
+        return communityService.getAllAssignments().with( agent );
     }
 
     public ChannelsUser getUser() {

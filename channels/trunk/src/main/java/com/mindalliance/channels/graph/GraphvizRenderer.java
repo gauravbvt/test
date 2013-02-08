@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import org.jgrapht.Graph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,7 +149,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
 
     @Override
     public void render(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Graph<V, E> graph,
             StyledDOTExporter<V, E> dotExporter,
             String format,
@@ -174,7 +174,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
                     timer = new Timer();
                     // will interrupt this thread if external process does not terminate before timeout
                     timer.schedule( new InterruptScheduler( Thread.currentThread() ), this.timeout );
-                    String dot = getDOT( planCommunity, graph, dotExporter );
+                    String dot = getDOT( communityService, graph, dotExporter );
                     baos = new ByteArrayOutputStream();
                     doRender( dot, name, format, baos );
                     // Stop the timer
@@ -343,18 +343,18 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
     /**
      * Produces a description of a graph in DOT format.
      *
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @param graph        -- the graph to be converted to DOT format
      * @param dotExporter  -- a DOT generator
      * @return a String in DOT format
      * @throws InterruptedException an interrupted exception
      */
     public String getDOT(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Graph<V, E> graph,
             StyledDOTExporter<V, E> dotExporter ) throws InterruptedException {
         StringWriter writer = new StringWriter();
-        dotExporter.export( planCommunity, writer, graph );
+        dotExporter.export( communityService, writer, graph );
         // System.out.println( writer.toString() );
         return writer.toString();
     }

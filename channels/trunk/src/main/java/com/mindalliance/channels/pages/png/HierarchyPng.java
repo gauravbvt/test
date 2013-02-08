@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -29,7 +29,7 @@ public class HierarchyPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanCommunity planCommunity,
+                                   CommunityService communityService,
                                    DiagramFactory diagramFactory ) throws DiagramException {
         Hierarchical hierarchical = null;
         String algo = "dot";
@@ -37,7 +37,7 @@ public class HierarchyPng extends DiagramPng {
                 && !parameters.get( "entity" ).toString().equals( "NONE" ) ) {
             Long entityId = parameters.get( "entity" ).toLong();
             try {
-                hierarchical = (Hierarchical) planCommunity.getPlanService().find( ModelObject.class, entityId );
+                hierarchical = (Hierarchical) communityService.getPlanService().find( ModelObject.class, entityId );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Selected entity not found at :" + entityId, e );
             }

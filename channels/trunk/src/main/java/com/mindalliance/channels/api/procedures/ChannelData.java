@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -38,22 +38,22 @@ public class ChannelData  implements Serializable {
         // required
     }
 
-    public ChannelData( Channel channel, PlanCommunity planCommunity ) {
+    public ChannelData( Channel channel, CommunityService communityService ) {
         transmissionMediumId = channel.getMedium().getId();
         address = channel.getAddress();
         format = channel.getFormat();
-        init( planCommunity );
+        init( communityService );
     }
 
-    public ChannelData( long transmissionMediumId, String address, PlanCommunity planCommunity ) {
+    public ChannelData( long transmissionMediumId, String address, CommunityService communityService ) {
         this.transmissionMediumId = transmissionMediumId;
         this.address = address;
-        init( planCommunity );
+        init( communityService );
     }
 
-    private void init( PlanCommunity planCommunity ) {
+    private void init( CommunityService communityService ) {
         try {
-             medium = planCommunity.getPlanService().find( TransmissionMedium.class, transmissionMediumId );
+             medium = communityService.getPlanService().find( TransmissionMedium.class, transmissionMediumId );
         } catch ( NotFoundException e ) {
             LOG.warn( "Medium not found " + transmissionMediumId );
         }

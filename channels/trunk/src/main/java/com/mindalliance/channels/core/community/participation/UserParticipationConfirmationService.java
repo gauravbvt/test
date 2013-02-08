@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
 
@@ -16,36 +16,36 @@ import java.util.List;
  */
 public interface UserParticipationConfirmationService extends GenericSqlService<UserParticipationConfirmation,Long> {
 
-    List<UserParticipationConfirmation> getParticipationConfirmations( PlanCommunity planCommunity );
+    List<UserParticipationConfirmation> getParticipationConfirmations( CommunityService communityService );
 
     List<UserParticipationConfirmation> getParticipationConfirmations( UserParticipation userParticipation );
 
-    List<UserParticipationConfirmation> getParticipationConfirmations( Agent supervisor, PlanCommunity planCommunity );
+    List<UserParticipationConfirmation> getParticipationConfirmations( Agent supervisor, CommunityService communityService );
 
     void addParticipationConfirmation(
             UserParticipation userParticipation,
             Agent supervisor,
             ChannelsUser user,
-            PlanCommunity planCommunity
+            CommunityService communityService
     );
 
     void removeParticipationConfirmation(
             UserParticipation userParticipation,
             Agent supervisor,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor );
 
-    void deleteConfirmations( UserParticipation participation, PlanCommunity planCommunity );
+    void deleteConfirmations( UserParticipation participation, CommunityService communityService );
 
-    boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, PlanCommunity planCommunity );
+    boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, CommunityService communityService );
 
-    boolean isConfirmationByUserRequired( UserParticipation userParticipation, ChannelsUser user, PlanCommunity planCommunity );
+    boolean isConfirmationByUserRequired( UserParticipation userParticipation, ChannelsUser user, CommunityService communityService );
 
     List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
             ChannelsUser user,
-            final PlanCommunity planCommunity );
+            final CommunityService communityService );
 
-    boolean isValid( UserParticipationConfirmation confirmation, PlanCommunity planCommunity );
+    boolean isValid( UserParticipationConfirmation confirmation, CommunityService communityService );
 }
 

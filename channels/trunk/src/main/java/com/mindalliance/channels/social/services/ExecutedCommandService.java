@@ -18,7 +18,7 @@ import java.util.Iterator;
 public interface ExecutedCommandService extends CommandListener, GenericSqlService<ExecutedCommand, Long> {
 
     /**
-     * Get an iterator on the command events recorded for a plan.
+     * Get an iterator on the command events recorded for a plan community.
      *
      * @param planCommunity a planCommunity
      * @return an iterator on command events

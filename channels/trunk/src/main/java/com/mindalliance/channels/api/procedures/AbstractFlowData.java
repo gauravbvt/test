@@ -2,7 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.MediumData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
@@ -45,36 +45,36 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
 
     public AbstractFlowData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             boolean initiating,
             Flow flow,
             CommunityAssignment assignment,
             ChannelsUser user ) {
-        super( planCommunity, assignment, user );
+        super( communityService, assignment, user );
         this.serverUrl = serverUrl;
         this.initiating = initiating;
         this.flow = flow;
     }
 
-    protected void initOtherData( PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    protected void initOtherData( CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         initFailureSeverity( planService );
-        initMediumDataList( serverUrl, planService );
-        initChannelDataList( planCommunity );
+        initMediumDataList( serverUrl, communityService );
+        initChannelDataList( communityService );
         documentation = new DocumentationData( serverUrl, getSharing() );
     }
 
-    private void initChannelDataList( PlanCommunity planCommunity ) {
+    private void initChannelDataList( CommunityService communityService ) {
         channelDataList = new ArrayList<ChannelData>();
         for ( Channel channel : getSharing().getChannels() ) {
-            channelDataList.add( new ChannelData( channel, planCommunity ) );
+            channelDataList.add( new ChannelData( channel, communityService ) );
         }
     }
 
-    private void initMediumDataList( String serverUrl, PlanService planService ) {
+    private void initMediumDataList( String serverUrl, CommunityService communityService ) {
         mediumDataList = new ArrayList<MediumData>(  );
         for ( TransmissionMedium medium : getSharing().transmissionMedia() ) {
-            mediumDataList.add( new MediumData( serverUrl, medium, planService.getPlan() ) );
+            mediumDataList.add( new MediumData( serverUrl, medium, communityService ) );
         }
     }
 
@@ -117,12 +117,12 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     private List<ContactData> findContactsFromEmployment(
             CommunityEmployment employment,
             CommunityCommitment commitment,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         return ContactData.findContactsFromEmployment(
                 serverUrl,
                 employment,
                 commitment,
-                planCommunity,
+                communityService,
                 getUser() == null ? null : getUser().getUserInfo()
         );
 

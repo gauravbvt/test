@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.procedures.ChannelData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Channel;
@@ -31,20 +31,20 @@ public class UserData  implements Serializable {
         // required
     }
 
-    public UserData( ChannelsUser user, PlanCommunity planCommunity ) {
+    public UserData( ChannelsUser user, CommunityService communityService ) {
         this.user = user;
-        initPersonalChannels( planCommunity );
+        initPersonalChannels( communityService );
     }
 
-    private void initPersonalChannels( PlanCommunity planCommunity ) {
+    private void initPersonalChannels( CommunityService communityService ) {
         ChannelsUserInfo userInfo = user.getUserInfo();
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
-            for ( Channel channel : planCommunity.getPlanService().getUserContactInfoService().findChannels( userInfo, planCommunity ) ) {
+            for ( Channel channel : communityService.getPlanService().getUserContactInfoService().findChannels( userInfo, communityService ) ) {
                 personalChannels.add( new ChannelData(
                         channel.getMedium().getId(),
                         channel.getAddress(),
-                        planCommunity ) );
+                        communityService ) );
             }
         }
 

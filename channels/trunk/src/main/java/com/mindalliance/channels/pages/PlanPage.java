@@ -48,13 +48,12 @@ import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloa
 import com.mindalliance.channels.pages.components.plan.floating.PlanVersionsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ProtocolsMapFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.TaskMoverFloatingPanel;
-import com.mindalliance.channels.pages.components.plan.floating.UserParticipationFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.menus.LearningMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanImprovingMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanScopingMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanSearchingMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanShowMenuPanel;
-import com.mindalliance.channels.pages.components.plan.menus.UserParticipationMenuPanel;
 import com.mindalliance.channels.pages.components.segment.ExpandedFlowPanel;
 import com.mindalliance.channels.pages.components.segment.FailureImpactsPanel;
 import com.mindalliance.channels.pages.components.segment.FlowsEOIsFloatingPanel;
@@ -183,7 +182,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private PlanScopingMenuPanel scopingMenu;
     private PlanSearchingMenuPanel searchingMenu;
-    private UserParticipationMenuPanel participationMenu;
+    private LearningMenuPanel participationMenu;
     private PlanImprovingMenuPanel improvingMenu;
 
     /**
@@ -527,8 +526,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanEvaluationPanel();
         addAllIssuesPanel();
         addPlanVersionsPanel();
-        // participating
-        addUserParticipationPanel();
+        // learning
+        // addUserParticipationPanel();
         addAllFeedbackPanel();
         addDataCollectionPanel();
         // searching
@@ -644,7 +643,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addParticipationMenu() {
-        participationMenu = new UserParticipationMenuPanel(
+        participationMenu = new LearningMenuPanel(
                 "participationMenu",
                 new PropertyModel<Segment>( this, "segment" ),
                 getReadOnlyExpansions() );
@@ -1037,6 +1036,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( planVersionsPanel );
     }
 
+/*
     private void addUserParticipationPanel() {
         if ( !getExpansions().contains( Channels.PLAN_PARTICIPATION ) ) {
             userParticipationPanel = new Label( "userParticipation", "" );
@@ -1049,6 +1049,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( userParticipationPanel );
     }
+*/
 
     private void addPlanSearchingPanel( String aspect ) {
         if ( !getExpansions().contains( Channels.PLAN_SEARCHING ) ) {
@@ -2119,9 +2120,9 @@ PopupSettings.RESIZABLE |
             refreshPlanVersionsPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_SEARCHING ) {
             refreshPlanSearchingPanel( target, change, updated );
-        } else if ( change.getId() == Channels.PLAN_PARTICIPATION ) {
+        }/* else if ( change.getId() == Channels.PLAN_PARTICIPATION ) {
             refreshUserParticipationPanel( target, change, updated );
-        } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
+        }*/ else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             refreshDataCollectionPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Plan.class ) ) {
             refreshPlanEditPanel( target, change, updated );
@@ -2299,7 +2300,7 @@ PopupSettings.RESIZABLE |
         refreshPlanEvaluationPanel( target, change, updated );
         refreshAllIssuesPanel( target, change, updated );
         refreshPlanVersionsPanel( target, change, updated );
-        refreshUserParticipationPanel( target, change, updated );
+        // refreshUserParticipationPanel( target, change, updated );
         refreshPlanSearchingPanel( target, change, updated );
     }
 
@@ -2617,6 +2618,7 @@ PopupSettings.RESIZABLE |
         }
     }
 
+/*
     private void refreshUserParticipationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.PLAN_PARTICIPATION
@@ -2629,6 +2631,7 @@ PopupSettings.RESIZABLE |
                     updated );
         }
     }
+*/
 
 
     private void refreshAllFeedbackPanel(

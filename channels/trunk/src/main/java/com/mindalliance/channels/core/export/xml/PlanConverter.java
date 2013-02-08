@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +43,6 @@ public class PlanConverter extends AbstractChannelsConverter {
      */
     public static final Logger LOG = LoggerFactory.getLogger( PlanConverter.class );
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
 
     public PlanConverter( XmlStreamer.Context context ) {
         super( context );
@@ -98,18 +96,6 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.endNode();
         writer.startNode( "communityCalendarPrivateTicket" );
         writer.setValue( plan.getCommunityCalendarPrivateTicket() );
-        writer.endNode();
-        writer.startNode( "surveyApiKey" );
-        writer.setValue( plan.getSurveyApiKey() );
-        writer.endNode();
-        writer.startNode( "surveyTemplate" );
-        writer.setValue( plan.getSurveyTemplate() );
-        writer.endNode();
-        writer.startNode( "surveyUserKey" );
-        writer.setValue( plan.getSurveyUserKey() );
-        writer.endNode();
-        writer.startNode( "surveyDefaultEmailAddress" );
-        writer.setValue( plan.getSurveyDefaultEmailAddress() );
         writer.endNode();
         writer.startNode( "viewableByAll" );
         writer.setValue( Boolean.toString( plan.isViewableByAll() ) );
@@ -177,7 +163,7 @@ public class PlanConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
 
-        // All assignment requirements
+        // All assignment requirements   -- TODO - OBSOLETE
         for ( Requirement requirement : planDao.list( Requirement.class ) ) {
             if ( !requirement.isUnknown() ) {
                 writer.startNode( "requirement" );
@@ -246,13 +232,13 @@ public class PlanConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
                 plan.setCommunityCalendarPrivateTicket( reader.getValue() );
             } else if ( nodeName.equals( "surveyApiKey" ) ) {
-                plan.setSurveyApiKey( reader.getValue() );
+               // do nothing - obsolete
             } else if ( nodeName.equals( "surveyUserKey" ) ) {
-                plan.setSurveyUserKey( reader.getValue() );
+                // do nothing - obsolete
             } else if ( nodeName.equals( "surveyTemplate" ) ) {
-                plan.setSurveyTemplate( reader.getValue() );
+                // do nothing - obsolete
             } else if ( nodeName.equals( "surveyDefaultEmailAddress" ) ) {
-                plan.setSurveyDefaultEmailAddress( reader.getValue() );
+                // do nothing - obsolete
             } else if ( nodeName.equals( "description" ) ) {
                 plan.setDescription( reader.getValue() );
                 // Entities

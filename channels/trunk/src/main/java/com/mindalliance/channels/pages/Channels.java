@@ -4,6 +4,7 @@ import com.google.code.jqwicket.JQComponentOnBeforeRenderListenerFix;
 import com.google.code.jqwicket.JQContributionConfig;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -133,6 +134,8 @@ public class Channels extends WebApplication
     
     private ChannelsUserDao userDao;
 
+    private CommunityServiceFactory communityServiceFactory;
+
     private PlanCommunityManager planCommunityManager;
 
     private Exception exception = null;
@@ -242,17 +245,90 @@ public class Channels extends WebApplication
         mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
-        mountResource( "users/photos/${name}", new PngReference( UserPhotoPng.class ) );
-        mountResource( "icons/${name}", new PngReference( IconPng.class ) );
-        mountResource( "segment.png", new PngReference( FlowMapPng.class ) );
-        mountResource( "plan.png", new PngReference( PlanMapPng.class ) );
-        mountResource( "network.png", new PngReference( EntityNetworkPng.class ) );
-        mountResource( "entities.png", new PngReference( EntitiesNetworkPng.class ) );
-        mountResource( "hierarchy.png", new PngReference( HierarchyPng.class ) );
-        mountResource( "essential.png", new PngReference( FailureImpactsPng.class ) );
-        mountResource( "dissemination.png", new PngReference( DisseminationPng.class ) );
-        mountResource( "procedures.png", new PngReference( ProceduresPng.class ) );
-        mountResource( "required.png", new PngReference( RequiredNetworkingPng.class ) );
+
+        /**
+         * ChannelsUserDao userDao,
+         PlanManager planManager,
+         CommunityServiceFactory communityServiceFactory,
+         PlanCommunityManager planCommunityManager
+         */
+        mountResource( "users/photos/${name}", new PngReference(
+                UserPhotoPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+                ) );
+        mountResource( "icons/${name}", new PngReference(
+                IconPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "segment.png", new PngReference(
+                FlowMapPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "plan.png", new PngReference(
+                PlanMapPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "network.png", new PngReference(
+                EntityNetworkPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "entities.png", new PngReference(
+                EntitiesNetworkPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "hierarchy.png", new PngReference(
+                HierarchyPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "essential.png", new PngReference(
+                FailureImpactsPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "dissemination.png", new PngReference(
+                DisseminationPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "procedures.png", new PngReference(
+                ProceduresPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "required.png", new PngReference(
+                RequiredNetworkingPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
 
         userUploadService.cleanUpPhotos();
 
@@ -334,6 +410,14 @@ public class Channels extends WebApplication
 
     public void setPlanManager( PlanManager planManager ) {
         this.planManager = planManager;
+    }
+
+    public CommunityServiceFactory getCommunityServiceFactory() {
+        return communityServiceFactory;
+    }
+
+    public void setCommunityServiceFactory( CommunityServiceFactory communityServiceFactory ) {
+        this.communityServiceFactory = communityServiceFactory;
     }
 
     public PlanServiceFactory getPlanServiceFactory() {

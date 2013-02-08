@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.command.CommandListener;
 import com.mindalliance.channels.core.model.Plan;
 
 import java.util.List;
@@ -12,21 +13,29 @@ import java.util.List;
  * Date: 11/30/12
  * Time: 3:15 PM
  */
-public interface PlanCommunityManager {  // todo - COMMUNITY - extends CommandListener  - mirror PlanManager
+public interface PlanCommunityManager  extends CommandListener {
 
     /**
-     * For now, there is exactly one implied, unnamed plan community per plan per instance of Channels.
-     * @param plan a plan
+     * Get the plan community's DAO.
+     * @param planCommunity a plan community
+     * @return a community dao
+     */
+    CommunityDao getDao( PlanCommunity planCommunity );
+
+    /**
+     * Get the plan community's DAO.
+     * @param uri a plan community's uri
+     * @return a community dao
+     */
+    public CommunityDao getDao( String uri );
+
+    /**
+     * Get plan community given uri. If domain plan uri, return plan community fro dev version.
+     * @param planCommunityUri a plan community uri (if a plan uri then community for domain planners)
      * @return a plan community
      */
-    PlanCommunity getPlanCommunityFor( Plan plan );  // todo - COMMUNITY - change when no longer a single plan community implied by a plan.
+    PlanCommunity getPlanCommunity( String planCommunityUri );
 
-    /**
-     * Find plan community with production plan.
-     * @param uri a community's URI
-     * @return a plan community or null
-     */
-    PlanCommunity findPlanCommunity( String uri );
 
     /**
      * Find a plan community with a given version of their plan (used by planners).
@@ -41,4 +50,17 @@ public interface PlanCommunityManager {  // todo - COMMUNITY - extends CommandLi
      * @return a plan community.
      */
     List<PlanCommunity> getPlanCommunities();
+
+    /**
+     * Return the domain plan community for a plan (community of planners).
+     * @param plan a plan
+     * @return a plan community
+     */
+    PlanCommunity getDomainPlanCommunity( Plan plan );
+
+    /**
+     * Clears community cache.
+     * Via AOP.
+     */
+    void clearCache();
 }

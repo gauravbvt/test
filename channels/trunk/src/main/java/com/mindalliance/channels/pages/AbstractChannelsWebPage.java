@@ -12,6 +12,8 @@ import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
@@ -36,8 +38,6 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
-import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
-import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
@@ -64,7 +64,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -78,7 +77,13 @@ import java.util.Set;
  */
 public class AbstractChannelsWebPage extends WebPage implements Updatable, Modalable {
 
+    // PLAN_PARM and COMMUNITY_PARM page parameters can not be both set.
+
+    // Implied domain plan community (for the plan planners)
     public static final String PLAN_PARM = "plan";
+
+    // Explicit plan community (for a community of adopters of a plan)
+    public static final String COMMUNITY_PARM = "community";
 
     /**
      * Delay between refresh check callbacks.
@@ -86,8 +91,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public static final int REFRESH_DELAY = 10;
 
     public static final String VERSION_PARM = "v";
-
-    public static final String COMMUNITY_PARM = "community";
 
     /**
      * Logger.
@@ -110,6 +113,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     private AttachmentManager attachmentManager;
 
     private Plan plan;
+    private PlanCommunity planCommunity;
 
     @SpringBean
     private PlanManager planManager;
@@ -134,12 +138,15 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     @SpringBean
     private PlanCommunityManager planCommunityManager;
 
+    @SpringBean
+    private CommunityServiceFactory communityServiceFactory;
 
     /**
      * Subsituted update target.
      */
     private Updatable updateTarget;
     private ModalWindow dialogWindow;
+
 
 
     //-------------------------------
@@ -149,6 +156,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public AbstractChannelsWebPage( PageParameters parameters ) {
         super( parameters );
         setPlanFromParameters( parameters );
+        setPlanCommunityFromParameters( parameters );
     }
 
     public Set<Long> getExpansions() {
@@ -248,6 +256,15 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         link.getPageParameters().set( VERSION_PARM, plan.getVersion() );
     }
 
+    public static void addPlanCommunityParameter( BookmarkablePageLink link, PlanCommunity planCommunity ) {
+        try {
+            link.getPageParameters().set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            // should never happen
+            LOG.error( "Failed to encode uri", e );
+        }    }
+
+
     @Override
     public void changed( Change change ) {
         // do nothing
@@ -278,7 +295,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     protected Commander getCommander() {
-        return commanderFactory.getCommander( getPlanCommunity() );
+        return commanderFactory.getCommander( getCommunityService() );
     }
 
     public UserParticipationService getUserParticipationService() {
@@ -288,15 +305,22 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     protected List<UserParticipation> getUserParticipations( PlanCommunity planCommunity, ChannelsUser user ) {
         return userParticipationService.getActiveUserParticipations(
                 user,
-                planCommunity );
+                getCommunityService() );
+    }
+
+    public String getPlanCommunityUri() {
+        return planCommunity == null ? getUser().getPlanCommunityUri() : planCommunity.getUri();
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return planCommunityManager.getPlanCommunityFor( plan );
+        if ( planCommunity == null ) {
+          planCommunity = planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
+        }
+        return planCommunity;
     }
 
     private PlanService getPlanService() {
-        return getPlanCommunity().getPlanService();
+        return getCommunityService().getPlanService();
     }
 
     protected BookmarkablePageLink<? extends WebPage> getProtocolsLink(
@@ -305,7 +329,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
             ChannelsUser user,
             boolean samePage ) {
         List<UserParticipation> userParticipations = getUserParticipations( planCommunity, user );
-        boolean planner = user.isPlanner( planCommunity.getPlan().getUri() );
+        boolean planner = user.isPlanner( planCommunity.getPlanUri() );
         BookmarkablePageLink<? extends WebPage> guidelinesLink;
         if ( planner || userParticipations.size() != 1 ) {
             guidelinesLink = newTargetedLink(
@@ -315,11 +339,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
                             planCommunity,
-                            plan.getVersion() ),
+                            getPlan().getVersion() ), // version needed?
                     null,
-                    plan );
+                    planCommunity );
         } else {
-            Actor actor = userParticipations.get( 0 ).getAgent( planCommunity ).getActor(); // todo - agents!
+            Actor actor = userParticipations.get( 0 ).getAgent( getCommunityService() ).getActor(); // todo - COMMUNITY - agents!
             guidelinesLink = newTargetedLink( id,
                     "",
                     ProtocolsPage.class,
@@ -328,54 +352,16 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                             planCommunity,
                             plan.getVersion() ),
                     null,
-                    plan );
+                    planCommunity );
         }
         if ( !samePage )
             guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return guidelinesLink;
     }
 
-    public BookmarkablePageLink<? extends WebPage> getInfoNeedsLink(
-            String id,
-            QueryService queryService,
-            PlanCommunity planCommunity,
-            ChannelsUser user,
-            boolean samePage ) {
-        List<UserParticipation> userParticipations = getUserParticipations( planCommunity, user );
-        String uri = plan.getUri();
-        boolean planner = user.isPlanner( uri );
-        BookmarkablePageLink<? extends WebPage> infoNeedsLink;
-        if ( planner || userParticipations.size() != 1 ) {
-            infoNeedsLink = newTargetedLink(
-                    id,
-                    "",
-                    AllInfoNeedsPage.class,
-                    AbstractParticipantPage.createParameters(
-                            new ResourceSpec(),
-                            planCommunity,
-                            plan.getVersion() ),
-                    null,
-                    plan );
-        } else {
-            Actor actor = userParticipations.get( 0 ).getAgent( planCommunity ).getActor(); // todo - agents!;
-            infoNeedsLink = newTargetedLink( id,
-                    "",
-                    InfoNeedsPage.class,
-                    AbstractParticipantPage.createParameters(
-                            actor,
-                            planCommunity,
-                            plan.getVersion() ),
-                    null,
-                    plan );
-        }
-        if ( !samePage )
-            infoNeedsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
-        return infoNeedsLink;
-    }
-
     public BookmarkablePageLink<? extends WebPage> getRFIsLink(
             String id,
-            Plan plan,
+            PlanCommunity planCommunity,
             boolean samePage ) {
         BookmarkablePageLink<? extends WebPage> rfisLink = newTargetedLink(
                 id,
@@ -383,7 +369,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                 RFIsPage.class,
                 new PageParameters(),
                 null,
-                plan );
+                planCommunity );
         if ( !samePage )
             rfisLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return rfisLink;
@@ -391,7 +377,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     public BookmarkablePageLink<? extends WebPage> getFeedbackLink(
             String id,
-            Plan plan,
+            PlanCommunity planCommunity,
             boolean samePage ) {
         BookmarkablePageLink<? extends WebPage> feedbackLink = newTargetedLink(
                 id,
@@ -399,7 +385,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                 FeedbackPage.class,
                 new PageParameters(),
                 null,
-                plan );
+                planCommunity );
         if ( !samePage )
             feedbackLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return feedbackLink;
@@ -415,12 +401,11 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                 RequirementsPage.class,
                 new PageParameters(),
                 null,
-                plan );
+                planCommunity );
         if ( !samePage )
             requirementsLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return requirementsLink;
     }
-
 
 
     /**
@@ -430,16 +415,18 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
      */
     public PageParameters getParameters() {
         PageParameters result = new PageParameters();
-
-        if ( plan != null ) {
-            try {
-                result.set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
-            } catch ( UnsupportedEncodingException e ) {
-                LOG.error( "Failed to url-encode plan uri " + plan.getUri(), e );
+        try {
+            if ( getPlan() != null ) {
+                result.set( PLAN_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
+                result.set( VERSION_PARM, Integer.toString( getPlan().getVersion() ) );
             }
-            result.set( VERSION_PARM, Integer.toString( plan.getVersion() ) );
+            PlanCommunity planCommunity = getPlanCommunity();
+            if ( planCommunity != null ) {
+                result.set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            }
+        } catch ( UnsupportedEncodingException e ) {
+            LOG.error( "Failed to url-encode", e );
         }
-
         return result;
     }
 
@@ -498,18 +485,18 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     public boolean isPlanner() {
-        return user.isPlanner( plan.getUri() );
+        return user.isPlanner( getPlan().getUri() );
     }
 
     protected PageParameters makePlanParameters() {
         PageParameters params = new PageParameters();
         try {
-            params.set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            params.set( PLAN_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
         }
-        params.set( VERSION_PARM, plan.getVersion() );
+        params.set( VERSION_PARM, getPlan().getVersion() );
         return params;
     }
 
@@ -546,15 +533,51 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return link;
     }
 
-    public static String queryParameters( Plan p ) {
-        String query = "";
+    public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+            String id, String target, Class<T> pageClass, PopupSettings popupSettings, PlanCommunity planCommunity ) {
+
+        BookmarkablePageLink<T> link = new BookmarkablePageLink<T>( id, pageClass );
+        addPlanCommunityParameter( link, planCommunity );
+        link.add( new AttributeModifier( "target", new Model<String>( target ) ) );
+        if ( popupSettings != null )
+            link.setPopupSettings( popupSettings );
+
+        return link;
+    }
+
+    public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
+            String id, String target, Class<T> pageClass, PageParameters parameters, PopupSettings popupSettings,
+            PlanCommunity planCommunity ) {
+
+        BookmarkablePageLink<T> link = newTargetedLink( id, target, pageClass, popupSettings, planCommunity );
+        for ( String name : parameters.getNamedKeys() ) {
+            link.getPageParameters().set( name, "" + parameters.get( name ) );
+        }
+        return link;
+    }
+
+    public static String queryParameters(  ) {
+        StringBuilder query = new StringBuilder();
+        query.append( "&" );
         try {
-            query = MessageFormat
-                    .format( "&plan={0}&v={1,number,0}", URLEncoder.encode( p.getUri(), "UTF-8" ), p.getVersion() );
+            if ( ChannelsUser.current().getPlanCommunityUri() != null ) {
+                query.append(COMMUNITY_PARM)
+                        .append( "=" )
+                        .append( ChannelsUser.current().getPlanCommunityUri() );
+            } else {
+                Plan p = ChannelsUser.current().getPlan();
+                query.append( PLAN_PARM )
+                        .append( "=" )
+                        .append( URLEncoder.encode( p.getUri(), "UTF-8" ) )
+                        .append( "&" )
+                        .append( VERSION_PARM )
+                        .append( "=" )
+                        .append( p.getVersion() );
+            }
         } catch ( UnsupportedEncodingException e ) {
             LOG.error( "Failed to encode plan uri", e );
         }
-        return query;
+        return query.toString();
     }
 
     public static PageParameters planParameters( Plan p ) {
@@ -566,12 +589,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
             LOG.error( "Failed to encode plan uri", e );
         }
         return parameters;
-    }
-
-    public static String redirectUrl( String path, Plan p ) {
-        return path
-                + "?"
-                + queryParameters( p );
     }
 
     @Override
@@ -595,15 +612,49 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         queryService = null;
     }
 
+    public void setPlanCommunity( PlanCommunity planCommunity ) {  // sets user plan and community uri
+        this.planCommunity = planCommunity;
+        user.setPlanCommunityUri( planCommunity.getUri() );
+        user.setCommunityService( communityServiceFactory.getService( planCommunity ) );
+        queryService = null;
+    }
+
+    protected void setPlanCommunityFromParameters( PageParameters pageParameters ) {
+        PlanCommunity planCommunity = getPlanCommunityFromParameters( pageParameters );
+        setPlanCommunity( planCommunity );
+    }
+
+    public PlanCommunity getPlanCommunityFromParameters( PageParameters pageParameters ) {
+        PlanCommunity planCommunity = null;
+        String encodedCommunityUri = pageParameters.get( COMMUNITY_PARM ).toString( null );
+        String communityUri = null;
+        if ( encodedCommunityUri != null ) { // community identified
+            // assert pageParameters.get( PLAN_PARM ) == null;
+            try {
+                communityUri = URLDecoder.decode( encodedCommunityUri, "UTF-8" );
+            } catch ( UnsupportedEncodingException e ) {
+                LOG.error( "Failed to decode community uri", e );
+            }
+        }
+        if ( communityUri != null ) {
+            planCommunity = planCommunityManager.getPlanCommunity( communityUri );
+        } else { // try domain plan community
+            Plan plan = getPlan();
+            if ( plan != null ) {
+                planCommunity = planCommunityManager.getDomainPlanCommunity( plan );
+            }
+        }
+        return planCommunity;
+    }
+
     /**
      * Set plan from uri parameters. Plan version is optional.
      *
      * @param parameters the parameters
      */
     protected void setPlanFromParameters( PageParameters parameters ) {
-        Plan plan = getPlanFromParameters(  planManager, user, parameters );
+        Plan plan = getPlanFromParameters( planManager, user, parameters );
         setPlan( plan );
-        getQueryService();
     }
 
     static public Plan getPlanFromParameters(
@@ -613,6 +664,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         Plan plan = null;
         String encodedPlanUri = parameters.get( PLAN_PARM ).toString( null );
         if ( encodedPlanUri == null ) {
+            // assert parameters.get( COMMUNITY_PARM ) == null;
             String userPlanUri = user.getPlanUri() == null ? "" : user.getPlanUri();
             try {
                 encodedPlanUri = URLEncoder.encode( userPlanUri, "UTF-8" );
@@ -704,8 +756,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     public Plan getPlan() {
-        if ( plan == null )
+        if ( plan == null ) {
             setPlanFromParameters( getPageParameters() );
+            setPlanCommunityFromParameters( getPageParameters() );
+        }
         return plan;
     }
 
@@ -757,8 +811,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         this.userDao = userDao;
     }
 
-    protected void userLeftPlan( ) {
-        if ( plan != null ) getCommander().userLeftPlan( getUser().getUsername() );
+    protected void userLeftPlanCommunity() {
+        if ( getPlanCommunity() != null ) getCommander().userLeftCommunity( getUser().getUsername() );
+    }
+
+    protected CommunityService getCommunityService() {
+        return communityServiceFactory.getService( getPlanCommunity() );
     }
 
 

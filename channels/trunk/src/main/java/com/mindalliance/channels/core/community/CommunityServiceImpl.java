@@ -3,6 +3,8 @@ package com.mindalliance.channels.core.community;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
+import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -11,6 +13,7 @@ import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
@@ -18,16 +21,22 @@ import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,12 +51,21 @@ import java.util.Set;
  */
 public class CommunityServiceImpl implements CommunityService {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( CommunityServiceImpl.class );
+
+
     private PlanCommunity planCommunity;
     private PlanService planService;
     private Analyst analyst;
     private UserParticipationService userParticipationService;
     private UserParticipationConfirmationService userParticipationConfirmationService;
     private OrganizationParticipationService organizationParticipationService;
+    private PlanCommunityManager planCommunityManager;
+    private ParticipationManager participationManager;
+    private ChannelsUserDao userDao;
 
     public CommunityServiceImpl() {}
 
@@ -55,19 +73,41 @@ public class CommunityServiceImpl implements CommunityService {
             Analyst analyst,
             UserParticipationService userParticipationService,
             UserParticipationConfirmationService userParticipationConfirmationService,
-            OrganizationParticipationService organizationParticipationService ) {
+            OrganizationParticipationService organizationParticipationService,
+            PlanCommunityManager planCommunityManager,
+            ParticipationManager participationManager,
+            ChannelsUserDao userDao ) {
         this.analyst = analyst;
         this.userParticipationService = userParticipationService;
         this.userParticipationConfirmationService = userParticipationConfirmationService;
         this.organizationParticipationService = organizationParticipationService;
+        this.planCommunityManager = planCommunityManager;
+        this.participationManager = participationManager;
+        this.userDao = userDao;
     }
 
+    @Override
     public PlanCommunity getPlanCommunity() {
         return planCommunity;
     }
 
+    @Override
+    public Plan getPlan() {
+        return getPlanService().getPlan();
+    }
+
+    @Override
     public void setPlanCommunity( PlanCommunity planCommunity ) {
         this.planCommunity = planCommunity;
+    }
+
+    @Override
+    public AbstractModelObjectDao getDao() {
+        if ( getPlanCommunity().isDomainCommunity() ) {
+            return getPlanService().getDao();
+        } else {
+            return planCommunityManager.getDao( getPlanCommunity() );
+        }
     }
 
     @Override
@@ -80,8 +120,23 @@ public class CommunityServiceImpl implements CommunityService {
         return userParticipationConfirmationService;
     }
 
+    @Override
     public OrganizationParticipationService getOrganizationParticipationService() {
         return organizationParticipationService;
+    }
+
+    @Override
+    public ParticipationManager getParticipationManager() {
+        return participationManager;
+    }
+
+    @Override
+    public ChannelsUserDao getUserDao() {
+        return userDao;
+    }
+
+    private void setParticipationManager( ParticipationManager participationManager ) {
+        this.participationManager = participationManager;
     }
 
     @Override
@@ -89,6 +144,7 @@ public class CommunityServiceImpl implements CommunityService {
         return planService;
     }
 
+    @Override
     public void setPlanService( PlanService planService ) {
         this.planService = planService;
     }
@@ -99,13 +155,88 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public <T extends ModelObject> T find( Class<T> clazz, long id, Date dateOfRecord ) throws NotFoundException {
+        return (T) getDao().find( clazz, id, dateOfRecord );
+    }
+
+    @Override
+    public boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord ) {
+        try {
+            return id != null && find( clazz, id, dateOfRecord ) != null;
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Does not exist: " + clazz.getSimpleName() + " at " + id + " recorded on " + dateOfRecord );
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean canHaveParentAgency( final String name, String parentName ) {
+        if ( parentName == null ) return true;
+        // circularity test
+        boolean nonCircular = !parentName.equals( name )
+                && !CollectionUtils.exists(
+                findAncestors( parentName ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Agency) object ).getName().equals( name );
+                    }
+                } );
+        if ( !nonCircular ) return false;
+        // placeholder parent test
+        Agency agency = getParticipationManager().findAgencyNamed( name, this );
+        Agency parentAgency = getParticipationManager().findAgencyNamed( parentName, this );
+        if ( agency == null || parentAgency == null ) return false; // should not happen
+        Organization placeholder = agency.getPlaceholder( this );
+        if ( placeholder != null ) {
+            Organization parentPlaceholder = parentAgency.getPlaceholder( this );
+            return ChannelsUtils.areEqualOrNull( placeholder.getParent(), parentPlaceholder );
+        }
+        return true;
+    }
+
+    @Override
+    public List<Agency> findAncestors( String agencyName ) {
+        List<Agency> visited = new ArrayList<Agency>();
+        Agency agency = getParticipationManager().findAgencyNamed( agencyName, this );
+        if ( agency != null )
+            return safeFindAncestors( agency, visited );
+        else
+            return new ArrayList<Agency>();
+    }
+
+    private List<Agency> safeFindAncestors(
+            Agency agency,
+            List<Agency> visited ) {
+        List<Agency> ancestors = new ArrayList<Agency>();
+        if ( !visited.contains( agency ) ) {
+            if ( agency != null ) {
+                Agency parentAgency = agency.getParent( this );
+                if ( parentAgency != null && !visited.contains( parentAgency ) ) {
+                    visited.add( parentAgency );
+                    ancestors.add( parentAgency );
+                    ancestors.addAll( safeFindAncestors( parentAgency, visited ) );
+                }
+            }
+        }
+        return ancestors;
+    }
+
+
+    public ParticipationAnalyst getParticipationAnalyst() {
+        return getParticipationManager().getParticipationAnalyst();
+    }
+
+
+    @Override
     public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
         Set<ChannelsUser> users = new HashSet<ChannelsUser>();
-        List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent( new Agent( actor ), planCommunity );
+        List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent( new Agent( actor ), this );
         ChannelsUserDao userDao = planService.getUserDao();
         for ( UserParticipation participation : participations ) {
             if ( !actor.isSupervisedParticipation()
-                    || userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, planCommunity ) ) {
+                    || userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, this ) ) {
                 ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
                 if ( user != null ) {
                     users.add( user );
@@ -123,7 +254,7 @@ public class CommunityServiceImpl implements CommunityService {
                 planService.findAllEmploymentsForActor( actor ) );
         List<Organization> myPlannedEmployers = new ArrayList<Organization>();
         for ( UserParticipation participation : activeParticipations ) {
-            Actor participationActor = participation.getAgent( planCommunity ).getActor( );
+            Actor participationActor = participation.getAgent( this ).getActor( );
             if ( participationActor != null && !participationActor.isOpenParticipation() )
                 myPlannedEmployers.addAll( planService.findDirectAndIndirectEmployers(
                         planService.findAllEmploymentsForActor( participationActor ) ) );
@@ -178,25 +309,25 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public CommunityAssignments getAllAssignments() {
         CommunityAssignments assignments = new CommunityAssignments( getCommunityLocale() );
-        List<Agent> allAgents = getPlanCommunity().getParticipationManager().getAllKnownAgents( getPlanCommunity() );
+        List<Agent> allAgents = getParticipationManager().getAllKnownAgents( this );
         for ( Assignment planAssignment : getPlanService().getAssignments( false, false ) ) {
             Actor actor = planAssignment.getActor();
             Organization employer = planAssignment.getOrganization();
             for ( Agent agent : allAgents ) {
                 if ( agent.getActor().equals( actor ) ) {
                     CommunityEmployment employment;
-                    if ( agent.isRegisteredInPlaceholder( employer, getPlanCommunity() ) ) {
+                    if ( agent.isRegisteredInPlaceholder( employer, this ) ) {
                         employment = new CommunityEmployment(
                                 planAssignment.getEmployment(),
                                 agent,
-                                new Agency( agent.getOrganizationParticipation(), getPlanCommunity() ),
-                                getPlanCommunity() );
+                                new Agency( agent.getOrganizationParticipation(), this ),
+                                this );
                     } else {
                         employment = new CommunityEmployment(
                                 planAssignment.getEmployment(),
                                 agent,
                                 new Agency( employer ),
-                                getPlanCommunity() );
+                                this );
                     }
                     CommunityAssignment assignment = new CommunityAssignment(
                             employment,
@@ -206,6 +337,15 @@ public class CommunityServiceImpl implements CommunityService {
             }
         }
         return assignments;
+    }
+
+    @Override
+    public boolean isCustodianOf( ChannelsUser user, Organization placeholder ) {
+        if ( !placeholder.isPlaceHolder() ) return false;
+        if ( user.isPlanner( getPlan().getUri() ) ) return true;
+        Actor custodian = placeholder.getCustodian();
+        return custodian != null
+                && getUserParticipationService().isUserParticipatingAs( user, new Agent( custodian ), this );
     }
 
 
@@ -252,19 +392,24 @@ public class CommunityServiceImpl implements CommunityService {
         // do nothing - AOP advice does the work.
     }
 
+    @Override
+    public void onDestroy() {
+        // Do nothing
+    }
+
     private boolean allowsCommitment( CommunityAssignment committer,
                                       CommunityAssignment beneficiary,
                                       Flow.Restriction restriction ) {
         if ( restriction != null ) {
             Agency committerAgency = committer.getAgency();
             Agency beneficiaryAgency = beneficiary.getAgency();
-            Place committerLocation = committer.getLocation( getPlanCommunity() );
-            Place beneficiaryLocation = beneficiary.getLocation( getPlanCommunity() );
+            Place committerLocation = committer.getLocation( this );
+            Place beneficiaryLocation = beneficiary.getLocation( this );
             switch( restriction ) {
 
                 case SameTopOrganization:
-                    return committerAgency.getTopAgency( getPlanCommunity() )
-                            .equals( beneficiaryAgency.getTopAgency( getPlanCommunity() ) );
+                    return committerAgency.getTopAgency( this )
+                            .equals( beneficiaryAgency.getTopAgency( this ) );
 
                 case SameOrganization:
                     return committerAgency.equals( beneficiaryAgency );
@@ -273,8 +418,8 @@ public class CommunityServiceImpl implements CommunityService {
                     return !committerAgency.equals( beneficiaryAgency );
 
                 case DifferentTopOrganizations:
-                    return !committerAgency.getTopAgency( getPlanCommunity() )
-                            .equals( beneficiaryAgency.getTopAgency( getPlanCommunity() ));
+                    return !committerAgency.getTopAgency( this )
+                            .equals( beneficiaryAgency.getTopAgency( this ));
 
                 case SameLocation:
                     return ModelObject.isNullOrUnknown( committerLocation )
@@ -310,7 +455,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     private boolean hasSupervisor( final Agent agent, final Agent supervisor, Agency agency ) {
         return CollectionUtils.exists(
-                agency.getAllJobs( getPlanCommunity() ),
+                agency.getAllJobs( this ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

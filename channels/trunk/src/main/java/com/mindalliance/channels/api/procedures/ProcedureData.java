@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
@@ -57,7 +57,7 @@ public class ProcedureData implements Serializable {
 
     public ProcedureData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             CommunityAssignment assignment,
             CommunityCommitments benefitingCommitments,
             CommunityCommitments committingCommitments,
@@ -66,58 +66,58 @@ public class ProcedureData implements Serializable {
         this.benefitingCommitments = benefitingCommitments;
         this.committingCommitments = committingCommitments;
         this.user = user;
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
-    private void initData( String serverUrl, PlanCommunity planCommunity ) {
-        assignmentData = new AssignmentData( serverUrl, planCommunity, assignment, user, this );
-        initTriggers( serverUrl, planCommunity );
+    private void initData( String serverUrl, CommunityService communityService ) {
+        assignmentData = new AssignmentData( serverUrl, communityService, assignment, user, this );
+        initTriggers( serverUrl, communityService );
     }
 
 
-    private void initTriggers( String serverUrl, PlanCommunity planCommunity ) {
+    private void initTriggers( String serverUrl, CommunityService communityService ) {
         triggers = new ArrayList<TriggerData>();
         // anytime
         if ( assignment.isOngoing() ) {
-            TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
+            TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
             triggerData.setOngoing( true );
-            triggerData.initTrigger( planCommunity );
+            triggerData.initTrigger( communityService );
             triggers.add( triggerData );
         } else {
             // event phase is trigger
             if ( assignment.isInitiatedByEventPhase() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
                 triggerData.setEventPhase( assignment.getEventPhase() );
                 triggerData.setEventPhaseContext( assignment.getEventPhaseContext() );
-                triggerData.initTrigger( planCommunity );
+                triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
             // information discovery (notifications to self)
             for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
                 triggerData.setNotificationToSelf( triggerSelfNotification );
-                triggerData.initTrigger( planCommunity );
+                triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
             // triggering notifications (from others)
             for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
                 triggerData.setNotificationFromOther( triggerNotification );
-                triggerData.initTrigger( planCommunity );
+                triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
             // triggering requests
             for ( Flow triggerRequest : triggeringRequestsFromOthers() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
                 triggerData.setRequestFromOther( triggerRequest );
-                triggerData.initTrigger( planCommunity );
+                triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
             // triggering requests to self
             for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, planCommunity, assignment, user );
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
                 triggerData.setRequestToSelf( triggerRequest );
-                triggerData.initTrigger( planCommunity );
+                triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
         }

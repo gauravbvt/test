@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.EventPhase;
@@ -50,10 +50,10 @@ public class TriggerData extends AbstractProcedureElementData {
 
     public TriggerData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             CommunityAssignment assignment, // task assignment being triggered
             ChannelsUser user ) {
-        super( planCommunity, assignment, user );
+        super( communityService, assignment, user );
         this.serverUrl = serverUrl;
     }
 
@@ -115,27 +115,27 @@ public class TriggerData extends AbstractProcedureElementData {
     }
 
     // Called after nature of trigger is set.
-    public void initTrigger( PlanCommunity planCommunity ) {
-        initDiscoveryData( planCommunity );
-        initResearchData( planCommunity );
-        initOnNotification( planCommunity );
-        initOnRequest( planCommunity );
-        initSituationData( planCommunity );
+    public void initTrigger( CommunityService communityService ) {
+        initDiscoveryData( communityService );
+        initResearchData( communityService );
+        initOnNotification( communityService );
+        initOnRequest( communityService );
+        initSituationData( communityService );
     }
 
-    private void initSituationData( PlanCommunity planCommunity) {
+    private void initSituationData( CommunityService communityService) {
         if ( isSituationKnown() ) {
-            situationData = new SituationData( planCommunity, getAssignment(), getUser() );
+            situationData = new SituationData( communityService, getAssignment(), getUser() );
         } else {
             situationData = null;
         }
     }
 
-    private void initOnRequest( PlanCommunity planCommunity ) {
+    private void initOnRequest( CommunityService communityService ) {
         if ( requestFromOther != null )
             onRequest = new RequestData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     requestFromOther,
                     false,
                     getAssignment(),
@@ -145,12 +145,12 @@ public class TriggerData extends AbstractProcedureElementData {
 
     }
 
-    private void initOnNotification( PlanCommunity planCommunity ) {
+    private void initOnNotification( CommunityService communityService ) {
 
         if ( notificationFromOther != null && !notificationFromOther.isToSelf() )
             onNotification = new NotificationData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     notificationFromOther,
                     false,
                     getAssignment(),
@@ -159,11 +159,11 @@ public class TriggerData extends AbstractProcedureElementData {
             onNotification = null;
     }
 
-    private void initResearchData( PlanCommunity planCommunity ) {
+    private void initResearchData( CommunityService communityService ) {
         if ( requestToSelf != null )
             researchData = new ResearchData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     requestToSelf,
                     getAssignment(),
                     getUser() );
@@ -172,11 +172,11 @@ public class TriggerData extends AbstractProcedureElementData {
 
     }
 
-    private void initDiscoveryData( PlanCommunity planCommunity ) {
+    private void initDiscoveryData( CommunityService communityService ) {
         if ( notificationToSelf != null )
             discoveryData = new DiscoveryData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     notificationToSelf,
                     getUser() );
         else

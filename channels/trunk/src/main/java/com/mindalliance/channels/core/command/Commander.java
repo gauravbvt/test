@@ -6,7 +6,9 @@
 
 package com.mindalliance.channels.core.command;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -15,6 +17,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
@@ -308,15 +311,6 @@ public interface Commander {
     void replay( Journal journal ) throws CommandException;
 
     /**
-     * Get current plan.
-     *
-     * @return a plan
-     */
-    Plan getPlan();
-
-    String getPlanCommunityUri();
-
-    /**
      * All users are out of sync with plan versions.
      */
     void setResyncRequired();
@@ -349,7 +343,7 @@ public interface Commander {
      */
     void initialize();
 
-    PlanDao getPlanDao();
+    AbstractModelObjectDao getDao();
 
     /**
      * Whether instances of class of given name can be locked.
@@ -366,7 +360,7 @@ public interface Commander {
      *
      * @param username a string
      */
-    void userLeftPlan( String username );
+    void userLeftCommunity( String username );
 
     /**
      * Make the appropriate command to remove a flow.
@@ -383,7 +377,15 @@ public interface Commander {
      */
     LockManager getLockManager();
 
-    void setPlanCommunity( PlanCommunity planCommunity );
-
     PlanCommunity getPlanCommunity();
+
+    void setCommunityService( CommunityService communityService );
+
+    PlanService getPlanService();
+
+    Plan getPlan();
+
+    PlanDao getPlanDao();
+
+    CommunityService getCommunityService();
 }

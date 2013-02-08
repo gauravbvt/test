@@ -1,6 +1,6 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.model.Event;
@@ -88,16 +88,16 @@ public class RequirementRelationship implements Identifiable {
         return relationshipId;
     }
 
-    public void setRelationshipId( String id, PlanCommunity planCommunity ) {
+    public void setRelationshipId( String id, CommunityService communityService ) {
         this.relationshipId = id;
-        ParticipationAnalyst analyst = planCommunity.getParticipationAnalyst();
+        ParticipationAnalyst analyst = communityService.getParticipationAnalyst();
         RequirementRelationship reqRel =
                 analyst.findRequirementRelationship(
-                        getFromAgency( planCommunity ),
-                        getToAgency( planCommunity ),
+                        getFromAgency( communityService ),
+                        getToAgency( communityService ),
                         timing,
                         event,
-                        planCommunity );
+                        communityService );
         if ( reqRel != null ) {
             requirements = reqRel.getRequirements();
             label = reqRel.toString();
@@ -115,29 +115,29 @@ public class RequirementRelationship implements Identifiable {
         return names;
     }
 
-    public Agency getFromAgency( PlanCommunity planCommunity ) {
+    public Agency getFromAgency( CommunityService communityService ) {
         try {
             String[] names = parseId( relationshipId );
-            return getAgency( Long.parseLong( names[0] ), planCommunity );
+            return getAgency( Long.parseLong( names[0] ), communityService );
         } catch ( Exception e ) {
             LOG.warn( "Failed to get from-agency from relationship " + relationshipId );
             return Agency.UNKNOWN;
         }
     }
 
-    public Agency getToAgency( PlanCommunity planCommunity ) {
+    public Agency getToAgency( CommunityService communityService ) {
         try {
             String[] names = parseId( relationshipId );
-            return getAgency( Long.parseLong( names[1] ), planCommunity );
+            return getAgency( Long.parseLong( names[1] ), communityService );
         } catch ( Exception e ) {
             LOG.warn( "Failed to get to-agency from relationship " + relationshipId );
             return Agency.UNKNOWN;
         }
     }
 
-    private Agency getAgency( Long id, PlanCommunity planCommunity ) {
+    private Agency getAgency( Long id, CommunityService communityService ) {
         try {
-            return planCommunity.getParticipationManager().findAgencyById( id, planCommunity );
+            return communityService.getParticipationManager().findAgencyById( id, communityService );
         } catch ( NotFoundException e ) {
             LOG.warn(  "Agency not found at " + id );
             return null;
@@ -147,13 +147,13 @@ public class RequirementRelationship implements Identifiable {
     public boolean hasUnfulfilledRequirements(
             final Phase.Timing timing,
             final Event event,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         return CollectionUtils.exists(
                 getRequirements(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Requirement)object).measureSatisfaction( timing, event, planCommunity ).isFailed();
+                        return ((Requirement)object).measureSatisfaction( timing, event, communityService ).isFailed();
                     }
                 }
         );

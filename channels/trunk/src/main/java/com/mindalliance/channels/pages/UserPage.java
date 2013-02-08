@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
@@ -94,13 +95,13 @@ public class UserPage extends AbstractChannelsBasicPage {
         addPlanName();
         addPlanClient();
         addReferences();
-        addGotoLinks( getPlanCommunity(), getUser() );
+        addGotoLinks( getCommunityService(), getUser() );
         addSocial();
     }
 
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
-        addGotoLinks( getPlanCommunity(), getUser() );
+        addGotoLinks( getCommunityService(), getUser() );
         target.add( gotoIconsContainer );
         updateSocialPanel( target );
     }
@@ -162,12 +163,13 @@ public class UserPage extends AbstractChannelsBasicPage {
         );
     }
 
-    private void addGotoLinks( PlanCommunity planCommunity, ChannelsUser user ) {
-        Plan plan = planCommunity.getPlan();
+    private void addGotoLinks( CommunityService communityService, ChannelsUser user ) {
+        Plan plan = communityService.getPlan();
+        PlanCommunity planCommunity = communityService.getPlanCommunity();
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-        boolean communityLeader = planCommunity.isCommunityLeader( user );
+        boolean communityLeader = communityService.getPlanCommunity().isCommunityLeader( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
@@ -187,19 +189,19 @@ public class UserPage extends AbstractChannelsBasicPage {
 */
         // Surveys
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
-                getRFIsLink( "gotoRFIs", getPlan(), true );
-        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, planCommunity ) );
+                getRFIsLink( "gotoRFIs", getPlanCommunity(), true );
+        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, getCommunityService() ) );
         addTipTitle( gotoRFIsLabel,
-                new Model<String>( getGotoRFIsDescription( user, planCommunity ) ) );
+                new Model<String>( getGotoRFIsDescription( user, communityService ) ) );
         gotoRFIsLink.add( gotoRFIsLabel );
 
         // Feedback
         BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
-                getFeedbackLink( "gotoFeedback", getPlan(), true );
-        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, planCommunity ) );
+                getFeedbackLink( "gotoFeedback", getPlanCommunity(), true );
+        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, communityService ) );
         addTipTitle(
                 gotoFeedbackLabel,
-                new Model<String>( getGotoFeedbackDescription( user, planCommunity ) )
+                new Model<String>( getGotoFeedbackDescription( user, communityService ) )
         );
         gotoFeedbackLink.add( gotoFeedbackLabel );
 
@@ -222,8 +224,8 @@ public class UserPage extends AbstractChannelsBasicPage {
                 null,
                 plan );
         int toConfirmCount = userParticipationService
-                .listUserParticipationsAwaitingConfirmationBy( getUser(), getPlanCommunity() ).size();
-        int issueCount = participationAnalyst.detectAllIssues( getPlanCommunity() ).size();
+                .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
+        int issueCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();
         addTipTitle(
                 participationManagerLink,
                 "Manage plan participation ("
@@ -314,10 +316,10 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
 
-    private String getRFIsLabel( ChannelsUser user, PlanCommunity planCommunity ) {
+    private String getRFIsLabel( ChannelsUser user, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "Planning surveys" );
-        int lateCount = surveysDAO.countLate( planCommunity, user );
+        int lateCount = surveysDAO.countLate( communityService, user );
         if ( lateCount > 0 ) {
             sb.append( " (" )
                     .append( lateCount )
@@ -326,10 +328,10 @@ public class UserPage extends AbstractChannelsBasicPage {
         return sb.toString();
     }
 
-    private String getFeedbackLabel( ChannelsUser user, PlanCommunity planCommunity ) {
+    private String getFeedbackLabel( ChannelsUser user, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "Feedback and replies" );
-        int count = userMessageService.countNewFeedbackReplies( planCommunity, user );
+        int count = userMessageService.countNewFeedbackReplies( communityService, user );
         if ( count > 0 ) {
             sb.append( " (" )
                     .append( count )
@@ -347,20 +349,20 @@ public class UserPage extends AbstractChannelsBasicPage {
                 : "View my information needs and their status in this plan.";
     }
 
-    private String getGotoRFIsDescription( ChannelsUser user, PlanCommunity planCommunity ) {
+    private String getGotoRFIsDescription( ChannelsUser user, CommunityService communityService ) {
         QueryService queryService = getQueryService();
         Analyst analyst = getAnalyst();
-        int activeCount = rfiService.listUserActiveRFIs( planCommunity, user ).size();
+        int activeCount = rfiService.listUserActiveRFIs( communityService, user ).size();
         StringBuilder sb = new StringBuilder();
         sb
                 .append( "I participate in " )
                 .append( activeCount == 0 ? "no" : activeCount )
                 .append( activeCount > 1 ? " surveys" : " survey" );
         if ( activeCount > 0 ) {
-            int noAnswerCount = surveysDAO.countUnanswered( planCommunity, user );
+            int noAnswerCount = surveysDAO.countUnanswered( communityService, user );
             // int incompleteCount = surveysDAO.countIncomplete( plan, user, queryService, analyst );
             int partialCount = activeCount - noAnswerCount;
-            int lateCount = surveysDAO.countLate( planCommunity, user );
+            int lateCount = surveysDAO.countLate( communityService, user );
             sb
                     .append( " of which " )
                     .append( noAnswerCount == 0 ? "none" : noAnswerCount )
@@ -383,9 +385,9 @@ public class UserPage extends AbstractChannelsBasicPage {
         return sb.toString();
     }
 
-    private String getGotoFeedbackDescription( ChannelsUser user, PlanCommunity planCommunity ) {
-        int unresolvedCount = feedbackService.countUnresolvedFeedback( planCommunity, user );
-        int newReplyCount = userMessageService.countNewFeedbackReplies( planCommunity, user );
+    private String getGotoFeedbackDescription( ChannelsUser user, CommunityService communityService ) {
+        int unresolvedCount = feedbackService.countUnresolvedFeedback( communityService, user );
+        int newReplyCount = userMessageService.countNewFeedbackReplies( communityService, user );
         StringBuilder sb = new StringBuilder();
         if ( unresolvedCount == 0 ) {
             sb.append( "All feedback are resolved." );

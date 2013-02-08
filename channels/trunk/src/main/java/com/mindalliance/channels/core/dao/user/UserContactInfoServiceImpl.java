@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -33,7 +33,7 @@ public class UserContactInfoServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<Channel> findChannels( ChannelsUserInfo channelsUserInfo, PlanCommunity planCommunity ) {
+    public List<Channel> findChannels( ChannelsUserInfo channelsUserInfo, CommunityService communityService ) {
         List<Channel> channels = new ArrayList<Channel>();
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -41,9 +41,9 @@ public class UserContactInfoServiceImpl
         for ( UserContactInfo contactInfo : (List<UserContactInfo>) criteria.list() ) {
             try {
                 TransmissionMedium medium = TransmissionMedium.getUNKNOWN();
-                if ( planCommunity != null ) {
+                if ( communityService != null ) {
                     // check if medium still valid
-                    medium = planCommunity.find(
+                    medium = communityService.find(
                             TransmissionMedium.class,
                             contactInfo.getTransmissionMediumId(),
                             contactInfo.getCreated() );

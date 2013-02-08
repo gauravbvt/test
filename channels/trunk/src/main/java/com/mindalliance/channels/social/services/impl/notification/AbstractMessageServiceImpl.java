@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
@@ -32,9 +32,9 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
     protected List<ChannelsUserInfo> getToUsers(
             Messageable messageable,
             String topic,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         List<ChannelsUser> toUsers = new ArrayList<ChannelsUser>();
-        List<String> toUsernames = messageable.getToUserNames( topic, planCommunity );
+        List<String> toUsernames = messageable.getToUserNames( topic, communityService );
         for ( String toUsername : toUsernames ) {
             String urn = messageable.getPlanUri();
             if ( toUsername.equals( ChannelsUserInfo.PLANNERS ) )
@@ -80,7 +80,7 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             String planUri,
             List<? extends Messageable> messageables,
             String topic,
-            PlanCommunity planCommunity) {
+            CommunityService communityService) {
         StringBuilder sb = new StringBuilder();
         int n = messageables.size();
         String kind = messageables.get( 0 ).getLabel() + " " + topic;
@@ -97,10 +97,10 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
             Messageable.Format format,
             List<? extends Messageable> messageables,
             String topic,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
         for ( Messageable messageable : messageables ) {
-            sb.append( messageable.getContent( topic, format, planCommunity ) );
+            sb.append( messageable.getContent( topic, format, communityService ) );
             sb.append( "\n============================================\n\n" );
         }
         return sb.toString();

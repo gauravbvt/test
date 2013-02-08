@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
@@ -34,34 +34,34 @@ public class ResearchData extends AbstractProcedureElementData {
 
     public ResearchData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Flow requestToSelf,
             CommunityAssignment assignment,
             ChannelsUser user ) {
-        super( planCommunity, assignment, user );
+        super( communityService, assignment, user );
         this.requestToSelf = requestToSelf;
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
-    private void initData( String serverUrl, PlanCommunity planCommunity ) {
-        initResearchTask( serverUrl, planCommunity );
-        initConsumingTaskData( serverUrl, planCommunity );
-        failureImpact = planCommunity.getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
+    private void initData( String serverUrl, CommunityService communityService ) {
+        initResearchTask( serverUrl, communityService );
+        initConsumingTaskData( serverUrl, communityService );
+        failureImpact = communityService.getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
         documentation =  new DocumentationData( serverUrl, requestToSelf );
     }
 
-    private void initConsumingTaskData( String serverUrl, PlanCommunity planCommunity ) {
+    private void initConsumingTaskData( String serverUrl, CommunityService communityService ) {
         consumingTaskData = new TaskData(
                 serverUrl,
-                planCommunity,
+                communityService,
                 (Part)requestToSelf.getTarget(),
                 getUser() );
     }
 
-    private void initResearchTask( String serverUrl, PlanCommunity planCommunity ) {
+    private void initResearchTask( String serverUrl, CommunityService communityService ) {
         researchTaskData = new TaskData(
                 serverUrl,
-                planCommunity,
+                communityService,
                 (Part)requestToSelf.getSource(),
                 getUser() );
     }

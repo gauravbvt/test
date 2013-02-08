@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.protocols;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.Actor;
@@ -26,20 +26,22 @@ public class CommunityEmployment implements Serializable {
     private Agent supervisor;
     private Agency employer;
 
-    public CommunityEmployment( Employment employment, Agent agent, Agency employer, PlanCommunity planCommunity ) {
+    public CommunityEmployment( Employment employment,
+                                Agent agent, Agency employer,
+                                CommunityService communityService ) {
         this.employment = employment;
         this.agent = agent;
         this.employer = employer;
-        init( planCommunity );
+        init( communityService );
     }
 
-    private void init( PlanCommunity planCommunity ) {
+    private void init( CommunityService communityService ) {
         Actor supervisorActor = employment.getSupervisor();
         if ( supervisorActor != null ) {
             if ( employer.isFixedOrganization() ) {
                 supervisor = new Agent( supervisorActor );
             } else {
-                supervisor = new Agent( supervisorActor, agent.getOrganizationParticipation(), planCommunity );
+                supervisor = new Agent( supervisorActor, agent.getOrganizationParticipation(), communityService );
             }
         }
     }

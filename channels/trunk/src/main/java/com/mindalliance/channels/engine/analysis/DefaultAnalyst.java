@@ -9,7 +9,7 @@ package com.mindalliance.channels.engine.analysis;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
@@ -1067,8 +1067,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public String realizability( Commitment commitment, PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    public String realizability( Commitment commitment, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         List<String> problems = findRealizabilityProblems( planService.getPlan(), commitment, planService );
         return problems.isEmpty() ?
                 "Yes" :
@@ -1120,8 +1120,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public int unwaivedIssuesCount( Requirement requirement, PlanCommunity planCommunity) {
-        return unwaivedIssuesCount( requirement, planCommunity.getPlanService() );
+    public int unwaivedIssuesCount( Requirement requirement, CommunityService communityService) {
+        return unwaivedIssuesCount( requirement, communityService.getPlanService() );
     }
 
     @Override

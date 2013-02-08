@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
@@ -198,9 +198,9 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     public List<String> getIndexedNames() {
-        ParticipationManager participationManager = getPlanCommunity().getParticipationManager();
+        ParticipationManager participationManager = getCommunityService().getParticipationManager();
         List<String> agencyNames = new ArrayList<String>();
-        for ( Agency agency : participationManager.getAllKnownAgencies( getPlanCommunity() ) ) {
+        for ( Agency agency : participationManager.getAllKnownAgencies( getCommunityService() ) ) {
             agencyNames.add( agency.getName() );
         }
         return agencyNames;
@@ -216,16 +216,16 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     private void resetOrganizationParticipationWrappers() {
         agencyParticipationWrappers = new ArrayList<AgencyParticipationWrapper>();
-        PlanCommunity planCommunity = getPlanCommunity();
-        ParticipationManager participationManager = getPlanCommunity().getParticipationManager();
-        for ( Agency agency : participationManager.getAllKnownAgencies( planCommunity ) ) {
+        CommunityService communityService = getCommunityService();
+        ParticipationManager participationManager = communityService.getParticipationManager();
+        for ( Agency agency : participationManager.getAllKnownAgencies( communityService ) ) {
             if ( nameRange.contains( agency.getName() )
                     && !isFilteredOut( agency ) ) {
-                RegisteredOrganization registeredAgency = registeredOrganizationService.find( agency.getName(), planCommunity );
+                RegisteredOrganization registeredAgency = registeredOrganizationService.find( agency.getName(), communityService );
                 if ( registeredAgency != null ) {
                     boolean participating = false;
                     for ( OrganizationParticipation registration
-                            : organizationParticipationService.findAllParticipationBy( registeredAgency, planCommunity ) ) {
+                            : organizationParticipationService.findAllParticipationBy( registeredAgency, communityService ) ) {
                         agencyParticipationWrappers.add( new AgencyParticipationWrapper( registration ) );
                         participating = true;
                     }
@@ -239,7 +239,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         }
         if ( showingPlaceholders ) {
             for ( Organization placeholder
-                    : planCommunity.getParticipationManager().findAllUnassignedPlaceholders( planCommunity ) ) {
+                    : communityService.getParticipationManager().findAllUnassignedPlaceholders( communityService ) ) {
                 agencyParticipationWrappers.add( new AgencyParticipationWrapper( placeholder ) );
             }
         }
@@ -293,8 +293,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     private List<String> getAllAgencyNames() {
         List<String> agencyNames = new ArrayList<String>();
-        PlanCommunity planCommunity = getPlanCommunity();
-        for ( Agency agency : planCommunity.getParticipationManager().getAllKnownAgencies( planCommunity ) ) {
+        CommunityService communityService = getCommunityService();
+        for ( Agency agency : communityService.getParticipationManager().getAllKnownAgencies( communityService ) ) {
             agencyNames.add( agency.getName() );
         }
         Collections.sort( agencyNames, new Comparator<String>() {
@@ -335,7 +335,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 target.add( registeringContainer );
                 update( target, Change.message(
                         addedRegistration != null
-                                ? addedRegistration.asString( getPlanCommunity() )
+                                ? addedRegistration.asString( getCommunityService() )
                                 : "Failed to register organization"
                 ) );
                 addedRegistration = null;
@@ -347,11 +347,11 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     private List<Organization> getManagedPlaceHolders() {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         List<Organization> managedPlaceholders = new ArrayList<Organization>();
         ChannelsUser user = getUser();
-        for ( Organization org : planCommunity.getPlanService().listActualEntities( Organization.class, true ) ) {
-            if ( planCommunity.isCustodianOf( user, org ) ) {
+        for ( Organization org : communityService.getPlanService().listActualEntities( Organization.class, true ) ) {
+            if ( communityService.isCustodianOf( user, org ) ) {
                 managedPlaceholders.add( org );
             }
         }
@@ -375,21 +375,21 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     public void setRegisteringPlaceholder( Organization placeholder ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         RegisteredOrganization registeredOrganization = registerOrgByName();
-        if ( registeredOrganization != null && planCommunity.isCustodianOf( getUser(), placeholder ) ) {
+        if ( registeredOrganization != null && communityService.isCustodianOf( getUser(), placeholder ) ) {
             addedRegistration = organizationParticipationService.assignOrganizationAs(
                     getUser(),
                     registeredOrganization,
                     placeholder,
-                    planCommunity
+                    communityService
             );
         }
     }
 
     private RegisteredOrganization registerOrgByName() {
         if ( registeredOrgName != null && !registeredOrgName.isEmpty() ) {
-            return registeredOrganizationService.findOrAdd( getUser(), registeredOrgName, getPlanCommunity() );
+            return registeredOrganizationService.findOrAdd( getUser(), registeredOrgName, getCommunityService() );
         } else {
             return null;
         }
@@ -473,11 +473,11 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         private Date registrationDate;
 
         public AgencyParticipationWrapper( OrganizationParticipation organizationParticipation ) {
-            PlanCommunity planCommunity = getPlanCommunity();
+            CommunityService communityService = getCommunityService();
             this.organizationParticipation = organizationParticipation;
-            agency = new Agency( organizationParticipation, planCommunity );
-            placeholder = organizationParticipation.getPlaceholderOrganization( planCommunity );
-            registrar = planCommunity.getUserDao().getUserNamed( organizationParticipation.getUsername() );
+            agency = new Agency( organizationParticipation, communityService );
+            placeholder = organizationParticipation.getPlaceholderOrganization( communityService );
+            registrar = communityService.getUserDao().getUserNamed( organizationParticipation.getUsername() );
             registrationDate = organizationParticipation.getCreated();
         }
 
@@ -548,14 +548,14 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         private boolean canBeRemoved() {
             return agency != null
                     && ( organizationParticipation == null
-                    || getPlanCommunity().getUserParticipationService()
-                    .listUserParticipationIn( organizationParticipation, getPlanCommunity() ).isEmpty() );
+                    || getCommunityService().getUserParticipationService()
+                    .listUserParticipationIn( organizationParticipation, getCommunityService() ).isEmpty() );
         }
 
         public boolean isUserCustodian() {
             return agency != null
                     && getPlaceholder() != null
-                    && getPlanCommunity().isCustodianOf( getUser(), getPlaceholder() );
+                    && getCommunityService().isCustodianOf( getUser(), getPlaceholder() );
         }
 
         public boolean remove() {
@@ -567,10 +567,10 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                             getUser(),
                             registeredOrganization,
                             getPlaceholder(),
-                            getPlanCommunity() );
+                            getCommunityService() );
                 } else if ( isNonParticipatingCommunityRegistered()
                         && getPlanCommunity().isCommunityLeader( getUser() ) ) {
-                    success = registeredOrganizationService.removeIfUnused( getUser(), getAgency().getName(), getPlanCommunity() );
+                    success = registeredOrganizationService.removeIfUnused( getUser(), getAgency().getName(), getCommunityService() );
                 }
             }
             return success;
@@ -581,7 +581,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 assert placeholder != null;
                 return "Unassigned " + placeholder.getName();
             } else if ( organizationParticipation != null )
-                return organizationParticipation.asString( getPlanCommunity() );
+                return organizationParticipation.asString( getCommunityService() );
             else
                 return agency.toString();
         }

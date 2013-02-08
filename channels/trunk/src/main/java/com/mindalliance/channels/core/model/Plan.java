@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.model;
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.model.Phase.Timing;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -48,16 +49,6 @@ public class Plan extends ModelObject implements ModelObjectContext {
      * Whether the plan is meant as a template.
      */
     private boolean viewableByAll;
-
-    /**
-     * Return a "directory-safe" equivalent name.
-     *
-     * @param name original name
-     * @return safe version
-     */
-    public static String sanitize( String name ) {
-        return name.replaceAll( "\\W", "_" );
-    }
 
     /**
      * Whether an organization is expected to have agents with assigned tasks.
@@ -165,14 +156,6 @@ public class Plan extends ModelObject implements ModelObjectContext {
     private String plannerSupportCommunity = "";
 
     private String userSupportCommunity = "";
-
-    private String surveyApiKey = "";
-
-    private String surveyUserKey = "";
-
-    private String surveyTemplate = "";
-
-    private String surveyDefaultEmailAddress = "";
 
     private String communityCalendar = "";
 
@@ -339,38 +322,6 @@ public class Plan extends ModelObject implements ModelObjectContext {
         this.communityCalendarPrivateTicket = communityCalendarPrivateTicket;
     }
 
-    public String getSurveyApiKey() {
-        return surveyApiKey == null ? "" : surveyApiKey;
-    }
-
-    public void setSurveyApiKey( String surveyApiKey ) {
-        this.surveyApiKey = surveyApiKey;
-    }
-
-    public String getSurveyUserKey() {
-        return surveyUserKey == null ? "" : surveyUserKey;
-    }
-
-    public void setSurveyUserKey( String surveyUserKey ) {
-        this.surveyUserKey = surveyUserKey;
-    }
-
-    public String getSurveyTemplate() {
-        return surveyTemplate == null ? "" : surveyTemplate;
-    }
-
-    public void setSurveyTemplate( String surveyTemplate ) {
-        this.surveyTemplate = surveyTemplate;
-    }
-
-    public String getSurveyDefaultEmailAddress() {
-        return surveyDefaultEmailAddress == null ? "" : surveyDefaultEmailAddress;
-    }
-
-    public void setSurveyDefaultEmailAddress( String surveyDefaultEmailAddress ) {
-        this.surveyDefaultEmailAddress = surveyDefaultEmailAddress;
-    }
-
     /**
      * Name with version.
      *
@@ -413,7 +364,7 @@ public class Plan extends ModelObject implements ModelObjectContext {
     }
 
     public void setUri( String uri ) {
-        this.uri = sanitize( uri );
+        this.uri = ChannelsUtils.sanitize( uri );
     }
 
     public String getVersionUri() {

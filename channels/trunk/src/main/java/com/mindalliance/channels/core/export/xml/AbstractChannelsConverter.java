@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.export.xml;
 import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.AttachmentImpl;
@@ -23,6 +24,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,8 @@ public abstract class AbstractChannelsConverter implements Converter {
      */
     private final Logger LOG = LoggerFactory.getLogger( AbstractChannelsConverter.class );
 
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
+
     /**
      * An xmlStreamer.
      */
@@ -59,9 +63,14 @@ public abstract class AbstractChannelsConverter implements Converter {
         return context;
     }
 
-    public PlanDao getPlanDao() {
+    PlanDao getPlanDao() {
         return context.getPlanDao();
     }
+
+    CommunityDao getCommunityDao() {
+        return getContext().getCommunityDao();
+    }
+
 
     public AttachmentManager getAttachmentManager() {
         return context.getAttachmentManager();

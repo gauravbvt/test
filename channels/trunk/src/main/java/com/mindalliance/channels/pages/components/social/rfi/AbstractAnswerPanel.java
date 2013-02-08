@@ -83,7 +83,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
 
     private void processOtherResults() {
         results = surveysDAO.processAnswers(
-                getPlanCommunity(),
+                getCommunityService(),
                 getRFI().getRfiSurvey(),
                 getQuestion(),
                 SHARED_ONLY,

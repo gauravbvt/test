@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -17,31 +17,31 @@ import java.util.List;
  */
 public interface UserParticipationService extends GenericSqlService<UserParticipation, Long> {
 
-    UserParticipation addParticipation( String username, ChannelsUser participatingUser, Agent agent, PlanCommunity planCommunity );
+    UserParticipation addParticipation( String username, ChannelsUser participatingUser, Agent agent, CommunityService communityService );
 
-    UserParticipation addAcceptedParticipation( String username, ChannelsUser participatingUser, Agent agent, PlanCommunity planCommunity );
+    UserParticipation addAcceptedParticipation( String username, ChannelsUser participatingUser, Agent agent, CommunityService communityService );
 
-    List<UserParticipation> getUserParticipations( ChannelsUser user, PlanCommunity planCommunity );
+    List<UserParticipation> getUserParticipations( ChannelsUser user, CommunityService communityService );
 
-    List<UserParticipation> getActiveUserParticipations( ChannelsUser user, PlanCommunity planCommunity );
+    List<UserParticipation> getActiveUserParticipations( ChannelsUser user, CommunityService communityService );
 
-    List<UserParticipation> getParticipationsAsAgent( Agent agent, PlanCommunity planCommunity );
+    List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService );
 
-    UserParticipation getParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
+    UserParticipation getParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 
-    boolean isParticipationNotFull( Agent agent, PlanCommunity planCommunity );
+    boolean isParticipationNotFull( Agent agent, CommunityService communityService );
 
-    boolean isParticipatedAs( Agent agent, PlanCommunity planCommunity );
+    boolean isParticipatedAs( Agent agent, CommunityService communityService );
 
-    List<Agent> listAgentsParticipatedAs( PlanCommunity planCommunity );
+    List<Agent> listAgentsParticipatedAs( CommunityService communityService );
 
-    void removeParticipation( String username, UserParticipation participation, PlanCommunity planCommunity );
+    void removeParticipation( String username, UserParticipation participation, CommunityService communityService );
 
-    List<UserParticipation> getAllParticipations( PlanCommunity planCommunity );
+    List<UserParticipation> getAllParticipations( CommunityService communityService );
 
-    List<UserParticipation> getAllActiveParticipations( PlanCommunity planCommunity );
+    List<UserParticipation> getAllActiveParticipations( CommunityService communityService );
 
-    boolean isActive( UserParticipation userParticipation, PlanCommunity planCommunity );
+    boolean isActive( UserParticipation userParticipation, CommunityService communityService );
 
     /**
      * Delete all participations by a user.
@@ -53,37 +53,37 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
 
     List<UserParticipation> validParticipations(
             List<UserParticipation> userParticipations,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
-    List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, PlanCommunity planCommunity );
+    List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, CommunityService communityService );
 
-    List<UserParticipation> getParticipationsSupervisedByUser( ChannelsUser user, PlanCommunity planCommunity );
+    List<UserParticipation> getParticipationsSupervisedByUser( ChannelsUser user, CommunityService communityService );
 
     List<Agent> listSupervisorsUserParticipatesAs(
             UserParticipation userParticipation,
             ChannelsUser user,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
-    List<String> listSupervisorsToNotify( UserParticipation userParticipation, PlanCommunity planCommunity );
+    List<String> listSupervisorsToNotify( UserParticipation userParticipation, CommunityService communityService );
 
-    List<ChannelsUserInfo> findUsersParticipatingAs( Agent agent, PlanCommunity planCommunity );
+    List<ChannelsUserInfo> findUsersParticipatingAs( Agent agent, CommunityService communityService );
 
-    boolean deleteParticipation( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
+    boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 
 
-    void accept( UserParticipation participation, PlanCommunity planCommunity );
+    void accept( UserParticipation participation, CommunityService communityService );
 
-    void refuse( UserParticipation participation, PlanCommunity planCommunity );
+    void refuse( UserParticipation participation, CommunityService communityService );
 
-    boolean isUserParticipatingAs( ChannelsUser user, Agent agent, PlanCommunity planCommunity );
+    boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService );
 
     List<UserParticipation> listUserParticipationIn(
             OrganizationParticipation organizationParticipation,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
    List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
             ChannelsUser user,
-            PlanCommunity planCommunity);
+            CommunityService communityService );
 
-    boolean isValid( UserParticipation userParticipation, PlanCommunity planCommunity );
+    boolean isValid( UserParticipation userParticipation, CommunityService communityService );
 }

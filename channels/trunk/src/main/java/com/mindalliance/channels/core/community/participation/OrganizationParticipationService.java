@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -17,42 +17,42 @@ import java.util.List;
  */
 public interface OrganizationParticipationService extends GenericSqlService<OrganizationParticipation, Long> {
 
-    List<OrganizationParticipation> getAllOrganizationParticipations( PlanCommunity planCommunity );
+    List<OrganizationParticipation> getAllOrganizationParticipations( CommunityService communityService );
 
-    boolean isValid( OrganizationParticipation registration, PlanCommunity planCommunity );
+    boolean isValid( OrganizationParticipation registration, CommunityService communityService );
 
-    List<Agency> listParticipatingAgencies( PlanCommunity planCommunity );
+    List<Agency> listParticipatingAgencies( CommunityService communityService );
 
-    List<Agency> listAgenciesParticipatingAs( Organization placeholder, PlanCommunity planCommunity );
+    List<Agency> listAgenciesParticipatingAs( Organization placeholder, CommunityService communityService );
 
     OrganizationParticipation findOrganizationParticipation(
             String orgName,
             Organization placeholder,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     boolean canUnassignOrganizationFrom(
             ChannelsUser user,
             Organization placeholder,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     boolean unassignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     List<OrganizationParticipation> findAllParticipationBy(
             RegisteredOrganization registeredOrganization,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     OrganizationParticipation assignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     boolean isAgencyRegisteredAs(
             RegisteredOrganization registeredOrg,
             Organization placeholder,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 }

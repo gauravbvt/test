@@ -1,6 +1,8 @@
 package com.mindalliance.channels.api;
 
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -19,6 +21,7 @@ abstract public class ModelObjectData  implements Serializable {
 
     private ModelObject modelObject;
     private Plan plan;
+    private PlanCommunity planCommunity;
     private DocumentationData documentation;
     private String serverUrl;
 
@@ -26,11 +29,12 @@ abstract public class ModelObjectData  implements Serializable {
         // required
     }
 
-    public ModelObjectData( String serverUrl, ModelObject modelObject, Plan plan ) {
+    public ModelObjectData( String serverUrl, ModelObject modelObject, CommunityService communityService ) {
         this.serverUrl = serverUrl;
         assert modelObject != null;
          this.modelObject = modelObject;
-        this.plan = plan;
+        plan = communityService.getPlan();
+        planCommunity = communityService.getPlanCommunity();
         documentation = new DocumentationData(  serverUrl, modelObject );
     }
 
@@ -58,8 +62,13 @@ abstract public class ModelObjectData  implements Serializable {
         return plan;
     }
 
+    protected PlanCommunity getPlanCommunity() {
+        return planCommunity;
+    }
+
     protected String getServerUrl() {
         return serverUrl;
     }
+
 
 }

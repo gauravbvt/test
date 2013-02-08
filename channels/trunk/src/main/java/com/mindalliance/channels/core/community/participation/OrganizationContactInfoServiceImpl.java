@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -37,10 +37,10 @@ public class OrganizationContactInfoServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<Channel> getChannels( RegisteredOrganization registered, PlanCommunity planCommunity ) {
+    public List<Channel> getChannels( RegisteredOrganization registered, CommunityService communityService ) {
         List<Channel> channels = new ArrayList<Channel>();
-        for ( OrganizationContactInfo contactInfo : findAllContactInfo( registered, planCommunity ) ) {
-            Channel channel = contactInfo.asChannel( planCommunity );
+        for ( OrganizationContactInfo contactInfo : findAllContactInfo( registered, communityService ) ) {
+            Channel channel = contactInfo.asChannel( communityService );
             if ( channel != null )
                 channels.add( channel );
 
@@ -55,44 +55,45 @@ public class OrganizationContactInfoServiceImpl
     public void setChannels( ChannelsUser user,
                              RegisteredOrganization registered,
                              List<Channel> channels,
-                             PlanCommunity planCommunity ) {
-        removeAllContactInfoOf( registered, planCommunity );
+                             CommunityService communityService ) {
+        removeAllContactInfoOf( registered, communityService );
         for ( Channel channel : channels ) {
             OrganizationContactInfo contactInfo = new OrganizationContactInfo(
                     user.getUsername(),
                     registered,
                     channel,
-                    planCommunity );
+                    communityService.getPlanCommunity() );
             save( contactInfo );
         }
-        planCommunity.clearCache();
+        communityService.clearCache();
     }
 
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered, PlanCommunity planCommunity ) {
+    public List<OrganizationContactInfo> findAllContactInfo( RegisteredOrganization registered,
+                                                             CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "registeredOrganization", registered ) );
-        return validate( (List<OrganizationContactInfo>) criteria.list(), planCommunity );
+        return validate( (List<OrganizationContactInfo>) criteria.list(), communityService );
     }
 
     @Override
     @Transactional
-    public void removeAllContactInfoOf( RegisteredOrganization registered, PlanCommunity planCommunity ) {
-        for ( OrganizationContactInfo contactInfo : findAllContactInfo( registered, planCommunity ) ) {
+    public void removeAllContactInfoOf( RegisteredOrganization registered, CommunityService communityService ) {
+        for ( OrganizationContactInfo contactInfo : findAllContactInfo( registered, communityService ) ) {
             delete( contactInfo );
         }
-        planCommunity.clearCache();
+        communityService.clearCache();
     }
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isValid( OrganizationContactInfo orgContactInfo, PlanCommunity planCommunity ) {
+    public boolean isValid( OrganizationContactInfo orgContactInfo, CommunityService communityService ) {
         return orgContactInfo != null
-                && registeredOrganizationService.isValid( orgContactInfo.getRegisteredOrganization(), planCommunity )
-                && planCommunity.exists( TransmissionMedium.class,
+                && registeredOrganizationService.isValid( orgContactInfo.getRegisteredOrganization(), communityService )
+                && communityService.exists( TransmissionMedium.class,
                 orgContactInfo.getTransmissionMediumId(),
                 orgContactInfo.getCreated() );
     }
@@ -101,13 +102,13 @@ public class OrganizationContactInfoServiceImpl
     @SuppressWarnings( "unchecked" )
     private List<OrganizationContactInfo> validate(
             List<OrganizationContactInfo> orgContactInfos,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         return (List<OrganizationContactInfo>) CollectionUtils.select(
                 orgContactInfos,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isValid( (OrganizationContactInfo) object, planCommunity );
+                        return isValid( (OrganizationContactInfo) object, communityService );
                     }
                 }
         );

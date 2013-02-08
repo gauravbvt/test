@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.protocols;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
@@ -162,23 +162,23 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         return result;
     }
 
-    public CommunityCommitments satisfying( Requirement requirement, PlanCommunity planCommunity ) {
+    public CommunityCommitments satisfying( Requirement requirement, CommunityService communityService ) {
         CommunityCommitments result = new CommunityCommitments( locale );
         for ( CommunityCommitment communityCommitment : this ) {
-            if ( requirement.satisfiedBy( communityCommitment, planCommunity ) )
+            if ( requirement.satisfiedBy( communityCommitment, communityService ) )
                 result.add( communityCommitment );
         }
         return result;
     }
 
-    public CommunityCommitments canBeRealized( PlanCommunity planCommunity ) {
+    public CommunityCommitments canBeRealized( CommunityService communityService ) {
         CommunityCommitments result = new CommunityCommitments( locale );
         for ( CommunityCommitment communityCommitment : this ) {
-            boolean realizable = planCommunity.getAnalyst()
+            boolean realizable = communityService.getAnalyst()
                     .findRealizabilityProblems(
-                            planCommunity.getPlan(),
+                            communityService.getPlan(),
                             communityCommitment.getCommitment(),
-                            planCommunity.getPlanService() ).isEmpty();
+                            communityService.getPlanService() ).isEmpty();
             if ( realizable ) {
                 result.add( communityCommitment );
             }

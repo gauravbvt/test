@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -46,11 +46,11 @@ public class FailureImpactsPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size,
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanCommunity planCommunity,
+                                   CommunityService communityService,
                                    DiagramFactory diagramFactory ) throws DiagramException {
         SegmentObject segmentObject = null;
         boolean assumeFails;
-        Segment segment = PlanPage.findSegment( planCommunity.getPlanService(), parameters );
+        Segment segment = PlanPage.findSegment( communityService.getPlanService(), parameters );
         if ( segment != null && parameters.getNamedKeys().contains( FAILURE ) ) {
             try {
                 long id = parameters.get( FAILURE ).toLong();

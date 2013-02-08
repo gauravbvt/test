@@ -8,6 +8,8 @@ import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.AllProceduresData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.community.participation.Agent;
@@ -26,7 +28,6 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
@@ -91,6 +92,9 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     private String serverUrl;
 
+    @Autowired
+    private CommunityServiceFactory communityServiceFactory;
+
 
     @Override
     /**
@@ -109,7 +113,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 user.setPlan( plan );
                 result.add( new PlanSummaryData(
                         serverUrl,
-                        planCommunityManager.getPlanCommunityFor( plan ) ) );
+                        getCommunityService( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -121,9 +125,10 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
+            CommunityService communityService = getCommunityService( planCommunity );
             return new PlanSummaryData(
                     serverUrl,
-                    planCommunity );
+                    communityService );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -140,7 +145,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            return new PlanReleaseData( planCommunity );
+            CommunityService communityService = getCommunityService( planCommunity );
+            return new PlanReleaseData( communityService );
         } catch ( Exception e ) {
             LOG.warn( e.getMessage(), e );
             throw new WebApplicationException(
@@ -168,7 +174,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 user.setPlan( plan );
                 result.add( new PlanSummaryData(
                         serverUrl,
-                        planCommunityManager.getPlanCommunityFor( plan ) ) );
+                        getCommunityService( plan ) ) );
             }
         }
         return new PlanSummariesData( result );
@@ -190,7 +196,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             PlanCommunity planCommunity = authorize( user, uri, version );
             return new PlanScopeData(
                     serverUrl,
-                    planCommunity );
+                    getCommunityService( planCommunity ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -231,12 +237,13 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
+            CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
                     user,
-                    planCommunity );
+                    communityService );
             return new ProceduresData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     participations,
                     user );
         } catch ( Exception e ) {
@@ -256,17 +263,18 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             ChannelsUser protocolsUser = userDao.getUserNamed( username );
             PlanCommunity planCommunity = authorize( user, uri, version );
-            protocolsUser.setPlanCommunity( planCommunity );
+            CommunityService communityService = getCommunityService( planCommunity );
+            protocolsUser.setCommunityService( communityService );
             List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                     protocolsUser,
-                    planCommunity
+                    communityService
             );
             if ( participationList.isEmpty() ) {
                 throw new Exception( username + " does not participate in community " + uri + " version " + version );
             }
             return new ProceduresData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     participationList,
                     protocolsUser );
         } catch ( Exception e ) {
@@ -285,12 +293,13 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting all user procedures for all participants in community " + uri );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
+            CommunityService communityService = getCommunityService( planCommunity );
             AllProceduresData allProceduresData = new AllProceduresData();
             for ( ChannelsUser channelsUser : userDao.getUsers( uri ) ) {
-                channelsUser.setPlanCommunity( planCommunity );
+                channelsUser.setCommunityService( communityService );
                 List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                         channelsUser,
-                        planCommunity
+                        communityService
                 );
                 if ( !participationList.isEmpty() ) {
                     ProceduresData proceduresData = getUserProcedures( uri, version, channelsUser.getUsername() );
@@ -315,10 +324,11 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting procedures of agent " + actorId + " for community " + uri + " and plan version " + version );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
-            Actor actor = getPlanService( planCommunity.getPlan() ).find( Actor.class, Long.parseLong( actorId ) );
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
             return new ProceduresData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     new Agent( actor ) );
 
         } catch ( Exception e ) {
@@ -343,14 +353,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 + " and plan version " + version );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
-            Actor actor = getPlanService( planCommunity.getPlan() ).find( Actor.class, Long.parseLong( agentId ) );
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) );
             OrganizationParticipation organizationParticipation =
                     organizationParticipationService.load( Long.parseLong( orgParticipationId ) );
             if ( organizationParticipation == null ) throw new NotFoundException();
             return new ProceduresData(
                     serverUrl,
-                    planCommunity,
-                    new Agent( actor, organizationParticipation, planCommunity ) );
+                    communityService,
+                    new Agent( actor, organizationParticipation, communityService ) );
         } catch ( Exception e ) {
             LOG.warn( "No protocols available for agent " + agentId, e );
             throw new WebApplicationException(
@@ -406,9 +417,10 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             ChannelsUser user = ChannelsUser.current( userDao );
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
+            CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
                     user,
-                    planCommunity );
+                    communityService );
             if ( participations.isEmpty() ) {
                 throw new Exception( user.getUsername() + " does not participate in community " + uri );
             }
@@ -425,25 +437,27 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     private PlanCommunity authorizeParticipant( ChannelsUser user, String uri ) throws Exception {
-        PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri );
-        Plan plan = planCommunity.getPlan();
+        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( uri ); // if domain plan community, development plan community implied
+        CommunityService communityService = getCommunityService( planCommunity );
+        Plan plan = communityService.getPlan();
         if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) { // todo - COMMUNITY - authorize for community not plan
             throw new Exception( user.getUsername() + " is not authorized to access community " + uri );
         }
-        user.setPlanCommunity( planCommunity );
+        user.setCommunityService( communityService );
         return planCommunity;
     }
 
     // Only planners can request access to a specific version of a plan.
     private PlanCommunity authorize( ChannelsUser user, String uri, String version ) throws Exception {
         PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri, Integer.parseInt( version ) );
-        Plan plan = planCommunity.getPlan();
+        CommunityService communityService = getCommunityService( planCommunity );
+        Plan plan = communityService.getPlan();
         if ( user == null
                 || plan == null
                 || ( plan.isDevelopment() && !user.isPlanner( uri ) )
                 || ( plan.isProduction() && !user.isParticipant( uri ) ) )
             throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
-        user.setPlanCommunity( planCommunity );
+        user.setCommunityService( communityService );
         return planCommunity;
     }
 
@@ -453,7 +467,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
-            return new IssuesData( serverUrl, planCommunity );
+            CommunityService communityService = getCommunityService( planCommunity );
+            return new IssuesData( serverUrl, communityService );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -463,7 +478,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
-    private boolean canSeeProcedures( ChannelsUser user, Actor actor, PlanCommunity planCommunity ) { // todo -agents and agencies
+ /*   private boolean canSeeProcedures( ChannelsUser user, Actor actor, PlanCommunity planCommunity ) { // todo -agents and agencies
         // Planner can see any actor's procedures
         Plan plan = planCommunity.getPlan();
         if ( plan.isViewableByAll() || user.isPlanner( plan.getUri() ) )
@@ -481,7 +496,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
         return false;
     }
-
+*/
     @Override
     public void addFeedback(
             String uri,
@@ -514,14 +529,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            Actor actor = planCommunity.getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo = agents
-            if ( participationManager.isParticipationSelfAssignable( new Agent( actor ), user, planCommunity ) ) {
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = getCommunityService( planCommunity ).getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo = agents
+            if ( participationManager.isParticipationSelfAssignable( new Agent( actor ), user, communityService ) ) {
                 UserParticipation participation = new UserParticipation(
                         user.getUsername(),
                         user,
                         new Agent( actor ),
                         planCommunity );
-                userParticipationService.accept( participation, planCommunity );
+                userParticipationService.accept( participation, communityService );
             } else {
                 throw new Exception( "Participation was not accepted" );
             }
@@ -540,14 +556,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            Actor actor = planCommunity.getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo - agents!
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo - COMMUNITY - agents!
             UserParticipation userParticipation = userParticipationService.getParticipation(
                     user,
                     new Agent( actor ),
-                    planCommunity
+                    communityService
             );
             if ( userParticipation != null ) {
-                userParticipationService.refuse( userParticipation, planCommunity );
+                userParticipationService.refuse( userParticipation, communityService );
             } else {
                 throw new Exception( "Participation was not refused" );
             }
@@ -566,8 +583,9 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, planCommunity.getPlanService() );
-            message = message + makeInvitation( invitedUser, planCommunity );
+            CommunityService communityService = getCommunityService( planCommunity );
+            ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
+            message = message + makeInvitation( invitedUser, communityService );
             emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
 
         } catch ( Exception e ) {
@@ -585,7 +603,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            TransmissionMedium medium = planCommunity.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
+            CommunityService communityService = getCommunityService( planCommunity );
+            TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             if ( !medium.isAddressValid( address ) ) throw new Exception( "Invalid address" );
             userContactInfoService.addChannel(
                     user.getUsername(),
@@ -606,7 +625,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            TransmissionMedium medium = planCommunity.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
+            CommunityService communityService = getCommunityService( planCommunity );
+            TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             userContactInfoService.removeChannel( user.getUserInfo(), new Channel( medium, address ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -617,8 +637,10 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
-    private String makeInvitation( ChannelsUserInfo invitedUser, PlanCommunity planCommunity ) {
+    private String makeInvitation( ChannelsUserInfo invitedUser, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
+        PlanCommunity planCommunity = communityService.getPlanCommunity();
+        Plan plan = communityService.getPlan();
         String homePageUrl = getServerUrl()
                 + "home?"
                 + AbstractChannelsWebPage.PLAN_PARM
@@ -628,7 +650,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 .append( "To participate in the plan community " )
                 .append( planCommunity.getName() )
                 .append( " designed by " )
-                .append( planCommunity.getPlan().getClient() )
+                .append(plan.getClient() )
                 .append( ",\ngo to " )
                 .append( homePageUrl )
                 .append( "\nand login with your email address " )
@@ -658,12 +680,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" );
     }
 
-    private PlanService getPlanService( Plan plan ) {
-        return planServiceFactory.getService( plan );
+
+    private CommunityService getCommunityService( PlanCommunity planCommunity ) {
+        return communityServiceFactory.getService( planCommunity );
     }
 
-    private PlanCommunity getPlanCommunity( Plan plan ) {
-        return planCommunityManager.getPlanCommunityFor( plan );
+    private CommunityService getCommunityService( Plan plan ) {
+        return communityServiceFactory.getService( planCommunityManager.getDomainPlanCommunity( plan ) );
     }
+
+
 
 }

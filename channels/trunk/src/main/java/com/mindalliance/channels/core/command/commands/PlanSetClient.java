@@ -11,8 +11,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDefinition;
+import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.model.Plan;
 
 /**
@@ -50,9 +50,9 @@ public class PlanSetClient extends AbstractCommand {
      */
     @Override
     public Change execute( Commander commander ) {
-        DefinitionManager definitionManager = commander.getQueryService().getPlanManager().getDefinitionManager();
+        PlanDefinitionManager planDefinitionManager = commander.getQueryService().getPlanManager().getPlanDefinitionManager();
 
-        PlanDefinition planDefinition = definitionManager.get( (String) get( "uri" ) );
+        PlanDefinition planDefinition = planDefinitionManager.get( (String) get( "uri" ) );
         planDefinition.setClient( (String) get( "new" ) );
 
         return new Change( Type.Updated, "plan.properties" );

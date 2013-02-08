@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -62,7 +63,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     }
 
     public UserParticipation( String username, ChannelsUser participatingUser, PlanCommunity planCommunity ) {
-        super( planCommunity.getPlan().getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getPlanUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
         this.participant = participatingUser.getUserInfo();
     }
 
@@ -106,13 +107,13 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         return actorId;
     }
 
-    public Agent getAgent( PlanCommunity planCommunity ) {
-        Actor actor = getActor( planCommunity );
+    public Agent getAgent( CommunityService communityService ) {
+        Actor actor = getActor( communityService );
         if ( actor == null ) return null;
         if ( organizationParticipation == null ) {
             return new Agent( actor );
         } else {
-            return new Agent( actor, organizationParticipation, planCommunity );
+            return new Agent( actor, organizationParticipation, communityService );
         }
     }
 
@@ -132,9 +133,9 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         this.requestNotified = requestNotified;
     }
 
-    private Actor getActor( PlanCommunity planCommunity ) {
+    private Actor getActor( CommunityService communityService ) {
         try {
-            return planCommunity.find( Actor.class, getActorId(), getCreated() );
+            return communityService.find( Actor.class, getActorId(), getCreated() );
         } catch ( NotFoundException e ) {
             return null;
         }
@@ -148,8 +149,8 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         return getParticipant().getUsername();
     }
 
-    public boolean isSupervised( PlanCommunity planCommunity ) {
-        Actor actor = getActor( planCommunity );
+    public boolean isSupervised( CommunityService communityService ) {
+        Actor actor = getActor( communityService );
         return actor != null && actor.isSupervisedParticipation();
     }
 
@@ -194,9 +195,9 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         supervisorsNotified = StringUtils.join( notifiedUsers.iterator(), "," );
     }
 
-    public String asString( PlanCommunity planCommunity ) {
+    public String asString( CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
-        Agent agent = getAgent( planCommunity );
+        Agent agent = getAgent( communityService );
         sb.append( participant.getFullName() )
                 .append( " (" )
                 .append( participant.getEmail() )
@@ -212,28 +213,28 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     /// Messageable
 
     @Override
-    public String getContent( String topic, Format format, PlanCommunity planCommunity ) {
+    public String getContent( String topic, Format format, CommunityService communityService ) {
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
             return "As supervisor, you are requested to confirm "
-                    + asString( planCommunity )
+                    + asString( communityService )
                     + "\n\nThank you!\n"
-                    + planCommunity.getPlan().getClient();
+                    + communityService.getPlan().getClient();
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             return "You are requested to participate as "
-                    + getAgent( planCommunity ).getName()
+                    + getAgent( communityService ).getName()
                     + ". It is up to you to accept or not."
                     + "\n\nThank you!\n"
-                    + planCommunity.getPlan().getClient();
+                    + communityService.getPlan().getClient();
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }
     }
 
     @Override
-    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
+    public List<String> getToUserNames( String topic, CommunityService communityService ) {
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
-            return planCommunity.getUserParticipationService()
-                .listSupervisorsToNotify( this, planCommunity );
+            return communityService.getUserParticipationService()
+                .listSupervisorsToNotify( this, communityService );
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             List<String> usernames = new ArrayList<String>();
             usernames.add( participant.getUsername() );
@@ -249,11 +250,11 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     }
 
     @Override
-    public String getSubject( String topic, Format format, PlanCommunity planCommunity ) {
+    public String getSubject( String topic, Format format, CommunityService communityService ) {
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
-            return "Request to confirm " + asString( planCommunity );
+            return "Request to confirm " + asString( communityService );
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
-            return "Your participation is requested as " + getAgent( planCommunity ).getName();
+            return "Your participation is requested as " + getAgent( communityService ).getName();
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }

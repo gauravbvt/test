@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
@@ -26,23 +26,23 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     }
 
     protected AbstractProcedureElementData(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUser user ) {
         this.user = user;
-        initData( planCommunity );
+        initData( communityService );
     }
 
     protected AbstractProcedureElementData(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             CommunityAssignment assignment,
             ChannelsUser user ) {
         this.assignment = assignment;
         this.user = user;
-        initData( planCommunity );
+        initData( communityService );
     }
 
-    private void initData( PlanCommunity planCommunity ) {
-        plan = planCommunity.getPlan();
+    private void initData( CommunityService communityService ) {
+        plan = communityService.getPlan();
     }
 
     public CommunityAssignment getAssignment() {

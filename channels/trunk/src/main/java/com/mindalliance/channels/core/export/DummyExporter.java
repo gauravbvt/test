@@ -1,10 +1,10 @@
 package com.mindalliance.channels.core.export;
 
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.dao.Journal;
-import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.Segment;
 import org.apache.wicket.markup.MarkupType;
 
@@ -30,7 +30,7 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
      * @param service the query service
      * @return an importer
      */
-    public Importer createImporter( String userName, PlanDao service ) {
+    public Importer createImporter( String userName, AbstractModelObjectDao service ) {
         return this;
     }
 
@@ -41,7 +41,7 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
      * @param planDao
      * @return an exporter
      */
-    public Exporter createExporter( String userName, PlanDao planDao ) {
+    public Exporter createExporter( String userName, AbstractModelObjectDao planDao ) {
         return this;
     }
 
@@ -107,6 +107,11 @@ public class DummyExporter implements ImportExportFactory, Importer, Exporter {
      * @throws IOException on errors
      */
     public void importPlan( FileInputStream stream ) throws IOException {
+    }
+
+    @Override
+    public void importPlanCommunity( FileInputStream stream ) throws IOException {
+
     }
 
     /**

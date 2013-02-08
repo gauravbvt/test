@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
@@ -70,10 +70,10 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
     @Override
     @SuppressWarnings( "unchecked" )
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
+                        DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         GraphBuilder flowMapGraphBuilder =
                 new FlowMapGraphBuilder( segment, planService, showingConnectors );
         Graph<Node, Flow> graph = flowMapGraphBuilder.buildDirectedGraph();
@@ -95,6 +95,6 @@ public class FlowMapDiagram extends AbstractDiagram<Node, Flow> {
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         FlowMapDOTExporter dotExporter = new FlowMapDOTExporter( metaProvider );
-        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( communityService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

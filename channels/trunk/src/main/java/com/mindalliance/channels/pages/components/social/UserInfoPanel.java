@@ -514,7 +514,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
         @Override
         public List<Channel> getEffectiveChannels() {
-            return userContactInfoService.findChannels( getUserInfo(), getPlanCommunity() );
+            return userContactInfoService.findChannels( getUserInfo(), getCommunityService() );
         }
 
         @Override

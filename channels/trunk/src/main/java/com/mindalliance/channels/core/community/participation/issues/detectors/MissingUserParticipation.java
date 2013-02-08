@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
@@ -37,13 +37,13 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
     }
 
     @Override
-    public List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity ) {
+    public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
         List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>(  );
         Actor actor = (Actor)identifiable;
-        if ( isEmployedByFixedOrganization( actor, planCommunity ) ) {
-            int count = planCommunity.getUserParticipationService().findUsersParticipatingAs(
+        if ( isEmployedByFixedOrganization( actor, communityService ) ) {
+            int count = communityService.getUserParticipationService().findUsersParticipatingAs(
                     new Agent( actor ),
-                    planCommunity
+                    communityService
             ).size();
             if ( count == 0 ) {
                 ParticipationIssue issue = new ParticipationIssue( actor, this );
@@ -55,9 +55,9 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
         return issues;
     }
 
-    private boolean isEmployedByFixedOrganization( Actor actor, PlanCommunity planCommunity ) {
+    private boolean isEmployedByFixedOrganization( Actor actor, CommunityService communityService ) {
         return CollectionUtils.exists(
-                planCommunity.getPlanService().findAllEmploymentsForActor( actor ),
+                communityService.getPlanService().findAllEmploymentsForActor( actor ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

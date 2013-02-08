@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
@@ -33,11 +33,11 @@ public class InvalidAgencyParent implements ParticipationIssueDetector {
     }
 
     @Override
-    public List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity ) {
+    public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
         List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
         Agency agency = (Agency) identifiable;
-        Agency parent = agency.getParent( planCommunity );
-        if ( parent != null && !planCommunity.canHaveParentAgency( agency.getName(), parent.getName() ) ) {
+        Agency parent = agency.getParent( communityService );
+        if ( parent != null && !communityService.canHaveParentAgency( agency.getName(), parent.getName() ) ) {
             ParticipationIssue issue = new ParticipationIssue( identifiable, this );
             issue.setDescription( parent.getName() + " is not a valid parent organization for " + agency.getName() );
             issue.addRemediationOption( "Remove " + parent.getName() + " as parent organization" );

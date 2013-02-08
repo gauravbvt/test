@@ -222,7 +222,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                 public void populateItem( Item<ICellPopulator<Issue>> cellItem, String id, IModel<Issue> issueModel ) {
                     Issue issue = issueModel.getObject();
                     boolean surveyed = rfiSurveyService.findRemediationSurvey(
-                            getPlanCommunity(),
+                            getCommunityService(),
                             issue ) != null;
                     SurveyLinkPanel surveyLinkPanel = new SurveyLinkPanel( id, surveyed, issue );
                     cellItem.add( surveyLinkPanel );
@@ -241,7 +241,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
                 public void onClick( AjaxRequestTarget target ) {
                         RFISurvey survey = surveysDAO.getOrCreateRemediationSurvey(
                                 getUsername(),
-                                getPlanCommunity(),
+                                getCommunityService(),
                                 issue );
                         // Open all surveys panel on this survey
                         Change change = new Change( Change.Type.Expanded, survey );

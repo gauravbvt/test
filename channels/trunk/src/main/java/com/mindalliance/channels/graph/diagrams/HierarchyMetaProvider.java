@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -137,7 +137,8 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Hierarchical vertex,
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService,
+                                                       Hierarchical vertex,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), (ModelObject) vertex ) ) );
@@ -151,17 +152,18 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             }
             list.add( new DOTAttribute( "fontsize", ENTITY_FONT_SIZE ) );
             list.add( new DOTAttribute( "fontname", ENTITY_FONT ) );
-            if ( getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
+            if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
                     (ModelObject) vertex,
                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
             }
-            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, planCommunity.getPlanService() ) ) );
+            list.add( new DOTAttribute( "tooltip", getTooltip( vertex, communityService.getPlanService() ) ) );
             return list;
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, HierarchyRelationship edge,
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService,
+                                                     HierarchyRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "none" ) );

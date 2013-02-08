@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model.rfi;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -99,8 +100,8 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     }
 
 
-    public boolean isOngoing( PlanCommunity planCommunity ) {
-        return !isClosed() && !isObsolete( planCommunity );
+    public boolean isOngoing( CommunityService communityService ) {
+        return !isClosed() && !isObsolete( communityService );
     }
 
     public Date getDeadline() {
@@ -111,10 +112,10 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
         this.deadline = deadline;
     }
 
-    public String getStatusLabel( PlanCommunity planCommunity ) {
+    public String getStatusLabel( CommunityService communityService ) {
         return isClosed()
                 ? "Closed"
-                : isObsolete( planCommunity )
+                : isObsolete( communityService )
                 ? "Obsolete"
                 : "Ongoing";
 
@@ -139,11 +140,11 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
                 : mo.getName();
     }
 
-    public boolean isObsolete( PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+    public boolean isObsolete( CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         return !getQuestionnaire().isActive()
                 || ( getAboutRef() != null && getModelObject( planService ) == null )
-                || getQuestionnaire().isObsolete( planService, planCommunity.getAnalyst() );
+                || getQuestionnaire().isObsolete( planService, communityService.getAnalyst() );
     }
 
     @Override
@@ -161,7 +162,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     }
 
     @Override
-    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
+    public List<String> getToUserNames( String topic, CommunityService communityService ) {
         List<String> usernames = new ArrayList<String>();
         usernames.add(  getToUsername(  topic  ) );
         return usernames;
@@ -176,32 +177,32 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     public String getContent(
             String topic,
             Format format,
-            PlanCommunity planCommunity ) {
-        PlanService planService = planCommunity.getPlanService();
+            CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         if ( topic.equals( STATUS ) ) {
-            return getStatusContent( planCommunity, planService.getSurveysDAO() );
+            return getStatusContent( communityService, planService.getSurveysDAO() );
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }
     }
 
-    private String getStatusContent( PlanCommunity planCommunity, SurveysDAO surveysDAO ) {
+    private String getStatusContent( CommunityService communityService, SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
         sb.append( getSurveyLabel() )
                 .append( ".\n" )
                 .append( "Launched on " )
                 .append( DATE_FORMAT.format( getCreated() ) )
                 .append( " by " )
-                .append( planCommunity.getUserDao().getFullName( getUsername() ) )
+                .append( communityService.getUserDao().getFullName( getUsername() ) )
                 .append( ".\n\n" );
-        List<RFI> completedRFIs = surveysDAO.findAllCompletedRFIs( planCommunity, this );
-        List<RFI> incompleteRFIs = surveysDAO.findAllIncompleteRFIs( planCommunity, this );
-        List<RFI> declinedRFIs = surveysDAO.findAllDeclinedRFIs( planCommunity, this );
-        List<RFIForward> forwards = surveysDAO.findAllRFIForwards( planCommunity, this );
-        addCompletedRFIContent( "completed", completedRFIs, sb, planCommunity );
-        addIncompleteRFIContent( "incomplete", incompleteRFIs, sb, planCommunity, surveysDAO );
-        addForwardContent( "forwarded", forwards, sb, planCommunity );
-        addDeclinedContent( "declined", declinedRFIs, sb, planCommunity );
+        List<RFI> completedRFIs = surveysDAO.findAllCompletedRFIs( communityService, this );
+        List<RFI> incompleteRFIs = surveysDAO.findAllIncompleteRFIs( communityService, this );
+        List<RFI> declinedRFIs = surveysDAO.findAllDeclinedRFIs( communityService, this );
+        List<RFIForward> forwards = surveysDAO.findAllRFIForwards( communityService, this );
+        addCompletedRFIContent( "completed", completedRFIs, sb, communityService );
+        addIncompleteRFIContent( "incomplete", incompleteRFIs, sb, communityService, surveysDAO );
+        addForwardContent( "forwarded", forwards, sb, communityService );
+        addDeclinedContent( "declined", declinedRFIs, sb, communityService );
         sb.append( "\n" );
         return sb.toString();
     }
@@ -210,11 +211,11 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
             String title,
             List<RFI> rfisList,
             StringBuilder sb,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFI rfi : rfisList ) {
             sb.append( "\t" )
-                    .append( planCommunity.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
+                    .append( communityService.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
                     .append( "\n" );
         }
     }
@@ -223,13 +224,13 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
             String title,
             List<RFI> rfisList,
             StringBuilder sb,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             SurveysDAO surveysDAO ) {
         Date now = new Date();
         sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFI rfi : rfisList ) {
             sb.append( "\t" );
-            sb.append( planCommunity.getUserDao().getFullName( rfi.getSurveyedUsername() ) ).append( "(" );
+            sb.append( communityService.getUserDao().getFullName( rfi.getSurveyedUsername() ) ).append( "(" );
             int percent = surveysDAO.getPercentCompletion( rfi );
             sb.append( percent ).append( "%" );
             Date dueDate = rfi.getDeadline();
@@ -244,11 +245,11 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
             String title,
             List<RFI> rfisList,
             StringBuilder sb,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFI rfi : rfisList ) {
             sb.append( "\t" )
-                    .append( planCommunity.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
+                    .append( communityService.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
                     .append( " (" )
                     .append( rfi.getReasonDeclined().isEmpty() ? "No reason given." : rfi.getReasonDeclined() )
                     .append( ")\n" );
@@ -259,14 +260,14 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
             String title,
             List<RFIForward> forwards,
             StringBuilder sb,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         sb.append( forwards.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFIForward forward : forwards ) {
             sb.append( "\t" )
                     .append( "from " )
-                    .append( planCommunity.getUserDao().getFullName( forward.getUsername() ) )
+                    .append( communityService.getUserDao().getFullName( forward.getUsername() ) )
                     .append( " to " )
-                    .append( planCommunity.getUserDao().getFullName( forward.getForwardToEmail() ) )
+                    .append( communityService.getUserDao().getFullName( forward.getForwardToEmail() ) )
                     .append( "\n" );
         }
     }
@@ -275,7 +276,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     public String getSubject(
             String topic,
             Format format,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         return null;
     }
 

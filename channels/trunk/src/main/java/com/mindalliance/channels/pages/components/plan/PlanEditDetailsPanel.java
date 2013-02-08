@@ -10,7 +10,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.PlanRename;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
-import com.mindalliance.channels.core.dao.DefinitionManager;
+import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
@@ -48,7 +48,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
      * The plan definition manager.
      */
     @SpringBean
-    private DefinitionManager definitionManager;
+    private PlanDefinitionManager planDefinitionManager;
 
     /**
      * Issues panel.
@@ -202,7 +202,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
     public void setName( String name ) {
         if ( name != null && !isSame( getName(), name ) )
             doCommand( new PlanRename( getUser().getUsername(),
-                    getPlan(), definitionManager.makeUniqueName( name ) ) );
+                    getPlan(), planDefinitionManager.makeUniqueName( name ) ) );
     }
 
     /**

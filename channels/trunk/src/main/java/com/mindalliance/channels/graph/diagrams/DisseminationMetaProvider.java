@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Dissemination;
 import com.mindalliance.channels.core.model.Flow;
@@ -165,7 +165,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Node vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService, Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 if ( vertex.isPart() ) {
@@ -194,8 +194,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
             }
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
-            if ( !getPlan().isViewableByAll()
-                    && getAnalyst().hasUnwaivedIssues( getQueryService(),
+            if ( getAnalyst().hasUnwaivedIssues( getQueryService(),
                                                        vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip", sanitize( getAnalyst().getIssuesOverview( getQueryService(),
@@ -216,10 +215,9 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Dissemination edge, boolean highlighted ) {
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, Dissemination edge, boolean highlighted ) {
             Flow flow = edge.getFlow();
-            boolean conceptual = !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( getQueryService(),
-                                                                                                  flow );
+            boolean conceptual = getAnalyst().isEffectivelyConceptual( getQueryService(), flow );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowsize", "0.75" ) );
             list.add( new DOTAttribute( "fontcolor", FONTCOLOR ) );
@@ -283,8 +281,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 list.add( new DOTAttribute( "labelangle", LABEL_ANGLE ) );
             }
             // Issue coloring
-            if ( !getPlan().isViewableByAll()
-                    && getAnalyst().hasUnwaivedIssues( getQueryService(),
+            if ( getAnalyst().hasUnwaivedIssues( getQueryService(),
                                                        flow, Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );

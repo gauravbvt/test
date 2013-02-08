@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core;
 
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 
 /**
  * ...
@@ -10,8 +10,8 @@ public interface CommanderFactory {
 
     /**
      * Get the dedicated commander for a given plan.
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return the commander
      */
-    Commander getCommander( PlanCommunity planCommunity );
+    Commander getCommander( CommunityService communityService );
 }

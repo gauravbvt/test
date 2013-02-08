@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
@@ -244,7 +244,8 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Segment vertex,
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService,
+                                                       Segment vertex,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "shape", "box" ) );
@@ -259,13 +260,13 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
             list.add( new DOTAttribute( "fontname", SEGMENT_FONT ) );
             list.add( new DOTAttribute( "tooltip",
                                         sanitize( StringUtils.abbreviate( vertex.getDescription(), 50 ) ) ) );
-            if ( !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( planCommunity.getPlanService(),
+            if ( getAnalyst().hasUnwaivedIssues( communityService.getPlanService(),
                                                                             vertex,
                                                                             Analyst.INCLUDE_PROPERTY_SPECIFIC ) )
             {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( getAnalyst().getIssuesOverview( planCommunity.getPlanService(),
+                                            sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
                                                     vertex,
                                                     Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
             }
@@ -273,7 +274,8 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, SegmentRelationship edge,
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService,
+                                                     SegmentRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "arrowhead", "vee" ) );
@@ -287,11 +289,11 @@ public class PlanMapMetaProvider extends AbstractMetaProvider<Segment, SegmentRe
                 list.add( new DOTAttribute( "penwidth", "3.0" ) );
             }
             // Issue coloring
-            if ( !getPlan().isViewableByAll() && edge.hasIssues( getAnalyst(), planCommunity.getPlanService() ) ) {
+            if ( edge.hasIssues( getAnalyst(), communityService.getPlanService() ) ) {
                 list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                 list.add( new DOTAttribute( "tooltip",
-                                            sanitize( edge.getIssuesSummary( getAnalyst(), planCommunity.getPlanService() ) ) ) );
+                                            sanitize( edge.getIssuesSummary( getAnalyst(), communityService.getPlanService() ) ) ) );
             }
             return list;
         }

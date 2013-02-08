@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -31,23 +31,23 @@ public class InfoDiscoveredData  implements Serializable {
 
     public InfoDiscoveredData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Flow notificationToSelf,
                                ChannelsUser user ) {
         this.notificationToSelf = notificationToSelf;
         this.user = user;
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
-    private void initData( String serverUrl, PlanCommunity planCommunity ) {
+    private void initData( String serverUrl, CommunityService communityService ) {
         doingTaskData = new TaskData(
                 serverUrl,
-                planCommunity,
+                communityService,
                 (Part)notificationToSelf.getSource(),
                 user );
         followUpTaskData = new TaskData(
                 serverUrl,
-                planCommunity,
+                communityService,
                 (Part)notificationToSelf.getTarget(),
                 user );
         documentation = new DocumentationData( serverUrl, notificationToSelf );

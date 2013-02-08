@@ -114,21 +114,21 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
     private List<RFIWrapper> getTodoRFIs() {
         if ( todoRFIs == null ) {
-            todoRFIs = surveysDAO.findIncompleteRFIs( getPlanCommunity(), getUser() );
+            todoRFIs = surveysDAO.findIncompleteRFIs( getCommunityService(), getUser() );
         }
         return wrapAll( todoRFIs );
     }
 
     private List<RFIWrapper> getDoneRFIs() {
         if ( doneRFIs == null ) {
-            doneRFIs = surveysDAO.findCompletedRFIs( getPlanCommunity(), getUser() );
+            doneRFIs = surveysDAO.findCompletedRFIs( getCommunityService(), getUser() );
         }
         return wrapAll( doneRFIs );
     }
 
     private List<RFIWrapper> getDeclinedRFIs() {
         if ( declinedRFIs == null ) {
-            declinedRFIs = surveysDAO.findDeclinedRFIs( getPlanCommunity(), getUser() );
+            declinedRFIs = surveysDAO.findDeclinedRFIs( getCommunityService(), getUser() );
         }
         return wrapAll( declinedRFIs );
     }
@@ -195,7 +195,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             Long id = rfi.getOrganizationId();
             if ( id != null ) {
                 try {
-                    org = getPlanCommunity().find( Organization.class, rfi.getOrganizationId(), rfi.getCreated() );
+                    org = getCommunityService().find( Organization.class, rfi.getOrganizationId(), rfi.getCreated() );
                 } catch ( NotFoundException e ) {
                     // do nothing
                 }

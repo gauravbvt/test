@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
@@ -59,14 +59,14 @@ public class PlanMapPng extends DiagramPng {
     protected Diagram makeDiagram( double[] size, 
                                    String orientation,
                                    PageParameters parameters,
-                                   PlanCommunity planCommunity,
+                                   CommunityService communityService,
                                    DiagramFactory diagramFactory ) throws DiagramException {
         ModelEntity group = null;
         boolean groupByPhase = false;
         boolean groupByEvent = true;
         Segment segment = null;
         SegmentRelationship sgRel = null;
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         if ( parameters.getNamedKeys().contains( "groupby" )
                 && !parameters.get( "groupby" ).toString().equals( "NONE" ) ) {
             String groupBy = parameters.get( "groupby" ).toString();
@@ -95,7 +95,7 @@ public class PlanMapPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.get( "connection" ).toString() );
             sgRel = new SegmentRelationship();
-            sgRel.setId( scRelId, planService, planCommunity.getAnalyst() );
+            sgRel.setId( scRelId, planService, communityService.getAnalyst() );
         }
         List<Segment> allSegments = planService.list( Segment.class );
         return diagramFactory.newPlanMapDiagram(

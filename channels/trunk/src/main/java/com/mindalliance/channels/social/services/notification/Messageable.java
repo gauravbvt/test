@@ -1,7 +1,7 @@
 package com.mindalliance.channels.social.services.notification;
 
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -26,19 +26,19 @@ public interface Messageable {
      */
     static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "M/d/yyyy HH:mm" );
 
-    List<String> getToUserNames( String topic, PlanCommunity planCommunity );
+    List<String> getToUserNames( String topic, CommunityService communityService );
 
     String getFromUsername( String topic );
 
     String getContent(
             String topic,
             Format format,
-            PlanCommunity planCommunity);
+            CommunityService communityService );
 
     String getSubject(
             String topic,
             Format format,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     String getCommunityUri();
 

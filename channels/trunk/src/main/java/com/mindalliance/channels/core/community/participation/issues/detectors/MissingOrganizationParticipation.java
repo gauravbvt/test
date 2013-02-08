@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -33,11 +33,11 @@ public class MissingOrganizationParticipation implements ParticipationIssueDetec
     }
 
     @Override
-    public List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity ) {
+    public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
         List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>(  );
         Organization placeholder = (Organization)identifiable;
-        int count = planCommunity.getParticipationManager()
-                .findAgenciesParticipatingAs( placeholder, planCommunity ).size();
+        int count = communityService.getParticipationManager()
+                .findAgenciesParticipatingAs( placeholder, communityService ).size();
         if ( count == 0 ) {
             ParticipationIssue issue = new ParticipationIssue( placeholder, this );
             issue.setDescription( "No organization participates as placeholder " + placeholder.getName() );

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
@@ -36,7 +36,7 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Segment, SegmentRela
     /**
      * {@inheritDoc}
      */
-    protected void exportVertices( PlanCommunity planCommunity, PrintWriter out, Graph<Segment, SegmentRelationship> g ) {
+    protected void exportVertices( CommunityService communityService, PrintWriter out, Graph<Segment, SegmentRelationship> g ) {
         PlanMapMetaProvider metaProvider = (PlanMapMetaProvider) getMetaProvider();
         if ( metaProvider.isGroupByPhase() || metaProvider.isGroupByEvent() ) {
             Map<ModelObject, Set<Segment>> groupedSegments = new HashMap<ModelObject, Set<Segment>>();
@@ -71,11 +71,11 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Segment, SegmentRela
                 }
                 out.print( asGraphAttributes( attributes ) );
                 out.println();
-                printoutVertices( planCommunity, out, groupedSegments.get( group ) );
+                printoutVertices( communityService, out, groupedSegments.get( group ) );
                 out.println( "}" );
             }
         } else {
-            super.exportVertices( planCommunity, out, g );
+            super.exportVertices( communityService, out, g );
         }
     }
 

@@ -10,7 +10,7 @@ import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
@@ -61,7 +61,7 @@ public class ProtocolsFinder implements Serializable {
     public ProtocolsFinder(
             String serverUrl,
             ProceduresData proceduresData,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUser user,
             PlanCommunityEndPoint channelsService,
             String username,
@@ -71,13 +71,13 @@ public class ProtocolsFinder implements Serializable {
         this.user = user;
         this.username = username;
         this.agent = agent;
-        initFinder( planCommunity, channelsService );
+        initFinder( communityService, channelsService );
     }
 
     private void initFinder(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             PlanCommunityEndPoint channelsService ) {
-        Plan plan = planCommunity.getPlan();
+        Plan plan = communityService.getPlan();
         planScopeData = channelsService.getPlanScope( plan.getUri(), Integer.toString( plan.getVersion() ) );
         directoryData = new DirectoryData( proceduresData );
         ongoingProcedures = new ArrayList<ProcedureData>();
@@ -90,13 +90,13 @@ public class ProtocolsFinder implements Serializable {
         onResearches = new HashMap<TriggerData, List<ProcedureData>>();
         rolodex = new HashSet<ContactData>();
         for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
-            processProcedureData( procedureData, planCommunity, user );
+            processProcedureData( procedureData, communityService, user );
         }
     }
 
     private void processProcedureData(
             ProcedureData procedureData,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUser user ) {
         if ( procedureData.isOngoing() ) {
             ongoingProcedures.add( procedureData );
@@ -122,7 +122,7 @@ public class ProtocolsFinder implements Serializable {
                 addTo( onDiscoveries, triggerData, procedureData );
                 TaskData discoveringTask = new TaskData(
                         serverUrl,
-                        planCommunity,
+                        communityService,
                         triggerData.discoveringPart(),
                         user );
             }

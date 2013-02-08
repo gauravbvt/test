@@ -82,6 +82,8 @@ import java.util.Set;
  */
 public abstract class DefaultQueryService implements QueryService {
 
+    // Todo - Move all methods with side-effects to PlanDao
+
     /**
      * Class logger.
      */
@@ -442,27 +444,215 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
-        ModelEntity entity = ModelEntity.getUniversalType( name, clazz );
-        if ( entity == null ) entity = getDao().find( clazz, name );
-        return entity != null && entity.getKind().equals( kind );
+    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
+        return getDao().list( clazz );
     }
 
-    // TODO - COMMUNITY - belongs to AbstractModelObjectDao
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
+        return getDao().listKnownEntities( clazz );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
+        return getDao().listActualEntities( clazz, mustBeReferenced );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
+        return getDao().listActualEntities( clazz );
+    }
+
+
+    @Override
+    @SuppressWarnings( {"unchecked"} )
+    public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity ) {
+        final Place locale = getPlanLocale();
+        return getDao().listEntitiesNarrowingOrEqualTo( entity, locale );
+    }
+
+
+    @Override
+    public Boolean entityExists( Class<? extends ModelEntity> clazz, String name, ModelEntity.Kind kind ) {
+        return getDao().entityExists( clazz, name, kind );
+    }
 
     @Override
     public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        try {
-            return getDao().find( clazz, id );
-        } catch ( NotFoundException exc ) {
-            try {
-                return getDao().findUnknown( clazz, id );
-            } catch ( NotFoundException e ) {
-                return getDao().findUniversal( clazz, id );
-            }
+        return getDao().find( clazz, id );
+    }
+
+    @Override
+    public <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name ) {
+        return getDao().findActualEntity( entityClass, name );
+    }
+
+    @Override
+    public <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
+            Class<T> entityClass,
+            final T entityType ) {
+        final Place locale = getPlanLocale();
+        return getDao().findAllActualEntitiesMatching( entityClass,entityType, locale );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
+        List<T> domain;
+        if ( Part.class.isAssignableFrom( clazz ) ) {
+            domain = (List<T>) findAllParts();
+        } else if ( Flow.class.isAssignableFrom( clazz ) ) {
+            domain = (List<T>) findAllFlows();
+        } else {
+            domain = getDao().findAllModelObjects( clazz );
+        }
+        return domain;
+    }
+
+    @Override
+    @SuppressWarnings( {"unchecked"} )
+    public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
+        return getDao().listReferencedEntities( clazz );
+    }
+
+
+    @Override
+    public <T extends ModelEntity> List<T> listKnownEntities(
+            Class<T> entityClass,
+            Boolean mustBeReferenced,
+            Boolean includeImmutables ) {
+        return getDao().listKnownEntities( entityClass, mustBeReferenced, includeImmutables );
+    }
+
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
+        return getDao().listTypeEntities( clazz );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Boolean isReferenced( final ModelObject mo ) {
+        if ( getPlan().references( mo ) )
+            return true;
+        else
+            return getDao().isReferenced( mo );
+    }
+
+
+    @Override
+    public <T extends ModelEntity> T retrieveEntity(
+            Class<T> entityClass, Map<String, Object> state, String key ) {
+        Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();
+        String name = (String) vals[0];
+        boolean type = (Boolean) vals[1];
+        if ( type ) {
+            return findOrCreateType( entityClass, name );
+        } else {
+            return findOrCreate( entityClass, name );
         }
     }
 
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
+        return safeFindOrCreate( clazz, name, null );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
+        String root = sanitizeEntityName( name );
+        if ( root != null && !root.isEmpty() ) {
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
+                        + " of actual " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"" );
+            }
+            String candidateName = root;
+            int i = 1;
+            while ( i < 10 ) {
+                try {
+                    return findOrCreate( clazz, candidateName, id );
+                } catch ( InvalidEntityKindException ignored ) {
+                    LOG.warn( "Entity name conflict creating actual " + candidateName );
+                    candidateName = root + " (" + i + ')';
+                    i++;
+                }
+            }
+            LOG.warn( "Unable to create actual " + root );
+        }
+        return null;
+    }
+
+    private String sanitizeEntityName( String name ) {
+        return StringUtils.abbreviate( name.replaceAll( "[^\\w-]", " " )
+                .replaceAll( "\\n", " " )
+                .replaceAll( "\\s+", " " ).trim()
+                , ModelEntity.MAX_NAME_SIZE );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name ) {
+        return safeFindOrCreateType( clazz, name, null );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
+        String root = sanitizeEntityName( name );
+        T entityType = null;
+        if ( root != null && !root.isEmpty() ) {
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
+                        + " of type " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"" );
+            }
+            String candidateName = root;
+            boolean success = false;
+            int i = 0;
+            while ( !success ) {
+                try {
+                    entityType = findOrCreateType( clazz, candidateName, id );
+                    success = true;
+                } catch ( InvalidEntityKindException ignored ) {
+                    LOG.warn( "Entity name conflict creating type {}", candidateName );
+                    candidateName = root.trim() + " type";
+                    if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
+                    i++;
+                }
+            }
+        }
+        return entityType;
+    }
+
+
+
+//////////////////////////////////////////////////////////////////////
+
+    @Override
+    public Boolean isReferenced( final Classification classification ) {
+        boolean hasReference = CollectionUtils.exists(
+                listActualEntities( Actor.class ), new Predicate() {
+            @Override
+            public boolean evaluate( Object object ) {
+                return ( (Actor) object ).getClearances().contains( classification );
+            }
+        } );
+        hasReference = hasReference || CollectionUtils.exists(
+                findAllFlows(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Flow) object ).getClassifications().contains( classification );
+                    }
+                }
+        );
+        return hasReference;
+    }
 
 
     @Override
@@ -477,18 +667,6 @@ public abstract class DefaultQueryService implements QueryService {
             }
         }
         return achievers;
-    }
-
-    // TODO - COMMUNITY - belongs to AbstractModelObjectDao
-
-    @Override
-    public <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name ) {
-        T result = null;
-        T entity = getDao().find( entityClass, name );
-        if ( entity != null ) {
-            if ( entity.isActual() ) result = entity;
-        }
-        return result;
     }
 
     @Override
@@ -517,25 +695,6 @@ public abstract class DefaultQueryService implements QueryService {
         }
 
         return new ArrayList<Actor>( actors );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> findAllActualEntitiesMatching(
-            Class<T> entityClass,
-            final T entityType ) {
-        assert entityType.isType();
-        final Place locale = getPlanLocale();
-        return (List<T>) CollectionUtils.select(
-                findAllModelObjects( entityClass ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        T entity = (T) object;
-                        return entity.isActual() && entity.narrowsOrEquals( entityType, locale );
-                    }
-                }
-        );
     }
 
     @Override
@@ -1567,21 +1726,6 @@ public abstract class DefaultQueryService implements QueryService {
         return allModelObjects;
     }
 
-    // TODO - COMMUNITY - belongs to AbstractModelObjectDao
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
-        List<T> domain;
-        if ( Part.class.isAssignableFrom( clazz ) ) {
-            domain = (List<T>) findAllParts();
-        } else if ( Flow.class.isAssignableFrom( clazz ) ) {
-            domain = (List<T>) findAllFlows();
-        } else {
-            domain = list( clazz );
-        }
-        return domain;
-    }
 
     @Override
     public List<ModelObject> findAllModelObjectsDirectlyRelatedToEvent( Event event ) {
@@ -2350,47 +2494,22 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name ) {
-        return findOrCreate( clazz, name, null );
+        return getDao().findOrCreate( clazz, name );
     }
 
     @Override
     public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, Long id ) {
-        T result;
-        // If entity can only be a type, find or create a type.
-        if ( !ModelEntity.canBeActualOrType( clazz )
-                && ModelEntity.defaultKindFor( clazz ).equals( ModelEntity.Kind.Type ) )
-            result = findOrCreateType( clazz, name, id );
-
-        else if ( ModelEntity.getUniversalType( name, clazz ) == null ) {
-            result = getDao().findOrCreate( clazz, name, id );
-            if ( result.isType() ) {
-                throw new InvalidEntityKindException(
-                        clazz.getSimpleName() + ' ' + name + " is a type" );
-            }
-            result.setActual();
-
-        } else
-            throw new InvalidEntityKindException(
-                    clazz.getSimpleName() + ' ' + name + " is a type" );
-
-        return result;
+        return getDao().findOrCreate( clazz, name, id );
     }
 
     @Override
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name ) {
-        return findOrCreateType( clazz, name, null );
+        return getDao().findOrCreateType( clazz, name );
     }
 
     @Override
     public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, Long id ) {
-        T entityType = ModelEntity.getUniversalType( name, clazz );
-        if ( entityType == null ) {
-            entityType = getDao().findOrCreate( clazz, name, id );
-            if ( entityType.isActual() )
-                throw new InvalidEntityKindException( clazz.getSimpleName() + ' ' + name + " is actual" );
-            entityType.setType();
-        }
-        return entityType;
+        return getDao().findOrCreateType( clazz, name, id );
     }
 
     @Override
@@ -3096,50 +3215,6 @@ public abstract class DefaultQueryService implements QueryService {
         return !findAllOverriddenFlows( flow, findAllFlows() ).isEmpty();
     }
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public Boolean isReferenced( final ModelObject mo ) {
-        // Optimized form for return this.countReferences( mo ) > 0;
-        boolean hasReference = false;
-        Iterator classes = ModelObject.referencingClasses().iterator();
-        if ( getPlan().references( mo ) ) return true;
-        while ( !hasReference && classes.hasNext() ) {
-            List<? extends ModelObject> mos = findAllModelObjects( (Class<? extends ModelObject>) classes.next() );
-            hasReference = CollectionUtils.exists(
-                    mos,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return ( (ModelObject) object ).references( mo );
-                        }
-                    }
-            );
-        }
-        return hasReference;
-    }
-
-
-    @Override
-    public Boolean isReferenced( final Classification classification ) {
-        boolean hasReference = CollectionUtils.exists(
-                listActualEntities( Actor.class ), new Predicate() {
-            @Override
-            public boolean evaluate( Object object ) {
-                return ( (Actor) object ).getClearances().contains( classification );
-            }
-        } );
-        hasReference = hasReference || CollectionUtils.exists(
-                findAllFlows(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Flow) object ).getClassifications().contains( classification );
-                    }
-                }
-        );
-        return hasReference;
-    }
-
     /**
      * Whether a flow is a sharing flow where source actor is target actor.
      *
@@ -3189,70 +3264,6 @@ public abstract class DefaultQueryService implements QueryService {
 
 
     @Override
-    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
-        return getDao().list( clazz );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
-        return (List<T>) CollectionUtils.select(
-                list( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return !( (T) object ).isUnknown();
-                    }
-                }
-        );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
-        return mustBeReferenced
-                ? (List<T>) CollectionUtils.select(
-                listReferencedEntities( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (T) object ).isActual();
-                    }
-                } )
-                : listActualEntities( clazz );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
-        return (List<T>) CollectionUtils.select(
-                list( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (T) object ).isActual();
-                    }
-                }
-        );
-    }
-
-
-    @Override
-    @SuppressWarnings( {"unchecked"} )
-    public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity ) {
-        final Place place = getPlanLocale();
-        return (List<T>) CollectionUtils.select(
-                list( entity.getClass() ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (ModelEntity) object ).narrowsOrEquals( entity, place );
-                    }
-                }
-        );
-    }
-
-    @Override
     public <T extends ModelEntity> List<T> listEntitiesTaskedInSegment(
             Class<T> entityClass,
             Segment segment,
@@ -3295,59 +3306,7 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<T>( result );
     }
 
-    @Override
-    @SuppressWarnings( {"unchecked"} )
-    public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
-        return (List<T>) CollectionUtils.select( list( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        ModelEntity entity = (ModelEntity) object;
-                        return entity.isImmutable() && !entity.isUnknown()
-                                || isReferenced( entity );
-                    }
-                } );
-    }
-
-    @SuppressWarnings( {"unchecked"} )
-    private <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz, final boolean includeImmutables ) {
-        return (List<T>) CollectionUtils.select( list( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        ModelEntity entity = (ModelEntity) object;
-                        return includeImmutables && entity.isImmutable() && !entity.isUnknown()
-                                || isReferenced( entity );
-                    }
-                } );
-    }
-
-
-    @Override
-    public <T extends ModelEntity> List<T> listKnownEntities(
-            Class<T> entityClass,
-            Boolean mustBeReferenced,
-            Boolean includeImmutables ) {
-        return mustBeReferenced
-                ? listReferencedEntities( entityClass, includeImmutables )
-                : listKnownEntities( entityClass );
-    }
-
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public <T extends ModelEntity> List<T> listTypeEntities( Class<T> clazz ) {
-        return (List<T>) CollectionUtils.select(
-                list( clazz ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (T) object ).isType();
-                    }
-                }
-        );
-    }
-
-    @Override
+     @Override
     public void onDestroy() {
         // Do nothing
     }
@@ -3367,91 +3326,6 @@ public abstract class DefaultQueryService implements QueryService {
             beforeRemove( (Role) object );
         else if ( Segment.class.isAssignableFrom( object.getClass() ) )
             beforeRemove( (Segment) object );
-    }
-
-    @Override
-    public <T extends ModelEntity> T retrieveEntity(
-            Class<T> entityClass, Map<String, Object> state, String key ) {
-        Object[] vals = ( (Collection<?>) state.get( key ) ).toArray();
-        String name = (String) vals[0];
-        boolean type = (Boolean) vals[1];
-        if ( type ) {
-            return findOrCreateType( entityClass, name );
-        } else {
-            return findOrCreate( entityClass, name );
-        }
-    }
-
-    @Override
-    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
-        return safeFindOrCreate( clazz, name, null );
-    }
-
-    @Override
-    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
-        String root = sanitizeEntityName( name );
-        if ( root != null && !root.isEmpty() ) {
-            if ( !name.equals( root ) ) {
-                LOG.warn( "\"" + name + "\""
-                        + " of actual " + clazz.getSimpleName()
-                        + "[" + id + "]"
-                        + " stripped to \"" + root + "\"" );
-            }
-            String candidateName = root;
-            int i = 1;
-            while ( i < 10 ) {
-                try {
-                    return findOrCreate( clazz, candidateName, id );
-                } catch ( InvalidEntityKindException ignored ) {
-                    LOG.warn( "Entity name conflict creating actual " + candidateName );
-                    candidateName = root + " (" + i + ')';
-                    i++;
-                }
-            }
-            LOG.warn( "Unable to create actual " + root );
-        }
-        return null;
-    }
-
-    private String sanitizeEntityName( String name ) {
-        return StringUtils.abbreviate( name.replaceAll( "[^\\w-]", " " )
-                .replaceAll( "\\n", " " )
-                .replaceAll( "\\s+", " " ).trim()
-                , ModelEntity.MAX_NAME_SIZE );
-    }
-
-    @Override
-    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name ) {
-        return safeFindOrCreateType( clazz, name, null );
-    }
-
-    @Override
-    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
-        String root = sanitizeEntityName( name );
-        T entityType = null;
-        if ( root != null && !root.isEmpty() ) {
-            if ( !name.equals( root ) ) {
-                LOG.warn( "\"" + name + "\""
-                        + " of type " + clazz.getSimpleName()
-                        + "[" + id + "]"
-                        + " stripped to \"" + root + "\"" );
-            }
-            String candidateName = root;
-            boolean success = false;
-            int i = 0;
-            while ( !success ) {
-                try {
-                    entityType = findOrCreateType( clazz, candidateName, id );
-                    success = true;
-                } catch ( InvalidEntityKindException ignored ) {
-                    LOG.warn( "Entity name conflict creating type {}", candidateName );
-                    candidateName = root.trim() + " type";
-                    if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
-                    i++;
-                }
-            }
-        }
-        return entityType;
     }
 
     /**

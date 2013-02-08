@@ -10,7 +10,9 @@ import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.command.commands.DisconnectFlow;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -26,6 +28,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.social.PresenceListener;
 import org.slf4j.Logger;
@@ -107,18 +110,23 @@ public class DefaultCommander implements Commander {
      */
     private long whenLastCheckedForTimeouts = System.currentTimeMillis();
 
-    private PlanCommunity planCommunity;
+    private CommunityService communityService;
 
     //-------------------------------
     public DefaultCommander() {
     }
 
     public PlanCommunity getPlanCommunity() {
-        return planCommunity;
+        return communityService.getPlanCommunity();
     }
 
-    public void setPlanCommunity( PlanCommunity planCommunity ) {
-        this.planCommunity = planCommunity;
+    public void setCommunityService( CommunityService communityService ) {
+        this.communityService = communityService;
+    }
+
+    @Override
+    public PlanService getPlanService() {
+        return communityService.getPlanService();
     }
 
     //-------------------------------
@@ -131,6 +139,10 @@ public class DefaultCommander implements Commander {
         presenceListeners.add( presenceListener );
     }
 
+    private boolean isAllowedInModelObjectContext( Command command ) { // Use this instead of  getPlan().isDevelopment()
+        return !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment();
+    }
+
     @Override
     public boolean canDo( Command command ) {
         return getPlan().isDevelopment() && command.canDo( this )
@@ -139,7 +151,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public boolean canRedo( String userName ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getPlanCommunity() ) {
             if ( getPlan().isDevelopment() ) {
                 Memento memento = history.getRedo( userName );
                 if ( memento != null ) {
@@ -179,7 +191,7 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
+    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {  // todo - COMMUNITY - also cleanup community-side
         synchronized ( getPlan() ) {
             return !( name == null || name.trim().isEmpty() ) && getQueryService().cleanup( clazz, name );
         }
@@ -259,7 +271,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public Exporter getExporter( String userName ) {
-        return importExportFactory.createExporter( userName, getPlanDao() );
+        return importExportFactory.createExporter( userName, getDao() );
     }
 
     @Override
@@ -272,14 +284,18 @@ public class DefaultCommander implements Commander {
         return history.getLastModifier();
     }
 
-    @Override
     public Plan getPlan() {
-        return planCommunity.getPlan();
+        return communityService.getPlan();
     }
 
     @Override
-    public String getPlanCommunityUri() {
-        return getPlan().getUri(); // todo - change for getPlanCommunity().getUri()
+    public PlanDao getPlanDao() {
+        return (PlanDao)getDao();
+    }
+
+    @Override
+    public CommunityService getCommunityService() {
+        return communityService;
     }
 
     @Override
@@ -343,19 +359,19 @@ public class DefaultCommander implements Commander {
      * Replay journaled commands for current plan.
      */
     private void replayJournal() {
-        Plan plan = planCommunity.getPlan();
-
+        Plan plan = communityService.getPlan();
+        PlanCommunity planCommunity = communityService.getPlanCommunity();
         try {
-            if ( plan.isDevelopment() ) {
-                replay( getPlanDao().getJournal() );
-                LOG.info( "Replayed journal for plan {}", plan );
+            if ( !planCommunity.isDomainCommunity() || plan.isDevelopment() ) {
+                replay( getDao().getJournal() );
+                LOG.info( "Replayed journal for plan community {}", planCommunity );
 
-                getPlanDao().save( importExportFactory.createExporter( "daemon", getPlanDao() ) );
+                getDao().save( importExportFactory.createExporter( "daemon", getDao() ) );
             }
         } catch ( IOException e ) {
-            LOG.error( MessageFormat.format( "Unable to save plan {0}", plan ), e );
+            LOG.error( MessageFormat.format( "Unable to replay journal for {0}", planCommunity ), e );
         } catch ( CommandException e ) {
-            LOG.error( MessageFormat.format( "Unable to replay journal for plan {0}", plan ), e );
+            LOG.error( MessageFormat.format( "Unable to replay journal for {0}", planCommunity ), e );
         }
     }
 
@@ -413,8 +429,8 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void keepAlive( String userName, int refreshDelay ) {
-        PlanCommunity planCommunity = getPlanCommunity();
-        synchronized ( planCommunity.getPlan() ) {  // todo - synchronize on plan community
+        final PlanCommunity planCommunity = getPlanCommunity();
+        synchronized ( planCommunity ) {
             for ( PresenceListener presenceListener : presenceListeners )
                 presenceListener.keepAlive( userName, planCommunity, refreshDelay );
             processDeaths();
@@ -422,8 +438,8 @@ public class DefaultCommander implements Commander {
     }
 
     private void processDeaths() {
-        PlanCommunity planCommunity = getPlanCommunity();  // todo - synchronize on plan community
-        synchronized ( planCommunity.getPlan() ) {
+        PlanCommunity planCommunity = getPlanCommunity();
+        synchronized ( planCommunity ) {
             Set<String> deads = new HashSet<String>();
             for ( PresenceListener presenceListener : presenceListeners )
                 deads.addAll( presenceListener.giveMeYourDead( planCommunity ) );
@@ -629,9 +645,9 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public void userLeftPlan( String username ) {
+    public void userLeftCommunity( String username ) {
         PlanCommunity planCommunity = getPlanCommunity();
-        synchronized ( planCommunity.getPlan() ) { // todo - synchronize on planCommunity
+        synchronized ( planCommunity ) {
             for ( PresenceListener presenceListener : presenceListeners )
                 presenceListener.killIfAlive( username, planCommunity );
             processDeath( username );
@@ -648,8 +664,10 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public PlanDao getPlanDao() {
-        return planCommunity.getPlanService().getDao();
+    public AbstractModelObjectDao getDao() {
+        return getPlanCommunity().isDomainCommunity()
+                ? communityService.getDao()
+                : communityService.getPlanService().getDao();
     }
 
 
@@ -663,7 +681,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public QueryService getQueryService() {
-        return planCommunity.getPlanService();
+        return communityService.getPlanService();
     }
 
     public int getTimeout() {

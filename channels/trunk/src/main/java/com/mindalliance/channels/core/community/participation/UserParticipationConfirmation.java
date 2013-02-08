@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
@@ -50,20 +50,20 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
         return organizationParticipation;
     }
 
-    public Agent getSupervisor( PlanCommunity planCommunity ) {
-        Actor actor = getSupervisorActor( planCommunity );
+    public Agent getSupervisor( CommunityService communityService ) {
+        Actor actor = getSupervisorActor( communityService );
         if ( actor == null ) return null;
         if ( organizationParticipation == null ) {
             return new Agent( actor );
         } else {
-            return new Agent( actor, organizationParticipation, planCommunity );
+            return new Agent( actor, organizationParticipation, communityService );
         }
     }
 
-    private Actor getSupervisorActor( PlanCommunity planCommunity ) {
+    private Actor getSupervisorActor( CommunityService communityService ) {
         if ( supervisorId == -1 ) return null;
         try {
-            return planCommunity.find( Actor.class, supervisorId, getCreated() );
+            return communityService.find( Actor.class, supervisorId, getCreated() );
         } catch ( NotFoundException e ) {
             return null;
         }

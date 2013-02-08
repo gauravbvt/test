@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
@@ -24,37 +24,37 @@ public interface ParticipationAnalyst {
     /**
      * Detect all issues.
      *
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a list of participation issues
      */
-    List<ParticipationIssue> detectAllIssues( PlanCommunity planCommunity );
+    List<ParticipationIssue> detectAllIssues( CommunityService communityService );
 
     /**
      * Detect all issues of a given identifiable.
      *
      * @param identifiable  an identifiable
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a list of participation issues
      */
-    List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity );
+    List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService );
 
     /**
      * Whether a given identifiable has issues.
      *
      * @param identifiable  an identifiable
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a boolean
      */
-    boolean hasIssues( Identifiable identifiable, PlanCommunity planCommunity );
+    boolean hasIssues( Identifiable identifiable, CommunityService communityService );
 
     /**
      * Get an overview of the issues of a given identifiable.
      *
      * @param identifiable  an identifiable
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a string, empty if no issues
      */
-    String getIssuesOverview( Identifiable identifiable, PlanCommunity planCommunity );
+    String getIssuesOverview( Identifiable identifiable, CommunityService communityService );
 
 
     /**
@@ -62,13 +62,13 @@ public interface ParticipationAnalyst {
      *
      * @param timing        a phase timing or null
      * @param event         an event or null
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a list of requirement relationships
      */
     List<RequirementRelationship> findRequirementRelationships(
             Phase.Timing timing,
             Event event,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     /**
      * Find requirement relationship from one organization to another.
@@ -77,7 +77,7 @@ public interface ParticipationAnalyst {
      * @param toAgency      an agency
      * @param timing        a phase timing or null
      * @param event         an event or null
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a requirement relationship
      */
     RequirementRelationship findRequirementRelationship(
@@ -85,19 +85,19 @@ public interface ParticipationAnalyst {
             Agency toAgency,
             Phase.Timing timing,
             Event event,
-            PlanCommunity planCommunity );
+            CommunityService communityService );
 
     /**
      * The level of satisfaction of a requirement.
      *
      * @param requirement   a requirement
      * @param extras        extra parameters -- 0=>Phase.Timing, 1=>Event
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a requirement satisfaction
      */
     Requirement.Satisfaction requirementSatisfaction( Requirement requirement,
                                                       Object[] extras,
-                                                      PlanCommunity planCommunity );
+                                                      CommunityService communityService );
 
     /**
      * Number of commitments that fulfill a given requirement.
@@ -106,7 +106,7 @@ public interface ParticipationAnalyst {
      * @param extras      extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
      * @return an int
      */
-    int requiredCommitmentsCount( Requirement requirement, Object[] extras, PlanCommunity planCommunity );
+    int requiredCommitmentsCount( Requirement requirement, Object[] extras, CommunityService communityService );
 
     /**
      * Summary of why given requirement not fully satisfied.
@@ -116,24 +116,24 @@ public interface ParticipationAnalyst {
      * @param extras      extra parameters -- 0=>Phase.Timing, 1=>Event, 2=>PlanCommunity
      * @return an int
      */
-    String satisfactionSummary( Requirement requirement, Object[] extras, PlanCommunity planCommunity );
+    String satisfactionSummary( Requirement requirement, Object[] extras, CommunityService communityService );
 
     /**
      * The percentage by which the requirement is satisfied by pairs of agencies it applies to
      * @param requirement a requirement
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a string - e.g. "25%"
      */
-    String percentSatisfaction( Requirement requirement, PlanCommunity planCommunity );
+    String percentSatisfaction( Requirement requirement, CommunityService communityService );
 
     /**
      * Diagnostic about whether a commitment can be realized or is conceptual.
      *
      * @param commitment    an info sharing commitment in a plan community
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a string
      */
-    String realizability( CommunityCommitment commitment, PlanCommunity planCommunity );
+    String realizability( CommunityCommitment commitment, CommunityService communityService );
 
 
 }

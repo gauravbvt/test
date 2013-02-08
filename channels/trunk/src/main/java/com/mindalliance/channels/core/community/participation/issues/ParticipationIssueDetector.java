@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation.issues;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 
 import java.util.List;
@@ -19,5 +19,5 @@ public interface ParticipationIssueDetector {
 
     String getKind();
 
-    List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity );
+    List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService );
 }

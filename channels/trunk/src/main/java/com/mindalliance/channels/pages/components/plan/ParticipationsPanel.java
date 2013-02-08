@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
@@ -56,7 +56,7 @@ import java.util.Set;
  * Date: Mar 22, 2010
  * Time: 12:57:54 PM
  */
-public class ParticipationsPanel extends AbstractCommandablePanel implements NameRangeable {
+public class ParticipationsPanel extends AbstractCommandablePanel implements NameRangeable {  // todo - COMMUNITY - remove
 
     @SpringBean
     private ParticipationManager participationManager;
@@ -247,12 +247,12 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         List<ParticipationWrapper> participationWrappers = new ArrayList<ParticipationWrapper>();
         participationWrappers = new ArrayList<ParticipationWrapper>();
-        PlanCommunity planCommunity = getPlanCommunity();
-        ChannelsUserDao userDao = planCommunity.getUserDao();
-        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
+        CommunityService communityService = getCommunityService();
+        ChannelsUserDao userDao = communityService.getUserDao();
+        UserParticipationService userParticipationService = communityService.getUserParticipationService();
         for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
             List<UserParticipation> participations = userParticipationService.getUserParticipations(
-                     channelsUser, planCommunity );
+                     channelsUser, communityService );
             for ( UserParticipation participation : participations ) {
                 userParticipationService.refresh( participation );
                 ParticipationWrapper wrapper = new ParticipationWrapper(
@@ -388,7 +388,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         String channelsString = pw != null
                 ? Channel.toString( userContactInfoService.findChannels(
                 pw.getParticipatingUserInfo(),
-                getPlanCommunity() ) )
+                getCommunityService() ) )
                 : "None";
         Label label = new Label( "userChannels", channelsString );
         label.setOutputMarkupId( true );
@@ -428,7 +428,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                                     getPlan() ) );*/
                 } else if ( action.equals( "participation" ) ) {
                     ChannelsUser participatingUser
-                            = getPlanCommunity().getUserDao().getUserNamed( wrapper.getUsername() );
+                            = getCommunityService().getUserDao().getUserNamed( wrapper.getUsername() );
                     if ( participatingUser != null ) {
                         selectedParticipation = null;
                         addedParticipationWrapper = new ParticipationWrapper(
@@ -475,9 +475,9 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             if ( participation == null ) {
                 return "";
             } else {
-                return getPlanCommunity().getUserParticipationService().isActive(
+                return getCommunityService().getUserParticipationService().isActive(
                         participation,
-                        getPlanCommunity()
+                        getCommunityService()
                 ) ? "Yes" : "Not yet";
             }
         }
@@ -499,7 +499,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public boolean hasAgent() {
-            return participation != null && participation.getAgent( getPlanCommunity() ) != null;
+            return participation != null && participation.getAgent( getCommunityService() ) != null;
         }
 
         public String getUserFullName() {
@@ -519,15 +519,15 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         public Agent getAgent() {
-            return participation == null ? null : participation.getAgent( getPlanCommunity() );
+            return participation == null ? null : participation.getAgent( getCommunityService() );
         }
 
         public void setAgent( Agent agent ) {
-            PlanCommunity planCommunity = getPlanCommunity();
-            ChannelsUserDao userDao = planCommunity.getUserDao();
-            UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
+            CommunityService communityService = getCommunityService();
+            ChannelsUserDao userDao = communityService.getUserDao();
+            UserParticipationService userParticipationService = communityService.getUserParticipationService();
             if ( participation != null ) {
-                userParticipationService.removeParticipation( getUser().getUsername(), participation, getPlanCommunity() );
+                userParticipationService.removeParticipation( getUser().getUsername(), participation, communityService );
             }
             if ( agent != null ) {
                 if ( getUser().getUsername().equals( username ) ) {
@@ -535,13 +535,13 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                             getUser().getUsername(),
                             userDao.getUserNamed( username ),
                             agent,
-                            getPlanCommunity() );
+                            communityService );
                 } else {
                     participation = userParticipationService.addParticipation(
                             getUser().getUsername(),
                             userDao.getUserNamed( username ),
                             agent,
-                            getPlanCommunity() );
+                            communityService );
                 }
             } else {
                 participation = null;
@@ -551,15 +551,15 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
 
         public List<Agent> getDomain() {
             Set<Agent> domain = new HashSet<Agent>();
-            PlanCommunity planCommunity = getPlanCommunity();
-            List<Agent> agents = participationManager.getAllKnownAgents( planCommunity );
+            CommunityService communityService = getCommunityService();
+            List<Agent> agents = participationManager.getAllKnownAgents( communityService );
             for ( Agent agent : agents ) {
                 ChannelsUser participatingUser = getParticipatingUser();
                 if ( participatingUser != null
                         && participationManager.isParticipationAvailable(
                         agent,
                         getParticipatingUser(),
-                        planCommunity ) )
+                        communityService ) )
                     domain.add( agent );
             }
             List<Agent> orderedDomain = new ArrayList<Agent>( domain );
@@ -580,7 +580,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
         }
 
         private ChannelsUser getParticipatingUser() {
-            return getPlanCommunity().getUserDao().getUserNamed( username );
+            return getCommunityService().getUserDao().getUserNamed( username );
         }
     }
 

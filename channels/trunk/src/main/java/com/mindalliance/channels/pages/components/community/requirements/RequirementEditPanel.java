@@ -236,7 +236,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
 
     private Requirement getRequirement() {
         Requirement requirement = (Requirement) getModel().getObject();
-        requirement.initialize( getPlanCommunity() );
+        requirement.initialize( getCommunityService() );
         return requirement;
     }
 

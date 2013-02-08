@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -70,14 +71,14 @@ public class OrganizationContactInfo extends AbstractPersistentChannelsObject {
         this.transmissionMediumId = transmissionMediumId;
     }
 
-    public boolean isValid( PlanCommunity planCommunity ) {
-        Channel channel = asChannel( planCommunity );
+    public boolean isValid( CommunityService communityService ) {
+        Channel channel = asChannel( communityService );
         return channel != null && channel.isValid();
     }
 
-    public Channel asChannel( PlanCommunity planCommunity ) {
+    public Channel asChannel( CommunityService communityService ) {
         try {
-            TransmissionMedium medium = planCommunity.find(
+            TransmissionMedium medium = communityService.find(
                     TransmissionMedium.class,
                     transmissionMediumId,
                     getCreated() );

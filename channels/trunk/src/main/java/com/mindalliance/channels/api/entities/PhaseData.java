@@ -2,8 +2,8 @@ package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.core.model.Plan;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -23,8 +23,8 @@ public class PhaseData extends ModelObjectData {
         // required
     }
 
-    public PhaseData( String serverUrl, Phase phase, Plan plan ) {
-        super( serverUrl, phase, plan );
+    public PhaseData( String serverUrl, Phase phase, CommunityService communityService ) {
+        super( serverUrl, phase, communityService );
     }
 
     @Override

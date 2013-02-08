@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
@@ -73,9 +73,9 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
                 ChannelsUserInfo participatingUser = confirmationWrapper.getParticipatingUser();
                 item.add( new Label( "user", participatingUser.getFullName() ) );
                 item.add( new Label( "email", participatingUser.getEmail() ) );
-                Agent participationAgent = confirmationWrapper.getAgent( getPlanCommunity() );
+                Agent participationAgent = confirmationWrapper.getAgent( getCommunityService() );
                 if ( participationAgent != null )
-                    addTipTitle( item, participationAgent.getRequirementsDescription( getPlanCommunity()) );
+                    addTipTitle( item, participationAgent.getRequirementsDescription( getCommunityService()) );
                 item.add( new Label( "agent", participationAgent == null ? "?" : participationAgent.getName() ) );
             }
         };
@@ -85,19 +85,19 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
 
     @SuppressWarnings( "unchecked" )
     private List<ParticipationConfirmationWrapper> participationConfirmationWrappers() {
-        PlanCommunity planCommunity = getPlanCommunity();
-        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
+        CommunityService communityService = getCommunityService();
+        UserParticipationService userParticipationService = communityService.getUserParticipationService();
         List<ParticipationConfirmationWrapper> wrappers = new ArrayList<ParticipationConfirmationWrapper>();
         // Find all plan participation confirmations made by a supervisor user participates as (= confirmed)
-        List<UserParticipationConfirmation> userConfirmations = planCommunity
+        List<UserParticipationConfirmation> userConfirmations = communityService
                 .getUserParticipationConfirmationService()
-                .listUserParticipationsConfirmedBy( getUser(), planCommunity );
+                .listUserParticipationsConfirmedBy( getUser(), communityService );
         for ( UserParticipationConfirmation userConfirmation : userConfirmations ) {
             wrappers.add( new ParticipationConfirmationWrapper( userConfirmation, true ) );
         }
         // Find all plan participation confirmations user needs to confirm as supervisor
         List<UserParticipation> userParticipationAwaitingUserConfirmation = userParticipationService.
-                listUserParticipationsAwaitingConfirmationBy( getUser(), getPlanCommunity() );
+                listUserParticipationsAwaitingConfirmationBy( getUser(), communityService );
         for ( UserParticipation participationToBeValidated : userParticipationAwaitingUserConfirmation ) {
             UserParticipationConfirmation confirmationToBe = new UserParticipationConfirmation(
                     participationToBeValidated,
@@ -135,25 +135,25 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
 
         public void setConfirmed( boolean confirmed ) {
             this.confirmed = confirmed;
-            PlanCommunity planCommunity = getPlanCommunity();
+            CommunityService communityService = getCommunityService();
             UserParticipationConfirmationService userParticipationConfirmationService =
-                    planCommunity.getUserParticipationConfirmationService();
-            for ( Agent supervisor : planCommunity.getUserParticipationService().listSupervisorsUserParticipatesAs(
+                    communityService.getUserParticipationConfirmationService();
+            for ( Agent supervisor : communityService.getUserParticipationService().listSupervisorsUserParticipatesAs(
                     participationConfirmation.getUserParticipation(),
                     getUser(),
-                    planCommunity
+                    communityService
             ) ) {
                 if ( confirmed ) {
                     userParticipationConfirmationService.addParticipationConfirmation(
                             participationConfirmation.getUserParticipation(),
                             supervisor,
                             getUser(),
-                            planCommunity );
+                            communityService );
                 } else {
                     userParticipationConfirmationService.removeParticipationConfirmation(
                             participationConfirmation.getUserParticipation(),
                             supervisor,
-                            planCommunity );
+                            communityService );
                 }
             }
         }
@@ -162,8 +162,8 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
             return participationConfirmation.getUserParticipation().getParticipant();
         }
 
-        public Agent getAgent( PlanCommunity planCommunity ) {
-            return participationConfirmation.getUserParticipation().getAgent( planCommunity );
+        public Agent getAgent( CommunityService communityService ) {
+            return participationConfirmation.getUserParticipation().getAgent( communityService );
         }
     }
 

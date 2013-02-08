@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.RegisteredOrganizationService;
@@ -78,7 +79,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         agency = a;
         tempAgency = new Agency( agency );
         tempAgency.setEditable( canBeEdited() );
-        tempAgency.initChannels( registeredOrganizationService, getPlanCommunity() );
+        tempAgency.initChannels( registeredOrganizationService, getCommunityService() );
     }
 
     private void addNameField() {
@@ -249,12 +250,11 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         applyButton = new AjaxLink<String>( "apply" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                PlanCommunity planCommunity = getPlanCommunity();
                 boolean success = registeredOrganizationService.updateWith(
                         getUser(),
                         agency.getName(),
                         tempAgency,
-                        planCommunity );
+                        getCommunityService() );
                 // resetAgency( tempAgency );
                 Change change = new Change( Change.Type.Collapsed, agency );
                 change.setMessage( success
@@ -271,20 +271,20 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
 
     private List<String> findNewOrganizationNameChoices() {
         List<String> newNames = new ArrayList<String>();
-        for ( String orgName : findAllOrganizationNames( getPlanCommunity() ) ) {
+        for ( String orgName : findAllOrganizationNames( getCommunityService() ) ) {
             newNames.add( orgName + " 2" ); // todo - make a wee bit smarter
         }
         return newNames;
     }
 
-    private List<String> findAllOrganizationNames( PlanCommunity planCommunity ) {
+    private List<String> findAllOrganizationNames( CommunityService communityService ) {
         Set<String> allOrgNames = new HashSet<String>();
-        for ( Organization org : planCommunity.getPlanService().listActualEntities( Organization.class, true ) ) {
+        for ( Organization org : communityService.getPlanService().listActualEntities( Organization.class, true ) ) {
             if ( !org.isPlaceHolder() ) {
                 allOrgNames.add( org.getName() );
             }
         }
-        allOrgNames.addAll( registeredOrganizationService.getAllRegisteredNames( planCommunity ) );
+        allOrgNames.addAll( registeredOrganizationService.getAllRegisteredNames( communityService ) );
         List<String> sortedNames = new ArrayList<String>( allOrgNames );
         Collections.sort( sortedNames );
         return sortedNames;
@@ -295,11 +295,11 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         if ( parentNameChoices == null ) {
             final PlanCommunity planCommunity = getPlanCommunity();
             parentNameChoices = (List<String>) CollectionUtils.select(
-                    findAllOrganizationNames( getPlanCommunity() ),
+                    findAllOrganizationNames( getCommunityService() ),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return planCommunity.canHaveParentAgency(
+                            return getCommunityService().canHaveParentAgency(
                                     agency.getName(),
                                     (String) object );
                         }
@@ -314,14 +314,14 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
         if ( canBeEdited() ) {
             // name
             if ( !tempAgency.getName().equals( agency.getName() ) ) {
-                if ( findAllOrganizationNames( getPlanCommunity() ).contains( tempAgency.getName() ) ) {
+                if ( findAllOrganizationNames( getCommunityService() ).contains( tempAgency.getName() ) ) {
                     errors.add( "The name \"" + tempAgency.getName() + "\" is already taken by another organization" );
                 }
             }
             // parent
             String tempParentName = tempAgency.getParentName();
             if ( tempParentName != null ) {
-                if ( !getPlanCommunity().canHaveParentAgency(
+                if ( !getCommunityService().canHaveParentAgency(
                         agency.getName(),
                         tempParentName ) ) {
                     errors.add( "The organization can not have \"" + tempParentName + "\" as parent" );

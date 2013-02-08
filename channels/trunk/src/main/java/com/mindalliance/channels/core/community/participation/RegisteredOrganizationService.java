@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -17,25 +17,25 @@ import java.util.List;
  */
 public interface RegisteredOrganizationService extends GenericSqlService<RegisteredOrganization, Long> {
 
-    List<RegisteredOrganization> getAllRegisteredOrganizations( PlanCommunity planCommunity );
+    List<RegisteredOrganization> getAllRegisteredOrganizations( CommunityService communityService );
 
-    RegisteredOrganization find( String orgName, PlanCommunity planCommunity );
+    RegisteredOrganization find( String orgName, CommunityService communityService );
 
-    RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, PlanCommunity planCommunity );
+    RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, CommunityService communityService );
 
-    boolean removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity );
+    boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService );
 
-    List<String> getAllRegisteredNames( PlanCommunity planCommunity );
+    List<String> getAllRegisteredNames( CommunityService communityService );
 
     boolean updateWith( ChannelsUser user,
                         String orgName,
                         Agency agency,
-                        PlanCommunity planCommunity );
+                        CommunityService communityService );
 
     List<Channel> getAllChannels( RegisteredOrganization registered,
-                                  PlanCommunity planCommunity );
+                                  CommunityService communityService );
 
-    List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity );
+    List<RegisteredOrganization> findAncestors( String orgName, CommunityService communityService );
 
-    boolean isValid( RegisteredOrganization registeredOrg, PlanCommunity planCommunity );
+    boolean isValid( RegisteredOrganization registeredOrg, CommunityService communityService );
 }

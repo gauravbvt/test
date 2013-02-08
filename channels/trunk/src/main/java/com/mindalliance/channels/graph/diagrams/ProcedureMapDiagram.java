@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Commitment;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -54,11 +54,11 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
+                        DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
 
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         ProceduresGraphBuilder graphBuilder =
                 new ProceduresGraphBuilder( segment, summarizeByOrgType, summarizeByOrg, summarizeByRole, focusEntity );
         graphBuilder.setQueryService( planService );
@@ -74,6 +74,6 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         ProceduresDOTExporter dotExporter = new ProceduresDOTExporter( metaProvider );
-        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( communityService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

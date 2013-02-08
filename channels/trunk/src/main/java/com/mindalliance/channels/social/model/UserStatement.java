@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -63,7 +64,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     abstract public String getToUsername( String topic );
 
     @Override
-    public List<String> getToUserNames( String topic, PlanCommunity planCommunity ) {
+    public List<String> getToUserNames( String topic, CommunityService communityService ) {
         List<String> usernames = new ArrayList<String>();
         usernames.add(  getToUsername(  topic  ) );
         return usernames;
@@ -78,8 +79,8 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     public String getContent(
             String topic,
             Format format,
-            PlanCommunity planCommunity ) {
-        if ( topic.equals( TEXT ) ) return getTextContent( format, planCommunity );
+            CommunityService communityService ) {
+        if ( topic.equals( TEXT ) ) return getTextContent( format, communityService );
         else throw new RuntimeException( "invalid content" );
     }
 
@@ -87,8 +88,8 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     public String getSubject(
             String topic,
             Format format,
-            PlanCommunity planCommunity ) {
-        if ( topic.equals( TEXT ) ) return getTextSubject( format, planCommunity  );
+            CommunityService communityService ) {
+        if ( topic.equals( TEXT ) ) return getTextSubject( format, communityService  );
         else throw new RuntimeException( "invalid content" );
     }
 
@@ -98,10 +99,10 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     }
 
 
-    abstract protected String getTextContent( Format format, PlanCommunity planCommunity );
+    abstract protected String getTextContent( Format format, CommunityService communityService );
 
 
-    abstract protected String getTextSubject( Format format, PlanCommunity planCommunity );
+    abstract protected String getTextSubject( Format format, CommunityService communityService );
 
 
 }

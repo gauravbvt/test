@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,19 +19,19 @@ import java.io.Serializable;
 @XmlType
 public class PlanReleaseData  implements Serializable {
 
-    private PlanCommunity planCommunity;
+    private PlanIdentifierData planIdentifierData;
 
     public PlanReleaseData() {
         // required
     }
 
-    public PlanReleaseData( PlanCommunity planCommunity ) {
-       this.planCommunity = planCommunity;
+    public PlanReleaseData( CommunityService communityService ) {
+       planIdentifierData = new PlanIdentifierData( communityService );
     }
 
     @XmlElement
     public PlanIdentifierData getPlanIdentifier() {
-        return new PlanIdentifierData( planCommunity );
+        return planIdentifierData;
     }
 
 }

@@ -13,7 +13,7 @@ import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
  * Date: Mar 22, 2010
  * Time: 9:50:48 AM
  */
-public class PlanUsersParticipationPanel extends AbstractCommandablePanel {
+public class PlanUsersParticipationPanel extends AbstractCommandablePanel {  // todo - COMMUNITY - remove
 
     private ParticipationsPanel participationsPanel;
 

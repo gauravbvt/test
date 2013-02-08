@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.OrganizationData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
@@ -32,23 +32,23 @@ public class AgencyData implements Serializable {
         // required
     }
 
-    public AgencyData( String serverUrl, Agency agency, PlanCommunity planCommunity ) {
+    public AgencyData( String serverUrl, Agency agency, CommunityService communityService ) {
         this.agency = agency;
-        init( serverUrl, planCommunity );
+        init( serverUrl, communityService );
     }
 
-    private void init( String serverUrl, PlanCommunity planCommunity ) {
-        Agency parentAgency = agency.getParent( planCommunity );
+    private void init( String serverUrl, CommunityService communityService ) {
+        Agency parentAgency = agency.getParent( communityService );
         if ( parentAgency != null ) {
-            parentData = new AgencyData( serverUrl, parentAgency, planCommunity );
+            parentData = new AgencyData( serverUrl, parentAgency, communityService );
         }
         Organization organization = agency.getPlanOrganization();
         if ( organization != null ) {
-            organizationData = new OrganizationData( serverUrl, organization, planCommunity );
+            organizationData = new OrganizationData( serverUrl, organization, communityService );
         }
         channelDataList = new ArrayList<ChannelData>();
         for ( Channel channel : agency.getEffectiveChannels() ) {
-            channelDataList.add( new ChannelData( channel, planCommunity ) );
+            channelDataList.add( new ChannelData( channel, communityService ) );
         }
     }
 

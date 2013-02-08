@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
@@ -40,13 +40,13 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public RegisteredOrganization find( final String orgName, final PlanCommunity planCommunity ) {
+    public RegisteredOrganization find( final String orgName, final CommunityService communityService ) {
         return (RegisteredOrganization) CollectionUtils.find(
-                getAllRegisteredOrganizations( planCommunity ),
+                getAllRegisteredOrganizations( communityService ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (RegisteredOrganization) object ).getName( planCommunity ).equals( orgName );
+                        return ( (RegisteredOrganization) object ).getName( communityService ).equals( orgName );
                     }
                 }
         );
@@ -55,48 +55,48 @@ public class RegisteredOrganizationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<RegisteredOrganization> getAllRegisteredOrganizations( PlanCommunity planCommunity ) {
+    public List<RegisteredOrganization> getAllRegisteredOrganizations( CommunityService communityService ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.addOrder( Order.desc( "created" ) );
-        return validate( (List<RegisteredOrganization>) criteria.list(), planCommunity );
+        return validate( (List<RegisteredOrganization>) criteria.list(), communityService );
     }
 
     @Override
     @Transactional
-    public RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, PlanCommunity planCommunity ) {
-        RegisteredOrganization registered = find( orgName, planCommunity );
+    public RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, CommunityService communityService ) {
+        RegisteredOrganization registered = find( orgName, communityService );
         if ( registered == null ) {
-            Organization fixedOrg = planCommunity.getPlanService().findActualEntity( Organization.class, orgName );
+            Organization fixedOrg = communityService.getPlanService().findActualEntity( Organization.class, orgName );
             if ( fixedOrg != null ) {
                 registered = new RegisteredOrganization(
                         user.getUsername(),
                         fixedOrg.getId(),
-                        planCommunity
+                        communityService.getPlanCommunity()
                 );
             } else {
                 registered = new RegisteredOrganization(
                         user.getUsername(),
                         orgName,
-                        planCommunity
+                        communityService.getPlanCommunity()
                 );
             }
             save( registered );
-            planCommunity.clearCache();
+            communityService.clearCache();
         }
         return registered;
     }
 
     @Override
     @Transactional
-    public boolean removeIfUnused( ChannelsUser user, String orgName, PlanCommunity planCommunity ) {
-        RegisteredOrganization registered = find( orgName, planCommunity );
+    public boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService ) {
+        RegisteredOrganization registered = find( orgName, communityService );
         if ( registered != null ) {
             boolean inParticipation = !organizationParticipationService
-                    .findAllParticipationBy( registered, planCommunity ).isEmpty();
+                    .findAllParticipationBy( registered, communityService ).isEmpty();
             boolean inOrgContacts = !organizationContactInfoService
-                    .findAllContactInfo( registered, planCommunity ).isEmpty();
+                    .findAllContactInfo( registered, communityService ).isEmpty();
             if ( !inParticipation && !inOrgContacts ) {
                 delete( registered );
                 return true;
@@ -107,10 +107,10 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     @Transactional
-    public List<String> getAllRegisteredNames( PlanCommunity planCommunity ) {
+    public List<String> getAllRegisteredNames( CommunityService communityService ) {
         List<String> allNames = new ArrayList<String>();
-        for ( RegisteredOrganization registered : getAllRegisteredOrganizations( planCommunity ) ) {
-            String name = registered.getName( planCommunity );
+        for ( RegisteredOrganization registered : getAllRegisteredOrganizations( communityService ) ) {
+            String name = registered.getName( communityService );
             if ( name != null ) allNames.add( name );
         }
         return allNames;
@@ -121,21 +121,21 @@ public class RegisteredOrganizationServiceImpl
     public boolean updateWith( ChannelsUser user,
                                String orgName,
                                Agency agency,
-                               PlanCommunity planCommunity ) {
+                               CommunityService communityService ) {
         boolean success = false;
-        RegisteredOrganization registered = find( orgName, planCommunity );
+        RegisteredOrganization registered = find( orgName, communityService );
         if ( registered != null ) {
             String parentName = agency.getParentName();
             if ( parentName != null ) {
-                if ( planCommunity.canHaveParentAgency(
+                if ( communityService.canHaveParentAgency(
                         agency.getName(),
                         parentName ) ) {
-                    RegisteredOrganization registeredParent = find( parentName, planCommunity );
+                    RegisteredOrganization registeredParent = find( parentName, communityService );
                     if ( registeredParent == null ) {
                         registeredParent = new RegisteredOrganization(
                                 user.getUsername(),
                                 parentName,
-                                planCommunity );
+                                communityService.getPlanCommunity() );
                         save( registeredParent );
                     }
                     registered.setParent( registeredParent );
@@ -144,7 +144,7 @@ public class RegisteredOrganizationServiceImpl
                 registered.setParent( null );
             }
             registered.updateWith( agency );
-            organizationContactInfoService.setChannels( user, registered, agency.getEffectiveChannels(), planCommunity );
+            organizationContactInfoService.setChannels( user, registered, agency.getEffectiveChannels(), communityService );
             save( registered );
             success = true;
         }
@@ -153,31 +153,31 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public List<Channel> getAllChannels( RegisteredOrganization registered, PlanCommunity planCommunity ) {
-        return organizationContactInfoService.getChannels( registered, planCommunity );
+    public List<Channel> getAllChannels( RegisteredOrganization registered, CommunityService communityService ) {
+        return organizationContactInfoService.getChannels( registered, communityService );
     }
 
-    public List<RegisteredOrganization> findAncestors( String orgName, PlanCommunity planCommunity ) {
+    public List<RegisteredOrganization> findAncestors( String orgName, CommunityService communityService ) {
         List<RegisteredOrganization> visited = new ArrayList<RegisteredOrganization>();
-        RegisteredOrganization registered = find( orgName, planCommunity );
+        RegisteredOrganization registered = find( orgName, communityService );
         if ( registered != null )
-            return safeFindAncestors( registered, planCommunity, visited );
+            return safeFindAncestors( registered, communityService, visited );
         else
             return new ArrayList<RegisteredOrganization>();
     }
 
     private List<RegisteredOrganization> safeFindAncestors(
             RegisteredOrganization registered,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             List<RegisteredOrganization> visited ) {
         List<RegisteredOrganization> ancestors = new ArrayList<RegisteredOrganization>();
         if ( !visited.contains( registered ) ) {
             if ( registered != null ) {
-                RegisteredOrganization registeredParent = registered.getEffectiveParent( planCommunity );
+                RegisteredOrganization registeredParent = registered.getEffectiveParent( communityService );
                 if ( registeredParent != null && !visited.contains( registeredParent ) ) {
                     visited.add( registeredParent );
                     ancestors.add( registeredParent );
-                    ancestors.addAll( safeFindAncestors( registeredParent, planCommunity, visited ) );
+                    ancestors.addAll( safeFindAncestors( registeredParent, communityService, visited ) );
                 }
             }
         }
@@ -186,23 +186,23 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     @Transactional( readOnly = true )
-    public boolean isValid( RegisteredOrganization registeredOrg, PlanCommunity planCommunity ) {
+    public boolean isValid( RegisteredOrganization registeredOrg, CommunityService communityService ) {
         return registeredOrg != null
-                && !( registeredOrg.isFixedOrganization() && registeredOrg.getFixedOrganization( planCommunity ) == null )
-                && ( registeredOrg.getParent() == null || isValid( registeredOrg.getParent(), planCommunity ) );
+                && !( registeredOrg.isFixedOrganization() && registeredOrg.getFixedOrganization( communityService ) == null )
+                && ( registeredOrg.getParent() == null || isValid( registeredOrg.getParent(), communityService ) );
     }
 
 
     @SuppressWarnings( "unchecked" )
     private List<RegisteredOrganization> validate(
             List<RegisteredOrganization> registeredOrganizations,
-            final PlanCommunity planCommunity ) {
+            final CommunityService communityService ) {
         return (List<RegisteredOrganization>) CollectionUtils.select(
                 registeredOrganizations,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return isValid( (RegisteredOrganization) object, planCommunity );
+                        return isValid( (RegisteredOrganization) object, communityService );
                     }
                 }
         );

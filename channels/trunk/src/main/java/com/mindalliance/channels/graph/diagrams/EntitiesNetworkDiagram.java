@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanService;
@@ -48,10 +48,10 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
 
     @Override
     public void render( String ticket, String outputFormat, OutputStream outputStream, Analyst analyst,
-                        DiagramFactory diagramFactory, PlanCommunity planCommunity ) throws DiagramException {
+                        DiagramFactory diagramFactory, CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         GraphBuilder<ModelEntity, EntityRelationship> entitiesNetworkGraphBuilder = new EntitiesNetworkGraphBuilder(
                 getEntities( planService ),
                 getEntityRels( planService, analyst ),
@@ -71,7 +71,7 @@ public class EntitiesNetworkDiagram extends AbstractDiagram<ModelEntity, EntityR
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         EntityNetworkDOTExporter dotExporter = new EntityNetworkDOTExporter( metaProvider );
-        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( communityService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 
     @SuppressWarnings( "unchecked" )

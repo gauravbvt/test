@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;
@@ -49,12 +49,12 @@ public class RequiredNetworkingDiagram extends AbstractDiagram<Agency, Requireme
             OutputStream outputStream,
             Analyst analyst,
             DiagramFactory diagramFactory,
-            PlanCommunity planCommunity ) throws DiagramException {
+            CommunityService communityService ) throws DiagramException {
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         RequiredNetworkingGraphBuilder graphBuilder =
                 new RequiredNetworkingGraphBuilder( timing, event, selectedAgency, selectedRequirementRel );
-        graphBuilder.setPlanCommunity( planCommunity );
+        graphBuilder.setCommunityService( communityService );
         Graph<Agency, RequirementRelationship> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Agency, RequirementRelationship> graphRenderer = diagramFactory.getGraphRenderer();
         graphRenderer.resetHighlight();
@@ -69,12 +69,12 @@ public class RequiredNetworkingDiagram extends AbstractDiagram<Agency, Requireme
                 event,
                 outputFormat,
                 diagramFactory.getImageDirectory(),
-                planCommunity );
+                communityService );
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
         RequiredNetworkingDOTExporter dotExporter = new RequiredNetworkingDOTExporter( metaProvider );
-        graphRenderer.render( planCommunity, graph, dotExporter, outputFormat, ticket, outputStream );
+        graphRenderer.render( communityService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

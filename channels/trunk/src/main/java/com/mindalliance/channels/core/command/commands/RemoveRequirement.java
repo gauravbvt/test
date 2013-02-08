@@ -30,9 +30,9 @@ public class RemoveRequirement extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        PlanDao planDao = commander.getPlanDao();
+        PlanDao planDao = commander.getPlanDao(); // TODO -COMMUNITY - use community dao
         Requirement requirement = commander.resolve( Requirement.class, (Long) get( "requirement" ) );
-        requirement.initialize( commander.getPlanCommunity() );
+        requirement.initialize( commander.getCommunityService() );
         describeTarget( requirement );
         set( "state", requirement.mapState() );
         planDao.remove( requirement );

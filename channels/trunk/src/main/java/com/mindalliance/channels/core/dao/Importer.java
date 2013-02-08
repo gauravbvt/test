@@ -45,12 +45,21 @@ public interface Importer {
     String getVersion();
 
     /**
-     * Import all persisted data from a stream.
+     * Import persisted plan from a stream.
      *
      * @param stream an input stream @throws IOException on errors
      * @throws IOException on errors
      */
     void importPlan( FileInputStream stream ) throws IOException;
+
+    /**
+     * Import persisted planCommunity from a stream.
+     *
+     * @param stream an input stream @throws IOException on errors
+     * @throws IOException on errors
+     */
+    void importPlanCommunity( FileInputStream stream ) throws IOException;
+
 
     /**
      * Import a journal from a stream.
@@ -69,5 +78,6 @@ public interface Importer {
      * @throws IOException on errors
      */
     Map<String, Object> loadSegment( InputStream inputStream ) throws IOException;
+
 }
 

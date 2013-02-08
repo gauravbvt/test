@@ -11,6 +11,7 @@ import com.mindalliance.channels.api.procedures.ProcedureData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.community.participation.Agency;
@@ -146,7 +147,8 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
 
     private void initData() throws Exception {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
+        PlanCommunity planCommunity = communityService.getPlanCommunity();
         planSummaryData = planCommunityEndPoint.getPlan(
                 planCommunity.getUri(),
                 Integer.toString( planCommunity.getPlanVersion() ) );
@@ -156,7 +158,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 OrganizationParticipation organizationParticipation
                         = organizationParticipationService.load( organizationParticipationId );
                 if ( organizationParticipation == null ) throw new NotFoundException();
-                agent = new Agent( actor, organizationParticipation, getPlanCommunity() );
+                agent = new Agent( actor, organizationParticipation, getCommunityService() );
                 proceduresData = planCommunityEndPoint.getAgentProtocols(
                         planCommunity.getUri(),
                         Integer.toString( planCommunity.getPlanVersion() ),
@@ -174,7 +176,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
-                if ( protocolsUser.isPlanner( planCommunity.getPlan().getUri() ) ) {
+                if ( protocolsUser.isPlanner( communityService.getPlan().getUri() ) ) {
                     proceduresData = planCommunityEndPoint.getUserProcedures(
                             planCommunity.getUri(),
                             Integer.toString( planCommunity.getPlanVersion() ),
@@ -189,7 +191,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         finder = new ProtocolsFinder(
                 planCommunityEndPoint.getServerUrl(),
                 proceduresData,
-                planCommunity,
+                communityService,
                 protocolsUser,
                 planCommunityEndPoint,
                 username,
@@ -617,8 +619,8 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<String> item ) {
                 final String agencyName = item.getModelObject();
-                Agency agency = getPlanCommunity().getParticipationManager()
-                        .findAgencyNamed( agencyName, getPlanCommunity() );
+                Agency agency = getCommunityService().getParticipationManager()
+                        .findAgencyNamed( agencyName, getCommunityService() );
                 if ( agency == null ) {
                     item.add( new Label( "agencyContact", "" ) );
                 } else {
@@ -627,7 +629,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                             planCommunityEndPoint.getServerUrl(),
                             agency,
                             finder,
-                            getPlanCommunity() ) );
+                            getCommunityService() ) );
                 }
                 ListView<ContactData> employeeContactsListView = new ListView<ContactData>(
                         "employeeContacts",

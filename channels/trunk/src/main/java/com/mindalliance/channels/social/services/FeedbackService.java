@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -72,9 +73,9 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
     /**
      * Count the unresolved feedback of a user in a plan.
      *
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @param user a user
      * @return an int
      */
-    int countUnresolvedFeedback( PlanCommunity planCommunity, ChannelsUser user );
+    int countUnresolvedFeedback( CommunityService communityService, ChannelsUser user );
 }

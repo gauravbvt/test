@@ -73,7 +73,7 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
     }
 
     public List<ParticipationIssue> getParticipationIssues() {
-        return participationAnalyst.detectAllIssues( getPlanCommunity() );
+        return participationAnalyst.detectAllIssues( getCommunityService() );
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {

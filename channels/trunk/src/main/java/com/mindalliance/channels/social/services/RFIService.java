@@ -1,6 +1,6 @@
 package com.mindalliance.channels.social.services;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Organization;
@@ -25,25 +25,25 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
     /**
      * List all RFIs in a given survey.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param rfiSurvey a survey
      * @return a list of rfis
      */
-    List<RFI> select( PlanCommunity planCommunity, RFISurvey rfiSurvey );
+    List<RFI> select( CommunityService communityService, RFISurvey rfiSurvey );
 
     /**
      * Get the number of RFIs based on a given questionnaire.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param questionnaire a questionnaire
      * @return an int
      */
-    int getRFICount( PlanCommunity planCommunity, Questionnaire questionnaire );
+    int getRFICount( CommunityService communityService, Questionnaire questionnaire );
 
     /**
      * Add or update an RFI.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param username     who adds or updates
      * @param rfiSurvey    a survey
      * @param userInfo     user info
@@ -53,7 +53,7 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
      * @param deadlineDate a date or null if no deadline
      */
     void makeOrUpdateRFI(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             String username,
             RFISurvey rfiSurvey,
             ChannelsUserInfo userInfo,
@@ -65,13 +65,13 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
     /**
      * Nag a user to complete an RFI.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param username  who nags
      * @param rfiSurvey a survey
      * @param userInfo  user info
      */
     void nag(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             String username,
             RFISurvey rfiSurvey,
             ChannelsUserInfo userInfo );
@@ -79,50 +79,50 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
     /**
      * Find matching RFI RFI.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param surveyedUsername who is being surveyed
      * @param rfiSurvey        a survey
      */
     RFI find(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             RFISurvey rfiSurvey,
             String surveyedUsername );
 
     /**
      * Find the usernames of all participants in a survey.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param rfiSurvey a survey
      * @return a list of strings
      */
-    List<String> findParticipants( PlanCommunity planCommunity, RFISurvey rfiSurvey );
+    List<String> findParticipants( CommunityService communityService, RFISurvey rfiSurvey );
 
 
     /**
      * Find all active RFIs for a user in a given plan.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @return a list of RFIs
      */
-    List<RFI> listActiveRFIs( PlanCommunity planCommunity );
+    List<RFI> listActiveRFIs( CommunityService communityService );
 
     /**
      * Find all active RFIs for a user in a given plan.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param user         a user
      * @return a list of RFIs
      */
-    List<RFI> listUserActiveRFIs( PlanCommunity planCommunity, ChannelsUser user );
+    List<RFI> listUserActiveRFIs( CommunityService communityService, ChannelsUser user );
 
     /**
      * Find all RFIs sent to a given user that are ongoing in a given plan.
      *
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param user         a user
      * @return a list of RFIs
      */
-    List<RFI> listOngoingUserRFIs( PlanCommunity planCommunity, ChannelsUser user );
+    List<RFI> listOngoingUserRFIs( CommunityService communityService, ChannelsUser user );
 
     /**
      * Toggle declining an RFI.
@@ -134,23 +134,23 @@ public interface RFIService extends GenericSqlService<RFI, Long> {
 
     /**
      * Find all rfis for which planners have requested nagging.
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @return a list of RFIs
      */
-    List<RFI> listRequestedNags( PlanCommunity planCommunity );
+    List<RFI> listRequestedNags( CommunityService communityService );
 
     /**
      * Find all RFIs for which an approaching deadline notification needs to be sent.
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @param warningDelay a long - msecs until deadline triggering warning
      * @return a list of RFIs
      */
-    List<RFI> listApproachingDeadline( PlanCommunity planCommunity, long warningDelay );
+    List<RFI> listApproachingDeadline( CommunityService communityService, long warningDelay );
 
     /**
      * Find all RFIs of which surveyed user has yet to be notified.
-     * @param planCommunity    a plan community
+     * @param communityService    a plan community service
      * @return a list of RFIs
      */
-    List<RFI> listNewRFIs( PlanCommunity planCommunity );
+    List<RFI> listNewRFIs( CommunityService communityService );
 }

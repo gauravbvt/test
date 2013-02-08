@@ -1,8 +1,8 @@
 package com.mindalliance.channels.api.entities;
 
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -26,8 +26,8 @@ public class EventData extends ModelEntityData {
     public EventData() {
     }
 
-    public EventData( String serverUrl, Event event, Plan plan ) {
-        super( serverUrl, event, plan );
+    public EventData( String serverUrl, Event event, CommunityService communityService ) {
+        super( serverUrl, event, communityService );
     }
 
     @Override

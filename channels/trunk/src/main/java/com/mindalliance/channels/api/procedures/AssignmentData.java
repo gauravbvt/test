@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -46,36 +46,36 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     public AssignmentData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             CommunityAssignment assignment,
             ChannelsUser user,
             ProcedureData procedureData ) {
-        super( planCommunity, assignment,  user );
+        super( communityService, assignment,  user );
         this.procedureData = procedureData;
-        initData( serverUrl, planCommunity );
+        initData( serverUrl, communityService );
     }
 
-    private void initData( String serverUrl, PlanCommunity planCommunity ) {
-        taskData = new TaskData( serverUrl, getAssignment(), planCommunity, getUser() );
-        initInNotifications(  serverUrl, planCommunity );
-        initOutNotifications(  serverUrl, planCommunity );
-        initInRequests( serverUrl, planCommunity );
-        initOutRequests( serverUrl, planCommunity );
-        initDiscoveries(  serverUrl, planCommunity );
-        initAllResearch(  serverUrl, planCommunity );
-        initEmployer( serverUrl, planCommunity );
+    private void initData( String serverUrl, CommunityService communityService ) {
+        taskData = new TaskData( serverUrl, getAssignment(), communityService, getUser() );
+        initInNotifications(  serverUrl, communityService );
+        initOutNotifications(  serverUrl, communityService );
+        initInRequests( serverUrl, communityService );
+        initOutRequests( serverUrl, communityService );
+        initDiscoveries(  serverUrl, communityService );
+        initAllResearch(  serverUrl, communityService );
+        initEmployer( serverUrl, communityService );
     }
 
-    private void initEmployer( String serverUrl, PlanCommunity planCommunity ) {
-        employer = new AgencyData( serverUrl, getAssignment().getAgency(),  planCommunity  );
+    private void initEmployer( String serverUrl, CommunityService communityService ) {
+        employer = new AgencyData( serverUrl, getAssignment().getAgency(),  communityService  );
     }
 
-    private void initAllResearch( String serverUrl, PlanCommunity planCommunity ) {
+    private void initAllResearch( String serverUrl, CommunityService communityService ) {
         allResearch = new ArrayList<ResearchData>();
         for ( Flow researchFlow : research() ) {
             allResearch.add( new ResearchData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     researchFlow,
                     getAssignment(),
                     getUser() ) );
@@ -83,25 +83,25 @@ public class AssignmentData extends AbstractProcedureElementData {
 
     }
 
-    private void initDiscoveries( String serverUrl, PlanCommunity planCommunity ) {
+    private void initDiscoveries( String serverUrl, CommunityService communityService ) {
         discoveries = new ArrayList<DiscoveryData>();
         for ( Flow discoveringFlow : discoveries() ) {
             discoveries.add( new DiscoveryData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     discoveringFlow,
                     getUser() ) );
         }
 
     }
 
-    private void initOutRequests( String serverUrl, PlanCommunity planCommunity ) {
+    private void initOutRequests( String serverUrl, CommunityService communityService ) {
             outRequests = new ArrayList<RequestData>();
             for ( Flow outRequestFlow : outRequests() ) {
                 boolean initiating = true;
                 outRequests.add( new RequestData(
                         serverUrl,
-                        planCommunity,
+                        communityService,
                         outRequestFlow,
                         initiating,
                         getAssignment(),
@@ -109,13 +109,13 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initInRequests( String serverUrl, PlanCommunity planCommunity ) {
+    private void initInRequests( String serverUrl, CommunityService communityService ) {
             inRequests = new ArrayList<RequestData>();
             for ( Flow inRequestFlow : inRequests() ) {
                 boolean initiating = false;
                 inRequests.add( new RequestData(
                         serverUrl,
-                        planCommunity,
+                        communityService,
                         inRequestFlow,
                         initiating,
                         getAssignment(),
@@ -123,13 +123,13 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initOutNotifications( String serverUrl, PlanCommunity planCommunity ) {
+    private void initOutNotifications( String serverUrl, CommunityService communityService ) {
             outNotifications = new ArrayList<NotificationData>();
             for ( Flow outNotificationFlow : outNotifications() ) {
                 boolean initiating = true;
                 outNotifications.add( new NotificationData(
                         serverUrl,
-                        planCommunity,
+                        communityService,
                         outNotificationFlow,
                         initiating,
                         getAssignment(),
@@ -137,13 +137,13 @@ public class AssignmentData extends AbstractProcedureElementData {
             }
     }
 
-    private void initInNotifications( String serverUrl, PlanCommunity planCommunity ) {
+    private void initInNotifications( String serverUrl, CommunityService communityService ) {
         inNotifications = new ArrayList<NotificationData>();
         for ( Flow inNotificationFlow : inNotifications() ) {
             boolean initiating = false;
             inNotifications.add( new NotificationData(
                     serverUrl,
-                    planCommunity,
+                    communityService,
                     inNotificationFlow,
                     initiating,
                     getAssignment(),

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
@@ -33,12 +33,12 @@ public class TooManyUsersParticipatingAsAgent implements ParticipationIssueDetec
     }
 
     @Override
-    public List<ParticipationIssue> detectIssues( Identifiable identifiable, PlanCommunity planCommunity ) {
+    public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
         List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
         Agent agent = (Agent) identifiable;
         int maxParticipation = agent.getMaxParticipation();
         if ( maxParticipation != -1 ) {
-            int count = planCommunity.getUserParticipationService().findUsersParticipatingAs( agent, planCommunity ).size();
+            int count = communityService.getUserParticipationService().findUsersParticipatingAs( agent, communityService ).size();
             if ( count > maxParticipation ) {
                 ParticipationIssue issue = new ParticipationIssue( agent, this );
                 issue.setDescription( count + " users participate as " + agent.getName()

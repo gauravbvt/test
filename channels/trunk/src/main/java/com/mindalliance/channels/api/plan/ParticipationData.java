@@ -1,7 +1,7 @@
 package com.mindalliance.channels.api.plan;
 
 import com.mindalliance.channels.api.entities.ActorData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
@@ -37,22 +37,22 @@ public class ParticipationData  implements Serializable {
 
     public ParticipationData(
             String serverUrl,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             ChannelsUser user,
             UserParticipation participation ) {
         this.participation = participation;
         this.user = user;
-        init( serverUrl, planCommunity );
+        init( serverUrl, communityService );
     }
 
-    private void init( String serverUrl, PlanCommunity planCommunity ) {
-        UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
-        UserParticipationConfirmationService userParticipationConfirmationService = planCommunity.getUserParticipationConfirmationService();
-        actor = participation.getAgent( planCommunity).getActor();
-        agentData = new ActorData( serverUrl, actor, planCommunity.getPlan() );
-        userData = new UserData( user, planCommunity );
-        confirmed = userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, planCommunity );
-        active = userParticipationService.isActive( participation, planCommunity );
+    private void init( String serverUrl, CommunityService communityService ) {
+        UserParticipationService userParticipationService = communityService.getUserParticipationService();
+        UserParticipationConfirmationService userParticipationConfirmationService = communityService.getUserParticipationConfirmationService();
+        actor = participation.getAgent( communityService).getActor();
+        agentData = new ActorData( serverUrl, actor, communityService );
+        userData = new UserData( user, communityService );
+        confirmed = userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, communityService );
+        active = userParticipationService.isActive( participation, communityService );
     }
 
     @XmlElement

@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanService;
@@ -22,9 +22,9 @@ public class FlowMapPng extends DiagramPng {
             double[] diagramSize, 
             String orientation,
             PageParameters parameters,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             DiagramFactory diagramFactory ) throws DiagramException {
-        PlanService planService = planCommunity.getPlanService();
+        PlanService planService = communityService.getPlanService();
         Segment segment = PlanPage.findSegment( planService, parameters );
         Node node = null;
         if ( segment == null ) {

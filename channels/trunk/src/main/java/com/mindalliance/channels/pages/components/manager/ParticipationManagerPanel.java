@@ -86,12 +86,12 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     public String getToConfirmTitle() {
         int toConfirmCount = userParticipationService
-                .listUserParticipationsAwaitingConfirmationBy( getUser(), getPlanCommunity() ).size();
+                .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
         return "Confirmations (" + toConfirmCount + " pending)";
     }
 
     public String getIssuesTitle() {
-        int issuesCount = participationAnalyst.detectAllIssues( getPlanCommunity() ).size();
+        int issuesCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();
         return "Participation issues (" + issuesCount +")";
     }
 

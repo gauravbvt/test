@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.graph.Diagram;
@@ -93,7 +94,7 @@ public abstract class DiagramPng extends ChannelsDynamicImageResource {
     private byte[] generatePng(
             PageParameters parameters ) {
         Channels channels = (Channels)Channels.get();
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService( parameters );
         double[] size = null;
         String orientation = null;
         if ( parameters.getNamedKeys().contains( "size" ) )
@@ -108,16 +109,16 @@ public abstract class DiagramPng extends ChannelsDynamicImageResource {
                     size,
                     orientation,
                     parameters,
-                    planCommunity,
+                    communityService,
                     channels.getDiagramFactory() );
             configureDiagram( parameters, diagram );
             LOG.debug( "Rendering PNG" );
             diagram.render( ticket,
                             DiagramFactory.PNG,
                             bos,
-                            planCommunity.getAnalyst(),
+                    communityService.getAnalyst(),
                             channels.getDiagramFactory(),
-                            planCommunity
+                    communityService
                              );
         } catch ( DiagramException e ) {
             LOG.error( "Error while generating diagram", e );
@@ -128,7 +129,7 @@ public abstract class DiagramPng extends ChannelsDynamicImageResource {
 
     protected PlanCommunity getPlanCommunity() {
         Channels channels = (Channels)Channels.get();
-        return channels.getPlanCommunityManager().getPlanCommunityFor( ChannelsUser.plan() ); // TODO - change when ChannelsUser.planCommunityUri()
+        return channels.getPlanCommunityManager().getPlanCommunity( ChannelsUser.current().getPlanCommunityUri() );
     }
 
     private void writeErrorImage( OutputStream output ) throws DiagramException {
@@ -163,7 +164,7 @@ public abstract class DiagramPng extends ChannelsDynamicImageResource {
      * @param diagramSize width and height as double array. Can be null.
      * @param orientation string
      * @param parameters page parameters
-     * @param planCommunity plan community
+     * @param communityService community service
      * @param diagramFactory a diagram factory
      * @return a diagram
      * @throws DiagramException if diagram can be generated
@@ -172,7 +173,7 @@ public abstract class DiagramPng extends ChannelsDynamicImageResource {
             double[] diagramSize,
             String orientation,
             PageParameters parameters,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             DiagramFactory diagramFactory ) throws DiagramException;
 
 }

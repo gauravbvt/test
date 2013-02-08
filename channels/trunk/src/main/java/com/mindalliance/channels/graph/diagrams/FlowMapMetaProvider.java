@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.ExternalFlow;
@@ -182,7 +182,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         @Override
-        public List<DOTAttribute> getVertexAttributes( PlanCommunity planCommunity, Node vertex, boolean highlighted ) {
+        public List<DOTAttribute> getVertexAttributes( CommunityService communityService, Node vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
             if ( getOutputFormat().equalsIgnoreCase( DiagramFactory.SVG ) ) {
                 if ( vertex.isPart() )
@@ -210,16 +210,16 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             list.add( new DOTAttribute( "fontcolor", getFontColor( vertex ) ) );
             list.add( new DOTAttribute( "fontsize", NODE_FONT_SIZE ) );
             if ( !isInvisible( vertex ) ) {
-                if ( indicateError( vertex, planCommunity.getPlanService() ) ) {
+                if ( indicateError( vertex, communityService.getPlanService() ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
-                                                sanitize( getAnalyst().getIssuesOverview( planCommunity.getPlanService(),
+                                                sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
                                                                                                       vertex,
                                                                                                       Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {
                     String tooltip = vertex.getTitle();
                     if ( vertex.isPart() ) {
-                        List<Actor> partActors = planCommunity.getPlanService().findAllActualActors( ( (Part) vertex ).resourceSpec() );
+                        List<Actor> partActors = communityService.getPlanService().findAllActualActors( ( (Part) vertex ).resourceSpec() );
                         if ( partActors.size() > 1 ) {
                             tooltip = "Executed by " + sanitize( listActors( partActors ) );
                         }
@@ -231,7 +231,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                 Connector connector = (Connector) vertex;
                 Iterator<ExternalFlow> externalFlows = connector.externalFlows();
                 list.add( new DOTAttribute( "fontcolor", "white" ) );
-                if ( !isHidingNoop() || !getAnalyst().isEffectivelyConceptual( planCommunity.getPlanService(),
+                if ( !isHidingNoop() || !getAnalyst().isEffectivelyConceptual( communityService.getPlanService(),
                                                                                connector.getInnerFlow() ) )
                 {
                     if ( externalFlows.hasNext() )
@@ -249,16 +249,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         private boolean indicateError( Node vertex, QueryService queryService ) {
-            return getAnalyst().hasUserIssues( queryService, vertex ) ||
-                    !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( queryService,
-                                                                                vertex,                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            return getAnalyst().hasUnwaivedIssues( queryService, vertex, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean indicateError( Flow edge, QueryService queryService ) {
-            return getAnalyst().hasUserIssues( queryService, edge ) ||
-                    !getPlan().isViewableByAll() && getAnalyst().hasUnwaivedIssues( queryService,
-                                                                                edge,
-                                                                                Analyst.INCLUDE_PROPERTY_SPECIFIC );
+            return getAnalyst().hasUnwaivedIssues( queryService, edge, Analyst.INCLUDE_PROPERTY_SPECIFIC );
         }
 
         private boolean isInvisible( Node vertex ) {
@@ -281,10 +276,8 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
         }
 
         @Override
-        public List<DOTAttribute> getEdgeAttributes( PlanCommunity planCommunity, Flow edge, boolean highlighted ) {
-            boolean conceptual =
-                    !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( planCommunity.getPlanService(),
-                                                                                     edge );
+        public List<DOTAttribute> getEdgeAttributes( CommunityService communityService, Flow edge, boolean highlighted ) {
+            boolean conceptual = getAnalyst().isEffectivelyConceptual( communityService.getPlanService(), edge );
             List<DOTAttribute> list = DOTAttribute.emptyList();
             list.add( new DOTAttribute( "color",
                                         colorIfVisible( edge, isOverridden( edge ) ? OVERRIDDEN_COLOR : "black" ) ) );
@@ -350,11 +343,11 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
             }
             // Issue coloring
             if ( !isInvisible( edge ) ) {
-                if ( indicateError( edge, planCommunity.getPlanService() ) ) {
+                if ( indicateError( edge, communityService.getPlanService() ) ) {
                     list.add( new DOTAttribute( "fontcolor", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "color", COLOR_ERROR ) );
                     list.add( new DOTAttribute( "tooltip",
-                                                sanitize( getAnalyst().getIssuesOverview( planCommunity.getPlanService(),
+                                                sanitize( getAnalyst().getIssuesOverview( communityService.getPlanService(),
                                                                                            edge,
                                                                                            Analyst.INCLUDE_PROPERTY_SPECIFIC ) ) ) );
                 } else {

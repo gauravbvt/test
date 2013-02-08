@@ -23,11 +23,14 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -77,7 +80,7 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     @Override
-    protected ModelObjectContext getModelObjectContext() {
+    public ModelObjectContext getModelObjectContext() {
         return getPlan();
     }
 
@@ -126,11 +129,11 @@ public class PlanDao extends AbstractModelObjectDao {
         return segment.addNode( assignId( new Part(), id, getIdGenerator() ) );
     }
 
-    public Requirement createRequirement() {   // todo - COMMUNITY - move to CommnunityDao
+    public Requirement createRequirement() {   // todo - COMMUNITY - move to CommunityDao
         return createRequirement( null );
     }
 
-    public Requirement createRequirement( Long id ) {   // todo - COMMUNITY - move to CommnunityDao
+    public Requirement createRequirement( Long id ) {   // todo - COMMUNITY - move to CommunityDao
         Requirement requirement = new Requirement();
         assignId( requirement, id, getIdGenerator() );
         add( requirement, id );
@@ -213,8 +216,9 @@ public class PlanDao extends AbstractModelObjectDao {
             InfoProduct.UNKNOWN.makeImmutable();
             InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
             InfoFormat.UNKNOWN.makeImmutable();
-            // todo - COMMUNITY - move to CommnunityDao
-            Requirement.UNKNOWN = findOrCreate( Requirement.class, Requirement.UnknownName, null );
+            if ( Requirement.UNKNOWN == null ) {  // todo - COMMUNITY - remove
+                Requirement.UNKNOWN = findOrCreateModelObject( Requirement.class, Requirement.UnknownName, null );
+            }
         }
         getIdGenerator().setMutableMode();
     }
@@ -301,6 +305,38 @@ public class PlanDao extends AbstractModelObjectDao {
         return attachables;
     }
 
+    @SuppressWarnings( {"unchecked"} )
+    // Listing by class. Local model object only
+    public <T extends ModelObject> List<T> listLocal( final Class<T> clazz ) {
+        List<T> results = new ArrayList<T>();
+        synchronized ( getIndexMap() ) {
+            if ( Segment.class.isAssignableFrom( clazz ) ) {
+                results.addAll( (Set<T>) ( getPlan().getSegments() ) );
+            } else if ( SegmentObject.class.isAssignableFrom( clazz ) ) {
+                results.addAll( listSegmentObjects( clazz ) );
+            } else {
+                for ( Object mo : getIndexMap().values() ) {
+                    if ( clazz.isAssignableFrom( mo.getClass() ) ) {
+                        results.add( (T) mo );
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    @SuppressWarnings( {"unchecked"} )
+    private <T extends ModelObject> List<? extends T> listSegmentObjects( Class<T> clazz ) {
+        List<T> results = new ArrayList<T>();
+        for ( Segment segment : getPlan().getSegments() ) {
+            if ( clazz.isAssignableFrom( Part.class ) ) {
+                results.addAll( IteratorUtils.toList( segment.parts() ) );
+            } else if ( clazz.isAssignableFrom( Flow.class ) ) {
+                results.addAll( IteratorUtils.toList( segment.flows() ) );
+            }
+        }
+        return results;
+    }
 
     @Override
     protected ModelObject find( long id ) throws NotFoundException {
@@ -388,6 +424,11 @@ public class PlanDao extends AbstractModelObjectDao {
             super.remove( object );
     }
 
+    @Override
+    protected void importModelObjectContext( Importer importer, FileInputStream in ) throws IOException {
+        importer.importPlan( in );
+    }
+
     private void removeSegment( Segment segment ) {
         if ( list( Segment.class ).size() > 1 ) {
             super.remove( segment );
@@ -459,7 +500,7 @@ public class PlanDao extends AbstractModelObjectDao {
     /**
      * Validate the underlying plan.
      */
-    void validate() {
+    public void validate() {
         // Make sure there is at least one event per plan
         List<Event> incidents = plan.getIncidents();
         if ( incidents.isEmpty() ) {

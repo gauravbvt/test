@@ -30,4 +30,33 @@ public interface ModelObjectContext {
      * @return a long by which to translate ids recorded on the given date
      */
     long getIdShiftSince( Date date );
+
+    String getCommunityCalendar();
+
+    void setCommunityCalendar( String communityCalendar );
+
+    String getCommunityCalendarHost();
+
+    void setCommunityCalendarHost( String communityCalendarHost );
+
+    String getUserSupportCommunity();
+
+    void setUserSupportCommunity( String supportCommunity );
+
+    String getUserSupportCommunity( String defaultName );
+
+    String getPlannerSupportCommunity();
+
+    void setPlannerSupportCommunity( String plannerSupportCommunity );
+
+    String getCommunityCalendar( String defaultCalendar );
+
+    String getCommunityCalendarHost( String defaultCalendarHost );
+
+    String getCommunityCalendarPrivateTicket( String defaultCommunityCalendarPrivateTicket );
+
+    String getCommunityCalendarPrivateTicket();
+
+    void setCommunityCalendarPrivateTicket( String communityCalendarPrivateTicket );
+
 }

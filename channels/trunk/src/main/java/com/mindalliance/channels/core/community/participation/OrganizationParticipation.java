@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Job;
@@ -84,9 +85,9 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         this.userParticipationConfirmationList = userParticipationConfirmationList;
     }
 
-    public Organization getPlaceholderOrganization( PlanCommunity planCommunity ) {
+    public Organization getPlaceholderOrganization( CommunityService communityService ) {
         try {
-            Organization organization = planCommunity.find( Organization.class, placeholderOrgId, getCreated() );
+            Organization organization = communityService.find( Organization.class, placeholderOrgId, getCreated() );
             return organization.isPlaceHolder() ? organization : null;
         } catch ( NotFoundException e ) {
             LOG.warn( "Placeholder organization not found at " + placeholderOrgId );
@@ -94,9 +95,9 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         }
     }
 
-    public Organization getOrganizationParticipatedAs( PlanCommunity planCommunity ) {
+    public Organization getOrganizationParticipatedAs( CommunityService communityService ) {
         try {
-            return planCommunity.find( Organization.class, placeholderOrgId, getCreated() );
+            return communityService.find( Organization.class, placeholderOrgId, getCreated() );
         } catch ( NotFoundException e ) {
             LOG.warn( "Placeholder organization not found at " + placeholderOrgId );
             return null;
@@ -123,8 +124,8 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
     }
 
 
-    public List<Job> getFixedJobs( PlanCommunity planCommunity ) {
-        return registeredOrganization.getFixedJobs( planCommunity );
+    public List<Job> getFixedJobs( CommunityService communityService ) {
+        return registeredOrganization.getFixedJobs( communityService );
     }
 
  /*   public boolean isValidAgent( final Agent agent, PlanCommunity planCommunity ) {
@@ -139,8 +140,8 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         );
     }
 */
-    public List<Job> getPlaceholderJobs( PlanCommunity planCommunity ) {
-        Organization placeholder = getPlaceholderOrganization( planCommunity );
+    public List<Job> getPlaceholderJobs( CommunityService communityService ) {
+        Organization placeholder = getPlaceholderOrganization( communityService );
         if ( placeholder != null ) {
             return placeholder.getJobs();
         } else {
@@ -148,18 +149,18 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
         }
     }
 
-    public String asString( PlanCommunity planCommunity) {
+    public String asString( CommunityService communityService) {
         StringBuilder sb = new StringBuilder(  );
-        sb.append( getRegisteredOrganization().getName( planCommunity ) );
+        sb.append( getRegisteredOrganization().getName( communityService ) );
         sb.append( " registered as " );
-        sb.append( getPlaceholderOrganization( planCommunity ).getName() );
+        sb.append( getPlaceholderOrganization( communityService ).getName() );
         return sb.toString();
     }
 
-    public String getJobTitle( final Actor actor, PlanCommunity planCommunity ) {
+    public String getJobTitle( final Actor actor, CommunityService communityService ) {
         List<Job> jobs = getRegisteredOrganization().isFixedOrganization()
-                            ? getFixedJobs( planCommunity )
-                            : getPlaceholderJobs( planCommunity );
+                            ? getFixedJobs( communityService )
+                            : getPlaceholderJobs( communityService );
         Job job = (Job)CollectionUtils.find(
                 jobs,
                 new Predicate() {

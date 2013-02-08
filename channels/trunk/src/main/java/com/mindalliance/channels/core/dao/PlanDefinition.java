@@ -5,6 +5,7 @@ package com.mindalliance.channels.core.dao;
 
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Plan.Status;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import java.util.StringTokenizer;
 /**
  * A plan definition with all its versions.
  */
-public class PlanDefinition extends Observable { // todo - COMMUNITY - mirror with CommunityDefinition
+public class PlanDefinition extends Observable {
 
     /**
      * Name of persisted data file.
@@ -66,7 +67,7 @@ public class PlanDefinition extends Observable { // todo - COMMUNITY - mirror wi
     private final Map<Integer, Version> versions =
             Collections.synchronizedMap( new HashMap<Integer, Version>() );
 
-    /** The directory when plan versions are saved. */
+    /** The directory where plan versions are saved. */
     private File planDirectory;
 
     /** High water mark for plan version numbers. Computed from directory. */
@@ -92,7 +93,7 @@ public class PlanDefinition extends Observable { // todo - COMMUNITY - mirror wi
      * @throws IOException on initialization errors
      */
     public void initialize( Resource dataDirectory ) throws IOException {
-        planDirectory = new File( dataDirectory.getFile(), Plan.sanitize( uri ) );
+        planDirectory = new File( dataDirectory.getFile(), ChannelsUtils.sanitize( uri ) );
         if ( planDirectory.mkdirs() )
             LOG.debug( "Created {}", planDirectory );
 

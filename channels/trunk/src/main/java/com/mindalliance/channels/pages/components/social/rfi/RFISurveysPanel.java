@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
@@ -145,13 +145,13 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
     public List<RFISurveyWrapper> getRfiSurveyWrappers() {
         List<RFISurveyWrapper> wrappers = new ArrayList<RFISurveyWrapper>();
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         List<RFISurvey> rfiSurveys = rfiSurveyService.select(
-                planCommunity,
+                communityService,
                 onlyLaunched, // restrict to open surveys or not
                 about );
         for ( RFISurvey rfiSurvey : rfiSurveys ) {
-            if ( !rfiSurvey.isObsolete( planCommunity ) ) {
+            if ( !rfiSurvey.isObsolete( communityService ) ) {
                 if ( !onlyAnswered || getAnsweredCount( rfiSurvey ) > 0 )
                     if ( !isFilteredOut( rfiSurvey ) ) {
                         rfiSurveyService.refresh( rfiSurvey );
@@ -163,7 +163,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     }
 
     private void addRFISurvey() {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         rfiSurveyContainer = new WebMarkupContainer( "rfiSurveyContainer" );
         rfiSurveyContainer.setOutputMarkupId( true );
         makeVisible( rfiSurveyContainer, selectedRFISurvey != null );
@@ -185,13 +185,13 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         activateButton.add( new AttributeModifier(
                 "value",
                 new Model<String>( selectedRFISurvey == null
-                        || selectedRFISurvey.isObsolete( planCommunity )
+                        || selectedRFISurvey.isObsolete( communityService )
                         ? ""
                         : selectedRFISurvey.isClosed()
                         ? "Activate this survey"
                         : "Retire this survey" ) ) );
         activateButton.setVisible( selectedRFISurvey != null
-                && !selectedRFISurvey.isObsolete( planCommunity ) );
+                && !selectedRFISurvey.isObsolete( communityService ) );
         rfiSurveyContainer.add( activateButton );
         // can forward
         AjaxCheckBox canForwardCheckBox = new AjaxCheckBox(
@@ -328,7 +328,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     }
 
     private int getAnsweredCount( RFISurvey rfiSurvey ) {
-        return surveysDAO.findAnsweringRFIs( getPlanCommunity(), rfiSurvey ).size();
+        return surveysDAO.findAnsweringRFIs( getCommunityService(), rfiSurvey ).size();
     }
 
     public boolean isCanBeForwarded() {
@@ -470,7 +470,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         public String getStatusLabel() {
-            return rfiSurvey.getStatusLabel( getPlanCommunity() );
+            return rfiSurvey.getStatusLabel( getCommunityService() );
         }
 
         public int getSentToCount() {
@@ -505,7 +505,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
         private Map<String,Integer> getResponseMetrics() {
             if ( metrics == null ) {
-                metrics = surveysDAO.findResponseMetrics( getPlanCommunity(), rfiSurvey );
+                metrics = surveysDAO.findResponseMetrics( getCommunityService(), rfiSurvey );
             }
             return metrics;
         }

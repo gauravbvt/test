@@ -155,7 +155,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
             @Override
             protected void onComponentTag( ComponentTag tag ) {
                 super.onComponentTag( tag );
-                String url = makeDiagramUrl() + makeSeed() + AbstractChannelsWebPage.queryParameters( getPlan() );
+                String url = makeDiagramUrl() + makeSeed() + AbstractChannelsWebPage.queryParameters(  );
                 tag.put( "src", url );
                 if ( isWithImageMap() ) {
                     // TODO may not be unique in the page but should be
@@ -242,7 +242,7 @@ public abstract class AbstractDiagramPanel extends AbstractCommandablePanel {
 
     private StringBuilder createMapHolder( String ticket, Analyst analyst, DiagramFactory diagramFactory ) {
         StringBuilder builder = new StringBuilder();
-        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory, getPlanCommunity() );
+        String imageMap = diagram.makeImageMap( ticket, analyst, diagramFactory, getCommunityService() );
         // imageMap = imageMap.replace( "id=\"G\"", "id=\"" + getContainerId() + "\"" );
         imageMap = imageMap.replace( "id=\"G\"", "" );
         imageMap = imageMap.replace( "name=\"G\"", "name=\"" + getContainerId() + "\"" );

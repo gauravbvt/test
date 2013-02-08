@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
@@ -125,9 +125,9 @@ public class Requirement extends ModelObject implements Countable {
         setName( s );
     }
 
-    public void initialize( PlanCommunity planCommunity ) {
-        committerSpec.initialize( planCommunity );
-        beneficiarySpec.initialize( planCommunity );
+    public void initialize( CommunityService communityService ) {
+        committerSpec.initialize( communityService );
+        beneficiarySpec.initialize( communityService );
     }
 
     public boolean isEmpty() {
@@ -302,14 +302,14 @@ public class Requirement extends ModelObject implements Countable {
      *
      * @param timing        a phase timing
      * @param event         an event
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a satisfaction rating
      */
     public Satisfaction measureSatisfaction(
             Phase.Timing timing,
             Event event,
-            PlanCommunity planCommunity ) {
-        SatisfactionMeasure[] satisfactions = evaluateSatisfaction( timing, event, planCommunity );
+            CommunityService communityService ) {
+        SatisfactionMeasure[] satisfactions = evaluateSatisfaction( timing, event, communityService );
         return satisfactions[0].getSatisfaction()
                 .min( satisfactions[1].getSatisfaction() )
                 .min( satisfactions[2].getSatisfaction() );
@@ -317,12 +317,12 @@ public class Requirement extends ModelObject implements Countable {
 
     private SatisfactionMeasure[] evaluateSatisfaction( Phase.Timing timing,
                                                         Event event,
-                                                        PlanCommunity planCommunity ) {
+                                                        CommunityService communityService ) {
         SatisfactionMeasure[] satisfactions = new SatisfactionMeasure[3];
-        CommunityCommitments commitments = planCommunity.getAllCommitments( false )
-                .inSituation( timing, event, planCommunity.getCommunityLocale() )
-                .satisfying( this, planCommunity )
-                .canBeRealized( planCommunity );
+        CommunityCommitments commitments = communityService.getAllCommitments( false )
+                .inSituation( timing, event, communityService.getPlanCommunity().getCommunityLocale() )
+                .satisfying( this, communityService )
+                .canBeRealized( communityService );
         if ( commitments.isEmpty() ) {
             satisfactions[0] = new SatisfactionMeasure( Satisfaction.Impossible, getCommitterSpec().getCardinality(), 0 );
             satisfactions[1] = new SatisfactionMeasure( Satisfaction.Impossible, getBeneficiarySpec().getCardinality(), 0 );
@@ -371,12 +371,12 @@ public class Requirement extends ModelObject implements Countable {
         return satisfactions;
     }
 
-    private boolean canBeRealized( CommunityCommitment communityCommitment, PlanCommunity planCommunity ) {
-        return planCommunity.getAnalyst()
+    private boolean canBeRealized( CommunityCommitment communityCommitment, CommunityService communityService ) {
+        return communityService.getAnalyst()
                 .findRealizabilityProblems(
-                        planCommunity.getPlan(),
+                        communityService.getPlan(),
                         communityCommitment.getCommitment(),
-                        planCommunity.getPlanService() ).isEmpty();
+                        communityService.getPlanService() ).isEmpty();
     }
 
     /**
@@ -384,18 +384,18 @@ public class Requirement extends ModelObject implements Countable {
      *
      * @param timing        a phase timing
      * @param event         an event
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a string
      */
     public String satisfactionSummary(
             Phase.Timing timing,
             Event event,
-            PlanCommunity planCommunity ) {
+            CommunityService communityService ) {
         String dissatisfaction = "";
         SatisfactionMeasure[] satisfactions = evaluateSatisfaction(
                 timing,
                 event,
-                planCommunity );
+                communityService );
         SatisfactionMeasure sourceCountSatisfactionMeasure = satisfactions[0];
         SatisfactionMeasure receiverCountSatisfactionMeasure = satisfactions[1];
         SatisfactionMeasure sourcesPerReceiverSatisfactionMeasure = satisfactions[2];
@@ -494,17 +494,17 @@ public class Requirement extends ModelObject implements Countable {
      * Whether a commitment satisfies this requirement.
      *
      * @param commitment    a commitment
-     * @param planCommunity a plan community
+     * @param communityService a plan community service
      * @return a boolean
      */
-    public boolean satisfiedBy( CommunityCommitment commitment, PlanCommunity planCommunity ) {
+    public boolean satisfiedBy( CommunityCommitment commitment, CommunityService communityService ) {
         if ( isEmpty() ) return false;
-        Place locale = planCommunity.getCommunityLocale();
+        Place locale = communityService.getPlanCommunity().getCommunityLocale();
         Flow flow = commitment.getSharing();
         return matchesFlow( flow, locale )
                 && beneficiarySpec.satisfiesSituation( commitment, locale )
-                && committerSpec.satisfiesTaskAndResources( commitment.getCommitter(), planCommunity )
-                && beneficiarySpec.satisfiesTaskAndResources( commitment.getBeneficiary(), planCommunity );
+                && committerSpec.satisfiesTaskAndResources( commitment.getCommitter(), communityService )
+                && beneficiarySpec.satisfiesTaskAndResources( commitment.getBeneficiary(), communityService );
     }
 
     public Map<String, Object> mapState() {
@@ -519,8 +519,8 @@ public class Requirement extends ModelObject implements Countable {
     }
 
     @SuppressWarnings( "unchecked" )
-    public void initFromMap( Map<String, Object> state, PlanCommunity planCommunity ) {
-        super.initFromMap( state, planCommunity.getPlanService() );
+    public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
+        super.initFromMap( state, communityService.getPlanService() );
         setInformation( (String) state.get( "information" ) );
         setInfoTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
         setEois( (List<String>) state.get( "eois" ) );
@@ -528,10 +528,10 @@ public class Requirement extends ModelObject implements Countable {
         card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
         setCardinality( card );
         AssignmentSpec cSpec = new AssignmentSpec();
-        cSpec.initFromMap( (Map<String, Object>) state.get( "committerSpec" ), planCommunity );
+        cSpec.initFromMap( (Map<String, Object>) state.get( "committerSpec" ), communityService );
         setCommitterSpec( cSpec );
         AssignmentSpec bSpec = new AssignmentSpec();
-        bSpec.initFromMap( (Map<String, Object>) state.get( "beneficiarySpec" ), planCommunity );
+        bSpec.initFromMap( (Map<String, Object>) state.get( "beneficiarySpec" ), communityService );
         setCommitterSpec( bSpec );
     }
 
@@ -861,14 +861,14 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         @SuppressWarnings( "unchecked" )
-        public void initFromMap( Map<String, Object> state, PlanCommunity planCommunity ) {
+        public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
             setTaskName( (String) state.get( "taskName" ) );
             setTaskTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
             Cardinality card = new Cardinality();
             card.initFromMap( (Map<String, Object>) state.get( "cardinality" ) );
             setCardinality( card );
             AgentSpec agentSpec = new AgentSpec();
-            agentSpec.initFromMap( (Map<String, Object>) state.get( "agentSpec" ), planCommunity );
+            agentSpec.initFromMap( (Map<String, Object>) state.get( "agentSpec" ), communityService );
         }
 
         public Agent getAgent() {
@@ -950,15 +950,15 @@ public class Requirement extends ModelObject implements Countable {
         }
 
 
-        public boolean appliesToAgency( Agency agency, PlanCommunity planCommunity ) {
-            return agentSpec.appliesToAgency( agency, planCommunity );
+        public boolean appliesToAgency( Agency agency, CommunityService communityService ) {
+            return agentSpec.appliesToAgency( agency, communityService );
         }
 
-        public boolean satisfiesTaskAndResources( CommunityAssignment assignment, PlanCommunity planCommunity ) {
+        public boolean satisfiesTaskAndResources( CommunityAssignment assignment, CommunityService communityService ) {
             Part part = assignment.getPart();
             return ( taskName.isEmpty() || Matcher.same( taskName, part.getTask() ) )
                     && ( taskTags.isEmpty() || Matcher.matchesAll( taskTags, part.getTags() ) )
-                    && agentSpec.appliesToAssignment( assignment, planCommunity );
+                    && agentSpec.appliesToAssignment( assignment, communityService );
         }
 
         public void setSituationIfAppropriate( Phase.Timing t, Event e, Place locale ) {
@@ -976,8 +976,8 @@ public class Requirement extends ModelObject implements Countable {
             return ModelObject.areIdentical( mo, event ) || agentSpec.references( mo );
         }
 
-        public void initialize( PlanCommunity planCommunity ) {
-            agentSpec.initialize( planCommunity );
+        public void initialize( CommunityService communityService ) {
+            agentSpec.initialize( communityService );
         }
 
     }
@@ -1010,12 +1010,12 @@ public class Requirement extends ModelObject implements Countable {
             agency = agentSpec.getAgency();
         }
 
-        public AgentSpec( CommunityAssignment assignment, PlanCommunity planCommunity ) {
+        public AgentSpec( CommunityAssignment assignment, CommunityService communityService ) {
             processAgent( assignment.getAgent() );
             jurisdiction = assignment.getJurisdiction();
             processAgency( assignment.getAgency() );
-            placeholder = assignment.getEmployment().getEmployer().getPlaceholder( planCommunity );
-            initialize( planCommunity );
+            placeholder = assignment.getEmployment().getEmployer().getPlaceholder( communityService );
+            initialize( communityService );
         }
 
         public String getLabel() {
@@ -1051,13 +1051,13 @@ public class Requirement extends ModelObject implements Countable {
 
         // MUST BE RUN before accessing agent or agency whenever requirement is created or one of its agentSpecs is updated
         // Makes sure all agent specs are valid, else nulled.
-        public void initialize( PlanCommunity planCommunity ) {
+        public void initialize( CommunityService communityService ) {
             if ( !initialized ) {
                 agent = null;
                 agency = null;
                 if ( actor != null ) {   // verify actor still valid
                     try {
-                        actor = planCommunity.getPlanService().find( Actor.class, actor.getId() );
+                        actor = communityService.getPlanService().find( Actor.class, actor.getId() );
                         assert actor.isActual();
                     } catch ( Exception e ) {
                         LOG.warn( "Failed to find actor " + actor.getId() );
@@ -1066,10 +1066,10 @@ public class Requirement extends ModelObject implements Countable {
                 }
                 if ( actor != null ) {
                     if ( orgParticipationId != null ) {
-                        OrganizationParticipation orgParticipation = planCommunity
+                        OrganizationParticipation orgParticipation = communityService
                                 .getOrganizationParticipationService().load( orgParticipationId );
                         if ( orgParticipation != null ) {
-                            agent = new Agent( actor, orgParticipation, planCommunity );
+                            agent = new Agent( actor, orgParticipation, communityService );
                         } else {
                             LOG.warn( "Invalid organization participation " + orgParticipationId );
                         }
@@ -1080,7 +1080,7 @@ public class Requirement extends ModelObject implements Countable {
                 if ( fixedOrgId != null ) {
                     assert orgParticipationId == null;
                     try {
-                        Organization org = planCommunity.getPlanService().find( Organization.class, fixedOrgId );
+                        Organization org = communityService.getPlanService().find( Organization.class, fixedOrgId );
                         if ( org != null && !org.isUnknown() ) {
                             agency = new Agency( org );
                         }
@@ -1092,11 +1092,11 @@ public class Requirement extends ModelObject implements Countable {
                 }
                 if ( orgParticipationId != null ) {
                     assert fixedOrgId == null;
-                    OrganizationParticipation orgParticipation = planCommunity
+                    OrganizationParticipation orgParticipation = communityService
                             .getOrganizationParticipationService().load( orgParticipationId );
                     if ( orgParticipation != null ) {
-                        agency = new Agency( orgParticipation, planCommunity );
-                        placeholder = agency.getPlaceholder( planCommunity );
+                        agency = new Agency( orgParticipation, communityService );
+                        placeholder = agency.getPlaceholder( communityService );
                     } else {
                         LOG.warn( "Invalid organization participation " + orgParticipationId );
                         orgParticipationId = null;
@@ -1233,8 +1233,8 @@ public class Requirement extends ModelObject implements Countable {
             return state;
         }
 
-        public void initFromMap( Map<String, Object> state, PlanCommunity planCommunity ) {
-            PlanService planService = planCommunity.getPlanService();
+        public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
+            PlanService planService = communityService.getPlanService();
             if ( state.containsKey( "actor" ) ) {
                 Long id = (Long) state.get( "actor" );
                 try {
@@ -1265,7 +1265,7 @@ public class Requirement extends ModelObject implements Countable {
                     LOG.warn( "Organization not found at " + id );
                 }
             }
-            initialize( planCommunity );
+            initialize( communityService );
         }
 
         public boolean references( ModelObject mo ) {
@@ -1282,15 +1282,15 @@ public class Requirement extends ModelObject implements Countable {
                     && placeholder == null;
         }
 
-        public boolean narrowsOrEquals( AgentSpec agentSpec, PlanCommunity planCommunity ) {
-            Place locale = planCommunity.getCommunityLocale();
+        public boolean narrowsOrEquals( AgentSpec agentSpec, CommunityService communityService ) {
+            Place locale = communityService.getPlanCommunity().getCommunityLocale();
             return ( agentSpec.getAgent() == null
                     || ( getAgent() != null && getAgent().equals( agentSpec.getAgent() ) ) )
                     && ModelEntity.implies( jurisdiction, agentSpec.getJurisdiction(), locale )
                     && ( agentSpec.getAgency() == null
                     || ( getAgency() != null
                     && ( getAgency().equals( agentSpec.getAgency() )
-                    || getAgency().hasAncestor( agentSpec.getAgency(), planCommunity ) ) ) )
+                    || getAgency().hasAncestor( agentSpec.getAgency(), communityService ) ) ) )
                     && ModelEntity.implies( placeholder, agentSpec.getPlaceholder(), locale );
         }
 
@@ -1302,24 +1302,24 @@ public class Requirement extends ModelObject implements Countable {
             return getAgency() != null;
         }
 
-        public boolean appliesToAssignment( CommunityAssignment assignment, PlanCommunity planCommunity ) {
+        public boolean appliesToAssignment( CommunityAssignment assignment, CommunityService communityService ) {
             return isAnyone()
                     || ( appliesToAgent( assignment.getAgent() )      // todo - deal with jurisdiction matching when re-enabled
-                            && appliesToAgency( assignment.getAgency(), planCommunity ) );
+                            && appliesToAgency( assignment.getAgency(), communityService ) );
         }
 
         private boolean appliesToAgent( Agent anAgent ) {
             return getAgent() == null || getAgent().equals( anAgent );
         }
 
-        public boolean appliesToAgency( Agency anAgency, PlanCommunity planCommunity ) {
+        public boolean appliesToAgency( Agency anAgency, CommunityService communityService ) {
             if ( getAgency() != null )
                 return getAgency().equals( anAgency )
-                        || anAgency.hasAncestor( getAgency(), planCommunity );
+                        || anAgency.hasAncestor( getAgency(), communityService );
             else if ( getPlaceholder() != null ) {
-                Organization otherPlaceHolder = anAgency.getPlaceholder( planCommunity );
+                Organization otherPlaceHolder = anAgency.getPlaceholder( communityService );
                 return otherPlaceHolder != null && getPlaceholder().equals( otherPlaceHolder )
-                        || anAgency.hasAncestorWithPlaceholder( getPlaceholder(), planCommunity );
+                        || anAgency.hasAncestorWithPlaceholder( getPlaceholder(), communityService );
             }
             return true;
         }

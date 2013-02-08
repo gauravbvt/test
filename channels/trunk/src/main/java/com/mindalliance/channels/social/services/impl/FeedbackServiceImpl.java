@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.services.impl;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -141,10 +142,10 @@ public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> i
     }
 
     @Override
-    public int countUnresolvedFeedback( PlanCommunity planCommunity, ChannelsUser user ) {
+    public int countUnresolvedFeedback( CommunityService communityService, ChannelsUser user ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
-        criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
+        criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
         criteria.add( Restrictions.eq( "username", user.getUsername()) );
         criteria.add( Restrictions.eq( "resolved", false ) );
         return criteria.list().size();

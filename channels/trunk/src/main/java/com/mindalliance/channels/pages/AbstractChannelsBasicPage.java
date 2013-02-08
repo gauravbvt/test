@@ -340,7 +340,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
 
     public void setPlan( Plan newPlan ) {
-        userLeftPlan( );
+        userLeftPlanCommunity();
         super.setPlan( newPlan );
     }
 

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -458,14 +458,14 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public List<UserMessage> getUserMessages( ChannelsUser user ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         String username = getUser().getUsername();
         List<UserMessage> userMessages = new ArrayList<UserMessage>();
         Iterator<UserMessage> iterator;
         if ( isShowReceived() ) {
-            iterator = userMessageService.getReceivedMessages( username, planCommunity );
+            iterator = userMessageService.getReceivedMessages( username, communityService );
         } else {
-            iterator = userMessageService.getSentMessages( username, planCommunity );
+            iterator = userMessageService.getSentMessages( username, communityService );
         }
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();

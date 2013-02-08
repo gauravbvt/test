@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.png;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
@@ -33,7 +33,7 @@ public class EntitiesNetworkPng extends DiagramPng {
             double[] size,
             String orientation,
             PageParameters parameters,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             DiagramFactory diagramFactory) throws DiagramException {
         Class entityClass = null;
         Segment segment = null;
@@ -52,7 +52,7 @@ public class EntitiesNetworkPng extends DiagramPng {
                 && !parameters.get( "segment" ).toString().equals( "NONE" ) ) {
             long id = Long.parseLong( parameters.get( "segment" ).toString() );
             try {
-                segment = planCommunity.getPlanService().find( Segment.class, id );
+                segment = communityService.getPlanService().find( Segment.class, id );
             } catch ( NotFoundException e ) {
                 LOG.warn( "Segment not found", e );
             }
@@ -61,7 +61,7 @@ public class EntitiesNetworkPng extends DiagramPng {
                 && !parameters.get( "connection" ).toString().equals( "NONE" ) ) {
             Long scRelId = Long.valueOf( parameters.get( "connection" ).toString() );
             selectedEntityRel = new EntityRelationship();
-            selectedEntityRel.setId( scRelId, planCommunity.getPlanService() );
+            selectedEntityRel.setId( scRelId, communityService.getPlanService() );
         }
        DiagramFactory<ModelEntity, EntityRelationship> factory = diagramFactory;
         return factory.newEntitiesNetworkDiagram(

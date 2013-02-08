@@ -8,7 +8,7 @@ package com.mindalliance.channels.pages.reports;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
@@ -70,7 +70,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     }
 
 
-    protected String getPlanCommunityUri() {
+    public String getPlanCommunityUri() {
         return planCommunityUri;
     }
 
@@ -87,22 +87,22 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     }
 
     protected void addContent(  ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         QueryService queryService = getQueryService();
-        boolean isPlanner = getUser().isPlanner( planCommunity.getPlan().getUri() );
-        planCommunityUri = planCommunity.getUri();
-        planVersion = planCommunity.getPlan().getVersion();
+        boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
+        planCommunityUri = communityService.getPlanCommunity().getUri();
+        planVersion = communityService.getPlan().getVersion();
         participations = isPlanner
-                            ? userParticipationService.getAllActiveParticipations( planCommunity )
-                            : userParticipationService.getActiveUserParticipations( getUser(), planCommunity );
+                            ? userParticipationService.getAllActiveParticipations( communityService )
+                            : userParticipationService.getActiveUserParticipations( getUser(), communityService );
         agents = findAssignedAgents();
-        initComponents( queryService, planCommunity );
+        initComponents( queryService, communityService );
     }
 
-    protected abstract void initComponents( QueryService service, PlanCommunity planCommunity );
+    protected abstract void initComponents( QueryService service, CommunityService communityService );
 
     protected List<Agent> findAssignedAgents( ) {
-        return participationManager.getAllKnownAgents( getPlanCommunity() );
+        return participationManager.getAllKnownAgents( getCommunityService() );
     }
 
 }

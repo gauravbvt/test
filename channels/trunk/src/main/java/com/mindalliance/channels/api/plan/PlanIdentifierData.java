@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.plan;
 
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Plan;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -32,8 +32,8 @@ public class PlanIdentifierData  implements Serializable {
         // required
     }
 
-    public PlanIdentifierData( PlanCommunity planCommunity ) {
-        plan = planCommunity.getPlan();
+    public PlanIdentifierData( CommunityService communityService ) {
+        plan = communityService.getPlan();
     }
 
     @XmlElement

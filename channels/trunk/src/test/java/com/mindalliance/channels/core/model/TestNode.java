@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.dao.DefinitionManager;
 import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.PlanManagerImpl;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import junit.framework.TestCase;
@@ -31,10 +31,10 @@ public class TestNode extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        DefinitionManager definitionManager = new DefinitionManager(
+        PlanDefinitionManager planDefinitionManager = new PlanDefinitionManager(
             new FileSystemResource( new File("target/channel-test-data" ) ), null );
-        definitionManager.afterPropertiesSet();
-        PlanManagerImpl planManager = new PlanManagerImpl( definitionManager );
+        planDefinitionManager.afterPropertiesSet();
+        PlanManagerImpl planManager = new PlanManagerImpl( planDefinitionManager );
         planManager.assignPlans();
 
         Plan plan = planManager.getPlans().get( 0 );

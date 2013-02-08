@@ -147,7 +147,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
 
     private List<String> allFlowNames() {
         Set<String> names = new HashSet<String>();
-        for ( Flow flow : getPlanCommunity().getPlanService().findAllFlows() ) {
+        for ( Flow flow : getCommunityService().getPlanService().findAllFlows() ) {
             String name = flow.getName().trim();
             if ( !name.isEmpty() ) names.add(  name );
         }
@@ -191,7 +191,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
 
     private Requirement getRequirement() {
         Requirement requirement = (Requirement) getModel().getObject();
-        requirement.initialize( getPlanCommunity() );
+        requirement.initialize( getCommunityService() );
         return requirement;
     }
 

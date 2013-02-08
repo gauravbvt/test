@@ -1,5 +1,6 @@
 package com.mindalliance.channels.social.model;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -105,7 +106,7 @@ public class UserMessage extends UserStatement {
     // Messageable
 
 
-    public String getTextContent( Format format, PlanCommunity planCommunity ) {
+    public String getTextContent( Format format, CommunityService communityService ) {
         // Ignore TEXT vs HTML for now
         Date now = new Date();
         StringBuilder sb = new StringBuilder();
@@ -130,7 +131,7 @@ public class UserMessage extends UserStatement {
         return sb.toString();
     }
 
-    public String getTextSubject( Format format, PlanCommunity planCommunity ) {
+    public String getTextSubject( Format format, CommunityService communityService ) {
         return "[" + getPlanUri() + "] " + getText();
     }
 

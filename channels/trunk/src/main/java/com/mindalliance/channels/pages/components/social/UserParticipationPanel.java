@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
@@ -102,7 +103,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             @Override
             protected void populateItem( ListItem<ParticipationWrapper> item ) {
                 ParticipationWrapper participationWrapper = item.getModelObject();
-                String assignation = getAssignation( participationWrapper.getAgent( getPlanCommunity() ) );
+                String assignation = getAssignation( participationWrapper.getAgent( getCommunityService() ) );
                 AjaxCheckBox acceptedCheckBox = new AjaxCheckBox(
                         "accepted",
                         new PropertyModel<Boolean>( participationWrapper, "accepted" )
@@ -117,7 +118,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 };
                 item.add( acceptedCheckBox );
                 item.add( new Label( "participation", assignation ) );
-                addTipTitle( item, participationWrapper.getRequirementsDescription( getPlanCommunity()) );
+                addTipTitle( item, participationWrapper.getRequirementsDescription( getCommunityService()) );
                 item.add( ( new Label(
                         "requester",
                         participationWrapper.isRequested()
@@ -166,12 +167,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 new Comparator<ParticipationWrapper>() {
                     @Override
                     public int compare( ParticipationWrapper p1, ParticipationWrapper p2 ) {
-                        boolean p1Open = p1.isOpen( getPlanCommunity() );
-                        boolean p2Open = p2.isOpen( getPlanCommunity() );
+                        boolean p1Open = p1.isOpen( getCommunityService() );
+                        boolean p2Open = p2.isOpen( getCommunityService() );
                         if ( !p1Open && p2Open ) return -1;
                         if ( p1Open && !p2Open ) return 1;
-                        return p1.getAgent( getPlanCommunity() ).getName()
-                                .compareTo( p2.getAgent( getPlanCommunity() ).getName() );
+                        return p1.getAgent( getCommunityService() ).getName()
+                                .compareTo( p2.getAgent( getCommunityService() ).getName() );
                     }
                 } );
         return wrappers;
@@ -180,7 +181,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private List<UserParticipation> unconstrainedUnacceptedParticipations() {
         Set<UserParticipation> participations = new HashSet<UserParticipation>(  );
         PlanCommunity planCommunity = getPlanCommunity();
-        for ( Agent agent : participationManager.findSelfAssignableOpenAgents( planCommunity, getUser() ) ) {
+        for ( Agent agent : participationManager.findSelfAssignableOpenAgents( getCommunityService(), getUser() ) ) {
             if ( agent.isUnconstrainedParticipation() ) {
                 participations.add( new UserParticipation(  getUsername(),  getUser(),  agent, planCommunity ) );
             }
@@ -191,13 +192,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<UserParticipation> unsupervisedParticipations() {
         return (List<UserParticipation>) CollectionUtils.select(
-                getPlanCommunity().getUserParticipationService().getUserParticipations(
+                getCommunityService().getUserParticipationService().getUserParticipations(
                         getUser(),
-                        getPlanCommunity() ),
+                        getCommunityService() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !( (UserParticipation) object ).isSupervised( getPlanCommunity() );
+                        return !( (UserParticipation) object ).isSupervised( getCommunityService() );
                     }
                 } );
     }
@@ -205,17 +206,17 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<UserParticipation> confirmedSupervisedParticipations() {
          final UserParticipationConfirmationService userParticipationConfirmationService
-                = getPlanCommunity().getUserParticipationConfirmationService();
+                = getCommunityService().getUserParticipationConfirmationService();
         return (List<UserParticipation>) CollectionUtils.select(
-                getPlanCommunity().getUserParticipationService().getUserParticipations(
+                getCommunityService().getUserParticipationService().getUserParticipations(
                         getUser(),
-                        getPlanCommunity() ),
+                getCommunityService() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         UserParticipation participation = (UserParticipation) object;
-                        return ( participation.isSupervised( getPlanCommunity() )
-                                && userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, getPlanCommunity() ) );
+                        return ( participation.isSupervised( getCommunityService() )
+                                && userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, getCommunityService() ) );
                     }
                 } );
     }
@@ -247,9 +248,9 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             @Override
             protected void populateItem( ListItem<ParticipationWrapper> item ) {
                 ParticipationWrapper participationWrapper = item.getModelObject();
-                String assignation = getAssignation( participationWrapper.getAgent( getPlanCommunity() ) );
+                String assignation = getAssignation( participationWrapper.getAgent( getCommunityService() ) );
                 item.add( new Label( "participation", assignation ) );
-                addTipTitle( item, participationWrapper.getRequirementsDescription( getPlanCommunity()) );
+                addTipTitle( item, participationWrapper.getRequirementsDescription( getCommunityService() ) );
                 AjaxCheckBox acceptedCheckBox = new AjaxCheckBox(
                         "accepted",
                         new PropertyModel<Boolean>( participationWrapper, "accepted" )
@@ -345,7 +346,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private List<Agent> agentsWithAvailableParticipation( List<ParticipationWrapper> participationWrappers ) {
         List<Agent> agents = new ArrayList<Agent>();
         if ( selectedAvailableParticipationAgency != null ) {
-            for ( final Agent agent : selectedAvailableParticipationAgency.getAgents( getPlanCommunity() ) ) {
+            for ( final Agent agent : selectedAvailableParticipationAgency.getAgents( getCommunityService() ) ) {
                 if ( isAgentAvailableForParticipation( agent )
                         && !CollectionUtils.exists(
                         participationWrappers,
@@ -353,7 +354,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                             @Override
                             public boolean evaluate( Object object ) {
                                 return ( (ParticipationWrapper) object ).getParticipation()
-                                        .getAgent( getPlanCommunity() ).equals( agent );
+                                        .getAgent( getCommunityService() ).equals( agent );
                             }
                         }
                 ) ) {
@@ -374,13 +375,13 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private List<Agency> agenciesWithAvailableParticipation(
             final List<ParticipationWrapper> participationWrappers ) {
         List<Agency> agencies = (List<Agency>) CollectionUtils.select(
-                participationManager.getAllKnownAgencies( getPlanCommunity() ),
+                participationManager.getAllKnownAgencies( getCommunityService() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         Agency agency = (Agency) object;
                         return CollectionUtils.exists(
-                                agency.getAgents( getPlanCommunity() ),
+                                agency.getAgents( getCommunityService() ),
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate( Object object ) {
@@ -392,7 +393,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                                                     @Override
                                                     public boolean evaluate( Object object ) {
                                                         return ( (ParticipationWrapper) object ).getParticipation()
-                                                                .getAgent( getPlanCommunity() ).equals( agent );
+                                                                .getAgent( getCommunityService() ).equals( agent );
                                                     }
                                                 }
                                         );
@@ -423,8 +424,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 new Comparator<ParticipationWrapper>() {
                     @Override
                     public int compare( ParticipationWrapper p1, ParticipationWrapper p2 ) {
-                        return p1.getAgent( getPlanCommunity() ).getName()
-                                .compareTo( p2.getAgent( getPlanCommunity() ).getName() );
+                        return p1.getAgent( getCommunityService() ).getName()
+                                .compareTo( p2.getAgent( getCommunityService() ).getName() );
                     }
                 } );
         return wrappers;
@@ -433,17 +434,17 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     @SuppressWarnings( "unchecked" )
     private List<UserParticipation> unconfirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService =
-                getPlanCommunity().getUserParticipationConfirmationService();
-        return (List<UserParticipation>) CollectionUtils.select( getPlanCommunity().getUserParticipationService()
+                getCommunityService().getUserParticipationConfirmationService();
+        return (List<UserParticipation>) CollectionUtils.select( getCommunityService().getUserParticipationService()
                 .getUserParticipations(
                         getUser(),
-                        getPlanCommunity() ),
+                        getCommunityService() ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         UserParticipation participation = (UserParticipation) object;
-                        return ( participation ).isSupervised( getPlanCommunity() )
-                                && !userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, getPlanCommunity() );
+                        return ( participation ).isSupervised( getCommunityService() )
+                                && !userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, getCommunityService() );
                     }
                 } );
     }
@@ -461,19 +462,19 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     public void setParticipationAsAvailableAgent( Agent agent ) {
-        PlanCommunity planCommunity = getPlanCommunity();
+        CommunityService communityService = getCommunityService();
         if ( isAgentAvailableForParticipation( agent ) ) {
-            planCommunity.getUserParticipationService().addAcceptedParticipation(
+            getCommunityService().getUserParticipationService().addAcceptedParticipation(
                     getUsername(),
                     getUser(),
                     agent,
-                    planCommunity );
+                    communityService );
         }
         selectedAvailableParticipationAgency = null;
     }
 
     private boolean isAgentAvailableForParticipation( Agent agent ) {
-        return participationManager.isParticipationSelfAssignable( agent, getUser(), getPlanCommunity() );
+        return participationManager.isParticipationSelfAssignable( agent, getUser(), getCommunityService() );
     }
 
     public class ParticipationWrapper implements Serializable {
@@ -497,18 +498,18 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         }
 
         public void setAccepted( boolean accepted ) {
-            PlanCommunity planCommunity = getPlanCommunity();
-            UserParticipationService userParticipationService = planCommunity.getUserParticipationService();
+            CommunityService communityService = getCommunityService();
+            UserParticipationService userParticipationService = communityService.getUserParticipationService();
             if ( accepted ) {
-                userParticipationService.accept( participation, planCommunity );
+                userParticipationService.accept( participation, communityService );
             } else {
                 if ( isRequested() ) {
-                    userParticipationService.refuse( participation, planCommunity );
+                    userParticipationService.refuse( participation, communityService );
                 } else {
                     userParticipationService.deleteParticipation(
-                            new ChannelsUser( participation.getParticipant(), planCommunity ),
-                            participation.getAgent( planCommunity ),
-                            planCommunity );
+                            new ChannelsUser( participation.getParticipant(), communityService ),
+                            participation.getAgent( communityService ),
+                            communityService );
                 }
             }
             resetAll();
@@ -517,8 +518,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         }
 
 
-        public boolean isOpen( PlanCommunity planCommunity ) {
-            return getAgent( planCommunity ).isOpenParticipation();
+        public boolean isOpen( CommunityService communityService ) {
+            return getAgent( communityService ).isOpenParticipation();
         }
 
         public boolean isRequested() {
@@ -532,15 +533,15 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     : requestingUser.getFullName();
         }
 
-        public Agent getAgent( PlanCommunity planCommunity ) {
+        public Agent getAgent( CommunityService communityService ) {
             return participation == null
                     ? null
-                    : participation.getAgent( planCommunity );
+                    : participation.getAgent( communityService );
         }
 
-        public String getRequirementsDescription( PlanCommunity planCommunity ) {
-            Agent agent = getAgent( planCommunity );
-            return agent == null ? "" : agent.getRequirementsDescription( planCommunity );
+        public String getRequirementsDescription( CommunityService communityService ) {
+            Agent agent = getAgent( communityService );
+            return agent == null ? "" : agent.getRequirementsDescription( communityService );
         }
     }
 

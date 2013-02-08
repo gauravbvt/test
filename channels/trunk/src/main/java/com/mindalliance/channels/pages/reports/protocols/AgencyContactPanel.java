@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.reports.protocols;
 import com.mindalliance.channels.api.procedures.AgencyData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
-import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -27,14 +27,14 @@ public class AgencyContactPanel extends AbstractDataPanel {
                                String serverUrl,
                                Agency agency,
                                ProtocolsFinder finder,
-                               PlanCommunity planCommunity ) {
+                               CommunityService communityService ) {
         super( id, finder );
-        initData( serverUrl, agency, planCommunity );
+        initData( serverUrl, agency, communityService );
         init();
     }
 
-    private void initData( String serverUrl, Agency agency, PlanCommunity planCommunity ) {
-        agencyData = new AgencyData( serverUrl, agency, planCommunity );
+    private void initData( String serverUrl, Agency agency, CommunityService communityService ) {
+        agencyData = new AgencyData( serverUrl, agency, communityService );
     }
 
     private void init() {

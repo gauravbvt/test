@@ -9,6 +9,9 @@ package com.mindalliance.channels.core.export.xml;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.AbstractCommand;
+import com.mindalliance.channels.core.community.CommunityDao;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.IdGenerator;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
@@ -88,7 +91,9 @@ public class XmlStreamer implements ImportExportFactory {
     private final IdGenerator idGenerator;
 
 
-    /** Where the attachments are managed... */
+    /**
+     * Where the attachments are managed...
+     */
     private AttachmentManager attachmentManager;
 
     public XmlStreamer( IdGenerator idGenerator ) {
@@ -96,12 +101,12 @@ public class XmlStreamer implements ImportExportFactory {
     }
 
     @Override
-    public Importer createImporter( String userName, PlanDao planDao ) {
+    public Importer createImporter( String userName, AbstractModelObjectDao planDao ) {
         return new Context( planDao, userName );
     }
 
     @Override
-    public Exporter createExporter( String userName, PlanDao planDao ) {
+    public Exporter createExporter( String userName, AbstractModelObjectDao planDao ) {
         return new Context( planDao, userName );
     }
 
@@ -128,10 +133,11 @@ public class XmlStreamer implements ImportExportFactory {
 
     /**
      * Return the mime type of imported/exported files.
+     *
      * @return application/xml
      */
     public MarkupType getMimeType() {
-        return new MarkupType( "xml", "application/xml");
+        return new MarkupType( "xml", "application/xml" );
     }
 
     public IdGenerator getIdGenerator() {
@@ -139,6 +145,7 @@ public class XmlStreamer implements ImportExportFactory {
     }
 
     //=======================================================
+
     /**
      * Holder of a configured XStream instance in a given context.
      */
@@ -152,33 +159,40 @@ public class XmlStreamer implements ImportExportFactory {
         private XStream xstream = new XStream();
 
         /**
-         * The current plan.
-         */
-        private final Plan plan;
-
-        /**
          * The current service.
          */
-        private final PlanDao planDao;
+        private final AbstractModelObjectDao modelObjectDao;
 
-        private Context( PlanDao planDao, String userName ) {
+        private Context( AbstractModelObjectDao modelObjectDao, String userName ) {
             this.userName = userName;
-            plan = planDao.getPlan();
-            this.planDao = planDao;
+            this.modelObjectDao = modelObjectDao;
             addAliases( xstream );
             registerConverters( xstream );
         }
 
-        public Plan getPlan() {
-            return plan;
+        protected PlanDao getPlanDao() {
+            return (PlanDao) getModelObjectDao();
         }
 
-        public PlanDao getPlanDao() {
-            return planDao;
+        protected CommunityDao getCommunityDao() {
+            return (CommunityDao) getModelObjectDao();
+        }
+
+        public PlanCommunity getPlanCommunity() {
+            return getCommunityDao().getPlanCommunity();
+        }
+
+        public Plan getPlan() {
+            return getPlanDao().getPlan();
+        }
+
+        public AbstractModelObjectDao getModelObjectDao() {
+            return modelObjectDao;
         }
 
         /**
          * The username responsible for the import.
+         *
          * @return "daemon", usually...
          */
         public String getUserName() {
@@ -189,8 +203,9 @@ public class XmlStreamer implements ImportExportFactory {
             return XmlStreamer.this.getAttachmentManager();
         }
 
-        @SuppressWarnings( { "OverlyLongMethod", "OverlyCoupledMethod" } )
+        @SuppressWarnings({"OverlyLongMethod", "OverlyCoupledMethod"})
         private void registerConverters( XStream stream ) {
+            stream.registerConverter( new CommunityConverter( this ) );
             stream.registerConverter( new PlanConverter( this ) );
             stream.registerConverter( new EventConverter( this ) );
             stream.registerConverter( new JournalConverter( this ) );
@@ -222,11 +237,12 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new ExportConverter( this ) );
         }
 
-        @SuppressWarnings( { "OverlyLongMethod", "OverlyCoupledMethod" } )
+        @SuppressWarnings({"OverlyLongMethod", "OverlyCoupledMethod"})
         private void addAliases( XStream stream ) {
             stream.setMode( XStream.NO_REFERENCES );
             stream.alias( "command", AbstractCommand.class );
             stream.alias( "journal", Journal.class );
+            stream.alias( "plancommunity", PlanCommunity.class );
             stream.alias( "plan", Plan.class );
             stream.alias( "classification", Classification.class );
             stream.alias( "availability", Availability.class );
@@ -315,16 +331,27 @@ public class XmlStreamer implements ImportExportFactory {
         }
 
         @Override
+        public void importPlanCommunity( FileInputStream stream ) throws IOException {
+            ObjectInputStream in = xstream.createObjectInputStream( stream );
+            try {
+                in.readObject();
+                // Do nothing with idMap also in results.
+            } catch ( ClassNotFoundException e ) {
+                throw new IOException( "Failed to import plan community.", e );
+            }
+        }
+
+        @Override
         public void export( OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
-            out.writeObject( plan );
+            out.writeObject( getModelObjectDao().getModelObjectContext() );
             out.close();
         }
 
         @Override
         public void export( Segment segment, OutputStream stream ) throws IOException {
             ObjectOutputStream out = xstream.createObjectOutputStream( stream, "export" );
-            out.writeObject( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+            out.writeObject( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" );
             out.writeObject( segment );
             out.close();
         }
@@ -400,12 +427,12 @@ public class XmlStreamer implements ImportExportFactory {
             if ( loadingPlan ) {
                 Long id = conSpec.getExternalFlowId();
                 externalFlow = (ExternalFlow) ( conSpec.isSource() ?
-                          planDao.connect( externalConnector, part, innerName, id )
-                        : planDao.connect( part, externalConnector, innerName, id ) );
+                        getPlanDao().connect( externalConnector, part, innerName, id )
+                        : getPlanDao().connect( part, externalConnector, innerName, id ) );
             } else {
                 externalFlow = (ExternalFlow) ( conSpec.isSource() ?
-                          planDao.connect( externalConnector, part, innerName, null )
-                        : planDao.connect( part, externalConnector, innerName, null ) );
+                        getPlanDao().connect( externalConnector, part, innerName, null )
+                        : getPlanDao().connect( part, externalConnector, innerName, null ) );
             }
             copy( localInnerFlow, externalFlow );
             String restriction = conSpec.getRestriction();
@@ -414,7 +441,7 @@ public class XmlStreamer implements ImportExportFactory {
             }
             externalFlow.setReceiptConfirmationRequested( conSpec.isReceiptConfirmationRequested() );
             externalFlow.setCanBypassIntermediate( conSpec.isCanBypassIntermediate() );
-            planDao.disconnect( localInnerFlow );
+            getPlanDao().disconnect( localInnerFlow );
         }
 
         private void copy( Flow inner, ExternalFlow external ) {
@@ -435,7 +462,7 @@ public class XmlStreamer implements ImportExportFactory {
             external.setReceiptConfirmationRequested( inner.isReceiptConfirmationRequested() );
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private List<Connector> findMatchingConnectors( final ConnectionSpecification conSpec ) {
             List<Connector> connectors = new ArrayList<Connector>();
             List<Segment> segments = ConverterUtils.findMatchingSegments( getPlanDao(), conSpec.getSegmentSpecification() );
@@ -462,7 +489,7 @@ public class XmlStreamer implements ImportExportFactory {
             if ( externalConnector.isSource() == conSpec.isSource() ) return false;
             Flow externalInnerFlow = externalConnector.getInnerFlow();
             Part part = (Part) ( conSpec.isSource() ?
-                      externalInnerFlow.getSource()
+                    externalInnerFlow.getSource()
                     : externalInnerFlow.getTarget() );
             Long partIdValue = Long.parseLong( conSpec.getPartSpecification().getId() );
             boolean partIdMatches = partIdValue != null && partIdValue == part.getId();

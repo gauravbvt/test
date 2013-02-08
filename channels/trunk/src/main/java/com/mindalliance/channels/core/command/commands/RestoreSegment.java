@@ -40,7 +40,7 @@ public class RestoreSegment extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         QueryService queryService = commander.getQueryService();
         ImportExportFactory importExportFactory = commander.getImportExportFactory();
-        Importer importer = importExportFactory.createImporter( getUserName(), commander.getPlanDao() );
+        Importer importer = importExportFactory.createImporter( getUserName(), commander.getDao() );
         String xml = (String) get( "xml" );
         if ( xml != null ) {
             Long defaultSegmentId = (Long) get( "defaultSegment" );
