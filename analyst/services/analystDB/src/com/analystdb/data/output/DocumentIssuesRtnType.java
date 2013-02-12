@@ -5,19 +5,37 @@ import com.analystdb.data.Issue;
 
 
 /**
- * Generated for query "documentIssues" on 01/27/2013 17:30:33
+ * Generated for query "documentIssues" on 02/11/2013 20:47:46
  * 
  */
 public class DocumentIssuesRtnType {
 
-    private Issue c0;
+    private Long id;
+    private Issue issue;
+    private Long approaches;
 
-    public Issue getC0() {
-        return c0;
+    public Long getId() {
+        return id;
     }
 
-    public void setC0(Issue c0) {
-        this.c0 = c0;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Issue issue) {
+        this.issue = issue;
+    }
+
+    public Long getApproaches() {
+        return approaches;
+    }
+
+    public void setApproaches(Long approaches) {
+        this.approaches = approaches;
     }
 
 }

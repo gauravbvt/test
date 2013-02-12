@@ -14,6 +14,18 @@
         <property name="version" type="integer">
             <column name="version"/>
         </property>
+        <property name="start" type="date">
+            <column name="start" length="10"/>
+        </property>
+        <property name="end" type="date">
+            <column name="end" length="10"/>
+        </property>
+        <property name="approved" type="boolean">
+            <column name="approved" not-null="true"/>
+        </property>
+        <property name="cost" type="integer">
+            <column name="cost"/>
+        </property>
         <many-to-one name="interview" class="com.analystdb.data.Interview">
             <column name="interview" not-null="true"/>
         </many-to-one>

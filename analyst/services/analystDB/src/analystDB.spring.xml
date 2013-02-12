@@ -1,6 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<beans xsi:schemaLocation="http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <bean class="com.analystdb.AnalystDB" scope="singleton" lazy-init="true" id="analystDB">
+<?xml version="1.0"?>
+
+<!-- Generated 02/10/2013 19:29:33
+
+Configuration for 'analystDB' database service
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+
+    <bean 
+        id="analystDB"
+        class="com.analystdb.AnalystDB"
+        scope="singleton"
+        lazy-init="true">
         <property name="dataServiceManager">
             <ref bean="analystDBDataService"/>
         </property>
@@ -8,7 +24,10 @@
             <ref bean="analystDBTaskMgr"/>
         </property>
     </bean>
-    <bean class="com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer">
+
+
+    <bean 
+        class="com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer">
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>
@@ -16,25 +35,47 @@
             </list>
         </property>
     </bean>
-    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" lazy-init="true" id="analystDBDataSource">
+
+    <bean 
+        id="analystDBDataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource" 
+        lazy-init="true">
         <property name="driverClassName" value="${analystDB.driverClassName}"/>
         <property name="url" value="${analystDB.connectionUrl}"/>
         <property name="username" value="${analystDB.username}"/>
         <property name="password" value="${analystDB.password}"/>
     </bean>
-    <bean class="org.springframework.orm.hibernate3.HibernateTransactionManager" lazy-init="true" id="analystDBTxMgr">
+
+
+    <bean 
+        id="analystDBTxMgr" 
+        class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+        lazy-init="true">
         <property name="sessionFactory">
             <ref bean="analystDBSessionFactory"/>
         </property>
     </bean>
-    <bean class="org.springframework.orm.hibernate3.HibernateTemplate" lazy-init="true" id="analystDBHibernateTemplate">
-        <property name="sessionFactory">
+
+
+    <bean 
+        id="analystDBHibernateTemplate"
+        class="org.springframework.orm.hibernate3.HibernateTemplate"
+        lazy-init="true">
+        <property name="sessionFactory"> 
             <ref bean="analystDBSessionFactory"/>
         </property>
-    </bean>
-    <bean class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean" lazy-init="true" id="analystDBSessionFactory">
+    </bean>  
+
+
+    <bean 
+        id="analystDBSessionFactory" 
+        class="com.wavemaker.runtime.data.spring.ConfigurationAndSessionFactoryBean"
+        lazy-init="true">
+
+        <!-- A unique name for this SessionFactory's configuration -->
         <property name="name" value="analystDB"/>
         <property name="dataSource" ref="analystDBDataSource"/>
+
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${analystDB.dialect}</prop>
@@ -42,35 +83,49 @@
                     org.hibernate.transaction.JDBCTransactionFactory
                 </prop>
                 <prop key="hibernate.current_session_context_class">thread</prop>
-            </props>
+                
+            </props> 
         </property>
+
         <property name="mappingResources">
             <list>
-                <value>com/analystdb/data/Analysis.hbm.xml</value>
-                <value>com/analystdb/data/Approach.hbm.xml</value>
-                <value>com/analystdb/data/DocumentCategory.hbm.xml</value>
-                <value>com/analystdb/data/Documents.hbm.xml</value>
-                <value>com/analystdb/data/Flow.hbm.xml</value>
-                <value>com/analystdb/data/FlowAttribute.hbm.xml</value>
-                <value>com/analystdb/data/Interview.hbm.xml</value>
-                <value>com/analystdb/data/Issue.hbm.xml</value>
-                <value>com/analystdb/data/IssueApproach.hbm.xml</value>
-                <value>com/analystdb/data/IssueAttribute.hbm.xml</value>
-                <value>com/analystdb/data/IssueCategory.hbm.xml</value>
-                <value>com/analystdb/data/IssueComment.hbm.xml</value>
-                <value>com/analystdb/data/IssueCommentFlows.hbm.xml</value>
-                <value>com/analystdb/data/IssueIssueCategory.hbm.xml</value>
-                <value>com/analystdb/data/Plan.hbm.xml</value>
-                <value>com/analystdb/data/Project.hbm.xml</value>
-                <value>com/analystdb/data/ProjectFiles.hbm.xml</value>
-                <value>com/analystdb/data/Resource.hbm.xml</value>
-                <value>com/analystdb/data/ResourceAttribute.hbm.xml</value>
-                <value>com/analystdb/data/app-queries.ql.xml</value>
+
+<value>com/analystdb/data/FlowAttribute.hbm.xml</value>
+<value>com/analystdb/data/Documents.hbm.xml</value>
+<value>com/analystdb/data/IssueCategory.hbm.xml</value>
+<value>com/analystdb/data/IssueCommentFlows.hbm.xml</value>
+<value>com/analystdb/data/IssueIssueCategory.hbm.xml</value>
+<value>com/analystdb/data/Resource.hbm.xml</value>
+<value>com/analystdb/data/ProjectFiles.hbm.xml</value>
+<value>com/analystdb/data/Interview.hbm.xml</value>
+<value>com/analystdb/data/Issue.hbm.xml</value>
+<value>com/analystdb/data/DocumentCategory.hbm.xml</value>
+<value>com/analystdb/data/IssueApproach.hbm.xml</value>
+<value>com/analystdb/data/IssueComment.hbm.xml</value>
+<value>com/analystdb/data/IssueAttribute.hbm.xml</value>
+<value>com/analystdb/data/Plan.hbm.xml</value>
+<value>com/analystdb/data/Flow.hbm.xml</value>
+<value>com/analystdb/data/Approach.hbm.xml</value>
+<value>com/analystdb/data/Project.hbm.xml</value>
+<value>com/analystdb/data/ResourceAttribute.hbm.xml</value>
+<value>com/analystdb/data/Analysis.hbm.xml</value>
+
+<value>com/analystdb/data/FlowAttribute.ql.xml</value>
+<value>com/analystdb/data/app-queries.ql.xml</value>
+
             </list>
         </property>
+
     </bean>
-    <bean class="com.wavemaker.runtime.data.spring.SpringDataServiceManager" lazy-init="true" id="analystDBDataService">
+
+
+    <!-- the data service bean instance is injected into the service bean -->
+    <bean 
+        id="analystDBDataService" 
+        class="com.wavemaker.runtime.data.spring.SpringDataServiceManager"
+        lazy-init="true">
         <constructor-arg>
+            <!-- the value of the "name" property of the SessionFactory -->
             <value>analystDB</value>
         </constructor-arg>
         <constructor-arg>
@@ -85,19 +140,30 @@
         <constructor-arg>
             <map>
                 <entry key="useIndividualCRUDOperations" value="false"/>
-                <entry key="refreshEntities" value=""/>
+                <entry key="refreshEntities" value=""/> 
             </map>
         </constructor-arg>
     </bean>
-    <bean class="com.wavemaker.runtime.data.DefaultTaskManager" lazy-init="true" id="analystDBTaskMgr"/>
-    <bean class="com.wavemaker.runtime.service.events.EventWire" lazy-init="false">
+
+
+    <bean 
+        id="analystDBTaskMgr"
+        class="com.wavemaker.runtime.data.DefaultTaskManager"
+        lazy-init="true"/>
+
+    <bean class="com.wavemaker.runtime.service.events.EventWire"
+        lazy-init="false">
         <property name="serviceWire" ref="analystDBServiceWire"/>
         <property name="eventListener">
             <bean class="com.wavemaker.runtime.data.DataServiceEventListener"/>
         </property>
     </bean>
-    <bean class="com.wavemaker.runtime.service.reflect.ReflectServiceWire" scope="singleton" lazy-init="false" id="analystDBServiceWire">
+
+    <bean id="analystDBServiceWire"
+        class="com.wavemaker.runtime.service.reflect.ReflectServiceWire"
+        lazy-init="false" scope="singleton">
         <property name="serviceId" value="analystDB"/>
         <property name="serviceType" ref="DataService"/>
     </bean>
+
 </beans>

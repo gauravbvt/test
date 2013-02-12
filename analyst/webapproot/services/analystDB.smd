@@ -1,5 +1,21 @@
 {
 	"methods": [{
+		"name": "addressedIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Issue]"
+	}, {
+		"name": "allDocsWithIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.AllDocsWithIssuesRtnType]"
+	}, {
 		"name": "allIssues",
 		"operationType": "hqlquery",
 		"parameters": [{
@@ -65,6 +81,9 @@
 		}, {
 			"name": "document",
 			"type": "java.lang.Integer"
+		}, {
+			"name": "phase",
+			"type": "java.lang.Integer"
 		}],
 		"returnType": "[com.analystdb.data.output.DocumentIssuesRtnType]"
 	}, {
@@ -76,6 +95,14 @@
 		}],
 		"returnType": "[com.analystdb.data.Flow]"
 	}, {
+		"name": "getFlowAttributeById",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "id",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "com.analystdb.data.FlowAttribute"
+	}, {
 		"name": "interviewIssues",
 		"operationType": "hqlquery",
 		"parameters": [{
@@ -84,6 +111,14 @@
 		}],
 		"returnType": "[com.analystdb.data.output.InterviewIssuesRtnType]"
 	}, {
+		"name": "issueApproaches",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "issue",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.IssueApproachesRtnType]"
+	}, {
 		"name": "issueCategoryCounts",
 		"operationType": "hqlquery",
 		"parameters": [{
@@ -91,6 +126,25 @@
 			"type": "java.lang.Long"
 		}],
 		"returnType": "[com.analystdb.data.output.IssueCategoryCountsRtnType]"
+	}, {
+		"name": "issueFlows",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "issue",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.IssueFlowsRtnType]"
+	}, {
+		"name": "issuesByCategory",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "category",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.IssuesByCategoryRtnType]"
 	}, {
 		"name": "maxIssueSequence",
 		"operationType": "hqlquery",
@@ -110,6 +164,17 @@
 			"type": "java.lang.Long"
 		}],
 		"returnType": "[com.analystdb.data.Issue]"
+	}, {
+		"name": "otherCategories",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "issue",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.IssueCategory]"
 	}, {
 		"name": "otherFlowIssues",
 		"operationType": "hqlquery",

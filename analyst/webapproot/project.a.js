@@ -334,6 +334,26 @@ wm.types = {
 		},
 		"com.analystdb.data.Approach": {
 			"fields": {
+				"approved": {
+					"exclude": [],
+					"fieldOrder": 6,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Boolean"
+				},
+				"cost": {
+					"exclude": [],
+					"fieldOrder": 7,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.Integer"
+				},
 				"description": {
 					"exclude": [],
 					"fieldOrder": 2,
@@ -343,6 +363,16 @@ wm.types = {
 					"noChange": [],
 					"required": false,
 					"type": "java.lang.String"
+				},
+				"end": {
+					"exclude": [],
+					"fieldOrder": 5,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.util.Date"
 				},
 				"id": {
 					"exclude": ["insert"],
@@ -356,7 +386,7 @@ wm.types = {
 				},
 				"interview": {
 					"exclude": [],
-					"fieldOrder": 4,
+					"fieldOrder": 8,
 					"fieldSubType": null,
 					"include": [],
 					"isList": false,
@@ -366,7 +396,7 @@ wm.types = {
 				},
 				"issueApproachs": {
 					"exclude": [],
-					"fieldOrder": 5,
+					"fieldOrder": 9,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -383,6 +413,16 @@ wm.types = {
 					"noChange": [],
 					"required": true,
 					"type": "java.lang.String"
+				},
+				"start": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.util.Date"
 				},
 				"version": {
 					"exclude": [],
@@ -1599,6 +1639,23 @@ wm.types = {
 			"liveService": true,
 			"service": "analystDB"
 		},
+		"com.analystdb.data.output.AllDocsWithIssuesRtnType": {
+			"fields": {
+				"c0": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Documents"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
 		"com.analystdb.data.output.AllIssuesRtnType": {
 			"fields": {
 				"issue": {
@@ -1736,9 +1793,29 @@ wm.types = {
 		},
 		"com.analystdb.data.output.DocumentIssuesRtnType": {
 			"fields": {
-				"c0": {
+				"approaches": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"id": {
 					"exclude": [],
 					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"issue": {
+					"exclude": [],
+					"fieldOrder": 1,
 					"fieldSubType": null,
 					"include": [],
 					"isList": false,
@@ -1798,6 +1875,23 @@ wm.types = {
 			"liveService": false,
 			"service": "analystDB"
 		},
+		"com.analystdb.data.output.IssueApproachesRtnType": {
+			"fields": {
+				"c0": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Approach"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
 		"com.analystdb.data.output.IssueCategoryCountsRtnType": {
 			"fields": {
 				"category": {
@@ -1829,6 +1923,80 @@ wm.types = {
 					"noChange": [],
 					"required": true,
 					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.output.IssueFlowsRtnType": {
+			"fields": {
+				"flow": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Flow"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.output.IssuesByCategoryRtnType": {
+			"fields": {
+				"approaches": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"documents": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"flows": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"issue": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Issue"
+				},
+				"key": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
 				}
 			},
 			"internal": false,
@@ -2116,7 +2284,7 @@ dojo.declare("Analyst", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "0.alpha6", 
+	"projectSubVersion": "0.alpha11", 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 
@@ -2241,5 +2409,8 @@ border: medium none !important;\
 }\
 .wm_notheme .wmbutton-disabled:hover {\
 background-color: #DFE5F1;\
+}\
+.wm_notheme div#wizard_genericDialog1_userQuestionLabel.wmhtml {\
+margin: 0 2px !important;\
 }\
 ';

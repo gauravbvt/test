@@ -1,4 +1,7 @@
 var interviewing = false;
+var switchInterview = null;
+var switchFlow = null;
+var switchIssue = null;
 
 dojo.declare("wizard", wm.Page, {
 	"preferredDevice": "desktop",
@@ -167,7 +170,7 @@ dojo.declare("wizard", wm.Page, {
         var issueComment = this.dataGrid2.selectedItem.dataSet.data;
         var data = {id:{issues:issueComment.id,flows:selected.id},flow:selected,issueComment:issueComment};
 
-        var live = this.issueFlowsVariable;
+        var live = this.issueCommentFlowsVariable;
         live.operation = "insert";
         live.sourceData.setData(data);
         live.update();
@@ -177,6 +180,25 @@ dojo.declare("wizard", wm.Page, {
 	},
 	removeButton3Click: function(inSender) {
         this.allRemoveButtonClick(inSender,this.availableGrid3,this.selectedGrid3,this.issueFlowsVariable);		
+	},
+    addButton4Click: function(inSender) {
+        var availableGrid = this.availableGrid4;
+        var selected = availableGrid.selectedItem.dataSet.data;
+        availableGrid.deleteRow(availableGrid.getSelectedIndex());
+
+        var issue = this.issueForm.dataOutput.data;
+        var data = {id:{issueId:issue.id,issueCategoryId:selected.id},issueCategory:selected,issue:issue};
+
+        var live = this.issueCategoriesVariable1;
+        live.operation = "insert";
+        live.sourceData.setData(data);
+        live.update();
+        live.sourceData.setData(null);
+        live.operation = "read";
+        live.update();
+	},
+    removeButton4Click: function(inSender) {
+        this.allRemoveButtonClick(inSender,this.availableGrid4,this.selectedGrid4,this.issueCategoriesVariable1);    	
 	},
 	issueInsertSuccess: function(inSender, inDeprecated) {
         var issueComment = this.issuecommentLiveForm1.dataOutput.data;
@@ -192,12 +214,95 @@ dojo.declare("wizard", wm.Page, {
             this.issueInsert.update();
 		}
 	},
-	switchToFlow: function(inSender) {
+    switchToFlow: function(inSender) {
 		var flow = inSender.selectedItem.data;
         if ( flow.flow ) {
-            flow = flow.flow;
+            flow = flow.flow.data;
         }
-        alert(flow);
+        switchFlow = flow;
+        switchInterview = flow.interview.data;
+        if ( this.interviewDojoGrid1.getRowCount() == 0 )
+            this.button2.click(); 
+        else
+            this.showInterviews.update();
+ 	},
+    switchToIssue: function(inSender) {
+		var issueComment = inSender.selectedItem.data;
+        if ( issueComment.issueComment ) {
+            issueComment = issueComment.issueComment.data;
+        }
+        switchIssue = issueComment;
+        switchInterview = issueComment.interview.data;
+        if ( this.interviewDojoGrid1.getRowCount() == 0 )
+            this.button2.click(); 
+        else
+            this.showInterviews.update();
+ 	},
+	Edit_InterviewsShow1: function(inSender) {
+        if ( switchInterview ) {
+            var id = switchInterview.id;
+            switchInterview = null;
+            var interviews = this.interviewDojoGrid1.dataSet.data._list;
+            for ( i=0; i<interviews.length && interviews[i].data.id != id; i++ );
+            if ( i !== interviews.length )
+                this.interviewDojoGrid1.select( i );
+    	}
+	},
+	interviewFlowsVariable1Success: function(inSender, inDeprecated) {
+        if ( switchFlow ) {
+            var id = switchFlow.id;
+            switchFlow = null;
+            var flows = this.flowDojoGrid.dataSet.data._list;
+            for ( i=0; i<flows.length && flows[i].data.id != id; i++ );
+            if ( i !== flows.length ) {
+                this.flowDojoGrid.select( i );
+            }
+    	}
+	},
+	interviewIssuesVariable1Success: function(inSender, inDeprecated) {
+        if ( switchIssue ) {
+            var id = switchIssue.id;
+            switchIssue = null;
+            var issues = this.dataGrid2.dataSet.data._list;
+            for ( i=0; i<issues.length && issues[i].data.id != id; i++ );
+            if ( i !== issues.length ) {
+                this.dataGrid2.select( i );
+            }
+        }
+	},
+	sequenceEditor1ReadOnlyNodeFormat: function(inSender, inValue) {
+    	return "I-" + inValue;		
+	},
+	button19Click: function(inSender) {
+		this.issueForm.setDataSet( this.dataGrid2.selectedItem.data.issue );        
+        this.showIssue.update();
+	},
+	summaryDocIssuesGrid1Select: function(inSender) {
+    	this.issueForm.setDataSet( this.summaryDocIssuesGrid1.selectedItem.data.issue );        
+        this.showIssue.update();
+	},
+	summaryIssuesGrid1Select: function(inSender) {
+        this.issueForm.setDataSet( this.summaryIssuesGrid1.selectedItem.data.issue );        
+        this.showIssue.update();
+	},
+	summaryAppIssuesGrid1Select: function(inSender) {
+        this.issueForm.setDataSet( this.summaryAppIssuesGrid1.selectedItem.data.issue );        
+        this.showIssue.update();
+	},
+    delCategoryButton6Click: function(inSender) {
+        var live = this.allIssueCategories;
+        live.setOperation("delete");
+        live.sourceData.setData( { id: this.availableGrid4.selectedItem.data.id } );
+        live.update();
+        inSender.disable();
+	},
+    genericDialog1Button1Click: function(inSender, inButton, inText) {
+        var data = {name:inText,project:this.projectDojoGrid.selectedItem.data};
+
+        var live = this.allIssueCategories;
+        live.operation = "insert";
+        live.sourceData.setData(data);
+        live.update();
 	},
 	_end: 0
 });

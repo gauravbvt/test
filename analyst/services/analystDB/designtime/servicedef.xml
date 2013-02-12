@@ -4,28 +4,14 @@
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.output.AllIssuesRtnType" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="otherIssueApproaches">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.Approach" isList="true"/>
+    <operation operationType="hqlquery" name="getFlowAttributeById">
+        <parameter name="id" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.FlowAttribute" isList="false"/>
     </operation>
     <operation operationType="hqlquery" name="resourceValues">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <parameter name="keyword" typeRef="java.lang.String" isList="false"/>
         <return typeRef="com.analystdb.data.output.ResourceValuesRtnType" isList="true"/>
-    </operation>
-    <operation operationType="hqlquery" name="projectPlans">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.ProjectPlansRtnType" isList="true"/>
-    </operation>
-    <operation operationType="hqlquery" name="issueCategoryCounts">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.IssueCategoryCountsRtnType" isList="true"/>
-    </operation>
-    <operation operationType="hqlquery" name="documentIssueCount">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <parameter name="category" typeRef="java.lang.Integer" isList="false"/>
-        <return typeRef="com.analystdb.data.output.DocumentIssueCountRtnType" isList="true"/>
     </operation>
     <operation operationType="hqlquery" name="otherFlowIssues">
         <parameter name="flow" typeRef="java.lang.Long" isList="false"/>
@@ -35,6 +21,59 @@
     <operation operationType="hqlquery" name="maxIssueSequence">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.output.MaxIssueSequenceRtnType" isList="false"/>
+    </operation>
+    <operation operationType="hqlquery" name="issueApproaches">
+        <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.IssueApproachesRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="issuesByCategory">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <parameter name="category" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.IssuesByCategoryRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="approachIssueCount">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.ApproachIssueCountRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="otherCategories">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.IssueCategory" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="approachIssues">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <parameter name="approach" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.ApproachIssuesRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="upcomingInterviews">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.UpcomingInterviewsRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="resourceKeywords">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.ResourceKeywordsRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="issueCategoryCounts">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.IssueCategoryCountsRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="projectPlans">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.ProjectPlansRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="otherIssueApproaches">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.Approach" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="documentIssueCount">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <parameter name="category" typeRef="java.lang.Integer" isList="false"/>
+        <return typeRef="com.analystdb.data.output.DocumentIssueCountRtnType" isList="true"/>
+    </operation>
+    <operation operationType="hqlquery" name="issueFlows">
+        <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.IssueFlowsRtnType" isList="true"/>
     </operation>
     <operation operationType="hqlquery" name="availableApproaches">
         <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
@@ -54,36 +93,28 @@
         <parameter name="resource" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.output.InterviewIssuesRtnType" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="approachIssueCount">
+    <operation operationType="hqlquery" name="addressedIssues">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.ApproachIssueCountRtnType" isList="true"/>
-    </operation>
-    <operation operationType="hqlquery" name="recentInterviews">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.RecentInterviewsRtnType" isList="true"/>
+        <return typeRef="com.analystdb.data.Issue" isList="true"/>
     </operation>
     <operation operationType="hqlquery" name="otherApproachIssues">
         <parameter name="approach" typeRef="java.lang.Long" isList="false"/>
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.Issue" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="approachIssues">
+    <operation operationType="hqlquery" name="recentInterviews">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <parameter name="approach" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.ApproachIssuesRtnType" isList="true"/>
+        <return typeRef="com.analystdb.data.output.RecentInterviewsRtnType" isList="true"/>
     </operation>
     <operation operationType="hqlquery" name="documentIssues">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <parameter name="document" typeRef="java.lang.Integer" isList="false"/>
+        <parameter name="phase" typeRef="java.lang.Integer" isList="false"/>
         <return typeRef="com.analystdb.data.output.DocumentIssuesRtnType" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="upcomingInterviews">
+    <operation operationType="hqlquery" name="allDocsWithIssues">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.UpcomingInterviewsRtnType" isList="true"/>
-    </operation>
-    <operation operationType="hqlquery" name="resourceKeywords">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.ResourceKeywordsRtnType" isList="true"/>
+        <return typeRef="com.analystdb.data.output.AllDocsWithIssuesRtnType" isList="true"/>
     </operation>
     <operation operationType="hqlquery" name="flowsByProject">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
@@ -119,6 +150,10 @@
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
+            <element name="start" typeRef="java.util.Date" isList="false" allowNull="true"/>
+            <element name="end" typeRef="java.util.Date" isList="false" allowNull="true"/>
+            <element name="approved" typeRef="java.lang.Boolean" isList="false" allowNull="false"/>
+            <element name="cost" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
             <element name="interview" typeRef="com.analystdb.data.Interview" isList="false" allowNull="false"/>
             <element name="issueApproachs" typeRef="com.analystdb.data.IssueApproach" isList="true" allowNull="true"/>
         </dataobject>
@@ -392,26 +427,6 @@
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
             <element name="resource" typeRef="com.analystdb.data.Resource" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
-            <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-            <element name="approachId" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-        </dataobject>
         <dataobject javaType="com.analystdb.data.IssueIssueCategoryId" name="id" supportsQuickData="false">
             <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
                 <require>delete</require>
@@ -452,19 +467,41 @@
                 <noChange>update</noChange>
             </element>
         </dataobject>
+        <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
+            <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element name="approachId" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.output.DocumentIssuesRtnType" supportsQuickData="false">
+            <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+            <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
+            <element name="approaches" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+        </dataobject>
         <dataobject javaType="com.analystdb.data.output.MaxIssueSequenceRtnType" supportsQuickData="false">
             <element name="last" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.output.DocumentIssuesRtnType" supportsQuickData="false">
-            <element name="c0" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
+        <dataobject javaType="com.analystdb.data.output.ResourceKeywordsRtnType" supportsQuickData="false">
+            <element name="c0" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.UpcomingInterviewsRtnType" supportsQuickData="false">
             <element name="interview" typeRef="com.analystdb.data.Interview" isList="false" allowNull="false"/>
             <element name="scheduled" typeRef="java.util.Date" isList="false" allowNull="false"/>
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
-        </dataobject>
-        <dataobject javaType="com.analystdb.data.output.ResourceKeywordsRtnType" supportsQuickData="false">
-            <element name="c0" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.RecentInterviewsRtnType" supportsQuickData="false">
             <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false"/>
@@ -478,10 +515,8 @@
             <element name="plan" typeRef="com.analystdb.data.Plan" isList="false" allowNull="false"/>
             <element name="analysis" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.output.DocumentIssueCountRtnType" supportsQuickData="false">
-            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
-            <element name="doc" typeRef="java.lang.String" isList="false" allowNull="false"/>
-            <element name="issues" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+        <dataobject javaType="com.analystdb.data.output.IssueFlowsRtnType" supportsQuickData="false">
+            <element name="flow" typeRef="com.analystdb.data.Flow" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.InterviewIssuesRtnType" supportsQuickData="false">
             <element name="c0" typeRef="java.lang.Long" isList="false" allowNull="false"/>
@@ -489,13 +524,28 @@
             <element name="issue" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
             <element name="description" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.output.ResourceValuesRtnType" supportsQuickData="false">
-            <element name="c0" typeRef="java.lang.String" isList="false" allowNull="false"/>
+        <dataobject javaType="com.analystdb.data.output.DocumentIssueCountRtnType" supportsQuickData="false">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="doc" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="issues" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.output.IssueApproachesRtnType" supportsQuickData="false">
+            <element name="c0" typeRef="com.analystdb.data.Approach" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.output.IssuesByCategoryRtnType" supportsQuickData="false">
+            <element name="key" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+            <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
+            <element name="approaches" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+            <element name="flows" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+            <element name="documents" typeRef="java.lang.Long" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.DocumentCategoryIssueCountsRtnType" supportsQuickData="false">
             <element name="category" typeRef="com.analystdb.data.DocumentCategory" isList="false" allowNull="false"/>
             <element name="phase" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="issues" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.output.ResourceValuesRtnType" supportsQuickData="false">
+            <element name="c0" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.ApproachIssueCountRtnType" supportsQuickData="false">
             <element name="approach" typeRef="com.analystdb.data.Approach" isList="false" allowNull="false"/>
@@ -506,11 +556,14 @@
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="issues" typeRef="java.lang.Long" isList="false" allowNull="false"/>
         </dataobject>
+        <dataobject javaType="com.analystdb.data.output.ApproachIssuesRtnType" supportsQuickData="false">
+            <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
+        </dataobject>
         <dataobject javaType="com.analystdb.data.output.AllIssuesRtnType" supportsQuickData="false">
             <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.output.ApproachIssuesRtnType" supportsQuickData="false">
-            <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
+        <dataobject javaType="com.analystdb.data.output.AllDocsWithIssuesRtnType" supportsQuickData="false">
+            <element name="c0" typeRef="com.analystdb.data.Documents" isList="false" allowNull="false"/>
         </dataobject>
     </dataobjects>
 </service>

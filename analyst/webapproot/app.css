@@ -125,3 +125,6 @@
   background-color: #DFE5F1;
 }
 
+.wm_notheme div#wizard_genericDialog1_userQuestionLabel.wmhtml {
+    margin: 0 2px !important;
+}

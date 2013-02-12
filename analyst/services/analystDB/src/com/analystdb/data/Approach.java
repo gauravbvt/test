@@ -1,13 +1,14 @@
 
 package com.analystdb.data;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 
 /**
  *  analystDB.Approach
- *  01/06/2013 20:47:04
+ *  02/10/2013 19:29:36
  * 
  */
 public class Approach {
@@ -17,6 +18,10 @@ public class Approach {
     private String name;
     private String description;
     private Integer version;
+    private Date start;
+    private Date end;
+    private Boolean approved;
+    private Integer cost;
     private Set<com.analystdb.data.IssueApproach> issueApproachs = new HashSet<com.analystdb.data.IssueApproach>();
 
     public Long getId() {
@@ -57,6 +62,38 @@ public class Approach {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
+    }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
+    }
+
+    public Integer getCost() {
+        return cost;
+    }
+
+    public void setCost(Integer cost) {
+        this.cost = cost;
     }
 
     public Set<com.analystdb.data.IssueApproach> getIssueApproachs() {
