@@ -49,6 +49,7 @@ import java.util.List;
  */
 public class UserPage extends AbstractChannelsBasicPage {
 
+    // todo - COMMUNITY - obsolete
 
     /**
      * Class logger.
@@ -169,7 +170,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
-        boolean communityLeader = communityService.getPlanCommunity().isCommunityLeader( user );
+        boolean communityLeader = communityService.isCommunityPlanner( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
@@ -222,7 +223,7 @@ public class UserPage extends AbstractChannelsBasicPage {
                 "",
                 ParticipationManagerPage.class,
                 null,
-                plan );
+                planCommunity );
         int toConfirmCount = userParticipationService
                 .listUserParticipationsAwaitingConfirmationBy( getUser(), getCommunityService() ).size();
         int issueCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();

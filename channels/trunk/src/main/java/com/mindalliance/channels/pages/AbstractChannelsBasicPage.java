@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages;
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
@@ -11,17 +12,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -30,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -73,7 +70,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
      */
     private NotifierWebMarkupContainer notifier;
     private String message;
-    private WebMarkupContainer pagePath;
+    private Component breadCrumbs;
     private static final int MAX_PLAN_DESCRIPTION_LENGTH = 50;
     private WebMarkupContainer contentsContainer;
 
@@ -86,12 +83,14 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         init();
     }
 
-    protected abstract void addContent(  );
+    protected abstract void addContent();
 
-    // DEFAULT
-    protected List<PagePathItem> getIntermediatePagesPathItems() {
-        return new ArrayList<PagePathItem>();
-    }
+    protected abstract String getContentsCssClass();
+
+    protected abstract String getPageName();
+
+    protected abstract String getFeedbackType();
+
 
     // DEFAULT
     protected void updateContent( AjaxRequestTarget target ) {
@@ -104,7 +103,10 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
     private void init() {
-        getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
+        if ( getPlanCommunity() != null )
+            getCommander(); // replays journal, save snapshot upon initialization.
+        if ( getPlanCommunity() != null && canTimeOut() )
+            getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
         addPageTitle();
         addForm();
         addHomeLink();
@@ -113,7 +115,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         addLoggedIn();
         addHelp();
         addFeedback();
-        addPagePath();
+        addBreadCrumbs();
         addContentsContainer();
     }
 
@@ -129,15 +131,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         contentsContainer = new WebMarkupContainer( "contentsContainer" );
         contentsContainer.setOutputMarkupId( true );
         form.addOrReplace( contentsContainer );
-        contentsContainer.add( new AttributeModifier( "class", getContentsCssClass() ));
+        contentsContainer.add( new AttributeModifier( "class", getContentsCssClass() ) );
         addContent();
     }
-
-    protected abstract String getContentsCssClass();
-
-    protected abstract String getPageName();
-
-    protected abstract String getFeedbackType();
 
     protected WebMarkupContainer getContainer() {
         return contentsContainer;
@@ -165,20 +161,21 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         form.add( new AbstractAjaxTimerBehavior( Duration.seconds( REFRESH_DELAY ) ) {
             @Override
             protected void onTimer( AjaxRequestTarget target ) {
-                try {
-                    doTimedUpdate( target );
-                    addSpinner();
-                    target.add( spinner );
-                } catch ( Exception e ) {
-                    LOG.error( "Failed to do timed update", e );
-                    ErrorPage.emailException(
-                            new Exception( "Timed update failed", e ),
-                            mailSender,
-                            getSupportCommunity(),
-                            getUser()
-                    );
-                    redirectHere();
-                }
+                if ( canTimeOut() )
+                    try {
+                        doTimedUpdate( target );
+                        addSpinner();
+                        target.add( spinner );
+                    } catch ( Exception e ) {
+                        LOG.error( "Failed to do timed update", e );
+                        ErrorPage.emailException(
+                                new Exception( "Timed update failed", e ),
+                                mailSender,
+                                getSupportCommunity(),
+                                getUser()
+                        );
+                        redirectHere();
+                    }
             }
         } );
         form.setMultiPart( true );
@@ -186,7 +183,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
     private void redirectHere() {
-        setResponsePage( this.getClass(), planParameters( getPlan() ) );
+        setResponsePage( this.getClass(), getPageParameters() );
     }
 
     private void addSpinner() {
@@ -242,91 +239,25 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
 
-    protected void addPagePath() {
-        pagePath = new WebMarkupContainer( "planPath" );
-        pagePath.setOutputMarkupId( true );
-        form.addOrReplace( pagePath );
-        addHomeInPath();
-        addSelectedPlanInPath();
-        addOtherPlansInPath();
-        addPathPageItems();
+    protected void addBreadCrumbs() {
+        breadCrumbs = hasBreadCrumbs()
+                ? new BreadcrumbsPanel( "contextPath", this )
+                : new Label( "contextPath", "" );
+        breadCrumbs.setOutputMarkupId( true );
+        form.addOrReplace( breadCrumbs );
     }
 
-    private void addHomeInPath() {
-        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class, planParameters( getPlan() ) );
-            }
-        };
-        pagePath.add( homeLink );
+    protected boolean hasBreadCrumbs() {
+        return true; // default
     }
 
-
-    private void addSelectedPlanInPath() {
-        Label selectedPlanName = new Label(
-                "selectedPlan",
-                getPlan().toString() );
-        pagePath.add( selectedPlanName );
-        selectedPlanName.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                PageParameters params = makePlanParameters();
-                setResponsePage( UserPage.class, params );
-            }
-        } );
-    }
-
-    private void addOtherPlansInPath() {
-        ListView<Plan> otherPlansListView = new ListView<Plan>(
-                "otherPlans",
-                getOtherPlans()
-        ) {
-            @Override
-            protected void populateItem( final ListItem<Plan> item ) {
-                AjaxLink<String> otherPlanLink = new AjaxLink<String>( "otherPlanLink" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        setPlan( item.getModelObject() );
-                        PageParameters params = makePlanParameters();
-                        setResponsePage( UserPage.class, params );
-                    }
-                };
-                otherPlanLink.add( new Label( "otherPlanName", item.getModelObject().toString() ) );
-                item.add( otherPlanLink );
-            }
-        };
-        pagePath.add( otherPlansListView );
-    }
-
-    private void addPathPageItems() {
-        ListView<PagePathItem> pagePathItems = new ListView<PagePathItem>(
-                "pageItems",
-                getPagePathItems()
-                ) {
-            @Override
-            protected void populateItem( ListItem<PagePathItem> item ) {
-                PagePathItem pagePathItem = item.getModelObject();
-                item.add( pagePathItem.getLink( "pageItemLink" ) );
-            }
-        };
-        pagePathItems.setVisible( this.getClass() != UserPage.class );
-        pagePath.add( pagePathItems );
-    }
-
-    private List<PagePathItem> getPagePathItems() {
-        List<PagePathItem> pagePathItems = new ArrayList<PagePathItem>();
-        pagePathItems.addAll( getIntermediatePagesPathItems() );
-        pagePathItems.add( new PagePathItem( getClass(), getPageParameters(), getPageName() ) );
-        return pagePathItems;
-    }
 
     private String getAbbreviatedSelectedPlanDescription() {
         String oneLiner = getPlan().getDescription().replaceAll( "\\s+", " " );
         return StringUtils.abbreviate( oneLiner, MAX_PLAN_DESCRIPTION_LENGTH );
     }
 
-    private List<Plan> getOtherPlans() {
+    public List<Plan> getOtherPlans() {
         List<Plan> otherPlans = new ArrayList<Plan>( getPlans() );
         otherPlans.remove( getPlan() );
         Collections.sort( otherPlans, new Comparator<Plan>() {
@@ -334,26 +265,59 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
             public int compare( Plan p1, Plan p2 ) {
                 return p1.getName().compareTo( p2.getName() );
             }
-        });
+        } );
         return otherPlans;
     }
 
+    public List<PlanCommunity> getOtherPlanCommunities() {
+        List<PlanCommunity> otherPlanCommunities = new ArrayList<PlanCommunity>( getVisiblePlanCommunities() );
+        otherPlanCommunities.remove( getPlanCommunity() );
+        Collections.sort( otherPlanCommunities, new Comparator<PlanCommunity>() {
+            @Override
+            public int compare( PlanCommunity p1, PlanCommunity p2 ) {
+                return p1.getName().compareTo( p2.getName() );
+            }
+        } );
+        return otherPlanCommunities;
+    }
 
+    // DEFAULT
+    public List<PagePathItem> getIntermediatePagesPathItems() {
+        return new ArrayList<PagePathItem>();
+    }
+
+    // DEFAULT
+    public List<PagePathItem> getPreContextPagesPathItems() {
+        List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
+        if ( isCommunityContext() ) {
+            intermediates.add( new PagePathItem(
+                    CommunitiesPage.class,
+                    new PageParameters(),
+                    "All communities" ) );
+        }
+        return intermediates;
+    }
+
+
+
+/*
     public void setPlan( Plan newPlan ) {
         userLeftPlanCommunity();
         super.setPlan( newPlan );
     }
+*/
 
     private Attachment getHelp() {
-        return (Attachment) CollectionUtils.find(
+        return isPlanContext()
+                ? (Attachment) CollectionUtils.find(
                 getPlan().getAttachments(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         return ( (Attachment) object ).isHelp();
                     }
-                }
-        );
+                } )
+                : null;
     }
 
     @Override
@@ -368,18 +332,15 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         } else if ( change.isCollapsed() || change.isRemoved() )
             collapse( change );
         else if ( change.isExpanded() || change.isAdded() ) {
-                expand( change );
+            expand( change );
         }
     }
 
-        @Override
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isUpdated()
-                && change.isForInstanceOf( Plan.class ) ) {
-            if ( change.isForProperty( "participation" ) ) {
-                updateContent( target );
-                target.add( form );
-            }
+        if ( change.isUpdated() ) {
+            addBreadCrumbs();
+            target.add( breadCrumbs );
         }
         String message = change.getMessage();
         if ( message != null ) {
@@ -395,26 +356,5 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         }
     }
 
-    protected class PagePathItem implements Serializable {
-
-        private Class<? extends AbstractChannelsWebPage> pageClass;
-        private PageParameters pageParameters;
-        private String name;
-
-        public PagePathItem(
-                Class<? extends AbstractChannelsWebPage> pageClass,
-                PageParameters pageParameters,
-                String name ) {
-            this.pageClass = pageClass;
-            this.pageParameters = pageParameters;
-            this.name = name;
-        }
-
-        protected BookmarkablePageLink<String> getLink( String id ) {
-            BookmarkablePageLink<String>  link = new BookmarkablePageLink<String>( id, pageClass, pageParameters );
-            link.add(  new Label( "pageName", name ) );
-            return link;
-        }
-    }
 
 }

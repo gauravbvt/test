@@ -20,6 +20,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Job;
+import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -228,6 +229,50 @@ public class CommunityServiceImpl implements CommunityService {
         return getParticipationManager().getParticipationAnalyst();
     }
 
+    @Override
+    public Boolean isCommunityPlanner( ChannelsUser user ) {
+        return user.isPlanner( getPlanCommunity().getPlanUri() ); // todo -COMMUNITY - add
+    }
+
+    @Override
+    public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
+        return getDao().listActualEntities( clazz, mustBeReferenced );
+    }
+
+    @Override
+    public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name ) {
+        return getDao().findOrCreate( clazz, name );
+    }
+
+    @Override
+    public <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
+        return getDao().find( clazz, id );
+    }
+
+    @Override
+    public <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, long id ) {
+        return getDao().findOrCreate( clazz, name, id );
+    }
+
+    @Override
+    public <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, long id ) {
+        return getDao().findOrCreateType( clazz, name, id );
+    }
+
+    @Override
+    public void update( ModelObject mo ) {
+        getDao().update( mo );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
+        return safeFindOrCreate( clazz, name, null );
+    }
+
+    @Override
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
+        return getDao().safeFindOrCreate( clazz, name, id );
+    }
 
     @Override
     public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {

@@ -105,7 +105,7 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
                     super.changed( change );
                 }
             } else if ( change.isForInstanceOf( EntityRelationship.class ) ) {
-                selectedEntityRel = (EntityRelationship<T>) change.getSubject( getQueryService() );
+                selectedEntityRel = (EntityRelationship<T>) change.getSubject( getCommunityService() );
                 // selectedEntity = null;
             } else {
                 selectedEntityRel = null;

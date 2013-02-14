@@ -388,7 +388,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             String moString = (String) ChannelsUtils.getProperty( bean, moProperty, null );
             if ( moString != null ) {
                 ModelObjectRef moRef = ModelObjectRef.fromString( moString );
-                mo = (ModelObject) moRef.resolve( getQueryService() );
+                mo = (ModelObject) moRef.resolve( getCommunityService() );
             }
         } else {
             mo = (ModelObject) ChannelsUtils.getProperty( bean, moProperty, null );

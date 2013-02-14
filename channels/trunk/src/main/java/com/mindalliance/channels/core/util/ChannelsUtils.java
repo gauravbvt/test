@@ -368,6 +368,7 @@ public final class ChannelsUtils {
      * @return an object
      */
     public static Object getProperty( Object bean, String property, Object defaultValue ) {
+        if ( property == null ) return defaultValue;
         if ( property.isEmpty() ) return bean;
         Object value;
         try {

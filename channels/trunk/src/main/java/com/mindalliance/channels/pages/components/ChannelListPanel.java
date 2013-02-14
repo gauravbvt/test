@@ -72,6 +72,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
     private boolean canAddNewInfoFormat = true;
 
+    private boolean restrictToImmutableMedia = false;
 
     static {
         NewMediumType = new TransmissionMedium( "New medium" );
@@ -83,6 +84,18 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         // fake id
         NewInfoFormatType.setId( Long.MAX_VALUE - 1 );
     }
+
+    public ChannelListPanel( String id,
+                             IModel<? extends Channelable> model,
+                             boolean canAddNewMediumAndFormat,
+                             boolean restrictToImmutableMedia ) {
+        super( id, model, null );
+        this.canAddNewMedium = canAddNewMediumAndFormat;
+        this.canAddNewInfoFormat = canAddNewMediumAndFormat;
+        this.restrictToImmutableMedia = restrictToImmutableMedia;
+        init();
+    }
+
 
     public ChannelListPanel( String id, IModel<? extends Channelable> model, boolean canAddNewMediumAndFormat ) {
         super( id, model, null );
@@ -405,7 +418,11 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         private List<TransmissionMedium> getCandidateMedia() {
             List<TransmissionMedium> candidates = new ArrayList<TransmissionMedium>();
             candidates.add( TransmissionMedium.UNKNOWN );
-            candidates.addAll( getQueryService().listReferencedEntities( TransmissionMedium.class ) );
+            for ( TransmissionMedium medium : getQueryService().listReferencedEntities( TransmissionMedium.class ) ) {
+                if ( !medium.isUnknown() && ( !restrictToImmutableMedia || medium.isImmutable() ) ) {
+                    candidates.add( medium );
+                }
+            }
             Collections.sort( candidates, new Comparator<TransmissionMedium>() {
                 public int compare( TransmissionMedium o1, TransmissionMedium o2 ) {
                     return Collator.getInstance().compare( o1.getLabel(), o2.getLabel() );

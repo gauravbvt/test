@@ -37,11 +37,11 @@ public class AddProducer extends AbstractCommand {
     public Change execute( Commander commander ) throws CommandException {
         String producer = (String) get( "producer" );
         Plan plan = commander.getPlan();
-        PlanManager planManager = commander.getQueryService().getPlanManager();
+        PlanManager planManager = commander.getCommunityService().getPlanService().getPlanManager();
         boolean produced = planManager.addProducer( producer, plan );
         setTargetDescription( producer );
         if ( produced ) {
-            commander.setResyncRequired();
+            commander.setPlanResyncRequired();
             return new Change( Change.Type.Recomposed, plan );
         } else {
             return new Change( Change.Type.Updated, plan, "producers" );

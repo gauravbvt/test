@@ -187,7 +187,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( SurveyWrapper.class ) && change.isExpanded() ) {
-            selectedSurvey = (SurveyWrapper) change.getSubject( getQueryService() );
+            selectedSurvey = (SurveyWrapper) change.getSubject( getCommunityService() );
             if ( change.isForProperty( "launch" ) ) {
                 if ( selectedSurvey.launch() ) {
                     change.setSubject( selectedSurvey.getRfiSurvey() );

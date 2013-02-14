@@ -483,9 +483,9 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                     .append( plan.getDescription() )
                     .append( "\n" );
         }
-        if ( communityService.getPlanCommunity().getCommunityLocale() != null ) {
+        if ( communityService.getPlanCommunity().getLocale( communityService ) != null ) {
             sb.append( "Targeted location: " )
-                    .append( communityService.getPlanCommunity().getCommunityLocale().getName() )
+                    .append( communityService.getPlanCommunity().getLocale( communityService ).getName() )
                     .append( "\n" );
         }
         sb.append( "\n" );

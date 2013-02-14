@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.community.CommunityDao;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
 import com.mindalliance.channels.core.model.AttachmentImpl;
@@ -71,6 +72,10 @@ public abstract class AbstractChannelsConverter implements Converter {
         return getContext().getCommunityDao();
     }
 
+    AbstractModelObjectDao getDao() {
+        return getContext().getModelObjectDao();
+    }
+
 
     public AttachmentManager getAttachmentManager() {
         return context.getAttachmentManager();
@@ -107,9 +112,9 @@ public abstract class AbstractChannelsConverter implements Converter {
     protected <T extends ModelEntity> T findOrCreate( Class<T> entityClass, String name, String id ) {
         if ( id == null ) {
             LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
-            return getPlanDao().findOrCreate( entityClass, name, null );
+            return getDao().findOrCreate( entityClass, name, null );
         } else {
-            return getPlanDao().findOrCreate( entityClass, name, Long.valueOf( id ) );
+            return getDao().findOrCreate( entityClass, name, Long.valueOf( id ) );
         }
     }
 
@@ -124,9 +129,9 @@ public abstract class AbstractChannelsConverter implements Converter {
     protected <T extends ModelEntity> T findOrCreateType( Class<T> entityClass, String name, String id ) {
         if ( id == null ) {
             LOG.warn( "Recreating referenced " + entityClass.getSimpleName() + " without id" );
-            return getPlanDao().findOrCreateType( entityClass, name, null );
+            return getDao().findOrCreateType( entityClass, name, null );
         } else {
-            return getPlanDao().findOrCreateType( entityClass, name, Long.valueOf( id ) );
+            return getDao().findOrCreateType( entityClass, name, Long.valueOf( id ) );
         }
     }
 
@@ -294,7 +299,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             // in case the issue is about the plan being loaded -- it is not yet findable.
             about = (T) getContext().getPlan();
         } else {
-            about = getPlanDao().find( clazz, id );
+            about = getDao().find( clazz, id );
         }
         return about;
     }
@@ -341,10 +346,10 @@ public abstract class AbstractChannelsConverter implements Converter {
 
         T entity;
         if ( isType ) {
-            entity = getPlanDao().findOrCreateType( clazz, name, importingPlan ? id : null );
+            entity = getDao().findOrCreateType( clazz, name, importingPlan ? id : null );
             entity.setType();
         } else {
-            entity = getPlanDao().findOrCreate( clazz, name, importingPlan ? id : null );
+            entity = getDao().findOrCreate( clazz, name, importingPlan ? id : null );
             entity.setActual();
         }
         idMap.put( id, entity.getId() );

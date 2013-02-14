@@ -302,7 +302,7 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isSelected() && change.isForInstanceOf( ModelEntity.class ) ) {
-            setSelectedType( (ModelEntity) change.getSubject( getQueryService() ) );
+            setSelectedType( (ModelEntity) change.getSubject( getCommunityService() ) );
             addTypologyDiagram();
             target.add( typologyDiagramPanel );
             addTypeIndex();

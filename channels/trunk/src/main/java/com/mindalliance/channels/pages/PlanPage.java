@@ -415,6 +415,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
         init( sc, p, new HashSet<Long>() );
     }
 
+    @Override
+    protected boolean canTimeOut() {
+        return true;
+    }
+
     // Guide scripting support
     public SegmentPanel getSegmentPanel() {
         return segmentPanel;
@@ -732,7 +737,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class, planParameters( getPlan() ) );
+                setResponsePage( HomePage.class, new PageParameters(  ) );
             }
         };
         planPath.add( homeLink );
@@ -1143,7 +1148,7 @@ PopupSettings.RESIZABLE |
 
 
     private void doTimedUpdate( AjaxRequestTarget target ) {
-        if ( getCommander().isOutOfSync( getUser().getUsername() ) ) {
+        if ( getCommander().isPlanOutOfSync( getUser().getUsername() ) ) {
             showNewPlanVersionWarningDialog( target );
         }
         getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
@@ -1769,7 +1774,7 @@ PopupSettings.RESIZABLE |
     }
 
     private boolean aspectRequiresLock( Change change, String aspect ) {
-        return aspectRequiresLock( change.getSubject( getQueryService() ), aspect );
+        return aspectRequiresLock( change.getSubject( getCommunityService() ), aspect );
     }
 
     // TODO - deal with Channels.ALL_EVENTS etc., consolidate test in the *EditPanels
@@ -1854,7 +1859,7 @@ PopupSettings.RESIZABLE |
     }
 
     private void expandFlow( Change change ) {
-        Flow flowToExpand = (Flow) change.getSubject( getQueryService() );
+        Flow flowToExpand = (Flow) change.getSubject( getCommunityService() );
         // collapse other flows
         List<Identifiable> toCollapse = new ArrayList<Identifiable>();
         for ( long id : getExpansions() ) {
@@ -1952,7 +1957,7 @@ PopupSettings.RESIZABLE |
             expand( new Change( Change.Type.Expanded, Channels.SOCIAL_ID ) );
         }
         if ( change.isForInstanceOf( Segment.class ) ) {
-            Segment changedSegment = (Segment) change.getSubject( getQueryService() );
+            Segment changedSegment = (Segment) change.getSubject( getCommunityService() );
             if ( change.isExists() ) {
                 getCommander().resetUserHistory( getUser().getUsername(), false );
                 if ( change.isAdded() ) {
@@ -1979,7 +1984,7 @@ PopupSettings.RESIZABLE |
                 flowsExplained = change.isExplained();
             }
         } else if ( change.isForInstanceOf( Part.class ) ) {
-            Part changedPart = (Part) change.getSubject( getQueryService() );
+            Part changedPart = (Part) change.getSubject( getCommunityService() );
             if ( change.isAdded() || change.isSelected() ) {
                 setPart( changedPart );
                 flowMaximized = false;
@@ -1992,7 +1997,7 @@ PopupSettings.RESIZABLE |
                 expand( getPart() );
             }
         } else if ( change.isForInstanceOf( Flow.class ) ) {
-            Flow changedFlow = (Flow) change.getSubject( getQueryService() );
+            Flow changedFlow = (Flow) change.getSubject( getCommunityService() );
             if ( change.isUpdated() && change.isForProperty( "other" ) ) {
                 expandFlow( change );
             } else if ( change.isSelected() ) {
@@ -2014,7 +2019,7 @@ PopupSettings.RESIZABLE |
                 expandFlow( change );
             }
         } else if ( change.isForInstanceOf( UserIssue.class ) && change.isAdded() ) {
-            UserIssue userIssue = (UserIssue) change.getSubject( getQueryService() );
+            UserIssue userIssue = (UserIssue) change.getSubject( getCommunityService() );
             ModelObject mo = userIssue.getAbout();
             if ( mo instanceof Segment ) {
                 expand( userIssue );
@@ -2328,7 +2333,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshPlanEditPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         Plan plan = getPlan();
         if ( change.isDisplay() && identifiable instanceof Plan ) {
             addPlanEditPanel( change );
@@ -2343,7 +2348,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshSegmentEditPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( ( change.isDisplay() || change.isAdded() )
                         && identifiable != null
                         && identifiable instanceof Segment
@@ -2381,7 +2386,7 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target,
             Change change,
             List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && identifiable instanceof Part
                         && change.isAspect( "assignments" ) ) {
@@ -2394,7 +2399,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshCommitmentsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && identifiable instanceof Flow
                         && change.isAspect( "commitments" ) ) {
@@ -2407,7 +2412,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshEOIsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && identifiable instanceof Flow
                         && ( change.isCollapsed()
@@ -2421,7 +2426,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshFailureImpactsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && identifiable instanceof SegmentObject
                         && change.isAspect(
@@ -2435,7 +2440,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshDisseminationPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null && identifiable instanceof SegmentObject
                         && change.isAspect( "dissemination" ) ) {
             boolean showTargets = change.hasQualifier( "show", "targets" );
@@ -2449,7 +2454,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshModelObjectSurveysPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null && identifiable instanceof ModelObject
                         && change.isAspect( "surveys" ) ) {
             addModelObjectSurveysPanel();
@@ -2460,7 +2465,7 @@ PopupSettings.RESIZABLE |
     }
 
     private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && identifiable instanceof Part
                         && change.isAspect( "overrides" ) ) {
@@ -2474,7 +2479,7 @@ PopupSettings.RESIZABLE |
 /*
     private void refreshRequirementsPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof Requirement ) {
@@ -2636,7 +2641,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshAllFeedbackPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof Feedback ) {
@@ -2656,7 +2661,7 @@ PopupSettings.RESIZABLE |
 
     private void refreshDataCollectionPanel(
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
                         && change.isDisplay()
                         && identifiable instanceof RFISurvey ) {

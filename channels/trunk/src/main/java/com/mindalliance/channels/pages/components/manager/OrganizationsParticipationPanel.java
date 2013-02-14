@@ -540,7 +540,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
         public ChannelsUser getUserIfCanRemove() {
             return isUserCustodian() && canBeRemoved()
-                    || isNonParticipatingCommunityRegistered() && getPlanCommunity().isCommunityLeader( getUser() )
+                    || isNonParticipatingCommunityRegistered() && getCommunityService().isCommunityPlanner( getUser() )
                     ? getUser()
                     : null;
         }
@@ -569,7 +569,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                             getPlaceholder(),
                             getCommunityService() );
                 } else if ( isNonParticipatingCommunityRegistered()
-                        && getPlanCommunity().isCommunityLeader( getUser() ) ) {
+                        && getCommunityService().isCommunityPlanner( getUser() ) ) {
                     success = registeredOrganizationService.removeIfUnused( getUser(), getAgency().getName(), getCommunityService() );
                 }
             }

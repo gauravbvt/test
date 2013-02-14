@@ -21,6 +21,7 @@ import com.mindalliance.channels.core.model.UserIssue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.IteratorChain;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +120,10 @@ public abstract class AbstractModelObjectDao {
             LOG.error( "Failed to set sub DAO", e );
             throw new RuntimeException( "Failed to set sub DAO" );
         }
+    }
+
+    protected AbstractModelObjectDao getSubDao() {
+        return subDao;
     }
 
     public IdGenerator getIdGenerator() {
@@ -660,8 +665,10 @@ public abstract class AbstractModelObjectDao {
                 LOG.info(
                         "Importing snapshot for {} from {}",
                         getModelObjectContext().getUri(), dataFile.getAbsolutePath() );
-                in = new FileInputStream( dataFile );
-                importModelObjectContext( importer, in );
+                if ( dataFile.length() > 0 ) {
+                    in = new FileInputStream( dataFile );
+                    importModelObjectContext( importer, in );
+                }
                 setJournal( loadJournal( importer ) );
             }
             afterLoad();
@@ -815,4 +822,81 @@ public abstract class AbstractModelObjectDao {
     }
 
 
+    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
+        ModelObject mo = find( clazz, name.trim() );
+        if ( mo == null || !mo.isEntity() || mo.isUnknown()
+                || mo.isImmutable() || !mo.isUndefined()
+                || isReferenced( mo ) )
+            return false;
+
+        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
+        remove( mo );
+        return true;
+    }
+
+    public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
+        String root = sanitizeEntityName( name );
+        if ( root != null && !root.isEmpty() ) {
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
+                        + " of actual " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"" );
+            }
+            String candidateName = root;
+            int i = 1;
+            while ( i < 10 ) {
+                try {
+                    return findOrCreate( clazz, candidateName, id );
+                } catch ( InvalidEntityKindException ignored ) {
+                    LOG.warn( "Entity name conflict creating actual " + candidateName );
+                    candidateName = root + " (" + i + ')';
+                    i++;
+                }
+            }
+            LOG.warn( "Unable to create actual " + root );
+        }
+        return null;
+
+    }
+
+    public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
+        String root = sanitizeEntityName( name );
+        T entityType = null;
+        if ( root != null && !root.isEmpty() ) {
+            if ( !name.equals( root ) ) {
+                LOG.warn( "\"" + name + "\""
+                        + " of type " + clazz.getSimpleName()
+                        + "[" + id + "]"
+                        + " stripped to \"" + root + "\"" );
+            }
+            String candidateName = root;
+            boolean success = false;
+            int i = 0;
+            while ( !success ) {
+                try {
+                    entityType = findOrCreateType( clazz, candidateName, id );
+                    success = true;
+                } catch ( InvalidEntityKindException ignored ) {
+                    LOG.warn( "Entity name conflict creating type {}", candidateName );
+                    candidateName = root.trim() + " type";
+                    if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
+                    i++;
+                }
+            }
+        }
+        return entityType;
+    }
+
+
+    private String sanitizeEntityName( String name ) {
+        return StringUtils.abbreviate( name.replaceAll( "[^\\w-]", " " )
+                .replaceAll( "\\n", " " )
+                .replaceAll( "\\s+", " " ).trim()
+                , ModelEntity.MAX_NAME_SIZE );
+    }
+
+    public long getLastAssignedId() {
+        return getIdGenerator().getIdCounter( getModelObjectContext().getUri() );
+    }
 }

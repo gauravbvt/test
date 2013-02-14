@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" xmlns:wicket="http://wicket.apache.org/">
+<body>
+
+<wicket:extend>
+
+    <div class="aboutplan-quickicons">
+
+        <div class="about-plan">
+            <!--<img wicket:id="planImage" class="plan-image" src="#" width="48" height="48"/>-->
+            <span wicket:id="planName" class="plan-name">Plan name</span>
+            <span wicket:id="planClient" class="plan-client">Plan client</span>
+        </div>
+
+        <div wicket:id="goto-icons" class="quick-icons">
+
+            <div wicket:id="model" class="goto model">
+                <a wicket:id="gotoModel" href="#">
+                    <img class="icon" src="images/qi.things_digital.png" width="32" height="32" alt="Collaboration model"/>
+                    <span>Collaboration Model</span>
+                </a>
+            </div>
+
+            <div wicket:id="issues" class="goto">
+                <a wicket:id="gotoIssues" href="#">
+                    <img class="icon" src="images/qi.error.png" width="32" height="32" alt="Issues found in collaboration model"/>
+                    <span>Model<br/>issues</span>
+                </a>
+            </div>
+
+            <div wicket:id="rfis" class="goto">
+                <a wicket:id="gotoRFIs" href="#">
+                    <img class="icon" src="images/qi.document_todo.png" width="32" height="32" alt="RFIs"/>
+                    <span wicket:id="rfisLabel">Planning surveys</span>
+                </a>
+            </div>
+
+            <div wicket:id="allFeedback" class="goto">
+                <a wicket:id="gotoFeedback" href="#">
+                    <img class="icon" src="images/qi.comments.png" width="32" height="32" alt="Feedback"/>
+                    <span wicket:id="feedbackLabel">Feedback</span>
+                </a>
+            </div>
+
+        </div>
+
+        <div wicket:id="referencesContainer" class="plan-references">
+            <h2>Plan documents</h2>
+            <ul>
+                <li wicket:id="references">
+                    <a wicket:id="attachment" href="#">reference</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="right-accordion">
+
+        <span wicket:id="social">[social panel]</span>
+
+    </div>
+</wicket:extend>
+</body>
+</html>

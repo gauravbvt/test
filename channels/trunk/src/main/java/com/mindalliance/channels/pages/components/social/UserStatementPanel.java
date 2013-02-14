@@ -75,7 +75,7 @@ abstract public class UserStatementPanel extends AbstractSocialEventPanel {
         UserStatement userMessage = getUserStatement();
         boolean linked = false;
         String subject = userMessage.getMoLabel();
-        ModelObject mo = userMessage.getAbout( getQueryService() );
+        ModelObject mo = userMessage.getAbout( getCommunityService() );
         if ( mo != null ) {
             ModelObjectLink moLink = new ModelObjectLink(
                     "modelObject",

@@ -6,7 +6,7 @@
 
 package com.mindalliance.channels.core.command;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.CommunityService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,12 +105,12 @@ public class MultiCommand extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
+        CommunityService communityService = commander.getCommunityService();
         for ( Command command : commands ) {
             LOG.info( "--- sub-command --" );
             Change change = commander.doCommand( command );
             for ( Link link : links )
-                link.process( command, change, queryService ); // without benefit of link processing
+                link.process( command, change, communityService ); // without benefit of link processing
             executed.add( command );
         }
         LOG.info( "END multicommand " + getName() );
@@ -206,11 +206,11 @@ public class MultiCommand extends AbstractCommand {
          *
          * @param command a command
          * @param change a change
-         * @param queryService a query service
+         * @param communityService a query service
          */
-        private void process( Command command, Change change, QueryService queryService ) {
+        private void process( Command command, Change change, CommunityService communityService ) {
             if ( command == sourceCommand ) {
-                Object result = change.getSubject( queryService );
+                Object result = change.getSubject( communityService );
                 if ( result != null ) {
                     Object value;
                     try {

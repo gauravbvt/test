@@ -1378,7 +1378,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         } else {
             change = doCommand( new RedirectFlow( getUser().getUsername(), getFlow(), other, isSend() ) );
         }
-        Flow newFlow = (Flow) change.getSubject( getQueryService() );
+        Flow newFlow = (Flow) change.getSubject( getCommunityService() );
         if ( newFlow != null ) { // TODO Find out why this has happened...
             // requestLockOn( newFlow );
             setFlow( newFlow );
@@ -1719,7 +1719,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 && change.isForInstanceOf( Node.class )
                 && change.isForProperty( "other" ) ) {
             Flow oldFlow = getFlow();
-            setOther( (Node) change.getSubject( getQueryService() ) );
+            setOther( (Node) change.getSubject( getCommunityService() ) );
             Flow newFlow = getFlow();
             if ( newFlow != null ) adjustFields( newFlow );
             update( target, new Change( Change.Type.Updated, getFlow() ) ); // was getNode()

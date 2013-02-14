@@ -113,7 +113,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new AddRequirement( getUsername() ) );
-                setSelectedRequirement( (Requirement) change.getSubject( getQueryService() ) );
+                setSelectedRequirement( (Requirement) change.getSubject( getCommunityService() ) );
                 updateComponents( target );
                 addRequirementsTable();
                 target.add( requirementsTable );
@@ -201,7 +201,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RequirementWrapper.class ) && change.isExpanded() ) {
-            RequirementWrapper wrapper = (RequirementWrapper)change.getSubject( getQueryService() );
+            RequirementWrapper wrapper = (RequirementWrapper)change.getSubject( getCommunityService() );
             Requirement requirement = wrapper.getRequirement();
             if ( getSelectedRequirement() != null && requirement.equals( getSelectedRequirement() )) {
                 setSelectedRequirement( null );
@@ -211,7 +211,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
             }
         }
         else if ( change.isForInstanceOf( Requirement.class ) ) {
-            Requirement requirement = (Requirement) change.getSubject( getQueryService() );
+            Requirement requirement = (Requirement) change.getSubject( getCommunityService() );
             if ( change.isAdded() ) {
                 setSelectedRequirement( requirement );
             } else if ( change.isRemoved() ) {

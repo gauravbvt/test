@@ -115,7 +115,7 @@ public class PlanEditPanel extends AbstractFloatingMultiAspectPanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( Issue.class )
-                && change.getSubject( getQueryService() ) instanceof Plan )
+                && change.getSubject( getCommunityService() ) instanceof Plan )
             setAspectShown( target, DETAILS );
         if ( !( change.isSelected() && ( change.isForInstanceOf( Plan.class ) ) ) ) {
             super.updateWith( target, change, updated );

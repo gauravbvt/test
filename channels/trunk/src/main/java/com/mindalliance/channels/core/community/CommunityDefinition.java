@@ -54,10 +54,6 @@ public class CommunityDefinition extends Observable {
     private final String uri;
 
     /**
-     * The community's name.
-     */
-    private String name;
-    /**
      * The plan's uri
      */
     private String planUri;
@@ -75,7 +71,6 @@ public class CommunityDefinition extends Observable {
     public CommunityDefinition( String uri, String values ) {
         this.uri = uri;
         StringTokenizer tokens = new StringTokenizer( values, "|" );
-        name = tokens.nextToken();
         planUri = tokens.nextToken();
         planVersion = Integer.parseInt( tokens.nextToken() );
     }
@@ -84,6 +79,7 @@ public class CommunityDefinition extends Observable {
         this.uri = uri;
         this.planUri = planUri;
         this.planVersion = planVersion;
+        setChanged();
     }
 
     /**
@@ -104,10 +100,6 @@ public class CommunityDefinition extends Observable {
 
     public File getCommunityDirectory() {
         return communityDirectory;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getPlanUri() {
@@ -134,16 +126,6 @@ public class CommunityDefinition extends Observable {
         notifyObservers();
     }
 
-    /**
-     * Set the plan name.
-     * @param name the new name
-     */
-    public void setName( String name ) {
-        if ( this.name != name && ( name == null || !name.equals( this.name ) ) )
-            setChanged();
-        this.name = name;
-        notifyObservers();
-    }
 
     /**
      * Provide a string representation to use in the community property file.
@@ -152,9 +134,6 @@ public class CommunityDefinition extends Observable {
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
-        if ( name != null )
-            buf.append( name );
-        buf.append( '|' );
         buf.append( planUri );
         buf.append( '|' );
         buf.append( planVersion );
@@ -180,7 +159,7 @@ public class CommunityDefinition extends Observable {
      * @throws IOException on errors
      */
     public File getDataFile() throws IOException {
-        return new File( DATA_FILE );
+        return new File( communityDirectory, DATA_FILE );
     }
 
     /**
@@ -190,7 +169,7 @@ public class CommunityDefinition extends Observable {
      * @throws IOException on errors
      */
     public File getJournalFile() throws IOException {
-        File journalFile = new File( JOURNAL_FILE );
+        File journalFile = new File( communityDirectory, JOURNAL_FILE );
         if ( journalFile.createNewFile() )
             LOG.debug( "Created {}", journalFile );
         return journalFile;
@@ -253,15 +232,14 @@ public class CommunityDefinition extends Observable {
     /**
      * Create an unloaded plan community.
      * @return a new uninitialized plan
-     * @param idGenerator the id generator
      */
-    PlanCommunity createPlanCommunity( IdGenerator idGenerator ) {
+    PlanCommunity createPlanCommunity( ) {
         PlanCommunity planCommunity = new PlanCommunity();
-        planCommunity.setId( idGenerator.assignId( null, uri ) );
-        planCommunity.setName( name );
+        planCommunity.setName( "Unnamed" );
         planCommunity.setUri( uri );
         planCommunity.setPlanUri( planUri );
         planCommunity.setPlanVersion( planVersion );
+        setChanged();
         return planCommunity;
     }
 }

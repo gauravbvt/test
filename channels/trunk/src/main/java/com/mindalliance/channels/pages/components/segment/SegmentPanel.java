@@ -439,7 +439,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         resizeSocialAndGuidePanels( target, change );
         refreshMenus( target );
-        Identifiable identifiable = change.getSubject( getQueryService() );
+        Identifiable identifiable = change.getSubject( getCommunityService() );
         boolean stopUpdates = false;
         if ( identifiable instanceof Issue && change.isExists()
                 && ( (Issue) identifiable ).getAbout().getId() == getSegment().getId() ) {
@@ -653,7 +653,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         setPartOrFlowUpdated( isPartOrFlowUpdated()
                 || change.hasQualifier( "updated" ) && (Boolean) change.getQualifier( "updated" ) );
         if ( !change.isNone() ) {
-            Identifiable identifiable = change.getSubject( getQueryService() );
+            Identifiable identifiable = change.getSubject( getCommunityService() );
             if ( identifiable == getPart() ) {
                 if ( change.isUpdated() || change.isSelected() ) {
                     addPartMediaPanel();

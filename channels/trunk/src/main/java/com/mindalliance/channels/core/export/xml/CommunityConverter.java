@@ -47,11 +47,12 @@ public class CommunityConverter extends AbstractChannelsConverter {
     public void marshal( Object source, HierarchicalStreamWriter writer, MarshallingContext context ) {
         PlanCommunity planCommunity = (PlanCommunity)source;
         CommunityDao communityDao = getCommunityDao();
+        writer.addAttribute( "id", Long.toString( planCommunity.getId() ) );
         writer.addAttribute( "uri", planCommunity.getUri() );
         writer.addAttribute( "planUri", planCommunity.getPlanUri() );
         writer.addAttribute( "planVersion", Integer.toString( planCommunity.getPlanVersion() ) );
         writer.startNode( "lastId" );
-        writer.setValue( String.valueOf( communityDao.getIdGenerator().getIdCounter( getContext().getPlan().getUri() ) ) );
+        writer.setValue( String.valueOf( communityDao.getIdGenerator().getIdCounter( planCommunity.getUri() ) ) );
         for ( Date date : planCommunity.getIdShifts().keySet() ) {
             writer.startNode( "idShift" );
             writer.addAttribute( "date", DATE_FORMAT.format( date ) );
@@ -64,6 +65,9 @@ public class CommunityConverter extends AbstractChannelsConverter {
         writer.endNode();
         writer.startNode( "description" );
         writer.setValue( planCommunity.getDescription() );
+        writer.endNode();
+        writer.startNode( "closed" );
+        writer.setValue( Boolean.toString( planCommunity.isClosed() ) );
         writer.endNode();
         writer.startNode( "plannerSupportCommunity" );
         writer.setValue( planCommunity.getPlannerSupportCommunity() );
@@ -83,7 +87,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
         // Export attachments
         exportAttachments( planCommunity, writer );
         // Export user issues
-        exportUserIssues( planCommunity, writer, context );
+        // exportUserIssues( planCommunity, writer, context );
 
         // Entities
         // All requirements
@@ -118,7 +122,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
         planCommunity.setPlanVersion( planVersion );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         planCommunity.setId( id );
-        getPlanDao().loadingModelContextWithId( id ); // can set a shift in all ids to prevent overshadowing of IDs in subDaos
+        getCommunityDao().loadingModelContextWithId( id ); // can set a shift in all ids to prevent overshadowing of IDs in subDaos
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -144,6 +148,8 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 planCommunity.setCommunityCalendar( reader.getValue() );
             } else if ( nodeName.equals( "communityCalendarPrivateTicket" ) ) {
                 planCommunity.setCommunityCalendarPrivateTicket( reader.getValue() );
+            } else if ( nodeName.equals( "closed" ) ) {
+                planCommunity.setClosed( Boolean.parseBoolean( reader.getValue() ) );
             } else if ( nodeName.equals( "description" ) ) {
                 planCommunity.setDescription( reader.getValue() );
                 // Entities

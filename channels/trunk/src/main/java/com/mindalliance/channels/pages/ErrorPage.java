@@ -52,7 +52,7 @@ public class ErrorPage extends AbstractChannelsWebPage {
         header.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                setResponsePage( UserPage.class );
+                setResponsePage( HomePage.class );
             }
         } );
         //todo - unhack

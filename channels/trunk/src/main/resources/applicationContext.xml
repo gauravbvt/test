@@ -74,7 +74,9 @@ CONFIGURATION NOTES:
 
 
     <!-- =========================== Main Components -->
-    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels"/>
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
     <bean id="idGenerator" class="com.mindalliance.channels.core.dao.PerPlanIdGenerator"/>
     <bean id="issueScanner" class="com.mindalliance.channels.engine.analysis.IssueScanner"/>
 

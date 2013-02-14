@@ -281,11 +281,11 @@ public class FlowListPanel extends AbstractCommandablePanel {
         if ( change.isUpdated() ) {
             setSelectedFlowUpdated( true );
             if ( change.isForInstanceOf( Flow.class ) ) {
-                selectedFlow = (Flow)change.getSubject( getQueryService() );
+                selectedFlow = (Flow)change.getSubject( getCommunityService() );
             }
         } else {
             if ( change.isForInstanceOf( Flow.class ) ) {
-                Flow flow = (Flow) change.getSubject( getQueryService() );
+                Flow flow = (Flow) change.getSubject( getCommunityService() );
                 if ( flow != null ) { // the flow might have been deleted by another planner
                     if ( change.isSelected() ) {
                         if ( selectedFlow != null && flow.equals( selectedFlow ) ) {
@@ -312,7 +312,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
                             selectedFlow = null;
                             setSelectedFlowUpdated( false );
                         } else if ( change.isAdded() ) {
-                            selectedFlow = (Flow) change.getSubject( getQueryService() );
+                            selectedFlow = (Flow) change.getSubject( getCommunityService() );
                         }
                         super.changed( change );
                     }

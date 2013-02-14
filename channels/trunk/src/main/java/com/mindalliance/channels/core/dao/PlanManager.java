@@ -257,4 +257,9 @@ public interface PlanManager extends CommandListener {
      */
     String getServerUrl();
 
+    /**
+     * Find all production plans.
+     * @return a list of plans
+     */
+    List<Plan> getProductionPlans();
 }

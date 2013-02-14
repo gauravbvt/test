@@ -51,7 +51,7 @@ public class DetachDocument extends AbstractCommand {
         String attachablePath = (String) get( "attachablePath" );
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
         if ( attachable == null ) throw new CommandException( "Can't find where attachments are" );
-        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager();
+        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager(); // todo - COMMUNITY
         attachmentManager.removeAttachment( attachment, attachable );
         describeTarget( mo );                
         return new Change( Type.Updated, mo, "attachments" );

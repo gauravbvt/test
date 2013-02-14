@@ -105,7 +105,7 @@ public class EntityValueAnalysisPanel<T extends ModelEntity> extends AbstractUpd
     public void changed( Change change ) {
         if ( change.isForInstanceOf( ValueAnalysis.class ) ) {
             if ( change.hasQualifier( "failure" ) ) {
-                Part part = ( (ValueAnalysis) change.getSubject( getQueryService() ) ).getPart();
+                Part part = ( (ValueAnalysis) change.getSubject( getCommunityService() ) ).getPart();
                 change.setSubject( part );
                 change.setType( Change.Type.AspectViewed );
                 change.setProperty( "failure" );

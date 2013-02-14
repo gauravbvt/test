@@ -282,7 +282,8 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                         new Model<Channelable>( new UserChannels(
                                 getUser().getUserInfo()
                         ) ),
-                        false ) );
+                        false,     // don't allow adding new media
+                        true ) );  // restrict to immutable media
         userInfoContainer.add( updatedContactContainer );
     }
 

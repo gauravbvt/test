@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -98,4 +99,42 @@ public interface CommunityService {
     ChannelsUserDao getUserDao();
 
     ParticipationAnalyst getParticipationAnalyst();
+
+    Boolean isCommunityPlanner( ChannelsUser user );
+
+    <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced );
+
+    <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name );
+
+    <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
+
+    <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, long id );
+
+    <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, long id );
+
+    void update( ModelObject mo );
+
+    /**
+     * Find an actual entity by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name );
+
+    /**
+     * Find an actual entity by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     * If id is not null, assign the entity the given id if created.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param id    an id
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id );
 }

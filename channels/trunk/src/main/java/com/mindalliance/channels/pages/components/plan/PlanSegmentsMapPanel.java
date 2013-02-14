@@ -477,7 +477,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isSelected() ) {
-            Identifiable changed = change.getSubject( getQueryService() );
+            Identifiable changed = change.getSubject( getCommunityService() );
             if ( changed instanceof Plan ) {
                 selectedGroup = null;
                 selectedSegment = null;

@@ -179,7 +179,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
             final Phase.Timing timing,
             final Event event,
             final CommunityService communityService ) {
-        final Place locale = communityService.getPlanCommunity().getCommunityLocale();
+        final Place locale = communityService.getPlanCommunity().getLocale( communityService );
         List<Requirement> relationshipRequirements = new ArrayList<Requirement>();
         for ( Requirement req : communityService.getPlanService().list( Requirement.class ) ) {  // todo - COMMUNITY - get requirements from the community, not the plan
             req.initialize( communityService );

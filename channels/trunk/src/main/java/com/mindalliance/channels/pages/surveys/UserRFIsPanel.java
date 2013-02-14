@@ -157,7 +157,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFIWrapper.class ) && change.isExpanded() ) {
-            RFIWrapper rfiWrapper = (RFIWrapper) change.getSubject( getQueryService() );
+            RFIWrapper rfiWrapper = (RFIWrapper) change.getSubject( getCommunityService() );
             change.setSubject( rfiWrapper.getRFI() );
         }
         super.changed( change );

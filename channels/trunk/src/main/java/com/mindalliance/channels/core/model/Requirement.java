@@ -320,7 +320,7 @@ public class Requirement extends ModelObject implements Countable {
                                                         CommunityService communityService ) {
         SatisfactionMeasure[] satisfactions = new SatisfactionMeasure[3];
         CommunityCommitments commitments = communityService.getAllCommitments( false )
-                .inSituation( timing, event, communityService.getPlanCommunity().getCommunityLocale() )
+                .inSituation( timing, event, communityService.getPlanCommunity().getLocale( communityService ) )
                 .satisfying( this, communityService )
                 .canBeRealized( communityService );
         if ( commitments.isEmpty() ) {
@@ -499,7 +499,7 @@ public class Requirement extends ModelObject implements Countable {
      */
     public boolean satisfiedBy( CommunityCommitment commitment, CommunityService communityService ) {
         if ( isEmpty() ) return false;
-        Place locale = communityService.getPlanCommunity().getCommunityLocale();
+        Place locale = communityService.getPlanCommunity().getLocale( communityService );
         Flow flow = commitment.getSharing();
         return matchesFlow( flow, locale )
                 && beneficiarySpec.satisfiesSituation( commitment, locale )
@@ -1283,7 +1283,7 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public boolean narrowsOrEquals( AgentSpec agentSpec, CommunityService communityService ) {
-            Place locale = communityService.getPlanCommunity().getCommunityLocale();
+            Place locale = communityService.getPlanCommunity().getLocale( communityService );
             return ( agentSpec.getAgent() == null
                     || ( getAgent() != null && getAgent().equals( agentSpec.getAgent() ) ) )
                     && ModelEntity.implies( jurisdiction, agentSpec.getJurisdiction(), locale )

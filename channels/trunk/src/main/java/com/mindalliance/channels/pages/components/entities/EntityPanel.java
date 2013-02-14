@@ -412,7 +412,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
      */
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        getCommander().requestLockOn( getUser().getUsername(), change.getSubject( getQueryService() ) );
+        getCommander().requestLockOn( getUser().getUsername(), change.getSubject( getCommunityService() ) );
         super.refresh( target, change, aspect );
     }
 

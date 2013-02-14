@@ -85,7 +85,7 @@ public class EntitiesPanel<T extends ModelEntity> extends AbstractUpdatablePanel
                     || change.isForInstanceOf( Segment.class ) ) {
                 super.changed( change );
             } else if ( change.isForInstanceOf( EntityRelationship.class ) ) {
-                selectedEntityRel = (EntityRelationship<T>) change.getSubject( getQueryService() );
+                selectedEntityRel = (EntityRelationship<T>) change.getSubject( getCommunityService() );
             } else {
                 selectedEntityRel = null;
             }

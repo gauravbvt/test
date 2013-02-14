@@ -1,8 +1,8 @@
 package com.mindalliance.channels.core.command;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,8 +215,8 @@ public class Change implements Serializable {
         return id != null && identifiableRef == null;
     }
 
-    public Identifiable getSubject( QueryService queryService ) {
-        return identifiableRef == null ? null : identifiableRef.resolve( queryService );
+    public Identifiable getSubject( CommunityService communityService ) {
+        return identifiableRef == null ? null : identifiableRef.resolve( communityService );
     }
 
     public void setSubject( Identifiable subject ) {
@@ -354,16 +354,16 @@ public class Change implements Serializable {
     /**
      * Gets the updated property value or null if N/A.
      *
-     * @param queryService a queryService
+     * @param communityService a community service
      * @return an object
      * @throws com.mindalliance.channels.core.model.NotFoundException
      *          if fails to retrieve property value
      */
-    public Object getChangedPropertyValue( QueryService queryService ) throws NotFoundException {
+    public Object getChangedPropertyValue( CommunityService communityService ) throws NotFoundException {
         Object value = null;
         if ( type == Type.Updated ) {
             try {
-                value = PropertyUtils.getProperty( getSubject( queryService ), property );
+                value = PropertyUtils.getProperty( getSubject( communityService ), property );
             } catch ( IllegalAccessException e ) {
                 throw new RuntimeException( e );
             } catch ( InvocationTargetException e ) {

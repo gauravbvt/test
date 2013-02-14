@@ -31,7 +31,6 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Hierarchical;
-import com.mindalliance.channels.core.model.InvalidEntityKindException;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -274,15 +273,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
-        ModelObject mo = getDao().find( clazz, name.trim() );
-        if ( mo == null || !mo.isEntity() || mo.isUnknown()
-                || mo.isImmutable() || !mo.isUndefined()
-                || isReferenced( mo ) )
-            return false;
-
-        LOG.info( "Removing unused " + mo.getClass().getSimpleName() + ' ' + mo );
-        remove( mo );
-        return true;
+        return getDao().cleanup( clazz, name );
     }
 
     @Override
@@ -564,35 +555,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
-        String root = sanitizeEntityName( name );
-        if ( root != null && !root.isEmpty() ) {
-            if ( !name.equals( root ) ) {
-                LOG.warn( "\"" + name + "\""
-                        + " of actual " + clazz.getSimpleName()
-                        + "[" + id + "]"
-                        + " stripped to \"" + root + "\"" );
-            }
-            String candidateName = root;
-            int i = 1;
-            while ( i < 10 ) {
-                try {
-                    return findOrCreate( clazz, candidateName, id );
-                } catch ( InvalidEntityKindException ignored ) {
-                    LOG.warn( "Entity name conflict creating actual " + candidateName );
-                    candidateName = root + " (" + i + ')';
-                    i++;
-                }
-            }
-            LOG.warn( "Unable to create actual " + root );
-        }
-        return null;
-    }
-
-    private String sanitizeEntityName( String name ) {
-        return StringUtils.abbreviate( name.replaceAll( "[^\\w-]", " " )
-                .replaceAll( "\\n", " " )
-                .replaceAll( "\\s+", " " ).trim()
-                , ModelEntity.MAX_NAME_SIZE );
+        return getDao().safeFindOrCreate( clazz, name, id );
     }
 
     @Override
@@ -602,31 +565,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
-        String root = sanitizeEntityName( name );
-        T entityType = null;
-        if ( root != null && !root.isEmpty() ) {
-            if ( !name.equals( root ) ) {
-                LOG.warn( "\"" + name + "\""
-                        + " of type " + clazz.getSimpleName()
-                        + "[" + id + "]"
-                        + " stripped to \"" + root + "\"" );
-            }
-            String candidateName = root;
-            boolean success = false;
-            int i = 0;
-            while ( !success ) {
-                try {
-                    entityType = findOrCreateType( clazz, candidateName, id );
-                    success = true;
-                } catch ( InvalidEntityKindException ignored ) {
-                    LOG.warn( "Entity name conflict creating type {}", candidateName );
-                    candidateName = root.trim() + " type";
-                    if ( i > 0 ) candidateName = candidateName + " (" + i + ")";
-                    i++;
-                }
-            }
-        }
-        return entityType;
+        return getDao().safeFindOrCreateType( clazz, name, id );
     }
 
 

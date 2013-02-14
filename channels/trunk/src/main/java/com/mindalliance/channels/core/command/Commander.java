@@ -313,7 +313,7 @@ public interface Commander {
     /**
      * All users are out of sync with plan versions.
      */
-    void setResyncRequired();
+    void setPlanResyncRequired();
 
     /**
      * Whether the current user us out of sync with plan versions.
@@ -321,7 +321,7 @@ public interface Commander {
      * @param userName the current user
      * @return a boolean
      */
-    boolean isOutOfSync( String userName );
+    boolean isPlanOutOfSync( String userName );
 
     /**
      * Signal that the current user is in sync with the plan versions.

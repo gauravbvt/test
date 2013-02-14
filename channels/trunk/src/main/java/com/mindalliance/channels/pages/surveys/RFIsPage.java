@@ -105,7 +105,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFI.class ) ) {
             if ( change.isExpanded() ) {
-                RFI rfi = (RFI) change.getSubject( getQueryService() );
+                RFI rfi = (RFI) change.getSubject( getCommunityService() );
                 if ( selectedRFI != null && rfi.equals( selectedRFI ) ) {
                     selectedRFI = null;
                 } else {

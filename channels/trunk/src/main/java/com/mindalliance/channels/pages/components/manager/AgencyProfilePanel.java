@@ -332,7 +332,8 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
 
 
     private boolean canBeEdited() {
-        return !isFixedOrganization() && getPlanCommunity().isOrganizationLeader( getUser(), agency.getRegistration() );
+        return !isFixedOrganization()
+                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegistration(), getCommunityService() );
     }
 
     public String getName() {

@@ -79,7 +79,7 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
                     public Object getDisplayValue( Question question ) {
                         return ChannelsUtils.convertTemplate(
                                 question.getText(),
-                                getRFISurvey().getAbout( getQueryService() ) );
+                                getRFISurvey().getAbout( getCommunityService() ) );
                     }
 
                     @Override

@@ -28,7 +28,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
 
     public AllInfoNeedsPage() {
-        super( new PageParameters(  ) );
+        this( new PageParameters(  ) );
     }
 
     public AllInfoNeedsPage( PageParameters parameters ) {

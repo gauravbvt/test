@@ -3,8 +3,11 @@ package com.mindalliance.channels.core.community;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.Importer;
+import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Requirement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +22,12 @@ import java.io.IOException;
  * Time: 9:33 AM
  */
 public class CommunityDao extends AbstractModelObjectDao {
+
+    /**
+     * The logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( CommunityDao.class );
+
 
     private CommunityDefinition communityDefinition;
     private PlanCommunity planCommunity;
@@ -79,7 +88,10 @@ public class CommunityDao extends AbstractModelObjectDao {
 
     @Override
     protected File getDataFile() throws IOException {
-        return communityDefinition.getDataFile();
+        File dataFile = communityDefinition.getDataFile();
+        if ( dataFile.createNewFile() )
+            LOG.info( "Created {}", dataFile );
+        return dataFile;
     }
 
     @Override
@@ -103,7 +115,7 @@ public class CommunityDao extends AbstractModelObjectDao {
     }
 
     public void validate() {
-        // Do nothing
+        // do nothing
     }
 
     @Override
@@ -111,11 +123,21 @@ public class CommunityDao extends AbstractModelObjectDao {
         importer.importPlanCommunity( in );
     }
 
-    public void resetCommunity() {
-        planCommunity = communityDefinition.createPlanCommunity( getIdGenerator() );
+    public PlanCommunity resetCommunity() {
+        planCommunity = communityDefinition.createPlanCommunity( );
+        return planCommunity;
     }
 
     public PlanCommunity getPlanCommunity() {
-        return (PlanCommunity)getModelObjectContext();
+        return planCommunity;
+    }
+
+    public void assignFirstIdTo( PlanCommunity planCommunity ) {
+        long startId = getPlanDao().getLastAssignedId() + 1;
+        planCommunity.setId( getIdGenerator().assignId( startId, planCommunity.getUri() ) );
+    }
+
+    private PlanDao getPlanDao() {
+        return (PlanDao) getSubDao();
     }
 }

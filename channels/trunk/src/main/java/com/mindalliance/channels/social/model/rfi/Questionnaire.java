@@ -1,12 +1,12 @@
 package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.collections.CollectionUtils;
@@ -154,16 +154,16 @@ public class Questionnaire extends AbstractPersistentChannelsObject {
         remediatedModelObjectRefString = new ModelObjectRef( issue.getAbout() ).asString();
     }
 
-    public boolean isObsolete( QueryService queryService, Analyst analyst ) {
+    public boolean isObsolete( CommunityService communitysService, Analyst analyst ) {
         boolean obsolete = false;
         if ( isIssueRemediation() ) {
-            ModelObject mo = ModelObjectRef.resolveFromString( remediatedModelObjectRefString, queryService );
+            ModelObject mo = ModelObjectRef.resolveFromString( remediatedModelObjectRefString, communitysService );
             if ( mo == null ) {
                 obsolete = true;
             } else {
                 // TODO : Apparently, cache bug raises exception
                 try {
-                    List<? extends Issue> unwaivedIssues = analyst.listUnwaivedIssues( queryService, mo, false );
+                    List<? extends Issue> unwaivedIssues = analyst.listUnwaivedIssues( communitysService.getPlanService(), mo, false );
                     obsolete = !CollectionUtils.exists(
                             unwaivedIssues,
                             new Predicate() {

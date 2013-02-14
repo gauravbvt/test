@@ -1,11 +1,11 @@
 package com.mindalliance.channels.social.model;
 
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-import com.mindalliance.channels.core.query.QueryService;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -93,27 +93,27 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
         return description;
     }
 
-    public ModelObject getAbout( QueryService queryService ) {
+    public ModelObject getAbout( CommunityService communityService ) {
         ModelObjectRef aboutRef = getAboutRef();
-        return aboutRef == null ? null : (ModelObject) aboutRef.resolve( queryService );
+        return aboutRef == null ? null : (ModelObject) aboutRef.resolve( communityService );
     }
 
     public ModelObjectRef getAboutRef() {
         return moRef == null ? null : ModelObjectRef.fromString( moRef );
     }
     
-    public ModelObject getModelObject( QueryService queryService ) {
+    public ModelObject getModelObject( CommunityService communityService ) {
         ModelObject mo = null;
         ModelObjectRef modelObjectRef = getAboutRef();
         if ( modelObjectRef != null ) {
-            mo = (ModelObject)modelObjectRef.resolve( queryService );
+            mo = (ModelObject)modelObjectRef.resolve( communityService );
         }
         return mo;
     }
 
-    public Segment getSegment( QueryService queryService ) {
+    public Segment getSegment( CommunityService communityService ) {
         Segment segment = null;
-        ModelObject mo = getModelObject( queryService );
+        ModelObject mo = getModelObject( communityService );
         if ( mo != null && mo instanceof SegmentObject ){
             segment = ((SegmentObject)mo).getSegment();
         }

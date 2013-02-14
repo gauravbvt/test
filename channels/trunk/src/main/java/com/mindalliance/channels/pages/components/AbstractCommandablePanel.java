@@ -145,7 +145,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
                                                      clazz,
                                                      safeName,
-                                                     ModelEntity.Kind.Actual ) ).getSubject( getQueryService() );
+                                                     ModelEntity.Kind.Actual ) ).getSubject( getCommunityService() );
     }
 
     /**
@@ -161,7 +161,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
         return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
                                                      clazz,
                                                      safeName,
-                                                     ModelEntity.Kind.Type ) ).getSubject( getQueryService() );
+                                                     ModelEntity.Kind.Type ) ).getSubject( getCommunityService() );
     }
 
     /**

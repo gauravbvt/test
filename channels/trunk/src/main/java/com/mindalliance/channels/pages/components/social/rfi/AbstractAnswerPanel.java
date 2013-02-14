@@ -240,7 +240,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
         extraContext.put( "planner", getUserFullName( getRFI().getRfiSurvey().getUsername() ) );
         return ChannelsUtils.convertTemplate(
                 getQuestion().getText(),
-                getRFI().getRfiSurvey().getAbout( getQueryService() ),
+                getRFI().getRfiSurvey().getAbout( getCommunityService() ),
                 extraContext );
     }
 

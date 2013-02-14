@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
@@ -45,7 +46,8 @@ public class AddNeed extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
+        CommunityService communityService = commander.getCommunityService();
+        QueryService queryService = communityService.getPlanService();
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
             Part part = (Part) segment.getNode( (Long) get( "part" ) );

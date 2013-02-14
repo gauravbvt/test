@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.model.AbstractModelObjectReferencingPPO;
 import com.mindalliance.channels.social.services.SurveysDAO;
@@ -133,18 +132,17 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
         return sb.toString();
     }
 
-    private String getModelObjectName( QueryService queryService ) {
-        ModelObject mo = getModelObject( queryService );
+    private String getModelObjectName( CommunityService communityService ) {
+        ModelObject mo = getModelObject( communityService );
         return mo == null
                 ? DELETED
                 : mo.getName();
     }
 
     public boolean isObsolete( CommunityService communityService ) {
-        PlanService planService = communityService.getPlanService();
         return !getQuestionnaire().isActive()
-                || ( getAboutRef() != null && getModelObject( planService ) == null )
-                || getQuestionnaire().isObsolete( planService, communityService.getAnalyst() );
+                || ( getAboutRef() != null && getModelObject( communityService ) == null )
+                || getQuestionnaire().isObsolete( communityService, communityService.getAnalyst() );
     }
 
     @Override

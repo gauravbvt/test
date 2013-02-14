@@ -377,7 +377,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
     public void changed( Change change ) {
         if ( change.isSelected() ) {  // in diagram
             if ( change.isForInstanceOf( Agency.class ) ) {
-                selectedAgency = (Agency) change.getSubject( getQueryService() );
+                selectedAgency = (Agency) change.getSubject( getCommunityService() );
                 selectedRequirementRel = null;
                 selectedAppliedRequirement = null;
             } else if ( change.isForInstanceOf( PlanCommunity.class ) ) {
@@ -385,7 +385,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                 selectedAgency = null;
                 selectedAppliedRequirement = null;
             } else if ( change.isForInstanceOf( RequirementRelationship.class ) ) {
-                selectedRequirementRel = (RequirementRelationship) change.getSubject( getQueryService() );
+                selectedRequirementRel = (RequirementRelationship) change.getSubject( getCommunityService() );
                 selectedAgency = null;
                 selectedAppliedRequirement = null;
             } else {
@@ -393,7 +393,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
             }
         } else if ( change.isExpanded() ) {  // from table of requirements
             if ( change.isForInstanceOf( Requirement.class ) ) {
-                Requirement req = (Requirement) change.getSubject( getQueryService() );
+                Requirement req = (Requirement) change.getSubject( getCommunityService() );
                 selectedAppliedRequirement = selectedAppliedRequirement != null && selectedAppliedRequirement.equals( req )
                         ? null
                         : req;

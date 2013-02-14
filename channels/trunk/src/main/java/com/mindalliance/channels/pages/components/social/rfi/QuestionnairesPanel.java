@@ -257,7 +257,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
                 isRemediation()
         );
         for ( Questionnaire questionnaire : questionnaires ) {
-            if ( !questionnaire.isObsolete( getQueryService(), getAnalyst() ) ) {
+            if ( !questionnaire.isObsolete( getCommunityService(), getAnalyst() ) ) {
                 QuestionnaireWrapper wrapper = new QuestionnaireWrapper( questionnaire );
                 if ( isRemediation() == questionnaire.isIssueRemediation() )
                     if ( !isUsedInSurveysOnly() || wrapper.getSurveyCount() > 0 )
@@ -357,7 +357,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( QuestionnaireWrapper.class ) && change.isExpanded() ) {
-            QuestionnaireWrapper qw = (QuestionnaireWrapper) change.getSubject( getQueryService() );
+            QuestionnaireWrapper qw = (QuestionnaireWrapper) change.getSubject( getCommunityService() );
             Questionnaire questionnaire = qw.getQuestionnaire();
             if ( selectedQuestionnaire != null && questionnaire.equals( selectedQuestionnaire ) ) {
                 setSelectedQuestionnaire( null );
@@ -373,7 +373,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( QuestionnaireWrapper.class ) && change.isExpanded() ) {
-            QuestionnaireWrapper qw = (QuestionnaireWrapper)change.getSubject( getQueryService() );
+            QuestionnaireWrapper qw = (QuestionnaireWrapper)change.getSubject( getCommunityService() );
             if ( isLockedByOtherUser( qw.getQuestionnaire() ) ) {
                 addQuestionnaireTable();
                 target.add( questionnaireTable );

@@ -148,15 +148,20 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     private ModalWindow dialogWindow;
 
 
-
     //-------------------------------
     public AbstractChannelsWebPage() {
     }
 
     public AbstractChannelsWebPage( PageParameters parameters ) {
         super( parameters );
-        setPlanFromParameters( parameters );
-        setPlanCommunityFromParameters( parameters );
+        setPlanCommunityFromParameters( parameters ); // can set plan if plan community specified.
+        if ( plan == null ) {
+            setPlanFromParameters( parameters ); // sets at least a default plan
+            if ( planCommunity == null && plan != null ) {
+                planCommunity = planCommunityManager.getDomainPlanCommunity( plan );
+                user.setPlanCommunityUri( planCommunity.getUri() );
+            }
+        }
     }
 
     public Set<Long> getExpansions() {
@@ -183,7 +188,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     protected void expand( Change change ) {
         tryAcquiringLock( change );
         if ( isSingleExpansion( change ) ) {
-            ModelObject subject = (ModelObject) change.getSubject( getQueryService() );
+            ModelObject subject = (ModelObject) change.getSubject( getCommunityService() );
             ModelObject previous = findExpanded( subject );
             if ( previous != null && !previous.equals( subject ) ) {
                 collapse( new Change( Change.Type.None, previous ) );
@@ -227,7 +232,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         if ( change.isByIdOnly() && getPlan().isDevelopment() ) {
             getCommander().requestLockOn( getUser().getUsername(), change.getId() );
         } else if ( change.isForInstanceOf( Identifiable.class ) ) {
-            Identifiable identifiable = change.getSubject( getQueryService() );
+            Identifiable identifiable = change.getSubject( getCommunityService() );
             if ( !ModelObject.isUnknownModelObject( identifiable )
                     && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
                     && getCommander().isLockable( change.getClassName() ) ) {
@@ -262,7 +267,16 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
-        }    }
+        }
+    }
+
+    protected boolean isCommunityContext() {
+        return getPageParameters().getNamedKeys().contains( COMMUNITY_PARM );
+    }
+
+    protected boolean isPlanContext() {
+        return getPageParameters().getNamedKeys().contains( PLAN_PARM );
+    }
 
 
     @Override
@@ -294,6 +308,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return (Channels) getApplication();
     }
 
+    protected boolean canTimeOut() {
+        return false;
+    }
+
     protected Commander getCommander() {
         return commanderFactory.getCommander( getCommunityService() );
     }
@@ -312,9 +330,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return planCommunity == null ? getUser().getPlanCommunityUri() : planCommunity.getUri();
     }
 
-    protected PlanCommunity getPlanCommunity() {
+    public PlanCommunity getPlanCommunity() {
         if ( planCommunity == null ) {
-          planCommunity = planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
+            planCommunity = planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
         }
         return planCommunity;
     }
@@ -375,6 +393,23 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return rfisLink;
     }
 
+    public BookmarkablePageLink<? extends WebPage> getRFIsLink(
+            String id,
+            Plan plan,
+            boolean samePage ) {
+        BookmarkablePageLink<? extends WebPage> rfisLink = newTargetedLink(
+                id,
+                "",
+                RFIsPage.class,
+                new PageParameters(),
+                null,
+                plan );
+        if ( !samePage )
+            rfisLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return rfisLink;
+    }
+
+
     public BookmarkablePageLink<? extends WebPage> getFeedbackLink(
             String id,
             PlanCommunity planCommunity,
@@ -390,6 +425,23 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
             feedbackLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return feedbackLink;
     }
+
+    public BookmarkablePageLink<? extends WebPage> getFeedbackLink(
+            String id,
+            Plan plan,
+            boolean samePage ) {
+        BookmarkablePageLink<? extends WebPage> feedbackLink = newTargetedLink(
+                id,
+                "",
+                FeedbackPage.class,
+                new PageParameters(),
+                null,
+                plan );
+        if ( !samePage )
+            feedbackLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
+        return feedbackLink;
+    }
+
 
     public BookmarkablePageLink<? extends WebPage> getRequirementsLink(
             String id,
@@ -431,7 +483,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     /**
-     * Get all plans that the current can read.
+     * Get all plans that the current user can read.
      *
      * @return a list of plans
      */
@@ -454,6 +506,30 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         } );
         return result;
     }
+
+    /**
+     * Get all non-domain communities that the current user can see.
+     *
+     * @return a list of plan communities
+     */
+    public final List<PlanCommunity> getVisiblePlanCommunities() {
+        List<PlanCommunity> result = new ArrayList<PlanCommunity>();
+        for ( PlanCommunity p : planCommunityManager.getPlanCommunities() ) {
+            if ( !p.isDomainCommunity() ) {
+                CommunityService communityService = communityServiceFactory.getService( p );
+                if ( !p.isClosed() || communityService.isCommunityPlanner( user ) )
+                    result.add( p );
+            }
+        }
+        Collections.sort( result, new Comparator<PlanCommunity>() {
+            @Override
+            public int compare( PlanCommunity p1, PlanCommunity p2 ) {
+                return p1.getName().compareTo( p2.getName() );
+            }
+        } );
+        return result;
+    }
+
 
     //-----------------------------------
     public static ResourceSpec getProfile( QueryService service, PageParameters parameters ) throws NotFoundException {
@@ -500,6 +576,18 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return params;
     }
 
+    protected PageParameters makeCommunityParameters() {
+        PageParameters params = new PageParameters();
+        try {
+            params.set( COMMUNITY_PARM, URLEncoder.encode( getPlanCommunityUri(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            // should never happen
+            LOG.error( "Failed to encode uri", e );
+        }
+        return params;
+    }
+
+
     /**
      * Set a component's visibility.
      *
@@ -508,6 +596,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
      */
     protected static void makeVisible( Component component, boolean visible ) {
         component.add( new AttributeModifier( "style", new Model<String>( visible ? "" : "display:none" ) ) );
+    }
+
+    public <T extends WebPage> BookmarkablePageLink<T> newTargetedLink( String id, Class<T> pageClass ) {
+        return new BookmarkablePageLink<T>( id, pageClass );
     }
 
     public static <T extends WebPage> BookmarkablePageLink<T> newTargetedLink(
@@ -556,12 +648,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return link;
     }
 
-    public static String queryParameters(  ) {
+    public static String queryParameters() {
         StringBuilder query = new StringBuilder();
         query.append( "&" );
         try {
             if ( ChannelsUser.current().getPlanCommunityUri() != null ) {
-                query.append(COMMUNITY_PARM)
+                query.append( COMMUNITY_PARM )
                         .append( "=" )
                         .append( ChannelsUser.current().getPlanCommunityUri() );
             } else {
@@ -614,14 +706,16 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     public void setPlanCommunity( PlanCommunity planCommunity ) {  // sets user plan and community uri
         this.planCommunity = planCommunity;
-        user.setPlanCommunityUri( planCommunity.getUri() );
-        user.setCommunityService( communityServiceFactory.getService( planCommunity ) );
-        queryService = null;
+        if ( planCommunity != null ) {
+            CommunityService communityService = communityServiceFactory.getService( planCommunity );
+            user.setCommunityService( communityService );
+            setPlan( communityService.getPlan() );
+        }
     }
 
     protected void setPlanCommunityFromParameters( PageParameters pageParameters ) {
         PlanCommunity planCommunity = getPlanCommunityFromParameters( pageParameters );
-        setPlanCommunity( planCommunity );
+        setPlanCommunity( planCommunity );  // also sets plan if planCommunity not null
     }
 
     public PlanCommunity getPlanCommunityFromParameters( PageParameters pageParameters ) {
@@ -638,11 +732,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         }
         if ( communityUri != null ) {
             planCommunity = planCommunityManager.getPlanCommunity( communityUri );
-        } else { // try domain plan community
-            Plan plan = getPlan();
-            if ( plan != null ) {
-                planCommunity = planCommunityManager.getDomainPlanCommunity( plan );
-            }
         }
         return planCommunity;
     }
@@ -689,8 +778,10 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         }
 
         List<Plan> plans = planManager.getPlansWithUri( planUri );
+/*
         if ( plans.isEmpty() )
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
+*/
 
         for ( Iterator<Plan> it = plans.iterator(); it.hasNext() && plan == null; ) {
             Plan p = it.next();
@@ -709,11 +800,14 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
             }
         }
         // If version mismatch, grab the production plan, if any
-        if ( plan == null ) {
+        if ( planUri != null && !planUri.isEmpty() && plan == null ) {
             plan = planManager.findProductionPlan( planUri );
         }
         // if still no plan, panic and grab first one.
         if ( plan == null ) {
+            if ( plans.isEmpty() ) {
+                plans = planManager.getPlans();
+            }
             LOG.warn( "PANIC: selecting first plan" );
             plan = plans.get( 0 );
         }
@@ -731,7 +825,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        // do nothing
+       // do nothing
     }
 
     @Override
@@ -756,11 +850,14 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     public Plan getPlan() {
-        if ( plan == null ) {
-            setPlanFromParameters( getPageParameters() );
-            setPlanCommunityFromParameters( getPageParameters() );
+        if ( isCommunityContext() ) {
+            return planManager.getPlan( planCommunity.getPlanUri(), planCommunity.getPlanVersion() );
+        } else {
+            if ( plan == null ) {
+                setPlanFromParameters( getPageParameters() );
+            }
+            return plan;
         }
-        return plan;
     }
 
     public PlanManager getPlanManager() {
@@ -818,7 +915,6 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     protected CommunityService getCommunityService() {
         return communityServiceFactory.getService( getPlanCommunity() );
     }
-
 
 
     // Modalable
@@ -882,10 +978,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     protected String makeHomeUrl() {
-        return getPlanManager().getServerUrl()
-                + "home?"
-                + PLAN_PARM + "=" + getPlan().getUri()
-                + "&" + VERSION_PARM + "=" + getPlan().getVersion();
+        return getApp().getServerUrl() + "/home";
     }
 
     protected Place getPlanLocale() {

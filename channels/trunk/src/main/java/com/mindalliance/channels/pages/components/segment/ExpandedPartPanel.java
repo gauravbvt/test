@@ -1168,7 +1168,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                     entityReferencePanel.updateIssues();
                     target.add( entityReferencePanel );
                 }
-                if ( change.getSubject( getQueryService() ).equals( getPart() ) ) {
+                if ( change.getSubject( getCommunityService() ).equals( getPart() ) ) {
                     if ( Arrays.asList( EntityProps ).contains( property ) )
                         updateEntityLink( target, change );
                 }

@@ -26,7 +26,7 @@ import java.util.Set;
  * Date: Apr 30, 2009
  * Time: 3:43:39 PM
  */
-public class Plan extends ModelObject implements ModelObjectContext {
+public class Plan extends ModelObject implements ModelObjectContext, Comparable<ModelObject> {
 
     /** Logger. */
     // private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
@@ -700,5 +700,17 @@ public class Plan extends ModelObject implements ModelObjectContext {
         if ( !hasAttachmentOfType( AttachmentImpl.Type.Help ) )
             types.add( Type.Help );
         return types;
+    }
+
+    @Override
+    public int compareTo( ModelObject mo ) {
+        Plan other = (Plan)mo;
+        if ( getUri().equals( other.getUri() ) ) {
+            return isDevelopment()
+                    ? -1
+                    : 1;
+        } else {
+            return getName().compareTo( other.getName() );
+        }
     }
 }

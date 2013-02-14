@@ -213,7 +213,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
 
     private boolean isFilteredOut( Feedback feedback ) {
         ModelObject about = filters.get( "about" );
-        return about != null && !about.equals( feedback.getAbout( getQueryService() ) );
+        return about != null && !about.equals( feedback.getAbout( getCommunityService() ) );
     }
 
 
@@ -241,7 +241,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             sb.append( feedback.getTopic().toLowerCase() );
             String moRefString = feedback.getMoRef();
             if ( moRefString != null ) {
-                ModelObject mo = ModelObjectRef.resolveFromString( moRefString, getQueryService() );
+                ModelObject mo = ModelObjectRef.resolveFromString( moRefString, getCommunityService() );
                 if ( mo != null ) {
                     sb.append( " (" );
                     sb.append( mo.getLabel() );
@@ -378,7 +378,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( FeedbackWrapper.class ) && change.isExpanded() ) {
-            FeedbackWrapper fw = (FeedbackWrapper) change.getSubject( getQueryService() );
+            FeedbackWrapper fw = (FeedbackWrapper) change.getSubject( getCommunityService() );
             if ( selectedFeedback != null && fw.getFeedback().equals( selectedFeedback ) ) {
                 setSelectedFeedback( null );
             } else {
@@ -466,7 +466,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
                 return null;
             } else {
                 ModelObjectRef modelObjectRef = ModelObjectRef.fromString( moRefString );
-                return (ModelObject) modelObjectRef.resolve( getQueryService() );
+                return (ModelObject) modelObjectRef.resolve( getCommunityService() );
             }
         }
 

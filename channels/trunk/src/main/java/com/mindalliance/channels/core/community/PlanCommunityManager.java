@@ -13,10 +13,11 @@ import java.util.List;
  * Date: 11/30/12
  * Time: 3:15 PM
  */
-public interface PlanCommunityManager  extends CommandListener {
+public interface PlanCommunityManager extends CommandListener {
 
     /**
      * Get the plan community's DAO.
+     *
      * @param planCommunity a plan community
      * @return a community dao
      */
@@ -24,6 +25,7 @@ public interface PlanCommunityManager  extends CommandListener {
 
     /**
      * Get the plan community's DAO.
+     *
      * @param uri a plan community's uri
      * @return a community dao
      */
@@ -31,6 +33,7 @@ public interface PlanCommunityManager  extends CommandListener {
 
     /**
      * Get plan community given uri. If domain plan uri, return plan community fro dev version.
+     *
      * @param planCommunityUri a plan community uri (if a plan uri then community for domain planners)
      * @return a plan community
      */
@@ -39,20 +42,23 @@ public interface PlanCommunityManager  extends CommandListener {
 
     /**
      * Find a plan community with a given version of their plan (used by planners).
-     * @param uri a community's URI
-     * @param planVersion  a plan's version
+     *
+     * @param uri         a community's URI
+     * @param planVersion a plan's version
      * @return a plan community or null
      */
     PlanCommunity findPlanCommunity( String uri, int planVersion );
 
     /**
      * Return the list of all plan communities.
+     *
      * @return a plan community.
      */
     List<PlanCommunity> getPlanCommunities();
 
     /**
      * Return the domain plan community for a plan (community of planners).
+     *
      * @param plan a plan
      * @return a plan community
      */
@@ -63,4 +69,13 @@ public interface PlanCommunityManager  extends CommandListener {
      * Via AOP.
      */
     void clearCache();
+
+    /**
+     * Create a new community for a given plan.
+     *
+     * @param plan a plan
+     * @return a PlanCommunity
+     */
+    PlanCommunity createNewCommunityFor( Plan plan );
+
 }

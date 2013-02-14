@@ -25,6 +25,7 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
+import com.mindalliance.channels.pages.PagePathItem;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -136,7 +137,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected List<PagePathItem> getIntermediatePagesPathItems() {
+    public List<PagePathItem> getIntermediatePagesPathItems() {
         List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
         intermediates.add( new PagePathItem(
                 AllProtocolsPage.class,

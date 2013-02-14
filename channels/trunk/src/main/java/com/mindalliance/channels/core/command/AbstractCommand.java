@@ -187,7 +187,7 @@ public abstract class AbstractCommand implements Command {
         Object value = arguments.get( key );
         if ( value instanceof ModelObjectRef ) {
             ModelObjectRef moRef = (ModelObjectRef) value;
-            value = moRef.resolve( commander.getQueryService() );
+            value = moRef.resolve( commander.getCommunityService() );
         } else if ( value instanceof MappedObject ) {
             value = ( (MappedObject) value ).fromMap( commander );
         }

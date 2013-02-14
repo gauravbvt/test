@@ -82,7 +82,7 @@ public class ExecutedCommandPanel extends AbstractSocialEventPanel {
         ModelObjectRef modelObjectRef = executedCommand.getCommandTarget();
         Component modelObjectComponent = null;
         if ( modelObjectRef != null ) {
-            identifiable = modelObjectRef.resolve( getQueryService() );
+            identifiable = modelObjectRef.resolve( getCommunityService() );
             if ( identifiable != null && identifiable instanceof ModelObject ) {
                 ModelObject mo = (ModelObject) identifiable;
                 modelObjectComponent = new ModelObjectLink(
@@ -108,7 +108,7 @@ public class ExecutedCommandPanel extends AbstractSocialEventPanel {
             // Try to compute it
             ModelObjectRef modelObjectRef = executedCommand.getCommandTarget();
             Identifiable subject = null;
-            if ( modelObjectRef != null ) subject = modelObjectRef.resolve( queryService );
+            if ( modelObjectRef != null ) subject = modelObjectRef.resolve( getCommunityService() );
             if ( subject != null && subject instanceof ModelObject ) {
                 ModelObject mo = (ModelObject) subject;
                 description = "\"" + mo.getLabel() + "\"";

@@ -1,9 +1,9 @@
 package com.mindalliance.channels.core.community;
 
+import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -43,6 +43,12 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
      * Logger.
      */
     private static final Logger LOG = LoggerFactory.getLogger( PlanCommunityManagerImpl.class );
+
+    @Autowired
+    private CommanderFactory commanderFactory;
+
+    @Autowired
+    private CommunityServiceFactory communityServiceFactory;
 
     /**
      * All the plans, indexed by version uri (uri:version).
@@ -84,10 +90,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     private PlanServiceFactory planServiceFactory;
 
     @Autowired
-    private ParticipationManager participationManager;
-
-    @Autowired
     private CommunityDefinitionManager communityDefinitionManager;
+
 
     public PlanCommunityManagerImpl( ) {
     }
@@ -171,7 +175,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             PlanDao planDao = planManager.getDao( plan );
             dao.setSubDao( planDao );
             // then load community
-            dao.resetCommunity();
+            PlanCommunity planCommunity = dao.resetCommunity();
+            dao.assignFirstIdTo( planCommunity );
             dao.defineImmutableEntities();
             if ( importExportFactory != null )
                 dao.load( importExportFactory.createImporter( "daemon", dao ) );
@@ -192,8 +197,10 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
              for ( CommunityDefinition definition : communityDefinitionManager ) {
                  String uri = definition.getUri();
                  CommunityDao dao = getDao( uri );
-                 if ( dao != null )
+                 if ( dao != null ) {
                      result.add( dao.getPlanCommunity() );
+                     initialize( dao.getPlanCommunity() );
+                 }
              }
             for ( Plan plan : planManager.getPlans() ) {
                 result.add( getDomainPlanCommunity( plan ) );
@@ -305,6 +312,22 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     public void clearCache() {
         // clearing done via aspect
+    }
+
+    @Override
+    public PlanCommunity createNewCommunityFor( Plan plan ) {
+        CommunityDefinition communityDefinition = communityDefinitionManager.create(
+                    plan.getUri(),
+                    plan.getVersion()  );
+        PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
+        planCommunity.setClosed( true );
+        return planCommunity;
+    }
+
+
+    // Make sure a plan community is fully loaded and initialized.
+    private void initialize( PlanCommunity planCommunity ) {
+        commanderFactory.getCommander( communityServiceFactory.getService( planCommunity ) );
     }
 
 

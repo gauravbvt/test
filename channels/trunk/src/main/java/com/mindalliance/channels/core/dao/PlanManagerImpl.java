@@ -244,7 +244,6 @@ public class PlanManagerImpl implements PlanManager {
                     result.add( prodDao.getPlan() );
             }
         }
-
         Collections.sort( result );
         return Collections.unmodifiableList( result );
     }
@@ -527,6 +526,20 @@ public class PlanManagerImpl implements PlanManager {
     public String getServerUrl() {
         return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Plan> getProductionPlans() {
+        return (List<Plan>)CollectionUtils.select(
+                getPlans(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Plan)object).isProduction();
+                    }
+                }
+        );
     }
 
     public void setServerUrl( String serverUrl ) {

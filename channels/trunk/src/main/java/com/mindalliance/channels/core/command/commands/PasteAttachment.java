@@ -75,7 +75,7 @@ public class PasteAttachment extends AbstractCommand {
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
         if ( attachable == null )
             throw new CommandException( "Can't find where attachments are" );
-        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager();
+        AttachmentManager attachmentManager = commander.getQueryService().getAttachmentManager();  // todo - COMMUNITY
         attachmentManager.addAttachment( attachment, attachable );
         describeTarget( mo );
         return new Change( Change.Type.Updated, mo, "attachmentTickets" );

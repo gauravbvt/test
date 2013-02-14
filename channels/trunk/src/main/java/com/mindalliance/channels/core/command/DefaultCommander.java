@@ -7,6 +7,7 @@
 package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.ChannelsLockable;
+import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.command.commands.DisconnectFlow;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
@@ -139,20 +140,20 @@ public class DefaultCommander implements Commander {
         presenceListeners.add( presenceListener );
     }
 
-    private boolean isAllowedInModelObjectContext( Command command ) { // Use this instead of  getPlan().isDevelopment()
+    private boolean isCommandExecutionAllowed() { // Use this instead of  getPlan().isDevelopment()
         return !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment();
     }
 
     @Override
     public boolean canDo( Command command ) {
-        return getPlan().isDevelopment() && command.canDo( this )
+        return isCommandExecutionAllowed() && command.canDo( this )
                && lockManager.isLockableByUser( command.getUserName(), command.getLockingSet() );
     }
 
     @Override
     public boolean canRedo( String userName ) {
-        synchronized ( getPlanCommunity() ) {
-            if ( getPlan().isDevelopment() ) {
+        synchronized ( getDao() ) {
+            if ( isCommandExecutionAllowed() ) {
                 Memento memento = history.getRedo( userName );
                 if ( memento != null ) {
                     Command command = memento.getCommand();
@@ -171,9 +172,8 @@ public class DefaultCommander implements Commander {
 
     @Override
     public boolean canUndo( String userName ) {
-        Plan plan = getPlan();
-        synchronized ( plan ) {
-            if ( plan.isDevelopment() ) {
+        synchronized ( getDao() ) {
+            if ( isCommandExecutionAllowed() ) {
                 Memento memento = history.getUndo( userName );
                 if ( memento != null ) {
                     Command command = memento.getCommand();
@@ -191,30 +191,30 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {  // todo - COMMUNITY - also cleanup community-side
-        synchronized ( getPlan() ) {
-            return !( name == null || name.trim().isEmpty() ) && getQueryService().cleanup( clazz, name );
+    public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
+        synchronized ( getDao() ) {
+            return !( name == null || name.trim().isEmpty() ) && cleanup( clazz, name );
         }
     }
 
     @Override
     public void clearTimeOut( String userName ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             timedOut.remove( userName );
         }
     }
 
     @Override
     public Change doCommand( Command command ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             return executeCommand( command, true );
         }
     }
 
     private Change executeCommand( Command command, boolean safe ) {
         try {
-            if ( safe && !getPlan().isDevelopment() )
-                throw new CommandException( "This version is no longer in development. You need to refresh. " );
+            if ( safe && !isCommandExecutionAllowed() )
+                throw new CommandException( "This version is no longer current. You need to refresh. " );
 
             if ( command instanceof MultiCommand )
                 LOG.info( "*** START multicommand ***" );
@@ -259,7 +259,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public Change doUnsafeCommand( Command command ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             return executeCommand( command, false );
         }
     }
@@ -359,19 +359,18 @@ public class DefaultCommander implements Commander {
      * Replay journaled commands for current plan.
      */
     private void replayJournal() {
-        Plan plan = communityService.getPlan();
-        PlanCommunity planCommunity = communityService.getPlanCommunity();
+        ModelObjectContext modelObjectContext = getDao().getModelObjectContext();
         try {
-            if ( !planCommunity.isDomainCommunity() || plan.isDevelopment() ) {
+            if ( isCommandExecutionAllowed() ) {
                 replay( getDao().getJournal() );
-                LOG.info( "Replayed journal for plan community {}", planCommunity );
+                LOG.info( "Replayed journal for {}", modelObjectContext );
 
                 getDao().save( importExportFactory.createExporter( "daemon", getDao() ) );
             }
         } catch ( IOException e ) {
-            LOG.error( MessageFormat.format( "Unable to replay journal for {0}", planCommunity ), e );
+            LOG.error( MessageFormat.format( "Unable to replay journal for {0}", modelObjectContext ), e );
         } catch ( CommandException e ) {
-            LOG.error( MessageFormat.format( "Unable to replay journal for {0}", planCommunity ), e );
+            LOG.error( MessageFormat.format( "Unable to replay journal for {0}", modelObjectContext ), e );
         }
     }
 
@@ -405,7 +404,7 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public boolean isOutOfSync( String userName ) {
+    public boolean isPlanOutOfSync( String userName ) {
         return planManager.isOutOfSync( userName, getPlan().getUri() );
     }
 
@@ -417,7 +416,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public boolean isTimedOut( String userName ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             return timedOut.contains( userName );
         }
     }
@@ -430,7 +429,7 @@ public class DefaultCommander implements Commander {
     @Override
     public void keepAlive( String userName, int refreshDelay ) {
         final PlanCommunity planCommunity = getPlanCommunity();
-        synchronized ( planCommunity ) {
+        synchronized ( getDao() ) {
             for ( PresenceListener presenceListener : presenceListeners )
                 presenceListener.keepAlive( userName, planCommunity, refreshDelay );
             processDeaths();
@@ -439,7 +438,7 @@ public class DefaultCommander implements Commander {
 
     private void processDeaths() {
         PlanCommunity planCommunity = getPlanCommunity();
-        synchronized ( planCommunity ) {
+        synchronized ( getDao() ) {
             Set<String> deads = new HashSet<String>();
             for ( PresenceListener presenceListener : presenceListeners )
                 deads.addAll( presenceListener.giveMeYourDead( planCommunity ) );
@@ -469,7 +468,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void processTimeOuts() {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             long now = System.currentTimeMillis();
             long timeoutMillis = timeout * 1000L;
             if ( timeoutMillis < now - whenLastCheckedForTimeouts ) {
@@ -489,7 +488,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public Change redo( String userName ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             // Get memento of undoing command
             Memento memento = history.getRedo( userName );
             if ( memento == null )
@@ -568,7 +567,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void resetUserHistory( String userName, boolean all ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             history.resetForUser( userName, all );
         }
     }
@@ -577,13 +576,13 @@ public class DefaultCommander implements Commander {
     @SuppressWarnings( "unchecked" )
     public <T extends ModelObject> T resolve( Class<T> clazz, Long id ) throws CommandException {
         try {
-            return getQueryService().find( clazz, id );
+            return getCommunityService().find( clazz, id );
         } catch ( NotFoundException e ) {
             // If replaying a journal, recreate an entity if not found
             if ( replaying && ModelEntity.class.isAssignableFrom( clazz ) ) {
                 LOG.warn( "Recreating not found entity " + clazz.getSimpleName() + "[" + id + "] on journal replay" );
                 try {
-                    return (T) getQueryService().safeFindOrCreate( (Class<? extends ModelEntity>) clazz,
+                    return (T) getCommunityService().safeFindOrCreate( (Class<? extends ModelEntity>) clazz,
                                                                    "unknown",
                                                                    id );
                 } catch ( Exception exc ) {
@@ -606,13 +605,13 @@ public class DefaultCommander implements Commander {
     }
 
     @Override
-    public void setResyncRequired() {
+    public void setPlanResyncRequired() {
         planManager.setResyncRequired( getPlan().getUri() );
     }
 
     @Override
     public Change undo( String userName ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             Memento memento = history.getUndo( userName );
             if ( memento == null )
                 return Change.failed( "Nothing can be undone right now." );
@@ -639,7 +638,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public void updateUserActive( String userName ) {
-        synchronized ( getPlan() ) {
+        synchronized ( getDao() ) {
             whenLastActive.put( userName, System.currentTimeMillis() );
         }
     }
@@ -665,7 +664,7 @@ public class DefaultCommander implements Commander {
 
     @Override
     public AbstractModelObjectDao getDao() {
-        return getPlanCommunity().isDomainCommunity()
+        return !getPlanCommunity().isDomainCommunity()
                 ? communityService.getDao()
                 : communityService.getPlanService().getDao();
     }

@@ -37,6 +37,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     private Place communityLocale;
     private String planUri;
     private int planVersion;
+    private boolean closed;
 
     private String plannerSupportCommunity = "";
     private String userSupportCommunity;
@@ -67,6 +68,14 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         this.uri = uri;
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed( boolean closed ) {
+        this.closed = closed;
+    }
+
     @Override
     public void recordIdShift( long lowerBound ) {
         idShifts.put( new Date(), lowerBound );
@@ -89,6 +98,12 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
             }
         }
         return shift;
+    }
+
+    public Place getLocale( CommunityService communityService ) {
+        return communityLocale == null
+                ? communityService.getPlan().getLocale()
+                :communityLocale;
     }
 
 
@@ -215,12 +230,10 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return false;
     }
 
-    public boolean isCommunityLeader( ChannelsUser user ) {
-        return user.isPlanner( getPlanUri() );   // todo have non-planners be community leaders as well or instead
-    }
-
-    public boolean isOrganizationLeader( ChannelsUser user, RegisteredOrganization registeredOrganization ) {
-        return isCommunityLeader( user ); // todo - change when organization leaders implemented
+    public boolean isOrganizationLead( ChannelsUser user,
+                                       RegisteredOrganization registeredOrganization,
+                                       CommunityService communityService ) {
+        return communityService.isCommunityPlanner( user ); // todo - change when organization leaders implemented
     }
 
     public void setPlanUri( String planUri ) {
@@ -249,5 +262,9 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     public void setDevelopment( boolean development ) {
         this.development = development;
+    }
+
+    public String toString() {
+        return getName();
     }
 }

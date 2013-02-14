@@ -59,14 +59,14 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "User participation" ) ) {
-            public Panel getPanel( String id ) {
-                return new UsersParticipationPanel( id, getModel() );
-            }
-        } );
         tabs.add( new AbstractTab( new Model<String>( "Organization participation" ) ) {
             public Panel getPanel( String id ) {
                 return new OrganizationsParticipationPanel( id, getModel() );
+            }
+        } );
+        tabs.add( new AbstractTab( new Model<String>( "User participation" ) ) {
+            public Panel getPanel( String id ) {
+                return new UsersParticipationPanel( id, getModel() );
             }
         } );
         tabs.add( new AbstractTab( new PropertyModel<String>( this, "toConfirmTitle" ) ) {

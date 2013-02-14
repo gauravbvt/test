@@ -23,12 +23,23 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
 
     public RequirementsPage( PageParameters parameters ) {
         super( parameters );
+
     }
 
     @Override
     protected void addContent() {
         addTitle();
         addRequirementsPanel();
+    }
+
+    @Override
+    protected boolean isCommunityContext() {
+        return true;
+    }
+
+    @Override
+    protected boolean isPlanContext() {
+        return false;
     }
 
     private void addRequirementsPanel() {

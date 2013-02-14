@@ -11,10 +11,10 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public abstract class UpdateObject extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
+        CommunityService communityService = commander.getCommunityService();
         Identifiable identifiable = getIdentifiable( commander );
         switch ( action() ) {
         case Set:
@@ -116,7 +116,7 @@ public abstract class UpdateObject extends AbstractCommand {
         }
         if ( identifiable instanceof ModelObject ) {
             ModelObject mo = (ModelObject) identifiable;
-            queryService.update( mo );
+            communityService.update( mo );  // todo - does nothing - why?
             describeTarget( mo );
         } else {
             setTargetDescription( identifiable.toString() );

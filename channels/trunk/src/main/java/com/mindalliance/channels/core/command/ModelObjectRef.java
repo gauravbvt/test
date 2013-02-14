@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.command;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -7,7 +8,6 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
-import com.mindalliance.channels.core.query.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -175,12 +175,12 @@ public class ModelObjectRef implements Serializable {
     /**
      * Resolve the reference to an in-memory identifiable, fails otherwise.
      *
-     * @param queryService a query service
+     * @param communityService a query community service
      * @return an identifiable
      * @throws NotFoundException if not found
      */
     @SuppressWarnings( "unchecked" )
-    public Identifiable resolve( QueryService queryService ) {
+    public Identifiable resolve( CommunityService communityService ) {
         if ( identifiable != null ) {
             return identifiable;
         } else {
@@ -189,16 +189,16 @@ public class ModelObjectRef implements Serializable {
                 Class<? extends Identifiable> clazz = getIdentifiableClass();
                 assert ModelObject.class.isAssignableFrom( clazz );
                 if ( entityKind == null || entityKind.isEmpty() ) {
-                    identifiable = queryService.find( (Class<? extends ModelObject>) clazz, id );
+                    identifiable = communityService.find( (Class<? extends ModelObject>) clazz, id );
                 } else {
                     assert ModelEntity.class.isAssignableFrom( clazz );
                     if ( entityKind.equals( ModelEntity.Kind.Actual.name() ) ) {
-                        identifiable = queryService.findOrCreate(
+                        identifiable = communityService.findOrCreate(
                                 (Class<ModelEntity>) getIdentifiableClass(),
                                 name,
                                 id );
                     } else {
-                        identifiable = queryService.findOrCreateType(
+                        identifiable = communityService.findOrCreateType(
                                 (Class<ModelEntity>) getIdentifiableClass(),
                                 name,
                                 id );
@@ -267,10 +267,10 @@ public class ModelObjectRef implements Serializable {
     }
 
 
-    public static ModelObject resolveFromString( String moRefString, QueryService queryService ) {
+    public static ModelObject resolveFromString( String moRefString, CommunityService communityService ) {
         ModelObjectRef moRef = fromString( moRefString );
         if ( moRef != null ) {
-            return (ModelObject) moRef.resolve( queryService );
+            return (ModelObject) moRef.resolve( communityService );
         } else {
             return null;
         }

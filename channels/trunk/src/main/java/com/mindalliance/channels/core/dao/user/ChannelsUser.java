@@ -87,7 +87,7 @@ public class ChannelsUser implements UserDetails {
 
     public void setPlan( Plan plan ) {
         this.plan = plan;
-        if ( planCommunityUri == null ) {
+        if ( plan != null && planCommunityUri == null ) {
             planCommunityUri = plan.getUri();
         }
     }

@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -320,10 +319,9 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
      */
     public void changed( Change change ) {
         if ( change.isExpanded() && change.isForInstanceOf( Organization.class ) ) {
-            QueryService queryService = getQueryService();
             if ( selectedOrganization == null
-                    || !selectedOrganization.equals( change.getSubject( queryService ) ) ) {
-                selectedOrganization = (Organization) change.getSubject( queryService );
+                    || !selectedOrganization.equals( change.getSubject( getCommunityService() ) ) ) {
+                selectedOrganization = (Organization) change.getSubject( getCommunityService() );
                 change.setType( Change.Type.Selected );
             } else {
                 super.changed( change );

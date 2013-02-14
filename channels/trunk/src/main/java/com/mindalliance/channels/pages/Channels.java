@@ -8,10 +8,8 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
@@ -34,7 +32,6 @@ import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
-import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -139,6 +136,7 @@ public class Channels extends WebApplication
     private PlanCommunityManager planCommunityManager;
 
     private Exception exception = null;
+    private String serverUrl;
 
     //-------------------------------
 
@@ -163,7 +161,8 @@ public class Channels extends WebApplication
      * Get the home page for the current user.
      */
     @Override
-    public Class<? extends WebPage> getHomePage() {         // todo - COMMUNITY - change to point to HomePage
+    public Class<? extends WebPage> getHomePage() {
+/*
         ChannelsUser user = ChannelsUser.current( userDao );
         Plan plan = user.getPlan();
         if ( plan == null ) {
@@ -173,6 +172,8 @@ public class Channels extends WebApplication
         return plan == null
                 ? NoAccessPage.class
                 : UserPage.class;
+*/
+        return HomePage.class;
     }
 
  /*   public LockManager getLockManager( Plan plan ) {
@@ -237,8 +238,10 @@ public class Channels extends WebApplication
         mountPage( "newPasswordRequest.html", NewPasswordPage.class );
         mountPage( "segment.xml", ExportPage.class );
         mountPage( "geomap", GeoMapPage.class );
-        mountPage( "home", UserPage.class );
-        mountPage( "surveys", RFIsPage.class );
+        mountPage( "home", HomePage.class );
+        mountPage( "communities", CommunitiesPage.class );
+        mountPage( "community", CommunityPage.class );
+        mountPage( "plans", PlansPage.class );
         mountPage( "feedback", FeedbackPage.class );
         mountPage( "requirements", RequirementsPage.class );
         mountPage(  "participation", ParticipationManagerPage.class );
@@ -246,12 +249,6 @@ public class Channels extends WebApplication
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
 
-        /**
-         * ChannelsUserDao userDao,
-         PlanManager planManager,
-         CommunityServiceFactory communityServiceFactory,
-         PlanCommunityManager planCommunityManager
-         */
         mountResource( "users/photos/${name}", new PngReference(
                 UserPhotoPng.class,
                 getUserDao(),
@@ -478,5 +475,13 @@ public class Channels extends WebApplication
         Exception oneTime = exception;
         exception = null;
         return oneTime;
+    }
+
+    public String getServerUrl() {
+        return serverUrl;
+    }
+
+    public void setServerUrl( String serverUrl ) {
+        this.serverUrl = serverUrl;
     }
 }

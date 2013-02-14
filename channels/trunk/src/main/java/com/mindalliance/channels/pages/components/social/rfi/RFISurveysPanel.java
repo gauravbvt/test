@@ -298,7 +298,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
     private boolean isFilteredOut( RFISurvey rfiSurvey ) {
         Segment segment = (Segment) filters.get( "segment" );
-        return segment != null && !segment.equals( rfiSurvey.getSegment( getQueryService() ) );
+        return segment != null && !segment.equals( rfiSurvey.getSegment( getCommunityService() ) );
     }
 
     public boolean isOnlyLaunched() {
@@ -349,7 +349,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
-            RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getQueryService() );
+            RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getCommunityService() );
             RFISurvey rfiSurvey = fw.getRfiSurvey();
             if ( selectedRFISurvey != null && rfiSurvey.equals( selectedRFISurvey ) ) {
                 setSelectedRFISurvey( null );
@@ -365,7 +365,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
-            RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getQueryService() );
+            RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getCommunityService() );
             RFISurvey rfiSurvey = fw.getRfiSurvey();
             if ( isLockedByOtherUser( rfiSurvey ) ) {
                 addRFISurveyTable();
@@ -446,7 +446,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         public ModelObject getModelObject() {
-            return rfiSurvey.getModelObject( getQueryService() );
+            return rfiSurvey.getModelObject( getCommunityService() );
         }
 
         public Questionnaire getQuestionnaire() {
@@ -454,7 +454,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         public Segment getSegment() {
-            return rfiSurvey.getSegment( getQueryService() );
+            return rfiSurvey.getSegment( getCommunityService() );
         }
 
         public String getMoLabel() {

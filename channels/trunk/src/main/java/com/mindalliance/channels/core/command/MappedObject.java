@@ -69,7 +69,7 @@ public class MappedObject implements Serializable {
                     PropertyUtils.setSimpleProperty(
                             object,
                             name,
-                            ( (ModelObjectRef) value ).resolve( commander.getQueryService() ) );
+                            ( (ModelObjectRef) value ).resolve( commander.getCommunityService() ) );
                 } else {
                     PropertyUtils.setSimpleProperty( object, name, value );
                 }

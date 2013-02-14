@@ -34,6 +34,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Channels;
+import com.mindalliance.channels.pages.CommunityPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -53,8 +54,10 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.net.URLEncoder;
 import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -196,7 +199,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     /**
-     * Get the active plan's commander.
+     * Get the active community's commander.
      *
      * @return a commander
      */
@@ -638,7 +641,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected CommunityService getCommunityService() {
-        return communityServiceFactory.getService( getPlanCommunity() );
+        return getCommunityService( getPlanCommunity() );
+    }
+
+    protected CommunityService getCommunityService( PlanCommunity planCommunity ) {
+        return communityServiceFactory.getService( planCommunity );
     }
 
     protected PlanService getPlanService() {
@@ -672,6 +679,17 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return component;
     }
 
+    public String makeCommunityPageUrl( PlanCommunity planCommunity ) {
+        try {
+            PageParameters parameters = new PageParameters(  );
+            parameters.set(
+                    AbstractChannelsBasicPage.COMMUNITY_PARM,
+                    URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            return urlFor( CommunityPage.class, parameters ).toString();
+        } catch ( Exception e ) {
+            throw new RuntimeException( e );
+        }
+    }
 
 
 }

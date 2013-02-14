@@ -151,14 +151,12 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
      * Create a new community definition (or get a previously created one).
      *
      * @param uri    the plan uri
-     * @param name   the name of the community. If uri already exists, name will be changed.
      * @param planUri the plan's uri
      * @param planVersion the plan's version
      * @return the plan definition
      * @throws IOException on data initialization errors
      */
     public CommunityDefinition getOrCreate( String uri,
-                                            String name,
                                             String planUri,
                                             int planVersion ) throws IOException {
         CommunityDefinition result;
@@ -170,7 +168,7 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
             LOG.info( "Created community {}", uri );
         }
 
-        result.setName( name );
+        result.notifyObservers(); // triggers saving if new definition created
         return result;
     }
 
@@ -277,37 +275,6 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
     }
 
     /**
-     * Test if a definition exists for a given community name.
-     *
-     * @param name the name
-     * @return true if there is such a definition
-     */
-    public boolean exists( String name ) {
-        for ( CommunityDefinition definition : definitions.values() )
-            if ( name.equals( definition.getName() ) )
-                return true;
-        return false;
-    }
-
-    /**
-     * Get all community names.
-     *
-     * @return names of all plans (sorted)
-     */
-    public List<String> getCommunityNames() {
-        Set<String> set;
-        synchronized ( definitions ) {
-            set = new HashSet<String>( definitions.size() );
-            for ( CommunityDefinition communityDefinition : definitions.values() )
-                set.add( communityDefinition.getName() );
-        }
-
-        List<String> answer = new ArrayList<String>( set );
-        Collections.sort( answer );
-        return answer;
-    }
-
-    /**
      * Get all community uris.
      *
      * @return names of all plans (sorted)
@@ -330,16 +297,6 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
      */
     public int getSize() {
         return definitions.size();
-    }
-
-    public String makeUniqueName( String prefix ) {
-        List<String> namesTaken = getCommunityNames();
-        int count = 1;
-        String uniqueName = prefix.trim();
-        while ( namesTaken.contains( uniqueName ) )
-            uniqueName = prefix + '(' + ++count + ')';
-
-        return uniqueName;
     }
 
     /**
@@ -367,8 +324,26 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
     }
 
 
+    public CommunityDefinition create( String planUri, int planVersion ) {
+        try {
+             return getOrCreate(
+                    makeNewCommunityUri( planUri ),
+                    planUri,
+                    planVersion
+            );
+        } catch ( IOException e ) {
+           throw new RuntimeException( "Failed to create new plan community", e );
+        }
+    }
 
-
-
-
+    private String makeNewCommunityUri( String planUri ) {
+        int index = 1;
+        String uri = planUri + "_" + index;
+        List<String> allUris = getCommunityUris();
+        while( allUris.contains( uri ) ) {
+            index++;
+            uri = planUri + "_" + index;
+        }
+        return uri;
+    }
 }
