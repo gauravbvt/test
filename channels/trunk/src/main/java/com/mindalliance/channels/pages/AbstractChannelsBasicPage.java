@@ -244,8 +244,13 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
     private void addFeedback() {
-        UserFeedbackPanel userFeedbackPanel = new UserFeedbackPanel( "feedback", getFeedbackType() );
-        userFeedbackPanel.setVisible( isCommunityContext() || isPlanContext() );
+        Component userFeedbackPanel;
+        if ( isCommunityContext() || isPlanContext() ) {
+            userFeedbackPanel = new UserFeedbackPanel( "feedback", getFeedbackType() );
+        }  else {
+            userFeedbackPanel = new Label( "feedback", "" );
+            userFeedbackPanel.setVisible( false );
+        }
         form.add( userFeedbackPanel );
     }
 

@@ -568,9 +568,27 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      */
     protected AbstractColumn<T> makeExternalLinkColumn(
             String name,
+            String urlProperty,
+            String labelProperty,
+            String defaultText ) {
+        return makeExternalLinkColumn( name, urlProperty, labelProperty, defaultText, true );
+    }
+
+    /**
+     * Defines a column containing external links.
+     *
+     * @param name          a string
+     * @param urlProperty   a string
+     * @param labelProperty a string
+     * @param defaultText   a string
+     * @return an abstract column
+     */
+    protected AbstractColumn<T> makeExternalLinkColumn(
+            String name,
             final String urlProperty,
             final String labelProperty,
-            final String defaultText ) {
+            final String defaultText ,
+            final boolean newPage ) {
         return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -584,7 +602,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     labelText = ( labelText == null || labelText.isEmpty() )
                             ? ( defaultTextValue == null ? "" : defaultTextValue )
                             : labelText;
-                    cellContent = new ExternalLinkPanel( id, url, labelText );
+                    cellContent = new ExternalLinkPanel( id, url, labelText, newPage );
                 } else {
                     String defaultTextValue = findStringValue( bean, defaultText );
                     cellContent = new Label( id, defaultText == null ? "" : defaultTextValue );
@@ -593,6 +611,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             }
         };
     }
+
 
     protected AbstractColumn<T> makeTernaryCheckBoxColumn(
             String name,

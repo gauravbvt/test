@@ -420,9 +420,9 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
-                ? "Build or modify the collaboration plan.\n" +
+                ? "Build or modify the " + plan.getName() + " plan.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
-                : "View the collaboration plan.\n" +
+                : "View the " + plan.getName() + " plan.\n" +
                 "  (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)";
     }
 

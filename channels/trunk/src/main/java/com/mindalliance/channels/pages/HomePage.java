@@ -126,11 +126,11 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoModelsDescription() {
-        return "The collaboration plans your are developing or maintaining"; // todo show metrics
+        return "The domain collaboration plans your are developing or maintaining"; // todo show metrics
     }
 
     private String getGotoCommunitiesDescription() {
-        return "The plan communities you participate or could participate in"; // todo show metrics
+        return "The collaboration communities you participate or could participate in"; // todo show metrics
     }
 
     private boolean isAPlanner() {
