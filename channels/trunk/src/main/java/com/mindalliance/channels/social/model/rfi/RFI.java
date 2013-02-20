@@ -272,8 +272,8 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     }
 
 
-    public String getRFILabel(  ) {
-        return getRfiSurvey().getSurveyLabel(  );
+    public String getRFILabel( CommunityService communityService ) {
+        return getRfiSurvey().getSurveyLabel( communityService );
     }
 
     public void nagged() {
@@ -377,7 +377,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
             CommunityService communityService ) {
         PlanService planService = communityService.getPlanService();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
-            return getNagSubject( format, planService );
+            return getNagSubject( format, communityService );
         else if ( topic.equals( NEW ) )
             return getNewRFISubject( format, planService, planService.getSurveysDAO() );
         else
@@ -389,9 +389,9 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         return "Survey";
     }
 
-    private String getNagSubject( Format format, PlanService planService ) {
+    private String getNagSubject( Format format, CommunityService communityService ) {
         // ignore format
-        return getRFILabel(  )
+        return getRFILabel( communityService )
                 + "is due on "
                 + Messageable.DATE_FORMAT.format( getDeadline() );
     }
@@ -403,7 +403,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         StringBuilder sb = new StringBuilder();
         boolean overdue = getDeadline() != null && new Date().after( getDeadline() );
         sb.append( "This is a reminder to complete " )
-                .append( getRFILabel(  ) )
+                .append( getRFILabel( communityService ) )
                 .append( "." );
         if ( overdue ) {
             sb.append( " The survey was due on " )
@@ -427,7 +427,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     private String getTodoContent( Format format, CommunityService communityService, SurveysDAO surveysDAO ) {
         // Ignore format
         StringBuilder sb = new StringBuilder();
-        sb.append( getRFILabel(  ) );
+        sb.append( getRFILabel( communityService ) );
         if ( getDeadline() != null ) {
             Date now = new Date();
             sb.append( now.after( getDeadline() ) ? " was" : " is" )
@@ -473,6 +473,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     private String getNewRFIContent( Format format, CommunityService communityService, SurveysDAO surveysDAO ) {
         // ignore format
         Plan plan = communityService.getPlan();
+        ChannelsUser surveyedUser = communityService.getUserDao().getUserNamed( getSurveyedUsername() );
         StringBuilder sb = new StringBuilder();
         sb.append( plan.getClient() );
         sb.append( " invites you to participate in a survey about the \"" )
@@ -489,12 +490,11 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                     .append( "\n" );
         }
         sb.append( "\n" );
-        sb.append( getRFILabel(  ) ).append( "\n" );
+        sb.append( getRFILabel( communityService ) ).append( "\n" );
         sb.append( "can be accessed here: " )
-                .append( surveysDAO.makeURL( communityService.getPlanService(), this ) )
+                .append( surveysDAO.makeURL( communityService, this, surveyedUser ) )
                 .append( "\n\n" );
         // New account login instructions
-        ChannelsUser surveyedUser = communityService.getUserDao().getUserNamed( getSurveyedUsername() );
         if ( surveyedUser != null ) {
             sb.append( "To login, use your email address as user name" )
                     .append( surveyedUser.getEmail() );

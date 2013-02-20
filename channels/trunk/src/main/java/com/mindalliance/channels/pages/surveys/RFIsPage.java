@@ -9,7 +9,6 @@ import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.RFIService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -30,10 +29,6 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
     private RFI selectedRFI;
     private Component rfiPanel;
-    /**
-     * Modal dialog window.
-     */
-    private ModalWindow dialogWindow;
     private UserRFIsPanel userRFIsPanel;
     public static final String RFI_PARM = "rfi";
     @SpringBean
@@ -60,6 +55,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     protected void addContent() {
         processParameters( getParameters() );
         addModalDialog( "dialog", null, getContainer() );
+        getContainer().add( new Label( "planName", getPlan().getName() ) );
         addUserRFIsPanel();
         addRFIPanel();
     }

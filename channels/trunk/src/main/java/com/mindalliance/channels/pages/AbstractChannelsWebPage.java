@@ -285,7 +285,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     //-----------------------------------
-    public static PageParameters createParameters( Specable profile, PlanCommunity planCommunity, int version ) {
+ /*   public static PageParameters createParameters( Specable profile, PlanCommunity planCommunity, int version ) {
 
         PageParameters result = new PageParameters();
         result.set( AbstractChannelsWebPage.PLAN_PARM, planCommunity.getPlanUri() );
@@ -303,6 +303,23 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         }
         return result;
     }
+*/
+    public static PageParameters createParameters( Specable profile, PlanCommunity planCommunity ) {
+        PageParameters result = new PageParameters();
+        result.set( AbstractChannelsWebPage.COMMUNITY_PARM, planCommunity.getUri() );
+        if ( profile != null ) {
+            if ( profile.getActor() != null )
+                result.set( "agent", profile.getActor().getId() );
+            if ( profile.getRole() != null )
+                result.set( "role", profile.getRole().getId() );
+            if ( profile.getOrganization() != null )
+                result.set( "org", profile.getOrganization().getId() );
+            if ( profile.getJurisdiction() != null )
+                result.set( "place", profile.getJurisdiction().getId() );
+        }
+        return result;
+    }
+
 
     protected Channels getApp() {
         return (Channels) getApplication();
@@ -354,12 +371,21 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     id,
                     "",
                     AllProtocolsPage.class,
+                    new PageParameters(),
+                    null,
+                    planCommunity );
+/*
+            guidelinesLink = newTargetedLink(
+                    id,
+                    "",
+                    AllProtocolsPage.class,
                     AbstractParticipantPage.createParameters(
                             new ResourceSpec(),
                             planCommunity,
                             getPlan().getVersion() ), // version needed?
                     null,
                     planCommunity );
+*/
         } else {
             Actor actor = userParticipations.get( 0 ).getAgent( getCommunityService() ).getActor(); // todo - COMMUNITY - agents!
             guidelinesLink = newTargetedLink( id,
@@ -367,8 +393,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
                     ProtocolsPage.class,
                     AbstractParticipantPage.createParameters(
                             actor,
-                            planCommunity,
-                            plan.getVersion() ),
+                            planCommunity ),
                     null,
                     planCommunity );
         }
@@ -710,6 +735,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
             CommunityService communityService = communityServiceFactory.getService( planCommunity );
             user.setCommunityService( communityService );
             setPlan( communityService.getPlan() );
+        } else {
+            user.setPlanCommunityUri( null );
         }
     }
 

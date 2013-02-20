@@ -8,7 +8,6 @@ import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -119,8 +118,6 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
     private PageParameters makeUserParameters( String username ) {
         PageParameters parameters = new PageParameters();
         parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
-        parameters.set( PLAN_PARM, getPlan().getUri() );
-        parameters.set( AbstractChannelsWebPage.VERSION_PARM, getPlanVersion() );
         parameters.set( "user", username );
         return parameters;
     }
@@ -128,8 +125,6 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
     private PageParameters makeAgentParameters( String username, Agent agent ) {
         PageParameters parameters = new PageParameters();
         parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
-        parameters.set( PLAN_PARM, getPlan().getUri() );
-        parameters.set( AbstractChannelsWebPage.VERSION_PARM, getPlanVersion() );
         parameters.set( USER, username );
         parameters.set( AGENT, agent.getId() );
         if ( agent.getOrganizationParticipation() != null )

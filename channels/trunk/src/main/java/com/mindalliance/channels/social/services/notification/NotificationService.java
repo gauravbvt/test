@@ -19,6 +19,8 @@ public interface NotificationService {
 
     void reportOnSurveys();
 
+    void notifyOnCommunityPlannerAuthorization();
+
     void notifyOfParticipationConfirmation();
 
     void reportOnParticipationConfirmation();

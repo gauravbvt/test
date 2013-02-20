@@ -509,7 +509,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             feedbackService.sendFeedback(
                     user.getUsername(),
-                    planCommunity,
+                    getCommunityService( planCommunity.getPlanUri() ),
                     Feedback.Type.valueOf( type ),
                     Feedback.PROTOCOLS,
                     feedback,
@@ -689,6 +689,9 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         return communityServiceFactory.getService( planCommunityManager.getDomainPlanCommunity( plan ) );
     }
 
-
+    private CommunityService getCommunityService( String uri ) {
+        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( uri );
+        return getCommunityService( planCommunity );
+    }
 
 }

@@ -1,13 +1,13 @@
 package com.mindalliance.channels.social.services.impl;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
@@ -84,6 +84,9 @@ public class SurveysDAOImpl implements SurveysDAO {
 
     @Autowired
     private ChannelsUserDao userDao;
+
+    @Autowired
+    private PlanCommunityManager planCommunityManager;
 
     @Override
     @Transactional
@@ -210,7 +213,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int countUnanswered( CommunityService communityService, ChannelsUser user ) {
         return CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -230,13 +233,13 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int countIncomplete( CommunityService communityService, ChannelsUser user ) {
         return findIncompleteRFIs( communityService, user ).size();
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int countLate( final CommunityService communityService, ChannelsUser user ) {
         return CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -244,15 +247,15 @@ public class SurveysDAOImpl implements SurveysDAO {
                     @Override
                     public boolean evaluate( Object object ) {
                         RFI rfi = (RFI) object;
-                        return isOverdue( communityService, rfi);
+                        return isOverdue( communityService, rfi );
                     }
                 }
         ).size();
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> findIncompleteRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -266,8 +269,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> findCompletedRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -282,7 +285,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public boolean isCompleted( final RFI rfi ) {
         RFISurvey survey = rfi.getRfiSurvey();
         Questionnaire questionnaire = survey.getQuestionnaire();
@@ -309,8 +312,8 @@ public class SurveysDAOImpl implements SurveysDAO {
 
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> findDeclinedRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.listOngoingUserRFIs( communityService, user ),
@@ -324,12 +327,12 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int getRequiredQuestionCount( RFI rfi ) {
         return getRequiredQuestions( rfi ).size();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Question> getRequiredQuestions( RFI rfi ) {
         RFISurvey survey = rfi.getRfiSurvey();
         Questionnaire questionnaire = survey.getQuestionnaire();
@@ -346,7 +349,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int getRequiredAnswersCount( RFI rfi ) {
         int count = 0;
         for ( Question question : getRequiredQuestions( rfi ) ) {
@@ -357,13 +360,13 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int getOptionalQuestionCount( RFI rfi ) {
         return getOptionalQuestions( rfi ).size();
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public int getOptionalAnswersCount( RFI rfi ) {
         int count = 0;
         for ( Question question : getOptionalQuestions( rfi ) ) {
@@ -373,7 +376,7 @@ public class SurveysDAOImpl implements SurveysDAO {
         return count;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Question> getOptionalQuestions( RFI rfi ) {
         RFISurvey survey = rfi.getRfiSurvey();
         rfiSurveyService.refresh( survey );
@@ -392,7 +395,7 @@ public class SurveysDAOImpl implements SurveysDAO {
 
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public Map<String, Integer> findResponseMetrics( CommunityService communityService, final RFISurvey rfiSurvey ) {
         List<RFI> surveyedRFIs = rfiService.select( communityService, rfiSurvey );
         Map<String, Integer> metrics = new HashMap<String, Integer>();
@@ -435,8 +438,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    @Transactional( readOnly = true )
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<RFI> findAnsweringRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         List<RFI> rfis = rfiService.select( communityService, rfiSurvey );
         return (List<RFI>) CollectionUtils.select(
@@ -470,14 +473,14 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public boolean isOverdue( CommunityService communityService, RFI rfi ) {
         return rfi.isLate( communityService )
                 && !isCompleted( rfi );
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public Map<String, Set<String>> processAnswers(
             CommunityService communityService,
             RFISurvey rfiSurvey,
@@ -535,8 +538,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<Question> listAnswerableQuestions( RFISurvey rfiSurvey ) {
         Questionnaire questionnaire = rfiSurvey.getQuestionnaire();
         return (List<Question>) CollectionUtils.select(
@@ -552,14 +555,14 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public long getPercentRequiredQuestionsAnswered( RFI rfi ) {
         return Math.round( ( getRequiredAnswersCount( rfi ) / ( 1.0 * getRequiredQuestions( rfi ).size() ) ) * 100 );
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> listIncompleteActiveRFIs( CommunityService communityService ) {
         List<RFI> activeRFIs = rfiService.listActiveRFIs( communityService );
         return (List<RFI>) CollectionUtils.select(
@@ -573,8 +576,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> findAllCompletedRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.select( communityService, rfiSurvey ),
@@ -587,8 +590,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> findAllIncompleteRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.select( communityService, rfiSurvey ),
@@ -602,8 +605,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFI> findAllDeclinedRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.select( communityService, rfiSurvey ),
@@ -617,8 +620,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<RFIForward> findAllRFIForwards( CommunityService communityService, RFISurvey rfiSurvey ) {
         return rfiForwardService.select( communityService, rfiSurvey );
     }
@@ -653,7 +656,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public ChannelsUserInfo getForwarder( RFIForward rfiForward ) {
         ChannelsUser user = userDao.getUserNamed( rfiForward.getUsername() );
         return user != null
@@ -662,7 +665,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public List<RFIForward> getForwardingsOf( RFI rfi ) {
         String surveyedUsername = rfi.getSurveyedUsername();
         ChannelsUser surveyedUser = userDao.getUserNamed( surveyedUsername );
@@ -675,19 +678,17 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    public String makeURL( PlanService planService, RFI rfi ) {
-        Plan plan = planService.getPlan();
-        String serverUrl = planService.getServerUrl();
-        return planService.getServerUrl()
+    public String makeURL( CommunityService communityService, RFI rfi, ChannelsUser surveyedUser ) {
+        PlanCommunity planCommunity = planCommunityManager.findPlanCommunity(
+                communityService.getPlan(),
+                surveyedUser );
+        String serverUrl = communityService.getPlanService().getServerUrl();
+        return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
                 + "surveys?"
-                + AbstractChannelsWebPage.PLAN_PARM
+                + AbstractChannelsWebPage.COMMUNITY_PARM
                 + "="
-                + plan.getUri()
-                + "&"
-                + AbstractChannelsWebPage.VERSION_PARM
-                + "="
-                + plan.getVersion()
+                + planCommunity.getUri()
                 + "&"
                 + RFIsPage.RFI_PARM
                 + "=" + rfi.getId();

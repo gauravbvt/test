@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -115,6 +116,12 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         init();
     }
 
+    @Override
+    // Use the domain community
+    public CommunityService getCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
+    }
+
     private void init() {
         addHeading();
         addFilters();
@@ -196,7 +203,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     public List<FeedbackWrapper> getFilteredFeedbacks() {
         List<FeedbackWrapper> wrappers = new ArrayList<FeedbackWrapper>();
         List<Feedback> feedbacks = feedbackService.selectInitialFeedbacks(
-                getPlanCommunity(),
+                getCommunityService(),
                 urgentOnly,
                 unresolvedOnly,
                 notRepliedToOnly,

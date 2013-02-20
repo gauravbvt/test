@@ -244,18 +244,18 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         // Surveys
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
                 getRFIsLink( "gotoRFIs", getPlanCommunity(), true );
-        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, getCommunityService() ) );
+        Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, getDomainCommunityService() ) );
         addTipTitle( gotoRFIsLabel,
-                new Model<String>( getGotoRFIsDescription( user, communityService ) ) );
+                new Model<String>( getGotoRFIsDescription( user, getDomainCommunityService() ) ) );
         gotoRFIsLink.add( gotoRFIsLabel );
 
         // Feedback
         BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
                 getFeedbackLink( "gotoFeedback", getPlanCommunity(), true );
-        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, communityService ) );
+        Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, getDomainCommunityService() ) );
         addTipTitle(
                 gotoFeedbackLabel,
-                new Model<String>( getGotoFeedbackDescription( user, communityService ) )
+                new Model<String>( getGotoFeedbackDescription( user, getDomainCommunityService() ) )
         );
         gotoFeedbackLink.add( gotoFeedbackLabel );
 

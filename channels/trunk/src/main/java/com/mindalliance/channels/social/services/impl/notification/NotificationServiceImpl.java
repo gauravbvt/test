@@ -4,6 +4,8 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
+import com.mindalliance.channels.core.community.participation.CommunityPlanner;
+import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -100,6 +102,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private PlanCommunityManager planCommunityManager;
     @Autowired
     private CommunityServiceFactory communityServiceFactory;
+    @Autowired
+    private CommunityPlannerService communityPlannerService;
 
     private List<MessagingService> messagingServices;
 
@@ -145,17 +149,19 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            CommunityService communityService = getCommunityService( planCommunity );
-            List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( planCommunity );
-            for ( Feedback urgentFeedback : urgentFeedbacks ) {
-                List<String> successes = sendMessages(
-                        urgentFeedback,
-                        UserStatement.TEXT,
-                        !EXCLUDE_INTERNAL_MESSAGES,
-                        communityService );
-                if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
-                    urgentFeedback.setWhenNotified( new Date() );
-                    feedbackService.save( urgentFeedback );
+            if ( planCommunity.isDomainCommunity() ) {
+                CommunityService communityService = getCommunityService( planCommunity );
+                List<Feedback> urgentFeedbacks = feedbackService.listNotYetNotifiedUrgentFeedbacks( communityService );
+                for ( Feedback urgentFeedback : urgentFeedbacks ) {
+                    List<String> successes = sendMessages(
+                            urgentFeedback,
+                            UserStatement.TEXT,
+                            !EXCLUDE_INTERNAL_MESSAGES,
+                            communityService );
+                    if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                        urgentFeedback.setWhenNotified( new Date() );
+                        feedbackService.save( urgentFeedback );
+                    }
                 }
             }
         }
@@ -168,24 +174,26 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
-            List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( planCommunity );
-            if ( !normalFeedbacks.isEmpty() ) {
-                Collections.sort( normalFeedbacks,
-                        new Comparator<Feedback>() {
-                            @Override
-                            public int compare( Feedback f1, Feedback f2 ) {
-                                return f1.getCreated().compareTo( f2.getCreated() );
-                            }
-                        } );
-                boolean success = sendReport(
-                        getPlanners( getCommunityService( planCommunity ).getPlan() ),
-                        normalFeedbacks,
-                        UserStatement.TEXT,
-                        communityService );
-                if ( success ) {
-                    for ( Feedback normalFeedback : normalFeedbacks ) {
-                        normalFeedback.setWhenNotified( new Date() );
-                        feedbackService.save( normalFeedback );
+            if ( planCommunity.isDomainCommunity() ) {
+                List<Feedback> normalFeedbacks = feedbackService.listNotYetNotifiedNormalFeedbacks( communityService );
+                if ( !normalFeedbacks.isEmpty() ) {
+                    Collections.sort( normalFeedbacks,
+                            new Comparator<Feedback>() {
+                                @Override
+                                public int compare( Feedback f1, Feedback f2 ) {
+                                    return f1.getCreated().compareTo( f2.getCreated() );
+                                }
+                            } );
+                    boolean success = sendReport(
+                            getPlanners( getCommunityService( planCommunity ).getPlan() ),
+                            normalFeedbacks,
+                            UserStatement.TEXT,
+                            communityService );
+                    if ( success ) {
+                        for ( Feedback normalFeedback : normalFeedbacks ) {
+                            normalFeedback.setWhenNotified( new Date() );
+                            feedbackService.save( normalFeedback );
+                        }
                     }
                 }
             }
@@ -195,15 +203,17 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// SURVEYS ////
 
     @Override
-    @Scheduled(fixedDelay = 60000)     // every minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfSurveys() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            // to survey participants
-            CommunityService communityService = getCommunityService( planCommunity );
-            sendNags( communityService );
-            sendDeadlineApproachingNotifications( communityService );
-            sendNewRFIs( communityService );
+            if ( planCommunity.isDomainCommunity() ) {
+                // to survey participants
+                CommunityService communityService = getCommunityService( planCommunity );
+                sendNags( communityService );
+                sendDeadlineApproachingNotifications( communityService );
+                sendNewRFIs( communityService );
+            }
         }
     }
 
@@ -258,16 +268,41 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
-            CommunityService communityService = getCommunityService( planCommunity );
-            // to survey participants
-            sendIncompleteRFIReports( communityService );
-            // to planners
-            sendSurveyStatusReports( communityService );
+            if ( planCommunity.isDomainCommunity() ) {
+                CommunityService communityService = getCommunityService( planCommunity );
+                // to survey participants
+                sendIncompleteRFIReports( communityService );
+                // to planners
+                sendSurveyStatusReports( communityService );
+            }
         }
     }
 
     @Override
-    @Scheduled(fixedDelay = 60000)     // every minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Transactional
+    public void notifyOnCommunityPlannerAuthorization() {
+        for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
+            CommunityService communityService = getCommunityService( planCommunity );
+            for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( communityService ) ) {
+                if ( !communityPlanner.isUserNotified() ) {
+                    List<String> successes = sendMessages(
+                            communityPlanner,
+                            CommunityPlanner.AUTHORIZED_AS_PLANNER,
+                            false,
+                            communityService
+                    );
+                    if ( !successes.isEmpty() ) {
+                        communityPlanner.setUserNotified( true );
+                        communityPlannerService.save( communityPlanner );
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -298,7 +333,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled(fixedDelay = 60000)     // every minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfParticipationRequest() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {

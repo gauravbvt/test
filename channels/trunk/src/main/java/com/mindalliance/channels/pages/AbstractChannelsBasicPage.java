@@ -3,7 +3,10 @@ package com.mindalliance.channels.pages;
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
@@ -56,6 +59,12 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
      */
     @SpringBean
     private MailSender mailSender;
+
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
+
+    @SpringBean
+    private CommunityServiceFactory communityServiceFactory;
 
     /**
      * The big form -- used for attachments and segment imports only.
@@ -235,7 +244,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
     private void addFeedback() {
-        form.add( new UserFeedbackPanel( "feedback", getFeedbackType() ) );
+        UserFeedbackPanel userFeedbackPanel = new UserFeedbackPanel( "feedback", getFeedbackType() );
+        userFeedbackPanel.setVisible( isCommunityContext() || isPlanContext() );
+        form.add( userFeedbackPanel );
     }
 
 
@@ -356,5 +367,16 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         }
     }
 
+    protected PlanCommunity getDomainPlanCommunity() {
+        return planCommunityManager.getPlanCommunity( getPlanCommunity().getPlanUri() );
+    }
+
+    protected CommunityService getDomainCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
+    }
+
+    protected CommunityService getCommunityService( PlanCommunity planCommunity ) {
+        return communityServiceFactory.getService( planCommunity );
+    }
 
 }

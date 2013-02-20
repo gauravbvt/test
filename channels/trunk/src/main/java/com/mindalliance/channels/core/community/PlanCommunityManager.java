@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.command.CommandListener;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 
 import java.util.List;
@@ -74,8 +75,23 @@ public interface PlanCommunityManager extends CommandListener {
      * Create a new community for a given plan.
      *
      * @param plan a plan
+     * @param founder a user
      * @return a PlanCommunity
      */
-    PlanCommunity createNewCommunityFor( Plan plan );
+    PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder );
 
+    /**
+     * List the usernames who are members of communities having adopted a given plan.
+     * @param plan a plan
+     * @return a list of usernames
+     */
+    List<String> listAllAdopters( Plan plan );
+
+    /**
+     * Find a plan community with a given plan in which the user is a participant, community planner or model planner.
+     * @param plan a plan
+     * @param user a Channels user
+     * @return a plan community or null
+     */
+    PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user );
 }

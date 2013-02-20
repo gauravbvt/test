@@ -120,14 +120,16 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
 
     }
 
-    public String getSurveyLabel( ) {
+    public String getSurveyLabel( CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
         sb
                 .append( isClosed() ? "Closed survey on " : "Survey on " )
                 .append( getQuestionnaire().getName() );
         if ( !getQuestionnaire().isIssueRemediation() ) {
             sb.append( ", about " )
-                    .append( getMoLabel() );
+                    .append( getMoLabel() )
+                    .append( " in plan " )
+                    .append( communityService.getPlan().getName() );
         }
         return sb.toString();
     }
@@ -186,7 +188,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
 
     private String getStatusContent( CommunityService communityService, SurveysDAO surveysDAO ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( getSurveyLabel() )
+        sb.append( getSurveyLabel( communityService ) )
                 .append( ".\n" )
                 .append( "Launched on " )
                 .append( DATE_FORMAT.format( getCreated() ) )

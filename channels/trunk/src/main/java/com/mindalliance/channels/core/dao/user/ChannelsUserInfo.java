@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.core.community.participation.CommunityPlanner;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
@@ -85,14 +86,11 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     @Transient
     private Map<String, String> planAccess;
 
-    // todo - COMMUNITY - private Map<String, String> communityAccess; // (ROLE_USER|ROLE_PLANNER)
     /**
      * Plan accesses as string.
      */
     @Column(length=2000)
     private String planAccesses;
-
-    // todo - COMMUNITY - private String communityAccesses;
 
     @Column(length=1000)
     private String photo;
@@ -105,6 +103,10 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     @OneToMany( mappedBy = "participant", cascade = CascadeType.ALL )
     @Transient
     private List<UserParticipation> userParticipations;
+
+    @OneToMany ( mappedBy = "userInfo", cascade = CascadeType.ALL )
+    @Transient
+    private List<CommunityPlanner> communityPlanners;
 
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     @Transient
@@ -292,6 +294,14 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
 
     public void setContactInfoList( List<UserContactInfo> contactInfoList ) {
         this.contactInfoList = contactInfoList;
+    }
+
+    public List<CommunityPlanner> getCommunityPlanners() {
+        return communityPlanners;
+    }
+
+    public void setCommunityPlanners( List<CommunityPlanner> communityPlanners ) {
+        this.communityPlanners = communityPlanners;
     }
 
     /**

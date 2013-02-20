@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
@@ -67,6 +68,7 @@ public class CommunityServiceImpl implements CommunityService {
     private PlanCommunityManager planCommunityManager;
     private ParticipationManager participationManager;
     private ChannelsUserDao userDao;
+    private CommunityPlannerService communityPlannerService;
 
     public CommunityServiceImpl() {}
 
@@ -77,7 +79,8 @@ public class CommunityServiceImpl implements CommunityService {
             OrganizationParticipationService organizationParticipationService,
             PlanCommunityManager planCommunityManager,
             ParticipationManager participationManager,
-            ChannelsUserDao userDao ) {
+            ChannelsUserDao userDao,
+            CommunityPlannerService communityPlannerService ) {
         this.analyst = analyst;
         this.userParticipationService = userParticipationService;
         this.userParticipationConfirmationService = userParticipationConfirmationService;
@@ -85,6 +88,7 @@ public class CommunityServiceImpl implements CommunityService {
         this.planCommunityManager = planCommunityManager;
         this.participationManager = participationManager;
         this.userDao = userDao;
+        this.communityPlannerService = communityPlannerService;
     }
 
     @Override
@@ -231,7 +235,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Boolean isCommunityPlanner( ChannelsUser user ) {
-        return user.isPlanner( getPlanCommunity().getPlanUri() ); // todo -COMMUNITY - add
+        return user.isAdmin() || communityPlannerService.isPlanner( user, this );
     }
 
     @Override

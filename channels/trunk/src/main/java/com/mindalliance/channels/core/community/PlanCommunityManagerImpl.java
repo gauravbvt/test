@@ -4,12 +4,17 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.participation.CommunityPlanner;
+import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
+import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
 import com.mindalliance.channels.core.dao.JournalCommand;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
@@ -25,8 +30,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Plan community manager.
@@ -49,6 +56,12 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     @Autowired
     private CommunityServiceFactory communityServiceFactory;
+
+    @Autowired
+    private UserParticipationService userParticipationService;
+
+    @Autowired
+    private CommunityPlannerService communityPlannerService;
 
     /**
      * All the plans, indexed by version uri (uri:version).
@@ -75,12 +88,13 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     private String defaultCommunityCalendarPrivateTicket;
 
     private ApplicationContext applicationContext;
-    private Map<Plan,PlanCommunity> domainPlanCommunities = new HashMap<Plan,PlanCommunity>();
+    private Map<Plan, PlanCommunity> domainPlanCommunities = new HashMap<Plan, PlanCommunity>();
     private String serverUrl;
     private ImportExportFactory importExportFactory;
-    /** Manager for community manager event listeners. */
+    /**
+     * Manager for community manager event listeners.
+     */
     private final Listeners listeners = new Listeners();
-
 
 
     @Autowired
@@ -93,7 +107,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     private CommunityDefinitionManager communityDefinitionManager;
 
 
-    public PlanCommunityManagerImpl( ) {
+    public PlanCommunityManagerImpl() {
     }
 
     public String getServerUrl() {
@@ -193,15 +207,15 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     public List<PlanCommunity> getPlanCommunities() {
         List<PlanCommunity> result = new ArrayList<PlanCommunity>();
-        synchronized( this ) {
-             for ( CommunityDefinition definition : communityDefinitionManager ) {
-                 String uri = definition.getUri();
-                 CommunityDao dao = getDao( uri );
-                 if ( dao != null ) {
-                     result.add( dao.getPlanCommunity() );
-                     initialize( dao.getPlanCommunity() );
-                 }
-             }
+        synchronized ( this ) {
+            for ( CommunityDefinition definition : communityDefinitionManager ) {
+                String uri = definition.getUri();
+                CommunityDao dao = getDao( uri );
+                if ( dao != null ) {
+                    result.add( dao.getPlanCommunity() );
+                    initialize( dao.getPlanCommunity() );
+                }
+            }
             for ( Plan plan : planManager.getPlans() ) {
                 result.add( getDomainPlanCommunity( plan ) );
             }
@@ -217,23 +231,23 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     @Override
     public PlanCommunity getPlanCommunity( final String planCommunityUri ) {
-        return (PlanCommunity)CollectionUtils.find(
+        return (PlanCommunity) CollectionUtils.find(
                 getPlanCommunities(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        PlanCommunity planCommunity = (PlanCommunity)object;
+                        PlanCommunity planCommunity = (PlanCommunity) object;
                         return planCommunity.getUri().equals( planCommunityUri )
                                 && ( !planCommunity.isDomainCommunity() || planCommunity.isDevelopment() );
                     }
-                });
+                } );
     }
 
     @Override
     public PlanCommunity getDomainPlanCommunity( Plan plan ) {
         PlanCommunity planCommunity = domainPlanCommunities.get( plan );
         if ( planCommunity == null ) {
-            CommunityService communityService = (CommunityService)applicationContext.getBean( "communityService" ); // prototype bean
+            CommunityService communityService = (CommunityService) applicationContext.getBean( "communityService" ); // prototype bean
             communityService.setPlanService( getPlanService( plan ) );
             planCommunity = new PlanCommunity( plan );
             communityService.setPlanCommunity( planCommunity );
@@ -244,16 +258,16 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     @Override
     public PlanCommunity findPlanCommunity( final String planCommunityUri, final int planVersion ) {
-        return (PlanCommunity)CollectionUtils.find(
+        return (PlanCommunity) CollectionUtils.find(
                 getPlanCommunities(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        PlanCommunity planCommunity = (PlanCommunity)object;
+                        PlanCommunity planCommunity = (PlanCommunity) object;
                         return planCommunity.getUri().equals( planCommunityUri )
                                 && ( planCommunity.getPlanVersion() == planVersion );
                     }
-                });
+                } );
     }
 
     private PlanService getPlanService( Plan plan ) {
@@ -286,8 +300,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     /**
      * Callback after a command was executed.
      *
-     * @param planCommunity         the plan community
-     * @param command      the command
+     * @param planCommunity the plan community
+     * @param command       the command
      */
     private void onAfterCommand( PlanCommunity planCommunity, JournalCommand command ) {
         if ( command != null && command.isMemorable() )
@@ -315,13 +329,52 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     }
 
     @Override
-    public PlanCommunity createNewCommunityFor( Plan plan ) {
+    public PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder ) {
         CommunityDefinition communityDefinition = communityDefinitionManager.create(
-                    plan.getUri(),
-                    plan.getVersion()  );
+                plan.getUri(),
+                plan.getVersion() );
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
+        communityPlannerService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
         return planCommunity;
+    }
+
+    @Override
+    public List<String> listAllAdopters( Plan plan ) {
+        Set<String> adopters = new HashSet<String>();
+        String planUri = plan.getUri();
+        for ( PlanCommunity planCommunity : getPlanCommunities() ) {
+            if ( planCommunity.getPlanUri().equals( planUri ) ) {
+                CommunityService communityService = communityServiceFactory.getService( planCommunity );
+                for ( UserParticipation userParticipation :
+                        userParticipationService.getAllParticipations( communityService ) ) {
+                    adopters.add( userParticipation.getParticipant().getUsername() );
+                }
+                for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( communityService ) ) {
+                    adopters.add( communityPlanner.getUserInfo().getUsername() );
+                }
+            }
+        }
+        return new ArrayList<String>( adopters );
+    }
+
+    @Override
+    public PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user ) {
+        for ( PlanCommunity planCommunity : getPlanCommunities() ) {
+            if ( !planCommunity.isDomainCommunity()
+                    && planCommunity.getPlanUri().equals( plan.getUri() ) ) {
+                CommunityService communityService = communityServiceFactory.getService( planCommunity );
+                if ( !userParticipationService.getUserParticipations( user, communityService ).isEmpty() )
+                    return planCommunity;
+                if ( communityPlannerService.isPlanner( user, communityService ) )
+                    return planCommunity;
+            }
+        }
+        PlanCommunity planCommunity = getDomainPlanCommunity( plan );
+        if ( user.isPlanner( plan.getUri() ) ) {
+            return planCommunity;
+        }
+        return null;
     }
 
 
@@ -336,7 +389,9 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
      */
     private static final class Listeners {
 
-        /** Whoever cares about plan manager events. */
+        /**
+         * Whoever cares about plan manager events.
+         */
         private final List<CommunityListener> communityListeners =
                 Collections.synchronizedList( new ArrayList<CommunityListener>() );
 

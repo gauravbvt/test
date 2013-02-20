@@ -123,7 +123,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
     }
 
     private void startNewCommunity() {
-        planCommunityManager.createNewCommunityFor( selectedProductionPlan );
+        planCommunityManager.createNewCommunityFor( selectedProductionPlan, getUser() );
     }
 
     public void updateContent( AjaxRequestTarget target ) {

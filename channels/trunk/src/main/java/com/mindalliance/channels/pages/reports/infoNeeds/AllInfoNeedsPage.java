@@ -93,7 +93,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                     protected void populateItem( ListItem<Agent> item ) {
                         final Agent agent = item.getModelObject();
                         PageParameters parameters =
-                            InfoNeedsPage.createParameters( agent.getActor(), getPlanCommunity(), getPlanVersion() );
+                            InfoNeedsPage.createParameters( agent.getActor(), getPlanCommunity() );
 
                         item.add(
 

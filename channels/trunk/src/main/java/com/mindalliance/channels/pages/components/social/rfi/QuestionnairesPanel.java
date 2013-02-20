@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
@@ -69,6 +70,13 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         super( id );
         init();
     }
+
+    @Override
+    // Use the domain community
+    public CommunityService getCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
+    }
+
 
     private void init() {
         addFilters();

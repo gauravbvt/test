@@ -63,7 +63,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     }
 
     public UserParticipation( String username, ChannelsUser participatingUser, PlanCommunity planCommunity ) {
-        super( planCommunity.getPlanUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
+        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
         this.participant = participatingUser.getUserInfo();
     }
 
@@ -217,14 +217,12 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
             return "As supervisor, you are requested to confirm "
                     + asString( communityService )
-                    + "\n\nThank you!\n"
-                    + communityService.getPlan().getClient();
+                    + "\n\nThank you!\n";
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             return "You are requested to participate as "
                     + getAgent( communityService ).getName()
                     + ". It is up to you to accept or not."
-                    + "\n\nThank you!\n"
-                    + communityService.getPlan().getClient();
+                    + "\n\nThank you!\n";
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }

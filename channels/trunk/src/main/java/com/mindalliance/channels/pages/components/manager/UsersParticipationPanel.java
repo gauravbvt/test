@@ -332,7 +332,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private List<String> getUserFullNamesAndEmails() {
         CommunityService communityService = getCommunityService();
         List<String> fullNamesAndEmails = new ArrayList<String>();
-        for ( ChannelsUser user : communityService.getUserDao().getUsers( communityService.getPlanCommunity().getUri() ) ) {
+        for ( ChannelsUser user : communityService.getUserDao().getUsers(  ) ) {
             fullNamesAndEmails.add( user.getFullName() + " (" + user.getEmail() + ")" );
         }
         Collections.sort( fullNamesAndEmails );

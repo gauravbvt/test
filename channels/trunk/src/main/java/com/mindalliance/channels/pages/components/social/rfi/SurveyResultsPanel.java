@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.Question;
@@ -47,6 +48,13 @@ public class SurveyResultsPanel extends AbstractUpdatablePanel {
         super( id, rfiSurveyModel );
         init();
     }
+
+    @Override
+    // Use the domain community
+    public CommunityService getCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
+    }
+
 
     private void init() {
         addCounts();

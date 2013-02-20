@@ -56,7 +56,13 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
                 user.getUsername() );
     }
 
-    
+    public AbstractPersistentChannelsObject( PlanCommunity planCommunity, String username ) {
+        this( planCommunity.getUri(),
+                planCommunity.getPlanUri(),
+                planCommunity.getPlanVersion(),
+                username );
+    }
+
     public AbstractPersistentChannelsObject( String communityUri, String planUri, int planVersion, String username ) {
         created = new Date( );
         this.username = username;

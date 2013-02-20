@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
-import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
@@ -278,9 +277,11 @@ public interface SurveysDAO {
     /**
      * Make url to point to an rfi.
      *
-     * @param planService a plan service
+     *
+     * @param communityService a community service
      * @param rfi  an RFI
+     * @param surveyedUser a Channels user
      * @return a string
      */
-    String makeURL( PlanService planService, RFI rfi );
+    String makeURL( CommunityService communityService, RFI rfi, ChannelsUser surveyedUser );
 }

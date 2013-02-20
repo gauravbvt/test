@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.social.feedback.AllUserFeedbackPanel;
 import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -28,6 +29,7 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
     }
 
     protected void addContent() {
+        getContainer().add( new Label( "planName", getPlan().getName() ) );
         addUserFeedbackPanel();
     }
 

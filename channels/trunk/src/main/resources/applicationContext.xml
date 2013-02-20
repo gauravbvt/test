@@ -171,6 +171,7 @@ CONFIGURATION NOTES:
     <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>
     <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
     <bean id="participationManager" class="com.mindalliance.channels.core.community.participation.ParticipationManagerImpl"/>
+    <bean id="communityPlannerService" class="com.mindalliance.channels.core.community.participation.CommunityPlannerServiceImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -230,6 +231,7 @@ CONFIGURATION NOTES:
         <constructor-arg ref="planCommunityManager"/>
         <constructor-arg ref="participationManager"/>
         <constructor-arg ref="userDao"/>
+        <constructor-arg ref="communityPlannerService"/>
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">

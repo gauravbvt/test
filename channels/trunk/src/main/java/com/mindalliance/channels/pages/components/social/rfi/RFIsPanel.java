@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -56,7 +58,7 @@ import java.util.Map;
  */
 public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
-    private static final String ALL = "every one";
+    private static final String ALL = "everyone"; // in communities having adopted the plan
     private static final String PARTICIPANTS_ONLY = "participants only";
     private static final String NON_PARTICIPANTS_ONLY = "non-participants only";
     private static final int MAX_ROWS = 10;
@@ -77,6 +79,9 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     @SpringBean
     private ChannelsUserDao userDao;
 
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
+
     /**
      * Filters mapped by property.
      */
@@ -96,6 +101,13 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         super( id, model );
         init();
     }
+
+    @Override
+    // Use the domain community
+    public CommunityService getCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
+    }
+
 
     private void init() {
         addRecipientsChoice();
@@ -222,7 +234,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private List<String> getAllUsernames() {
         if ( allUsernames == null ) {
-            allUsernames = userDao.getUsernames();
+            allUsernames = planCommunityManager.listAllAdopters( getPlan() );
         }
         return allUsernames;
     }

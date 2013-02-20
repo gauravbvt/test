@@ -1,7 +1,6 @@
 package com.mindalliance.channels.social.services;
 
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
@@ -21,7 +20,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     void sendFeedback(
             String username,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Feedback.Type type,
             String topic,
             String content,
@@ -29,16 +28,16 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
 
     void sendFeedback(
             String username,
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Feedback.Type type,
             String topic,
             String text,
             boolean urgent,
             ModelObject mo );
 
-    List<Feedback> listNotYetNotifiedNormalFeedbacks( PlanCommunity planCommunity );
+    List<Feedback> listNotYetNotifiedNormalFeedbacks( CommunityService communityService );
 
-    List<Feedback> listNotYetNotifiedUrgentFeedbacks( PlanCommunity planCommunity );
+    List<Feedback> listNotYetNotifiedUrgentFeedbacks( CommunityService communityService );
 
     void addReplyTo( Feedback feedback, UserMessage reply, UserMessageService messageService );
 
@@ -54,7 +53,7 @@ public interface FeedbackService extends GenericSqlService<Feedback, Long> {
      * @return a list of feedback
      */
     List<Feedback> selectInitialFeedbacks(
-            PlanCommunity planCommunity,
+            CommunityService communityService,
             Boolean urgentOnly,
             Boolean unresolvedOnly,
             Boolean notRepliedToOnly,

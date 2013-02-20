@@ -79,6 +79,13 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         init();
     }
 
+    @Override
+    // Use the domain community
+    public CommunityService getCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
+    }
+
+
     private void init() {
         RFISurvey rfiSurvey = getRFISurvey();
         if ( !rfiSurvey.isUnknown() )
@@ -241,7 +248,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     public String getRfiSurveyLabel() {
         return selectedRFISurvey == null
                 ? ""
-                : selectedRFISurvey.getSurveyLabel(  );
+                : selectedRFISurvey.getSurveyLabel( getCommunityService() );
     }
 
     public RFISurvey getSelectedRFISurvey() {

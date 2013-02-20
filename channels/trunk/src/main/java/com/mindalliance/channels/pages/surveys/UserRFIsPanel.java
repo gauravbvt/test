@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.surveys;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
@@ -52,6 +53,12 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
     public UserRFIsPanel( String id, IModel<RFI> rfiModel ) {
         super( id, rfiModel );
         init();
+    }
+
+    @Override
+    // Use the domain community
+    public CommunityService getCommunityService() {
+        return getCommunityService( getDomainPlanCommunity() );
     }
 
     private void init() {
@@ -177,7 +184,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         }
 
         public String getSurveyLabel() {
-            return rfi.getRFILabel(  );
+            return rfi.getRFILabel( getCommunityService() );
         }
 
         public String getJob() {

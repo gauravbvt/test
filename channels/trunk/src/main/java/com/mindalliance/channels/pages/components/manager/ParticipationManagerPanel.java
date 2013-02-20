@@ -59,12 +59,12 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "Organization participation" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "Organizations" ) ) {
             public Panel getPanel( String id ) {
                 return new OrganizationsParticipationPanel( id, getModel() );
             }
         } );
-        tabs.add( new AbstractTab( new Model<String>( "User participation" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
             public Panel getPanel( String id ) {
                 return new UsersParticipationPanel( id, getModel() );
             }
@@ -79,8 +79,12 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
                 return new ParticipationIssuesPanel( id );
             }
         } );
-
-
+        tabs.add( new AbstractTab( new Model<String>( "Planners" ) ) {
+                @Override
+                public Panel getPanel( String id ) {
+                    return new CommunityPlannersPanel( id );
+                }
+            } );
         return tabs;
     }
 
