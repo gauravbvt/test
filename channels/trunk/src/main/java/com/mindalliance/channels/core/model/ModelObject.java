@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ChannelsLockable;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -450,6 +451,7 @@ public abstract class ModelObject
      */
     public static List<Class> referencingClasses() {
         Class[] classes = {
+                Plan.class, PlanCommunity.class,  // added
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class,
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
                 Requirement.class, InfoFormat.class, InfoProduct.class

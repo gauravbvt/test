@@ -244,7 +244,7 @@ public class Channels extends WebApplication
         mountPage( "community", CommunityPage.class );
         mountPage( "plans", PlansPage.class );
         mountPage( "feedback", FeedbackPage.class );
-        mountPage( "surveys", RFIsPage.class );
+        mountPage( RFIsPage.SURVEYS, RFIsPage.class );
         mountPage( "requirements", RequirementsPage.class );
         mountPage(  "participation", ParticipationManagerPage.class );
         mountPage( "help", HelpPage.class );

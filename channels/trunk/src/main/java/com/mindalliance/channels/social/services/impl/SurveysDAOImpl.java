@@ -685,7 +685,8 @@ public class SurveysDAOImpl implements SurveysDAO {
         String serverUrl = communityService.getPlanService().getServerUrl();
         return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
-                + "surveys?"
+                + RFIsPage.SURVEYS
+                + "?"
                 + AbstractChannelsWebPage.COMMUNITY_PARM
                 + "="
                 + planCommunity.getUri()

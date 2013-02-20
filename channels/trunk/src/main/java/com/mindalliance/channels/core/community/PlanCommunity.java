@@ -248,7 +248,12 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return getUri().equals( getPlanUri() );
     }
 
-    //////////////////
+    @Override
+    public boolean references( final ModelObject mo ) {
+        return ModelObject.areIdentical( communityLocale, mo );
+    }
+
+        //////////////////
 
 
     @Override

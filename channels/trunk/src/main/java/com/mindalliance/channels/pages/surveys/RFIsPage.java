@@ -27,10 +27,12 @@ import java.util.List;
  */
 public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
+    public static final String SURVEYS = "surveys";
+    public static final String RFI_PARM = "rfi";
+
     private RFI selectedRFI;
     private Component rfiPanel;
     private UserRFIsPanel userRFIsPanel;
-    public static final String RFI_PARM = "rfi";
     @SpringBean
     private RFIService rfiService;
 

@@ -193,7 +193,7 @@ public class DefaultCommander implements Commander {
     @Override
     public boolean cleanup( Class<? extends ModelObject> clazz, String name ) {
         synchronized ( getDao() ) {
-            return !( name == null || name.trim().isEmpty() ) && cleanup( clazz, name );
+            return !( name == null || name.trim().isEmpty() ) && getDao().cleanup( clazz, name );
         }
     }
 
