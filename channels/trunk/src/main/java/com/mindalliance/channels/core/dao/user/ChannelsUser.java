@@ -78,7 +78,7 @@ public class ChannelsUser implements UserDetails {
     }
 
     /**
-     * Returns the "best practices" plan i.e. collaboration model.
+     * Returns the "best practices" i.e. collaboration plan.
      * @return a plan
      */
     public Plan getPlan() {
