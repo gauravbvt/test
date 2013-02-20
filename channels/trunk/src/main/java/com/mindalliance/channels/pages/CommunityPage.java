@@ -260,7 +260,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         gotoFeedbackLink.add( gotoFeedbackLabel );
 
         // Model editor link
-        BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
+        BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlansPage.class, null, plan );
         addTipTitle( gotoModelLink,
                 new Model<String>( getGotoModelDescription( user, plan ) )
         );
