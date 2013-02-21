@@ -16,10 +16,12 @@ public class ChannelsModalWindow extends ModalWindow {
 
     public ChannelsModalWindow( String id ) {
         super( id );
+        setOutputMarkupId( true );
     }
 
     public ChannelsModalWindow( String id, IModel<?> model ) {
         super( id, model );
+        setOutputMarkupId( true );
     }
 
     @Override

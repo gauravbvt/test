@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.pages.components.ChannelsModalWindow;
 import com.mindalliance.channels.pages.components.community.CommunityDetailsPanel;
 import com.mindalliance.channels.pages.components.community.CommunityStatusPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -18,6 +19,7 @@ import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -69,7 +71,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
     private SocialPanel socialPanel;
     private WebMarkupContainer gotoIconsContainer;
-    private CommunityDetailsPanel communityEditPanel;
+    private ModalWindow detailsDialog;
     private WebMarkupContainer detailsContainer;
 
     public CommunityPage() {
@@ -86,10 +88,29 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     @Override
     protected void addContent() {
         addCommunityDetails();
-        makeVisible( communityEditPanel, false );
+        addCommunityDetailsDialog();
         // addReferences();
         addGotoLinks( getCommunityService(), getUser() );
         addSocial();
+    }
+
+    private void addCommunityDetailsDialog() {
+        detailsDialog = new ChannelsModalWindow( "detailsDialog" );
+        detailsDialog.setTitle( "Community details" );
+        detailsDialog.setCookieName( "channels-community-details" );
+        detailsDialog.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
+            public void onClose( AjaxRequestTarget target ) {
+                addCommunityDetails();
+                target.add( detailsContainer );
+                detailsDialog = null;
+            }
+        } );
+        CommunityDetailsPanel communityEditPanel = new CommunityDetailsPanel(
+                detailsDialog.getContentId(),
+                new PropertyModel<PlanCommunity>( this, "planCommunity" )
+        );
+        detailsDialog.setContent( communityEditPanel );
+        getContainer().addOrReplace( detailsDialog );
     }
 
     private void addCommunityDetails() {
@@ -98,7 +119,6 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         addDetailLabels();
         addEditButton();
         addStatusPanel();
-        addCommunityDetailsPanel();
         getContainer().addOrReplace( detailsContainer );
     }
 
@@ -107,14 +127,6 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         addPlanVersion();
         addCommunityDescription();
         addCommunityLocale();
-    }
-
-    private void addCommunityDetailsPanel() {
-        communityEditPanel = new CommunityDetailsPanel(
-                "detailsEditor",
-                new PropertyModel<PlanCommunity>( this, "planCommunity" )
-        );
-        detailsContainer.add( communityEditPanel );
     }
 
 
@@ -169,8 +181,8 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         AjaxLink<String> editButton = new AjaxLink<String>( "edit" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                makeVisible( communityEditPanel, true );
-                target.add( communityEditPanel );
+                addCommunityDetailsDialog();
+                detailsDialog.show( target );
             }
         };
         editButton.setVisible( isCommunityPlanner() );
@@ -481,10 +493,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( PlanCommunity.class ) ) {
             if ( change.isCollapsed() || change.isUpdated() ) {
+                detailsDialog.close( target );
+                detailsDialog = null;
                 if ( change.isUpdated() ) {
                     addDetailLabels();
                 }
-                makeVisible( communityEditPanel, false );
                 target.add( detailsContainer );
             }
             if ( change.isForProperty( "participation" ) ) {

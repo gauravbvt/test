@@ -398,7 +398,6 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     private void addAgencyProfile() {
         profileDialog = new ChannelsModalWindow( "profileDialog" );
-        profileDialog.setOutputMarkupId( true );
         profileDialog.setTitle( "Organization profile" );
         profileDialog.setCookieName( "channels-agency-profile" );
         profileDialog.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
