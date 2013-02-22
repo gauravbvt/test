@@ -556,7 +556,7 @@ span.plan-name {
     font-weight: bold;
     padding: 0;
     text-transform: capitalize;
-    width: 377px;
+    width: 320px;
 }
 
 span.plan-client {
@@ -564,13 +564,34 @@ span.plan-client {
 	float:left;
 	font-size:14px;
 	padding:3px 0 0 0;
-	width: 377px;
+   width: 320px;
 }
 
 div.plan-references {
 	float: left;
 	margin: 0 35px;
-	width: 377px;
+}
+
+span.locale,
+span.description,
+span.status {
+	display: block;
+	float: left;
+	font-family: georgia;
+	font-style: italic;
+	font-size: 12px;
+	width: 100%;
+	padding: 5px 0 0 0;
+}
+
+span.locale {
+    border-top: 1px solid #CCCCCC;
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+span.status div {
+	display: inline;
 }
 
 div.plan-references h2,
@@ -1326,10 +1347,26 @@ table.data-table {
     width: 100%; 
 }
 
+table.data-table.big {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
 table.data-table td {
     vertical-align: top;
     padding:5px;
     color:#333333;
+}
+
+table.data-table.big td {
+	padding: 10px;
+}
+
+table.data-table.big td:nth-child(4) span {
+	display: block;
+	width: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 table.data-table td table td {
@@ -1361,6 +1398,10 @@ table.data-table tr.headers th {
     text-align: left;
     padding:0 5px;
     vertical-align:middle;
+}
+
+table.data-table.big tr.headers th {
+    padding: 5px 10px;
 }
 
 table.data-table tr.even {
@@ -2121,7 +2162,8 @@ div.controls {
 }
 
 a.button,
-input[type='button'] {
+input[type='button'],
+table.data-table.big a.link {
     background: #e8e8e8;
     border: 1px solid #A7A9AC;
     color: #666666;
@@ -2187,6 +2229,7 @@ input[type='text'] {
 .w_content_container table td {
     border-bottom: 1px dotted #999999;
     padding: 10px 5px;
+    text-align: left;
 }
 
 .w_content_container table th {
