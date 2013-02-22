@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
@@ -41,6 +42,7 @@ public class DuplicatePart extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
+        CommunityService communityService = commander.getCommunityService();
         QueryService queryService = commander.getQueryService();
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
@@ -49,7 +51,7 @@ public class DuplicatePart extends AbstractCommand {
             Map<String, Object> partState = part.mapState();
             Long priorId = (Long) get( "duplicate" );
             Part duplicate = queryService.createPart( segment, priorId );
-            duplicate.initFromMap( partState, queryService );
+            duplicate.initFromMap( partState, communityService );
             set( "duplicate", duplicate.getId() );
             describeTarget( duplicate );                    
             return new Change( Change.Type.Added, duplicate );

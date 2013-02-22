@@ -298,11 +298,6 @@ public class PlanConverter extends AbstractChannelsConverter {
                         ModelEntity.Kind.valueOf( kindName ),
                         context );
                 plan.setLocale( locale );
-            } else if ( nodeName.equals( "requirement" ) ) {
-                // requirement always added to plan on creation by dao
-                context.convertAnother(
-                        plan,
-                        Requirement.class );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

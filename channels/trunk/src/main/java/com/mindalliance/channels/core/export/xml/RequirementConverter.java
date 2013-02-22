@@ -96,9 +96,8 @@ public class RequirementConverter extends AbstractChannelsConverter {
         // Other model object properties
         writeTags( writer, requirement );
         exportDetectionWaivers( requirement, writer );
-        exportAttachments( requirement, writer );
+        // exportAttachments( requirement, writer );
         exportDetectionWaivers( requirement, writer );
-        exportAttachments( requirement, writer );
         exportUserIssues( requirement, writer, context );
     }
 
@@ -188,7 +187,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-        Requirement requirement = getPlanDao().createRequirement( id );
+        Requirement requirement = getCommunityDao().createRequirement( id );
         while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
@@ -216,9 +215,9 @@ public class RequirementConverter extends AbstractChannelsConverter {
                 requirement.addTags( reader.getValue() );
             } else if ( "detection-waivers".equals( nodeName ) ) {
                 importDetectionWaivers( requirement, reader );
-            } else if ( "attachments".equals( nodeName ) ) {
+            }/* else if ( "attachments".equals( nodeName ) ) {
                 importAttachments( requirement, reader );
-            } else if ( "issue".equals( nodeName ) ) {
+            }*/ else if ( "issue".equals( nodeName ) ) {
                 context.convertAnother( requirement, UserIssue.class );
             } else {
                 LOG.debug( "Unknown element: " + nodeName );

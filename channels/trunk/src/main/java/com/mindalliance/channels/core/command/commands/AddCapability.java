@@ -63,7 +63,7 @@ public class AddCapability extends AbstractCommand {
             describeTarget( flow );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null )
-                flow.initFromMap( flowAttributes, queryService );
+                flow.initFromMap( flowAttributes, communityService );
 
             set( "flow", flow.getId() );
             set( "connector", flow.getTarget().getId() );

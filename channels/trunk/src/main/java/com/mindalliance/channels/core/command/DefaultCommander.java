@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.command.commands.DisconnectFlow;
 import com.mindalliance.channels.core.command.commands.RemoveCapability;
 import com.mindalliance.channels.core.command.commands.RemoveNeed;
+import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
@@ -291,6 +292,11 @@ public class DefaultCommander implements Commander {
     @Override
     public PlanDao getPlanDao() {
         return (PlanDao)getDao();
+    }
+
+    @Override
+    public CommunityDao getCommunityDao() {
+        return (CommunityDao)getDao();
     }
 
     @Override

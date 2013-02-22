@@ -107,9 +107,9 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     reader.moveUp();
                 }
                 if ( importingPlan ) {
-                    getPlanDao().add( issue, issueId );
+                    getDao().add( issue, issueId );
                 } else {
-                    getPlanDao().add( issue );
+                    getDao().add( issue );
                 }
                 idMap.put( issueId, issue.getId() );
             } else {

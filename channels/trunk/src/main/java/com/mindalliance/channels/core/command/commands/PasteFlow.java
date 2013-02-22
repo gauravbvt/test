@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
@@ -49,6 +50,7 @@ public class PasteFlow extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
+        CommunityService communityService = commander.getCommunityService();
         QueryService queryService = commander.getQueryService();
         try {
             Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
@@ -76,7 +78,7 @@ public class PasteFlow extends AbstractCommand {
                                               priorId );
             Map<String, Object> flowAttributes = (Map<String, Object>) copy.get( "attributes" );
             if ( flowAttributes != null ) {
-                flow.initFromMap( flowAttributes, queryService );
+                flow.initFromMap( flowAttributes, communityService );
             }
             set( "flow", flow.getId() );
             describeTarget( flow );

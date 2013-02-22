@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
@@ -475,21 +476,22 @@ public class ResourceSpec extends ModelObject implements Specable {
     }
 
     @Override
-    public void initFromMap( Map<String,Object>state, QueryService queryService ) {
+    public void initFromMap( Map<String,Object>state, CommunityService communityService ) {
+        PlanService planService = communityService.getPlanService();
         if ( state.get( "actor" ) != null )
-            setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
+            setActor( planService.retrieveEntity( Actor.class, state, "actor" ) );
         else
             setActor( null );
         if ( state.get( "role" ) != null )
-            setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
+            setRole( planService.retrieveEntity( Role.class, state, "role" ) );
         else
             setRole( null );
         if ( state.get( "organization" ) != null )
-            setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
+            setOrganization( planService.retrieveEntity( Organization.class, state, "organization" ) );
         else
             setOrganization( null );
         if ( state.get( "jurisdiction" ) != null )
-            setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
+            setJurisdiction( planService.retrieveEntity( Place.class, state, "jurisdiction" ) );
         else
             setJurisdiction( null );
     }

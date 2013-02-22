@@ -94,4 +94,5 @@ public interface PlanCommunityManager extends CommandListener {
      * @return a plan community or null
      */
     PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user );
+
 }

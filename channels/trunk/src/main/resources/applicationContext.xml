@@ -101,7 +101,6 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager">
-        <property name="dataDirectory" value="${channels.home}${file.separator}data"/>
         <property name="uploadPath" value="uploads/"/>
         <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
         <property name="videoExtensions" value="avi,mov,mp4,mpg"/>

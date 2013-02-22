@@ -20,6 +20,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -28,6 +29,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -239,6 +241,11 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public <T extends ModelObject> List<T> list( Class<T> clazz ) {
+        return getDao().list( clazz );
+    }
+
+    @Override
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
         return getDao().listActualEntities( clazz, mustBeReferenced );
     }
@@ -269,6 +276,21 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public void add( ModelObject modelObject, Long id ) {
+        getDao().add( modelObject, id );
+    }
+
+    @Override
+    public <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name ) {
+        return getDao().findEntityType( entityClass, name );
+    }
+
+    @Override
+    public <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name ) {
+        return getDao().findActualEntity( entityClass, name );
+    }
+
+    @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
         return safeFindOrCreate( clazz, name, null );
     }
@@ -276,6 +298,20 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id ) {
         return getDao().safeFindOrCreate( clazz, name, id );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Issue> listUserIssues( final ModelObject modelObject ) {
+        return (List<Issue>)CollectionUtils.select(
+                list( UserIssue.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Issue)object).getAbout().equals( modelObject );
+                    }
+                }
+        );
     }
 
     @Override

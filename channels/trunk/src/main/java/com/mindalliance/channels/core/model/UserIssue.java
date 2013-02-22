@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.CommunityService;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
@@ -217,8 +217,8 @@ public class UserIssue extends ModelObject implements Issue {
     }
 
     @Override
-    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
-        super.initFromMap( state, queryService );
+    public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
+        super.initFromMap( state, communityService );
         setType( (String) state.get( "type" ) );
         setRemediation( (String) state.get( "remediation" ) );
         setSeverity( (Level) state.get( "severity" ) );

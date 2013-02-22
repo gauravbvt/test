@@ -69,7 +69,7 @@ public class SetPartFromCopy extends AbstractCommand {
         }
         part.initFromMap(
                 ( Map<String, Object>)copy.get( "partState" ),
-                commander.getQueryService() );
+                commander.getCommunityService() );
         multi.execute( commander );
         describeTarget( part );
         return new Change( Type.Recomposed, segment );

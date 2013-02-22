@@ -87,7 +87,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
         // Export attachments
         exportAttachments( planCommunity, writer );
         // Export user issues
-        // exportUserIssues( planCommunity, writer, context );
+        exportUserIssues( planCommunity, writer, context );
 
         // Entities
         // All requirements
@@ -168,7 +168,6 @@ public class CommunityConverter extends AbstractChannelsConverter {
                         context );
                 planCommunity.setCommunityLocale( locale );
             } else if ( nodeName.equals( "requirement" ) ) {
-                // requirement always added to plan on creation by dao
                 context.convertAnother(
                         planCommunity,
                         Requirement.class );

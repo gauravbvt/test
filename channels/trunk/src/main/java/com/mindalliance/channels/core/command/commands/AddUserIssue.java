@@ -12,9 +12,9 @@ import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public class AddUserIssue extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
+        CommunityService communityService = commander.getCommunityService();
         Long priorId = (Long) get( "issue" );
         UserIssue issue = new UserIssue( commander.resolve(
                 ModelObject.class,
@@ -56,8 +56,8 @@ public class AddUserIssue extends AbstractCommand {
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         issue.setReportedBy( getUserName() );
         if ( state != null )
-            issue.initFromMap( state, queryService );
-        queryService.add( issue, priorId );
+            issue.initFromMap( state, communityService );
+        communityService.add( issue, priorId );
         set( "issue", issue.getId() );
         describeTarget( issue );                
         return new Change( Type.Added, issue );

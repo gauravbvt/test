@@ -2218,12 +2218,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name ) {
-        T result = null;
-        T entity = getDao().find( entityClass, name );
-        if ( entity != null ) {
-            if ( entity.isType() ) result = entity;
-        }
-        return result;
+        return getDao().findEntityType( entityClass, name );
     }
 
     @Override

@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.core.command;
 
+import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
@@ -387,5 +388,8 @@ public interface Commander {
 
     PlanDao getPlanDao();
 
+    CommunityDao getCommunityDao();
+
     CommunityService getCommunityService();
+
 }

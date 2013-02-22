@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.model.Requirement;
 
 /**
@@ -30,12 +30,12 @@ public class RemoveRequirement extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        PlanDao planDao = commander.getPlanDao(); // TODO -COMMUNITY - use community dao
+        AbstractModelObjectDao dao = commander.getDao();
         Requirement requirement = commander.resolve( Requirement.class, (Long) get( "requirement" ) );
         requirement.initialize( commander.getCommunityService() );
         describeTarget( requirement );
         set( "state", requirement.mapState() );
-        planDao.remove( requirement );
+        dao.remove( requirement );
         releaseAnyLockOn( commander, requirement );
         ignoreLock( (Long) get( "requirement" ) );
         return new Change( Change.Type.Removed, requirement );

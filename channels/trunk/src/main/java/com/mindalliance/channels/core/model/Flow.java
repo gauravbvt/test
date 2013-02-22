@@ -1,7 +1,8 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -1454,14 +1455,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
-        super.initFromMap( state, queryService );
+    public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
+        super.initFromMap( state, communityService );
         if ( state.containsKey( "standardized" ) )
             setStandardized( (Boolean) state.get( "standardized" ) );
         if ( !isStandardized() && state.containsKey( "eois" ) )
             setEois( (List<ElementOfInformation>) state.get( "eois" ) );
         if ( isStandardized() ) {
-            setProductInfoFromName( queryService.getDao() );
+            setProductInfoFromName( communityService.getDao() );
         }
         if ( state.containsKey( "askedFor" ) )
             setAskedFor( (Boolean) state.get( "askedFor" ) );
@@ -1491,10 +1492,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setReceiptConfirmationRequested( (Boolean) state.get( "receiptConfirmationRequested" ) );
     }
 
-    public void setProductInfoFromName( PlanDao planDao ) {
+    public void setProductInfoFromName( AbstractModelObjectDao dao ) {
         assert isStandardized();
         if ( !getName().isEmpty() ) {
-            infoProduct = planDao.findOrCreateType( InfoProduct.class, getName(), null );
+            infoProduct = dao.findOrCreateType( InfoProduct.class, getName(), null );
         }
     }
 

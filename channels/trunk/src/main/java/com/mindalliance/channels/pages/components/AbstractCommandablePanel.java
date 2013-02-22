@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Releaseable;
 import org.apache.wicket.model.IModel;
@@ -66,7 +67,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      */
     protected boolean isLockedByUser( Identifiable identifiable ) {
         return noLockRequired( identifiable )
-               || ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+        || contextAllowsEditing( identifiable )
                   && !isImmutable( identifiable ) && getLockManager().isLockedByUser( getUser().getUsername(),
                                                                                       identifiable.getId() );
     }
@@ -78,13 +79,13 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUser( long id ) {
-        return  getPlan().isDevelopment() &&
+        return  contextAllowsEditing( id ) &&
                  getLockManager().isLockedByUser( getUser().getUsername(), id );
     }
 
 
     private boolean noLockRequired( Identifiable identifiable ) {
-        return false;
+        return !getPlanCommunity().isDomainCommunity();
     }
 
     /**
@@ -94,8 +95,23 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
-        return ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
+        return  contextAllowsEditing( identifiable )
                 && ( isImmutable( identifiable ) || isLockedByUser( identifiable ) );
+    }
+
+    protected boolean contextAllowsEditing( long id ) {
+        try {
+            ModelObject modelObject = getCommunityService().find( ModelObject.class, id );
+            return contextAllowsEditing( modelObject );
+        } catch ( NotFoundException e ) {
+            return false;
+        }
+    }
+
+    protected boolean contextAllowsEditing( Identifiable identifiable ) {
+       return !getPlanCommunity().isDomainCommunity()
+               || identifiable.isModifiableInProduction()
+               || getPlan().isDevelopment();
     }
 
     /**
@@ -105,7 +121,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUserIfNeeded( long id ) {
-        return getPlan().isDevelopment() && isLockedByUser( id );
+        return contextAllowsEditing( id ) && isLockedByUser( id );
     }
 
     private boolean isImmutable( Identifiable identifiable ) {

@@ -140,4 +140,16 @@ public class CommunityDao extends AbstractModelObjectDao {
     private PlanDao getPlanDao() {
         return (PlanDao) getSubDao();
     }
+
+    public Requirement createRequirement() {
+        return createRequirement( null );
+    }
+
+    public Requirement createRequirement( Long id ) {
+        Requirement requirement = new Requirement();
+        assignId( requirement, id, getIdGenerator() );
+        add( requirement, id );
+        return requirement;
+    }
+
 }

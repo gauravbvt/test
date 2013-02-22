@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -102,6 +103,8 @@ public interface CommunityService {
 
     Boolean isCommunityPlanner( ChannelsUser user );
 
+    <T extends ModelObject> List<T> list( Class<T> clazz );
+
     <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced );
 
     <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name );
@@ -137,4 +140,39 @@ public interface CommunityService {
      * @return the object or null if name is null or empty
      */
     <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id );
+
+    /**
+     * List all user issues about a given model object.
+     * @param modelObject a model object
+     * @return a list of issues.
+     */
+    List<Issue> listUserIssues( ModelObject modelObject );
+
+    /**
+     * Persist a model object at a given id.
+     * @param modelObject a model object
+     * @param id an id
+     */
+    void add( ModelObject modelObject, Long id );
+
+    /**
+     * Find an entity type by name, if it exists.
+     *
+     * @param entityClass a model entity class
+     * @param name        a string
+     * @param <T>         a subclass of model entity
+     * @return a model entity or null
+     */
+    <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name );
+
+    /**
+     * Find an actual entity by name, if it exists.
+     *
+     * @param entityClass a model entity class
+     * @param name        a string
+     * @param <T>         a subclass of model entity
+     * @return a model entity or null
+     */
+    <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name );
+
 }

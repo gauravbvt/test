@@ -79,6 +79,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
     private void init(  ) {
         selectedRequirement = (Requirement)getModel().getObject();
         if ( selectedRequirement.isUnknown() ) selectedRequirement = null;
+        lockRequirement();
         addRequirementsTable();
         addRequirementEditPanel( );
         addButtons();
@@ -135,7 +136,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
             }
         };
         // newButton.setEnabled( this.isLockedByUser( getPlan() ) );
-        makeVisible( removeButton, selectedRequirement != null/* && isLockedByUser( selectedRequirement )*/ ); // todo re-activate lock check when community objects can be locked
+        makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
         add( removeButton );
     }
 
@@ -143,8 +144,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
         addRequirementsTable();
         addRequirementEditPanel();
         target.add( requirementEditPanel );
-        makeVisible( removeButton, selectedRequirement != null /*&& isLockedByUser( selectedRequirement )*/ ); // todo re-activate lock check when community objects can be locked
-        // makeVisible( newButton, isLockedByUser( getPlan() ) );
+        makeVisible( removeButton, selectedRequirement != null && isLockedByUser( selectedRequirement ) );
         target.add( newButton );
         target.add( removeButton );
         target.add( requirementsTable );
@@ -155,7 +155,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
     public List<RequirementWrapper> getRequirementWrappers() {
         List<RequirementWrapper> wrappers = new ArrayList<RequirementWrapper>(  );
         List<Requirement> requirements =  (List<Requirement>) CollectionUtils.select(
-                getQueryService().list( Requirement.class ),
+                getCommunityService().getDao().list( Requirement.class ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -332,6 +332,10 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
                     : "Edit";
         }
 
+        public int getIssueCount() {
+            return getCommunityService().listUserIssues( requirement ).size();
+        }
+
 
     }
 
@@ -375,11 +379,10 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
                     EMPTY,
                     "beneficiarySpec.event.description",
                     filterable ) );
-            columns.add( makeAnalystColumn(
+            columns.add( makeColumn(
                     "Issues",
-                    "requirement",
-                    "unwaivedIssuesCount",
-                    "?" ) );
+                    "issueCount",
+                    EMPTY ) );
             columns.add( makeParticipationAnalystColumn(
                     "% satisfaction",
                     "requirement",

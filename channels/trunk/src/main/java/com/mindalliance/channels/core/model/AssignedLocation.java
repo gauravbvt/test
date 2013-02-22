@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model;
 
-import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.community.CommunityService;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -130,7 +130,7 @@ public class AssignedLocation implements Serializable {
         return map;
     }
 
-    public void initFromMap( Map<String, Object> map, QueryService queryService ) {
+    public void initFromMap( Map<String, Object> map, CommunityService communityService ) {
         String kindName = (String) map.get( "kind" );
         if ( kindName.equals( Kind.NamedPlace.name() ) ) {
             kind = Kind.NamedPlace;
@@ -138,8 +138,8 @@ public class AssignedLocation implements Serializable {
                 boolean isType = (Boolean) map.get( "type" );
                 String name = (String) map.get( "name" );
                 namedPlace = isType
-                        ? queryService.findEntityType( Place.class, name )
-                        : queryService.findActualEntity( Place.class, name );
+                        ? communityService.findEntityType( Place.class, name )
+                        : communityService.findActualEntity( Place.class, name );
             }
         } else if ( kindName.equals( Kind.CommunicatedPlace.name() ) ) {
             kind = Kind.CommunicatedPlace;

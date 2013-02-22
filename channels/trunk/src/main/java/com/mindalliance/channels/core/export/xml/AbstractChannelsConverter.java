@@ -142,7 +142,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @param context an unmarshalling context
      * @return a map
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected Map<Long, Long> getIdMap( UnmarshallingContext context ) {
         Map<Long, Long> idMap = (Map<Long, Long>) context.get( "idMap" );
         if ( idMap == null ) {
@@ -158,7 +158,7 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @param context an unmarshalling context
      * @return a map
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected Map<Connector, List<ConnectionSpecification>> getProxyConnectors( UnmarshallingContext context ) {
         Map<Connector, List<ConnectionSpecification>> proxyConnectors =
                 (Map<Connector, List<ConnectionSpecification>>) context.get( "proxyConnectors" );
@@ -180,7 +180,7 @@ public abstract class AbstractChannelsConverter implements Converter {
             ModelObject modelObject,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-        List<UserIssue> issues = getPlanDao().findAllUserIssues( modelObject );
+        List<UserIssue> issues = getDao().findAllUserIssues( modelObject );
         for ( UserIssue issue : issues ) {
             writer.startNode( "issue" );
             context.convertAnother( issue );
@@ -292,16 +292,25 @@ public abstract class AbstractChannelsConverter implements Converter {
      * @return a model object
      * @throws NotFoundException if not found
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException {
-        T about;
-        if ( getContext().getPlan().getId() == id ) {
+        if ( isPlanContext() && getContext().getPlan().getId() == id ) {
             // in case the issue is about the plan being loaded -- it is not yet findable.
-            about = (T) getContext().getPlan();
-        } else {
-            about = getDao().find( clazz, id );
+            return (T) getContext().getPlan();
         }
-        return about;
+        if ( isCommunityContext() && getContext().getPlanCommunity().getId() == id ) {
+            // in case the issue is about the plan being loaded -- it is not yet findable.
+            return (T) getContext().getPlanCommunity();
+        }
+        return getDao().find( clazz, id );
+    }
+
+    protected boolean isPlanContext() {
+        return getDao() instanceof PlanDao;
+    }
+
+    protected boolean isCommunityContext() {
+        return getDao() instanceof CommunityDao;
     }
 
     /**

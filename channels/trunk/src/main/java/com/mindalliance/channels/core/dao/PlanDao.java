@@ -129,16 +129,6 @@ public class PlanDao extends AbstractModelObjectDao {
         return segment.addNode( assignId( new Part(), id, getIdGenerator() ) );
     }
 
-    public Requirement createRequirement() {   // todo - COMMUNITY - move to CommunityDao
-        return createRequirement( null );
-    }
-
-    public Requirement createRequirement( Long id ) {   // todo - COMMUNITY - move to CommunityDao
-        Requirement requirement = new Requirement();
-        assignId( requirement, id, getIdGenerator() );
-        add( requirement, id );
-        return requirement;
-    }
 
     /**
      * Create and add a new receive.

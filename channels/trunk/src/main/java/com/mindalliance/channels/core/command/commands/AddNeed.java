@@ -63,7 +63,7 @@ public class AddNeed extends AbstractCommand {
             set( "connector", flow.getSource().getId() );
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null )
-                flow.initFromMap( flowAttributes, queryService );
+                flow.initFromMap( flowAttributes, communityService );
 
             describeTarget( flow );
             return new Change( Type.Added, flow );

@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Node;
@@ -73,6 +74,7 @@ public class ConnectWithFlow extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
+        CommunityService communityService = commander.getCommunityService();
         QueryService queryService = commander.getQueryService();
         Segment segment = commander.resolve( Segment.class, (Long) get( "segment" ) );
         Part part = (Part) segment.getNode( (Long) get( "part" ) );
@@ -101,7 +103,7 @@ public class ConnectWithFlow extends AbstractCommand {
         Map<String, Object> attributes = (Map<String, Object>) get( "attributes" );
 
         if ( attributes != null )
-            flow.initFromMap( attributes, queryService );
+            flow.initFromMap( attributes, communityService );
         describeTarget( flow );
         return new Change( Change.Type.Added, flow );
     }

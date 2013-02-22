@@ -2,8 +2,8 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ChannelsLockable;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -526,7 +526,7 @@ public abstract class ModelObject
     }
 
     @SuppressWarnings( "unchecked" )
-    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
+    public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         setName( (String)state.get( "name" ) );
         setDescription( (String) state.get( "description" ) );
         setTagsAsString( (String) state.get( "tags" ) );

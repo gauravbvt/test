@@ -5,7 +5,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.dao.PlanDao;
+import com.mindalliance.channels.core.community.CommunityDao;
 import com.mindalliance.channels.core.model.Requirement;
 
 import java.util.Map;
@@ -31,9 +31,9 @@ public class AddRequirement extends AbstractCommand {
     @Override
     @SuppressWarnings( "unchecked" )
     public Change execute( Commander commander ) throws CommandException {
-        PlanDao planDao = commander.getPlanDao(); // todo - COMMUNITY - get community dao
+        CommunityDao dao = commander.getCommunityDao();
         Long priorId = (Long) get( "requirement" );   // set when undoing a RemoveRequirement
-        Requirement requirement = planDao.createRequirement( priorId );
+        Requirement requirement = dao.createRequirement( priorId );
         // State is set when undoing a RemoveRequirement
         Map<String, Object> state = (Map<String, Object>) get( "state" );
         if ( state != null )

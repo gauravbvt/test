@@ -51,7 +51,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     private static final String ATTACHMENTS = "Attachments";
     private static final String ISSUES = "Issues";
 
-    private static final String[] HEADERS = {INFO, SENDERS, RECEIVERS, CARD, ATTACHMENTS, ISSUES};
+    private static final String[] HEADERS = {INFO, SENDERS, RECEIVERS, CARD/*, ATTACHMENTS*/, ISSUES};   // todo - COMMUNITY - reinstate when communities can persist attachements and issues
     private String selectedSection = INFO;
     private TextField<String> nameField;
     private TextArea<String> descField;
@@ -166,16 +166,11 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
 
     private String makeSectionName( String section ) {
         if ( section.equals( ISSUES ) ) {
-            int allCount = getAnalyst().allIssuesCount( getRequirement(), getQueryService() );
-            int unwaivedCount = getAnalyst().unwaivedIssuesCount( getRequirement(), getQueryService() );
-            if ( unwaivedCount != allCount ) {
-                return ISSUES + "(" + unwaivedCount + "/" + allCount + ")";
-            } else {
-                return ISSUES + "(" + allCount + ")";
-            }
+            int count = getCommunityService().listUserIssues( getRequirement() ).size();
+            return ISSUES + " (" + count + ")";
         } else if ( section.equals( ATTACHMENTS ) ) {
             int count = getRequirement().getAttachments().size();
-            return ATTACHMENTS + "(" + count + ")";
+            return ATTACHMENTS + " (" + count + ")";
         } else {
             return section;
         }

@@ -76,7 +76,7 @@ public class AddPart extends AbstractCommand {
         CommunityService communityService = commander.getCommunityService();
         QueryService queryService = communityService.getPlanService();
         if ( partState != null )
-            part.initFromMap( partState, queryService );
+            part.initFromMap( partState, communityService );
         describeTarget( part );
         return new Change( Change.Type.Added, part );
     }

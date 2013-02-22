@@ -156,6 +156,11 @@ public class Requirement extends ModelObject implements Countable {
         return false;
     }
 
+    @Override
+    public boolean isModifiableInProduction() {
+        return true;
+    }
+
     public String getInformation() {
         return information;
     }
@@ -520,7 +525,7 @@ public class Requirement extends ModelObject implements Countable {
 
     @SuppressWarnings( "unchecked" )
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
-        super.initFromMap( state, communityService.getPlanService() );
+        super.initFromMap( state, communityService );
         setInformation( (String) state.get( "information" ) );
         setInfoTags( Tag.tagsFromString( (String) state.get( "requiredTags" ) ) );
         setEois( (List<String>) state.get( "eois" ) );

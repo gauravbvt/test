@@ -899,4 +899,14 @@ public abstract class AbstractModelObjectDao {
     public long getLastAssignedId() {
         return getIdGenerator().getIdCounter( getModelObjectContext().getUri() );
     }
+
+    public <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name ) {
+        T result = null;
+        T entity = find( entityClass, name );
+        if ( entity != null ) {
+            if ( entity.isType() ) result = entity;
+        }
+        return result;
+
+    }
 }

@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
@@ -917,8 +919,9 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     }
 
     @SuppressWarnings( "unchecked" )
-    public void initFromMap( Map<String, Object> state, QueryService queryService ) {
-        super.initFromMap( state, queryService );
+    public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
+        super.initFromMap( state, communityService );
+        PlanService planService = communityService.getPlanService();
         setTask( (String) state.get( "task" ) );
         setRepeatsEvery( (Delay) state.get( "repeatsEvery" ) );
         setCompletionTime( (Delay) state.get( "completionTime" ) );
@@ -931,33 +934,33 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         setProhibited( (Boolean) state.get( "prohibited" ) );
         setCategory( (Category) state.get( "category" ) );
         for ( Map<String, Object> goalMap : (List<Map<String, Object>>) state.get( "goals" ) )
-            addGoal( queryService.goalFromMap( goalMap ) );
+            addGoal( planService.goalFromMap( goalMap ) );
         if ( state.get( "initiatedEvent" ) == null )
             setInitiatedEvent( null );
         else
-            setInitiatedEvent( queryService.findOrCreateType( Event.class,
+            setInitiatedEvent( planService.findOrCreateType( Event.class,
                     (String) state.get( "initiatedEvent" ) ) );
         if ( state.get( "actor" ) != null )
-            setActor( queryService.retrieveEntity( Actor.class, state, "actor" ) );
+            setActor( planService.retrieveEntity( Actor.class, state, "actor" ) );
         else
             setActor( null );
         if ( state.get( "role" ) != null )
-            setRole( queryService.retrieveEntity( Role.class, state, "role" ) );
+            setRole( planService.retrieveEntity( Role.class, state, "role" ) );
         else
             setRole( null );
         if ( state.get( "organization" ) != null )
-            setOrganization( queryService.retrieveEntity( Organization.class, state, "organization" ) );
+            setOrganization( planService.retrieveEntity( Organization.class, state, "organization" ) );
         else
             setOrganization( null );
         if ( state.get( "jurisdiction" ) != null )
-            setJurisdiction( queryService.retrieveEntity( Place.class, state, "jurisdiction" ) );
+            setJurisdiction( planService.retrieveEntity( Place.class, state, "jurisdiction" ) );
         else
             setJurisdiction( null );
         if ( state.get( "location" ) != null ) {
             AssignedLocation assignedLocation = new AssignedLocation();
             assignedLocation.initFromMap(
                     (Map<String, Object>) state.get( "location" ),
-                    queryService );
+                    communityService );
             setLocation( assignedLocation );
         } else
             setLocation( null );

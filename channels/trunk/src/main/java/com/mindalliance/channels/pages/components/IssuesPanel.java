@@ -68,7 +68,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
-        newIssueLink.setVisible( getPlan().isDevelopment() );
+        newIssueLink.setVisible( !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment() );
         add( newIssueLink );
         createIssuePanels();
     }
@@ -105,8 +105,12 @@ public class IssuesPanel extends AbstractCommandablePanel {
      * @return list of issues
      */
     public List<Issue> getModelObjectIssues() {
-        List<Issue> issues =
-                new ArrayList<Issue>( getAnalyst().listIssues( getQueryService(), model.getObject(), false ) );
+        List<Issue> issues;
+        if ( getPlanCommunity().isDomainCommunity() ) {
+                issues = new ArrayList<Issue>( getAnalyst().listIssues( getQueryService(), model.getObject(), false ) );
+        } else {  // no analyst-detected issues in non-domain plan community
+            issues = getCommunityService().listUserIssues( model.getObject() );
+        }
         Collections.sort( issues, new Comparator<Issue>() {
             public int compare( Issue issue, Issue other ) {
                 return other.getSeverity().compareTo( issue.getSeverity() );
