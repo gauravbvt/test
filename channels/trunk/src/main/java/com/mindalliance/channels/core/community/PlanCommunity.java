@@ -51,7 +51,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     }
 
     public PlanCommunity( // Plan community for domain planners
-            Plan plan ) {
+                          Plan plan ) {
         uri = plan.getUri();
         planUri = plan.getUri();
         planVersion = plan.getVersion();
@@ -103,7 +103,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     public Place getLocale( CommunityService communityService ) {
         return communityLocale == null
                 ? communityService.getPlan().getLocale()
-                :communityLocale;
+                : communityLocale;
     }
 
 
@@ -253,7 +253,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return ModelObject.areIdentical( communityLocale, mo );
     }
 
-        //////////////////
+    //////////////////
 
 
     @Override
@@ -271,5 +271,23 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        return this == obj
+                || obj != null && obj instanceof PlanCommunity
+                && getUri().equals( ( (PlanCommunity) obj ).getUri() )
+                && getPlanUri().equals( ( (PlanCommunity) obj ).getPlanUri() )
+                && getPlanVersion() == ( ( (PlanCommunity) obj ).getPlanVersion() );
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash + 31 * getUri().hashCode();
+        hash = hash + 31 * getPlanUri().hashCode();
+        hash = hash + 31 * Long.valueOf( getPlanVersion() ).hashCode();
+        return hash;
     }
 }
