@@ -77,7 +77,7 @@ public class UserIssue extends ModelObject implements Issue {
      * {@inheritDoc}
      */
     public String getTypeName() {
-        return "user issue";
+        return "issue";
     }
 
     public ModelObject getAbout() {

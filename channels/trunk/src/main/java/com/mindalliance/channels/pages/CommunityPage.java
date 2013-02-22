@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
@@ -7,7 +8,9 @@ import com.mindalliance.channels.core.community.participation.ParticipationAnaly
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
 import com.mindalliance.channels.pages.components.community.CommunityDetailsPanel;
 import com.mindalliance.channels.pages.components.community.CommunityStatusPanel;
@@ -17,6 +20,9 @@ import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -24,6 +30,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
@@ -73,6 +82,9 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     private WebMarkupContainer gotoIconsContainer;
     private ModalWindow detailsDialog;
     private WebMarkupContainer detailsContainer;
+    private WebMarkupContainer referencesContainer;
+    private boolean showingAttachments;
+    private WebMarkupContainer attachmentsContainer;
 
     public CommunityPage() {
         this( new PageParameters() );
@@ -89,7 +101,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     protected void addContent() {
         addCommunityDetails();
         addCommunityDetailsDialog();
-        // addReferences();
+        addReferences();
         addGotoLinks( getCommunityService(), getUser() );
         addSocial();
     }
@@ -118,8 +130,31 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         detailsContainer.setOutputMarkupId( true );
         addDetailLabels();
         addEditButton();
+        addAttachmentsContainer();
+        addAttachButton();
         addStatusPanel();
         getContainer().addOrReplace( detailsContainer );
+    }
+
+    private void addAttachmentsContainer() {
+        attachmentsContainer = new WebMarkupContainer( "attachmentsContainer" );
+        attachmentsContainer.setOutputMarkupId( true );
+        makeVisible( attachmentsContainer, showingAttachments );
+        attachmentsContainer.add(  new AttachmentPanel( "attachments", new Model<ModelObject>( getPlanCommunity() )) );
+        detailsContainer.addOrReplace( attachmentsContainer );
+    }
+
+    private void addAttachButton() {
+        AjaxLink<String> attachButton = new AjaxLink<String>( "attach" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                showingAttachments = !showingAttachments;
+                makeVisible( attachmentsContainer, showingAttachments );
+                target.add( attachmentsContainer );
+            }
+        };
+        attachButton.setVisible( isCommunityPlanner() );
+        detailsContainer.add( attachButton );
     }
 
     private void addDetailLabels() {
@@ -193,10 +228,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         return getCommunityService().isCommunityPlanner( getUser() );
     }
 
-    /* private void addReferences() {
+     private void addReferences() {
          List<Attachment> references = getReferences();
-         WebMarkupContainer referencesContainer = new WebMarkupContainer( "referencesContainer" );
-         getContainer().add( referencesContainer );
+         referencesContainer = new WebMarkupContainer( "referencesContainer" );
+         referencesContainer.setOutputMarkupId( true );
+         getContainer().addOrReplace( referencesContainer );
          ListView<Attachment> attachmentList = new ListView<Attachment>(
                  "references",
                  references ) {
@@ -205,7 +241,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
              protected void populateItem( ListItem<Attachment> item ) {
                  Attachment a = item.getModelObject();
                  ExternalLink documentLink = new ExternalLink( "attachment",
-                         a.getUrl(), getAttachmentManager().getLabel( getPlan(), a ) );
+                         a.getUrl(), getAttachmentManager().getLabel( getCommunityService(), a ) );
                  documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
                  item.add( documentLink );
                  addTipTitle(
@@ -216,13 +252,13 @@ public class CommunityPage extends AbstractChannelsBasicPage {
              }
          };
          referencesContainer.add( attachmentList );
-         referencesContainer.setVisible( !references.isEmpty() );
+         makeVisible( referencesContainer, !references.isEmpty() );
      }
 
      @SuppressWarnings("unchecked")
      public List<Attachment> getReferences() {
          return (List<Attachment>) CollectionUtils.select(
-                 getPlan().getAttachments(),
+                 getPlanCommunity().getAttachments(),
                  new Predicate() {
                      @Override
                      public boolean evaluate( Object object ) {
@@ -231,7 +267,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
                  }
          );
      }
- */
+
     private void addStatusPanel() {
         CommunityStatusPanel statusPanel = new CommunityStatusPanel( "status" );
         statusPanel.setVisible( getCommunityService().isCommunityPlanner( getUser() ) );
@@ -491,7 +527,14 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-        if ( change.isForInstanceOf( PlanCommunity.class ) ) {
+        if ( change.isForProperty( "attachments" ) ) {
+            showingAttachments = false;
+            makeVisible( attachmentsContainer, showingAttachments );
+            target.add(  attachmentsContainer );
+            addReferences();
+            target.add( referencesContainer );
+        }
+        else if ( change.isForInstanceOf( PlanCommunity.class ) ) {
             if ( change.isCollapsed() || change.isUpdated() ) {
                 detailsDialog.close( target );
                 detailsDialog = null;

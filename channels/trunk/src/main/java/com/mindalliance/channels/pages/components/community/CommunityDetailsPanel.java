@@ -56,7 +56,6 @@ public class CommunityDetailsPanel extends AbstractCommandablePanel {
         addName();
         addDescription();
         addLocale();
-        // addAttachments();
         addButtons();
     }
 
@@ -187,7 +186,7 @@ public class CommunityDetailsPanel extends AbstractCommandablePanel {
             MultiCommand multiCommand = new MultiCommand( getUsername(), "Update community details" );
             multiCommand.makeUndoable( false );
             multiCommand.setChange( new Change( Change.Type.Updated, getCommunity() ) );
-            if ( !name.equals( planCommunity.getName() ) ) {
+            if ( name != null && !name.equals( planCommunity.getName() ) ) {
                 multiCommand.addCommand( new UpdatePlanObject(
                         getUsername(),
                         getCommunity(),
@@ -195,7 +194,7 @@ public class CommunityDetailsPanel extends AbstractCommandablePanel {
                         name
                 ) );
             }
-            if ( !description.equals( planCommunity.getDescription()  ) ) {
+            if ( description != null && !description.equals( planCommunity.getDescription()  ) ) {
                 multiCommand.addCommand( new UpdatePlanObject(
                         getUsername(),
                         getCommunity(),
@@ -217,9 +216,9 @@ public class CommunityDetailsPanel extends AbstractCommandablePanel {
 
     private boolean hasChanged() {
         PlanCommunity planCommunity = getCommunity();
-        return !( name.equals( planCommunity.getName() )
-                && description.equals( planCommunity.getDescription() )
-                && ModelObject.areEqualOrNull( namedLocale, planCommunity.getCommunityLocale() ) );
+        return !( name != null && name.equals( planCommunity.getName() )
+                && ( description != null && description.equals( planCommunity.getDescription() ) )
+                && ModelObject.areEqualOrNull( getNamedLocale(), planCommunity.getCommunityLocale() ) );
     }
 
     private Place getNamedLocale() {
@@ -229,4 +228,5 @@ public class CommunityDetailsPanel extends AbstractCommandablePanel {
     private PlanCommunity getCommunity() {
         return (PlanCommunity) getModel().getObject();
     }
+
 }

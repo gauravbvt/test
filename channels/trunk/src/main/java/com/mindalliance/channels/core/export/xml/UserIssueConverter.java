@@ -72,6 +72,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Map<Long, Long> idMap = getIdMap( context );
         boolean importingPlan = isImportingPlan( context );
+        boolean loadingCommunity = isCommunityContext();
         UserIssue issue = null;
         try {
             Long issueId = Long.parseLong( reader.getAttribute( "id" ) );
@@ -106,7 +107,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                     }
                     reader.moveUp();
                 }
-                if ( importingPlan ) {
+                if ( importingPlan || loadingCommunity ) {
                     getDao().add( issue, issueId );
                 } else {
                     getDao().add( issue );

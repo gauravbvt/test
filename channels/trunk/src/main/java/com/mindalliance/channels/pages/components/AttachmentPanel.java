@@ -176,7 +176,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
                 addAttachmentList();
                 refresh( target );
-                update( target, new Change( Change.Type.Unknown ) );
+                update( target, new Change( Change.Type.Unknown, "attachments" ) );
             }
 
             @Override
