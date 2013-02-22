@@ -51,7 +51,7 @@ public class RequirementEditPanel extends AbstractCommandablePanel {
     private static final String ATTACHMENTS = "Attachments";
     private static final String ISSUES = "Issues";
 
-    private static final String[] HEADERS = {INFO, SENDERS, RECEIVERS, CARD/*, ATTACHMENTS*/, ISSUES};   // todo - COMMUNITY - reinstate when communities can persist attachements and issues
+    private static final String[] HEADERS = {INFO, SENDERS, RECEIVERS, CARD, ATTACHMENTS, ISSUES};
     private String selectedSection = INFO;
     private TextField<String> nameField;
     private TextArea<String> descField;

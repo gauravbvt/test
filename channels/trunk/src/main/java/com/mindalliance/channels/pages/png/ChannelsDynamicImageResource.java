@@ -83,7 +83,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
 
     protected File getFile( String fileName, PageParameters parameters ) {
         AttachmentManager attachmentManager = ( (Channels) Channels.get() ).getAttachmentManager();
-        return new File( attachmentManager.getUploadDirectory( getPlan( parameters ) ), fileName );
+        return new File( attachmentManager.getUploadDirectory( getCommunityService( parameters ) ), fileName );
     }
 
     private Plan getPlan( PageParameters parameters ) {

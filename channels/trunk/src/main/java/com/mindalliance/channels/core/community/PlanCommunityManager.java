@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.CommandListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -95,4 +96,16 @@ public interface PlanCommunityManager extends CommandListener {
      */
     PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user );
 
+    /**
+     * Return the directory where a given plan community is persisted.
+     * @param planCommunity a plan community
+     * @return a plan community
+     */
+    File getCommunityDirectory( PlanCommunity planCommunity );
+
+    /**
+     * Add a community listener.
+     * @param aCommunityListener a community listener
+     */
+    void addListener( CommunityListener aCommunityListener );
 }

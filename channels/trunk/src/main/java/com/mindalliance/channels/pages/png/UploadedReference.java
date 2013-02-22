@@ -8,6 +8,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 /**
  * Reference to an uploaded resource for the current plan.
@@ -36,7 +37,10 @@ public class UploadedReference extends ResourceReference {
 
     private String getUploadsDirectoryPath() {
         AttachmentManager attachmentManager = ( (Channels) Channels.get() ).getAttachmentManager();
-        return attachmentManager.getUploadDirectory( ChannelsUser.plan() ).getAbsolutePath();
+        File directory = ChannelsUser.current().getPlanCommunityUri() != null
+                ? attachmentManager.getUploadDirectory( ChannelsUser.current().getPlanCommunityUri() )
+                : attachmentManager.getUploadDirectory( ChannelsUser.current().getPlan() );
+        return directory.getAbsolutePath();
     }
 
 }

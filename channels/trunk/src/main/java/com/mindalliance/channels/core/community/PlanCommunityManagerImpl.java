@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -375,6 +376,16 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             return planCommunity;
         }
         return null;
+    }
+
+    @Override
+    public File getCommunityDirectory( PlanCommunity planCommunity ) {
+        return communityDefinitionManager.get( planCommunity.getUri() ).getCommunityDirectory();
+    }
+
+    @Override
+    public void addListener( CommunityListener aCommunityListener ) {
+        listeners.addListener( aCommunityListener );
     }
 
 

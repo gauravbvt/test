@@ -137,7 +137,7 @@ public class UserPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<Attachment> item ) {
                 Attachment a = item.getModelObject();
                 ExternalLink documentLink = new ExternalLink( "attachment",
-                        a.getUrl(), getAttachmentManager().getLabel( getPlan(), a ) );
+                        a.getUrl(), getAttachmentManager().getLabel( getCommunityService(), a ) );
                 documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
                 item.add( documentLink );
                 addTipTitle(

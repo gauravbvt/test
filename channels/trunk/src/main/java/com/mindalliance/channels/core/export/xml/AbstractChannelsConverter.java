@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.community.CommunityDao;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.export.ConnectionSpecification;
@@ -64,8 +65,12 @@ public abstract class AbstractChannelsConverter implements Converter {
         return context;
     }
 
+    boolean isInDomainContext() {
+        return getDao() instanceof PlanDao;
+    }
+
     PlanDao getPlanDao() {
-        return context.getPlanDao();
+        return getContext().getPlanDao();
     }
 
     CommunityDao getCommunityDao() {
@@ -256,7 +261,7 @@ public abstract class AbstractChannelsConverter implements Converter {
                         url = reader.getValue();
                         name = "";
                     }
-                    if ( attachmentManager.exists( getPlan(), url ) ) {
+                    if ( attachmentExists( url ) ) {
                         attachmentManager.addAttachment( new AttachmentImpl( url, type, name ), attachable );
                     } else {
                         LOG.warn( "Dropping attachment to {} (not found)", url );
@@ -265,6 +270,13 @@ public abstract class AbstractChannelsConverter implements Converter {
             }
             reader.moveUp();
         }
+    }
+
+    private boolean attachmentExists( String url ) {
+        if ( isInDomainContext() )
+            return getAttachmentManager().exists( getPlan(), url );
+        else
+            return getAttachmentManager().exists( getPlanCommunity(), url );
     }
 
     /**
@@ -373,6 +385,16 @@ public abstract class AbstractChannelsConverter implements Converter {
     protected Plan getPlan() {
         return getPlanDao().getPlan();
     }
+
+    /**
+     * Get current plan.
+     *
+     * @return a plan
+     */
+    protected PlanCommunity getPlanCommunity() {
+        return getCommunityDao().getPlanCommunity();
+    }
+
 
     /**
      * Get entity kind given the kind's name.

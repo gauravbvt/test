@@ -175,4 +175,9 @@ public interface CommunityService {
      */
     <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name );
 
+    /**
+     * Whether the community service is for a domain community.
+     * @return a boolean
+     */
+    boolean isForDomain();
 }

@@ -6,6 +6,8 @@
 
 package com.mindalliance.channels.core;
 
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Plan;
 
 import java.io.File;
@@ -31,20 +33,25 @@ public interface AttachmentManager {
     /**
      * URL points to a document.
      *
-     * @param plan a plan
+     * @param communityService a community service
      * @param url a url
      * @return a boolean
      */
+    boolean exists( CommunityService communityService, String url );
+
     boolean exists( Plan plan, String url );
+
+    boolean exists( PlanCommunity planCommunity, String url );
+
 
     /**
      * Get display label for an attachment.
      *
-     * @param plan a plan
+     * @param communityService a community service
      * @param attachment an attachment
      * @return a string
      */
-    String getLabel( Plan plan, Attachment attachment );
+    String getLabel( CommunityService communityService, Attachment attachment );
 
     /**
      * Get all media reference attachments.
@@ -57,19 +64,38 @@ public interface AttachmentManager {
     /**
      * Get upload directory.
      *
-     * @param plan the plan
+     * @param communityService a community service
+     * @return a string
+     */
+    File getUploadDirectory( CommunityService communityService );
+
+    /**
+     * Get upload directory.
+     *
+     * @param plan a plan
      * @return a string
      */
     File getUploadDirectory( Plan plan );
 
     /**
+     * Get upload directory.
+     *
+     * @param planCommunityUri a community uri
+     * @return a string
+     */
+    File getUploadDirectory( String planCommunityUri );
+
+
+    /**
      * Make full file path name from plan version-relative path.
      *
-     * @param plan the context
+     * @param communityService a community service
      * @param planRelativePath a string
      * @return a file
      */
-    File getUploadedFile( Plan plan, String planRelativePath );
+    File getUploadedFile( CommunityService communityService, String planRelativePath );
+
+    File getUploadedFile( Plan plan, String url );
 
     /**
      * Whether url points to an image.
@@ -122,10 +148,10 @@ public interface AttachmentManager {
     /**
      * Remove an url attached to a plan.
      *
-     * @param plan the plan
+     * @param communityService a community service
      * @param url the document url
      */
-    void remove( Plan plan, String url );
+    void remove( CommunityService communityService, String url );
 
     /**
      * Remove an attachment from an attachable object.
@@ -138,10 +164,10 @@ public interface AttachmentManager {
     /**
      * Upload a file and get an attachment to a model object.
      *
-     * @param plan a plan
+     * @param communityService a community service
      * @param upload what to upload
      * @return an attachment or null if failed
      */
-    Attachment upload( Plan plan, Upload upload );
+    Attachment upload( CommunityService communityService, Upload upload );
 
 }

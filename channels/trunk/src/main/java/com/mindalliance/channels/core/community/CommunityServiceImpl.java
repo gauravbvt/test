@@ -291,6 +291,11 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public boolean isForDomain() {
+        return getPlanCommunity().isDomainCommunity();
+    }
+
+    @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
         return safeFindOrCreate( clazz, name, null );
     }

@@ -11,6 +11,11 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Upload;
+import com.mindalliance.channels.core.community.CommunityDao;
+import com.mindalliance.channels.core.community.CommunityListener;
+import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -23,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -77,6 +81,11 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     private PlanManager planManager;
 
     /**
+     * Plan community manager.
+     */
+    private PlanCommunityManager planCommunityManager;
+
+    /**
      * Name of the file to store map into, relative to directory.
      */
     private String digestsMapFile = "digests.properties";
@@ -117,8 +126,6 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
      */
     private List<String> imageDomains = new ArrayList<String>();
 
-    private Resource dataDirectory;
-
     public FileBasedManager() {
     }
 
@@ -132,7 +139,14 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
             throw new IllegalArgumentException();
 
         this.planManager = planManager;
-        planManager.addListener( new Listener() );
+        planManager.addListener( new APlanListener() );
+    }
+
+    public void setPlanCommunityManager( PlanCommunityManager planCommunityManager ) {
+        if ( planCommunityManager == null )
+            throw new IllegalArgumentException();
+        this.planCommunityManager = planCommunityManager;
+        planCommunityManager.addListener( new ACommunityListener() );
     }
 
     private void reloadTags( Plan plan ) {
@@ -147,11 +161,19 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     /**
      * Remove a mapped url for a given plan.
      *
-     * @param plan the plan
-     * @param url  the url
+     * @param communityService a community service
+     * @param url              the url
      */
     @Override
-    public void remove( Plan plan, String url ) {
+    public void remove( CommunityService communityService, String url ) {
+        remove( url );
+    }
+
+    private void remove( Plan plan, String url ) {
+        remove(  url  );
+    }
+
+    private void remove( String url ) {
         documentMap.remove( url );
     }
 
@@ -183,14 +205,6 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         }
 
         return result;
-    }
-
-    public void setDataDirectory( Resource dataDirectory ) {
-        this.dataDirectory = dataDirectory;
-    }
-
-    public Resource getDataDirectory() {
-        return dataDirectory;
     }
 
     /**
@@ -257,14 +271,27 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         this.digestsMapFile = digestsMapFile;
     }
 
+    private void save( CommunityService communityService ) throws IOException  {
+        if ( communityService.isForDomain() )
+            save( communityService.getPlan() );
+        else
+            save( communityService.getPlanCommunity() );
+    }
+
+    private void save( PlanCommunity planCommunity ) throws IOException {
+        saveFor( new File( getUploadDirectory( planCommunity ), digestsMapFile ) );
+    }
+
     private void save( Plan plan ) throws IOException {
+        saveFor( new File( getUploadDirectory( plan ), digestsMapFile ) );
+    }
+
+    private void saveFor( File file ) throws IOException {
         Properties digests = new Properties();
         synchronized ( documentMap ) {
             for ( Entry<String, FileDocument> entry : documentMap.entrySet() )
                 digests.setProperty( entry.getKey(), entry.getValue().getDigest() );
         }
-
-        File file = new File( getUploadDirectory( plan ), digestsMapFile );
         LOG.debug( "Saving attachment digests into " + file.getAbsolutePath() );
         Writer out = new FileWriter( file );
         try {
@@ -276,9 +303,23 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     }
 
     @Override
+    public boolean exists( CommunityService communityService, String url ) {
+        return communityService.isForDomain()
+                ? exists( communityService.getPlan(), url )
+                : exists( communityService.getPlanCommunity(), url );
+    }
+
+    @Override
+    public boolean exists( PlanCommunity planCommunity, String url ) {
+        return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( planCommunity, url ) );
+    }
+
+
+    @Override
     public boolean exists( Plan plan, String url ) {
         return isValidUrl( url ) && ( !isFileDocument( url ) || isUploaded( plan, url ) );
     }
+
 
     private boolean isValidUrl( String url ) {
         if ( !url.startsWith( uploadPath ) )
@@ -291,8 +332,16 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         return true;
     }
 
+    private boolean isUploaded( PlanCommunity planCommunity, final String url ) {
+        return isUploaded( getUploadDirectory( planCommunity ), url );
+    }
+
     private boolean isUploaded( Plan plan, final String url ) {
-        return getUploadDirectory( plan ).listFiles( new FilenameFilter() {
+        return isUploaded( getUploadDirectory( plan ), url );
+    }
+
+    private boolean isUploaded( File directory, final String url ) {
+        return directory.listFiles( new FilenameFilter() {
             @Override
             public boolean accept( File dir, String name ) {
                 return url.substring( url.lastIndexOf( '/' ) + 1 ).equals( name );
@@ -300,15 +349,16 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         } ).length == 1;
     }
 
+
     private boolean isFileDocument( String url ) {
         return url.startsWith( uploadPath );
     }
 
     @Override
-    public Attachment upload( Plan plan, Upload upload ) {
+    public Attachment upload( CommunityService communityService, Upload upload ) {
 
         try {
-            return doUpload( plan, upload );
+            return doUpload( communityService, upload );
 
         } catch ( NoSuchAlgorithmException e ) {
             LOG.error( "System does not support SHA digests", e );
@@ -319,13 +369,13 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
         return null;
     }
 
-    private Attachment doUpload( Plan plan, Upload upload ) throws NoSuchAlgorithmException, IOException {
+    private Attachment doUpload( CommunityService communityService, Upload upload ) throws NoSuchAlgorithmException, IOException {
         AttachmentImpl attachment = null;
 
         MessageDigest messageDigest = MessageDigest.getInstance( "SHA" );
         InputStream in = new BufferedInputStream( new DigestInputStream( upload.getInputStream(), messageDigest ) );
         try {
-            FileDocument fileDocument = upload( in, messageDigest, createFile( getUploadDirectory( plan ),
+            FileDocument fileDocument = upload( in, messageDigest, createFile( getUploadDirectory( communityService ),
                     upload.getFileName() ) );
 
             synchronized ( documentMap ) {
@@ -333,7 +383,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
                 documentMap.put( actual.getUrl(), actual );
                 attachment = new AttachmentImpl( actual.getUrl(), upload.getSelectedType() );
                 attachment.setName( upload.getName() );
-                save( plan );
+                save( communityService );
             }
 
         } finally {
@@ -366,7 +416,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     }
 
     @Override
-    public String getLabel( Plan plan, Attachment attachment ) {
+    public String getLabel( CommunityService communityService, Attachment attachment ) {
         FileDocument fileDocument = documentMap.get( attachment.getUrl() );
         return attachment.getName().isEmpty() ? fileDocument == null ? attachment.getUrl()
                 : fileDocument.getFile().getName()
@@ -374,14 +424,34 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     }
 
     @Override
+    public File getUploadDirectory( CommunityService communityService ) {
+        return communityService.isForDomain()
+                ? getUploadDirectory( communityService.getPlan() )
+                : getUploadDirectory( communityService.getPlanCommunity() );
+    }
+
+    @Override
     public File getUploadDirectory( Plan plan ) {
-        File versionDirectory = planManager.getVersionDirectory( plan );
-        File uploadsDir = new File( versionDirectory, uploadPath );
+        return getUploadDirectory( planManager.getVersionDirectory( plan ) );
+    }
+
+    @Override
+    public File getUploadDirectory( String planCommunityUri ) {
+        return getUploadDirectory( planCommunityManager.getPlanCommunity( planCommunityUri ) );
+    }
+
+    private File getUploadDirectory( PlanCommunity planCommunity ) {
+        return getUploadDirectory(  planCommunityManager.getCommunityDirectory( planCommunity ) );
+    }
+
+    private File getUploadDirectory( File contextDirectory ) {
+        File uploadsDir = new File( contextDirectory, uploadPath );
         if ( !uploadsDir.exists() && uploadsDir.mkdir() )
             LOG.info( "Created upload directory: {}", uploadsDir.getAbsolutePath() );
 
         return uploadsDir;
     }
+
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -412,6 +482,17 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     @Override
     public boolean isUploadedFileDocument( String url ) {
         return url.startsWith( uploadPath );
+    }
+
+    @Override
+    public File getUploadedFile( CommunityService communityService, String relativePath ) {
+        return communityService.isForDomain()
+                ? getUploadedFile( communityService.getPlan(), relativePath )
+                : getUploadedFile( communityService.getPlanCommunity(), relativePath );
+    }
+
+    private File getUploadedFile( PlanCommunity planCommunity, String relativePath ) {
+        return new File( getUploadDirectory( planCommunity ), relativePath.replaceFirst( uploadPath, "" ) );
     }
 
     @Override
@@ -466,7 +547,7 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
     /**
      * Plan manager hook to react on plan changes.
      */
-    private class Listener implements PlanListener {
+    private class APlanListener implements PlanListener {
 
         private File[] getAttachedFiles( Plan plan ) {
             return getUploadDirectory( plan ).listFiles();
@@ -565,6 +646,31 @@ public class FileBasedManager implements AttachmentManager, InitializingBean {
             } catch ( IOException e ) {
                 LOG.error( "Unable to save attachments for plan " + planDao.getPlan().getUri(), e );
             }
+        }
+    }
+
+    /**
+     * Plan community manager hook to react on plan community changes.
+     */
+    private class ACommunityListener implements CommunityListener {
+
+        @Override
+        public void aboutToUnload( CommunityDao communityDao ) {
+            try {
+                save( communityDao.getPlanCommunity() );
+            } catch ( IOException e ) {
+                LOG.error( "Unable to save attachments for plan " + communityDao.getPlanCommunity().getUri(), e );
+            }
+        }
+
+        @Override
+        public void created( PlanCommunity planCommunity ) {
+            // do nothing
+        }
+
+        @Override
+        public void loaded( CommunityDao communityDao ) {
+            // do nothing - todo - remove unattached
         }
     }
 }

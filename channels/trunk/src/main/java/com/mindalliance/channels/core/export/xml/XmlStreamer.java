@@ -101,13 +101,13 @@ public class XmlStreamer implements ImportExportFactory {
     }
 
     @Override
-    public Importer createImporter( String userName, AbstractModelObjectDao planDao ) {
-        return new Context( planDao, userName );
+    public Importer createImporter( String userName, AbstractModelObjectDao dao ) {
+        return new Context( dao, userName );
     }
 
     @Override
-    public Exporter createExporter( String userName, AbstractModelObjectDao planDao ) {
-        return new Context( planDao, userName );
+    public Exporter createExporter( String userName, AbstractModelObjectDao dao ) {
+        return new Context( dao, userName );
     }
 
     public AttachmentManager getAttachmentManager() {

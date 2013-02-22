@@ -253,7 +253,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
          * @return a string
          */
         public String getUrlLabel() {
-            return getQueryService().getAttachmentManager().getLabel( getPlan(), attachment );
+            return getQueryService().getAttachmentManager().getLabel( getCommunityService(), attachment );
         }
 
         /**
