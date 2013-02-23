@@ -86,40 +86,53 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
         return new File( attachmentManager.getUploadDirectory( getCommunityService( parameters ) ), fileName );
     }
 
-    private Plan getPlan( PageParameters parameters ) {
-        Plan plan;
-        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.PLAN_PARM ) ) {
-            ChannelsUser user = ChannelsUser.current( getUserDao() );
-            plan = AbstractChannelsWebPage.getPlanFromParameters( getPlanManager(), user, parameters );
-            if ( !user.isParticipant( plan.getUri() ) )
-                return null;
+    protected CommunityService getCommunityService() {
+        return communityServiceFactory.getService( getPlanCommunity( ) );
+    }
+
+    private PlanCommunity getPlanCommunity() {
+        ChannelsUser user = ChannelsUser.current( getUserDao() );
+        if ( user.getPlan() != null ) {
+            return planCommunityManager.getDomainPlanCommunity( user.getPlan() );
         } else {
-            plan = ChannelsUser.plan();
+            return planCommunityManager.getPlanCommunity( user.getPlanCommunityUri() );
         }
-        return plan;
     }
 
     protected CommunityService getCommunityService( PageParameters parameters ) {
         return communityServiceFactory.getService( getPlanCommunity( parameters ) );
     }
 
-    protected PlanCommunity getPlanCommunity(PageParameters parameters ) {
-        return planCommunityManager.getPlanCommunity( getPlanCommunityUri( parameters ) );
-    }
-
-    public String getPlanCommunityUri( PageParameters parameters ) {
-        String communityUri = null;
+    public PlanCommunity getPlanCommunity( PageParameters parameters ) {
+        ChannelsUser user = ChannelsUser.current( getUserDao() );
         if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COMMUNITY_PARM ) ) {
             try {
-                communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COMMUNITY_PARM ).toString(), "UTF-8" );
+                String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COMMUNITY_PARM ).toString(), "UTF-8" );
+                PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri );
+                if ( planCommunity != null ) {
+                    return planCommunity;
+                } else {
+                    return null;
+                }
             } catch ( UnsupportedEncodingException e ) {
                 LOG.error( "Failed to decode community uri", e );
+                return null;
+            }
+        } else if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.PLAN_PARM ) ) {
+            try {
+                String planUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.PLAN_PARM ).toString(), "UTF-8" );
+                int planVersion = parameters.get( AbstractChannelsWebPage.VERSION_PARM ).toInt();
+                Plan plan = planManager.getPlan( planUri, planVersion );
+                if ( !user.isParticipant( planUri ) )
+                    return null;
+                else
+                    return planCommunityManager.getDomainPlanCommunity( plan );
+            } catch ( UnsupportedEncodingException e ) {
+                LOG.error( "Failed to decode community uri", e );
+                return null;
             }
         }
-        if ( communityUri == null ) {
-            communityUri = ChannelsUser.current().getPlanCommunityUri();
-        }
-        return communityUri;
+        return null;
     }
 
 

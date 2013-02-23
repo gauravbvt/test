@@ -194,7 +194,7 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     list.add( new DOTAttribute( "shape", "egg" ) );
                 // assuming a bitmap format
             } else {
-                list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
+                list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
                     list.add( new DOTAttribute( "shape", "box" ) );

@@ -84,7 +84,7 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
 
     private String getPlanImagePath() {
         Plan plan = getPlan();
-        String path = imagingService.getSquareIconUrl( plan, plan );
+        String path = imagingService.getSquareIconUrl( getCommunityService(), plan );
         return path == null ? "images/plan.png" : path;
     }
 

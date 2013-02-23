@@ -178,7 +178,7 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 }
                 // assuming a bitmap format
             } else {
-                list.add( new DOTAttribute( "image", getIcon( DisseminationMetaProvider.this.getAnalyst().getImagingService(),
+                list.add( new DOTAttribute( "image", getIcon( communityService, DisseminationMetaProvider.this.getAnalyst().getImagingService(),
                         vertex ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {

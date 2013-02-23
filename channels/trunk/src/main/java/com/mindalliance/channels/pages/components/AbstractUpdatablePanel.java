@@ -412,8 +412,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
                     new Model<String>( hasIssues ? "waived" : "no-error" ) ) );
             addTipTitle( component, new Model<String>( hasIssues ? "All issues waived" : "" ) );
 
-        }
-        else {
+        } else {
             component.add( new AttributeModifier( "class", new Model<String>( "error" ) ) );
             addTipTitle( component, new Model<String>( summary ) );
         }
@@ -430,7 +429,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
      */
     @Override
     public Plan getPlan() {
-        return getUser().getPlan();
+        Plan plan = getUser().getPlan();
+        if ( plan == null ) {
+            return getCommunityService().getPlan();
+        } else {
+            return plan;
+        }
     }
 
     public String getPlanCommunityUri() {
@@ -586,7 +590,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected Actor findActor( ChannelsUser user ) {
         List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
                 getUser(),
@@ -637,7 +641,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     }
 
     protected PlanCommunity getPlanCommunity() {
-        return planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
+        return getUser().getPlan() != null  // domain context else community context
+                ? planCommunityManager.getDomainPlanCommunity( getUser().getPlan() )
+                : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
     }
 
     protected PlanCommunity getDomainPlanCommunity() {
@@ -685,7 +691,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     public String makeCommunityPageUrl( PlanCommunity planCommunity ) {
         try {
-            PageParameters parameters = new PageParameters(  );
+            PageParameters parameters = new PageParameters();
             parameters.set(
                     AbstractChannelsBasicPage.COMMUNITY_PARM,
                     URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );

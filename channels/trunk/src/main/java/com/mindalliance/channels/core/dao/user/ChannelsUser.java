@@ -87,9 +87,8 @@ public class ChannelsUser implements UserDetails {
 
     public void setPlan( Plan plan ) {
         this.plan = plan;
-        if ( plan != null && planCommunityUri == null ) {
-            planCommunityUri = plan.getUri();
-        }
+        if ( plan != null )
+            planCommunityUri = null;
     }
 
     public void setCommunityService( CommunityService communityService ) {
@@ -103,6 +102,8 @@ public class ChannelsUser implements UserDetails {
 
     public void setPlanCommunityUri( String planCommunityUri ) {
         this.planCommunityUri = planCommunityUri;
+        if ( planCommunityUri != null )
+            plan = null;
     }
 
     public boolean isAnonymous() {
@@ -417,6 +418,16 @@ public class ChannelsUser implements UserDetails {
 
     public void setPhoto( String s ) {
         userInfo.setPhoto( s );
+    }
+
+    public static String contextUri() {
+        return current().getContextUri();
+    }
+
+    private String getContextUri() {
+        return plan != null
+                ? plan.getUri()
+                : planCommunityUri;
     }
 }
 

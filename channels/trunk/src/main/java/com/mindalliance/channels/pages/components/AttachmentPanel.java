@@ -332,7 +332,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         attachablePath,
                         attachment ) );
                 if ( attachment.isPicture() ) {
-                    imagingService.deiconize( getAttachee() );
+                    imagingService.deiconize( getCommunityService(), getAttachee() );
                 }
                 refresh( target );
                 update( target,
@@ -497,7 +497,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void postProcess( Attachment attachment ) {
         ModelObject attachee = getAttachee();
         if ( attachablePath.isEmpty() && attachment.isPicture() && attachee.isIconized() ) {
-            imagingService.iconize( getPlan(), attachment.getUrl(), attachee );
+            imagingService.iconize( getCommunityService(), attachment.getUrl(), attachee );
         }
     }
 

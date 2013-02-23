@@ -154,13 +154,16 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     public AbstractChannelsWebPage( PageParameters parameters ) {
         super( parameters );
-        setPlanCommunityFromParameters( parameters ); // can set plan if plan community specified.
-        if ( plan == null ) {
+        setPlanCommunityFromParameters( parameters ); // either community is specified or a plan or none (default plan then selected)
+        if ( getPlanCommunityUri() == null ) {
             setPlanFromParameters( parameters ); // sets at least a default plan
+/*
             if ( planCommunity == null && plan != null ) {
                 planCommunity = planCommunityManager.getDomainPlanCommunity( plan );
                 user.setPlanCommunityUri( planCommunity.getUri() );
+
             }
+ */
         }
     }
 
@@ -349,7 +352,9 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     public PlanCommunity getPlanCommunity() {
         if ( planCommunity == null ) {
-            planCommunity = planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
+            planCommunity = user.getPlan() != null  // domain context else community context
+                ? planCommunityManager.getDomainPlanCommunity( getPlan() )
+                : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
         }
         return planCommunity;
     }
@@ -732,9 +737,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public void setPlanCommunity( PlanCommunity planCommunity ) {  // sets user plan and community uri
         this.planCommunity = planCommunity;
         if ( planCommunity != null ) {
-            CommunityService communityService = communityServiceFactory.getService( planCommunity );
-            user.setCommunityService( communityService );
-            setPlan( communityService.getPlan() );
+            user.setPlanCommunityUri( planCommunity.getUri() );
         } else {
             user.setPlanCommunityUri( null );
         }

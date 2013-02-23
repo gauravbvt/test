@@ -423,7 +423,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     private String getPlanImagePath() {
         Plan plan = getPlan();
-        String path = imagingService.getSquareIconUrl( plan, plan );
+        String path = imagingService.getSquareIconUrl( getCommunityService(), plan );
         return path == null ? "images/plan.png" : path;
     }
 

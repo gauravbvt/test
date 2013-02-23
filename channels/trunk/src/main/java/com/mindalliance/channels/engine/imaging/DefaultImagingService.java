@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.imaging;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.InfoFormat;
@@ -121,12 +121,12 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public int[] getImageSize( Plan plan, String url ) {
+    public int[] getImageSize( CommunityService communityService, String url ) {
         int[] size = new int[2];
         size[0] = 0;
         size[1] = 0;
         try {
-            BufferedImage image = getImage( plan, url );
+            BufferedImage image = getImage( communityService, url );
             size[0] = image.getWidth();
             size[1] = image.getHeight();
         } catch ( IOException e ) {
@@ -135,8 +135,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return size;
     }
 
-    private BufferedImage getImage( Plan plan, String url ) throws IOException {
-        File uploadedFile = attachmentManager.getUploadedFile( plan, url );
+    private BufferedImage getImage( CommunityService communityService, String url ) throws IOException {
+        File uploadedFile = attachmentManager.getUploadedFile( communityService, url );
         BufferedImage image = isUploadedFileDocument( url )
                 ? ImageIO.read( uploadedFile )
                 : isFileDocument( url ) ? ImageIO.read( new File( url ) ) : ImageIO.read( new URL( url ) );
@@ -156,15 +156,15 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public boolean iconize( Plan plan, String url, ModelObject modelObject ) {
+    public boolean iconize( CommunityService communityService, String url, ModelObject modelObject ) {
         try {
-            BufferedImage image = getImage( plan, url );
+            BufferedImage image = getImage( communityService, url );
             int height = ICON_HEIGHTS[0];
             int width = height * image.getWidth() / image.getHeight();
 
             BufferedImage resized = resize( image, width, height );
-            ImageIO.write( resized, "png", getIconFile( modelObject, ".png" ) );
-            createNumberedIcons( plan, resized, width, modelObject );
+            ImageIO.write( resized, "png", getIconFile( communityService, modelObject, ".png" ) );
+            createNumberedIcons( communityService, resized, width, modelObject );
 
         } catch ( IOException e ) {
             LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ')',
@@ -174,11 +174,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return true;
     }
 
-    private boolean squarify( Plan plan, String url, ModelObject modelObject ) {
+    private boolean squarify( CommunityService communityService, String url, ModelObject modelObject ) {
         try {
-            BufferedImage image = getImage( plan, url );
+            BufferedImage image = getImage( communityService, url );
             BufferedImage icon = doSquarify( image );
-            ImageIO.write( icon, "png", getIconFile( modelObject, "_squared.png" ) );
+            ImageIO.write( icon, "png", getIconFile( communityService, modelObject, "_squared.png" ) );
             return true;
 
         } catch ( IOException e ) {
@@ -220,20 +220,20 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public void deiconize( ModelObject modelObject ) {
+    public void deiconize( CommunityService communityService, ModelObject modelObject ) {
         try {
-            File iconFile = getIconFile( modelObject, ".png" );
+            File iconFile = getIconFile( communityService, modelObject, ".png" );
             if ( iconFile.delete() )
                 LOG.debug( "Deleted {}", iconFile );
-            iconFile = getIconFile( modelObject, "_squared.png" );
+            iconFile = getIconFile( communityService, modelObject, "_squared.png" );
             if ( iconFile.delete() )
                 LOG.debug( "Deleted {}", iconFile );
 
             for ( int i = 1; i < ICON_HEIGHTS.length; i++ ) {
-                File file = getIconFile( modelObject, i + ".png" );
+                File file = getIconFile( communityService, modelObject, i + ".png" );
                 if ( file.delete() )
                     LOG.debug( "Deleted {}", file );
-                file = getIconFile( modelObject, i + "_negated.png" );
+                file = getIconFile( communityService, modelObject, i + "_negated.png" );
                 if ( file.delete() )
                     LOG.debug( "Deleted {}", file );
             }
@@ -243,16 +243,16 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         }
     }
 
-    private String getModelObjectIconsPath( Plan plan, ModelObject modelObject ) {
+    private String getModelObjectIconsPath( CommunityService communityService, ModelObject modelObject ) {
         try {
-            File iconFile = getIconFile( modelObject, ".png" );
+            File iconFile = getIconFile( communityService, modelObject, ".png" );
             if ( iconFile.exists() ) {
                 String path = iconFile.getAbsolutePath();
                 return path.substring( 0, path.indexOf( ".png" ) );
             }
 
-            if ( modelObject.hasImage() && iconize( plan, modelObject.getImageUrl(), modelObject ) )
-                return getModelObjectIconsPath( plan, modelObject );
+            if ( modelObject.hasImage() && iconize( communityService, modelObject.getImageUrl(), modelObject ) )
+                return getModelObjectIconsPath( communityService, modelObject );
 
         } catch ( IOException e ) {
             LOG.trace( "Exception when getting " + modelObject.getId(), e );
@@ -262,11 +262,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String getSquareIconUrl( Plan plan, ModelObject modelObject ) {
+    public String getSquareIconUrl( CommunityService communityService, ModelObject modelObject ) {
         try {
-            File squareIconFile = getIconFile( modelObject, "_squared.png" );
+            File squareIconFile = getIconFile( communityService, modelObject, "_squared.png" );
             if ( squareIconFile.exists() ) {
-                String prefix = getIconFilePrefix( ChannelsUser.plan() );
+                String prefix = getIconFilePrefix(communityService  );
 
                 String absolutePath = squareIconFile.getAbsolutePath();
                 String relPath = absolutePath.substring( prefix.length() );
@@ -275,9 +275,9 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                 return "icons" + File.separator + encodedPath;
             }
 
-            String path = getModelObjectIconsPath( plan, modelObject );
-            if ( path != null && squarify( plan, path + ".png", modelObject ) )
-                return getSquareIconUrl( plan, modelObject );
+            String path = getModelObjectIconsPath( communityService, modelObject );
+            if ( path != null && squarify( communityService, path + ".png", modelObject ) )
+                return getSquareIconUrl( communityService, modelObject );
 
         } catch ( IOException e ) {
             LOG.warn( "Failed to get square icon url", e );
@@ -286,26 +286,26 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return null;
     }
 
-    private String getIconFilePrefix( Plan plan ) throws IOException {
+    private String getIconFilePrefix( CommunityService communityService ) throws IOException {
         return iconDirectory.getFile().getAbsolutePath()
-                + File.separator + getFlattenedPlanUri( plan ) + File.separator;
+                + File.separator + getFlattenedContextUri( communityService ) + File.separator;
     }
 
     @Override
-    public File findIcon( Plan plan, String encodedPath ) throws IOException {
+    public File findIcon( CommunityService communityService, String encodedPath ) throws IOException {
         String decodedPath = URLEncoder.encode( encodedPath, "UTF-8" );
         decodedPath = decodedPath.replaceAll( SEPARATOR, File.separator );
-        return new File( getIconFilePrefix( plan ) + decodedPath );
+        return new File( getIconFilePrefix( communityService ) + decodedPath );
     }
 
-    private void createNumberedIcons( Plan plan, BufferedImage resized, int width, ModelObject modelObject )
+    private void createNumberedIcons( CommunityService communityService, BufferedImage resized, int width, ModelObject modelObject )
             throws IOException {
 
         for ( int i = 1; i < ICON_HEIGHTS.length; i++ )
-            createNumberedIcon( plan, resized, modelObject, width, ICON_HEIGHTS[i], i );
+            createNumberedIcon( communityService, resized, modelObject, width, ICON_HEIGHTS[i], i );
     }
 
-    private void createNumberedIcon( Plan plan,
+    private void createNumberedIcon( CommunityService communityService,
                                      BufferedImage resized,
                                      ModelObject modelObject,
                                      int width,
@@ -317,11 +317,11 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         icon.createGraphics();
         Graphics2D graphics = (Graphics2D) icon.getGraphics();
         graphics.drawImage( resized, 0, 0, resized.getWidth(), resized.getHeight(), null );
-        ImageIO.write( icon, "png", getIconFile( modelObject, number + ".png" ) );
+        ImageIO.write( icon, "png", getIconFile( communityService, modelObject, number + ".png" ) );
         String negatedIconUrl = getImageDirectory().getFile().getAbsolutePath() + NEGATED_ICON_URL;
         BufferedImage negatedIcon = ImageIO.read( new File( negatedIconUrl ) );
         graphics.drawImage( negatedIcon, 0, 0, null );
-        ImageIO.write( icon, "png", getIconFile( modelObject, number + NEGATED + ".png" ) );
+        ImageIO.write( icon, "png", getIconFile( communityService, modelObject, number + NEGATED + ".png" ) );
         graphics.dispose();
     }
 
@@ -358,8 +358,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return result;
     }
 
-    private File getIconFile( ModelObject modelObject, String suffix ) throws IOException {
-        return new File( getIconsDirectoryFor( modelObject ),
+    private File getIconFile( CommunityService communityService, ModelObject modelObject, String suffix ) throws IOException {
+        return new File( getIconsDirectoryFor( communityService, modelObject ),
                 sanitizeFileName( modelObject.getName() ) + suffix );
     }
 
@@ -396,8 +396,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
      * @return a directory
      * @throws IOException on errors
      */
-    private File getIconsDirectoryFor( ModelObject modelObject ) throws IOException {
-        return new File( getIconsAbsolutePathFor( modelObject ) );
+    private File getIconsDirectoryFor( CommunityService communityService, ModelObject modelObject ) throws IOException {
+        return new File( getIconsAbsolutePathFor( communityService, modelObject ) );
     }
 
     private File getBaseIconDirectory() throws IOException {
@@ -408,8 +408,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return iconDir;
     }
 
-    private String getIconsAbsolutePathFor( ModelObject modelObject ) throws IOException {
-        File subDir = new File( getBaseIconDirectory(), getFlattenedPlanUri( ChannelsUser.plan() ) );
+    private String getIconsAbsolutePathFor( CommunityService communityService, ModelObject modelObject ) throws IOException {
+        File subDir = new File( getBaseIconDirectory(), getFlattenedContextUri( communityService ) );
         if ( subDir.mkdir() )
             LOG.info( "Created {}", subDir );
 
@@ -420,13 +420,15 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return moSubDir.getAbsolutePath();
     }
 
-    private static String getFlattenedPlanUri( Plan plan ) {
-        return uriToDirName( plan.getVersionUri() );
+    private static String getFlattenedContextUri( CommunityService communityService ) {
+        return uriToDirName( communityService.isForDomain()
+                ? communityService.getPlan().getVersionUri()
+                : communityService.getPlanCommunity().getUri() );
     }
 
     @Override
-    public String findIconName( Plan plan, ModelObject modelObject ) {
-        String iconName = getModelObjectIconsPath( plan, modelObject );
+    public String findIconName( CommunityService communityService, ModelObject modelObject ) {
+        String iconName = getModelObjectIconsPath( communityService, modelObject );
         if ( iconName != null )
             return iconName;
 
@@ -454,22 +456,22 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String findIconName( Plan plan, Assignment assignment ) {
+    public String findIconName( CommunityService communityService, Assignment assignment ) {
         String iconName = null;
         Actor actor = assignment.getActor();
         if ( actor != null && !actor.isUnknown() ) {
-            iconName = findSpecificIcon( plan, actor, new ArrayList<Actor>() );
+            iconName = findSpecificIcon( communityService, actor, new ArrayList<Actor>() );
         }
         if ( iconName == null ) {
             Role role = assignment.getRole();
             if ( role != null && !role.isUnknown() ) {
-                iconName = findSpecificIcon( plan, role, new ArrayList<Role>() );
+                iconName = findSpecificIcon( communityService, role, new ArrayList<Role>() );
             }
         }
         if ( iconName == null ) {
             Organization org = assignment.getOrganization();
             if ( org != null && !org.isUnknown() ) {
-                iconName = findSpecificIcon( plan, org, new ArrayList<Organization>() );
+                iconName = findSpecificIcon( communityService, org, new ArrayList<Organization>() );
             }
         }
         return iconName == null
@@ -478,43 +480,43 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     @Override
-    public String findIconName( Plan plan, Specable part, Assignments assignments ) {
+    public String findIconName( CommunityService communityService, Specable part, Assignments assignments ) {
 
         Assignments partAssignments = assignments.withAll( part );
-        String specific = findSpecificIcon( plan, part, partAssignments );
+        String specific = findSpecificIcon( communityService, part, partAssignments );
         return specific == null ? findGenericIconName( part )
                 : specific;
     }
 
-    private String findSpecificIcon( Plan plan, Specable part, Assignments assignments ) {
+    private String findSpecificIcon( CommunityService communityService, Specable part, Assignments assignments ) {
 
-        String actorIcon = findSpecificIcon( plan, part.getActor(), assignments.getActualActors() );
+        String actorIcon = findSpecificIcon( communityService, part.getActor(), assignments.getActualActors() );
         if ( actorIcon != null )
             return actorIcon;
 
-        String roleIcon = findSpecificIcon( plan, part.getRole(), assignments.getRoles() );
-        return roleIcon == null ? findSpecificOrgIcon( ChannelsUser.plan(), part.getOrganization(),
+        String roleIcon = findSpecificIcon( communityService, part.getRole(), assignments.getRoles() );
+        return roleIcon == null ? findSpecificOrgIcon( communityService, part.getOrganization(),
                 assignments.getOrganizations() )
                 : roleIcon;
     }
 
-    private String findSpecificOrgIcon( Plan plan, Organization spec, List<Organization> candidates ) {
+    private String findSpecificOrgIcon( CommunityService communityService, Organization spec, List<Organization> candidates ) {
 
         Organization organization = candidates.size() == 1 ? candidates.get( 0 ) : spec;
         if ( organization != null ) {
-            String s = getModelObjectIconsPath( plan, organization );
+            String s = getModelObjectIconsPath( communityService, organization );
             if ( s != null )
                 return s;
 
             List<Organization> ancestors = organization.ancestors();
             for ( Organization ancestor : ancestors ) {
-                String path = getModelObjectIconsPath( plan, ancestor );
+                String path = getModelObjectIconsPath( communityService, ancestor );
                 if ( path != null )
                     return path;
             }
 
             for ( ModelEntity type : organization.getAllTypes() ) {
-                String path = getModelObjectIconsPath( plan, type );
+                String path = getModelObjectIconsPath( communityService, type );
                 if ( path != null )
                     return path;
             }
@@ -523,16 +525,16 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         return null;
     }
 
-    private <T extends ModelEntity> String findSpecificIcon( Plan plan, T spec, List<T> candidates ) {
+    private <T extends ModelEntity> String findSpecificIcon( CommunityService communityService, T spec, List<T> candidates ) {
         T entity = candidates.size() == 1 ? candidates.get( 0 ) : spec;
 
         if ( entity != null ) {
-            String s = getModelObjectIconsPath( plan, entity );
+            String s = getModelObjectIconsPath( communityService, entity );
             if ( s != null )
                 return s;
 
             for ( ModelEntity type : entity.getAllTypes() ) {
-                String path = getModelObjectIconsPath( plan, type );
+                String path = getModelObjectIconsPath( communityService, type );
                 if ( path != null )
                     return path;
             }

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.imaging;
 
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.ModelObject;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.query.Assignments;
 
@@ -35,39 +35,39 @@ public interface ImagingService {
      * Find the size of an image given its url.
      *
      *
-     * @param plan
+     * @param communityService community service
      * @param url a string
      * @return an int array
      */
-    int[] getImageSize( Plan plan, String url );
+    int[] getImageSize( CommunityService communityService,  String url );
 
     /**
      * Create/update PNG icons for model object from image at given url.
      *
      *
-     * @param plan
+     * @param communityService community service
      * @param url         a string
      * @param modelObject a model object
      * @return true if successful
      */
-    boolean iconize( Plan plan, String url, ModelObject modelObject );
+    boolean iconize( CommunityService communityService,  String url, ModelObject modelObject );
 
     /**
      * Remove icons for model object.
      *
      * @param modelObject a model object
      */
-    void deiconize( ModelObject modelObject );
+    void deiconize( CommunityService communityService, ModelObject modelObject );
 
     /**
      * Return url of squared icon..
      *
      *
-     * @param plan
+     * @param communityService community service
      * @param modelObject a model object
      * @return a string
      */
-    String getSquareIconUrl( Plan plan, ModelObject modelObject );
+    String getSquareIconUrl( CommunityService communityService,  ModelObject modelObject );
 
 
     /**
@@ -75,22 +75,22 @@ public interface ImagingService {
      *
      *
      *
-     * @param plan
+     * @param communityService community service
      * @param modelObject   a model object
      * @return a string
      */
-    String findIconName( Plan plan, ModelObject modelObject );
+    String findIconName( CommunityService communityService,  ModelObject modelObject );
 
     /**
      * Find icon name for given model object.
      *
      *
      *
-     * @param plan
+     * @param communityService community service
      * @param assignment   an assignment
      * @return a string
      */
-    String findIconName( Plan plan, Assignment assignment );
+    String findIconName( CommunityService communityService,  Assignment assignment );
 
     /**
      * Find icon name for given part.
@@ -98,12 +98,12 @@ public interface ImagingService {
      *
      *
      *
-     * @param plan
+     * @param communityService community service
      * @param part a specable
      * @param assignments a list of assignments
      * @return a string
      */
-    String findIconName( Plan plan, Specable part, Assignments assignments );
+    String findIconName( CommunityService communityService,  Specable part, Assignments assignments );
 
     /**
      * Get icon directory.
@@ -115,12 +115,12 @@ public interface ImagingService {
     /**
      * Find icon file given relative filename.
      *
-     * @param plan
+     * @param communityService community service
      * @param encodedPath a string
      * @return  a file
      * @throws java.io.IOException if fails
      */
-    File findIcon( Plan plan, String encodedPath ) throws IOException;
+    File findIcon( CommunityService communityService,  String encodedPath ) throws IOException;
 
     /**
      * Return path to "too_complex" image.

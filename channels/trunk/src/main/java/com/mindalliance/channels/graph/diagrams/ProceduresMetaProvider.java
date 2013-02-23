@@ -255,7 +255,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
                 // assuming a bitmap format
             } else {
                 list.add( new DOTAttribute( "image",
-                                            getIcon( ProceduresMetaProvider.this.getAnalyst().getImagingService(),
+                                            getIcon( communityService, ProceduresMetaProvider.this.getAnalyst().getImagingService(),
                                                      assignment ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {
@@ -337,11 +337,11 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
         }
     }
 
-    protected String getIcon( ImagingService imagingService, Assignment assignment ) {
+    protected String getIcon( CommunityService communityService, ImagingService imagingService, Assignment assignment ) {
         String iconName;
         String[] lines = assignment.getFullTitle( "|" ).split( "\\|" );
         int numLines = Math.min( lines.length, 5 );
-        iconName = imagingService.findIconName( getPlan(), assignment );
+        iconName = imagingService.findIconName( communityService, assignment );
 
         return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
     }

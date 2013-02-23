@@ -141,7 +141,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
                                                        Hierarchical vertex,
                                                        boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), (ModelObject) vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), (ModelObject) vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
@@ -180,7 +180,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             return list;
         }
 
-        private String getIcon( ImagingService imagingService, ModelObject modelObject ) {
+        private String getIcon( CommunityService communityService, ImagingService imagingService, ModelObject modelObject ) {
             String iconName;
             String imagesDirName;
             try {
@@ -191,7 +191,7 @@ public class HierarchyMetaProvider extends AbstractMetaProvider {
             String label = getIdentifiableLabel( modelObject );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
-            iconName = imagingService.findIconName( getPlan(), modelObject );
+            iconName = imagingService.findIconName( communityService, modelObject );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
     }

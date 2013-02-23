@@ -145,7 +145,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
         @Override
         public List<DOTAttribute> getVertexAttributes( CommunityService communityService, Agency vertex, boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "image", getIcon( getAnalyst().getImagingService(), vertex ) ) );
+            list.add( new DOTAttribute( "image", getIcon( communityService, getAnalyst().getImagingService(), vertex ) ) );
             list.add( new DOTAttribute( "labelloc", "b" ) );
             if ( highlighted ) {
                 list.add( new DOTAttribute( "shape", "box" ) );
@@ -167,7 +167,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             return list;
         }
 
-        private String getIcon( ImagingService service, Agency agency ) {
+        private String getIcon( CommunityService communityService, ImagingService service, Agency agency ) {
             String iconName;
             String imagesDirName;
             try {
@@ -179,7 +179,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );
             iconName = service.findIconName(
-                    getPlan(),
+                    communityService,
                     agency.getPlanOrganization() == null
                             ? agency
                             : agency.getPlanOrganization() );

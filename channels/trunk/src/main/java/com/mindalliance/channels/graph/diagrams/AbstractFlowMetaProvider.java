@@ -1,6 +1,6 @@
 package com.mindalliance.channels.graph.diagrams;
 
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Flow;
@@ -188,7 +188,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
         }
     }
 
-    protected String getIcon( ImagingService imagingService, Node node ) {
+    protected String getIcon( CommunityService communityService, ImagingService imagingService, Node node ) {
         String imagesDirName;
         String negated = "";
         try {
@@ -223,7 +223,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                                         ? ImagingService.NEGATED
                                         : "";
                 iconName = imagingService.findIconName(
-                        ChannelsUser.plan(),
+                        communityService,
                         part,
                         getQueryService().getAssignments() );
             }
