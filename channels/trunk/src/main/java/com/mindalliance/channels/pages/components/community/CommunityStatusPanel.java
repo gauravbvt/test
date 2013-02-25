@@ -51,8 +51,8 @@ public class CommunityStatusPanel extends AbstractCommandablePanel {
         Label toggleToLabel = new Label(
                 "toggleTo",
                 getPlanCommunity().isClosed()
-                        ? "Open it"
-                        : "Close it"
+                        ? "Open"
+                        : "Close"
         );
         toggleLink.add( toggleToLabel );
         statusContainer.add( toggleLink );

@@ -582,6 +582,7 @@ span.status {
 	font-size: 12px;
 	width: 100%;
 	padding: 5px 0 0 0;
+	line-height: 200%;
 }
 
 span.locale {
@@ -2163,7 +2164,8 @@ div.controls {
 
 a.button,
 input[type='button'],
-table.data-table.big a.link {
+table.data-table.big a.link,
+span.status a {
     background: #e8e8e8;
     border: 1px solid #A7A9AC;
     color: #666666;
@@ -2176,6 +2178,7 @@ table.data-table.big a.link {
     text-transform: uppercase;
     font-family: arial;
     line-height: 100%;
+    font-style: normal;
 }
 
 
