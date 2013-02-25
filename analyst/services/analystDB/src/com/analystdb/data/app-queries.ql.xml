@@ -42,7 +42,7 @@ order by i.sequence
     <query name="approachIssueCount">
         <query-param name="project" type="java.lang.Long"/>
         select a as approach, (select count(ia.issue) from IssueApproach ia where ia.approach=a.id) as issues
-from Approach a
+from Approach a join fetch a.interview
 where a.interview.resource.project.id = :project
 order by a.name
     </query>
@@ -198,8 +198,8 @@ and exists (select ia.id.approachId from IssueApproach ia where ia.id.issueId = 
     </query>
     <query name="issueApproaches">
         <query-param name="issue" type="java.lang.Long"/>
-        select ia.approach
-from IssueApproach ia
+        select ia.approach as approach
+from IssueApproach ia join fetch ia.approach.interview
 where ia.id.issueId = :issue
     </query>
 </hibernate-mapping>

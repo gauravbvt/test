@@ -2,13 +2,14 @@ var interviewing = false;
 var switchInterview = null;
 var switchFlow = null;
 var switchIssue = null;
+var switchApproach = null;
 
 dojo.declare("wizard", wm.Page, {
 	"preferredDevice": "desktop",
 	start: function() {
 		
 	},
-	logoutButtonClick: function(inSender) {
+ 	logoutButtonClick: function(inSender) {
 	},
     insertInterview: function(resource,scheduled) {
             var live = this.interviewLiveVariable1;
@@ -179,7 +180,7 @@ dojo.declare("wizard", wm.Page, {
         live.update();
 	},
 	removeButton3Click: function(inSender) {
-        this.allRemoveButtonClick(inSender,this.availableGrid3,this.selectedGrid3,this.issueFlowsVariable);		
+        this.allRemoveButtonClick(inSender,this.availableGrid3,this.selectedGrid3,this.issueCommentFlowsVariable);		
 	},
     addButton4Click: function(inSender) {
         var availableGrid = this.availableGrid4;
@@ -233,6 +234,18 @@ dojo.declare("wizard", wm.Page, {
         }
         switchIssue = issueComment;
         switchInterview = issueComment.interview.data;
+        if ( this.interviewDojoGrid1.getRowCount() == 0 )
+            this.button2.click(); 
+        else
+            this.showInterviews.update();
+ 	},
+    switchToApproach: function(inSender) {
+    	var approach = inSender.selectedItem.data;
+        if ( approach.approach ) {
+            approach = approach.approach.data;
+        }
+        switchApproach = approach;
+        switchInterview = approach.interview.data;
         if ( this.interviewDojoGrid1.getRowCount() == 0 )
             this.button2.click(); 
         else
@@ -303,6 +316,21 @@ dojo.declare("wizard", wm.Page, {
         live.operation = "insert";
         live.sourceData.setData(data);
         live.update();
+	},
+	interviewApproachesVariable1Success: function(inSender, inDeprecated) {
+        if ( switchApproach ) {
+            var id = switchApproach.id;
+            switchApproach = null;
+            var approaches = this.approachDojoGrid.dataSet.data._list;
+            for ( i=0; i<approaches.length && approaches[i].data.id != id; i++ );
+            if ( i !== approaches.length ) {
+                this.approachDojoGrid.select( i );
+            }
+        }		
+	},
+	documentsNewButtonClick: function(inSender) {
+        var cc = this.documentcategoryLiveVariable1.getData()[0];
+		this.documentsDojoGrid.addRow({documentCategory: cc,document:"(New Document)"}, true, false)
 	},
 	_end: 0
 });

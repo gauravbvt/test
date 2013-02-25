@@ -6,7 +6,7 @@ import com.analystdb.data.Interview;
 
 
 /**
- * Generated for query "upcomingInterviews" on 02/11/2013 20:47:46
+ * Generated for query "upcomingInterviews" on 02/12/2013 13:52:49
  * 
  */
 public class UpcomingInterviewsRtnType {

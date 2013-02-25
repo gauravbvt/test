@@ -5,19 +5,19 @@ import com.analystdb.data.Approach;
 
 
 /**
- * Generated for query "issueApproaches" on 02/11/2013 20:47:46
+ * Generated for query "issueApproaches" on 02/12/2013 13:52:49
  * 
  */
 public class IssueApproachesRtnType {
 
-    private Approach c0;
+    private Approach approach;
 
-    public Approach getC0() {
-        return c0;
+    public Approach getApproach() {
+        return approach;
     }
 
-    public void setC0(Approach c0) {
-        this.c0 = c0;
+    public void setApproach(Approach approach) {
+        this.approach = approach;
     }
 
 }

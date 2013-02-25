@@ -1624,7 +1624,7 @@ wm.types = {
 		},
 		"com.analystdb.data.output.IssueApproachesRtnType": {
 			"fields": {
-				"c0": {
+				"approach": {
 					"exclude": [],
 					"fieldOrder": 0,
 					"fieldSubType": null,

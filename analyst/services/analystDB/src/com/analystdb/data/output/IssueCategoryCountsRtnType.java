@@ -5,7 +5,7 @@ import com.analystdb.data.IssueCategory;
 
 
 /**
- * Generated for query "issueCategoryCounts" on 02/11/2013 20:47:46
+ * Generated for query "issueCategoryCounts" on 02/12/2013 13:52:49
  * 
  */
 public class IssueCategoryCountsRtnType {
