@@ -8,6 +8,7 @@ package com.mindalliance.channels.core.command;
 
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -33,7 +34,7 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     private static final Logger LOG = LoggerFactory.getLogger( CommanderFactoryImpl.class );
 
-    private final Map<String, Commander> commanders = new ConcurrentHashMap<String, Commander>();
+    private final Map<PlanCommunity, Commander> commanders = new ConcurrentHashMap<PlanCommunity, Commander>();
 
     private ImportExportFactory importExportFactory;
 
@@ -60,19 +61,19 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
 
     @Override
     public Commander getCommander( CommunityService communityService ) {
-        String planCommunityUri = communityService.getPlanCommunity().getUri();
-        Commander commander = commanders.get( planCommunityUri );
+        PlanCommunity planCommunity = communityService.getPlanCommunity();
+        Commander commander = commanders.get( planCommunity );
         if ( commander != null )
             return commander;
 
         synchronized ( this ) {
             // Check if someone else beat us at initialization
-            Commander cmd = commanders.get( planCommunityUri );
+            Commander cmd = commanders.get( planCommunity );
             if ( cmd != null )
                 return cmd;
             communityService.clearCache();
             DefaultCommander newCommander = new DefaultCommander();
-            commanders.put( planCommunityUri, newCommander );
+            commanders.put( planCommunity, newCommander );
             newCommander.setCommunityService( communityService );
             newCommander.setPlanManager( planManager );
             newCommander.setLockManager( new DefaultLockManager( ) );
