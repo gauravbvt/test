@@ -2378,7 +2378,7 @@ ul.attach {
     padding: 15px;
     width: 342px;
     list-style: none;
-    border: 1px dashed #cccccc;
+    border: 1px dashed #999999;
     color: #666666;
 }
 
@@ -2406,10 +2406,14 @@ ul.attach li.controls {
 }
 
 ul.attach li.controls select {
+   background: none repeat scroll 0 0 #E8E8E8;
+   border: 1px solid #999999;
 	font-size: 12px;
 }
 
 ul.attach li.controls input[type="text"] {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
     margin: 10px 0 0;
     width: 100%;
 }
