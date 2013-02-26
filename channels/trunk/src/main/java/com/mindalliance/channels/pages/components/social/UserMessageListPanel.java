@@ -128,10 +128,6 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         add( showHideBroadcastsLink );
     }
 
-    private boolean isPlanner() {
-        return getUser().isPlanner();
-    }
-
     private void addShowHideBroadcastsLabel() {
         showHideBroadcastsLabel = new Label(
                 "hideShowBroadcasts",
@@ -450,7 +446,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 target,
                 Change.message(
                         "Message will be emailed to "
-                                + ( message.isBroadcast( getUser() )
+                                + ( message.isBroadcast( getUser(), getPlanCommunity() )
                                 ? message.isToAllPlanners()
                                 ? "all planners"
                                 : "all users"
@@ -470,7 +466,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         while ( iterator.hasNext() && userMessages.size() < numberToShow ) {
             UserMessage userMessage = iterator.next();
             if ( userMessage != null ) {
-                if ( !( privateOnly && userMessage.isBroadcast( user ) ) ) {
+                if ( !( privateOnly && userMessage.isBroadcast( user, getPlanCommunity() ) ) ) {
                     userMessages.add( userMessage );
                 }
             }

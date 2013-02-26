@@ -65,9 +65,9 @@ public class UserMessage extends UserStatement {
         this.whenNotificationSent = whenNotificationSent;
     }
 
-    public boolean isBroadcast( ChannelsUser currentUser ) {
+    public boolean isBroadcast( ChannelsUser currentUser, PlanCommunity planCommunity ) {
         return toUsername == null // legacy - all planners
-                || toUsername.equals( ChannelsUserInfo.PLANNERS ) && currentUser.isPlanner()
+                || toUsername.equals( ChannelsUserInfo.PLANNERS ) && currentUser.isPlanner( planCommunity.getPlanUri() )
                 || toUsername.equals( ChannelsUserInfo.USERS );
     }
 

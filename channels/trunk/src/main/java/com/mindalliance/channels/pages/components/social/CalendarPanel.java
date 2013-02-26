@@ -62,7 +62,7 @@ public class CalendarPanel extends AbstractSocialListPanel {
                  );
         loginInfo.add( calendarLoginLink );
         add( loginInfo );
-        loginInfo.setVisible( getUser().isPlanner() );
+        loginInfo.setVisible( isPlanner() );
     }
 
     private String getCalendarPrivateTicket() {

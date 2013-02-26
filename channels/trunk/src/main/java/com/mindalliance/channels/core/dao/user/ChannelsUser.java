@@ -260,15 +260,6 @@ public class ChannelsUser implements UserDetails {
         return userInfo.isPlanner( uri );
     }
 
-    /**
-     * Whether user is planner for current plan.
-     *
-     * @return a boolean
-     */
-    public boolean isPlanner() {
-        return isPlanner( getPlan().getUri() );
-    }
-
     @Override
     public String toString() {
         return getUsername();

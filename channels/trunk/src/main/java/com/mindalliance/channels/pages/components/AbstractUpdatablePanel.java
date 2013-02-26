@@ -701,5 +701,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         }
     }
 
+    protected boolean isPlanner() {
+        return getUser().isPlanner( getPlanCommunity().getPlanUri() );
+    }
+
 
 }

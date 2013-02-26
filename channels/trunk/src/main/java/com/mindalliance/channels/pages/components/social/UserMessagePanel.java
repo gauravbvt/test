@@ -45,7 +45,7 @@ public class UserMessagePanel extends UserStatementPanel {
     }
 
     protected String getCssClasses() {
-        String cssClasses = getUserMessage().isBroadcast( getUser() )
+        String cssClasses = getUserMessage().isBroadcast( getUser(), getPlanCommunity() )
                 ? "broadcast "
                 : "private ";
         return cssClasses + super.getCssClasses();

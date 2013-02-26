@@ -149,7 +149,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     private String getMessagesTabTitle() {
-        return getUser().isPlanner() ? "Messages" : "News";
+        return isPlanner() ? "Messages" : "News";
     }
 
     private String getSelectedTabTitle() {
