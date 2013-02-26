@@ -568,8 +568,9 @@ span.plan-client {
 }
 
 div.plan-references {
-	float: left;
-	margin: 0 35px;
+    float: left;
+    margin: 0 0 0 35px;
+    width: 360px;
 }
 
 span.locale,
@@ -595,13 +596,26 @@ span.status div {
 	display: inline;
 }
 
+span.attachments {
+    display: block;
+    float: left;
+    width: 360px;
+    padding: 30px 0 0 0;
+}
+
 div.plan-references h2,
-h3.resolved, h3.not-resolved {
+h3.resolved, h3.not-resolved,
+span.attachments h2 a {
+    background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+    color: #333333;
+    float: left;
     font-size: 12px;
     margin: 0 0 10px;
     padding: 5px 9px;
     text-transform: uppercase;
+    width: 100%;
 }
 
 h3.resolved, h3.not-resolved {
@@ -609,17 +623,31 @@ h3.resolved, h3.not-resolved {
     margin: 20px 0 10px;
 }
 
-div.plan-references ul {
+div.plan-references ul,
+span.attachments ul.attach.list {
     list-style: none outside none;
     margin: 0;
-    padding: 0 0 3px 14px;
+    padding: 5px 0 3px 14px;
+    float: left;
+    border: none;
+    color: #333333;
 }
 
-div.plan-references ul li {
+span.attachments ul.attach.list {
+	padding-top: 15px;
+}
+
+div.plan-references ul li,
+span.attachments ul.attach.list li {
     background: url('../images/bullet-black.png') no-repeat scroll 0 5px transparent;
     list-style: none outside none;
     margin: 0;
     padding: 0 0 7px 15px;
+}
+
+span.attachments ul.attach.list li {
+    float: left;
+    width: 350px;
 }
 
 div.quick-icons {
@@ -2346,9 +2374,18 @@ ul.attach ul.menu {
 ul.attach {
     display: block;
     float: left;
-    margin: 10px 0 0 20px;
-    padding: 0;
+    margin: 15px 0 0 0;
+    padding: 15px;
+    width: 342px;
+    list-style: none;
+    border: 1px dashed #cccccc;
+    color: #666666;
 }
+
+ul.attach input[type="button"] {
+	margin: 15px 0 0 0;
+}
+
 /*
 ul.attach {
     border-bottom: 1px dotted #999999;
@@ -2368,6 +2405,15 @@ ul.attach li.controls {
     padding: 0;
 }
 
+ul.attach li.controls select {
+	font-size: 12px;
+}
+
+ul.attach li.controls input[type="text"] {
+    margin: 10px 0 0;
+    width: 100%;
+}
+
 ul.attach li a {
     float: left;
     font-weight: bold;
@@ -2378,10 +2424,11 @@ ul.attach li a:hover {
 }
 
 ul.attach li ul.menu,
-ul.attach li ul.menu li {
+ul.attach.list li ul.menu li {
     float: right;
     margin: 0 0 0 5px;
     padding: 0;
+    width: auto;
 }
 
 ul.attach li ul.menu li a {
