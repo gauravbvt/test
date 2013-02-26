@@ -242,7 +242,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
             columns.add( makeColumn( "Name", "name", null, EMPTY, "description" ) );
             columns.add( makeColumn( "Locale", "locale.name", null, EMPTY, "locale.description" ) );
             columns.add( makeColumn( "Domain plan", "plan.name", null, EMPTY, "plan.description" ) );
-            columns.add( makeColumn( "Plan URI", "plan.versionUri", EMPTY ) );
+            columns.add( makeColumn( "Plan URI", "plan.versionUri", null, EMPTY, "plan.versionUri" ) );
             columns.add( makeColumn( "I participate", "userParticipates", EMPTY ) );
             columns.add( makeColumn( "Status", "status", EMPTY ) );
             columns.add( makeExternalLinkColumn(
