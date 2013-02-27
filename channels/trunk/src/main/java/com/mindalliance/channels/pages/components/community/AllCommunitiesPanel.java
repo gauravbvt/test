@@ -249,7 +249,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
                     "",
                     "communityUrl",
                     null,
-                    "Go>",
+                    "Go",
                     false   // stay on same page
             ) );
             // Provider and table

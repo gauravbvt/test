@@ -29,10 +29,8 @@ div.issues-contents li {
 
 div.issues-contents h1.subtitle {
 	font-size: 28px;
-	padding: 30px 0 10px;
 	text-align: center;
 	font-family:Georgia, "Times New Roman", Times, serif;
-	line-height: 150%;
 }
 
 div.issues-contents h2.description {

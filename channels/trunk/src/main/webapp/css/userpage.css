@@ -578,12 +578,10 @@ span.description,
 span.status {
 	display: block;
 	float: left;
-	font-family: georgia;
-	font-style: italic;
-	font-size: 12px;
+	font-size: 11px;
 	width: 100%;
 	padding: 5px 0 0 0;
-	line-height: 200%;
+	line-height: 150%;
 }
 
 span.locale {
@@ -600,7 +598,7 @@ span.attachments {
     display: block;
     float: left;
     width: 360px;
-    padding: 30px 0 0 0;
+    padding: 20px 0 0;
 }
 
 div.plan-references h2,
@@ -616,6 +614,10 @@ span.attachments h2 a {
     padding: 5px 9px;
     text-transform: uppercase;
     width: 100%;
+}
+
+span.attachments h2 a {
+    background: url("../images/link.more.png") no-repeat scroll 360px 8px #E8E8E8;	
 }
 
 h3.resolved, h3.not-resolved {
@@ -672,6 +674,14 @@ div.goto a {
     width: 87px;
 }
 
+div.quick-icons.big div.goto a {
+    width: 345px;
+    height: 34px;
+    margin: 0 34px 20px 0;
+    padding: 15px 15px 13px 15px;
+    background: url('../images/right-home-big.png') no-repeat scroll 340px center #E8E8E8;
+}
+
 div.goto a:hover {
 	text-decoration:none;
 	background:#ffffff;
@@ -684,6 +694,11 @@ div.goto img.icon {
 	border:0;
 }
 
+div.quick-icons.big div.goto img.icon {
+    float: left;
+    padding: 0 15px 0 0;
+}
+
 div.goto span {
     color: #333333;
     display: block;
@@ -693,6 +708,14 @@ div.goto span {
     text-align: center;
     text-transform: uppercase;
     width: 87px;
+}
+
+div.quick-icons.big div.goto span {
+    color: #666666;
+    font-size: 14px;
+    padding: 6px 0 0;
+    text-align: left;
+    width: 250px;	
 }
 
 div.goto a:hover span {
@@ -711,6 +734,53 @@ div.right-accordion {
 
 div.title-desc {
 	padding: 0 0 10px 0;
+}
+
+h1.subtitle {
+    background: none repeat scroll 0 0 papayawhip;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+    font-family: georgia;
+    font-size: 28px;
+    font-weight: normal;
+    margin: 10px 0;
+    padding: 10px 0;
+    text-align: center;
+    text-transform: capitalize;
+    color: #666666;
+}
+
+div.new-community,
+div.participation {
+    border: 1px dashed #999999;
+    float: left;
+    margin: 10px 0 0;
+    padding: 15px;
+    width: 734px;
+}
+
+div.new-community h3,
+div.participation h4 {
+    float: left;
+    font-size: 12px;
+    padding: 4px 0 0;
+    text-transform: uppercase;	
+}
+
+div.new-community select,
+div.participation select {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    float: right;
+    font-size: 11px;
+    padding: 3px;
+    width: 300px;	
+}
+
+div.new-community input[type="button"],
+div.participation input[type="button"] {
+    clear: both;
+    margin: 10px 0 0;
 }
 
 /* ---- Social ----- */
@@ -2008,27 +2078,33 @@ div.wicket-aa ul li:hover {
 
 div.wicket-aa ul li.selected { background-color: #e6e6e6; padding: 2px; margin:0; }
 
-    /* participation user name input */
+/* participation user name input */
 
 .participation div {
-    margin-top: 10px;
+    float: left;
+    padding-top: 10px;
+    width: 100%;
 }
 
 .participation ul {
     list-style-type: none;
 }
 
-.participation h4 {
+div.participation h4 {
     border-bottom: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
-    color: #666666;
-    margin: 10px 0;
-    padding: 2px 0 2px 5px;
-    text-transform: uppercase;
+    float: left;
+    margin-bottom: 10px;
+    padding-bottom: 3px;
+    width: 100%;
 }
 
 .participation input[type='text'] {
-    width: 50%;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    float: right;
+    font-size: 11px;
+    padding: 3px;
+    width: 292px;
 }
 
 /* issue details */
@@ -2117,7 +2193,7 @@ div.issues ol li table span a.menubar:hover {
 }
 
 table.issue-details {
-    margin: 10px 0 0 0;
+    margin: 10px 0;
 }
 
 
@@ -2131,7 +2207,7 @@ ul.menu {
 
 
 table.issue-details td {
-    padding: 10px 5px;
+    padding: 5px;
 }
 
 .issues li {

@@ -19,9 +19,11 @@
     <div wicket:id="agenciesTable">[user participation table]</div>
     <div class="participation" wicket:id="registeringContainer">
         <h4>New registration</h4>
-        Register organization named <input wicket:id="orgName" type="text" width="80"/>
-        <div wicket:id="placeholdersContainer">
-            as
+        <div class="new-org-container">
+        Organization Name <input wicket:id="orgName" type="text" width="80"/>
+        </div>
+        <div class="placeholder-cont" wicket:id="placeholdersContainer">
+            Organization Registered As
             <select wicket:id="placeholders"><option>org name</option></select>
         </div>
     </div>
