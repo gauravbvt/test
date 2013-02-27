@@ -65,7 +65,7 @@ div.protocols-contents h4 {
 }
 
 div.protocols-contents div.about h4,
-div.protocols-contents div.participation h4,
+div.protocols-contents div.participation-protocols h4,
 div.protocols-contents div.documentation-top label {
     background: none repeat scroll 0 0 #c3d9ff;
     font-size: 14px;
@@ -127,7 +127,7 @@ div.protocols-contents label.eois-cont {
 }
 
 div.protocols-contents div.about,
-div.protocols-contents div.participation,
+div.protocols-contents div.participation-protocols,
 div.protocols-contents div.documentation-top {
     background: #E8E8E8;
     border-left: 1px solid #6B8ABE;
@@ -144,7 +144,7 @@ div.protocols-contents div.about table td {
     vertical-align: top;
 }
 
-div.protocols-contents div.participation p {
+div.protocols-contents div.participation-protocols p {
     display: block;
     padding: 10px;
     line-height: 150%;
