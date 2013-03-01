@@ -110,6 +110,8 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
             addTabPanel();
             tabbedPanel.setSelectedTab( selection );
             target.add( tabbedPanel );
+        } else {
+            super.updateWith( target, change, updatables );
         }
     }
 }

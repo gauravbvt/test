@@ -20,7 +20,6 @@
 			<div class="group first">
 				<a class="logout" href="logout">Sign out</a>
 				<a class="help" target="help" href="./help">Help</a>
-					<span wicket:id="loggedUser">user</span>
 			</div>
 		</div>
 	</div>
@@ -28,7 +27,7 @@
 		<div class="pathway">
 			<ul>
 				<li>
-					<a href="#">
+					<a href="home">
 						<span>Home</span>
 					</a>			
 				</li>
@@ -46,7 +45,7 @@
 				<h1 class="subtitle"> Settings </h1>
 			</div>
 			<form action="" wicket:id="users">
-				<div class="issues settings" wicket:id="feedback">(error messages)</div>
+				<div wicket:id="feedback">(error messages)</div>
 				<div class="new-user">
 				<h2>Create New User</h2>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">

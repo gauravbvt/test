@@ -13,9 +13,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -169,11 +171,22 @@ public class AdminPage extends AbstractChannelsWebPage {
         deleteLink.setVisible( planDefinitionManager.getSize() >= 1 );
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
         managePlanSubmit.setVisible( getPlan().isDevelopment() );
+        Label homeLink = new Label("homeLink", "Home");
+        homeLink.add( new AjaxEventBehavior("onclick") {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                // Todo
+            }
+        } );
         add(
-                new Label( "loggedUser", getUser().getUsername() ),
                 form.add(
-
-                        new FeedbackPanel( "feedback" ),
+                        homeLink,
+                        new FeedbackPanel( "feedback" ) {
+                            @Override
+                            protected String getCSSClass(final FeedbackMessage message) {
+                                return super.getCSSClass( message );  // customize
+                            }
+                        },
 
                         productizeLink,
 

@@ -26,18 +26,16 @@
 					<input wicket:id="orgName" type="text" width="80"/>
 				</td>
 			</tr>
-	        <div class="placeholder-cont" wicket:id="placeholdersContainer">
-			<tr>
+			<tr class="placeholder-cont" wicket:id="placeholdersContainer">
 				<td class="label">Organization Registered As</td>
 				<td>
 					<select wicket:id="placeholders"><option>org name</option></select>
 				</td>
-			</td>
-	        </div>
+			</tr>
 			<tr>
 				<td>&nbsp;</td>
 				<td>
-					<input type="button" value="Create"/>
+					<input wicket:id="register" type="button" value="Register"/>
 				</td>
 			</tr>
 		</table>

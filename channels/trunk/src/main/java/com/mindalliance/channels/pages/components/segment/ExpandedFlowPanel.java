@@ -598,15 +598,22 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addIssuesAnnotation( nameField, getFlow(), "name" );
                 target.add( nameField );
-                addOtherChoice();
-                target.add( otherChoice );
                 addInfoLabelOrLink();
                 target.add( infoLinkOrLabel );
                 addStandardizedField();
                 target.add( standardizedCheckbox );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
-        } );
+
+            } );
+
+        nameField.add( new AjaxFormComponentUpdatingBehavior( "onkeyup" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addOtherChoice();
+                target.add( otherChoice );
+            } } );
+
         addIssuesAnnotation( nameField, getFlow(), nameField.getId() );
         add( nameField );
     }

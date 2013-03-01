@@ -81,7 +81,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
         plansChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                makeVisible( newCommunityButton, selectedProductionPlan != null );
+                newCommunityButton.setEnabled( selectedProductionPlan != null );
                 target.add( newCommunityButton );
             }
         } );
@@ -119,7 +119,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
         };
         newCommunityButton.setOutputMarkupId( true );
         add( newCommunityButton );
-        makeVisible( newCommunityButton, selectedProductionPlan != null );
+        newCommunityButton.setEnabled( selectedProductionPlan != null );
     }
 
     private void startNewCommunity() {

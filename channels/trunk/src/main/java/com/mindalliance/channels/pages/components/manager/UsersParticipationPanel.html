@@ -26,26 +26,22 @@
 					<input wicket:id="assignedUser" type="text" width="80"/>
 				</td>
 			</tr>
-			<div wicket:id="agenciesContainer">
-			<tr>
+			<tr wicket:id="agenciesContainer">
 				<td class="label">is to participate in</td>
 				<td>
 					<select wicket:id="agencies"><option>org name</option></select>
 				</td>
 			</tr>
-			</div>
-			<div wicket:id="agentsContainer">
-			<tr>
-				<td class="label">As</td>
+			<tr wicket:id="agentsContainer">
+				<td class="label">as</td>
 				<td>
 					<select wicket:id="agents"><option>agent name</option></select>
 				</td>
 			</tr>
-			</div>
 			<tr>
 				<td>&nbsp;</td>
 				<td>
-					<input type="button" value="Create"/>
+					<input wicket:id="participate" type="button" value="Add participation"/>
 				</td>
 			</tr>			
 		</table>

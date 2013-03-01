@@ -23,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -83,10 +84,12 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private WebMarkupContainer assignmentContainer;
     private ChannelsUser assignmentUser;
     private Agency assignmentAgency;
+    private Agent assignmentAgent;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm z" );
     private UserParticipation addedParticipation;
     private WebMarkupContainer agentAssignmentContainer;
+    private AjaxLink<String> participateButton;
 
     public UsersParticipationPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
@@ -296,6 +299,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         addAssignmentUser();
         addAssignmentAgency();
         addAssignmentAgent();
+        addParticipateButton();
     }
 
     private void addAssignmentUser() {
@@ -323,16 +327,21 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 addAssignmentUser();
                 addAssignmentAgency();
                 addAssignmentAgent();
+                participateButton.setEnabled( canAssign() );
                 target.add( assignmentContainer );
             }
         } );
         assignmentContainer.addOrReplace( assignmentUserField );
     }
 
+    private boolean canAssign() {
+        return assignmentUser != null && assignmentAgency != null && assignmentAgent != null;
+    }
+
     private List<String> getUserFullNamesAndEmails() {
         CommunityService communityService = getCommunityService();
         List<String> fullNamesAndEmails = new ArrayList<String>();
-        for ( ChannelsUser user : communityService.getUserDao().getUsers(  ) ) {
+        for ( ChannelsUser user : communityService.getUserDao().getUsers() ) {
             fullNamesAndEmails.add( user.getFullName() + " (" + user.getEmail() + ")" );
         }
         Collections.sort( fullNamesAndEmails );
@@ -363,14 +372,16 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             protected void onUpdate( AjaxRequestTarget target ) {
                 addAssignmentAgent();
                 target.add( agentAssignmentContainer );
+                participateButton.setEnabled( canAssign() );
+                target.add( assignmentContainer );
             }
         } );
         container.add( agencyChoice );
-        container.setVisible( !agenciesWithAvailableParticipation.isEmpty() );
+        container.setEnabled( !agenciesWithAvailableParticipation.isEmpty() );
         assignmentContainer.addOrReplace( container );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Agency> agenciesWithAvailableParticipationFor( final ChannelsUser assignmentUser ) {
         if ( assignmentUser == null )
             return new ArrayList<Agency>();
@@ -411,7 +422,6 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private void addAssignmentAgent() {
         agentAssignmentContainer = new WebMarkupContainer( "agentsContainer" );
         agentAssignmentContainer.setOutputMarkupId( true );
-        makeVisible( agentAssignmentContainer, assignmentAgency != null );
         assignmentContainer.addOrReplace( agentAssignmentContainer );
         List<Agent> availableParticipationAgents = agentsWithAvailableParticipation();
         DropDownChoice<Agent> agentChoice = new DropDownChoice<Agent>(
@@ -433,19 +443,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         agentChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                resetUserParticipationWrappers();
-                addUsersParticipationTable();
-                target.add( usersParticipationTable );
-                addAssigning();
+                participateButton.setEnabled( canAssign() );
                 target.add( assignmentContainer );
-                Change change = new Change( Change.Type.Updated, getCommunityService().getPlanCommunity(), "participation" );
-                change.setMessage( addedParticipation != null
-                        ? "Added " + addedParticipation.asString( getCommunityService() )
-                        : "Failed to add participation"  );
-                update( target, change );
-                addedParticipation = null;
             }
         } );
+        agentChoice.setEnabled( !availableParticipationAgents.isEmpty() );
         agentAssignmentContainer.add( agentChoice );
     }
 
@@ -468,6 +470,32 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         return agents;
     }
 
+    private void addParticipateButton() {
+        participateButton = new AjaxLink<String>( "participate" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                assignParticipation();
+                resetUserParticipationWrappers();
+                addUsersParticipationTable();
+                target.add( usersParticipationTable );
+                addAssigning();
+                target.add( assignmentContainer );
+                Change change = new Change( Change.Type.Added, getCommunityService().getPlanCommunity(), "participation" );
+                change.setMessage( addedParticipation != null
+                        ? "Added " + addedParticipation.asString( getCommunityService() )
+                        : "Failed to add participation" );
+                addedParticipation = null;
+                assignmentAgency = null;
+                assignmentUser = null;
+                assignmentAgent = null;
+                update( target, change );
+            }
+        };
+        participateButton.setOutputMarkupId( true );
+        participateButton.setEnabled( canAssign() );
+        assignmentContainer.addOrReplace( participateButton );
+    }
+
     public void update( AjaxRequestTarget target, Object object, String action ) {
         if ( object instanceof UserParticipationWrapper ) {
             UserParticipationWrapper wrapper = (UserParticipationWrapper) object;
@@ -479,10 +507,10 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 target.add( usersParticipationTable );
                 addAssigning();
                 target.add( assignmentContainer );
-                Change change = new Change( Change.Type.Updated, getCommunityService().getPlanCommunity(), "participation" );
+                Change change = new Change( Change.Type.Removed, getCommunityService().getPlanCommunity(), "participation" );
                 change.setMessage( success
                         ? "Removed " + userParticipationString
-                        : "Failed to remove " + userParticipationString  );
+                        : "Failed to remove " + userParticipationString );
                 update( target, change );
             }
         }
@@ -534,28 +562,33 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     }
 
     public Agent getAssignmentAgent() {
-        return null;
+        return assignmentAgent;
     }
 
     public void setAssignmentAgent( Agent agent ) {
-        CommunityService communityService = getCommunityService();
-        ParticipationManager participationManager = communityService.getParticipationManager();
-        if ( participationManager.isParticipationAvailable( agent, assignmentUser, communityService ) ) {
-            if ( getUser().equals( assignmentUser ) ) {
-                addedParticipation = communityService.getUserParticipationService().addAcceptedParticipation(
-                        getUsername(),
-                        assignmentUser,
-                        agent,
-                        communityService );
-            } else {
-                addedParticipation = communityService.getUserParticipationService().addParticipation(
-                        getUsername(),
-                        assignmentUser,
-                        agent,
-                        communityService );
+        assignmentAgent = agent;
+    }
+
+    private void assignParticipation() {
+        if ( canAssign() ) {
+            CommunityService communityService = getCommunityService();
+            ParticipationManager participationManager = communityService.getParticipationManager();
+            if ( participationManager.isParticipationAvailable( assignmentAgent, assignmentUser, communityService ) ) {
+                if ( getUser().equals( assignmentUser ) ) {
+                    addedParticipation = communityService.getUserParticipationService().addAcceptedParticipation(
+                            getUsername(),
+                            assignmentUser,
+                            assignmentAgent,
+                            communityService );
+                } else {
+                    addedParticipation = communityService.getUserParticipationService().addParticipation(
+                            getUsername(),
+                            assignmentUser,
+                            assignmentAgent,
+                            communityService );
+                }
             }
         }
-        assignmentAgency = null;
     }
 
     public boolean isShowingUnassignedAgents() {
@@ -606,7 +639,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
         }
 
         public String getEmail() {
-            return user == null ? null :user.getEmail();
+            return user == null ? null : user.getEmail();
         }
 
         public String getAgentName() {
@@ -747,7 +780,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             initTable();
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void initTable() {
             final List<IColumn<UserParticipationWrapper>> columns = new ArrayList<IColumn<UserParticipationWrapper>>();
             columns.add( makeColumn( "User", "normalizedFullName", EMPTY ) );
@@ -780,7 +813,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                     getPageSize() ) );
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private List<UserParticipationWrapper> getFilteredParticipations() {
             return (List<UserParticipationWrapper>) CollectionUtils.select(
                     userParticipationModel.getObject(),

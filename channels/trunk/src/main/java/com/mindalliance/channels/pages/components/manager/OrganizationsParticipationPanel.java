@@ -26,6 +26,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -84,6 +85,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     private String registeredOrgName;
 
+    private Organization registeringPlaceholder;
+
     private OrganizationParticipation addedRegistration;
 
     private Agency profiledAgency;
@@ -99,6 +102,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     private List<AgencyParticipationWrapper> agencyParticipationWrappers;
     private WebMarkupContainer registeringContainer;
     private ModalWindow profileDialog;
+    private DropDownChoice<Organization> placeholderChoice;
+    private AjaxLink<String> createButton;
 
     public OrganizationsParticipationPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model );
@@ -258,6 +263,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         addOrReplace( registeringContainer );
         addParticipatingOrgName();
         addPlaceholder();
+        addRegisterButton();
     }
 
     private void addParticipatingOrgName() {
@@ -282,9 +288,10 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         registereOrgNameField.setOutputMarkupId( true );
         registereOrgNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                addParticipatingOrgName();
-                addPlaceholder();
-                target.add( registeringContainer );
+                placeholderChoice.setEnabled( !getRegisteredOrgName().isEmpty() );
+                target.add( placeholderChoice );
+                createButton.setEnabled( canRegister() );
+                target.add( createButton );
             }
         } );
         registeringContainer.addOrReplace( registereOrgNameField );
@@ -310,7 +317,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         WebMarkupContainer container = new WebMarkupContainer( "placeholdersContainer" );
         container.setOutputMarkupId( true );
         List<Organization> placeholderOrgs = getManagedPlaceHolders();
-        DropDownChoice<Organization> placeholderChoice = new DropDownChoice<Organization>(
+        placeholderChoice = new DropDownChoice<Organization>(
                 "placeholders",
                 new PropertyModel<Organization>( this, "registeringPlaceholder" ),
                 placeholderOrgs,
@@ -328,19 +335,11 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         placeholderChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                resetOrganizationParticipationWrappers();
-                addOrganizationParticipationTable();
-                target.add( organizationParticipationTable );
-                addRegistering();
-                target.add( registeringContainer );
-                update( target, Change.message(
-                        addedRegistration != null
-                                ? addedRegistration.asString( getCommunityService() )
-                                : "Failed to register organization"
-                ) );
-                addedRegistration = null;
+                createButton.setEnabled( canRegister() );
+                target.add( createButton );
             }
         } );
+        placeholderChoice.setEnabled( !getRegisteredOrgName().isEmpty() );
         container.add( placeholderChoice );
         container.setVisible( !placeholderOrgs.isEmpty() );
         registeringContainer.addOrReplace( container );
@@ -357,6 +356,31 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         }
         return managedPlaceholders;
     }
+
+    private void addRegisterButton() {
+        createButton = new AjaxLink<String>( "register" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                registerAsPlaceholder(); // do it
+                resetOrganizationParticipationWrappers();
+                addOrganizationParticipationTable();
+                target.add( organizationParticipationTable );
+                addRegistering();
+                target.add( registeringContainer );
+                update( target, Change.message(
+                        addedRegistration != null
+                                ? addedRegistration.asString( getCommunityService() )
+                                : "Failed to register organization"
+                ) );
+                registeredOrgName = null;
+                addedRegistration = null;
+            }
+        };
+        createButton.setOutputMarkupId( true );
+        createButton.setEnabled( canRegister() );
+        registeringContainer.addOrReplace( createButton );
+    }
+
 
     public String getRegisteredOrgName() {
         return registeredOrgName != null ? registeredOrgName : "";
@@ -375,17 +399,28 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     public void setRegisteringPlaceholder( Organization placeholder ) {
-        CommunityService communityService = getCommunityService();
-        RegisteredOrganization registeredOrganization = registerOrgByName();
-        if ( registeredOrganization != null && communityService.isCustodianOf( getUser(), placeholder ) ) {
-            addedRegistration = organizationParticipationService.assignOrganizationAs(
-                    getUser(),
-                    registeredOrganization,
-                    placeholder,
-                    communityService
-            );
+        registeringPlaceholder = placeholder;
+    }
+
+    public void registerAsPlaceholder() {
+        if ( canRegister() ) {
+            CommunityService communityService = getCommunityService();
+            RegisteredOrganization registeredOrganization = registerOrgByName();
+            if ( registeredOrganization != null && communityService.isCustodianOf( getUser(), registeringPlaceholder ) ) {
+                addedRegistration = organizationParticipationService.assignOrganizationAs(
+                        getUser(),
+                        registeredOrganization,
+                        registeringPlaceholder,
+                        communityService
+                );
+            }
         }
     }
+
+    private boolean canRegister() {
+        return !getRegisteredOrgName().isEmpty() && registeringPlaceholder != null;
+    }
+
 
     private RegisteredOrganization registerOrgByName() {
         if ( registeredOrgName != null && !registeredOrgName.isEmpty() ) {
@@ -605,7 +640,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
             initTable();
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void initTable() {
             final List<IColumn<AgencyParticipationWrapper>> columns = new ArrayList<IColumn<AgencyParticipationWrapper>>();
             columns.add( makeFilterableColumn(
@@ -648,7 +683,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                     getPageSize() ) );
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private List<AgencyParticipationWrapper> getFilteredOrganizationParticipations() {
             return (List<AgencyParticipationWrapper>) CollectionUtils.select(
                     orgParticipationModel.getObject(),
