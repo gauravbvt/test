@@ -130,31 +130,8 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         detailsContainer.setOutputMarkupId( true );
         addDetailLabels();
         addEditButton();
-        addAttachmentsContainer();
-        addAttachButton();
         addStatusPanel();
         getContainer().addOrReplace( detailsContainer );
-    }
-
-    private void addAttachmentsContainer() {
-        attachmentsContainer = new WebMarkupContainer( "attachmentsContainer" );
-        attachmentsContainer.setOutputMarkupId( true );
-        makeVisible( attachmentsContainer, showingAttachments );
-        attachmentsContainer.add(  new AttachmentPanel( "attachments", new Model<ModelObject>( getPlanCommunity() )) );
-        detailsContainer.addOrReplace( attachmentsContainer );
-    }
-
-    private void addAttachButton() {
-        AjaxLink<String> attachButton = new AjaxLink<String>( "attach" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                showingAttachments = !showingAttachments;
-                makeVisible( attachmentsContainer, showingAttachments );
-                target.add( attachmentsContainer );
-            }
-        };
-        attachButton.setVisible( isCommunityPlanner() );
-        detailsContainer.add( attachButton );
     }
 
     private void addDetailLabels() {
@@ -229,33 +206,67 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
      private void addReferences() {
-         List<Attachment> references = getReferences();
          referencesContainer = new WebMarkupContainer( "referencesContainer" );
          referencesContainer.setOutputMarkupId( true );
          getContainer().addOrReplace( referencesContainer );
-         ListView<Attachment> attachmentList = new ListView<Attachment>(
-                 "references",
-                 references ) {
-
-             @Override
-             protected void populateItem( ListItem<Attachment> item ) {
-                 Attachment a = item.getModelObject();
-                 ExternalLink documentLink = new ExternalLink( "attachment",
-                         a.getUrl(), getAttachmentManager().getLabel( getCommunityService(), a ) );
-                 documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
-                 item.add( documentLink );
-                 addTipTitle(
-                         item,
-                         new Model<String>(
-                                 a.getType().getLabel() + " - " + a.getUrl()
-                         ) );
-             }
-         };
-         referencesContainer.add( attachmentList );
-         makeVisible( referencesContainer, !references.isEmpty() );
+         addAttachmentsContainer();
+         addAttachButton();
+         addAttachedDocuments();
+         makeVisible( referencesContainer, !getReferences().isEmpty() );
      }
 
-     @SuppressWarnings("unchecked")
+    private void addAttachmentsContainer() {
+        attachmentsContainer = new WebMarkupContainer( "attachmentsContainer" );
+        attachmentsContainer.setOutputMarkupId( true );
+        makeVisible( attachmentsContainer, showingAttachments );
+        attachmentsContainer.add(  new AttachmentPanel( "attachments", new Model<ModelObject>( getPlanCommunity() )) );
+        referencesContainer.addOrReplace( attachmentsContainer );
+    }
+
+    private void addAttachButton() {
+        WebMarkupContainer attachmentsEditContainer = new WebMarkupContainer( "communityDocumentsEdit" );
+        attachmentsEditContainer.setVisible( isCommunityPlanner() );
+        referencesContainer.add( attachmentsEditContainer );
+        AjaxLink<String> attachButton = new AjaxLink<String>( "attach" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                showingAttachments = !showingAttachments;
+                makeVisible( attachmentsContainer, showingAttachments );
+                target.add( attachmentsContainer );
+            }
+        };
+        attachButton.setVisible( isCommunityPlanner() );
+        attachmentsEditContainer.add( attachButton );
+    }
+
+
+    private void addAttachedDocuments() {
+        WebMarkupContainer communityDocumentsLabel = new WebMarkupContainer( "communityDocuments");
+        communityDocumentsLabel.setVisible( !isCommunityPlanner() );
+        referencesContainer.add( communityDocumentsLabel );
+        List<Attachment> references = getReferences();
+        ListView<Attachment> attachmentList = new ListView<Attachment>(
+                "references",
+                references ) {
+
+            @Override
+            protected void populateItem( ListItem<Attachment> item ) {
+                Attachment a = item.getModelObject();
+                ExternalLink documentLink = new ExternalLink( "attachment",
+                        a.getUrl(), getAttachmentManager().getLabel( getCommunityService(), a ) );
+                documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
+                item.add( documentLink );
+                addTipTitle(
+                        item,
+                        new Model<String>(
+                                a.getType().getLabel() + " - " + a.getUrl()
+                        ) );
+            }
+        };
+        referencesContainer.add( attachmentList );
+    }
+
+    @SuppressWarnings("unchecked")
      public List<Attachment> getReferences() {
          return (List<Attachment>) CollectionUtils.select(
                  getPlanCommunity().getAttachments(),

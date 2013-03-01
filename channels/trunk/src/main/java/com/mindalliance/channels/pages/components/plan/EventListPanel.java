@@ -110,8 +110,17 @@ public class EventListPanel extends AbstractCommandablePanel {
         nameField.setVisible( isLockedByUser( Channels.ALL_EVENTS ) && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
+/*
                 addConfirmedCell( item );
                 target.add( item );
+*/
+                eventsDiv.addOrReplace( makeEventsTable() );
+                target.add( eventsDiv );
+                update( target, new Change(
+                        Change.Type.Updated,
+                        getPlan(),
+                        "incidents"
+                ) );
             }
         } );
         nameContainer.add( nameField );
@@ -256,7 +265,7 @@ public class EventListPanel extends AbstractCommandablePanel {
          */
         public void setName( String value ) {
             event.setName( value );
-//            setConfirmed( true );
+            setConfirmed( true );
         }
 
         /**
