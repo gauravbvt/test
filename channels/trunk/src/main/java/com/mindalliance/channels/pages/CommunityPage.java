@@ -212,7 +212,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
          addAttachmentsContainer();
          addAttachButton();
          addAttachedDocuments();
-         makeVisible( referencesContainer, !getReferences().isEmpty() );
+         makeVisible( referencesContainer, isCommunityPlanner() || !getReferences().isEmpty() );
      }
 
     private void addAttachmentsContainer() {
