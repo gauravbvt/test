@@ -58,7 +58,6 @@ div.header {
     background: url('../images/global-header-bg.png') #c3d9ff;
     border-left: 1px solid #999999;
     border-right:1px solid #999999;
-    border-bottom:1px solid #999999;
     font-size:12px;
     float:left;
 }
@@ -217,11 +216,10 @@ div.menu div.group {
     float: right;
     margin: 10px 0 0;
     padding: 5px 10px;
-    width: 186px;
 }
 
 div.menu div.group.first {
-    width: 186px;
+
 }
 
 div#contents {
@@ -726,8 +724,6 @@ div.goto a:hover span {
 div.right-accordion {
 	float:right;
 	width:300px;
-	height:522px;
-	border-left:1px solid #cccccc;
 	font-size:11px;
 }
 
@@ -820,9 +816,9 @@ div.participation input[type="button"] {
 
 #social div.tab-row a {
     background: none repeat scroll 0 0 #E7F0FF;
-    border-bottom: 1px solid #CCCCCC;
-    border-right: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
+    border-color: #CCCCCC -moz-use-text-color #CCCCCC #CCCCCC;
+    border-style: solid none solid solid;
+    border-width: 1px medium 1px 1px;
     color: #666666;
     display: block;
     font-weight: bold;
@@ -852,17 +848,21 @@ div.participation input[type="button"] {
     white-space: nowrap;
 }
 
+#social div.tab-row li.last a {
+	border-right: 1px solid #cccccc;
+}
+
 
 /* ----- Social - Global ----- */
 
 #social div.tab-panel {
     background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #CCCCCC;
+    border-left: 1px solid #CCCCCC;
     border-right: 1px solid #CCCCCC;
     float: right;
-    height: 495px;
     overflow: auto;
-    width: 100%;
+    width: 298px;
 }
 
 #social div.social-controls {
@@ -1452,11 +1452,12 @@ table.data-table.big {
 }
 
 table.data-table td {
-    vertical-align: top;
+    vertical-align: middle;
     padding:5px;
     color:#333333;
 }
 
+table.data-table.users td,
 table.data-table.big td {
 	padding: 10px;
 }
@@ -1499,6 +1500,7 @@ table.data-table tr.headers th {
     vertical-align:middle;
 }
 
+table.data-table.users tr.headers th,
 table.data-table.big tr.headers th {
     padding: 5px 10px;
 }
@@ -1551,6 +1553,17 @@ table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul > li {
 
 table.data-table > tbody > tr > td > span > table > tbody > tr > td > ul > li > a > img {
     vertical-align:middle;
+}
+
+table.data-table input[type="text"],
+table.data-table input[type="password"] {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #999999;
+    font-size: 11px;
+    margin: 0;
+    padding: 3px;
+    width: 95%;
+    margin: 2px 0;
 }
 
 th {
@@ -2269,7 +2282,8 @@ div.controls {
 a.button,
 input[type='button'],
 table.data-table.big a.link,
-span.status a {
+span.status a,
+input.submit {
     background: #e8e8e8;
     border: 1px solid #A7A9AC;
     color: #666666;
@@ -2285,6 +2299,14 @@ span.status a {
     font-style: normal;
 }
 
+a.button:hover,
+input[type='button']:hover,
+table.data-table.big a.link:hover,
+span.status a:hover,
+input.submit:hover {
+    border: 1px solid #000000;
+    color: #000000;
+}
 
 input[type='text'] {
     width: 97%;
@@ -2531,4 +2553,103 @@ ul.attach li ul.menu li a:hover {
 }
 
 
+/* ----- Settings Page ----- */
 
+div.issues.settings {
+	background: none repeat scroll 0 0 #C9252C;
+	border: medium none;
+	color: #FFFFFF;
+	margin: 10px 0 20px;
+	padding: 5px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+div.issues.settings li {
+    font-family: arial;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+div.new-user,
+div.new-plan,
+div.manage-users,
+div.manage-plan {
+    border: 1px solid #CCCCCC;
+    float: left;
+    margin: 10px 0 20px;
+    width: 764px;
+}
+
+div.new-user h2,
+div.new-plan h2,
+div.manage-users h2,
+div.manage-plan h2 {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+    font-family: Georgia;
+    font-size: 20px;
+    font-style: oblique;
+    font-weight: normal;
+    padding: 5px 10px;
+}
+
+div.new-user table,
+div.new-plan table,
+div.manage-plan table {
+    padding: 10px;
+}
+
+div.new-user table td,
+div.new-plan table td,
+div.manage-plan table td {
+	padding: 10px 5px 10px 10px;
+}
+
+div.new-user input[type="text"],
+div.new-plan input[type="text"],
+div.manage-plan input[type="text"] {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border: 1px solid #999999;
+	float: right;
+	font-size: 11px;
+	padding: 3px;
+	width: 292px;
+}
+
+div.manage-plan select {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #999999;
+    float: right;
+    font-size: 11px;
+    margin-right: -5px;
+    padding: 3px;
+    width: 310px;
+}
+
+div.manage-users input.submit {
+	margin: 10px 15px 15px;
+}
+
+div.manage-users table.data-table.users {
+	border-top: none;
+}
+
+div.manage-plan h3 {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+    color: #333333;
+    font-size: 13px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+
+div.manage-plan td.plan-uri {
+	text-align: right;
+}
+
+div.manage-plan a.button {
+    padding: 8px 10px 7px;
+}

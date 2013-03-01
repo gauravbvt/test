@@ -6,187 +6,213 @@
         xml:lang="en"
         lang="en">
 <head>
-    <title>Channels - Administration</title>
-    <link rel="stylesheet" href="css/admin.css" type="text/css">
+    <title>Channels - Settings</title>
+    <link rel="stylesheet" href="css/userpage.css" type="text/css">
 </head>
 <body>
 
 <div id="container">
-    <div id="header">
-		<a href="home"><img class="logo" src="images/logo_home.png" width="48" height="48" alt="Channels Logo" /></a>
-        <h1>Channels &ndash; Administration</h1>
-		<a class="logout" href="logout">Sign out <span wicket:id="loggedUser">user</span></a>
-    </div>
-    <div id="contents">
-        <div id="plan">
-        <form action="" wicket:id="users">
-			<div class="issues" wicket:id="feedback">(error messages)</div>
-            <h2>Manage users</h2>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="label">New User ID:</td>
-                    <td>
-                        <input type="text" wicket:id="new">
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                        <input type="submit" value="Submit" class="submit" name="Submit"/>
-                    </td>
-                </tr>
-            </table>
-            <table class="users" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <thead>
-                <tr>
-                    <th rowspan="2">User</th>
-                    <th rowspan="2">Full Name</th>
-                    <th rowspan="2">Email</th>
-                    <th rowspan="2">Password</th>
-                    <th colspan="4">All Plans</th>
-                    <th colspan="3">This Plan</th>
-                    <th rowspan="2">Delete</th>
-                </tr>
-                <tr>
-                    <th>Admin</th>
-                    <th>Planner</th>
-                    <th>User</th>
-                    <th>Disabled</th>
-                    <th>Planner</th>
-                    <th>User</th>
-                    <th>N/A</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr wicket:id="item">
-                            <span wicket:id="group">
-                                <td valign="middle" align="left"><span wicket:id="username">Name</span></td>
-                                <td align="left"><input type="text" wicket:id="fullName"/></td>
-                                <td align="left"><input type="text" wicket:id="email"/></td>
-                                <td align="left"><input type="password" wicket:id="password"/></td>
-                                <td align="center"><input type="radio" wicket:id="admin"/></td>
-                                <td align="center"><input type="radio" wicket:id="planner"/></td>
-                                <td align="center"><input type="radio" wicket:id="user"/></td>
-                                <td align="center"><input type="radio" wicket:id="disabled"/></td>
-                                <td align="center"><input type="radio" wicket:id="localPlanner"/></td>
-                                <td align="center"><input type="radio" wicket:id="localUser"/></td>
-                                <td align="center"><input type="radio" wicket:id="localDisabled"/></td>
-                                <td align="center"><input type="checkbox" wicket:id="delete"/></td>
-                            </span>
-                </tr>
-                </tbody>
-            </table>
-            <div class="submit">
-                <input type="submit" value="Submit" class="submit" name="Submit"/>
-            </div>
-            <h2>Create new plan</h2>
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="label">New Plan URI:</td>
-					<td class="input">
-						<input type="text" class="big" wicket:id="newPlanUri" value=""/>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">New Plan Owned by:</td>
-					<td>
-						<input type="text" class="big" wicket:id="newPlanClient"/>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<input type="submit" value="Submit" class="submit" name="Submit"/>
-					</td>
-				</tr>
-			</table>
-            <h2>Manage plan</h2>
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="label">Select Plan:</td>
-					<td>
-						<select wicket:id="plan-sel" name="plan">
-	                		<option>Some plan</option>
-	                	</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">&nbsp;</td>
-					<td>
-						<a class="button" wicket:id="productize">Productize</a>
-						<a class="button" wicket:id="deletePlan">Delete Plan</a>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Plan URI:</td>
-					<td>
-						<span wicket:id="planUri"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Plan Owner:</td>
-					<td>
-						<input type="text" wicket:id="planClient"/>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<input wicket:id="managePlanSubmit" type="submit" value="Submit" class="submit" name="Submit"/>
-					</td>
-				</tr>
-			</table>
-            <h3>Override email addresses</h3>
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="label">Send Planner Feedback To:</td>
-					<td>
-						<input type="text" wicket:id="plannerSupportCommunity"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Send Participant Feedback To:</td>
-					<td>
-						<input type="text" wicket:id="userSupportCommunity"/>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<input type="submit" value="Submit" class="submit" name="Submit"/>
-					</td>
-				</tr>
-			</table>
-            <h3>Set community calendar</h3>
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="label">Community Calendar Host:</td>
-					<td>
-						<input type="text" wicket:id="communityCalendarHost"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Community Calendar:</td>
-					<td>
-						<input type="text" wicket:id="communityCalendar"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Community Calendar Privacy Ticket:</td>
-					<td>
-						<input type="text" wicket:id="communityCalendarPrivateTicket"/>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>
-						<input type="submit" value="Submit" class="submit" name="Submit"/>
-					</td>
-				</tr>
-			</table>
-         </form>
+	<div class="header">
+		<a href="home">
+			<img class="logo" width="140" height="51" alt="Channels" src="images/global-logo.png">
+		</a>
+		<div class="menu">
+			<div class="group first">
+				<a class="logout" href="logout">Sign out</a>
+				<a class="help" target="help" href="./help">Help</a>
+					<span wicket:id="loggedUser">user</span>
+			</div>
 		</div>
-    </div>
+	</div>
+	<div class="pathway-cont">
+		<div class="pathway">
+			<ul>
+				<li>
+					<a href="#">
+						<span>Home</span>
+					</a>			
+				</li>
+				<li>
+					<a href="#">
+						<span>Settings</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div id="contents">
+		<div id="plan">
+			<div class="title-desc">
+				<h1 class="subtitle"> Settings </h1>
+			</div>
+			<form action="" wicket:id="users">
+				<div class="issues settings" wicket:id="feedback">(error messages)</div>
+				<div class="new-user">
+				<h2>Create New User</h2>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+				    <td class="label">New User ID:</td>
+				    <td>
+				        <input type="text" wicket:id="new">
+				    </td>
+				</tr>
+				<tr>
+				    <td>&nbsp;</td>
+				    <td>
+				        <input type="submit" value="Create" class="submit" name="Submit"/>
+				    </td>
+				</tr>
+				</table>
+				</div>
+				<div class="manage-users">
+				<h2>Manage Users</h2>
+				<table class="data-table users" width="100%" border="0" cellspacing="0" cellpadding="0">
+					<thead>
+						<tr class="headers">
+						    <th rowspan="2">User</th>
+						    <th rowspan="2">Full Name</th>
+						    <th rowspan="2">Email</th>
+						    <th rowspan="2">Password</th>
+						    <th colspan="4">All Plans</th>
+						    <th colspan="3">This Plan</th>
+						    <th rowspan="2">Delete</th>
+						</tr>
+						<tr class="headers">
+						    <th>Admin</th>
+						    <th>Planner</th>
+						    <th>User</th>
+						    <th>Disabled</th>
+						    <th>Planner</th>
+						    <th>User</th>
+						    <th>N/A</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="even" wicket:id="item">
+							<span wicket:id="group">
+								<td valign="middle" align="left"><span wicket:id="username">Name</span></td>
+								<td align="left"><input type="text" wicket:id="fullName"/></td>
+								<td align="left"><input type="text" wicket:id="email"/></td>
+								<td align="left"><input type="password" wicket:id="password"/></td>
+								<td align="center"><input type="radio" wicket:id="admin"/></td>
+								<td align="center"><input type="radio" wicket:id="planner"/></td>
+								<td align="center"><input type="radio" wicket:id="user"/></td>
+								<td align="center"><input type="radio" wicket:id="disabled"/></td>
+								<td align="center"><input type="radio" wicket:id="localPlanner"/></td>
+								<td align="center"><input type="radio" wicket:id="localUser"/></td>
+								<td align="center"><input type="radio" wicket:id="localDisabled"/></td>
+								<td align="center"><input type="checkbox" wicket:id="delete"/></td>
+							</span>
+						</tr>
+					</tbody>
+				</table>
+				<div class="submit">
+					<input type="submit" value="Update" class="submit" name="Submit"/>
+				</div>
+				</div>
+				<div class="new-plan">
+				<h2>Create New Plan</h2>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="label">New Plan URI:</td>
+						<td class="input">
+							<input type="text" class="big" wicket:id="newPlanUri" value=""/>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">New Plan Owned by:</td>
+						<td>
+						<input type="text" class="big" wicket:id="newPlanClient"/>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+						<input type="submit" value="Create" class="submit" name="Submit"/>
+						</td>
+					</tr>
+				</table>
+				</div>
+				<div class="manage-plan">
+				<h2>Manage Plan
+					<select wicket:id="plan-sel" name="plan">
+						<option>Some plan</option>
+					</select>
+				</h2>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="label">Plan URI:</td>
+						<td class="plan-uri">
+							<span wicket:id="planUri"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">Plan Owner:</td>
+						<td>
+							<input type="text" wicket:id="planClient"/>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<a class="button" wicket:id="productize">Productize</a>
+							<a class="button" wicket:id="deletePlan">Delete Plan</a>
+							<input wicket:id="managePlanSubmit" type="submit" value="Update" class="submit" name="Submit"/>
+						</td>
+					</tr>
+				</table>
+				<h3>Override email addresses</h3>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="label">Send Planner Feedback To:</td>
+						<td>
+							<input type="text" wicket:id="plannerSupportCommunity"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">Send Participant Feedback To:</td>
+						<td>
+							<input type="text" wicket:id="userSupportCommunity"/>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<input type="submit" value="Update" class="submit" name="Submit"/>
+						</td>
+					</tr>
+				</table>
+				<h3>Set community calendar</h3>
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="label">Community Calendar Host:</td>
+						<td>
+							<input type="text" wicket:id="communityCalendarHost"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">Community Calendar:</td>
+						<td>
+							<input type="text" wicket:id="communityCalendar"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">Community Calendar Privacy Ticket:</td>
+						<td>
+							<input type="text" wicket:id="communityCalendarPrivateTicket"/>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<input type="submit" value="Update" class="submit" name="Submit"/>
+						</td>
+					</tr>
+				</table>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 </body>
 </html>
