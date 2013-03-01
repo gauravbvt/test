@@ -96,7 +96,6 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
             }
         } );
         uninvolvedCheckBox.setOutputMarkupId( true );
-        uninvolvedCheckBox.setEnabled( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
         add( uninvolvedCheckBox );
     }
 
@@ -113,7 +112,6 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
             }
         } );
         expectedCheckBox.setOutputMarkupId( true );
-        expectedCheckBox.setEnabled( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
         add( expectedCheckBox );
     }
 

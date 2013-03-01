@@ -138,7 +138,7 @@ public abstract class AbstractModelObjectDao {
         return indexMap;
     }
 
-    public synchronized Journal getJournal() {
+    public Journal getJournal() {
         return journal;
     }
 
@@ -150,15 +150,15 @@ public abstract class AbstractModelObjectDao {
         add( object, null );
     }
 
-    public void add( ModelObject object, Long id ) {
-        synchronized ( getIndexMap() ) {
-            if ( id != null && isIdAssigned( id ) )
-                throw new DuplicateKeyException();
+    public abstract void add( ModelObject object, Long id );
 
-            assignId( object, id, getIdGenerator() );
-            getIndexMap().put( object.getId(), object );
-            addSpecific( object, id );
-        }
+    protected void doAdd( ModelObject object, Long id ) {
+        if ( id != null && isIdAssigned( id ) )
+            throw new DuplicateKeyException();
+
+        assignId( object, id, getIdGenerator() );
+        getIndexMap().put( object.getId(), object );
+        addSpecific( object, id );
     }
 
     public void loadingModelContextWithId( Long modelContextId ) {
@@ -273,24 +273,12 @@ public abstract class AbstractModelObjectDao {
         return results;
     }
 
-    @SuppressWarnings({"unchecked"})
-    // Listing by class. Local model object only
-    public <T extends ModelObject> List<T> listLocal( final Class<T> clazz ) {
-        List<T> results = new ArrayList<T>();
-        synchronized ( getIndexMap() ) {
-            for ( Object mo : getIndexMap().values() ) {
-                if ( clazz.isAssignableFrom( mo.getClass() ) ) {
-                    results.add( (T) mo );
-                }
-            }
-        }
-        return results;
-    }
+    abstract public <T extends ModelObject> List<T> listLocal( final Class<T> clazz );
 
 
     ////////////////////
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelEntity> List<T> listKnownEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 list( clazz ),
@@ -303,7 +291,7 @@ public abstract class AbstractModelObjectDao {
         );
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced ) {
         return mustBeReferenced
                 ? (List<T>) CollectionUtils.select(
@@ -317,7 +305,7 @@ public abstract class AbstractModelObjectDao {
                 : listActualEntities( clazz );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select(
                 list( clazz ),
@@ -330,7 +318,7 @@ public abstract class AbstractModelObjectDao {
         );
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public <T extends ModelEntity> List<T> listReferencedEntities( Class<T> clazz ) {
         return (List<T>) CollectionUtils.select( list( clazz ),
                 new Predicate() {
@@ -343,7 +331,7 @@ public abstract class AbstractModelObjectDao {
                 } );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Boolean isReferenced( final ModelObject mo ) {
         // Optimized form for return this.countReferences( mo ) > 0;
         boolean hasReference = false;
@@ -363,12 +351,12 @@ public abstract class AbstractModelObjectDao {
         return hasReference;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public <T extends ModelObject> List<T> findAllModelObjects( Class<T> clazz ) {
         return list( clazz );
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     public <T extends ModelEntity> List<T> listEntitiesNarrowingOrEqualTo( final T entity, final Place locale ) {
         return (List<T>) CollectionUtils.select(
                 list( entity.getClass() ),
@@ -656,7 +644,9 @@ public abstract class AbstractModelObjectDao {
      * @return the loaded model object context
      * @throws IOException on error
      */
-    public synchronized ModelObjectContext load( Importer importer ) throws IOException {
+    abstract public ModelObjectContext load( Importer importer ) throws IOException;
+
+    protected ModelObjectContext doLoad( Importer importer ) throws IOException {
         FileInputStream in = null;
         try {
             getIdGenerator().setIdCounter( getMinAssignableId(), getModelObjectContext().getUri() );
@@ -712,7 +702,9 @@ public abstract class AbstractModelObjectDao {
      * @param exporter where to export
      * @throws IOException on errors
      */
-    public synchronized void save( Exporter exporter ) throws IOException {      // todo - generalize
+    abstract public void save( Exporter exporter ) throws IOException;
+
+    protected void doSave( Exporter exporter ) throws IOException {
         if ( isLoaded() ) {
             beforeSnapshot();
             takeSnapshot( exporter );
@@ -721,7 +713,7 @@ public abstract class AbstractModelObjectDao {
         }
     }
 
-    private void takeSnapshot( Exporter exporter ) throws IOException {       // todo - generalize
+    private void takeSnapshot( Exporter exporter ) throws IOException {
         LOG.info( "Taking snapshot of {}", getModelObjectContext().getUri() );
 
         // Make backup
@@ -748,7 +740,7 @@ public abstract class AbstractModelObjectDao {
      * @param exporter the persistence mechanism
      * @throws IOException on errors
      */
-    public void saveJournal( Exporter exporter ) throws IOException {    // todo generalize
+    public void saveJournal( Exporter exporter ) throws IOException {
         getJournalFile().delete();
         FileOutputStream out = null;
         try {

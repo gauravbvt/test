@@ -256,6 +256,7 @@ public class EventListPanel extends AbstractCommandablePanel {
          */
         public void setName( String value ) {
             event.setName( value );
+//            setConfirmed( true );
         }
 
         /**

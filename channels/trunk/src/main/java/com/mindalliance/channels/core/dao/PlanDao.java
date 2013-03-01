@@ -84,12 +84,20 @@ public class PlanDao extends AbstractModelObjectDao {
         return getPlan();
     }
 
+    @Override
+    public void add( ModelObject object, Long id ) {
+        synchronized ( getIndexMap() ) {
+            doAdd( object, id );
+        }
+    }
+
 
     @Override
     protected void addSpecific( ModelObject object, Long id ) {
         if ( object instanceof Segment )
             getPlan().addSegment( (Segment) object );
     }
+
 
     public Flow connect( Node source, Node target, String name, Long id ) {
         Flow result;
@@ -295,7 +303,7 @@ public class PlanDao extends AbstractModelObjectDao {
         return attachables;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     // Listing by class. Local model object only
     public <T extends ModelObject> List<T> listLocal( final Class<T> clazz ) {
         List<T> results = new ArrayList<T>();
@@ -315,7 +323,7 @@ public class PlanDao extends AbstractModelObjectDao {
         return results;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     private <T extends ModelObject> List<? extends T> listSegmentObjects( Class<T> clazz ) {
         List<T> results = new ArrayList<T>();
         for ( Segment segment : getPlan().getSegments() ) {
@@ -369,21 +377,31 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
     @Override
-    public synchronized boolean isLoaded() {
+    public boolean isLoaded() {
         return plan != null;
     }
 
     @Override
-    @SuppressWarnings( {"unchecked", "RawUseOfParameterizedType"} )
+    @SuppressWarnings({"unchecked", "RawUseOfParameterizedType"})
     protected boolean isReferenced( ModelObject mo, Set<? extends ModelObject> referencingObjects ) {
         return plan.references( mo )
                 || super.isReferenced( mo, referencingObjects );
+    }
+
+    @Override
+    public synchronized ModelObjectContext load( Importer importer ) throws IOException {
+        return doLoad( importer );
     }
 
 
     @Override
     protected void afterLoad() {
         add( plan, plan.getId() );
+    }
+
+    @Override
+    public synchronized void save( Exporter exporter ) throws IOException {
+        doSave( exporter );
     }
 
     @Override
@@ -553,13 +571,13 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
 
-    public synchronized Plan getPlan() {
+    public Plan getPlan() {
         if ( plan == null )
             throw new IllegalStateException( "Plan not loaded" );
         return plan;
     }
 
-    @SuppressWarnings( {"unchecked"} )
+    @SuppressWarnings({"unchecked"})
     protected <T extends ModelObject> List<T> findAllLocalModelObjects( Class<T> clazz ) {
         List<T> domain;
         boolean isPart = Part.class.isAssignableFrom( clazz );

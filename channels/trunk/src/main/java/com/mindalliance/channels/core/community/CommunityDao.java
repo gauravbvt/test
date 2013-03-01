@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
+import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.Importer;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Plan community dao.
@@ -37,9 +40,31 @@ public class CommunityDao extends AbstractModelObjectDao {
     }
 
     @Override
+    public void add( ModelObject object, Long id ) {
+        synchronized ( getIndexMap() ) {
+            doAdd( object, id );
+        }
+    }
+
+
+    @Override
     protected void addSpecific( ModelObject object, Long id ) {
         // Do nothing
     }
+
+    @SuppressWarnings({"unchecked"})
+    public <T extends ModelObject> List<T> listLocal( final Class<T> clazz ) {
+        List<T> results = new ArrayList<T>();
+        synchronized ( getIndexMap() ) {
+            for ( Object mo : getIndexMap().values() ) {
+                if ( clazz.isAssignableFrom( mo.getClass() ) ) {
+                    results.add( (T) mo );
+                }
+            }
+        }
+        return results;
+    }
+
 
     @Override
     protected <T extends ModelObject> void setContextKindOf( T object ) {
@@ -59,6 +84,16 @@ public class CommunityDao extends AbstractModelObjectDao {
             Requirement.UNKNOWN = findOrCreateModelObject( Requirement.class, Requirement.UnknownName, null );
         }
         getIdGenerator().setMutableMode();
+    }
+
+    @Override
+    public synchronized ModelObjectContext load( Importer importer ) throws IOException {
+        return doLoad( importer );
+    }
+
+    @Override
+    public synchronized void save( Exporter exporter ) throws IOException {
+        doSave( exporter );
     }
 
     @Override

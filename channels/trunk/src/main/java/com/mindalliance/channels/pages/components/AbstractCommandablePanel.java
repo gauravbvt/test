@@ -100,6 +100,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     protected boolean contextAllowsEditing( long id ) {
+        if ( id < 0 ) return true; // editing context id, not model object id
         try {
             ModelObject modelObject = getCommunityService().find( ModelObject.class, id );
             return contextAllowsEditing( modelObject );
