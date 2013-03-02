@@ -1438,6 +1438,15 @@ td.name-title-icon-menu .menubar .dropmenu ul li a:hover {
 
 /* ----- Floating Panels - Data Tables ----- */
 
+h3.data-table-header {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-top: 1px solid #999999;
+    color: #333333;
+    font-size: 12px;
+    padding: 4px;
+    text-transform: uppercase;	
+}
+
 table.data-table {
     border-collapse: collapse;
     font-size:11px;
@@ -2574,7 +2583,10 @@ div.issues.settings li {
 div.new-user,
 div.new-plan,
 div.manage-users,
-div.manage-plan {
+div.manage-plan,
+div.registering-container,
+div.assignment-container,
+div.authorizing-container {
     border: 1px solid #CCCCCC;
     float: left;
     margin: 10px 0 20px;
@@ -2584,32 +2596,43 @@ div.manage-plan {
 div.new-user h2,
 div.new-plan h2,
 div.manage-users h2,
-div.manage-plan h2 {
+div.manage-plan h2,
+div.registering-container h2,
+div.assignment-container h2,
+div.authorizing-container h2 {
     background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #CCCCCC;
     color: #333333;
-    font-family: Georgia;
-    font-size: 20px;
-    font-style: oblique;
+    font-size: 16px;
     font-weight: normal;
     padding: 5px 10px;
+    text-transform: uppercase;
 }
 
 div.new-user table,
 div.new-plan table,
-div.manage-plan table {
+div.manage-plan table,
+div.registering-container table,
+div.assignment-container table,
+div.authorizing-container table {
     padding: 10px;
 }
 
 div.new-user table td,
 div.new-plan table td,
-div.manage-plan table td {
+div.manage-plan table td,
+div.registering-container table td,
+div.assignment-container table td,
+div.authorizing-container table td {
 	padding: 10px 5px 10px 10px;
 }
 
 div.new-user input[type="text"],
 div.new-plan input[type="text"],
-div.manage-plan input[type="text"] {
+div.manage-plan input[type="text"],
+div.registering-container input[type="text"],
+div.assignment-container input[type="text"],
+div.authorizing-container input[type="text"] {
 	background: none repeat scroll 0 0 #E8E8E8;
 	border: 1px solid #999999;
 	float: right;
@@ -2626,7 +2649,20 @@ div.manage-plan select {
     margin-right: -5px;
     padding: 3px;
     width: 310px;
+    text-transform: none;
 }
+
+div.registering-container select,
+div.assignment-container select,
+div.authorizing-container select {
+    background: none repeat scroll 0 0 #e8e8e8;
+    border: 1px solid #999999;
+    float: right;
+    font-size: 11px;
+    padding: 3px;
+    width: 300px;
+}
+
 
 div.manage-users input.submit {
 	margin: 10px 15px 15px;
