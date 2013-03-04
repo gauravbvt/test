@@ -21,11 +21,6 @@ import java.util.Date;
 @XmlType( propOrder = {"uri", "name", "version", "release", "dateVersioned"} )
 public class PlanIdentifierData  implements Serializable {
 
-    /**
-     * Simple date format.
-     */
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MMM d yyyy HH:mm z" );
-
     private Plan plan;
 
     public PlanIdentifierData() {
@@ -34,6 +29,10 @@ public class PlanIdentifierData  implements Serializable {
 
     public PlanIdentifierData( CommunityService communityService ) {
         plan = communityService.getPlan();
+    }
+
+    protected SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat( "MMM d yyyy HH:mm z" );
     }
 
     @XmlElement
@@ -62,10 +61,10 @@ public class PlanIdentifierData  implements Serializable {
 
     @XmlElement
     public String getDateVersioned() {
-        return DATE_FORMAT.format( plan.getWhenVersioned() );
+        return getDateFormat().format( plan.getWhenVersioned() );
     }
 
     public String getTimeNow() {
-        return DATE_FORMAT.format( new Date() );
+        return getDateFormat().format( new Date() );
     }
 }

@@ -388,7 +388,6 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         listeners.addListener( aCommunityListener );
     }
 
-
     // Make sure a plan community is fully loaded and initialized.
     private void initialize( PlanCommunity planCommunity ) {
         commanderFactory.getCommander( communityServiceFactory.getService( planCommunity ) );

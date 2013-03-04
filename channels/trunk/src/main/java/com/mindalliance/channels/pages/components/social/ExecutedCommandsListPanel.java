@@ -175,7 +175,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
         if ( nextExecutedCommand == null ) return false;
         if ( !nextExecutedCommand.isDone() ) return false;
         if ( !( nextExecutedCommand.isUpdate() ) ) return false;
-        if ( executedCommand.getChangeId() != nextExecutedCommand.getChangeId() ) return false;
+        if ( !executedCommand.getChangeId().equals( nextExecutedCommand.getChangeId() ) ) return false;
         return true;
     }
 

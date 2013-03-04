@@ -279,7 +279,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + participant.hashCode();
-        hash = hash * 31 + new Long( actorId ).hashCode();
+        hash = hash * 31 + Long.valueOf( actorId ).hashCode();
         if ( organizationParticipation != null ) hash = hash * 31 + organizationParticipation.hashCode();
         return hash;
     }

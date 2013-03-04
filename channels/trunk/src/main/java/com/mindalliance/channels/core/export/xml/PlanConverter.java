@@ -60,15 +60,15 @@ public class PlanConverter extends AbstractChannelsConverter {
         writer.addAttribute( "id", String.valueOf( plan.getId() ) );
         writer.addAttribute( "uri", plan.getUri() );
         writer.addAttribute( "version", getVersion() );
-        writer.addAttribute( "date", DATE_FORMAT.format( new Date() ) );
+        writer.addAttribute( "date", getDateFormat().format( new Date() ) );
         writer.startNode( "whenVersioned" );
-        writer.setValue( DATE_FORMAT.format( plan.getWhenVersioned() ) );
+        writer.setValue( getDateFormat().format( plan.getWhenVersioned() ) );
         writer.endNode();
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf( planDao.getIdGenerator().getIdCounter( getContext().getPlan().getUri() ) ) );
         for ( Date date : plan.getIdShifts().keySet() ) {
             writer.startNode( "idShift" );
-            writer.addAttribute( "date", DATE_FORMAT.format( date ) );
+            writer.addAttribute( "date", getDateFormat().format( date ) );
             writer.addAttribute( "shift", Long.toString( plan.getIdShifts().get( date ) ) );
             writer.endNode();
         }
@@ -206,14 +206,14 @@ public class PlanConverter extends AbstractChannelsConverter {
                 plan.setViewableByAll( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "whenVersioned" ) ) {
                 try {
-                    Date whenVersion = DATE_FORMAT.parse( reader.getValue() );
+                    Date whenVersion = getDateFormat().parse( reader.getValue() );
                     plan.setWhenVersioned( whenVersion );
                 } catch ( ParseException e ) {
                     throw new RuntimeException( e );
                 }
             } else if ( nodeName.equals( "idShift" ) ) {
                 try {
-                    Date date = DATE_FORMAT.parse( reader.getAttribute( "date" ) );
+                    Date date = getDateFormat().parse( reader.getAttribute( "date" ) );
                     Long shift = Long.parseLong( reader.getAttribute( "shift" ) );
                     plan.getIdShifts().put( date, shift );
                 } catch ( ParseException e ) {

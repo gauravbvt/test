@@ -222,7 +222,8 @@ public class UserParticipationServiceImpl
         for ( UserParticipation userParticipation : (List<UserParticipation>) criteria.list() ) {
             delete( userParticipation );
         }
-        communityService.clearCache();
+        if ( communityService != null )
+            communityService.clearCache();
     }
 
     @Override
@@ -475,7 +476,6 @@ public class UserParticipationServiceImpl
     @SuppressWarnings( "unchecked" )
     public List<UserParticipation> listUserParticipationIn( OrganizationParticipation organizationParticipation,
                                                             CommunityService communityService ) {
-        PlanCommunity planCommunity = communityService.getPlanCommunity();
         OrganizationParticipation orgParticipation = organizationParticipationService
                 .findOrganizationParticipation( organizationParticipation.getRegisteredOrganization().getName( communityService ),
                         organizationParticipation.getPlaceholderOrganization( communityService ),

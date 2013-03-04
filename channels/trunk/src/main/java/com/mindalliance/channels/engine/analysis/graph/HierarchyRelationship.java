@@ -1,7 +1,7 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.model.Hierarchical;
+import com.mindalliance.channels.core.query.QueryService;
 
 /**
  * Hierarchical relationship from superior to inferior.
@@ -22,9 +22,6 @@ public class HierarchyRelationship<T extends Hierarchical> extends Relationship 
 
     public void setId( long id, QueryService queryService ) {
         super.setId( id, queryService );
-        HierarchyRelationship hierarchyRel =  new HierarchyRelationship(
-                getFromHierarchical( queryService ),
-                getToHierarchical( queryService ) );
     }
 
     private Hierarchical getFromHierarchical( QueryService queryService ) {

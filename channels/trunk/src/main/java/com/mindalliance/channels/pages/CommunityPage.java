@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
@@ -172,7 +173,9 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private void addCommunityLocale() {
-        Label label = new Label( "locale", "In " + getPlanCommunity().getLocale( getCommunityService() ).getName() );
+        Place locale = getPlanCommunity().getLocale( getCommunityService() );
+        String localeName = locale == null ? "Anywhere" : "In " + locale.getName();
+        Label label = new Label( "locale", localeName );
         label.setOutputMarkupId( true );
         detailsContainer.addOrReplace( label );
     }

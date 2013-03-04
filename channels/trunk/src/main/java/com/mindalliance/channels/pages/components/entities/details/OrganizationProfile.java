@@ -100,7 +100,6 @@ public class OrganizationProfile extends AbstractCommandablePanel {
     }
 
     private void addParentField() {
-        Organization organization = getOrganization();
         // If organization is actual, parent must be actual
         actualParentField = new AutoCompleteTextField<String>(
                 "actualParent",

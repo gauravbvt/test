@@ -3,7 +3,6 @@ package com.mindalliance.channels.social.services.notification;
 
 import com.mindalliance.channels.core.community.CommunityService;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public interface Messageable {
     /**
      * Simple date format.
      */
-    static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "M/d/yyyy HH:mm" );
+    static String DATE_FORMAT_STRING = "M/d/yyyy HH:mm" ;
 
     List<String> getToUserNames( String topic, CommunityService communityService );
 

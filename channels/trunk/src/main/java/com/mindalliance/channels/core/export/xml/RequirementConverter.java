@@ -16,8 +16,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 /**
  * Information sharing requirements converter.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
@@ -184,8 +182,6 @@ public class RequirementConverter extends AbstractChannelsConverter {
 
     @Override
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
-        Map<Long, Long> idMap = getIdMap( context );
-        boolean importingPlan = isImportingPlan( context );
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
         Requirement requirement = getCommunityDao().createRequirement( id );
         while ( reader.hasMoreChildren() ) {

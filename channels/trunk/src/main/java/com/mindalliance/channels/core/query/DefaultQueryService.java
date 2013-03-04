@@ -267,7 +267,7 @@ public abstract class DefaultQueryService implements QueryService {
         for ( Part part : findAllPartsWithExactLocation( place ) )
             part.setLocation( null );
         for ( Place p : list( Place.class ) )
-            if ( equals( p.getWithin() ) )
+            if ( place.equals( p.getWithin() ) )
                 p.setWithin( null );
     }
 
@@ -356,10 +356,6 @@ public abstract class DefaultQueryService implements QueryService {
             for ( ModelObject ref : mos ) {
                 if ( ref.references( mo ) ) count++;
             }
-        }
-        // Include plan as possible referencer
-        if ( getPlan().references( mo ) ) {
-            count++;
         }
         return count;
     }
@@ -2801,9 +2797,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserFullName( String userName ) {
-        if ( userDao == null ) {
-            System.out.println( "OOPS!" );
-        }
+        if ( userName == null || userName.isEmpty() ) return null;
         ChannelsUser user = userDao.getUserNamed( userName );
         if ( user != null ) {
             return user.getFullName();

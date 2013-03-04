@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -120,7 +121,7 @@ public class UserMessage extends UserStatement {
             sb.append( "\n\n -- In response to the " )
                     .append( feedback.getTypeLabel() )
                     .append( " you sent on " );
-            sb.append( DATE_FORMAT.format( feedback.getCreated() ) );
+            sb.append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( feedback.getCreated() ) );
             sb.append( ":\n\n" );
             sb.append( feedback.getText() );
             sb.append( "\n\n ---------------- " );

@@ -108,4 +108,5 @@ public interface PlanCommunityManager extends CommandListener {
      * @param aCommunityListener a community listener
      */
     void addListener( CommunityListener aCommunityListener );
+
 }

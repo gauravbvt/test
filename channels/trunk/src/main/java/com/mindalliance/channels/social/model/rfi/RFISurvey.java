@@ -14,6 +14,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -191,7 +192,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
         sb.append( getSurveyLabel( communityService ) )
                 .append( ".\n" )
                 .append( "Launched on " )
-                .append( DATE_FORMAT.format( getCreated() ) )
+                .append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( getCreated() ) )
                 .append( " by " )
                 .append( communityService.getUserDao().getFullName( getUsername() ) )
                 .append( ".\n\n" );

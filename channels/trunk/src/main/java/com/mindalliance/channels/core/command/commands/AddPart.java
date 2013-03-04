@@ -16,7 +16,6 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.Map;
 
@@ -74,7 +73,6 @@ public class AddPart extends AbstractCommand {
             planDao.removeNode( defaultPart, segment );
         Map<String, Object> partState = (Map<String, Object>) get( "partState" );
         CommunityService communityService = commander.getCommunityService();
-        QueryService queryService = communityService.getPlanService();
         if ( partState != null )
             part.initFromMap( partState, communityService );
         describeTarget( part );

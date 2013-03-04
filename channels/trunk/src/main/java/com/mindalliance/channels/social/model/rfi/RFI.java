@@ -18,6 +18,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -393,7 +394,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         // ignore format
         return getRFILabel( communityService )
                 + "is due on "
-                + Messageable.DATE_FORMAT.format( getDeadline() );
+                + new SimpleDateFormat( DATE_FORMAT_STRING ).format( getDeadline() );
     }
 
     private String getNagContent(
@@ -407,11 +408,11 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
                 .append( "." );
         if ( overdue ) {
             sb.append( " The survey was due on " )
-                    .append( Messageable.DATE_FORMAT.format( getDeadline() ) )
+                    .append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( getDeadline() ) )
                     .append( "." );
         } else {
             sb.append( " The survey is due on " )
-                    .append( Messageable.DATE_FORMAT.format( getDeadline() ) )
+                    .append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( getDeadline() ) )
                     .append( "." );
         }
         sb.append( "\n\n" );
@@ -432,7 +433,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
             Date now = new Date();
             sb.append( now.after( getDeadline() ) ? " was" : " is" )
                     .append( " sent to you on " )
-                    .append( DATE_FORMAT.format( getDeadline() ) )
+                    .append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( getDeadline() ) )
                     .append( " and" );
         }
         int percentComplete = surveysDAO.getPercentCompletion( this );

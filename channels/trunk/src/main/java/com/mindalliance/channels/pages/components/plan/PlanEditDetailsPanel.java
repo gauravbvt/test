@@ -255,7 +255,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         return getPlan().isViewableByAll();
     }
 
-    public void setTemplateViewableByAll( boolean val ) {
+    public void setViewableByAll( boolean val ) {
         if ( val != isViewableByAll() ) {
             doCommand(
                     new UpdatePlanObject( getUser().getUsername(), getPlan(),

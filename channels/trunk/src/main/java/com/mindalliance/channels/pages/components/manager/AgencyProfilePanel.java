@@ -3,7 +3,6 @@ package com.mindalliance.channels.pages.components.manager;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.RegisteredOrganizationService;
 import com.mindalliance.channels.core.model.Channelable;
@@ -293,7 +292,6 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
     @SuppressWarnings( "unchecked" )
     private List<String> findParentNameChoices() {
         if ( parentNameChoices == null ) {
-            final PlanCommunity planCommunity = getPlanCommunity();
             parentNameChoices = (List<String>) CollectionUtils.select(
                     findAllOrganizationNames( getCommunityService() ),
                     new Predicate() {

@@ -171,8 +171,6 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             @Override
             protected void populateItem( ListItem<InfoNeedsReportTask> item ) {
                 InfoNeedsReportTask task = item.getModelObject();
-                QueryService queryService = getQueryService();
-
                 item.add( new WebMarkupContainer( "taskAnchor" ).add( new Label( "taskName", task.getTitle() ) ).add(
                         new AttributeModifier( "name", task.getAnchor() ) ),
                         new UserFeedbackPanel( "taskFeedback", task.getPart(), "Send feedback", Feedback.INFO_NEEDS ),

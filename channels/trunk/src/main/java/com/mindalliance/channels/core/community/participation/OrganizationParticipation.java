@@ -118,7 +118,7 @@ public class OrganizationParticipation extends AbstractPersistentChannelsObject 
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + new Long( placeholderOrgId ).hashCode();
+        hash = hash * 31 + Long.valueOf( placeholderOrgId ).hashCode();
         hash = hash * 31 + registeredOrganization.hashCode();
         return hash;
     }

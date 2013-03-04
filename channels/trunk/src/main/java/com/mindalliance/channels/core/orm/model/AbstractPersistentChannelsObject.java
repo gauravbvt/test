@@ -27,7 +27,7 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
     /**
      * Simple date format.
      */
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm" );
+    private static String DATE_FORMAT_STRING = "M/d/yyyy HH:mm";
 
 
     @Id @GeneratedValue(strategy = GenerationType.TABLE)
@@ -98,7 +98,7 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
     }
 
     protected String getFormattedCreated() {
-        return dateFormat.format( getCreated() );
+        return new SimpleDateFormat( DATE_FORMAT_STRING ).format( getCreated() );
     }
 
     public String getUsername() {
@@ -160,14 +160,15 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
 
     @Override
     public boolean equals( Object obj ) {
-        return obj.getClass().isAssignableFrom( getClass() )
+        return obj != null
+                && obj.getClass().isAssignableFrom( getClass() )
                 && getClass().isAssignableFrom( obj.getClass() )
                 && getId() == ((AbstractPersistentChannelsObject)obj).getId();
     }
 
     @Override
     public int hashCode() {
-        return new Long( getId() ).hashCode();
+        return Long.valueOf( getId() ).hashCode();
     }
 
     public boolean isPersisted() {

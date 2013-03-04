@@ -46,8 +46,6 @@ public abstract class AbstractChannelsConverter implements Converter {
      */
     private final Logger LOG = LoggerFactory.getLogger( AbstractChannelsConverter.class );
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
-
     /**
      * An xmlStreamer.
      */
@@ -55,6 +53,10 @@ public abstract class AbstractChannelsConverter implements Converter {
 
     protected AbstractChannelsConverter( XmlStreamer.Context context ) {
         this.context = context;
+    }
+
+    protected SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" );
     }
 
     protected String getVersion() {

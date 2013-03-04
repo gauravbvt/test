@@ -270,7 +270,10 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
                 String absolutePath = squareIconFile.getAbsolutePath();
                 String relPath = absolutePath.substring( prefix.length() );
-                String encodedPath = relPath.replaceAll( File.separator, SEPARATOR );
+                String encodedPath = relPath.replaceAll(
+                        File.separatorChar=='\\'
+                                ? "\\\\" :
+                                File.separator, SEPARATOR );
 
                 return "icons" + File.separator + encodedPath;
             }

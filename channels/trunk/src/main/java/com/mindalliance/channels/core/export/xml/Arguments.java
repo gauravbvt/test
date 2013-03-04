@@ -13,13 +13,15 @@ import java.util.Map;
  */
 public class Arguments {
 
+    private Map<String,Object> value = new HashMap<String,Object>();
+
     public Arguments() {}
 
     public Arguments( Map<String, Object> value ) {
-        this.value = (HashMap<String, Object>)value;
+        this.value = value;
     }
 
-    public HashMap<String, Object> getValue() {
+    public Map<String, Object> getValue() {
         return value;
     }
 
@@ -27,5 +29,4 @@ public class Arguments {
         this.value = value;
     }
 
-    private HashMap<String,Object> value = new HashMap<String,Object>();
 }

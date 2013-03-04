@@ -122,8 +122,8 @@ public class PhaseListPanel extends AbstractCommandablePanel {
         };
         makeVisible(
                 deleteLink,
-                isLockedByUser( plan )
-                        && !wrapper.isMarkedForCreation()
+                !wrapper.isMarkedForCreation()
+                        && isLockedByUser( getPlan() )
                         && plan.getPhases().size() > 1
                         && getQueryService().countReferences( wrapper.getPhase() ) <= 1 );
         item.addOrReplace( deleteLink );

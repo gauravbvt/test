@@ -55,7 +55,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
         writer.setValue( String.valueOf( communityDao.getIdGenerator().getIdCounter( planCommunity.getUri() ) ) );
         for ( Date date : planCommunity.getIdShifts().keySet() ) {
             writer.startNode( "idShift" );
-            writer.addAttribute( "date", DATE_FORMAT.format( date ) );
+            writer.addAttribute( "date", getDateFormat().format( date ) );
             writer.addAttribute( "shift", Long.toString( planCommunity.getIdShifts().get( date ) ) );
             writer.endNode();
         }
@@ -132,7 +132,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 planCommunity.setName( reader.getValue() );
             } else if ( nodeName.equals( "idShift" ) ) {
                 try {
-                    Date date = DATE_FORMAT.parse( reader.getAttribute( "date" ) );
+                    Date date = getDateFormat().parse( reader.getAttribute( "date" ) );
                     Long shift = Long.parseLong( reader.getAttribute( "shift" ) );
                     planCommunity.getIdShifts().put( date, shift );
                 } catch ( ParseException e ) {

@@ -15,8 +15,6 @@ import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.social.model.Feedback;
@@ -351,8 +349,6 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoRFIsDescription( ChannelsUser user, CommunityService communityService ) {
-        QueryService queryService = getQueryService();
-        Analyst analyst = getAnalyst();
         int activeCount = rfiService.listUserActiveRFIs( communityService, user ).size();
         StringBuilder sb = new StringBuilder();
         sb

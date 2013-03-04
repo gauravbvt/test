@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 
@@ -14,7 +15,7 @@ import java.util.Comparator;
  * Date: Jan 21, 2009
  * Time: 12:53:49 PM
  */
-public class PropertyComparator<T> implements Comparator<T> {
+public class PropertyComparator<T> implements Comparator<T>, Serializable {
 
     private SortParam sortParam;
 

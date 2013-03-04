@@ -227,7 +227,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
         if ( isCommunityDefined() ) {
             hash = hash * 31 + name.hashCode();
         } else {
-            hash = hash * 31 + new Long( fixedOrganizationId ).hashCode();
+            hash = hash * 31 + Long.valueOf( fixedOrganizationId ).hashCode();
         }
         return hash;
     }

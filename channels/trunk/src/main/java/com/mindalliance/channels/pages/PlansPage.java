@@ -3,11 +3,8 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
-import com.mindalliance.channels.core.query.QueryService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.social.model.Feedback;
@@ -152,7 +149,6 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     private void addGotoLinks( CommunityService communityService, ChannelsUser user ) {
         Plan plan = communityService.getPlan();
-        PlanCommunity planCommunity = communityService.getPlanCommunity();
         String uri = plan.getUri();
         boolean planner = user.isPlanner( uri );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
@@ -249,8 +245,6 @@ public class PlansPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoRFIsDescription( ChannelsUser user, CommunityService communityService ) {
-        QueryService queryService = getQueryService();
-        Analyst analyst = getAnalyst();
         int activeCount = rfiService.listUserActiveRFIs( communityService, user ).size();
         StringBuilder sb = new StringBuilder();
         sb

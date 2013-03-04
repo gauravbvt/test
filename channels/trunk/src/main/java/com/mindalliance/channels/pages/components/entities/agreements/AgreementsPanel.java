@@ -197,7 +197,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                     selectedAgreement.getOrganization(),
                     queryService.getAssignments( false ),
                     queryService.findAllFlows()
-                    );
+            );
         }
     }
 
@@ -222,15 +222,8 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                 target.add( agreementsTable );
                 addCommitmentsContainer();
                 target.add( commitmentsContainer );
-                if ( ( (AgreementWrapper) object ).isConfirmed() ) {
-                    update(
-                            target,
-                            new Change( Change.Type.Updated, wrapper.getOrganization(), "agreements" ) );
-                } else {
-                    update(
-                            target,
-                            new Change( Change.Type.Updated, wrapper.getOrganization(), "agreements" ) );
-                }
+                update( target,
+                        new Change( Change.Type.Updated, wrapper.getOrganization(), "agreements" ) );
             }
         }
     }
@@ -268,7 +261,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
         }
 
         public boolean isConfirmable() {
-           return isLockedByUserIfNeeded( getOrganization() );
+            return isLockedByUserIfNeeded( getOrganization() );
         }
 
         public boolean isConfirmed() {

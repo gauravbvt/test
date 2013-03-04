@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.core.community.CommunityDefinitionManager;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -74,6 +75,9 @@ public class AdminPage extends AbstractChannelsWebPage {
     @SpringBean
     private PlanDefinitionManager planDefinitionManager;
 
+    @SpringBean
+    private CommunityDefinitionManager communityDefinitionManager;
+
     /**
      * The user service.
      */
@@ -90,6 +94,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private String newPlanUri;
 
     private String newPlanClient;
+    private FeedbackPanel validationFeedbackPanel;
 
     /**
      * Constructor. Having this constructor public means that your page is 'bookmarkable' and hence
@@ -168,25 +173,30 @@ public class AdminPage extends AbstractChannelsWebPage {
                 }
             }
         };
-        deleteLink.setVisible( planDefinitionManager.getSize() >= 1 );
+        deleteLink.setVisible( canBeDeletedPlan( getPlan() ));
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
         managePlanSubmit.setVisible( getPlan().isDevelopment() );
         Label homeLink = new Label("homeLink", "Home");
         homeLink.add( new AjaxEventBehavior("onclick") {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                // Todo
+                // Do nothing
             }
         } );
+        validationFeedbackPanel = new FeedbackPanel( "feedback" ) {
+            @Override
+            protected String getCSSClass(final FeedbackMessage message) {
+                return "issues settings";  // customize here
+            }
+        };
+        validationFeedbackPanel.setOutputMarkupId( true );
+        // makeVisible( validationFeedbackPanel, !validationFeedbackPanel.getFeedbackMessages().isEmpty() );
         add(
                 form.add(
                         homeLink,
-                        new FeedbackPanel( "feedback" ) {
-                            @Override
-                            protected String getCSSClass(final FeedbackMessage message) {
-                                return super.getCSSClass( message );  // customize
-                            }
-                        },
+
+                        validationFeedbackPanel
+                                /*.setVisible( !validationFeedbackPanel.getFeedbackMessages().isEmpty() )*/,
 
                         productizeLink,
 
@@ -198,7 +208,9 @@ public class AdminPage extends AbstractChannelsWebPage {
                         new TextField<String>( "planClient",
                                 new PropertyModel<String>( this, "planClient" ) )
                                 .setEnabled( getPlan().isDevelopment() ),
-
+                        new Label(
+                                "communitiesCount",
+                                Integer.toString( communityDefinitionManager.countCommunitiesFor( getPlan().getUri() ) ) ),
                         new TextField<String>( "plannerSupportCommunity",
                                 new PropertyModel<String>( this, "plannerSupportCommunity" ) ),
                         new TextField<String>( "userSupportCommunity",
@@ -274,6 +286,11 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 } )
                                 .add( new ValidationStyler() )
                 ) );
+    }
+
+    private boolean canBeDeletedPlan( Plan plan ) {
+        return planDefinitionManager.getSize() >= 1
+                && communityDefinitionManager.countCommunitiesFor( plan.getUri() ) == 0;
     }
 
     public String getPlannerSupportCommunity() {

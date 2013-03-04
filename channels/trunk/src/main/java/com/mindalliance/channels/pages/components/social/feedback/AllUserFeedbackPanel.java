@@ -51,7 +51,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     /**
      * Simple date format.
      */
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat( "M/d/yyyy HH:mm" );
+    private static String DATE_FORMAT_STRING =  "M/d/yyyy HH:mm";
 
     private static int MAX_TEXT_LENGTH = 40;
 
@@ -256,7 +256,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
                 }
             }
             sb.append( ", received on " );
-            sb.append( dateFormat.format( feedback.getCreated() ) );
+            sb.append( new SimpleDateFormat(DATE_FORMAT_STRING).format( feedback.getCreated() ) );
             sb.append( "." );
         }
         return StringUtils.capitalize( sb.toString() );
@@ -498,12 +498,12 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         }
 
         public String getFormattedCreated() {
-            return dateFormat.format( feedback.getCreated() );
+            return new SimpleDateFormat(DATE_FORMAT_STRING).format( feedback.getCreated() );
         }
 
         public String getFormattedLastReplied() {
             return feedback.getLastReplied() != null
-                    ? dateFormat.format( feedback.getLastReplied() )
+                    ? new SimpleDateFormat(DATE_FORMAT_STRING).format( feedback.getLastReplied() )
                     : null;
         }
 

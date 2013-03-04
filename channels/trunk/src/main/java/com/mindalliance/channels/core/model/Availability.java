@@ -114,4 +114,8 @@ public class Availability implements Serializable {
                 toString().equals( other.toString() );
     }
 
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
 }

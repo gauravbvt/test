@@ -13,6 +13,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -214,7 +215,7 @@ public class Feedback extends UserStatement {
                 + getPlanVersion()
                 + "\nUser: " + communityService.getUserDao().getFullName( getUsername() )
                 + "\n"
-                + DATE_FORMAT.format( getCreated() )
+                + new SimpleDateFormat( DATE_FORMAT_STRING ).format( getCreated() )
                 + aboutString(  )
                 + "\n----------------------------------------------------------------------------\n\n"
                 + getText()

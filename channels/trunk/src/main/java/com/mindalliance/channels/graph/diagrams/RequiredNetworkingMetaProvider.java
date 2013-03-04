@@ -14,7 +14,6 @@ import org.jgrapht.ext.EdgeNameProvider;
 import org.jgrapht.ext.VertexNameProvider;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -169,12 +168,6 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
         private String getIcon( CommunityService communityService, ImagingService service, Agency agency ) {
             String iconName;
-            String imagesDirName;
-            try {
-                imagesDirName = getImageDirectory().getFile().getAbsolutePath();
-            } catch ( IOException e ) {
-                throw new RuntimeException( "Unable to get image directory location", e );
-            }
             String label = getIdentifiableLabel( agency );
             String[] lines = label.split( "\\|" );
             int numLines = Math.min( lines.length, 3 );

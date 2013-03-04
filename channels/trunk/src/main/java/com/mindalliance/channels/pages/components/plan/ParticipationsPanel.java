@@ -246,7 +246,6 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
 
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         List<ParticipationWrapper> participationWrappers = new ArrayList<ParticipationWrapper>();
-        participationWrappers = new ArrayList<ParticipationWrapper>();
         CommunityService communityService = getCommunityService();
         ChannelsUserDao userDao = communityService.getUserDao();
         UserParticipationService userParticipationService = communityService.getUserParticipationService();

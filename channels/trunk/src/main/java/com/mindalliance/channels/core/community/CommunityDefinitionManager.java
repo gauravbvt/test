@@ -3,6 +3,8 @@ package com.mindalliance.channels.core.community;
 import com.mindalliance.channels.core.dao.IdGenerator;
 import com.mindalliance.channels.core.dao.SimpleIdGenerator;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -345,5 +347,22 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
             uri = planUri + "_" + index;
         }
         return uri;
+    }
+
+    /**
+     * Counts how many plan communities were created based on a given plan.
+     * @param planUri a plan's uri
+     * @return an integer count
+     */
+    public int countCommunitiesFor( final String planUri ) {
+        return CollectionUtils.select(
+            definitions.values(),
+            new Predicate() {
+                @Override
+                public boolean evaluate( Object object ) {
+                    return ((CommunityDefinition) object).getPlanUri().equals( planUri );
+                }
+            }
+        ).size();
     }
 }

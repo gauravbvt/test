@@ -94,7 +94,7 @@ public class PresenceRecordServiceImpl
             recordPresence( username, planCommunity );
         }
         Map<String, Long> lives = getUserLives( planCommunity.getUri() );
-        lives.put( username, System.currentTimeMillis() + ( refreshDelay * 2 * 1000 ) );
+        lives.put( username, System.currentTimeMillis() + ( refreshDelay * 2L * 1000L ) );
     }
 
     @Override

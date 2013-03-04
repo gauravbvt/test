@@ -2,7 +2,6 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
@@ -12,7 +11,6 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.query.PlanService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 
@@ -96,8 +94,6 @@ public class NotificationData extends AbstractFlowData {
             ChannelsUserInfo userInfo ) {
         Set<CommunityEmployment> employments = new HashSet<CommunityEmployment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>();
-        PlanService planService = communityService.getPlanService();
-        UserParticipationService userParticipationService = communityService.getUserParticipationService();
         for ( CommunityCommitment commitment : commitments ) {
             if ( isInitiating() ) {  // notifying
                 CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
