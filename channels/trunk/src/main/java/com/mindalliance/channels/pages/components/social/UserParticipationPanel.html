@@ -26,16 +26,18 @@
                         <span wicket:id="requester">(requested by John Doe)</span>
                     </li>
                 </ul>
-                <div wicket:id="newParticipation">
-                    <span wicket:id="newParticipationLabel">I (also) participate in</span>
-                    <select wicket:id="agencies">
-                        <option>org</option>
-                    </select>
-                    <div wicket:id="asAgent">
-                         as <select wicket:id="agents">
-                            <option>agent</option>
-                        </select>
-                    </div>
+            </div>
+        </div>
+        <div wicket:id="newParticipationContainer" class="tabcontent-group">
+            <h3 wicket:id="newParticipationLabel">I (also) participate in</h3>
+            <div wicket:id="newParticipation">
+                <select wicket:id="agencies">
+                    <option>org</option>
+                </select>
+                <div wicket:id="asAgent">
+                    as <select wicket:id="agents">
+                    <option>agent</option>
+                </select>
                 </div>
             </div>
         </div>
@@ -50,7 +52,7 @@
                         <span wicket:id="requester">(requested by John Doe)</span>
                     </li>
                 </ul>
-             </div>
+            </div>
         </div>
     </div>
 </wicket:panel>

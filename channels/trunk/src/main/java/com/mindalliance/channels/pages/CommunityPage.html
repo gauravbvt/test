@@ -10,6 +10,7 @@
             <div class="about-plan">
                 <input wicket:id="edit" type="button" value="Edit"/>
                 <!--<img wicket:id="planImage" class="plan-image" src="#" width="48" height="48"/>-->
+                <h2>Community</h2>
                 <span wicket:id="name" class="plan-name">Community name</span>
                 <span wicket:id="planVersion" class="plan-client">Plan version</span>
                 <span class="locale">
@@ -75,22 +76,8 @@
 
         </div>
 
-        <div wicket:id="referencesContainer" class="plan-references">
-            <h2 wicket:id="communityDocumentsEdit">
-                <a wicket:id="attach" href="#">Community documents</a>
-            </h2>
-             <span class="attachments">
-                 <div wicket:id="attachmentsContainer">
-                     <span wicket:id="attachments">[attachments panel]</span>
-                 </div>
-            </span>
-            <h2 wicket:id="communityDocuments">Community documents</h2>
-            <ul>
-                <li wicket:id="references">
-                    <a wicket:id="attachment" href="#">reference</a>
-                </li>
-            </ul>
-        </div>
+        <h2 wicket:id="attachmentsLabel">Community documents</h2>
+        <span wicket:id="attachments">[attachments panel]</span>
     </div>
 
     <div class="right-accordion">

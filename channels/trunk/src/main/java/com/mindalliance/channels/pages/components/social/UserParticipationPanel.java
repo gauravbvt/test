@@ -75,6 +75,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         addUserParticipationContainer();
         addUserRole();
         addOpenAndConfirmedParticipation();
+        addNewParticipation();
         addToBeConfirmedParticipation();
     }
 
@@ -128,10 +129,14 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         };
         openAndConfirmedParticipationContainer.add( participationList );
-        // new participation
-        WebMarkupContainer newParticipationContainer = new WebMarkupContainer( "newParticipation" );
-        newParticipationContainer.setOutputMarkupId( true );
-        openAndConfirmedParticipationContainer.add( newParticipationContainer );
+        openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
+    }
+
+    private void addNewParticipation() {
+        List<ParticipationWrapper> participationWrappers = openAndConfirmedParticipationWrappers();
+        WebMarkupContainer newParticipationContainer = new WebMarkupContainer( "newParticipationContainer" );
+        newParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
+        userParticipationContainer.add( newParticipationContainer );
         newParticipationContainer.add(
                 new Label(
                         "newParticipationLabel",
@@ -139,11 +144,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                                 ? "I participate in"
                                 : "I also participate in" )
         );
-        addPartipationAgencyChoice( newParticipationContainer, participationWrappers );
-        addParticipationAgentChoice( newParticipationContainer, participationWrappers );
-        openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
+        WebMarkupContainer newParticipationControls = new WebMarkupContainer( "newParticipation" );
+        newParticipationControls.setOutputMarkupId( true );
+        newParticipationContainer.add(  newParticipationControls );
+        addPartipationAgencyChoice( newParticipationControls, participationWrappers );
+        addParticipationAgentChoice( newParticipationControls, participationWrappers );
     }
-
 
     private List<ParticipationWrapper> openAndConfirmedParticipationWrappers() {
         List<ParticipationWrapper> wrappers = new ArrayList<ParticipationWrapper>();

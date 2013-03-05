@@ -128,6 +128,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private String attachablePath = "";
 
     /**
+     * Enforces readOnly state if true.
+     */
+    private boolean readOnly;
+
+    /**
      * The content of the url field.
      */
     private String url;
@@ -135,14 +140,30 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     public AttachmentPanel(
             String id,
             IModel<? extends ModelObject> model ) {
-        this( id, model, "" );
+        this( id, model, "", false );
+    }
+
+    public AttachmentPanel(
+            String id,
+            IModel<? extends ModelObject> model,
+            boolean readOnly ) {
+        this( id, model, "", readOnly );
     }
 
     public AttachmentPanel(
             String id,
             IModel<? extends ModelObject> model,
             String attachablePath ) {
+        this( id, model, attachablePath, false );
+    }
+
+    public AttachmentPanel(
+            String id,
+            IModel<? extends ModelObject> model,
+            String attachablePath,
+            boolean readOnly ) {
         super( id, model, null );
+        this.readOnly = readOnly;
         this.attachablePath = attachablePath;
         setOutputMarkupId( true );
         container = new WebMarkupContainer( "container" );
@@ -192,7 +213,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         makeVisible( uploadField, Kind.File.equals( kind ) );
         makeVisible( urlField, Kind.URL.equals( kind ) );
-        makeVisible( controlsContainer, isLockedByUserIfNeeded( getAttachee() ) );
+        makeVisible( controlsContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
     }
 
     private void refresh( AjaxRequestTarget target ) {
@@ -312,14 +333,15 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void addCopyImage( ListItem<Attachment> item ) {
         final Attachment attachment = item.getModelObject();
-        AjaxFallbackLink deletelink = new AjaxFallbackLink( "copy" ) {
+        AjaxFallbackLink copyLink = new AjaxFallbackLink( "copy" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new CopyAttachment( getUser().getUsername(), attachment ) );
                 change.setType( Change.Type.Copied );
                 update( target, change );
             }
         };
-        item.add( deletelink );
+        makeVisible( copyLink, !readOnly );
+        item.add( copyLink );
     }
 
     private void addDeleteImage( ListItem<Attachment> item ) {
@@ -343,7 +365,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
-        makeVisible( deleteLink, isLockedByUserIfNeeded( getAttachee() ) );
+        makeVisible( deleteLink, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
         item.add( deleteLink );
     }
 
