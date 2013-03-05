@@ -109,4 +109,11 @@ public interface PlanCommunityManager extends CommandListener {
      */
     void addListener( CommunityListener aCommunityListener );
 
+    /**
+     * Whether a given user is community planner for a given plan community.
+     * @param user a Channels user
+     * @param planCommunity a plan community
+     * @return a plan community
+     */
+    boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity );
 }

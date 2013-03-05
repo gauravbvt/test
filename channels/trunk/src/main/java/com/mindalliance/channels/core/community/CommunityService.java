@@ -115,6 +115,7 @@ public interface CommunityService {
 
     <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, long id );
 
+
     void update( ModelObject mo );
 
     /**

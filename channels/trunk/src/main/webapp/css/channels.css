@@ -2578,7 +2578,7 @@ input[disabled] {
 }
 
 .partMediaRefs ul {
-    margin: 0;
+    margin-top: 10px;
     position: absolute;
     top: 2px;
     left: 2em;
@@ -3661,4 +3661,8 @@ div.feedback-new-message input:hover {
     vertical-align: middle;
     padding-right: 10px;
     padding-left: 2px;
+}
+
+.segmentGeoLink img {
+    margin-top: 5px;
 }

@@ -388,6 +388,11 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         listeners.addListener( aCommunityListener );
     }
 
+    @Override
+    public boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
+        return communityPlannerService.isPlanner( user, communityServiceFactory.getService( planCommunity ) );
+    }
+
     // Make sure a plan community is fully loaded and initialized.
     private void initialize( PlanCommunity planCommunity ) {
         commanderFactory.getCommander( communityServiceFactory.getService( planCommunity ) );

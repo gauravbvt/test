@@ -33,17 +33,19 @@ public class CommunityPlannerServiceImpl
     private ChannelsUserDao userDao;
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public boolean isPlanner( ChannelsUser user, CommunityService communityService ) {
         return findCommunityPlanner( user.getUserInfo(), communityService ) != null;
     }
 
     @Override
     @Transactional
-    public CommunityPlanner authorizePlanner( String username, ChannelsUser planner, CommunityService communityService ) {
-        ChannelsUser user = userDao.getUserNamed( username );
-        if ( user != null && communityService.isCommunityPlanner( user ) ) {
-            CommunityPlanner communityPlanner = new CommunityPlanner( username, planner, communityService.getPlanCommunity() );
+    public CommunityPlanner authorizePlanner( String username, ChannelsUser authorizedUser, CommunityService communityService ) {
+        ChannelsUser authorizingUser = userDao.getUserNamed( username );
+        if ( authorizingUser != null && authorizedUser != null
+                && communityService.isCommunityPlanner( authorizingUser )
+                && !isPlanner( authorizedUser, communityService ) ) {
+            CommunityPlanner communityPlanner = new CommunityPlanner( username, authorizedUser, communityService.getPlanCommunity() );
             save( communityPlanner );
             communityService.clearCache();
             return communityPlanner;
@@ -77,23 +79,23 @@ public class CommunityPlannerServiceImpl
     }
 
     @Override
-    @Transactional( readOnly = true )
-    @SuppressWarnings( "unchecked" )
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<CommunityPlanner> listPlanners( CommunityService communityService ) {
         return listPlanners( communityService.getPlanCommunity() );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<CommunityPlanner> listPlanners( PlanCommunity planCommunity ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", planCommunity.getUri() ) );
-        return (List<CommunityPlanner>)criteria.list();
+        return (List<CommunityPlanner>) criteria.list();
     }
 
 
     @Override
-    @Transactional( readOnly = true )
+    @Transactional(readOnly = true)
     public boolean wasNotified( ChannelsUser planner, CommunityService communityService ) {
         CommunityPlanner communityPlanner = findCommunityPlanner( planner.getUserInfo(), communityService );
         return communityPlanner != null && communityPlanner.isUserNotified();

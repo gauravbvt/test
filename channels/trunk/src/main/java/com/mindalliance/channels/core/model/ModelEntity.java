@@ -121,12 +121,12 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         UNIVERSAL_TYPES.add( ANY_MEDIUM_TYPE );
 
         ANY_INFO_PRODUCT_TYPE = new InfoProduct( "any information product" );
-        ANY_INFO_PRODUCT_TYPE.setId( 10000000L - 16 );
+        ANY_INFO_PRODUCT_TYPE.setId( 10000000L - 17 );
         ANY_INFO_PRODUCT_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_INFO_PRODUCT_TYPE );
 
         ANY_INFO_FORMAT_TYPE = new InfoFormat( "any format" );
-        ANY_INFO_FORMAT_TYPE.setId( 10000000L - 16 );
+        ANY_INFO_FORMAT_TYPE.setId( 10000000L - 18 );
         ANY_INFO_FORMAT_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_INFO_FORMAT_TYPE );
 

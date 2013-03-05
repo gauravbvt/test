@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.GeoMapPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
@@ -36,10 +37,17 @@ public class GeomapLinkPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
+        addLinkContainer();
+    }
+
+    private void addLinkContainer() {
+        WebMarkupContainer linkContainer = new WebMarkupContainer( "linkContainer" );
+        linkContainer.setOutputMarkupId( true );
         Component link = GeoMapPage.makeLink( "mapLink", titleModel, geoLocatables, getQueryService() )
                 .setVisible( hasMappableContent() );
         addTipTitle( link, hintModel );
-        add( link );
+        linkContainer.add( link );
+        addOrReplace( linkContainer );
     }
 
     public boolean hasMappableContent() {

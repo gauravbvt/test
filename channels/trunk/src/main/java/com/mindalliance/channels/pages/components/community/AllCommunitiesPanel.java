@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.community;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
@@ -142,12 +143,16 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
         List<CommunityWrapper> wrappers = new ArrayList<CommunityWrapper>();
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( !planCommunity.isDomainCommunity()
-                    && ( !planCommunity.isClosed() || getCommunityService().isCommunityPlanner( getUser() ) ) ) {
+                    && ( !planCommunity.isClosed() || isCommunityPlanner( getUser(), planCommunity ) ) ) {
                 wrappers.add( new CommunityWrapper( planCommunity ) );
             }
         }
         Collections.sort( wrappers );
         return wrappers;
+    }
+
+    private boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
+        return planCommunityManager.isCommunityPlanner( user, planCommunity );
     }
 
     public class CommunityWrapper implements Identifiable, Comparable<CommunityWrapper> {
