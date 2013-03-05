@@ -4,7 +4,9 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import com.mindalliance.channels.social.model.Feedback;
@@ -14,15 +16,11 @@ import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -73,7 +71,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
     protected void addContent() {
         addPlanName();
         addPlanClient();
-        addReferences();
+        addAttachments();
         addGotoLinks( getCommunityService(), getUser() );
         addSocial();
     }
@@ -108,30 +106,22 @@ public class PlansPage extends AbstractChannelsBasicPage {
         getContainer().add( new Label( "planClient", getPlan().getClient() ) );
     }
 
-    private void addReferences() {
-        List<Attachment> references = getReferences();
-        WebMarkupContainer referencesContainer = new WebMarkupContainer( "referencesContainer" );
-        getContainer().add( referencesContainer );
-        ListView<Attachment> attachmentList = new ListView<Attachment>(
-                "references",
-                references ) {
+    private void addAttachments() {
+        WebMarkupContainer attachmentsLabel = new WebMarkupContainer( "attachmentsLabel" );
+        attachmentsLabel.setOutputMarkupId( true );
+        getContainer().addOrReplace( attachmentsLabel );
+        boolean visible = !isAttachmentsReadOnly() || !getPlan().getAttachments().isEmpty();
+        makeVisible( attachmentsLabel, visible );
+        AttachmentPanel attachmentPanel = new AttachmentPanel(
+                "attachments",
+                new Model<ModelObject>( getPlan() ),
+                isAttachmentsReadOnly() );
+        makeVisible( attachmentPanel, visible );
+        getContainer().addOrReplace( attachmentPanel );
+    }
 
-            @Override
-            protected void populateItem( ListItem<Attachment> item ) {
-                Attachment a = item.getModelObject();
-                ExternalLink documentLink = new ExternalLink( "attachment",
-                        a.getUrl(), getAttachmentManager().getLabel( getCommunityService(), a ) );
-                documentLink.add( new AttributeModifier( "target", new Model<String>( "_" ) ) );
-                item.add( documentLink );
-                addTipTitle(
-                        item,
-                        new Model<String>(
-                                a.getType().getLabel() + " - " + a.getUrl()
-                        ) );
-            }
-        };
-        referencesContainer.add( attachmentList );
-        referencesContainer.setVisible( !references.isEmpty() );
+    private boolean isAttachmentsReadOnly() {
+        return !isPlanner();
     }
 
     @SuppressWarnings("unchecked")
