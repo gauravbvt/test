@@ -42,7 +42,10 @@
                     <td><input wicket:id="name" type="text"/></td>
                 </tr>
                 <tr>
-                    <td class="label"><span wicket:id="radios"></span> </td>
+                    <td class="label">
+                        <a wicket:id="urlKind" href="#">URL</a>
+                        <a wicket:id="fileKind" href="#">File</a>
+                    </td>
                     <td>
                         <input class="file" type="file" wicket:id="upload" value="Upload"/>
                         <input type="text" wicket:id="url" value="url"/>

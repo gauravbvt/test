@@ -183,7 +183,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         addAttachmentContainer = new WebMarkupContainer( "addAttachment" );
         addAttachmentContainer.setOutputMarkupId( true );
         container.add( addAttachmentContainer );
-        makeVisible( addAttachmentContainer, isLockedByUserIfNeeded( getAttachee() ) );
+        makeVisible( addAttachmentContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
         addControlsHeader( addAttachmentContainer );
         addControls( addAttachmentContainer );
     }
@@ -243,7 +243,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         makeVisible( uploadField, Kind.File.equals( kind ) );
         makeVisible( urlField, Kind.URL.equals( kind ) );
-        makeVisible( addAttachmentContainer, isLockedByUserIfNeeded( getAttachee() ) );
+        makeVisible( addAttachmentContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
         makeVisible( controlsContainer, showingControls );
     }
 
@@ -402,7 +402,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         item.add( deleteLink );
     }
 
-    private void addKindSelector() {
+    private void addRadioKindSelector() {
         RadioChoice<Kind> kindSelector = new RadioChoice<Kind>(
                 "radios",
                 new PropertyModel<Kind>( this, "kind" ),
@@ -429,6 +429,33 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             }
         } );
         controlsContainer.add( kindSelector );
+    }
+
+    private void addKindSelector() {
+        AjaxLink<String> urlKindLink = new AjaxLink<String>( "urlKind" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Kind k = Kind.URL;
+                setKind( k );
+                makeVisible( uploadField, Kind.File.equals( k ) );
+                makeVisible( urlField, Kind.URL.equals( k ) );
+                submit.setEnabled( Kind.File.equals( kind ) );
+                target.add( AttachmentPanel.this );
+            }
+        };
+        controlsContainer.add( urlKindLink );
+        AjaxLink<String> fileKindLink = new AjaxLink<String>( "fileKind" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Kind k = Kind.File;
+                setKind( k );
+                makeVisible( uploadField, Kind.File.equals( k ) );
+                makeVisible( urlField, Kind.URL.equals( k ) );
+                submit.setEnabled( Kind.File.equals( kind ) );
+                target.add( AttachmentPanel.this );
+            }
+        };
+        controlsContainer.add( fileKindLink );
     }
 
     /**
