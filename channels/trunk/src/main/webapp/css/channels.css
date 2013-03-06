@@ -1479,6 +1479,10 @@ ul.call-list {
     padding-bottom: 5px;
 }
 
+.attachment-panel-add-container .attach-controls {   /*added by JF */
+    table-layout: fixed;
+}
+
 /*
 
 ul.attach li {

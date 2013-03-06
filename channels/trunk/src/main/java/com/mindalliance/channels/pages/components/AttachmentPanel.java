@@ -18,6 +18,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -61,6 +62,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * Attachment type choice.
      */
     private DropDownChoice<Type> typeChoice;
+    /**
+     * Whether to show the new attachment controls.
+     */
+    private boolean showingControls = false;
+    private WebMarkupContainer addAttachmentContainer;
 
     /**
      * Available attachment kind. Each kind should have a corresponding field.
@@ -170,17 +176,41 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         container.setOutputMarkupId( true );
         add( container );
         addAttachmentList();
+        addNewAttachment();
+    }
+
+    private void addNewAttachment() {
+        addAttachmentContainer = new WebMarkupContainer( "addAttachment" );
+        addAttachmentContainer.setOutputMarkupId( true );
+        container.add( addAttachmentContainer );
+        makeVisible( addAttachmentContainer, isLockedByUserIfNeeded( getAttachee() ) );
+        addControlsHeader( addAttachmentContainer );
+        addControls( addAttachmentContainer );
+    }
+
+    private void addControlsHeader( WebMarkupContainer addAttachmentContainer ) {
+        AjaxLink<String> showControlsLink = new AjaxLink<String>( "showControls" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                showingControls = !showingControls;
+                makeVisible( controlsContainer, showingControls );
+                target.add( controlsContainer );
+            }
+        };
+        addAttachmentContainer.add( showControlsLink );
+    }
+
+    private void addControls( WebMarkupContainer addAttachmentContainer ) {
         controlsContainer = new WebMarkupContainer( "controls" );
         controlsContainer.setOutputMarkupId( true );
-        makeVisible( controlsContainer, isLockedByUserIfNeeded( getAttachee() ) );
-        container.add( controlsContainer );
+        makeVisible( controlsContainer, showingControls );
+        addAttachmentContainer.add( controlsContainer );
         addTypeChoice();
         addKindSelector();
         addNameField();
         addUploadField();
         addUrlField();
         addSubmit();
-        // adjustFields();
     }
 
     /**
@@ -213,7 +243,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void adjustFields() {
         makeVisible( uploadField, Kind.File.equals( kind ) );
         makeVisible( urlField, Kind.URL.equals( kind ) );
-        makeVisible( controlsContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
+        makeVisible( addAttachmentContainer, isLockedByUserIfNeeded( getAttachee() ) );
+        makeVisible( controlsContainer, showingControls );
     }
 
     private void refresh( AjaxRequestTarget target ) {
@@ -340,6 +371,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
+        addTipTitle( copyLink, "Copy the attachment" );
         makeVisible( copyLink, !readOnly );
         item.add( copyLink );
     }
@@ -365,6 +397,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                         ) );
             }
         };
+        addTipTitle( deleteLink, "Remove the attachment" );
         makeVisible( deleteLink, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
         item.add( deleteLink );
     }

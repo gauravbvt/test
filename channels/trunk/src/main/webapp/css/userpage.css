@@ -2576,6 +2576,9 @@ ul.attach li ul.menu li a:hover {
     border: 1px solid #000000;
 }
 
+.attachment-panel-add-container .attach-controls {   /*added by JF */
+    table-layout: fixed;
+}
 
 /* ----- Settings Page ----- */
 
