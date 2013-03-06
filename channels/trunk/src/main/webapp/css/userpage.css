@@ -592,16 +592,21 @@ span.status div {
 	display: inline;
 }
 
-span.attachments {
+div.attachment-panel {
+    display: block;
+    margin: 0 0 0 35px;
+    width: 359px;
+}
+
+div.attachments {
     display: block;
     float: left;
-    width: 360px;
-    padding: 20px 0 0;
 }
 
 div.plan-references h2,
 h3.resolved, h3.not-resolved,
-span.attachments h2 a {
+h2.attachment-panel-title,
+h2.attachment-panel-add a {
     background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
@@ -614,8 +619,16 @@ span.attachments h2 a {
     width: 100%;
 }
 
-span.attachments h2 a {
-    background: url("../images/link.more.png") no-repeat scroll 360px 8px #E8E8E8;	
+h2.attachment-panel-add a {
+    background: url("../images/link.more.png") no-repeat scroll 360px 8px #E8E8E8;
+    border-top: medium none;
+    margin-bottom: 0;
+    width: 357px;
+}
+
+h2.attachment-panel-title {
+	margin: 0 0 0 35px;
+	width: 359px;
 }
 
 h3.resolved, h3.not-resolved {
@@ -624,7 +637,7 @@ h3.resolved, h3.not-resolved {
 }
 
 div.plan-references ul,
-span.attachments ul.attach.list {
+div.attachments ul.attach.list {
     list-style: none outside none;
     margin: 0;
     padding: 5px 0 3px 14px;
@@ -633,19 +646,20 @@ span.attachments ul.attach.list {
     color: #333333;
 }
 
-span.attachments ul.attach.list {
-	padding-top: 15px;
+div.attachments ul.attach.list {
+    padding-bottom: 15px;
+    padding-top: 15px;
 }
 
 div.plan-references ul li,
-span.attachments ul.attach.list li {
+div.attachments ul.attach.list li {
     background: url('../images/bullet-black.png') no-repeat scroll 0 5px transparent;
     list-style: none outside none;
     margin: 0;
     padding: 0 0 7px 15px;
 }
 
-span.attachments ul.attach.list li {
+div.attachments ul.attach.list li {
     float: left;
     width: 350px;
 }
@@ -1297,7 +1311,7 @@ ol.channels li input[type="checkbox"] {
 }
 
 #social div.userInfo select {
-	width: 97%;
+	width: 100%;
 }
 
 #social div.userInfo ol li input.address {
@@ -2543,14 +2557,14 @@ ul.attach.list li ul.menu li {
 }
 
 ul.attach li ul.menu li a {
-    font-size: 9px;
-    text-transform: uppercase;
-    font-weight: normal;
+    background: none repeat scroll 0 0 #E8E8E8;
+    border: 1px solid #A7A9AC;
+    color: #666666;
     font-family: Arial, Helvetica, sans-serif;
-    border: none;
-    color: #ffffff;
-    background: #999999;
+    font-size: 9px;
+    font-weight: normal;
     padding: 1px 3px;
+    text-transform: uppercase;
 }
 
 ul.attach li ul.menu li:first-child a {
@@ -2558,7 +2572,8 @@ ul.attach li ul.menu li:first-child a {
 }
 
 ul.attach li ul.menu li a:hover {
-    color: #e8e8e8;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
 
@@ -2586,11 +2601,16 @@ div.manage-users,
 div.manage-plan,
 div.registering-container,
 div.assignment-container,
-div.authorizing-container {
+div.authorizing-container,
+div.attachment-panel-add-container {
     border: 1px solid #CCCCCC;
     float: left;
     margin: 10px 0 20px;
     width: 764px;
+}
+
+div.attachment-panel-add-container {
+    width: 375px;
 }
 
 div.new-user h2,
@@ -2614,8 +2634,13 @@ div.new-plan table,
 div.manage-plan table,
 div.registering-container table,
 div.assignment-container table,
-div.authorizing-container table {
+div.authorizing-container table,
+div.attachment-panel-add-container table {
     padding: 10px;
+}
+
+div.attachment-panel-add-container table {
+	width: 100%;
 }
 
 div.new-user table td,
@@ -2623,7 +2648,8 @@ div.new-plan table td,
 div.manage-plan table td,
 div.registering-container table td,
 div.assignment-container table td,
-div.authorizing-container table td {
+div.authorizing-container table td,
+div.attachment-panel-add-container table td {
 	padding: 10px 5px 10px 10px;
 }
 
@@ -2632,13 +2658,22 @@ div.new-plan input[type="text"],
 div.manage-plan input[type="text"],
 div.registering-container input[type="text"],
 div.assignment-container input[type="text"],
-div.authorizing-container input[type="text"] {
+div.authorizing-container input[type="text"],
+div.attachment-panel-add-container input[type="text"] {
 	background: none repeat scroll 0 0 #E8E8E8;
 	border: 1px solid #999999;
 	float: right;
 	font-size: 11px;
 	padding: 3px;
 	width: 292px;
+}
+
+div.attachment-panel-add-container input[type="text"] {
+	width: 192px;
+}
+
+div.attachment-panel-add-container input[type="file"] {
+	float: right;
 }
 
 div.manage-plan select {
@@ -2654,7 +2689,8 @@ div.manage-plan select {
 
 div.registering-container select,
 div.assignment-container select,
-div.authorizing-container select {
+div.authorizing-container select,
+div.attachment-panel-add-container select {
     background: none repeat scroll 0 0 #e8e8e8;
     border: 1px solid #999999;
     float: right;
@@ -2663,6 +2699,9 @@ div.authorizing-container select {
     width: 300px;
 }
 
+div.attachment-panel-add-container select {
+	width: 200px;
+}
 
 div.manage-users input.submit {
 	margin: 10px 15px 15px;
