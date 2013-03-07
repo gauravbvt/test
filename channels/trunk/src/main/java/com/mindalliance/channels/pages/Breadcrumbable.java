@@ -30,6 +30,8 @@ public interface Breadcrumbable {
 
     PageParameters makePlanParameters();
 
+    PageParameters makePlanParameters( Plan plan );
+
     boolean isInCommunityContext();
 
     PlanCommunity getCommunityInContext();
@@ -63,4 +65,8 @@ public interface Breadcrumbable {
     PagePathItem getSelectedInnerPagePathItem();
 
     List<PagePathItem> getOtherInnerPagePathItems();
+
+    PagePathItem getCurrentContextPagePathItem();
+
+    List<PagePathItem> getOtherContextsPagePathItems();
 }

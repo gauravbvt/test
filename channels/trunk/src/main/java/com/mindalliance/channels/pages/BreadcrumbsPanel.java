@@ -1,13 +1,8 @@
 package com.mindalliance.channels.pages;
 
-import com.mindalliance.channels.core.ModelObjectContext;
-import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.model.Plan;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -37,13 +32,12 @@ public class BreadcrumbsPanel extends Panel {
     private void init() {
         addHomeInPath();
         addPreContextItemsInPath();
-        addSelectedContextInPath();
-        addOtherContextsInPath();
+        addCurrentContext();
         addPathPageItems();
         addInnerPagePathItems();
     }
 
-     private void addHomeInPath() {
+    private void addHomeInPath() {
         AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -53,69 +47,28 @@ public class BreadcrumbsPanel extends Panel {
         add( homeLink );
     }
 
-    private void addSelectedContextInPath() {
-        Label selectedModelObjectContextName = new Label(
-                "selectedContext",
-                page.isPlanContext()
-                        ? page.getPlan().toString()
-                        : page.isCommunityContext()
-                        ? page.getPlanCommunity().toString()
-                        : "" );
-        add( selectedModelObjectContextName );
-        selectedModelObjectContextName.add( new AjaxEventBehavior( "onclick" ) {
-            @Override
-            protected void onEvent( AjaxRequestTarget target ) {
-                PageParameters params = null;
-                if ( page.isPlanContext() ) {
-                    params = page.makePlanParameters();
-                    setResponsePage( PlansPage.class, params );
-                    if ( page.isInCommunityContext() ) {
-                        page.addFromCommunityParameters( params, page.getCommunityInContext() );
-                    }
-                }
-                else if ( page.isCommunityContext() ) {
-                    params = page.makeCommunityParameters();
-                    setResponsePage( CommunityPage.class, params );
-                }
-            }
-        } );
+    private void addCurrentContext() {
+        WebMarkupContainer currentContextContainer = new WebMarkupContainer( "currentContext" );
+        add( currentContextContainer );
+        addSelectedContextInPath( currentContextContainer );
+        addOtherContextsInPath( currentContextContainer );
     }
 
-     private void addOtherContextsInPath() {
-        ListView<ModelObjectContext> otherPlansListView = new ListView<ModelObjectContext>(
-                "otherContexts",
-                page.isPlanContext()
-                    ? page.getOtherPlans()
-                    : page.isCommunityContext()
-                        ? page.getOtherPlanCommunities()
-                        : new ArrayList<ModelObjectContext>()
-        ) {
-            @Override
-            protected void populateItem( final ListItem<ModelObjectContext> item ) {
-                AjaxLink<String> otherModelObjectContextLink = new AjaxLink<String>( Breadcrumbable.PAGE_ITEM_LINK_ID ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        PageParameters params = null;
-                        if ( page.isPlanContext() ) {
-                            page.setPlan( (Plan)item.getModelObject() );
-                            params = page.makePlanParameters();
-                            if ( page.isInCommunityContext() ) {
-                                page.addFromCommunityParameters( params, page.getCommunityInContext() );
-                            }
-                            setResponsePage( PlansPage.class, params );
-                        }
-                        else if ( page.isCommunityContext() ) {
-                            page.setPlanCommunity( (PlanCommunity)item.getModelObject() );
-                            params = page.makeCommunityParameters();
-                            setResponsePage( CommunitiesPage.class, params );
-                        }
-                    }
-                };
-                otherModelObjectContextLink.add( new Label( "otherContextName", item.getModelObject().toString() ) );
-                item.add( otherModelObjectContextLink );
-            }
-        };
-        add( otherPlansListView );
+    private void addSelectedContextInPath( WebMarkupContainer currentContextContainer ) {
+         currentContextContainer.add( page.getCurrentContextPagePathItem().getLink() );
+    }
+
+     private void addOtherContextsInPath( WebMarkupContainer currentContextContainer ) {
+         ListView<PagePathItem> otherContextsListView = new ListView<PagePathItem>(
+                 "otherContexts",
+                 page.getOtherContextsPagePathItems()
+         ) {
+             @Override
+             protected void populateItem( final ListItem<PagePathItem> item ) {
+                 item.add( item.getModelObject().getLink() );
+             }
+         };
+         currentContextContainer.add( otherContextsListView );
     }
 
 

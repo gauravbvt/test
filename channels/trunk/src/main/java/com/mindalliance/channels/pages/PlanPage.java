@@ -303,7 +303,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component taskMoverPanel;
     private Component allIssuesPanel;
     private Component planVersionsPanel;
-    private Component userParticipationPanel;
     private Component planSearchingPanel;
 
     /**
@@ -733,6 +732,31 @@ public final class PlanPage extends AbstractChannelsWebPage {
         breadCrumbs = new BreadcrumbsPanel( "contextPath", this );
         breadCrumbs.setOutputMarkupId( true );
         form.addOrReplace( breadCrumbs );
+    }
+
+    @Override
+    public PagePathItem getCurrentContextPagePathItem() {
+        return new PagePathItem( getCurrentPlanLink() );
+    }
+
+    private AjaxLink<String> getCurrentPlanLink() {
+        AjaxLink<String> selectedPlanLink = new AjaxLink<String>( Breadcrumbable.PAGE_ITEM_LINK_ID ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPlan() ) );
+            }
+        };
+        // planPath.add( selectedSegmentLink );
+        String planName = getPlan().getVersionedName();
+        Label selectedPlanNameLabel = new Label(
+                Breadcrumbable.PAGE_ITEM_LINK_NAME,
+                StringUtils.abbreviate( planName, PLAN_NAME_MAX_LENGTH )
+        );
+        if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
+            addTipTitle( selectedPlanNameLabel, planName );
+        }
+        selectedPlanLink.add( selectedPlanNameLabel );
+        return selectedPlanLink;
     }
 
     @Override

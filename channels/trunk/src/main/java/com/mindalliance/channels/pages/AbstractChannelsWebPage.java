@@ -10,6 +10,7 @@ import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
 import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
+import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.CommunityService;
@@ -624,16 +625,22 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     @Override
     public PageParameters makePlanParameters() {
+        return makePlanParameters( getPlan() );
+    }
+
+    @Override
+    public PageParameters makePlanParameters( Plan plan ) {
         PageParameters params = new PageParameters();
         try {
-            params.set( PLAN_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
+            params.set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
         }
-        params.set( VERSION_PARM, getPlan().getVersion() );
+        params.set( VERSION_PARM, plan.getVersion() );
         return params;
     }
+
 
     @Override
     public PageParameters makeCommunityParameters() {
@@ -688,6 +695,65 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     @Override
     public List<PagePathItem> getOtherInnerPagePathItems() {
         return new ArrayList<PagePathItem>(); // Default
+    }
+
+    @Override
+    public PagePathItem getCurrentContextPagePathItem() {
+        String currentContextName = isPlanContext()
+                ? getPlan().toString()
+                : isCommunityContext()
+                ? getPlanCommunity().toString()
+                : "";
+        PageParameters params = null;
+        if ( isPlanContext() ) {
+            params = makePlanParameters();
+            if ( isInCommunityContext() ) {
+                addFromCommunityParameters( params, getCommunityInContext() );
+            }
+        }
+        else if ( isCommunityContext() ) {
+            params = makeCommunityParameters();
+        }
+        Class<? extends Page> pageClass = isPlanContext()
+                ? PlansPage.class
+                : isCommunityContext()
+                ? CommunityPage.class
+                : HomePage.class;
+        return new PagePathItem( pageClass, params, currentContextName );
+    }
+
+    @Override
+    public List<PagePathItem> getOtherContextsPagePathItems() {
+        List<PagePathItem> pagePathItems = new ArrayList<PagePathItem>(  );
+        List<? extends ModelObjectContext> modelObjectContexts =
+                isPlanContext()
+                        ? getOtherPlans()
+                        : isCommunityContext()
+                        ? getOtherPlanCommunities()
+                        : new ArrayList<ModelObjectContext>();
+        for ( ModelObjectContext modelObjectContext : modelObjectContexts ) {
+            PageParameters params = null;
+            Class<? extends Page> pageClass;
+            String pageName;
+            if ( isPlanContext() ) {
+                Plan plan = (Plan)modelObjectContext;
+                params = makePlanParameters( plan );
+                if ( isInCommunityContext() ) {
+                    addFromCommunityParameters( params, getCommunityInContext() );
+                }
+                pageClass = PlansPage.class;
+                pageName = plan.getVersionedName();
+                pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
+            }
+            else if ( isCommunityContext() ) {
+                PlanCommunity planCommunity = (PlanCommunity)modelObjectContext;
+                params = makeCommunityParameters( planCommunity );
+                pageClass = CommunityPage.class;
+                pageName = planCommunity.getName();
+                pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
+            }
+        }
+        return pagePathItems;
     }
 
     @Override
