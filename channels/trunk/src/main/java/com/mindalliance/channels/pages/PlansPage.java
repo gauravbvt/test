@@ -99,7 +99,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
 
     private void addPlanName() {
-        getContainer().add( new Label( "planName", getPlan().getName() ) );
+        getContainer().add( new Label( "planName", getPlan().getVersionedName() ) );
     }
 
     private void addPlanClient() {

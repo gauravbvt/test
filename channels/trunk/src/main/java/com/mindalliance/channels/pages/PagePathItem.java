@@ -1,11 +1,17 @@
 package com.mindalliance.channels.pages;
 
+import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
+import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
+import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.io.Serializable;
@@ -18,6 +24,8 @@ import java.io.Serializable;
 * Time: 1:01 PM
 */
 public class PagePathItem implements Serializable {
+
+    private static final int MAX_NAME_LENGTH = 40;
 
     private Class<? extends Page> pageClass;
     private PageParameters pageParameters;
@@ -51,7 +59,12 @@ public class PagePathItem implements Serializable {
         BookmarkablePageLink<String> link = new BookmarkablePageLink<String>(
                 Breadcrumbable.PAGE_ITEM_LINK_ID,
                 pageClass, pageParameters );
-        link.add( new Label( Breadcrumbable.PAGE_ITEM_LINK_NAME, name ) );
+        String displayName = StringUtils.abbreviate( name, MAX_NAME_LENGTH );
+        Label nameLabel = new Label( Breadcrumbable.PAGE_ITEM_LINK_NAME, displayName );
+        if ( displayName.length() < name.length() ) {
+            addTipTitle( nameLabel, new Model<String>( name ) );
+        }
+        link.add( nameLabel );
         return link;
     }
 
@@ -73,4 +86,12 @@ public class PagePathItem implements Serializable {
     public boolean isEmpty() {
         return namedLink == null && pageClass == null;
     }
+
+    private Component addTipTitle( Component component, IModel<String> titleModel ) {
+        component.add( new AttributeModifier( "title", titleModel ) );
+        component.add( new TipTipBehavior( new TipTipOptions().maxWidth( "400px" ) ) );
+//        component.add( new TipTipBehavior( new TipTipOptions().keepAlive( true ) ) );
+        return component;
+    }
+
 }

@@ -328,7 +328,7 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
      * @return a string
      */
     public String getVersionedName() {
-        return getName() + " v." + version + '(' + getStatusString() + ')';
+        return getName() + " v." + version + " (" + getStatusString() + ')';
     }
 
     public Set<Segment> getSegments() {
