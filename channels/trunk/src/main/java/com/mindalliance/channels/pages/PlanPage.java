@@ -82,8 +82,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -328,10 +326,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Segment issues link.
      */
     private AjaxLink<String> segmentIssuesLink;
-    /**
-     * Plan path.
-     */
-    private WebMarkupContainer planPath;
+
+    // private WebMarkupContainer planPath;
+
+    private BreadcrumbsPanel breadCrumbs;
+
     /**
      * Notifier.
      */
@@ -458,6 +457,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
 //        rememberState();
     }
 
+    @Override
+    public String getPageName() {
+        return "";
+    }
+
     private void addBody() {
         WebMarkupContainer body = new IndicatorAwareWebContainer( "indicator", "spinner" );
         add( body );
@@ -491,7 +495,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanMenubar();
         addFeedback();
         addHelp();
-        addPlanPath();
+        // addPlanPath();
+        addBreadCrumbs();
         addSpinner();
         addPartsMapLink();
         addSegmentIssuesLink();
@@ -620,8 +625,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         // target.add( goForwardLink );
         target.add( segmentIssuesLink );
         target.add( geomapLinkPanel );
-        addPlanPath();
-        target.add( planPath );
+        addBreadCrumbs();
+        target.add( breadCrumbs );
     }
 
     private void addActivitiesMenubar() {
@@ -723,84 +728,63 @@ public final class PlanPage extends AbstractChannelsWebPage {
         form.addOrReplace( spinner );
     }
 
-    private void addPlanPath() {
-        planPath = new WebMarkupContainer( "planPath" );
-        planPath.setOutputMarkupId( true );
-        form.addOrReplace( planPath );
-        addHomeInPath();
-        addSelectedPlanInPath();
-        addSelectedSegmentInPath();
-        addOtherSegmentsInPath();
+
+    private void addBreadCrumbs() {
+        breadCrumbs = new BreadcrumbsPanel( "contextPath", this );
+        breadCrumbs.setOutputMarkupId( true );
+        form.addOrReplace( breadCrumbs );
     }
 
-    private void addHomeInPath() {
-        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                setResponsePage( HomePage.class, new PageParameters(  ) );
-            }
-        };
-        planPath.add( homeLink );
+    @Override
+    public PagePathItem getSelectedInnerPagePathItem() {
+        return new PagePathItem( getSelectedSegmentLink() );
     }
 
-    private void addSelectedPlanInPath() {
-        AjaxLink<String> selectedPlanLink = new AjaxLink<String>( "selectedPlanLink" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan() ) );
-            }
-        };
-        planPath.add( selectedPlanLink );
-        String planName = getPlan().getName();
-        Label selectedPlanNameLabel = new Label(
-                "selectedPlan",
-                StringUtils.abbreviate( planName, PLAN_NAME_MAX_LENGTH )
-        );
-        if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
-            addTipTitle( selectedPlanNameLabel, planName );
+    @Override
+    public List<PagePathItem> getOtherInnerPagePathItems() {
+        List<PagePathItem> pagePathItems = new ArrayList<PagePathItem>();
+        for ( AjaxLink link : getOtherSegmentsLinks() ) {
+            pagePathItems.add( new PagePathItem( link ) );
         }
-        selectedPlanLink.add( selectedPlanNameLabel );
+        return pagePathItems;
     }
 
-    private void addSelectedSegmentInPath() {
-        AjaxLink<String> selectedSegmentLink = new AjaxLink<String>( "selectedSegmentLink" ) {
+
+    private AjaxLink getSelectedSegmentLink() {
+        AjaxLink<String> selectedSegmentLink = new AjaxLink<String>( Breadcrumbable.PAGE_ITEM_LINK_ID ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getSegment() ) );
             }
         };
-        planPath.add( selectedSegmentLink );
+        // planPath.add( selectedSegmentLink );
         String segmentName = getSegment().getName();
         Label selectedSegmentNameLabel = new Label(
-                "selectedSegment",
+                Breadcrumbable.PAGE_ITEM_LINK_NAME,
                 StringUtils.abbreviate( segmentName, SEGMENT_NAME_MAX_LENGTH )
         );
         if ( segmentName.length() > SEGMENT_NAME_MAX_LENGTH ) {
             addTipTitle( selectedSegmentNameLabel, segmentName );
         }
         selectedSegmentLink.add( selectedSegmentNameLabel );
+        return selectedSegmentLink;
     }
 
 
-    private void addOtherSegmentsInPath() {
-        ListView<Segment> otherSegmentsListView = new ListView<Segment>(
-                "otherSegments",
-                getOtherSegments()
-        ) {
-            @Override
-            protected void populateItem( final ListItem<Segment> item ) {
-                AjaxLink<String> otherPlanLink = new AjaxLink<String>( "otherSegmentLink" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        setSegment( item.getModelObject() );
-                        update( target, new Change( Change.Type.Selected, getSegment() ) );
-                    }
-                };
-                otherPlanLink.add( new Label( "otherSegmentName", item.getModelObject().toString() ) );
-                item.add( otherPlanLink );
-            }
-        };
-        planPath.add( otherSegmentsListView );
+    private List<AjaxLink> getOtherSegmentsLinks() {
+        List<AjaxLink> segmentLinks = new ArrayList<AjaxLink>();
+        for ( final Segment segment : getOtherSegments() ) {
+            AjaxLink<String> otherPlanLink = new AjaxLink<String>( Breadcrumbable.PAGE_ITEM_LINK_ID ) {
+                @Override
+                public void onClick( AjaxRequestTarget target ) {
+                    setSegment( segment );
+                    update( target, new Change( Change.Type.Selected, getSegment() ) );
+                }
+            };
+            otherPlanLink.add( new Label( Breadcrumbable.PAGE_ITEM_LINK_NAME, segment.getName() ) );
+            segmentLinks.add( otherPlanLink );
+        }
+        return segmentLinks;
     }
 
     private List<Segment> getOtherSegments() {
@@ -1187,7 +1171,7 @@ PopupSettings.RESIZABLE |
         }
         makeVisible( refreshNeededComponent, !reasonsToRefresh.isEmpty() );
         addTipTitle( refreshNeededComponent, new Model<String>(
-                "Refresh:" + reasonsToRefresh )  );
+                "Refresh:" + reasonsToRefresh ) );
     }
 
     private String getReasonsToRefresh() {
@@ -2260,8 +2244,8 @@ PopupSettings.RESIZABLE |
     }
 
     private void updateHeaders( AjaxRequestTarget target ) {
-        addPlanPath();
-        target.add( planPath );
+        addBreadCrumbs();
+        target.add( breadCrumbs );
         updateNavigation( target );
         addPartsMapLink();
         target.add( partsMapLink );
@@ -2350,14 +2334,14 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( ( change.isDisplay() || change.isAdded() )
-                        && identifiable != null
-                        && identifiable instanceof Segment
+                && identifiable != null
+                && identifiable instanceof Segment
                 ||
                 identifiable != null && change.isSelected() && identifiable instanceof Part ) {
             addSegmentEditPanel();
             target.add( segmentEditPanel );
-            addPlanPath();
-            target.add( planPath );
+            addBreadCrumbs();
+            target.add( breadCrumbs );
         } else if ( segmentEditPanel instanceof SegmentEditPanel ) {
             ( (SegmentEditPanel) segmentEditPanel ).refresh( target,
                     change,
@@ -2388,8 +2372,8 @@ PopupSettings.RESIZABLE |
             List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && identifiable instanceof Part
-                        && change.isAspect( "assignments" ) ) {
+                && identifiable instanceof Part
+                && change.isAspect( "assignments" ) ) {
             addAssignmentsPanel();
             target.add( assignmentsPanel );
         } else if ( assignmentsPanel instanceof PartAssignmentsPanel ) {
@@ -2401,8 +2385,8 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && identifiable instanceof Flow
-                        && change.isAspect( "commitments" ) ) {
+                && identifiable instanceof Flow
+                && change.isAspect( "commitments" ) ) {
             addCommitmentsPanel();
             target.add( commitmentsPanel );
         } else if ( commitmentsPanel instanceof SharingCommitmentsPanel ) {
@@ -2414,9 +2398,9 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && identifiable instanceof Flow
-                        && ( change.isCollapsed()
-                        || change.isAspect( "eois" ) ) ) {
+                && identifiable instanceof Flow
+                && ( change.isCollapsed()
+                || change.isAspect( "eois" ) ) ) {
             addEOIsPanel();
             target.add( eoisPanel );
         } else if ( eoisPanel instanceof FlowsEOIsFloatingPanel ) {
@@ -2428,9 +2412,9 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && identifiable instanceof SegmentObject
-                        && change.isAspect(
-                        "failure" ) ) {
+                && identifiable instanceof SegmentObject
+                && change.isAspect(
+                "failure" ) ) {
             addFailureImpactsPanel();
             target.add( failureImpactsPanel );
         } else if ( failureImpactsPanel instanceof FailureImpactsPanel ) {
@@ -2442,7 +2426,7 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null && identifiable instanceof SegmentObject
-                        && change.isAspect( "dissemination" ) ) {
+                && change.isAspect( "dissemination" ) ) {
             boolean showTargets = change.hasQualifier( "show", "targets" );
             Subject subject = (Subject) change.getQualifier( "subject" );
             addDisseminationPanel( subject, showTargets );
@@ -2456,7 +2440,7 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null && identifiable instanceof ModelObject
-                        && change.isAspect( "surveys" ) ) {
+                && change.isAspect( "surveys" ) ) {
             addModelObjectSurveysPanel();
             target.add( modelObjectSurveysPanel );
         } else if ( modelObjectSurveysPanel instanceof ModelObjectSurveysPanel ) {
@@ -2467,8 +2451,8 @@ PopupSettings.RESIZABLE |
     private void refreshOverridesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && identifiable instanceof Part
-                        && change.isAspect( "overrides" ) ) {
+                && identifiable instanceof Part
+                && change.isAspect( "overrides" ) ) {
             addOverridesPanel();
             target.add( overridesPanel );
         } else if ( overridesPanel instanceof OverridesPanel ) {
@@ -2508,7 +2492,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllEventsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.ALL_EVENTS
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addAllEventsPanel();
             target.add( allEventsPanel );
         } else if ( allEventsPanel instanceof PlanEventsFloatingPanel ) {
@@ -2521,7 +2505,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllOrganizationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.ALL_ORGANIZATIONS
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addAllOrganizationsPanel( change );
             target.add( allOrganizationsPanel );
         } else if ( allOrganizationsPanel instanceof PlanOrganizationsPanel ) {
@@ -2535,7 +2519,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllSegmentsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.ALL_SEGMENTS
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addAllSegmentsPanel();
             target.add( allSegmentsPanel );
         } else if ( allSegmentsPanel instanceof PlanSegmentsFloatingPanel ) {
@@ -2548,7 +2532,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllClassificationsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.ALL_CLASSIFICATIONS
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addAllClassificationsPanel();
             target.add( allClassificationsPanel );
         } else if ( allClassificationsPanel instanceof PlanClassificationsFloatingPanel ) {
@@ -2561,7 +2545,7 @@ PopupSettings.RESIZABLE |
     private void refreshTaskMoverPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.TASK_MOVER
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addTaskMoverPanel();
             target.add( taskMoverPanel );
         } else if ( taskMoverPanel instanceof TaskMoverFloatingPanel ) {
@@ -2574,7 +2558,7 @@ PopupSettings.RESIZABLE |
     private void refreshProtocolsMapPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.PROTOCOLS_MAP
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addProtocolsMapPanel();
             target.add( protocolsMapPanel );
         } else if ( protocolsMapPanel instanceof ProtocolsMapFloatingPanel ) {
@@ -2587,7 +2571,7 @@ PopupSettings.RESIZABLE |
     private void refreshPlanEvaluationPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.PLAN_EVALUATION
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addPlanEvaluationPanel();
             target.add( planEvaluationPanel );
         } else if ( planEvaluationPanel instanceof PlanEvaluationFloatingPanel ) {
@@ -2600,7 +2584,7 @@ PopupSettings.RESIZABLE |
     private void refreshAllIssuesPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.ALL_ISSUES
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addAllIssuesPanel();
             target.add( allIssuesPanel );
         } else if ( allIssuesPanel instanceof AllIssuesFloatingPanel ) {
@@ -2613,7 +2597,7 @@ PopupSettings.RESIZABLE |
     private void refreshPlanVersionsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
         if ( id == Channels.PLAN_VERSIONS
-                        && change.isDisplay() ) {
+                && change.isDisplay() ) {
             addPlanVersionsPanel();
             target.add( planVersionsPanel );
         } else if ( planVersionsPanel instanceof PlanVersionsFloatingPanel ) {
@@ -2643,8 +2627,8 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && change.isDisplay()
-                        && identifiable instanceof Feedback ) {
+                && change.isDisplay()
+                && identifiable instanceof Feedback ) {
             Feedback expandedFeedback = (Feedback) identifiable;
             Feedback viewedFeedback = ( expandedFeedback == null || expandedFeedback.isUnknown() )
                     ? Feedback.UNKNOWN
@@ -2663,8 +2647,8 @@ PopupSettings.RESIZABLE |
             AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         Identifiable identifiable = change.getSubject( getCommunityService() );
         if ( identifiable != null
-                        && change.isDisplay()
-                        && identifiable instanceof RFISurvey ) {
+                && change.isDisplay()
+                && identifiable instanceof RFISurvey ) {
             RFISurvey rfiSurvey = (RFISurvey) identifiable;
             RFISurvey viewedRFISurvey = ( rfiSurvey == null || rfiSurvey.isUnknown() )
                     ? RFISurvey.UNKNOWN

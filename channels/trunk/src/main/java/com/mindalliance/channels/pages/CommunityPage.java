@@ -259,6 +259,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
         // Model editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlansPage.class, null, plan );
+        addInCommunityContextParameter( gotoModelLink, getPlanCommunity() );
         addTipTitle( gotoModelLink,
                 new Model<String>( getGotoModelDescription( user, plan ) )
         );
@@ -446,7 +447,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return ""; // don;t show page name in breadcrumbs
     }
 

@@ -439,7 +439,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Home";
     }
 

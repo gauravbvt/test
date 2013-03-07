@@ -77,7 +77,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected boolean isPlanContext() {
+    public boolean isPlanContext() {
         return true;
     }
 
@@ -149,6 +149,9 @@ public class PlansPage extends AbstractChannelsBasicPage {
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
                 getRFIsLink( "gotoRFIs", getPlan(), true );
         Label gotoRFIsLabel = new Label( "rfisLabel", getRFIsLabel( user, getCommunityService() ) );
+        if ( isInCommunityContext() ) {
+            addInCommunityContextParameter( gotoRFIsLink, getCommunityInContext() );
+        }
         addTipTitle( gotoRFIsLabel,
                 new Model<String>( getGotoRFIsDescription( user, communityService ) ) );
         gotoRFIsLink.add( gotoRFIsLabel );
@@ -157,6 +160,9 @@ public class PlansPage extends AbstractChannelsBasicPage {
         BookmarkablePageLink<? extends WebPage> gotoFeedbackLink =
                 getFeedbackLink( "gotoFeedback", getPlan(), true );
         Label gotoFeedbackLabel = new Label( "feedbackLabel", getFeedbackLabel( user, communityService ) );
+        if ( isInCommunityContext() ) {
+            addInCommunityContextParameter( gotoFeedbackLink, getCommunityInContext() );
+        }
         addTipTitle(
                 gotoFeedbackLabel,
                 new Model<String>( getGotoFeedbackDescription( user, communityService ) )
@@ -165,6 +171,9 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
         // Model editor link
         BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlanPage.class, null, plan );
+        if ( isInCommunityContext() ) {
+            addInCommunityContextParameter( gotoModelLink, getCommunityInContext() );
+        }
         addTipTitle( gotoModelLink,
                 new Model<String>( getGotoModelDescription( user, plan ) )
         );
@@ -176,6 +185,9 @@ public class PlansPage extends AbstractChannelsBasicPage {
                 IssuesPage.createParameters( uri, plan.getVersion() ),
                 null,
                 plan );
+        if ( isInCommunityContext() ) {
+            addInCommunityContextParameter( gotoIssuesLink, getCommunityInContext() );
+        }
         addTipTitle(
                 gotoIssuesLink,
                 "View a summary of all issues automatically found by Channels or reported by planners" );
@@ -327,7 +339,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "";
     }
 

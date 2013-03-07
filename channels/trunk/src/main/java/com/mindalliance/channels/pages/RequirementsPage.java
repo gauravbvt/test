@@ -33,12 +33,12 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected boolean isCommunityContext() {
+    public boolean isCommunityContext() {
         return true;
     }
 
     @Override
-    protected boolean isPlanContext() {
+    public boolean isPlanContext() {
         return false;
     }
 
@@ -60,7 +60,7 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Plan requirements";
     }
 

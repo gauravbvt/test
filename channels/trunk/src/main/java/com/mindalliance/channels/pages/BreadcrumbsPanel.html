@@ -15,7 +15,7 @@
         </li>
         <li wicket:id="preContextItems">
             <a wicket:id="pageItemLink" href="#">
-                <span wicket:id="pageName">page name</span>
+                <span wicket:id="pageItemName">page name</span>
             </a>
         </li>
         <li class="plan">
@@ -24,7 +24,7 @@
             </a>
             <ul>
                 <li wicket:id="otherContexts">
-                    <a href="#" wicket:id="otherContextLink">
+                    <a href="#" wicket:id="pageItemLink">
                         <span wicket:id="otherContextName">other context name</span>
                     </a>
                 </li>
@@ -32,9 +32,22 @@
         </li>
         <li wicket:id="pageItems">
             <a wicket:id="pageItemLink" href="#">
-                <span wicket:id="pageName">page name</span>
+                <span wicket:id="pageItemName">page name</span>
             </a>
         </li>
+        <li wicket:id="innerPageItems" class="plan">
+            <a wicket:id="pageItemLink" href="#">
+                <span wicket:id="pageItemName">current context</span>
+            </a>
+            <ul>
+                <li wicket:id="otherInnerPageItems">
+                    <a href="#" wicket:id="pageItemLink">
+                        <span wicket:id="pageItemName">other context name</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
     </ul>
 </wicket:panel>
 </body>

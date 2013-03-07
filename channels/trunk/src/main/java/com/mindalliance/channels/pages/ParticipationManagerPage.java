@@ -51,7 +51,7 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Plan participation";
     }
 

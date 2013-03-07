@@ -44,6 +44,7 @@ import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebPage;
@@ -75,7 +76,7 @@ import java.util.Set;
 /**
  * Abstract Channels Web Page.
  */
-public class AbstractChannelsWebPage extends WebPage implements Updatable, Modalable {
+public abstract class AbstractChannelsWebPage extends WebPage implements Updatable, Modalable, Breadcrumbable {
 
     // PLAN_PARM and COMMUNITY_PARM page parameters can not be both set.
 
@@ -91,6 +92,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public static final int REFRESH_DELAY = 10;
 
     public static final String VERSION_PARM = "v";
+
+    public static final String FROM_COMMUNITY = "from_community";
 
     /**
      * Logger.
@@ -273,14 +276,39 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         }
     }
 
-    protected boolean isCommunityContext() {
+    public static void addInCommunityContextParameter( BookmarkablePageLink link, PlanCommunity planCommunity ) {
+        try {
+            link.getPageParameters().set( FROM_COMMUNITY, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            // should never happen
+            LOG.error( "Failed to encode uri", e );
+        }
+    }
+
+    @Override
+    public String getPageName() {
+        return ""; // DEFAULT
+    }
+
+    @Override
+    public boolean isCommunityContext() {
         return getPageParameters().getNamedKeys().contains( COMMUNITY_PARM );
     }
 
-    protected boolean isPlanContext() {
+    @Override
+    public boolean isPlanContext() {
         return getPageParameters().getNamedKeys().contains( PLAN_PARM );
     }
 
+    @Override
+    public boolean isInCommunityContext() {
+        return getPageParameters().getNamedKeys().contains( FROM_COMMUNITY );
+    }
+
+    @Override
+    public PlanCommunity getCommunityInContext() {
+        return getPlanCommunityFromParameter( getPageParameters(), FROM_COMMUNITY );
+    }
 
     @Override
     public void changed( Change change ) {
@@ -353,8 +381,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     public PlanCommunity getPlanCommunity() {
         if ( planCommunity == null ) {
             planCommunity = user.getPlan() != null  // domain context else community context
-                ? planCommunityManager.getDomainPlanCommunity( getPlan() )
-                : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
+                    ? planCommunityManager.getDomainPlanCommunity( getPlan() )
+                    : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
         }
         return planCommunity;
     }
@@ -594,7 +622,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return user.isPlanner( getPlan().getUri() );
     }
 
-    protected PageParameters makePlanParameters() {
+    @Override
+    public PageParameters makePlanParameters() {
         PageParameters params = new PageParameters();
         try {
             params.set( PLAN_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
@@ -606,7 +635,8 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return params;
     }
 
-    protected PageParameters makeCommunityParameters() {
+    @Override
+    public PageParameters makeCommunityParameters() {
         PageParameters params = new PageParameters();
         try {
             params.set( COMMUNITY_PARM, URLEncoder.encode( getPlanCommunityUri(), "UTF-8" ) );
@@ -617,6 +647,108 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         return params;
     }
 
+    @Override
+    public PageParameters makeCommunityParameters( PlanCommunity planCommunity ) {
+        PageParameters params = new PageParameters();
+        try {
+            params.set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            // should never happen
+            LOG.error( "Failed to encode uri", e );
+        }
+        return params;
+    }
+
+    @Override
+    public PageParameters addFromCommunityParameters( PageParameters params, PlanCommunity planCommunity ) {
+        try {
+            params.set( FROM_COMMUNITY, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            // should never happen
+            LOG.error( "Failed to encode uri", e );
+        }
+        return params;
+    }
+
+    @Override
+    public List<PagePathItem> getIntermediatePagesPathItems() {
+        return new ArrayList<PagePathItem>();
+    }
+
+    @Override
+    public boolean hasInnerPagePathItems() {
+        return !getSelectedInnerPagePathItem().isEmpty();
+    }
+
+    @Override
+    public PagePathItem getSelectedInnerPagePathItem() {
+        return new PagePathItem();  // Default is empty item
+    }
+
+    @Override
+    public List<PagePathItem> getOtherInnerPagePathItems() {
+        return new ArrayList<PagePathItem>(); // Default
+    }
+
+    @Override
+    public List<Plan> getOtherPlans() {
+        List<Plan> otherPlans;
+        if ( isInCommunityContext() ) {
+            String planUri = getPlanCommunity().getPlanUri();
+            otherPlans = planManager.getPlansWithUri( planUri );
+        } else {
+            otherPlans = getPlans();
+        }
+        otherPlans.remove( getPlan() );
+        Collections.sort( otherPlans, new Comparator<Plan>() {
+            @Override
+            public int compare( Plan p1, Plan p2 ) {
+                return p1.getName().compareTo( p2.getName() );
+            }
+        } );
+        return otherPlans;
+    }
+
+    @Override
+    public List<PlanCommunity> getOtherPlanCommunities() {
+        List<PlanCommunity> otherPlanCommunities = new ArrayList<PlanCommunity>( getVisiblePlanCommunities() );
+        otherPlanCommunities.remove( getPlanCommunity() );
+        Collections.sort( otherPlanCommunities, new Comparator<PlanCommunity>() {
+            @Override
+            public int compare( PlanCommunity p1, PlanCommunity p2 ) {
+                return p1.getName().compareTo( p2.getName() );
+            }
+        } );
+        return otherPlanCommunities;
+    }
+
+    @Override
+    public List<PagePathItem> getPreContextPagesPathItems() {
+        List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
+        if ( isCommunityContext() ) {
+            intermediates.add( new PagePathItem(
+                    CommunitiesPage.class,
+                    new PageParameters(),
+                    "Communities" ) );
+        } else if ( isInCommunityContext() ) {
+            intermediates.add( new PagePathItem(
+                    CommunitiesPage.class,
+                    new PageParameters(),
+                    "Communities" ) );
+            PlanCommunity planCommunity = getCommunityInContext();
+            intermediates.add( new PagePathItem(
+                    CommunityPage.class,
+                    makeCommunityParameters( planCommunity ),
+                    planCommunity.getName()
+            ) ); // from community
+        }
+        return intermediates;
+    }
+
+    @Override
+    public Class<? extends Page> getWebPageClass() {
+        return getPageClass();
+    }
 
     /**
      * Set a component's visibility.
@@ -749,8 +881,12 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
     }
 
     public PlanCommunity getPlanCommunityFromParameters( PageParameters pageParameters ) {
+        return getPlanCommunityFromParameter( pageParameters, COMMUNITY_PARM );
+    }
+
+    private PlanCommunity getPlanCommunityFromParameter( PageParameters pageParameters, String parameterName ) {
         PlanCommunity planCommunity = null;
-        String encodedCommunityUri = pageParameters.get( COMMUNITY_PARM ).toString( null );
+        String encodedCommunityUri = pageParameters.get( parameterName ).toString( null );
         String communityUri = null;
         if ( encodedCommunityUri != null ) { // community identified
             // assert pageParameters.get( PLAN_PARM ) == null;
@@ -765,6 +901,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
         }
         return planCommunity;
     }
+
 
     /**
      * Set plan from uri parameters. Plan version is optional.
@@ -855,7 +992,7 @@ public class AbstractChannelsWebPage extends WebPage implements Updatable, Modal
 
     @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
-       // do nothing
+        // do nothing
     }
 
     @Override

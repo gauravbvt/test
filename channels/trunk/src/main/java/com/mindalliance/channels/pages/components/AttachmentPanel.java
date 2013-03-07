@@ -171,7 +171,6 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         super( id, model, null );
         this.readOnly = readOnly;
         this.attachablePath = attachablePath;
-        setOutputMarkupId( true );
         container = new WebMarkupContainer( "container" );
         container.setOutputMarkupId( true );
         add( container );

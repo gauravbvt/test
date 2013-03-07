@@ -55,7 +55,7 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Home";
     }
 

@@ -104,7 +104,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Protocols";
     }
 

@@ -68,7 +68,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Surveys";
     }
 

@@ -43,7 +43,7 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Issues";
     }
 

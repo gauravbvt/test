@@ -77,7 +77,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "Info Needs";
     }
 

@@ -34,7 +34,7 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "All Collaboration Protocols";
     }
 

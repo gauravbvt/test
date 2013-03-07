@@ -36,7 +36,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
     }
 
     @Override
-    protected String getPageName() {
+    public String getPageName() {
         return "All Info Needs";
     }
 

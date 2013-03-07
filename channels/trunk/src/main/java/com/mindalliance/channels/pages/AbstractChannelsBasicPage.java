@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.services.FeedbackService;
@@ -31,9 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -95,8 +91,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     protected abstract void addContent();
 
     protected abstract String getContentsCssClass();
-
-    protected abstract String getPageName();
 
     protected abstract String getFeedbackType();
 
@@ -272,48 +266,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         String oneLiner = getPlan().getDescription().replaceAll( "\\s+", " " );
         return StringUtils.abbreviate( oneLiner, MAX_PLAN_DESCRIPTION_LENGTH );
     }
-
-    public List<Plan> getOtherPlans() {
-        List<Plan> otherPlans = new ArrayList<Plan>( getPlans() );
-        otherPlans.remove( getPlan() );
-        Collections.sort( otherPlans, new Comparator<Plan>() {
-            @Override
-            public int compare( Plan p1, Plan p2 ) {
-                return p1.getName().compareTo( p2.getName() );
-            }
-        } );
-        return otherPlans;
-    }
-
-    public List<PlanCommunity> getOtherPlanCommunities() {
-        List<PlanCommunity> otherPlanCommunities = new ArrayList<PlanCommunity>( getVisiblePlanCommunities() );
-        otherPlanCommunities.remove( getPlanCommunity() );
-        Collections.sort( otherPlanCommunities, new Comparator<PlanCommunity>() {
-            @Override
-            public int compare( PlanCommunity p1, PlanCommunity p2 ) {
-                return p1.getName().compareTo( p2.getName() );
-            }
-        } );
-        return otherPlanCommunities;
-    }
-
-    // DEFAULT
-    public List<PagePathItem> getIntermediatePagesPathItems() {
-        return new ArrayList<PagePathItem>();
-    }
-
-    // DEFAULT
-    public List<PagePathItem> getPreContextPagesPathItems() {
-        List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
-        if ( isCommunityContext() ) {
-            intermediates.add( new PagePathItem(
-                    CommunitiesPage.class,
-                    new PageParameters(),
-                    "All communities" ) );
-        }
-        return intermediates;
-    }
-
 
 
 /*
