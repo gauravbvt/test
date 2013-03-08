@@ -488,6 +488,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void addHeader() {
         addHomeLink();
+        addProductionLock();
         addRefreshNow();
         //  addGoBackAndForward();
         addActivitiesMenubar();
@@ -500,6 +501,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPartsMapLink();
         addSegmentIssuesLink();
         updateNavigation();
+    }
+
+    private void addProductionLock() {
+        WebMarkupContainer productionLockImg = new WebMarkupContainer( "productionLock" );
+        productionLockImg.setVisible( getPlan().isProduction() );
+        addTipTitle( productionLockImg, "Production version. Can not be modified." );
+        form.add( productionLockImg );
     }
 
     private void addHomeLink() {
