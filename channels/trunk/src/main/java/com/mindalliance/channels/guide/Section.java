@@ -15,17 +15,17 @@ import java.util.List;
  * Date: 5/24/12
  * Time: 9:35 PM
  */
-public class ActivityGroup implements Serializable {
+public class Section implements Serializable {
 
     @XStreamAsAttribute
     private String id;
 
     private String name;
 
-    @XStreamImplicit( itemFieldName = "activity" )
-    private List<Activity> activities;
+    @XStreamImplicit( itemFieldName = "topic" )
+    private List<Topic> topics;
 
-    public ActivityGroup() {
+    public Section() {
     }
 
     public String getId() {
@@ -44,23 +44,32 @@ public class ActivityGroup implements Serializable {
         this.name = name;
     }
 
-    public List<Activity> getActivities() {
-        return activities;
+    public List<Topic> getTopics() {
+        return topics;
     }
 
-    public void setActivities( List<Activity> activities ) {
-        this.activities = activities;
+    public void setTopics( List<Topic> topics ) {
+        this.topics = topics;
     }
 
-    public Activity derefActivity( final String activityId ) {
-        return (Activity) CollectionUtils.find(
-                activities,
+    public Topic derefTopic( final String topicId ) {
+        return (Topic) CollectionUtils.find(
+                topics,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (Activity) object ).getId().equals( activityId );
+                        return ( (Topic) object ).getId().equals( topicId );
                     }
                 } );
     }
 
+    public Topic findTopic( final String topicId ) {
+        return (Topic)CollectionUtils.find( topics,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Topic)object).getId().equals( topicId );
+                    }
+                });
+    }
 }

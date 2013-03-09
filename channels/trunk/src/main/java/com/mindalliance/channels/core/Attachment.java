@@ -84,8 +84,6 @@ public interface Attachment extends Serializable, Comparable<Attachment> {
 
     String getUrl();
 
-    boolean isHelp();
-
     /**
      * Is MOU.
      *

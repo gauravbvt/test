@@ -20,8 +20,8 @@ public class Guide implements Serializable {
 
     private String description;
 
-    @XStreamImplicit( itemFieldName = "group" )
-    private List<ActivityGroup> activityGroups;
+    @XStreamImplicit( itemFieldName = "section" )
+    private List<Section> sections;
 
     public Guide() {
     }
@@ -42,26 +42,36 @@ public class Guide implements Serializable {
         this.description = description;
     }
 
-    public List<ActivityGroup> getActivityGroups() {
-        return activityGroups;
+    public List<Section> getSections() {
+        return sections;
     }
 
-    public void setActivityGroups( List<ActivityGroup> activityGroups ) {
-        this.activityGroups = activityGroups;
+    public void setSections( List<Section> sections ) {
+        this.sections = sections;
     }
 
-    public ActivityGroup derefGroup( final String groupId ) {
-        return (ActivityGroup) CollectionUtils.find(
-                activityGroups,
+    public Section derefSection( final String groupId ) {
+        return (Section) CollectionUtils.find(
+                sections,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (ActivityGroup) object ).getId().equals( groupId );
+                        return ( (Section) object ).getId().equals( groupId );
                     }
                 } );
     }
 
-    public int findGroupIndex( ActivityGroup nextGroup ) {
-        return getActivityGroups().indexOf( nextGroup );
+    public int findSectionIndex( Section nextGroup ) {
+        return getSections().indexOf( nextGroup );
+    }
+
+    public Section findSection( final String sectionId ) {
+        return (Section) CollectionUtils.find( sections,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Section) object ).getId().equals( sectionId );
+                    }
+                } );
     }
 }

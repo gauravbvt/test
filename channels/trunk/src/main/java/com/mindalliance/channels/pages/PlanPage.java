@@ -28,6 +28,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.guide.IGuidePanel;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
@@ -81,7 +82,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -418,6 +418,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return true;
     }
 
+    protected IGuidePanel getGuidePanel() {
+        return segmentPanel.getGuidePanel();
+    }
+
     // Guide scripting support
     public SegmentPanel getSegmentPanel() {
         return segmentPanel;
@@ -494,7 +498,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addActivitiesMenubar();
         addPlanMenubar();
         addFeedback();
-        addHelp();
+        // addHelp();
         // addPlanPath();
         addBreadCrumbs();
         addSpinner();
@@ -1141,17 +1145,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
 
-    private void addHelp() {
-        BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
-        helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
-        /* helpLink.setPopupSettings( new PopupSettings(
-PopupSettings.RESIZABLE |
-      PopupSettings.SCROLLBARS |
-      PopupSettings.MENU_BAR |
-      PopupSettings.TOOL_BAR ) );*/
-
+/*    private void addHelp() {
+        AjaxLink<String> helpLink = new AjaxLink<String>( "help-link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, Change.guide( "about-channels", "channels") );
+            }
+        };
         form.add( helpLink );
-    }
+    }*/
 
     private void addNotifier( WebMarkupContainer body ) {
         notifier = new NotifierWebMarkupContainer( "notifier" );
@@ -1947,6 +1949,8 @@ PopupSettings.RESIZABLE |
                 segment = getPlan().getDefaultSegment();
                 setPart( null );
             }
+        } else if ( change.isGuide() ) {
+            addExpansion( Channels.GUIDE_ID );
         } else if ( change.isCollapsed() || change.isRemoved() )
             collapse( change );
         else if ( change.isExpanded() || change.isAdded() ) {
@@ -2074,6 +2078,11 @@ PopupSettings.RESIZABLE |
             segmentPanel.updateGuidePanel( target );
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {  // Not caused anymore
                 redirectToPlan();
+            } else if ( change.isGuide() ) {
+              /* getGuidePanel().selectTopicInSection(
+                       (String) change.getQualifier( "sectionId" ),
+                       (String) change.getQualifier( "topicId" ),
+                       target );*/
             } else if ( change.isAspectReplaced() ) {
                 replaceAspect( change, target );
             } else if ( change.isAspectViewed()

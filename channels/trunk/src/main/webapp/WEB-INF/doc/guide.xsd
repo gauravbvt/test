@@ -6,37 +6,47 @@
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
                 <xs:element name="description" type="xs:string"/>
-                <xs:element ref="group" maxOccurs="unbounded"/>
+                <xs:element ref="section" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="group">
+    <xs:element name="section">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
-                <xs:element ref="activity" maxOccurs="unbounded"/>
+                <xs:element ref="topic" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID"/>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="activity">
+    <xs:element name="topic">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
-                <xs:element ref="step" maxOccurs="unbounded" minOccurs="1"/>
+                <xs:element ref="item" maxOccurs="unbounded" minOccurs="1"/>
                 <xs:element ref="next" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="document" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID"/>
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="step">
+    <xs:element name="item">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="description" type="xs:string"/>
                 <xs:element ref="script" maxOccurs="1" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="document">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="title" type="xs:string"/>
+                <xs:element name="url" type="xs:anyURI"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -68,8 +78,8 @@
 
     <xs:element name="next">
         <xs:complexType>
-            <xs:attribute name="group" type="xs:IDREF"/>
-            <xs:attribute name="activity" type="xs:IDREF"/>
+            <xs:attribute name="section" type="xs:IDREF"/>
+            <xs:attribute name="topic" type="xs:IDREF"/>
         </xs:complexType>
     </xs:element>
 

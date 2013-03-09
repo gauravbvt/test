@@ -13,15 +13,15 @@
             <a wicket:id="hideGuide" href="#" class="closer"><img src="images/hide_left.png" alt="Hide guide panel"/></a>
         </div>
         <div wicket:id="accordion" style="overflow:auto">
-            <wicket:container wicket:id="groups">
+            <wicket:container wicket:id="sections">
                 <h3><a href="#" wicket:id="title"/></h3>
                 <ul class="activities">
-                    <li wicket:id="activities">
-                        <a wicket:id="activityLink" href="#">
-                            <span wicket:id="activityName" class="activityName">activity name</span>
+                    <li wicket:id="topics">
+                        <a wicket:id="topicLink" href="#">
+                            <span wicket:id="topicName" class="activityName">topic name</span>
                         </a>
-                        <div wicket:id="activityDoc" class="doc">
-                            <div wicket:id="steps">
+                        <div wicket:id="topic" class="doc">
+                            <div wicket:id="topicItems">
                                 <div wicket:id="description">Description from wikimedia format</div>
                                 <a wicket:id="actionLink" class="window"><span wicket:id="action"> Do it</span></a>
                             </div>
@@ -34,6 +34,11 @@
                                         </a>
                                     </li>
                                 </ul>
+                            </div>
+                            <div wicket:id="document" class="nextActivities">
+                                <a wicket:id="documentLink" href="#">
+                                    <span>More</span>
+                                </a>
                             </div>
                         </div>
                     </li>

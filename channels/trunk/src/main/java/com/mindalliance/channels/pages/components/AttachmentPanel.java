@@ -15,16 +15,15 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -42,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -67,6 +65,10 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      */
     private boolean showingControls = false;
     private WebMarkupContainer addAttachmentContainer;
+    private Label fileLabel;
+    private Label urlLabel;
+    private AjaxLink<String> urlKindLink;
+    private AjaxLink<String> fileKindLink;
 
     /**
      * Available attachment kind. Each kind should have a corresponding field.
@@ -205,11 +207,13 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         makeVisible( controlsContainer, showingControls );
         addAttachmentContainer.add( controlsContainer );
         addTypeChoice();
+        addSelectedKind();
         addKindSelector();
         addNameField();
         addUploadField();
         addUrlField();
         addSubmit();
+        updateNewAttachmentFields();
     }
 
     /**
@@ -285,12 +289,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                /*refresh( target );
-               update( target, new Change(
-                       Change.Type.Updated,
-                       getAttachee(),
-                       "attachmentTickets"
-               ) );*/
+                // do nothing
             }
         } );
         controlsContainer.add( nameField );
@@ -401,56 +400,38 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         item.add( deleteLink );
     }
 
-    private void addRadioKindSelector() {
-        RadioChoice<Kind> kindSelector = new RadioChoice<Kind>(
-                "radios",
-                new PropertyModel<Kind>( this, "kind" ),
-                Arrays.asList( Kind.values() ),
-                new IChoiceRenderer<Kind>() {
-                    public Object getDisplayValue( Kind object ) {
-                        return " " + object.toString();
-                    }
+    private void addSelectedKind() {
+        fileLabel = new Label( "fileLabel", "File" );
+        controlsContainer.add( fileLabel );
+        urlLabel = new Label( "urlLabel", "URL" );
+        controlsContainer.add( urlLabel );
+    }
 
-                    public String getIdValue( Kind object, int index ) {
-                        return object.name();
-                    }
-                }
-        );
-        kindSelector.setSuffix( " " );
-        kindSelector.add( new AjaxFormChoiceComponentUpdatingBehavior() {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                Kind k = (Kind) getComponent().getDefaultModelObject();
-                makeVisible( uploadField, Kind.File.equals( k ) );
-                makeVisible( urlField, Kind.URL.equals( k ) );
-                submit.setEnabled( Kind.File.equals( kind ) );
-                target.add( AttachmentPanel.this );
-            }
-        } );
-        controlsContainer.add( kindSelector );
+    private void updateNewAttachmentFields() {
+        makeVisible( uploadField, Kind.File.equals( getKind() ) );
+        makeVisible( urlField, Kind.URL.equals( getKind() ) );
+        makeVisible( fileKindLink, Kind.URL.equals( getKind() ) );
+        makeVisible( urlKindLink, Kind.File.equals( getKind() ) );
+        makeVisible( fileLabel, Kind.File.equals( getKind() ) );
+        makeVisible( urlLabel, Kind.URL.equals( getKind() ) );
+        submit.setEnabled( Kind.File.equals( getKind() ) );
     }
 
     private void addKindSelector() {
-        AjaxLink<String> urlKindLink = new AjaxLink<String>( "urlKind" ) {
+        urlKindLink = new AjaxLink<String>( "urlKind" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                Kind k = Kind.URL;
-                setKind( k );
-                makeVisible( uploadField, Kind.File.equals( k ) );
-                makeVisible( urlField, Kind.URL.equals( k ) );
-                submit.setEnabled( Kind.File.equals( kind ) );
+                setKind( Kind.URL );
+                updateNewAttachmentFields();
                 target.add( AttachmentPanel.this );
             }
         };
         controlsContainer.add( urlKindLink );
-        AjaxLink<String> fileKindLink = new AjaxLink<String>( "fileKind" ) {
+        fileKindLink = new AjaxLink<String>( "fileKind" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                Kind k = Kind.File;
-                setKind( k );
-                makeVisible( uploadField, Kind.File.equals( k ) );
-                makeVisible( urlField, Kind.URL.equals( k ) );
-                submit.setEnabled( Kind.File.equals( kind ) );
+                setKind( Kind.File );
+                updateNewAttachmentFields();
                 target.add( AttachmentPanel.this );
             }
         };

@@ -101,11 +101,6 @@ public class AttachmentImpl implements Attachment {
     }
 
     @Override
-    public boolean isHelp() {
-        return type == Type.Help;
-    }
-
-    @Override
     public boolean equals( Object obj ) {
         if ( obj instanceof AttachmentImpl ) {
             Attachment other = (Attachment) obj;

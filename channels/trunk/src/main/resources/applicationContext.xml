@@ -555,13 +555,13 @@ CONFIGURATION NOTES:
     <!-- Guide -->
 
     <bean id="guideReader" class="com.mindalliance.channels.guide.GuideReaderImpl">
-        <property name="guideResource" value="/WEB-INF/doc/guide.xml"/>
+        <property name="guidesDir" value="/WEB-INF/doc"/>
         <property name="supportedClasses">
             <list>
                 <value>com.mindalliance.channels.guide.Guide</value>
-                <value>com.mindalliance.channels.guide.ActivityGroup</value>
-                <value>com.mindalliance.channels.guide.Activity</value>
-                <value>com.mindalliance.channels.guide.ActivityRef</value>
+                <value>com.mindalliance.channels.guide.Section</value>
+                <value>com.mindalliance.channels.guide.Topic</value>
+                <value>com.mindalliance.channels.guide.TopicRef</value>
             </list>
         </property>
         <property name="serverUrl" value="${server.url}"/>

@@ -21,6 +21,7 @@ import java.util.Map;
  * Time: 8:09:56 AM
  */
 public class Change implements Serializable {
+
     /**
      * A kind of change.
      */
@@ -108,7 +109,11 @@ public class Change implements Serializable {
         /**
          * Change is a refresh.
          */
-        Refresh;
+        Refresh,
+        /**
+         * Open the guide on a section and topic.
+         */
+        Guide;
 
     }
 
@@ -210,6 +215,12 @@ public class Change implements Serializable {
         this.property = property;
     }
 
+    public static Change guide( String sectionId, String topicId ) {
+        Change change = new Change( Type.Guide );
+        change.addQualifier( "sectionId", sectionId );
+        change.addQualifier( "topicId", topicId );
+        return change;
+    }
 
     public boolean isByIdOnly() {
         return id != null && identifiableRef == null;
@@ -476,6 +487,14 @@ public class Change implements Serializable {
      */
     public boolean isAspectReplaced() {
         return type == Type.AspectReplaced;
+    }
+
+    /**
+     * Whether type is guide.
+     * @return
+     */
+    public boolean isGuide() {
+        return type == Type.Guide;
     }
 
     /**

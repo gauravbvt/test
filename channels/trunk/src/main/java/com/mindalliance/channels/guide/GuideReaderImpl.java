@@ -32,7 +32,7 @@ public class GuideReaderImpl implements GuideReader, InitializingBean {
     @Autowired
     private XStreamMarshaller xStreamMarshaller;
 
-    private Resource guideResource;
+    private Resource guidesDirResource;
 
     private List<Class> supportedClasses;
 
@@ -42,8 +42,8 @@ public class GuideReaderImpl implements GuideReader, InitializingBean {
         this.supportedClasses = supportedClasses;
     }
 
-    public void setGuideResource( Resource guideResource ) {
-        this.guideResource = guideResource;
+    public void setGuidesDir( Resource guidesDirResource ) {
+        this.guidesDirResource = guidesDirResource;
     }
 
     public String getServerUrl() {
@@ -65,9 +65,12 @@ public class GuideReaderImpl implements GuideReader, InitializingBean {
     }
 
     @Override
-    public Guide getGuide() {
+    public Guide getGuide( String name ) {
         try {
-            File doc = guideResource.getFile();
+            File guidesDir = guidesDirResource.getFile();
+            assert guidesDir.isDirectory();
+            File doc = new File( guidesDir.getAbsolutePath() + File.separator + name + ".xml");
+            assert doc.exists();
             FileReader reader = new FileReader( doc );
             return (Guide)xStreamMarshaller.unmarshal( new StreamSource( reader ) );
         } catch ( IOException e ) {

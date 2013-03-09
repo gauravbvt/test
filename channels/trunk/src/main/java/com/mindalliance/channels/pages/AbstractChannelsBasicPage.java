@@ -1,7 +1,6 @@
 package com.mindalliance.channels.pages;
 
 import com.google.code.jqwicket.ui.notifier.NotifierWebMarkupContainer;
-import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
@@ -10,8 +9,6 @@ import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.services.FeedbackService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -20,8 +17,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -116,7 +111,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         addSpinner();
         addNotifier();
         addLoggedIn();
-        addHelp();
+        // addHelp();
         addFeedback();
         addBreadCrumbs();
         addContentsContainer();
@@ -196,21 +191,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         form.addOrReplace( spinner );
     }
 
-    private void addHelp() {
-        Attachment help = getHelp();
-
-        if ( help != null ) {
-            ExternalLink helpLink = new ExternalLink( "help-link", help.getUrl() );
-            form.add( helpLink );
-
-        } else {
-            BookmarkablePageLink<HelpPage> helpLink = new BookmarkablePageLink<HelpPage>( "help-link", HelpPage.class );
-            helpLink.add( new AttributeModifier( "target", new Model<String>( "help" ) ) );
-            form.add( helpLink );
-        }
-    }
-
-
     private void addNotifier() {
         notifier = new NotifierWebMarkupContainer( "notifier" );
         makeVisible( notifier, false );
@@ -265,27 +245,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     private String getAbbreviatedSelectedPlanDescription() {
         String oneLiner = getPlan().getDescription().replaceAll( "\\s+", " " );
         return StringUtils.abbreviate( oneLiner, MAX_PLAN_DESCRIPTION_LENGTH );
-    }
-
-
-/*
-    public void setPlan( Plan newPlan ) {
-        userLeftPlanCommunity();
-        super.setPlan( newPlan );
-    }
-*/
-
-    private Attachment getHelp() {
-        return isPlanContext()
-                ? (Attachment) CollectionUtils.find(
-                getPlan().getAttachments(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Attachment) object ).isHelp();
-                    }
-                } )
-                : null;
     }
 
     @Override

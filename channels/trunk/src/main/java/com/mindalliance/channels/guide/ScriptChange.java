@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 5/25/12
  * Time: 1:38 PM
  */
-public class ActivityChange implements Serializable {
+public class ScriptChange implements Serializable {
 
     private Long subjectId;
     private String subjectPath;

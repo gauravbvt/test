@@ -14,14 +14,14 @@ import java.util.List;
  * Date: 5/30/12
  * Time: 1:17 PM
  */
-public class ActivityScript implements Serializable {
+public class TopicItemScript implements Serializable {
 
     private String action;
 
     @XStreamImplicit( itemFieldName = "change" )
-    private List<ActivityChange> activityChanges;
+    private List<ScriptChange> scriptChanges;
 
-    public ActivityScript() {
+    public TopicItemScript() {
     }
 
     public String getAction() {
@@ -32,11 +32,11 @@ public class ActivityScript implements Serializable {
         this.action = action;
     }
 
-    public List<ActivityChange> getActivityChanges() {
-        return activityChanges == null ? new ArrayList<ActivityChange>() : activityChanges;
+    public List<ScriptChange> getScriptChanges() {
+        return scriptChanges == null ? new ArrayList<ScriptChange>() : scriptChanges;
     }
 
-    public void setActivityChanges( List<ActivityChange> activityChanges ) {
-        this.activityChanges = activityChanges;
+    public void setScriptChanges( List<ScriptChange> scriptChanges ) {
+        this.scriptChanges = scriptChanges;
     }
 }

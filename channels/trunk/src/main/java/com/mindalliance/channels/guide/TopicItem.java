@@ -11,14 +11,14 @@ import java.io.Serializable;
  * Date: 5/30/12
  * Time: 2:12 PM
  */
-public class ActivityStep implements Serializable {
+public class TopicItem implements Serializable {
 
     private String description;
 
     @XStreamAlias( value = "script" )
-    private ActivityScript activityScript;
+    private TopicItemScript itemScript;
 
-    public ActivityStep() {
+    public TopicItem() {
     }
 
     public String getDescription() {
@@ -29,11 +29,11 @@ public class ActivityStep implements Serializable {
         this.description = description;
     }
 
-    public ActivityScript getActivityScript() {
-        return activityScript;
+    public TopicItemScript getItemScript() {
+        return itemScript;
     }
 
-    public void setActivityScript( ActivityScript activityScript ) {
-        this.activityScript = activityScript;
+    public void setItemScript( TopicItemScript itemScript ) {
+        this.itemScript = itemScript;
     }
 }

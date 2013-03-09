@@ -38,6 +38,7 @@ import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
+import com.mindalliance.channels.guide.IGuidePanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
@@ -169,6 +170,10 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             }
  */
         }
+    }
+
+    protected IGuidePanel getGuidePanel() {
+        return null; // DEFAULT
     }
 
     public Set<Long> getExpansions() {

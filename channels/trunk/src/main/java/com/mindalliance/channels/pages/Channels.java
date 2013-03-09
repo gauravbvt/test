@@ -328,7 +328,6 @@ public class Channels extends WebApplication
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
-
         userUploadService.cleanUpPhotos();
 
     }

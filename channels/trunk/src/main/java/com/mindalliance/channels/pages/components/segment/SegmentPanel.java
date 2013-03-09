@@ -17,11 +17,12 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.guide.IGuidePanel;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
-import com.mindalliance.channels.pages.components.guide.PlanningGuidePanel;
+import com.mindalliance.channels.pages.components.guide.GuidePanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -146,7 +147,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     private WebMarkupContainer taskTitleContainer;
 
-    private PlanningGuidePanel planningGuidePanel;
+    private GuidePanel guidePanel;
 
     //-------------------------------
     public SegmentPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel, Set<Long> expansions ) {
@@ -280,8 +281,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     }
 
     private void addPlanningGuide() {
-        planningGuidePanel = new PlanningGuidePanel( "guide" );
-        add( planningGuidePanel );
+        guidePanel = new GuidePanel( "guide", "planner" );
+        add( guidePanel );
     }
 
     private void addSocialPanel() {
@@ -326,8 +327,8 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     public void updateGuidePanel( AjaxRequestTarget target ) {
         boolean guideExpanded = getExpansions().contains( Channels.GUIDE_ID );
-        makeVisible( planningGuidePanel, guideExpanded );
-        planningGuidePanel.refresh( target, new Change( Change.Type.Refresh ) );
+        makeVisible( guidePanel, guideExpanded );
+        guidePanel.refresh( target, new Change( Change.Type.Refresh ) );
         resizeSocialAndGuidePanels( target, new Change( Change.Type.Unknown ) );
     }
 
@@ -702,5 +703,9 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
 
     public void setPartOrFlowUpdated( boolean partOrFlowUpdated ) {
         this.partOrFlowUpdated = partOrFlowUpdated;
+    }
+
+    public IGuidePanel getGuidePanel() {
+        return guidePanel;
     }
 }

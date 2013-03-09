@@ -697,8 +697,6 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
         List<Type> types = super.getAttachmentTypes();
         types.add( Type.TAGS );
         types.add( Type.Image );
-        if ( !hasAttachmentOfType( AttachmentImpl.Type.Help ) )
-            types.add( Type.Help );
         return types;
     }
 

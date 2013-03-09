@@ -12,10 +12,11 @@ public interface GuideReader {
 
     /**
      * Get the guide data.
+     * @param name the guide's name
      *
      * @return a guide
      */
-    Guide getGuide();
+    Guide getGuide( String name );
 
     /**
      * Get server's url.
@@ -23,4 +24,5 @@ public interface GuideReader {
      * @return a string
      */
     String getServerUrl();
+
 }
