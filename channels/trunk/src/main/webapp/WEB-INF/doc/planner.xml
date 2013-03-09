@@ -26,10 +26,6 @@ Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of i
             <item>
                 <description>For more information, see [${helpUrl}/ch02.html this]</description>
             </item>
-            <document>
-                <title>Intro to Channels</title>
-                <url>ch02.html</url>
-            </document>
         </topic>
         <topic id="protocols">
             <name>Generating collaboration protocols</name>
