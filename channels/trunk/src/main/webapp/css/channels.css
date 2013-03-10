@@ -1375,15 +1375,6 @@ div.section-title ul.menu {
     margin: 0;
 }
 
-*/
-
-ul.attach ul.menu {
-    padding-top: 2px;
-    padding-right: 8px;
-}
-
-/*
-
 .header ul.menu, .header span.menubar {
     margin: 0;
     position: static;
@@ -1410,94 +1401,10 @@ ul > li > ul.menu {
 
 ul.call-list {
     margin: 0;
-    padding: 0 0 0 1em;
+    padding: 0 0 5px 1em;
     list-style: outside;
     line-height: 1.5em;
 }
-
-/* ----- Attachment Styling ----- */
-
-ul.attach {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-ul.attach {
-    border-bottom: 1px dotted #999999;
-    margin: 0 0 10px 0;
-    padding: 0 10px 5px;
-}
-
-td.grouped > ul.attach {
-    padding: 0 0 5px 0;
-}
-
-ul.attach li {
-    margin: 0 0 5px;
-    padding: 0 0 0 25px;
-}
-
-ul.attach li.controls {
-    padding: 0;
-}
-
-ul.attach li a {
-    font-weight: bold;
-}
-
-ul.attach li a:hover {
-    border-bottom: 1px dotted #4F2D87;
-}
-
-ul.attach li ul.menu,
-ul.attach li ul.menu li {
-    margin: 0;
-    padding: 0;
-}
-
-ul.attach li ul.menu li a {
-    font-size: 9px;
-    text-transform: uppercase;
-    font-weight: normal;
-    font-family: Arial, Helvetica, sans-serif;
-    border: none;
-    color: #ffffff;
-    background: #999999;
-    padding: 1px 3px;
-}
-
-ul.attach li ul.menu li:first-child a {
-    margin-right: 3px;
-}
-
-ul.attach li ul.menu li a:hover {
-    color: #e8e8e8;
-}
-
-ul.call-list {
-    padding-bottom: 5px;
-}
-
-.attachment-panel-add-container .attach-controls {   /*added by JF */
-    table-layout: fixed;
-}
-
-/*
-
-ul.attach li {
-    position: relative;
-}
-
-ul.attach input[type='text'] {
-	margin: 5px 0;
-}
-
-span.issue {
-
-}
-
-*/
 
 span.suggest {
     font-weight: normal;
@@ -1619,7 +1526,7 @@ li.doc_Reference {
 
 li.doc_Policy {
     padding-left: 20px;
-    background: transparent url('../images/scroll.png') no-repeat 0;
+    background: transparent url('../images/script.png') no-repeat 0;
 }
 
 li.doc_Image {
@@ -1634,12 +1541,12 @@ li.doc_MOU {
 
 li.doc_PolicyMust {
     padding-left: 20px;
-    background: transparent url('../images/scroll_ok.png') no-repeat 0;
+    background: transparent url('../images/script_add.png') no-repeat 0;
 }
 
 li.doc_PolicyCant {
     padding-left: 20px;
-    background: transparent url('../images/scroll_error.png') no-repeat 0;
+    background: transparent url('../images/script_delete.png') no-repeat 0;
 }
 
 li.doc_TAGS {
@@ -3678,10 +3585,6 @@ div.feedback-new-message input:hover {
 
 /* ----- New Attachment Panel ----- */
 
-div.attachment-panel {
-
-}
-
 div.attachments {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #A7A9AC;
@@ -3736,6 +3639,7 @@ div.attachment-panel-add-container table.attach-controls {
     border-right: 3px solid #999999;
     padding: 10px;
     width: 100%;
+    table-layout: fixed;
 }
 
 div.floating div.attachment-panel-add-container table.attach-controls {
@@ -3761,6 +3665,35 @@ div.attachment-panel-add-container table td.label {
     width: 15%;
 }
 
+div.attachment-panel ul.attach {
+    margin: 0 0 7px;
+    padding: 0 10px 5px;
+    list-style: none;
+}
+
+div.attachment-panel ul.attach li {
+    margin: 0 0 7px;
+    padding: 0 0 0 25px;
+}
+
+div.attachment-panel ul.attach li a {
+    font-weight: bold;
+}
+
+div.attachment-panel ul.attach li a:hover {
+    border-bottom: 1px dotted #4F2D87;
+}
+
+div.attachment-panel ul.attach li ul.menu,
+div.attachment-panel ul.attach li ul.menu li {
+    margin: 0;
+    padding: 0;
+}
+
+div.attachment-panel ul.attach li ul.menu li:first-child a {
+    margin-right: 3px;
+}
+
 div.attachment-panel input[type="submit"],
 div.attachment-panel input[type="button"] {
     background: none repeat scroll 0 0 #E8E8E8;
@@ -3777,7 +3710,6 @@ div.attachment-panel input[type="button"] {
     padding: 5px 10px;
     text-transform: uppercase;
 }
-
 
 div.attachment-panel ul.attach li ul.menu li a {
     background: none repeat scroll 0 0 #E8E8E8;
@@ -3797,30 +3729,13 @@ div.attachment-panel ul.attach li ul.menu li a:hover {
 	color: #000000;
 }
 
-div.attachment-panel ul.attach {
-	border: 0;
-    margin: 0 0 7px;
-    padding: 0 10px 5px;
+
+/* ----- Unmerged - Attachment Styling ----- */
+
+td.grouped > ul.attach {
+    padding: 0 0 5px 0;
 }
 
-div.attachment-panel ul.attach li {
-    margin: 0 0 7px;
-    padding: 0 0 0 25px;
+ul.attach li.controls {
+    padding: 0;
 }
-
-li.doc_PolicyMust {
-    background: url("../images/script_add.png") no-repeat scroll 0 center transparent;
-}
-
-li.doc_PolicyCant {
-    background: url("../images/script_delete.png") no-repeat scroll 0 center transparent;
-}
-
-li.doc_Reference {
-    background: url("../images/document.png") no-repeat scroll 0 center transparent;
-}
-
-li.doc_Policy {
-    background: url("../images/script.png") no-repeat scroll 0 center transparent;
-}
-
