@@ -1,0 +1,120 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+a#quick-help-button {
+    background: url("../images/quick-help.png") no-repeat scroll 14px 14px #1F7F5C;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: 25px;
+    width: 48px;
+    height: 48px;
+}
+
+a#quick-help-button:hover {
+    background: url("../images/quick-help.png") no-repeat scroll 14px 14px #4A9E7F;
+    border: 0;
+}
+
+div#quick-help {
+    background: none repeat scroll 0 0 #FFFFFF;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: 25px;
+    width: 205px;
+}
+
+a.quick-help-title {
+    background: url("../images/quick-help-big.png") no-repeat scroll 13px 14px #1F7F5C;
+    color: #FFFFFF;
+    font-family: 'Montserrat',sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 14px 0 13px 40px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+}
+
+a.quick-help-title:hover {
+    background: url("../images/quick-help-big.png") no-repeat scroll 13px 14px #4A9E7F;
+    color: #FFFFFF;
+	border: 0;
+}
+
+div.quick-help-content {
+    border-bottom: 5px solid #1F7F5C;
+    border-left: 5px solid #1F7F5C;
+    padding: 11px 12px 12px;
+	color: #4F4F4F;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 11px;
+    line-height: 22px;
+}
+
+a.quick-help-title:hover + div.quick-help-content {
+    border-bottom: 5px solid #4A9E7F;
+    border-left: 5px solid #4A9E7F;
+}
+
+div.quick-help-content h1 {
+    border-bottom: 1px solid #999999;
+    color: #656565;
+    font-family: 'Montserrat',sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: -0.06em;
+    margin: 0 0 10px;
+    padding: 0 0 9px;
+    line-height: 100%;
+}
+
+div.quick-help-content p {
+    margin: 0;
+    padding: 0 0 7px;
+}
+
+div.quick-help-content p a {
+    border-bottom: 1px dotted #1F7F5C;
+    color: #1F7F5C;
+    font-weight: normal;
+}
+
+div.quick-help-content p a:hover {
+    border-bottom: 1px dotted #0b563b;
+	color: #0b563b;
+}
+
+div.quick-help-content ul {
+	margin: 0 0 0 17px;
+}
+
+div.quick-help-content ol {
+	margin: 0 0 0 20px;
+}
+
+div.quick-help-content ul li,
+div.quick-help-content ol li {
+	padding: 0 0 5px 0;
+}
+
+a.quick-help-more {
+    background: url("../images/quick-help-more.png") no-repeat scroll right top #1F7F5C;
+    color: #FFFFFF;
+    display: inline-block;
+    font-family: 'Montserrat',sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    margin: 5px 0 0;
+    padding: 8px 43px 8px 10px;
+    text-transform: uppercase;
+    line-height: 16px;
+}
+
+a.quick-help-more:hover {
+	background: url("../images/quick-help-more.png") no-repeat scroll right top #4A9E7F;
+	color: #ffffff;
+	border: none;
+}
