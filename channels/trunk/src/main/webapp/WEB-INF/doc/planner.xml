@@ -21,10 +21,7 @@ Channels continuously examines these ''collaboration plans'' for gaps and brittl
 Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex collaboration plans.               
                 
 Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration protocols.
-                </description>           
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02.html this]</description>
+                </description>
             </item>
         </topic>
         <topic id="protocols">
@@ -34,9 +31,6 @@ Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of i
                     
 As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's protocols.
                 </description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02.html this]</description>
             </item>
         </topic>
         <topic>
@@ -93,9 +87,6 @@ Our thanks and admiration to all who contributed to these libraires.
 Applying an environment to a collaboration plan produces visualizations, analytics, diagnostics, reports and collaboration protocols.
                 </description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s11.html this]</description>
-            </item>
         </topic>
         <topic id="event">
             <name>Event</name>
@@ -106,9 +97,6 @@ Risks and events should not be confused. An event can introduce risks to one org
 
 From the point of view of the plan, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s14s06.html this]</description>
-            </item>
         </topic>
         <topic id="phase">
             <name>Phase</name>
@@ -118,21 +106,12 @@ From the point of view of the plan, an event is considered an ''incident'' if it
 A collaboration plan can elect to address what happens before, during or after of events, or a combination thereof.
                 </description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s14s07.html this]</description>
-            </item>
         </topic>
         <topic id="scenario">
             <name>Scenario</name>
             <item>
                 <description>The term ''scenario'' is used in collaboration planning to mean one phase of one event, possibly in the context of other past or current events.                
                 </description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s12s06.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s12.html this]</description>
             </item>
         </topic>
         <topic id="goal">
@@ -143,12 +122,6 @@ A collaboration plan can elect to address what happens before, during or after o
 Goals are achieved by carrying out tasks, or when an event terminates.                
                 </description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s12s04.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch01s12s06.html this]</description>
-            </item>
         </topic>
         <topic id="segment">
             <name>Segment</name>
@@ -157,9 +130,6 @@ Goals are achieved by carrying out tasks, or when an event terminates.
 
 No two segments should address identical goals in identical scenarios.
                 </description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s12s06.html this]</description>
             </item>
         </topic>
         <topic id="information">
@@ -174,9 +144,6 @@ Information can be constrained to compliance with a named information product th
 An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
                 </description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s16.html this]</description>
-            </item>
             <next section="profiling" topic="profiling-info-product"/>
         </topic>
         <topic id="task">
@@ -184,26 +151,17 @@ An element of information also has a name and can be accompanied by handling ins
             <item>
                 <description>A task is an action or decision taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s13.html#d0e454 this]</description>
-            </item>
         </topic>
         <topic id="need">
             <name>Information need</name>
             <item>
                 <description>Specification of information needed to execute a task, plus requirements on its delivery.</description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s13s03.html this]</description>
-            </item>
         </topic>
         <topic id="capability">
             <name>Information capability</name>
             <item>
                 <description>Specification of information acquired by or for the execution of a task, plus how it could be (further) shared.</description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s13s04.html this]</description>
             </item>
         </topic>
         <topic id="flow">
@@ -212,26 +170,17 @@ An element of information also has a name and can be accompanied by handling ins
                 <description>Or flow, for short. How agents carrying out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.
                 </description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s13s02.html this]</description>
-            </item>
         </topic>
         <topic id="assignment">
             <name>Task assignment</name>
             <item>
                 <description>The list of agents assigned to a task because their profiles match the definition of the task.</description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s17s02.html this]</description>
-            </item>
         </topic>
         <topic id="commitment">
             <name>Information sharing commitment</name>
             <item>
                 <description>The commitment by one agent to share information acquired doing a task with another agent who needs it to successfully do some other task.</description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s17s03.html this]</description>
             </item>
         </topic>
         <topic id="issue">
@@ -241,9 +190,6 @@ An element of information also has a name and can be accompanied by handling ins
 * validity (something is inherently wrong in the plan)
 * completeness (something is obviously missing from the plan)
 * robustness (something is making the plan likely to fail)</description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s04.html this]</description>
             </item>
         </topic>
     </section>
@@ -265,12 +211,6 @@ An element of information also has a name and can be accompanied by handling ins
             <item>
                 <description>Note that events can also be named anywhere they are used to define another plan element. When they are, they are automatically added to the scope of the plan.</description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch01s12s03.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s05s04.html this]</description>
-            </item>
             <next section="scoping" topic="phases"/>
             <next section="profiling" topic="profiling-event"/>
         </topic>
@@ -287,9 +227,6 @@ The list is part of the plan's ''details''.]]></description>
                         <property>details</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s02.html this]</description>
             </item>
             <next section="scoping" topic="add-define-segment"/>
             <next section="scoping" topic="organizations"/>
@@ -308,9 +245,6 @@ The list is part of the plan's ''details''.]]></description>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s06.html this]</description>
-            </item>
             <next section="scoping" topic="requirements"/>
             <next section="profiling" topic="profiling-organization"/>
         </topic>
@@ -326,9 +260,6 @@ The list is part of the plan's ''details''.]]></description>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s03.html this]</description>
-            </item>
         </topic>
         <topic id="add-define-segment">
             <name>Add and define a segment</name>
@@ -342,12 +273,6 @@ The list is part of the plan's ''details''.]]></description>
                         <property>details</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s05s08.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s12.html this]</description>
             </item>
             <next section="scoping" topic="segment-goals"/>
         </topic>
@@ -368,9 +293,6 @@ Naming the goal is optional.]]></description>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s12.html this]</description>
-            </item>
         </topic>
         <topic id="classifications">
             <name>Define secrecy classifications</name>
@@ -387,9 +309,6 @@ Naming the goal is optional.]]></description>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s05.html this]</description>
-            </item>
         </topic>
     </section>
     <section id="info-sharing">
@@ -399,9 +318,6 @@ Naming the goal is optional.]]></description>
             <item>
                 <description>Add new task to a segment by clicking ''ADD'' in the  Task panel or by selecting ''add new task'' from the top Actions menu.
 The newly created task is intially empty and presented as ''someone doing something''.</description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s06s02.html this]</description>
             </item>
             <next section="info-sharing" topic="define-task"/>
         </topic>
@@ -424,9 +340,6 @@ Note that as little and as much as wanted can be put into a task's definition.
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s10.html#d0e2225 this]</description>
-            </item>
             <next section="info-sharing" topic="add-need"/>
             <next section="info-sharing" topic="add-capability"/>
             <next section="info-sharing" topic="connect-with-flow"/>
@@ -441,9 +354,6 @@ Note that as little and as much as wanted can be put into a task's definition.
  * improve its execution
                 </description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s06s03.html this]</description>
-            </item>
             <next section="info-sharing" topic="add-capability"/>
             <next section="info-sharing" topic="define-flow"/>
             <next section="info-sharing" topic="connect-with-flow"/>
@@ -452,9 +362,6 @@ Note that as little and as much as wanted can be put into a task's definition.
             <name>Add info capability to task</name>
             <item>
                 <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the Sends panel. An info capability specifies info agents assigned to a task expect to acquire and be able to share with others.</description>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s06s04.html this]</description>
             </item>
             <next section="info-sharing" topic="add-need"/>
             <next section="info-sharing" topic="define-flow"/>
@@ -480,9 +387,6 @@ Note that as little and as much as wanted can be put into a task's definition.
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s10s02.html this]</description>
-            </item>
             <next section="info-sharing" topic="connect-with-flow"/>
             <next section="profiling" topic="profiling-medium"/>
             <next section="profiling" topic="profiling-info-product"/>
@@ -502,9 +406,6 @@ A sharing flow is created by connecting an info need or a capability to a task. 
                         <property>Index</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s06s05.html this]</description>
             </item>
             <next section="info-sharing" topic="add-task"/>
         </topic>
@@ -552,12 +453,6 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s13s06.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s07s02.html this]</description>
-            </item>
             <next section="profiling" topic="profiling-phase"/>
             <next section="profiling" topic="profiling-place"/>
             <next section="scoping" topic="events"/>
@@ -602,12 +497,6 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s07s03.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s13s07.html this]</description>
-            </item>
             <next section="profiling" topic="profiling-phase"/>
             <next section="scoping" topic="events"/>
         </topic>
@@ -633,12 +522,6 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s07s05.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s13s02.html this]</description>
-            </item>
             <next section="profiling" topic="profiling-agent"/>
             <next section="scoping" topic="requirements"/>
         </topic>
@@ -660,7 +543,7 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-             <item>
+            <item>
                 <description>Roles can be found by name in the plan's index.</description>
                 <script>
                     <action>Open the index</action>
@@ -670,12 +553,6 @@ Note that all profile attributes are optional.]]>
                         <property>Index</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s07s06.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s13.html#d0e3198 this]</description>
             </item>
         </topic>
         <topic id="profiling-agent">
@@ -722,12 +599,6 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s07s07.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s13s03.html this]</description>
-            </item>
             <next section="profiling" topic="profiling-organization"/>
         </topic>
         <topic id="profiling-place">
@@ -766,12 +637,6 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s07s04.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s13s04.html this]</description>
-            </item>
         </topic>
         <topic id="profiling-medium">
             <name>Profile a transmission medium</name>
@@ -795,7 +660,7 @@ Note that all profile attributes are optional.]]>
                     </change>
                 </script>
             </item>
-             <item>
+            <item>
                 <description>Transmission media can be found by name in the plan's index.</description>
                 <script>
                     <action>Open the index</action>
@@ -805,12 +670,6 @@ Note that all profile attributes are optional.]]>
                         <property>Index</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s07s08.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s13s05.html this]</description>
             </item>
         </topic>
         <topic id="profiling-info-product">
@@ -902,18 +761,6 @@ Note that all profile attributes are optional.]]>
             <item>
                 <description>If the resolution of an issue is not self-evident and requires input from stakeholders, a survey (with questionnaire) can be created about resolving the issue.</description>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s07.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s21.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s11s15.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s03s03s05.html this]</description>
-            </item>
             <next section="learning" topic="launch-remediation-survey"/>
         </topic>
         <topic id="moving-tasks">
@@ -927,9 +774,6 @@ Note that all profile attributes are optional.]]>
                         <type>Expanded</type>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch03s08s02.html this]</description>
             </item>
             <next section="scoping" topic="add-define-segment"/>
         </topic>
@@ -970,12 +814,6 @@ Which agents are assigned to a task is determined by
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s15.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s11s08.html this]</description>
-            </item>
             <next section="improving" topic="verify-procedures"/>
         </topic>
         <topic id="verify-taxonomy">
@@ -1000,15 +838,6 @@ Taxonomies are defined implictly by categorizing individual entities. Taxonomies
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s13.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s08s04.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s08s03.html this]</description>
-            </item>
             <next section="improving" topic="verify-procedures"/>
         </topic>
         <topic id="verify-procedures">
@@ -1029,9 +858,6 @@ The other parties to the commitments can be aggregated by role, organization typ
                         <type>Expanded</type>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s08.html this]</description>
             </item>
             <next section="improving" topic="tune-task-flow-definition"/>
             <next section="improving" topic="verify-taxonomy"/>
@@ -1061,9 +887,6 @@ Questionnaires can be activated and deactivated. They can be extended while they
                         </qualifier>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s19s02.html this]</description>
             </item>
             <next section="learning" topic="launch-survey"/>
         </topic>
@@ -1100,12 +923,6 @@ Questionnaires can be activated and deactivated. They can be extended while they
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s14.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
-            </item>
             <next section="learning" topic="add-survey-participants"/>
             <next section="learning" topic="compose-questionnaire"/>
         </topic>
@@ -1122,7 +939,7 @@ Note that the issue remediation questionnaires are by default not shown in the l
                 </description>
                 <script>
                     <action>See all remediation questionnaires</action>
-                     <change>
+                    <change>
                         <subjectPath>guide.unknownRFISurvey</subjectPath>
                         <type>Expanded</type>
                         <qualifier>
@@ -1131,12 +948,6 @@ Note that the issue remediation questionnaires are by default not shown in the l
                         </qualifier>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s14.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
             </item>
             <next section="learning" topic="add-survey-participants"/>
             <next section="learning" topic="compose-questionnaire"/>
@@ -1166,9 +977,6 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
-            </item>
             <next section="learning" topic="survey-results"/>
         </topic>
         <topic id="survey-results">
@@ -1179,7 +987,7 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
 Results can be viewed by opening the survey and selecting the ''results'' tabs.</description>
                 <script>
                     <action>See all launched surveys</action>
-                      <change>
+                    <change>
                         <subjectPath>guide.unknownRFISurvey</subjectPath>
                         <type>Expanded</type>
                         <qualifier>
@@ -1187,10 +995,7 @@ Results can be viewed by opening the survey and selecting the ''results'' tabs.<
                             <value>Surveys</value>
                         </qualifier>
                     </change>
-              </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s19.html#d0e3748 this]</description>
+                </script>
             </item>
             <next section="learning" topic="add-survey-participants"/>
         </topic>
@@ -1208,9 +1013,6 @@ Planners can see this feedback and reply to it. The user can then reply back etc
                         <type>Expanded</type>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s20.html this]</description>
             </item>
         </topic>
     </section>
@@ -1231,9 +1033,6 @@ The index can be filtered by kind of element (role, agent, event etc.), by tags,
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s12.html this]</description>
-            </item>
         </topic>
         <topic id="whos-who">
             <name>Search for agents</name>
@@ -1249,9 +1048,6 @@ The table can be indexed by the name of the agent or by attributes of employment
                         <property>Who's who</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s09.html this]</description>
             </item>
         </topic>
         <topic id="documents">
@@ -1269,9 +1065,6 @@ A table with all attachments in the plan can be found in the plan's ''attachment
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s11.html this]</description>
-            </item>
         </topic>
         <topic id="tags">
             <name>Search by tags</name>
@@ -1287,9 +1080,6 @@ The list of all tags used in the plan can be looked up to see what has been mark
                         <property>Tags</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s14.html this]</description>
             </item>
         </topic>
         <topic id="taxonomies">
@@ -1310,15 +1100,6 @@ Taxonomies can be visualized to verify that they are correct.
                     </change>
                 </script>
             </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s11s13.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s08s04.html this]</description>
-            </item>
-            <item>
-                <description>See also [${helpUrl}/ch03s08s03.html this]</description>
-            </item>
             <next section="improving" topic="verify-procedures"/>
         </topic>
         <topic id="references">
@@ -1337,9 +1118,6 @@ For example, at the bottom of in the profile of a role is an index of all other 
                         <property>details</property>
                     </change>
                 </script>
-            </item>
-            <item>
-                <description>For more information, see [${helpUrl}/ch02s06s13.html this]</description>
             </item>
         </topic>
     </section>
