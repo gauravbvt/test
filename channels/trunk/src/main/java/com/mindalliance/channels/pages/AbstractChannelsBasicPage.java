@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.pages.components.IndicatorAwareForm;
+import com.mindalliance.channels.pages.components.help.HelpPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import com.mindalliance.channels.social.services.FeedbackService;
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +15,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -73,7 +75,9 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     private Component breadCrumbs;
     private static final int MAX_PLAN_DESCRIPTION_LENGTH = 50;
     private WebMarkupContainer contentsContainer;
-
+    private boolean showingQuickHelp;
+    private AjaxLink<String> quickHelpLink;
+    private HelpPanel helpPanel;
 
     protected AbstractChannelsBasicPage() {
     }
@@ -177,7 +181,43 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
             }
         } );
         form.setMultiPart( true );
+        addQuickHelp();
         add( form );
+    }
+
+    private void addQuickHelp() {
+        addQuickHelpButton();
+        addQuickHelpPanel();
+    }
+
+    private void addQuickHelpButton() {
+        quickHelpLink = new AjaxLink<String>( "quickHelpButton" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                toggleQuickHelp( target );
+            }
+        };
+        quickHelpLink.setOutputMarkupId( true );
+        form.add(  quickHelpLink );
+    }
+
+    private void toggleQuickHelp( AjaxRequestTarget target ) {
+        showingQuickHelp = !showingQuickHelp;
+        makeVisible( quickHelpLink, !showingQuickHelp );
+        helpPanel.selectTopicInSection( null, null, target );
+        makeVisible( helpPanel, showingQuickHelp );
+        target.add( quickHelpLink );
+        target.add( helpPanel );
+    }
+
+    private void addQuickHelpPanel() {
+        helpPanel = new HelpPanel( "quickHelp", getGuideName() );
+        makeVisible( helpPanel, false );
+        form.add( helpPanel );
+    }
+
+    protected String getGuideName() {
+        return "planner"; // DEFAULT TODO - Make abstract
     }
 
     private void redirectHere() {
@@ -277,6 +317,8 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         } else if ( change.isCommunicated() ) {
             newMessage( target, change );
             updateContent( target );
+        } else if ( change.isCollapsed() && change.getId() == Channels.GUIDE_ID ) {
+            toggleQuickHelp( target );
         }
         if ( change.getScript() != null ) {
             target.appendJavaScript( change.getScript() );

@@ -721,5 +721,4 @@ public final class ChannelsUtils {
         return name.replaceAll( "\\W", "_" );
     }
 
-
 }

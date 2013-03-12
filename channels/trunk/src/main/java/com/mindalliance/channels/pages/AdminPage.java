@@ -191,6 +191,17 @@ public class AdminPage extends AbstractChannelsWebPage {
         };
         validationFeedbackPanel.setOutputMarkupId( true );
         // makeVisible( validationFeedbackPanel, !validationFeedbackPanel.getFeedbackMessages().isEmpty() );
+        Component newPlanUriField = new TextField<String>( "newPlanUri",
+                new PropertyModel<String>( this, "newPlanUri" ) )
+                .add( new AbstractValidator<String>() {
+                    @Override
+                    protected void onValidate( IValidatable<String> validatable ) {
+                        if ( !planDefinitionManager.isNewPlanUriValid( validatable.getValue() ) )
+                            error( validatable, "NonUniqueUri" );
+                    }
+                } );
+        newPlanUriField.add( new ValidationStyler() );
+        addTipTitle( newPlanUriField, "Example: com_company_plans_example" );
         add(
                 form.add(
                         homeLink,
@@ -215,23 +226,15 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 new PropertyModel<String>( this, "plannerSupportCommunity" ) ),
                         new TextField<String>( "userSupportCommunity",
                                 new PropertyModel<String>( this, "userSupportCommunity" ) ),
+                        /*
                         new TextField<String>( "communityCalendarHost",
                                 new PropertyModel<String>( this, "communityCalendarHost" ) ),
                         new TextField<String>( "communityCalendar",
                                 new PropertyModel<String>( this, "communityCalendar" ) ),
                         new TextField<String>( "communityCalendarPrivateTicket",
                                 new PropertyModel<String>( this, "communityCalendarPrivateTicket" ) ),
-
-                        new TextField<String>( "newPlanUri",
-                                new PropertyModel<String>( this, "newPlanUri" ) )
-                                .add( new AbstractValidator<String>() {
-                                    @Override
-                                    protected void onValidate( IValidatable<String> validatable ) {
-                                        if ( !planDefinitionManager.isNewPlanUriValid( validatable.getValue() ) )
-                                            error( validatable, "NonUniqueUri" );
-                                    }
-                                } )
-                                .add( new ValidationStyler() ),
+*/
+                        newPlanUriField,
 
                         new TextField<String>( "newPlanClient",
                                 new PropertyModel<String>( this, "newPlanClient" ) ),

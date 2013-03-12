@@ -412,7 +412,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     private void addSocial() {
-        String[] tabsShown = {SocialPanel.CALENDAR, /*SocialPanel.SURVEYS, */SocialPanel.MESSAGES, SocialPanel.USER, SocialPanel.PARTICIPATION};
+        String[] tabsShown = {/* SocialPanel.CALENDAR, */SocialPanel.MESSAGES, SocialPanel.USER, SocialPanel.PARTICIPATION};
         socialPanel = new SocialPanel( "social", false, tabsShown, false );
         getContainer().add( socialPanel );
     }
