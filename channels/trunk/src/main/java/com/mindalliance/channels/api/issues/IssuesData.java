@@ -23,12 +23,13 @@ import java.util.List;
  * Time: 2:34 PM
  */
 @XmlRootElement( name = "issues", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"planSummary", "planMetrics", "issues"} )
+@XmlType( propOrder = {"planSummary", "planMetrics", "issueMetricsData", "issues"} )
 public class IssuesData  implements Serializable {
 
 
     private PlanSummaryData planSummaryData;
     private PlanMetricsData planMetricsData;
+    private IssueMetricsData issueMetricsData;
     private List<IssueData> issues;
 
     public IssuesData() {
@@ -43,6 +44,7 @@ public class IssuesData  implements Serializable {
             CommunityService communityService ) {
         planSummaryData = new PlanSummaryData( serverUrl, communityService );
         planMetricsData = new PlanMetricsData( communityService );
+        issueMetricsData = new IssueMetricsData( communityService );
         initIssues( communityService );
     }
 
@@ -66,6 +68,11 @@ public class IssuesData  implements Serializable {
     @XmlElement
     public PlanMetricsData getPlanMetrics() {
         return planMetricsData;
+    }
+
+    @XmlElement
+    public IssueMetricsData getIssueMetricsData() {
+        return issueMetricsData;
     }
 
 

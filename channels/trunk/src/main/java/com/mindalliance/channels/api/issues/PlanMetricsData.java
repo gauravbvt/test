@@ -5,12 +5,13 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
@@ -34,7 +35,8 @@ public class PlanMetricsData  implements Serializable {
 
     private static Class[] ModelObjectClasses = {
             Event.class, Phase.class, Actor.class, Organization.class, Role.class, Place.class,
-            TransmissionMedium.class, Segment.class, Part.class, Flow.class, Connector.class, Requirement.class
+            InfoProduct.class, InfoFormat.class, TransmissionMedium.class,
+            Segment.class, Part.class, Flow.class, Connector.class
     };
     private List<ModelObjectCountData> counts;
 

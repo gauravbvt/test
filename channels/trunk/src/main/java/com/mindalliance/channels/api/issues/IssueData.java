@@ -7,6 +7,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Web service data element for an issue.
@@ -17,7 +19,7 @@ import java.io.Serializable;
  * Time: 2:54 PM
  */
 @XmlType( propOrder={ "about", "detected", "type", "kind", "waived", "description",
-        "remediation", "severity", "reportedBy"} )
+        "remediationOptions", "severity", "reportedBy"} )
 public class IssueData  implements Serializable {
 
     private Issue issue;
@@ -62,9 +64,13 @@ public class IssueData  implements Serializable {
         return StringEscapeUtils.escapeXml( issue.getDescription() );
     }
 
-    @XmlElement
-    public String getRemediation() {
-        return StringEscapeUtils.escapeXml( issue.getRemediation() );
+    @XmlElement( name = "remediation" )
+    public List<String> getRemediationOptions() {
+        List<String> options = new ArrayList<String>(  );
+        for ( String option : issue.getRemediation().split( "\\n" ) ) {
+            options.add( StringEscapeUtils.escapeXml( option.trim() ) );
+        }
+        return options;
     }
 
     @XmlElement

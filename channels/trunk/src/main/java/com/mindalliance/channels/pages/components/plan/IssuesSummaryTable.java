@@ -8,9 +8,8 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -18,33 +17,30 @@ import org.apache.wicket.markup.html.list.ListView;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A table summary of all issues in the plan.
  */
 public class IssuesSummaryTable extends AbstractUpdatablePanel {
 
-    private List<Issue> allUnwaivedIssues = null;
-
-    private List<Issue> allWaivedIssues = null;
     private List<Level> levels;
 
-    public IssuesSummaryTable( String id ) {
+    public IssuesSummaryTable( String id, IssueMetrics issueMetrics ) {
         super( id );
-        init();
+        init( issueMetrics );
     }
 
-    private void init() {
-        addRobustness();
-        addCompleteness();
-        addValidity();
+    private void init( IssueMetrics issueMetrics ) {
+        addRobustness( issueMetrics );
+        addCompleteness( issueMetrics );
+        addValidity( issueMetrics );
     }
 
-    private void addValidity() {
-        add( new Label( "validityMetrics", issuesTypeMetrics( Issue.VALIDITY, false ) ) );
+    private void addValidity( final IssueMetrics issueMetrics ) {
+        add( new Label(
+                "validityMetrics",
+                issuesSummary( issueMetrics.getIssueSummaryMetrics( Issue.VALIDITY, false ) ) ) );
         add( new ListView<Level>(
                 "validitySeverity",
                 levels()
@@ -53,10 +49,12 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.VALIDITY, false ) ) );
+                        severityMetrics( issueMetrics, item.getModelObject(), Issue.VALIDITY, false ) ) );
             }
         } );
-        add( new Label( "validityWaivedMetrics", issuesTypeMetrics( Issue.VALIDITY, true ) ) );
+        add( new Label(
+                "validityWaivedMetrics",
+                issuesSummary( issueMetrics.getIssueSummaryMetrics( Issue.VALIDITY, true ) ) ) );
         add( new ListView<Level>(
                 "validityWaivedSeverity",
                 levels()
@@ -65,13 +63,15 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.VALIDITY, true ) ) );
+                        severityMetrics( issueMetrics, item.getModelObject(), Issue.VALIDITY, true ) ) );
             }
         } );
     }
 
-    private void addCompleteness() {
-        add( new Label( "completenessMetrics", issuesTypeMetrics( Issue.COMPLETENESS, false ) ) );
+    private void addCompleteness( final IssueMetrics issueMetrics ) {
+        add( new Label(
+                "completenessMetrics",
+                issuesSummary( issueMetrics.getIssueSummaryMetrics( Issue.COMPLETENESS, false ) ) ) );
         add( new ListView<Level>(
                 "completenessSeverity",
                 levels()
@@ -80,10 +80,12 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.COMPLETENESS, false ) ) );
+                        severityMetrics( issueMetrics, item.getModelObject(), Issue.COMPLETENESS, false ) ) );
             }
         } );
-        add( new Label( "completenessWaivedMetrics", issuesTypeMetrics( Issue.COMPLETENESS, true ) ) );
+        add( new Label(
+                "completenessWaivedMetrics",
+                issuesSummary( issueMetrics.getIssueSummaryMetrics( Issue.COMPLETENESS, true ) ) ) );
         add( new ListView<Level>(
                 "completenessWaivedSeverity",
                 levels()
@@ -92,13 +94,13 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.COMPLETENESS, true ) ) );
+                        severityMetrics( issueMetrics, item.getModelObject(), Issue.COMPLETENESS, true ) ) );
             }
         } );
     }
 
-    private void addRobustness() {
-        add( new Label( "robustnessMetrics", issuesTypeMetrics( Issue.ROBUSTNESS, false ) ) );
+    private void addRobustness( final IssueMetrics issueMetrics ) {
+        add( new Label( "robustnessMetrics", issuesSummary( issueMetrics.getIssueSummaryMetrics( Issue.ROBUSTNESS, false ) ) ) );
         add( new ListView<Level>(
                 "robustnessSeverity",
                 levels()
@@ -107,10 +109,10 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.ROBUSTNESS, false ) ) );
+                        severityMetrics( issueMetrics, item.getModelObject(), Issue.ROBUSTNESS, false ) ) );
             }
         } );
-        add( new Label( "robustnessWaivedMetrics", issuesTypeMetrics( Issue.ROBUSTNESS, true ) ) );
+        add( new Label( "robustnessWaivedMetrics", issuesSummary( issueMetrics.getIssueSummaryMetrics( Issue.ROBUSTNESS, true ) ) ) );
         add( new ListView<Level>(
                 "robustnessWaivedSeverity",
                 levels()
@@ -119,7 +121,7 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Level> item ) {
                 item.add( new Label(
                         "severityMetrics",
-                        severityMetrics( item.getModelObject(), Issue.ROBUSTNESS, true ) ) );
+                        severityMetrics( issueMetrics, item.getModelObject(), Issue.ROBUSTNESS, true ) ) );
             }
         } );
     }
@@ -132,65 +134,25 @@ public class IssuesSummaryTable extends AbstractUpdatablePanel {
         return levels;
     }
 
-    private String issuesTypeMetrics( String type, boolean waived ) {
-        List<Issue> issues = getAllIssues( type, waived );
-        Set<String> kinds = new HashSet<String>();
-        for ( Issue issue : issues ) {
-            kinds.add( issue.getKind() );
-        }
-        double n = issues.size();
-        double total = issuesCount();
+    private String issuesSummary( IssueMetrics.Metrics metrics ) {
         MessageFormat mf = new MessageFormat( "{0} {1} ({2,number,percent}) , {3} kinds" );
-        double percent = total == 0 ? 0.0 : n / total;
-        Object[] args = {n, waived ? "waived" : "unresolved", Math.max( percent, percent > 0 ? 0.01 : 0.0 ), kinds.size()};
+        Object[] args = {
+                metrics.getCount(),
+                metrics.isWaived() ? "waived" : "unresolved",
+                Math.max( metrics.getPercent(), metrics.getPercent() > 0 ? 0.01 : 0.0 ),
+                metrics.getKindsCount()};
         return mf.format( args );
     }
 
 
-    private String severityMetrics( final Level severity, String type, boolean waived ) {
-        List<Issue> issues = getAllIssues( type, waived );
-        double count = CollectionUtils.select(
-                issues,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Issue) object ).getSeverity().equals( severity );
-                    }
-                }
-        ).size();
+    private String severityMetrics( IssueMetrics issueMetrics, final Level severity, String type, boolean waived ) {
+        IssueMetrics.Metrics metrics = issueMetrics.getSeverityMetrics( severity, type, waived );
         MessageFormat mf = new MessageFormat( "{0} {1} ({2,number,percent})" );
-        double total = issuesCount();
-        double percent = total == 0 ? 0.0 : count / total;
-        Object[] args = {count, severity.getNegativeLabel().toLowerCase(), Math.max( percent, percent > 0 ? 0.01 : 0.0 )};
+        Object[] args = {
+                metrics.getCount(),
+                severity.getNegativeLabel().toLowerCase(),
+                Math.max( metrics.getPercent(), metrics.getPercent() > 0 ? 0.01 : 0.0 )};
         return mf.format( args );
     }
 
-    private List<Issue> getAllIssues( boolean waived ) {
-        if ( waived ) {
-            if ( allWaivedIssues == null )
-                allWaivedIssues = getAnalyst().findAllWaivedIssues( getQueryService() );
-            return allWaivedIssues;
-        } else {
-            if ( allUnwaivedIssues == null )
-                allUnwaivedIssues = getAnalyst().findAllUnwaivedIssues( getQueryService() );
-            return allUnwaivedIssues;
-        }
-    }
-
-    private int issuesCount() {
-        return getAllIssues( true ).size() + getAllIssues( false ).size();
-    }
-
-    @SuppressWarnings( "unchecked" )
-    private List<Issue> getAllIssues( final String type, boolean waived ) {
-        return (List<Issue>) CollectionUtils.select(
-                getAllIssues( waived ),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Issue) object ).getType().equals( type );
-                    }
-                }
-        );
-    }
-}
+ }

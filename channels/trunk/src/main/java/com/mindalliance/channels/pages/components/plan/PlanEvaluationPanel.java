@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -75,7 +76,7 @@ public class PlanEvaluationPanel extends AbstractCommandablePanel {
     }
 
     private void addIssuesSummary() {
-        add( new IssuesSummaryTable( "issuesSummary" ) );
+        add( new IssuesSummaryTable( "issuesSummary", new IssueMetrics( getCommunityService() ) ) );
     }
 
     //-------------------------------

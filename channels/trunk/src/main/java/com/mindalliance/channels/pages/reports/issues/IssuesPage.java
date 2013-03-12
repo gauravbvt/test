@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.reports.issues;
 
 import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.engine.analysis.IssueMetrics;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.components.plan.IssuesSummaryTable;
 import com.mindalliance.channels.social.model.Feedback;
@@ -33,8 +34,9 @@ public class IssuesPage extends AbstractChannelsBasicPage {
 
 
     protected void addContent() {
-        addIssuesSummary();
-        addIssueMetrics();
+        IssueMetrics issueMetrics = new IssueMetrics( getCommunityService() );
+        addIssuesSummary( issueMetrics );
+        addIssueMetrics( issueMetrics );
     }
 
     @Override
@@ -52,14 +54,14 @@ public class IssuesPage extends AbstractChannelsBasicPage {
         return Feedback.ISSUES;
     }
 
-    private void addIssuesSummary() {
-        getContainer().add( new IssuesSummaryTable( "issuesSummary" ) );
+    private void addIssuesSummary( IssueMetrics issueMetrics ) {
+        getContainer().add( new IssuesSummaryTable( "issuesSummary", issueMetrics ) );
     }
 
-    private void addIssueMetrics() {
-        getContainer().add( new IssuesMetrics( "robustnessMetrics", Issue.ROBUSTNESS ) );
-        getContainer().add( new IssuesMetrics( "completenessMetrics", Issue.COMPLETENESS ) );
-        getContainer().add( new IssuesMetrics( "validityMetrics", Issue.VALIDITY ) );
+    private void addIssueMetrics( IssueMetrics issueMetrics ) {
+        getContainer().add( new IssuesMetricsPanel( "robustnessMetrics", Issue.ROBUSTNESS, issueMetrics ) );
+        getContainer().add( new IssuesMetricsPanel( "completenessMetrics", Issue.COMPLETENESS, issueMetrics ) );
+        getContainer().add( new IssuesMetricsPanel( "validityMetrics", Issue.VALIDITY, issueMetrics ) );
     }
 
 }
