@@ -21,6 +21,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -52,7 +53,7 @@ import java.util.Set;
  * Date: 9/29/11
  * Time: 2:15 PM
  */
-public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements Filterable {
+public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements Filterable, Guidable {
 
     /**
      * Class logger.
@@ -85,6 +86,16 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
     public RequirementsAnalysisPanel( String id, Model<Plan> planModel, Set<Long> expansions ) {
         super( id, planModel, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "scoping";  // todo move to community guide
+    }
+
+    @Override
+    public String getTopicId() {
+        return "requirements"; // todo move to community guide
     }
 
     private void init() {

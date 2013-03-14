@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import org.apache.commons.collections.CollectionUtils;
@@ -36,7 +37,7 @@ import java.util.List;
  * Date: Jun 1, 2009
  * Time: 11:44:29 AM
  */
-public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRangeable, Filterable {
+public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRangeable, Filterable, Guidable {
     /**
      * Indexing choice.
      */
@@ -85,6 +86,16 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
     public PlanWhosWhoPanel( String id ) {
         super( id, null, null );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "searching";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "whos-who";
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import com.mindalliance.channels.social.services.RFIService;
@@ -39,7 +40,7 @@ import java.util.List;
  * Date: 3/6/12
  * Time: 2:37 PM
  */
-public class QuestionnairesPanel extends AbstractCommandablePanel {
+public class QuestionnairesPanel extends AbstractCommandablePanel implements Guidable {
 
     private static final String ANYTHING = "anything";
     private static final String ALL = "all";
@@ -77,6 +78,15 @@ public class QuestionnairesPanel extends AbstractCommandablePanel {
         return getCommunityService( getDomainPlanCommunity() );
     }
 
+    @Override
+    public String getSectionId() {
+        return "learning";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "compose-questionnaire";
+    }
 
     private void init() {
         addFilters();

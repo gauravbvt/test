@@ -9,6 +9,24 @@ a#quick-help-button {
     top: 25px;
     width: 48px;
     height: 48px;
+    z-index: 10000;
+}
+
+a#quick-help-button-low {  /** added by jf **/
+    top: 120px;
+    background: url("../images/quick-help.png") no-repeat scroll 3px 14px #1F7F5C;
+    width: 24px;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    height: 48px;
+    z-index: 10000;
+
+}
+
+a#quick-help-button-low:hover {  /** added by jf **/
+    background: url("../images/quick-help.png") no-repeat scroll 3px 14px #4A9E7F;
+    border: 0;
 }
 
 a#quick-help-button:hover {
@@ -23,6 +41,7 @@ div#quick-help {
     text-align: left;
     top: 25px;
     width: 205px;
+    z-index: 10000;
 }
 
 a.quick-help-title {
@@ -118,3 +137,4 @@ a.quick-help-more:hover {
 	color: #ffffff;
 	border: none;
 }
+

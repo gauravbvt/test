@@ -316,19 +316,6 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         }
     }
 
- /*   private Component getEntityAgreementsPanel() {
-        if ( getObject() instanceof Organization ) {
-            return new OrganizationAgreementsPanel(
-                    "aspect",
-                    new PropertyModel<Organization>( this, "object" ),
-                    getExpansions(),
-                    PREFIX_DOM_IDENTIFIER );
-        } else {
-            return new Label( "aspect", "Not available" );
-        }
-    }
-*/
-
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
                 "aspect",

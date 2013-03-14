@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.EOIsEditPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -18,7 +19,7 @@ import java.util.Set;
  * Date: 11/1/12
  * Time: 1:23 PM
  */
-public class InfoProductDetailsPanel extends EntityDetailsPanel {
+public class InfoProductDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     /**
      * Web markup container.
@@ -28,6 +29,18 @@ public class InfoProductDetailsPanel extends EntityDetailsPanel {
     public InfoProductDetailsPanel( String id, PropertyModel<ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-info-product";
+    }
+
+
 
     @Override
     protected void addSpecifics( WebMarkupContainer moDetailsDiv ) {

@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -28,7 +29,7 @@ import java.util.Set;
  * Date: May 8, 2009
  * Time: 9:22:26 AM
  */
-public class EventDetailsPanel extends EntityDetailsPanel {
+public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
     /**
      * Web markup container.
      */
@@ -49,6 +50,18 @@ public class EventDetailsPanel extends EntityDetailsPanel {
     public EventDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-event";
+    }
+
+
 
     /**
      * {@inheritDoc }

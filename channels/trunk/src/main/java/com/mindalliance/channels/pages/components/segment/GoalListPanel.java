@@ -17,6 +17,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -55,7 +56,7 @@ import java.util.Set;
  * Date: May 8, 2009
  * Time: 3:02:51 PM
  */
-public class GoalListPanel extends AbstractCommandablePanel {
+public class GoalListPanel extends AbstractCommandablePanel implements Guidable {
     /**
      * Maximum number of rows in goal-seeking task table before paging.
      */
@@ -92,6 +93,16 @@ public class GoalListPanel extends AbstractCommandablePanel {
     public GoalListPanel( String id, IModel<? extends Identifiable> iModel, Set<Long> expansions ) {
         super( id, iModel, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "scoping";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "segment-goals";
     }
 
     @Override

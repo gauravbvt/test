@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -18,7 +19,7 @@ import java.util.List;
  * Date: 2/1/11
  * Time: 10:39 AM
  */
-public class PlanTagsPanel extends AbstractCommandablePanel {
+public class PlanTagsPanel extends AbstractCommandablePanel implements Guidable {
 
     private Tag selectedTag;
     private WebMarkupContainer tagIndexContainer;
@@ -32,6 +33,16 @@ public class PlanTagsPanel extends AbstractCommandablePanel {
     public void redisplay( AjaxRequestTarget target ) {
         init();
         super.redisplay( target );
+    }
+
+    @Override
+    public String getSectionId() {
+        return "searching";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "tags";
     }
 
 

@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,7 +40,7 @@ import java.util.Set;
  * Date: 11/6/12
  * Time: 11:34 AM
  */
-public class RoleAnalyticsPanel extends AbstractUpdatablePanel implements NameRangeable, Filterable {
+public class RoleAnalyticsPanel extends AbstractUpdatablePanel implements NameRangeable, Filterable, Guidable {
 
     /**
      * Indexing choice.
@@ -91,6 +92,17 @@ public class RoleAnalyticsPanel extends AbstractUpdatablePanel implements NameRa
         super( id, model, expansions );
         init();
     }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
+    }
+
 
     /**
      * {@inheritDoc}

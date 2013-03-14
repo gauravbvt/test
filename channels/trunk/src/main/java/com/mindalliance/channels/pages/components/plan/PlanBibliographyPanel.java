@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -36,7 +37,7 @@ import java.util.Map;
  * Date: Jun 13, 2009
  * Time: 1:15:43 PM
  */
-public class PlanBibliographyPanel extends AbstractCommandablePanel implements Filterable {
+public class PlanBibliographyPanel extends AbstractCommandablePanel implements Filterable, Guidable {
 
     /**
      * Maximum number of rows of attachments to show at a time.
@@ -74,6 +75,16 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
     public PlanBibliographyPanel( String id ) {
         super( id );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "searching";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "documents";
     }
 
     private void init() {

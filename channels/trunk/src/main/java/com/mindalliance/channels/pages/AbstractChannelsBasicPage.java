@@ -27,7 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailSender;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract basic Channels page.
@@ -78,6 +80,14 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     private boolean showingQuickHelp;
     private AjaxLink<String> quickHelpLink;
     private HelpPanel helpPanel;
+    /**
+     * Help section.
+     */
+    private String sectionId;
+    /**
+     * Topic section.
+     */
+    private String topicId;
 
     protected AbstractChannelsBasicPage() {
     }
@@ -203,6 +213,10 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
     private void toggleQuickHelp( AjaxRequestTarget target ) {
         showingQuickHelp = !showingQuickHelp;
+        updateQuickHelpVisibility( target );
+    }
+
+    private void updateQuickHelpVisibility( AjaxRequestTarget target ) {
         makeVisible( quickHelpLink, !showingQuickHelp );
         helpPanel.selectTopicInSection( null, null, target );
         makeVisible( helpPanel, showingQuickHelp );
@@ -210,14 +224,26 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         target.add( helpPanel );
     }
 
+    private void showHelp( Change change, AjaxRequestTarget target ) {
+        showingQuickHelp = true;
+        updateQuickHelpVisibility( target );
+        sectionId = (String)change.getQualifier( "sectionId" );
+        topicId = (String)change.getQualifier( "topicId" );
+        helpPanel.selectTopicInSection( sectionId, topicId, target );
+    }
+
     private void addQuickHelpPanel() {
-        helpPanel = new HelpPanel( "quickHelp", getGuideName() );
+        helpPanel = new HelpPanel( "quickHelp", getGuideName(), getHelpContext() );
         makeVisible( helpPanel, false );
         form.add( helpPanel );
     }
 
+    protected Map<String, Object> getHelpContext() {
+        return new HashMap<String,Object>(); //DEFAULT
+    }
+
     protected String getGuideName() {
-        return "planner"; // DEFAULT TODO - Make abstract
+        return "planner"; //todo - make abstract
     }
 
     private void redirectHere() {
@@ -319,6 +345,8 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
             updateContent( target );
         } else if ( change.isCollapsed() && change.getId() == Channels.GUIDE_ID ) {
             toggleQuickHelp( target );
+        } else if ( change.isGuide() ) {
+            showHelp( change, target );
         }
         if ( change.getScript() != null ) {
             target.appendJavaScript( change.getScript() );

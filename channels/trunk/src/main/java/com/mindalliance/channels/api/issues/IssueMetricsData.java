@@ -17,7 +17,7 @@ import java.util.List;
  * Date: 3/12/13
  * Time: 5:55 PM
  */
-@XmlType
+@XmlType( propOrder={"waivedIssuesCount", "unwaivedIssuesCount", "allIssueTypeMetricsData", "allIssueKindMetricsData"})
 public class IssueMetricsData implements Serializable {
 
     private IssueMetrics issueMetrics;

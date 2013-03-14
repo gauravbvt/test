@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,7 +23,7 @@ import java.util.Set;
  * Date: Sep 22, 2009
  * Time: 9:27:31 AM
  */
-public class PhaseDetailsPanel extends EntityDetailsPanel {
+public class PhaseDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     /**
      * Web markup container.
@@ -33,6 +34,17 @@ public class PhaseDetailsPanel extends EntityDetailsPanel {
     public PhaseDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
         super( id, entityModel, expansions );
     }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-phase";
+    }
+
 
     /**
      * {@inheritDoc }

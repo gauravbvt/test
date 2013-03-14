@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -44,7 +45,7 @@ import java.util.Set;
  * Date: Feb 23, 2009
  * Time: 2:15:22 PM
  */
-public class ActorDetailsPanel extends EntityDetailsPanel {
+public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     private final static String AT_MOST_ONE = "At most one";
     private final static String ANY_NUMBER = "Any number of";
@@ -69,6 +70,18 @@ public class ActorDetailsPanel extends EntityDetailsPanel {
     public ActorDetailsPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-agent";
+    }
+
+
 
     /**
      * {@inheritDoc}

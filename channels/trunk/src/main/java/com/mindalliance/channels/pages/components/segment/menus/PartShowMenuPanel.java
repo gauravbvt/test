@@ -48,6 +48,7 @@ public class PartShowMenuPanel extends MenuPanel {
      */
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
+        menuItems.add( help( "info-sharing","define-task" ) );
         // Show/hide details
         if ( isCollapsed( getPart() ) ) {
             AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
@@ -125,6 +126,7 @@ public class PartShowMenuPanel extends MenuPanel {
                 "menuItem",
                 new Model<String>( "Surveys" ),
                 surveysLink ) );
+
         // View part entities
         menuItems.addAll( getModelObjectMenuItems( "menuItem", getModelObjectWrappers() ) );
         return menuItems;

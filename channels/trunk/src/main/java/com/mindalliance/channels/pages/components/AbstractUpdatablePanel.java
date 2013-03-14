@@ -48,6 +48,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -705,5 +706,35 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return getUser().isPlanner( getPlanCommunity().getPlanUri() );
     }
 
+    protected Component makeHelpIcon( String id, final Guidable guidable ) {
+        WebMarkupContainer helpIcon = new WebMarkupContainer( id );
+        helpIcon.setOutputMarkupId( true );
+        helpIcon.add( new AttributeModifier( "src", "images/help_guide.png") );
+        helpIcon.add( new AttributeModifier( "alt", "Help") );
+        addTipTitle( helpIcon, "Quick help" );
+        helpIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update(  target, Change.guide( guidable.getSectionId(), guidable.getTopicId() ) );
+            }
+        } );
+        return helpIcon;
+    }
+
+
+        protected Component makeHelpIcon( String id, final String sectionId, final String topicId ) {
+        WebMarkupContainer helpIcon = new WebMarkupContainer( id );
+        helpIcon.setOutputMarkupId( true );
+        helpIcon.add( new AttributeModifier( "src", "images/help_guide.png") );
+        helpIcon.add( new AttributeModifier( "alt", "Help") );
+        addTipTitle( helpIcon, "Quick help" );
+        helpIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update(  target, Change.guide( sectionId, topicId ) );
+            }
+        } );
+        return helpIcon;
+    }
 
 }

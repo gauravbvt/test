@@ -16,6 +16,7 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ import java.util.Set;
  * Date: Jun 1, 2009
  * Time: 11:41:35 AM
  */
-public class PlanIndexPanel extends AbstractIndexPanel {
+public class PlanIndexPanel extends AbstractIndexPanel implements Guidable {
 
     private static final boolean EXCLUDE_IMMUTABLE = false;
 
@@ -44,6 +45,16 @@ public class PlanIndexPanel extends AbstractIndexPanel {
 
     public PlanIndexPanel( String id,  Set<Long> expansions ) {
         super( id, null, expansions );
+    }
+
+    @Override
+    public String getSectionId() {
+        return "searching";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "search-by-name";
     }
 
     /**

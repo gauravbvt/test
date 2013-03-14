@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -351,6 +352,15 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                 } );
     }
 
+    protected LinkMenuItem help( final String sectionId, final String topicId ) {
+        AjaxLink<String> helpLink = new AjaxLink<String>( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, Change.guide( sectionId, topicId ) );
+            }
+        };
+        return new LinkMenuItem( "menuItem", new Model<String>("Help"), helpLink );
+    }
 
 
 

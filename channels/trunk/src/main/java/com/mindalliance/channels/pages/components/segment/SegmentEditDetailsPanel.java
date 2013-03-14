@@ -22,6 +22,7 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
@@ -47,7 +48,7 @@ import java.util.Set;
 /**
  * Editor on the details of a segment (name, description, etc).
  */
-public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
+public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * Plan manager.
@@ -93,6 +94,16 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel {
     public SegmentEditDetailsPanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "scoping";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "add-define-segment";
     }
 
     private void init() {

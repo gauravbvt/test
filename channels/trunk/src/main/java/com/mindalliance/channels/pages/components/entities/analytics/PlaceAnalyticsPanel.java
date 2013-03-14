@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,7 +40,7 @@ import java.util.Set;
  */
 public class PlaceAnalyticsPanel
         extends AbstractUpdatablePanel
-        implements NameRangeable, Filterable {
+        implements NameRangeable, Filterable, Guidable {
 
     /**
      * Maximum number of places within to show in table at once.
@@ -73,6 +74,16 @@ public class PlaceAnalyticsPanel
     public PlaceAnalyticsPanel( String id, IModel<ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
     }
 
     private void init() {

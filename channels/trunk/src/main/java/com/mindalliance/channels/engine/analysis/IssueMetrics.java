@@ -95,7 +95,7 @@ public class IssueMetrics implements Serializable {
             kinds.add( issue.getKind() );
         }
         double n = issues.size();
-        int total = getAllIssuesCount();
+        double total = getAllIssuesCount();
         double percent = total == 0 ? 0.0 : n / total;
         return new Metrics( issues.size(), percent, kinds.size(), waived );
     }
@@ -187,7 +187,8 @@ public class IssueMetrics implements Serializable {
 
         public Metrics getIssueTypeMetrics( String kind ) {
             int count = issuesOfTypeByKind.get( kind ).size();
-            double percent = count / getAllUnwaivedIssuesCount();
+            double total = getAllUnwaivedIssuesCount();
+            double percent = total == 0 ? 0.0 : (double)count / total;
             int kinds = 1;
             return new Metrics( count, percent, kinds, true );
         }

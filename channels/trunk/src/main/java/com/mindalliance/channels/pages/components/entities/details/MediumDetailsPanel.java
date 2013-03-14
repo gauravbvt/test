@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -37,7 +38,7 @@ import java.util.Set;
  * Date: Dec 7, 2009
  * Time: 11:29:49 AM
  */
-public class MediumDetailsPanel extends EntityDetailsPanel {
+public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
 
     /**
      * Container to add components to.
@@ -79,6 +80,18 @@ public class MediumDetailsPanel extends EntityDetailsPanel {
     public MediumDetailsPanel( String id, PropertyModel<ModelEntity> entityModel, Set<Long> expansions ) {
         super( id, entityModel, expansions );
     }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-medium";
+    }
+
+
 
     /**
      * {@inheritDoc}

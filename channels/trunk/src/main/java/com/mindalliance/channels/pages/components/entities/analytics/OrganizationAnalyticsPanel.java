@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -29,12 +30,24 @@ import java.util.Set;
  * Date: 11/6/12
  * Time: 1:53 PM
  */
-public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel {
+public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel implements Guidable {
 
     public OrganizationAnalyticsPanel( String id, IModel<ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
     }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
+    }
+
+
 
     private void init() {
         addAssignmentsPanel();

@@ -12,6 +12,7 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -41,7 +42,7 @@ import java.util.Set;
  * Date: Oct 26, 2009
  * Time: 1:29:03 PM
  */
-public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
+public class PlanOrganizationScopePanel extends AbstractCommandablePanel implements Guidable {
 
     private boolean involvedOnly = false;
     private boolean uninvolvedOnly = false;
@@ -59,6 +60,16 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel {
     public PlanOrganizationScopePanel( String id, IModel<? extends Identifiable> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "scoping";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "organizations";
     }
 
     private void init() {

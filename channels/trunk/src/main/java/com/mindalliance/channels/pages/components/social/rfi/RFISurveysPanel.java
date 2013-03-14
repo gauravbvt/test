@@ -11,6 +11,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.model.rfi.RFISurvey;
@@ -48,7 +49,7 @@ import java.util.Map;
  * Date: 3/6/12
  * Time: 2:36 PM
  */
-public class RFISurveysPanel extends AbstractCommandablePanel implements Filterable {
+public class RFISurveysPanel extends AbstractCommandablePanel implements Filterable, Guidable {
 
     private static final String ANYTHING = "anything";
 
@@ -77,6 +78,16 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     public RFISurveysPanel( String id, IModel<RFISurvey> rfiSurveyModel ) {
         super( id, rfiSurveyModel );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "learning";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "launch-survey";
     }
 
     @Override

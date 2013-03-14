@@ -1,11 +1,13 @@
 package com.mindalliance.channels.guide;
 
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import org.apache.commons.beanutils.LazyDynaMap;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
@@ -22,6 +24,7 @@ public class Guide implements Serializable {
 
     @XStreamImplicit( itemFieldName = "section" )
     private List<Section> sections;
+    private Object context = this;
 
     public Guide() {
     }
@@ -73,5 +76,13 @@ public class Guide implements Serializable {
                         return ( (Section) object ).getId().equals( sectionId );
                     }
                 } );
+    }
+
+    public void setContext( Map<String, Object> map ) {
+        this.context = new LazyDynaMap( map );
+    }
+
+    public Object getContext() {
+        return context;
     }
 }

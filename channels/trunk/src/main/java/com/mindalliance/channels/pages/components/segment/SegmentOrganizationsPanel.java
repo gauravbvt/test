@@ -6,12 +6,13 @@
 
 package com.mindalliance.channels.pages.components.segment;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntitiesPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -23,7 +24,7 @@ import java.util.Set;
 /**
  * Panel showing organizations and relationships involved in a segment.
  */
-public class SegmentOrganizationsPanel extends AbstractUpdatablePanel {
+public class SegmentOrganizationsPanel extends AbstractUpdatablePanel implements Guidable {
 
     /**
      * DOM identifier prefix for containment of diagram.
@@ -39,6 +40,16 @@ public class SegmentOrganizationsPanel extends AbstractUpdatablePanel {
         super( id, segmentModel, expansions );
         this.segmentModel = segmentModel;
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "segment-organizations";
     }
 
     private void init() {

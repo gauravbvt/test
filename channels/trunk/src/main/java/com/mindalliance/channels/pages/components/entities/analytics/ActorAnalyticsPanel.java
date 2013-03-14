@@ -17,6 +17,7 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
@@ -49,7 +50,7 @@ import java.util.Set;
  */
 public class ActorAnalyticsPanel
         extends AbstractUpdatablePanel
-        implements NameRangeable, Filterable {
+        implements NameRangeable, Filterable, Guidable {
 
     /**
      * Indexing choice.
@@ -108,6 +109,17 @@ public class ActorAnalyticsPanel
         super( id, model, expansions );
         init();
     }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
+    }
+
 
     private void init() {
         addRoles();

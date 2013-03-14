@@ -1,6 +1,7 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.Set;
@@ -13,13 +14,23 @@ import java.util.Set;
  * Date: 11/1/12
  * Time: 1:26 PM
  */
-public class InfoFormatDetailsPanel extends EntityDetailsPanel {
+public class InfoFormatDetailsPanel extends EntityDetailsPanel implements Guidable {
 
 
     public InfoFormatDetailsPanel( String id, PropertyModel<ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
     }
 
-    // Nothing specific.
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-info-format";
+    }
+
+
 
 }

@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -31,7 +32,7 @@ import java.util.Set;
  * Date: 11/6/12
  * Time: 1:45 PM
  */
-public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements Filterable {
+public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements Filterable, Guidable {
 
     /**
      * Maximum number of rows in references table.
@@ -51,6 +52,16 @@ public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements 
     public InfoFormatAnalyticsPanel( String id, IModel<ModelEntity> model, Set<Long> expansions ) {
         super(id, model, expansions);
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
     }
 
     private void init() {

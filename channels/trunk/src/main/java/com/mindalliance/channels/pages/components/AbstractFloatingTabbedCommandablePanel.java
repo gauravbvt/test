@@ -31,7 +31,7 @@ import java.util.Set;
  * Date: 7/26/12
  * Time: 11:20 AM
  */
-public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCommandablePanel {
+public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * Pad top on move.
@@ -221,9 +221,15 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         addActionsMenu();
         addTabs();
         addPathIcons();
+        addHelpIcon();
     }
 
-     protected void addActionsMenu() {
+    private void addHelpIcon() {
+        Component helpIcon = makeHelpIcon( "help", (Guidable)this );
+        header.add( helpIcon );
+    }
+
+    protected void addActionsMenu() {
         actionsMenu = makeActionMenuOrLabel( "actionMenu" );
         if ( actionsMenu == null ) {
             actionsMenu = new Label("actionMenu", "");

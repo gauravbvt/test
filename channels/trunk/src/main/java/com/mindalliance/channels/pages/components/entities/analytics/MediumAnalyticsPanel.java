@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities.analytics;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -17,11 +18,21 @@ import java.util.Set;
  * Date: 11/6/12
  * Time: 1:37 PM
  */
-public class MediumAnalyticsPanel extends AbstractUpdatablePanel {
+public class MediumAnalyticsPanel extends AbstractUpdatablePanel implements Guidable {
 
     public MediumAnalyticsPanel( String id, IModel<ModelEntity> model, Set<Long> expansions ) {
         super( id, model, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
     }
 
     private void init() {

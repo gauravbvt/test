@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities.structure;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -24,7 +25,7 @@ import java.util.Set;
  * Date: 11/6/12
  * Time: 2:04 PM
  */
-public class OrganizationStructurePanel extends AbstractCommandablePanel {
+public class OrganizationStructurePanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * Prefix DOM identifier for org chart element.
@@ -36,6 +37,16 @@ public class OrganizationStructurePanel extends AbstractCommandablePanel {
     public OrganizationStructurePanel( String id, IModel<Organization> model, Set<Long> expansions, String prefixDomIdentifier ) {
         super( id, model, expansions );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-organization";
     }
 
     private void init() {

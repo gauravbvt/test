@@ -394,6 +394,11 @@ public class GuidePanel extends AbstractUpdatablePanel implements IGuidePanel {
     }
 
     @Override
+    public void setContext( Map<String, Object> context ) {
+        guide.setContext( context );
+    }
+
+    @Override
     public void selectTopicInSection( String sectionId, String topicId, AjaxRequestTarget target ) {
         Section section = guide.findSection( sectionId );
         if ( section != null ) {

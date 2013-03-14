@@ -47,6 +47,8 @@
 <body wicket:id="indicator">
 <div wicket:id="dialog"/>
 <form wicket:id="big-form" class="stretch" action="#">
+    <a wicket:id="quickHelpButton" id="quick-help-button-low" href="#">&nbsp</a>
+    <span wicket:id="quickHelp">[help panel]</span>
     <div class="maximized" wicket:id="maximized-flow">[fullflow panel]</div>
     <!--FLOATING-->
     <div wicket:id="entity">[entity panel]</div>
@@ -122,32 +124,6 @@
 
     <div class="pathway-cont">
         <div wicket:id="contextPath" class="pathway">[breadcrumbs panel </div>
-        <!--<div wicket:id="planPath" class="pathway">
-            <ul>
-                <li>
-                    <a wicket:id="homeLink" href="home">
-                        <span>Home</span>
-                    </a>
-                </li>
-                <li class="plan">
-                    <a wicket:id="selectedPlanLink" href="#">
-                        <span wicket:id="selectedPlan">Rail Security</span>
-                    </a>
-                </li>
-                <li class="plan">
-                    <a wicket:id="selectedSegmentLink" href="#">
-                        <span wicket:id="selectedSegment">Train stopped</span>
-                    </a>
-                    <ul>
-                        <li wicket:id="otherSegments">
-                            <a href="#" wicket:id="otherSegmentLink">
-                                <span wicket:id="otherSegmentName">Station evacuation</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>-->
         <div class="icon-menu">
             <div class="group"><!--
                 <a wicket:id="goForward" class="button-icon" title="Go forward">

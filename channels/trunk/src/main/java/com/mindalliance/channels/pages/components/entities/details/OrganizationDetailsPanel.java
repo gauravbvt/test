@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -29,7 +30,7 @@ import java.util.Set;
  * Date: Feb 4, 2009
  * Time: 2:28:58 PM
  */
-public class OrganizationDetailsPanel extends EntityDetailsPanel {
+public class OrganizationDetailsPanel extends EntityDetailsPanel implements Guidable {
     /**
      * Whether actors are required for each role in the organization.
      */
@@ -52,6 +53,16 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel {
             IModel<? extends ModelEntity> model,
             Set<Long> expansions ) {
         super( id, model, expansions );
+    }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-organization";
     }
 
     /**

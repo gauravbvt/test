@@ -268,7 +268,7 @@ The list is part of the plan's ''details''.]]></description>
                 <script>
                     <action>Define a segment</action>
                     <change>
-                        <subjectPath>planPage.segment</subjectPath>
+                        <subjectPath>page.segment</subjectPath>
                         <type>Expanded</type>
                         <property>details</property>
                     </change>
@@ -287,7 +287,7 @@ Naming the goal is optional.]]></description>
                 <script>
                     <action>Set segment goals</action>
                     <change>
-                        <subjectPath>planPage.segment</subjectPath>
+                        <subjectPath>page.segment</subjectPath>
                         <type>Expanded</type>
                         <property>goals</property>
                     </change>
@@ -335,7 +335,7 @@ Note that as little and as much as wanted can be put into a task's definition.
                 <script>
                     <action>Open the task form</action>
                     <change>
-                        <subjectPath>planPage.part</subjectPath>
+                        <subjectPath>page.part</subjectPath>
                         <type>Expanded</type>
                     </change>
                 </script>
@@ -734,6 +734,32 @@ Note that all profile attributes are optional.]]>
             </item>
         </topic>
     </section>
+    <section id="analyzing">
+        <name>Analyzing the plan</name>
+        <topic id="entity-network">
+            <name>Info sharing commitment networks</name>
+            <item>
+                <description>A collaboration plan determines how agents must commit to share information with one another.
+
+Commitment networks depict these info sharing commitment relationships between agents either directly or aggregated by role or organization.
+
+Planners can drill down on each commitment relationship to see the info sharing commitments it summarizes. 
+                </description>
+            </item>
+        </topic>
+        <topic id="segment-organizations">
+            <name>Organizations in a segment</name>
+            <item>
+                <description>Planners can see what organizations have agents assigned to a segment's task and how these organizations are linked by info sharing commitments.</description>
+            </item>
+        </topic>
+        <topic id="analyzing-entities">
+            <name>Analyzing entities</name>
+            <item>
+                <description>Planners can see details of how an entity contributes to the definition of others, and is involved in the plan.</description>
+            </item>
+        </topic>
+    </section>
     <section id="improving">
         <name>Improving the plan</name>
         <topic id="all-issues">
@@ -793,7 +819,7 @@ Which agents are assigned to a task is determined by
                 <script>
                     <action>See a task's assignments</action>
                     <change>
-                        <subjectPath>planPage.part</subjectPath>
+                        <subjectPath>page.part</subjectPath>
                         <type>AspectViewed</type>
                         <property>assignments</property>
                     </change>
@@ -898,7 +924,7 @@ Questionnaires can be activated and deactivated. They can be extended while they
                 <script>
                     <action>View launched and launch-able surveys on a task</action>
                     <change>
-                        <subjectPath>planPage.part</subjectPath>
+                        <subjectPath>page.part</subjectPath>
                         <type>AspectViewed</type>
                         <property>surveys</property>
                     </change>

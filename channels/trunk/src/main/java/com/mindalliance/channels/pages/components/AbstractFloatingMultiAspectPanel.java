@@ -140,12 +140,22 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         getContentContainer().add( moContainer );
         String css = getCssClass();
         moContainer.add( new AttributeModifier( "class", new Model<String>( css ) ) );
-
-        if ( aspectShown == null )
+         if ( aspectShown == null )
             aspectShown = getDefaultAspect();
         showAspect( aspectShown, getChange() );
     }
 
+     public String getSectionId() {
+        return aspectPanel instanceof Guidable
+                ? ((Guidable)aspectPanel).getSectionId()
+                : null;
+    }
+
+    public String getTopicId() {
+        return aspectPanel instanceof Guidable
+                ? ((Guidable)aspectPanel).getTopicId()
+                : null;
+    }
 
     @Override
     protected Component makeActionMenuOrLabel( String menuId ) {

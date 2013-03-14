@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,7 +31,7 @@ import java.util.Set;
  * Date: 11/6/12
  * Time: 12:02 PM
  */
-public class EventAnalyticsPanel extends AbstractUpdatablePanel  implements Filterable {
+public class EventAnalyticsPanel extends AbstractUpdatablePanel  implements Filterable, Guidable {
 
     /**
      * Maximum number of rows in event references table.
@@ -52,6 +53,17 @@ public class EventAnalyticsPanel extends AbstractUpdatablePanel  implements Filt
         super( id, model, expansions );
         init();
     }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "analyzing-entities";
+    }
+
 
     private void init() {
         filters = new ArrayList<Identifiable>();

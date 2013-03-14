@@ -33,6 +33,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -52,23 +53,16 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     private String sectionId;
     private String topicId;
 
-    public HelpPanel( String id, String guideName ) {
+    public HelpPanel( String id, String guideName, Map<String,Object> context ) {
         super( id );
         this.guideName = guideName;
-        init();
-    }
-
-    public HelpPanel( String id, String guideName, String sectionId, String topicId ) {
-        super( id );
-        this.guideName = guideName;
-        this.sectionId = sectionId;
-        this.topicId = topicId;
-        init();
-    }
-
-    private void init() {
         guide = guideReader.getGuide( guideName );
-        addTitle( );
+        guide.setContext( context );
+        init( );
+    }
+
+    private void init( ) {
+        addTitle();
         Topic topic = getTopic();
         addTopicName( topic );
         addTopicItems( topic );
@@ -233,7 +227,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
 
     private Identifiable getSubject( ScriptChange scriptChange ) {
         return (Identifiable) ChannelsUtils.getProperty(
-                guide,
+                guide.getContext(),
                 scriptChange.getSubjectPath(),
                 null );
     }
@@ -271,10 +265,15 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     }
 
     @Override
+    public void setContext( Map<String, Object> context ) {
+        guide.setContext( context );
+    }
+
+    @Override
     public void selectTopicInSection( String sectionId, String topicId, AjaxRequestTarget target ) {
         this.sectionId = sectionId;
         this.topicId = topicId;
-        init();
+        init( );
         target.add( this );
     }
 

@@ -24,6 +24,7 @@ import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -39,7 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class EntityIssuesPanel extends AbstractIssueTablePanel {
+public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidable {
 
     private static final int MAX_ROWS = 10;
 
@@ -60,6 +61,16 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel {
 
     public EntityIssuesPanel( String id, IModel<ModelEntity> model ) {
         super( id, model, MAX_ROWS );
+    }
+
+    @Override
+    public String getSectionId() {
+        return "concepts";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "issue";
     }
 
     public ModelEntity getEntity() {

@@ -36,6 +36,7 @@ import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import com.mindalliance.channels.pages.components.ModelObjectSurveysPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
+import com.mindalliance.channels.pages.components.help.HelpPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllFeedbackFloatingPanel;
@@ -361,6 +362,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private String message;
 
+    private boolean showingQuickHelp;
+    private AjaxLink<String> quickHelpLink;
+    private HelpPanel helpPanel;
 
     static {
         IE7CompatibilityScript =
@@ -375,6 +379,15 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         "};\n" +
                         "});";
     }
+
+    /**
+     * Help section id.
+     */
+    private String sectionId;
+    /**
+     * Help topic id.
+     */
+    private String topicId;
 
     /**
      * Used when page is called without parameters.
@@ -419,7 +432,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     protected IGuidePanel getGuidePanel() {
-        return segmentPanel.getGuidePanel();
+        return null; // todo
     }
 
     // Guide scripting support
@@ -488,6 +501,60 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addFloatingPanels();
         addSegmentPanel();
         addFooter();
+        addQuickHelp();
+    }
+
+    private void addQuickHelp() {
+        addQuickHelpButton();
+        addQuickHelpPanel();
+    }
+
+    private void addQuickHelpButton() {
+        quickHelpLink = new AjaxLink<String>( "quickHelpButton" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                toggleQuickHelp( target );
+            }
+        };
+        quickHelpLink.setOutputMarkupId( true );
+        form.add( quickHelpLink );
+    }
+
+    private void toggleQuickHelp( AjaxRequestTarget target ) {
+        showingQuickHelp = !showingQuickHelp;
+        updateQuickHelpVisibility( target );
+    }
+
+    private void updateQuickHelpVisibility( AjaxRequestTarget target ) {
+        makeVisible( quickHelpLink, !showingQuickHelp );
+        // helpPanel.selectTopicInSection( null, null, target );
+        makeVisible( helpPanel, showingQuickHelp );
+        target.add( quickHelpLink );
+        target.add( helpPanel );
+    }
+
+    private void showHelp( Change change, AjaxRequestTarget target ) {
+        showingQuickHelp = true;
+        updateQuickHelpVisibility( target );
+        sectionId = (String)change.getQualifier( "sectionId" );
+        topicId = (String)change.getQualifier( "topicId" );
+        helpPanel.selectTopicInSection( sectionId, topicId, target );
+    }
+
+    private void addQuickHelpPanel() {
+        helpPanel = new HelpPanel( "quickHelp", getGuideName(), getHelpContext() );
+        makeVisible( helpPanel, false );
+        form.add( helpPanel );
+    }
+
+    private Map<String, Object> getHelpContext() {
+        Map<String,Object> context = new HashMap<String,Object>();
+        context.put( "page", this );
+        return context;
+    }
+
+    protected String getGuideName() {
+        return "planner";
     }
 
     private void addHeader() {
@@ -1949,8 +2016,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 segment = getPlan().getDefaultSegment();
                 setPart( null );
             }
-        } else if ( change.isGuide() ) {
-            addExpansion( Channels.GUIDE_ID );
         } else if ( change.isCollapsed() || change.isRemoved() )
             collapse( change );
         else if ( change.isExpanded() || change.isAdded() ) {
@@ -2075,14 +2140,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         if ( !change.isNone() ) {
             refreshAllMenus( target );
-            segmentPanel.updateGuidePanel( target );
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {  // Not caused anymore
                 redirectToPlan();
+            } else if ( change.isCollapsed() && change.getId() == Channels.GUIDE_ID ) {
+                toggleQuickHelp( target );
             } else if ( change.isGuide() ) {
-              /* getGuidePanel().selectTopicInSection(
-                       (String) change.getQualifier( "sectionId" ),
-                       (String) change.getQualifier( "topicId" ),
-                       target );*/
+                showHelp( change, target );
             } else if ( change.isAspectReplaced() ) {
                 replaceAspect( change, target );
             } else if ( change.isAspectViewed()
@@ -2150,9 +2213,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshPlanVersionsPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_SEARCHING ) {
             refreshPlanSearchingPanel( target, change, updated );
-        }/* else if ( change.getId() == Channels.PLAN_PARTICIPATION ) {
-            refreshUserParticipationPanel( target, change, updated );
-        }*/ else if ( change.isForInstanceOf( RFISurvey.class ) ) {
+        } else if ( change.isForInstanceOf( RFISurvey.class ) ) {
             refreshDataCollectionPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Plan.class ) ) {
             refreshPlanEditPanel( target, change, updated );

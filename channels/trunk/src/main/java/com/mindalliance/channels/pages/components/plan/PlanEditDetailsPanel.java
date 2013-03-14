@@ -21,6 +21,7 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,7 +43,7 @@ import java.util.Set;
 /**
  * Plan edit details panel.
  */
-public class PlanEditDetailsPanel extends AbstractCommandablePanel {
+public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * The plan definition manager.
@@ -75,6 +76,16 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel {
         addAttachments();
         addOrReplace( createIssuePanel() );
         adjustComponents();
+    }
+
+    @Override
+    public String getSectionId() {
+        return "concepts";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "plan";
     }
 
     private void addUri() {

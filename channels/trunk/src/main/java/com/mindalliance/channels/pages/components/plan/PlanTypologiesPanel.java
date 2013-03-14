@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.diagrams.HierarchyDiagramPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencesAndMatchesPanel;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -39,7 +40,7 @@ import java.util.List;
  * Date: 3/21/11
  * Time: 8:59 PM
  */
-public class PlanTypologiesPanel extends AbstractCommandablePanel {
+public class PlanTypologiesPanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * Expected screen resolution.
@@ -103,6 +104,16 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel {
     public void redisplay( AjaxRequestTarget target ) {
         init();
         super.redisplay( target );
+    }
+
+    @Override
+    public String getSectionId() {
+        return "searching";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "taxonomies";
     }
 
     private void init() {

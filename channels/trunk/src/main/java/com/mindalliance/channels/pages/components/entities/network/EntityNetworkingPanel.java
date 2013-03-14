@@ -7,6 +7,7 @@ import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntityNetworkPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
@@ -22,7 +23,7 @@ import java.util.Set;
  * Date: Apr 6, 2009
  * Time: 3:33:41 PM
  */
-public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdatablePanel {
+public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdatablePanel implements Guidable {
 
     private IModel<T> entityModel;
     /**
@@ -44,6 +45,18 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
         this.prefixDomIdentifier = prefixDomIdentifier;
         init();
     }
+
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "entity-network";
+    }
+
+
 
     @Override
     public void redisplay( AjaxRequestTarget target ) {

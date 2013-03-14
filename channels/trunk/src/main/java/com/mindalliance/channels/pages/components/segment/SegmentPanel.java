@@ -17,12 +17,10 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.guide.IGuidePanel;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.MediaReferencesPanel;
-import com.mindalliance.channels.pages.components.guide.GuidePanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartActionsMenuPanel;
 import com.mindalliance.channels.pages.components.segment.menus.PartShowMenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -83,12 +81,6 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * CSS id.
      */
     private static final String SOCIAL_PANEL_ID = "#social";
-    /**
-     * CSS id.
-     */
-    private static final String GUIDE_PANEL_ID = "#guide";
-
-    private static final int GUIDE_WIDTH = 20;
     private static final int SOCIAL_WIDTH = 20;
 
     private boolean maximized;
@@ -147,8 +139,6 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      */
     private WebMarkupContainer taskTitleContainer;
 
-    private GuidePanel guidePanel;
-
     //-------------------------------
     public SegmentPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel, Set<Long> expansions ) {
         super( id, segmentModel, partModel, expansions );
@@ -162,13 +152,13 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addFlowDiagram();
         addPartAndFlows();
         addSocialPanel();
-        addPlanningGuide();
     }
 
     private void addPartAndFlows() {
         addPartMenuBar();
         addPartTitleContainer();
         addPartMediaPanel();
+        addPartHelp();
         addOverridesImage();
         addPartPanel();
         addReceivesFlowPanel();
@@ -236,6 +226,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addOrReplace( partMediaPanel );
     }
 
+    private void addPartHelp() {
+        add( makeHelpIcon( "help", "info-sharing", "add-task" ) );
+    }
+
     private void addOverridesImage() {
         boolean overriding = getQueryService().isOverriding( getPart() );
         boolean overridden = getQueryService().isOverridden( getPart() );
@@ -280,11 +274,6 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addOrReplace( sendsFlowPanel );
     }
 
-    private void addPlanningGuide() {
-        guidePanel = new GuidePanel( "guide", "planner" );
-        add( guidePanel );
-    }
-
     private void addSocialPanel() {
         String[] tabsShown = {SocialPanel.PRESENCE, SocialPanel.ACTIVITIES, SocialPanel.MESSAGES};
         socialPanel = new SocialPanel( "social", tabsShown );
@@ -293,18 +282,14 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
 
     public void resizeSocialAndGuidePanels( AjaxRequestTarget target, Change change ) {
         if ( change.isUnknown() || change.isCommunicated()
-                || change.getId() == Channels.SOCIAL_ID && change.isDisplay()
-                || change.getId() == Channels.GUIDE_ID && change.isDisplay() ) {
+                || change.getId() == Channels.SOCIAL_ID && change.isDisplay() ) {
             boolean socialExpanded = getExpansions().contains( Channels.SOCIAL_ID );
-            boolean guideExpanded = getExpansions().contains( Channels.GUIDE_ID );
             int socialPanelWidth = socialExpanded ? SOCIAL_WIDTH : 0;
-            int guidePanelWidth = guideExpanded ? GUIDE_WIDTH : 0;
-            int segmentPanelWidth = 100 - socialPanelWidth - guidePanelWidth;
-            int segmentPanelLeft = guideExpanded ? GUIDE_WIDTH : 0;
+            int segmentPanelWidth = 100 - socialPanelWidth;
+            int segmentPanelLeft = socialExpanded ? SOCIAL_WIDTH : 0;
             final String script =
                     "$(\"" + SEGMENT_PANEL_ID + "\")" + ".css(\"width\",\"" + segmentPanelWidth + "%" + "\");"
                             + "$(\"" + SEGMENT_PANEL_ID + "\")" + ".css(\"left\",\"" + segmentPanelLeft + "%" + "\");"
-                            + "$(\"" + GUIDE_PANEL_ID + "\")" + ".css(\"width\",\"" + guidePanelWidth + "%" + "\");"
                             + "$(\"" + SOCIAL_PANEL_ID + "\")" + ".css(\"width\",\"" + socialPanelWidth + "%" + "\");";
             target.prependJavaScript( script );
             target.add( flowMapDiagramPanel );
@@ -320,18 +305,14 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         socialPanel.refresh( target, new Change( Change.Type.Unknown ) );
     }
 
-    /**
-     * Update guide panel.
-     *
-     * @param target an ajax request target
-     */
-    public void updateGuidePanel( AjaxRequestTarget target ) {
+
+ /*   public void updateGuidePanel( AjaxRequestTarget target ) {
         boolean guideExpanded = getExpansions().contains( Channels.GUIDE_ID );
         makeVisible( guidePanel, guideExpanded );
         guidePanel.refresh( target, new Change( Change.Type.Refresh ) );
         resizeSocialAndGuidePanels( target, new Change( Change.Type.Unknown ) );
     }
-
+*/
 
     //-------------------------------
     protected void addFlowMapViewingControls() {
@@ -705,7 +686,4 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         this.partOrFlowUpdated = partOrFlowUpdated;
     }
 
-    public IGuidePanel getGuidePanel() {
-        return guidePanel;
-    }
 }

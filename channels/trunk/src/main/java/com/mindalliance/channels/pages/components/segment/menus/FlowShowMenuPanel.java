@@ -58,7 +58,7 @@ public class FlowShowMenuPanel extends MenuPanel {
         synchronized ( getCommander() ) {
             final Flow flow = getFlow();
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
-
+            menuItems.add( help( "info-sharing","define-flow" ) );
             // Show/hide details
             menuItems.add(
                     new LinkMenuItem(

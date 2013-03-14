@@ -10,6 +10,7 @@ import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.PlaceReferencePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -42,7 +43,7 @@ import java.util.Set;
  * Date: Jun 16, 2009
  * Time: 10:53:47 AM
  */
-public class PlaceDetailsPanel extends EntityDetailsPanel{
+public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
 
     @SpringBean
     private GeoService geoService;
@@ -73,6 +74,18 @@ public class PlaceDetailsPanel extends EntityDetailsPanel{
             Set<Long> expansions ) {
         super( id, model, expansions );
     }
+
+    @Override
+    public String getSectionId() {
+        return "profiling";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "profiling-place";
+    }
+
+
 
     /**
      * {@inheritDoc}

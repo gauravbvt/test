@@ -14,6 +14,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.Filterable;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
@@ -42,7 +43,7 @@ import java.util.Set;
  * Date: 9/29/11
  * Time: 2:13 PM
  */
-public class RequirementDefinitionsPanel extends AbstractCommandablePanel implements Filterable {
+public class RequirementDefinitionsPanel extends AbstractCommandablePanel implements Filterable, Guidable {
 
     /**
      * The logger.
@@ -70,11 +71,21 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
     public RequirementDefinitionsPanel(
             String id,
             Model<Requirement> requirementModel,
-            Set<Long> expansions
-    ) {
+            Set<Long> expansions ) {
         super( id, requirementModel, expansions );
         init();
     }
+
+    @Override
+    public String getSectionId() {
+        return "scoping";  // todo move to community guide
+    }
+
+    @Override
+    public String getTopicId() {
+        return "requirements"; // todo move to community guide
+    }
+
 
     private void init(  ) {
         selectedRequirement = (Requirement)getModel().getObject();
