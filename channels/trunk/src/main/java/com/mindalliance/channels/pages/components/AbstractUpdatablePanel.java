@@ -706,10 +706,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return getUser().isPlanner( getPlanCommunity().getPlanUri() );
     }
 
-    protected Component makeHelpIcon( String id, final Guidable guidable ) {
+    protected Component makeHelpIcon( String id, final Guidable guidable, String iconSrc ) {
         WebMarkupContainer helpIcon = new WebMarkupContainer( id );
         helpIcon.setOutputMarkupId( true );
-        helpIcon.add( new AttributeModifier( "src", "images/help_guide.png") );
+        helpIcon.add( new AttributeModifier( "src", iconSrc) );
         helpIcon.add( new AttributeModifier( "alt", "Help") );
         addTipTitle( helpIcon, "Quick help" );
         helpIcon.add( new AjaxEventBehavior( "onclick" ) {
@@ -721,8 +721,12 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return helpIcon;
     }
 
+    protected Component makeHelpIcon( String id, final Guidable guidable ) {
+            return makeHelpIcon( id, guidable, "images/help_guide.png" );
+     }
 
-        protected Component makeHelpIcon( String id, final String sectionId, final String topicId ) {
+
+    protected Component makeHelpIcon( String id, final String sectionId, final String topicId ) {
         WebMarkupContainer helpIcon = new WebMarkupContainer( id );
         helpIcon.setOutputMarkupId( true );
         helpIcon.add( new AttributeModifier( "src", "images/help_guide.png") );

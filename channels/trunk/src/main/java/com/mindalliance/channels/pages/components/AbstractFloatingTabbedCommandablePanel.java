@@ -147,6 +147,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         moveBar.add( new AttributeModifier( "onMouseDown", new Model<String>( moveScript ) ) );
         add( moveBar );
         addTitle();
+        addHelp();
         addMinimize();
         addClose();
      }
@@ -176,6 +177,10 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         };
         closeLink.add( new AttributeModifier( "onMouseOver", new Model<String>( "this.focus();" ) ) );
         moveBar.add( closeLink );
+    }
+
+    private void addHelp() {
+        moveBar.add( makeHelpIcon( "help", this, "images/float-bar-help.png" ) );
     }
 
     private void addMinimize() {
@@ -221,7 +226,6 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         addActionsMenu();
         addTabs();
         addPathIcons();
-        addHelpIcon();
     }
 
     private void addHelpIcon() {

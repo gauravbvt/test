@@ -28,6 +28,16 @@ public class FlowLegendPanel extends AbstractFloatingCommandablePanel {
         super( id, model, null );
     }
 
+    @Override
+    public String getSectionId() {
+        return "info-sharing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "flow-map";
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -1693,6 +1693,13 @@ div.fp-title {
     text-transform: capitalize;
 }
 
+div.fp-help {
+    position: absolute;
+    float: right;
+    right: 65px;
+    top: 7px;
+}
+
 div.float-bar-minimize,
 div.fp-minimize {
     position: absolute;
@@ -3742,13 +3749,20 @@ ul.attach li.controls {
 
 /* Added by JF */
 
-.help-icon {
+.planEditor .help-icon {
     float: right;
     margin-right: 5px;
     margin-top: 2px;
     cursor: pointer;
 }
 
-.floating .help-icon {
-    margin-top: 12px;
+.planEditor .floating .help-icon {
+    margin-top: 0px;
+    margin-right: 0px;
+    cursor: pointer;
+}
+
+.planEditor .issues .help-icon {
+    margin-right: 42px;
+    margin-top: 3px;
 }

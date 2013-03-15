@@ -39,6 +39,16 @@ public class AllFeedbackFloatingPanel extends AbstractFloatingCommandablePanel {
         init( planModel );
     }
 
+    @Override
+    public String getSectionId() {
+        return "learning";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "feedback";
+    }
+
     private void init( IModel<Plan> planModel ) {
         addHeading();
         addUserFeedback( planModel );

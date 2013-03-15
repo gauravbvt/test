@@ -87,10 +87,21 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     private WebMarkupContainer uploadContainer;
     private FileUploadField uploadPhotoField;
     private AjaxSubmitLink uploadButton;
+    private WebMarkupContainer userPasswordContainer;
 
     public UserInfoPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return null;  // Todo
+    }
+
+    @Override
+    public String getTopicId() {
+        return null;  // Todo
     }
 
     protected void init() {
@@ -134,6 +145,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         addFullNameField();
         addEmailField();
         addPhotoFields();
+        userInfoContainer.add( makeHelpIcon( "helpIdentity", "about-me", "my-identity" ) );
     }
 
     private void addFullNameField() {
@@ -284,10 +296,18 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                         ) ),
                         false,     // don't allow adding new media
                         true ) );  // restrict to immutable media
+        updatedContactContainer.add( makeHelpIcon( "helpContact", "about-me", "my-contact-info" ) );
         userInfoContainer.add( updatedContactContainer );
     }
 
     private void addPassword() {
+        userPasswordContainer = new WebMarkupContainer( "userPassword" );
+        addPasswordFields();
+        userPasswordContainer.add( makeHelpIcon( "helpPassword", "about-me", "my-password" ) );
+        userInfoContainer.add( userPasswordContainer );
+     }
+
+    private void addPasswordFields() {
         PasswordTextField passwordText = new PasswordTextField( "password", new PropertyModel<String>( this, "password" ) );
         passwordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -295,7 +315,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                 adjustFields( target );
             }
         } );
-        userInfoContainer.add( passwordText );
+        userPasswordContainer.add( passwordText );
         newPasswordText = new TextField<String>( "newPassword", new PropertyModel<String>( this, "newPassword" ) );
         newPasswordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -304,7 +324,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         } );
         newPasswordText.setEnabled( false );
-        userInfoContainer.add( newPasswordText );
+        userPasswordContainer.add( newPasswordText );
         repeatNewPasswordText = new TextField<String>( "repeatNewPassword", new PropertyModel<String>( this, "repeatNewPassword" ) );
         repeatNewPasswordText.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -313,13 +333,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         } );
         repeatNewPasswordText.setEnabled( false );
-        userInfoContainer.add( repeatNewPasswordText );
+        userPasswordContainer.add( repeatNewPasswordText );
+
     }
 
     private void addErrors() {
         errorsContainer = new WebMarkupContainer( "errorsContainer" );
         errorsContainer.setOutputMarkupId( true );
-        userInfoContainer.addOrReplace( errorsContainer );
+        userPasswordContainer.addOrReplace( errorsContainer );
         ListView<String> errorsList = new ListView<String>(
                 "errors",
                 errors ) {
@@ -348,7 +369,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                 target.add( UserInfoPanel.this );
             }
         };
-        userInfoContainer.add( otherReset );
+        userPasswordContainer.add( otherReset );
         AjaxFallbackLink<String> applyButton = new AjaxFallbackLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -362,7 +383,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                 applyChanges( target );
             }
         };
-        userInfoContainer.add( otherApplyButton );
+        userPasswordContainer.add( otherApplyButton );
     }
 
     private void applyChanges( AjaxRequestTarget target ) {

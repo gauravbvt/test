@@ -52,6 +52,16 @@ public class FlowsEOIsFloatingPanel extends AbstractFloatingCommandablePanel {
         init();
      }
 
+    @Override
+    public String getSectionId() {
+        return "info-sharing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "eois";
+    }
+
     private void init() {
         addDoneButton();
         addAboutEOIHolder();

@@ -42,6 +42,16 @@ public class SharingCommitmentsPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "concepts";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "commitment";
+    }
+
     private void init() {
         addAbout();
         addCommitmentsTable();

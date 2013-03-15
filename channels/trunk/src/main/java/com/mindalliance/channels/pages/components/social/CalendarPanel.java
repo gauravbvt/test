@@ -35,6 +35,16 @@ public class CalendarPanel extends AbstractSocialListPanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return null;  // Todo
+    }
+
+    @Override
+    public String getTopicId() {
+        return null;  // Todo
+    }
+
     protected void init() {
         super.init();
         addCalendarFrame();

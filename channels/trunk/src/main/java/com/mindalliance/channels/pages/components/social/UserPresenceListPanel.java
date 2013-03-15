@@ -51,8 +51,19 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return null;  // Todo
+    }
+
+    @Override
+    public String getTopicId() {
+        return null;  // Todo
+    }
+
     protected void init() {
         super.init();
+        add( makeHelpIcon( "helpPresence", "presence", "planner-presence" ) );
         addShowHideLink();
         addShowHideLabel();
         presencesContainer = new WebMarkupContainer( "presencesContainer" );

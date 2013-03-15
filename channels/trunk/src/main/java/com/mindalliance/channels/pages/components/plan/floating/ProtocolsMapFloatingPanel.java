@@ -26,6 +26,16 @@ public class ProtocolsMapFloatingPanel extends AbstractFloatingCommandablePanel 
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "improving";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "verify-procedures";
+    }
+
     private void init() {
         addHeading();
         addProtocolsMapPanel();

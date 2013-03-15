@@ -25,6 +25,16 @@ public class PlanClassificationsFloatingPanel extends AbstractFloatingCommandabl
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "scoping";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "classifications";
+    }
+
     private void init() {
         addHeading();
         addPlanEventsPanel();

@@ -51,6 +51,16 @@ public class PartAssignmentsPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "concepts";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "assignment";
+    }
+
     private void init() {
         addAbout();
         addAssignmentsTable();

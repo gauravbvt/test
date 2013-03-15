@@ -49,6 +49,16 @@ public class OverridesPanel  extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "info-sharing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "overriding";
+    }
+
     private void init() {
         addAbout();
         addOverriddenTable();

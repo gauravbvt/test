@@ -33,7 +33,7 @@ As a user's participation in a plan changes, even as events unfold, Channels aut
                 </description>
             </item>
         </topic>
-        <topic>
+        <topic id="development-team">
             <name>Development team</name>
             <item>
                 <description>
@@ -85,6 +85,8 @@ Our thanks and admiration to all who contributed to these libraires.
 # a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
 # an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
 Applying an environment to a collaboration plan produces visualizations, analytics, diagnostics, reports and collaboration protocols.
+
+A collaboration plan has one editable development version and one unchangeable (current) production version. The development version is released by an administrator. Upon releasing a new version of the plan, a copy of the development version becomes the new production version and the prior production version is retired. Finally, the development version number is incrementd by one.
                 </description>
             </item>
         </topic>
@@ -129,6 +131,8 @@ Goals are achieved by carrying out tasks, or when an event terminates.
                 <description>Collaboration plans are composed of one or more or more segments. Each segment addresses a list of organizational goals for one scenario.
 
 No two segments should address identical goals in identical scenarios.
+
+Two segments are connected by the flows that span them and by how a task in one segment can start or end an events thus initiating the other segment.
                 </description>
             </item>
         </topic>
@@ -190,6 +194,13 @@ An element of information also has a name and can be accompanied by handling ins
 * validity (something is inherently wrong in the plan)
 * completeness (something is obviously missing from the plan)
 * robustness (something is making the plan likely to fail)</description>
+            </item>
+        </topic>
+        <topic id="attachment">
+            <name>Attachment</name>
+            <item>
+                <description>Planners can attach uploaded or linked resources to a collaboration plan or community as a whole, or to any element of a collaboration plan.
+Attachments can be documents, graphics, videos etc. They can be named and categorized, typpically as reference, picture or policy.</description>
             </item>
         </topic>
     </section>
@@ -313,6 +324,12 @@ Naming the goal is optional.]]></description>
     </section>
     <section id="info-sharing">
         <name>Specifying info sharing</name>
+        <topic id="flow-map">
+            <name>Information flow maps</name>
+            <item>
+                <description>Information flow maps depict how information is consumed and produced by tasks and to what effects.</description>
+            </item>
+        </topic>
         <topic id="add-task">
             <name>Add a task</name>
             <item>
@@ -348,10 +365,10 @@ Note that as little and as much as wanted can be put into a task's definition.
             <name>Add info need to task</name>
             <item>
                 <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the Receives panel. An info need specifies information that agents assigned to the task need to receive to
- * trigger the task
- * enable it to succeed (critical)
- * terminate the task (useful)
- * improve its execution
+* trigger the task
+* enable it to succeed (critical)
+* terminate the task (useful)
+* improve its execution
                 </description>
             </item>
             <next section="info-sharing" topic="add-capability"/>
@@ -392,6 +409,21 @@ Note that as little and as much as wanted can be put into a task's definition.
             <next section="profiling" topic="profiling-info-product"/>
             <next section="profiling" topic="profiling-info-format"/>
         </topic>
+        <topic id="eois">
+            <name>Elements of information</name>
+            <item>
+                <description>Planners can name the essential elements of information of an information need, capability or flow, and set their properties.
+
+The properties of an element of information are
+* its name
+* the question it answers
+* its security classification
+* its handling instructions
+* if produced, how it transforms , if at all, received elements
+* if needed, whether its delivery is subject to timeliness constraints
+                </description>
+            </item>
+        </topic>
         <topic id="connect-with-flow">
             <name>Connect tasks with info sharing</name>
             <item>
@@ -408,6 +440,12 @@ A sharing flow is created by connecting an info need or a capability to a task. 
                 </script>
             </item>
             <next section="info-sharing" topic="add-task"/>
+        </topic>
+        <topic id="overriding">
+            <name>Overriding tasks</name>
+            <item>
+                <description>A task X with the same name as another task Y overrides it if the agents assignable to task X is a subset of the agents assignable to the other task Y. An agent that is effectively only assigned to the overriding task (the more exclusive one), not the overridden task.</description>
+            </item>
         </topic>
     </section>
     <section id="profiling">
@@ -757,6 +795,18 @@ Planners can drill down on each commitment relationship to see the info sharing 
             <name>Analyzing entities</name>
             <item>
                 <description>Planners can see details of how an entity contributes to the definition of others, and is involved in the plan.</description>
+            </item>
+        </topic>
+        <topic id="dissemination">
+            <name>Info dissemination</name>
+            <item>
+                <description>Planners can visualize where, accroding to plan, individual elements of informations comsumed by a task would come from, and where elements of information produced by a task would end up.</description>
+            </item>
+        </topic>
+        <topic id="failure-impact">
+            <name>Failure impact</name>
+            <item>
+                <description>Planners can visualize how the failure of a task or of a flow can cause the cascading failure of criticals tasks thus jeopardizing the achiement of organizational goals.</description>
             </item>
         </topic>
     </section>

@@ -9,7 +9,10 @@
 <wicket:panel>
 	<div class="userInfo" wicket:id="userInfo">
 		<div class="tabcontent-group">
-			<h3>My identity</h3>
+			<h3>
+                My identity
+                <img wicket:id = "helpIdentity" class="help-icon"/>
+            </h3>
 			<div class="tabcontent-content">
 	         <table>
 	             <tr>
@@ -43,13 +46,20 @@
 	      </div>
 		</div>
       <div wicket:id="userContact" class="tabcontent-group">
-         <h3> My personal contact info</h3>
+         <h3>
+             My personal contact info
+             <img wicket:id = "helpContact" class="help-icon"/>
+
+         </h3>
   			<div class="tabcontent-content">
 	         <span wicket:id="contactInfo">[channels list panel]</span>
 	      </div>
       </div>
-      <div class="tabcontent-group">
-         <h3>My password</h3>
+      <div wicket:id="userPassword" class="tabcontent-group">
+         <h3>
+             My password
+             <img wicket:id = "helpPassword" class="help-icon"/>
+         </h3>
 			<div class="tabcontent-content">
 	         <table>
 	             <tr><td>Current Password:</td><td><input type="password" wicket:id="password"/></td></tr>

@@ -65,6 +65,16 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "learning";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "launch-survey";
+    }
+
     private void init() {
         addHeader();
         addModelObjectSurveysTable();

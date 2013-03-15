@@ -138,3 +138,25 @@ a.quick-help-more:hover {
 	border: none;
 }
 
+/** Added by JF **/
+
+div.tabcontent-group img.help-icon {
+    float:right;
+    cursor: pointer;
+}
+
+div.social-controls img.help-icon {
+    float:right;
+    cursor: pointer;
+}
+
+div.new-message img.help-icon {
+    float:right;
+    cursor: pointer;
+}
+
+h2.attachment-panel-add img.help-icon {
+    float:right;
+    margin-right: 10px;
+    cursor: pointer;
+}

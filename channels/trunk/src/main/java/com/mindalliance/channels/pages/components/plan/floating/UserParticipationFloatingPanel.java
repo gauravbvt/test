@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
 /**
+ * OBSOLETE.
  * Plan Participation Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -22,6 +23,16 @@ public class UserParticipationFloatingPanel extends AbstractFloatingCommandableP
     public UserParticipationFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return null;  // Todo
+    }
+
+    @Override
+    public String getTopicId() {
+        return null;  // Todo
     }
 
     private void init() {

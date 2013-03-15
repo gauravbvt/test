@@ -4,6 +4,8 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import org.apache.commons.beanutils.LazyDynaMap;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,11 +20,16 @@ import java.util.Map;
  */
 public class Guide implements Serializable {
 
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( Guide.class );
+
     private String name;
 
     private String description;
 
-    @XStreamImplicit( itemFieldName = "section" )
+    @XStreamImplicit(itemFieldName = "section")
     private List<Section> sections;
     private Object context = this;
 
@@ -69,13 +76,21 @@ public class Guide implements Serializable {
     }
 
     public Section findSection( final String sectionId ) {
-        return (Section) CollectionUtils.find( sections,
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (Section) object ).getId().equals( sectionId );
-                    }
-                } );
+        Section section = null;
+        if ( sectionId != null ) {
+            section = (Section) CollectionUtils.find( sections,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Section) object ).getId().equals( sectionId );
+                        }
+                    } );
+        }
+        if ( section == null ) {
+            LOG.warn( "Section " + sectionId + " not found in guide " + getName() );
+            section = getSections().get( 0 );
+        }
+        return section;
     }
 
     public void setContext( Map<String, Object> map ) {

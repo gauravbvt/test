@@ -86,6 +86,16 @@ public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "failure-impact";
+    }
+
     private void init() {
         addCaption();
         addAssumeFail();

@@ -59,11 +59,22 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private Agency selectedAvailableParticipationAgency;
     private WebMarkupContainer newAgentContainer;
+    private WebMarkupContainer privilegesContainer;
 
 
     public UserParticipationPanel( String id, SocialPanel socialPanel, boolean collapsible ) {
         super( id, collapsible );
         init();
+    }
+
+    @Override
+    public String getSectionId() {
+        return null;  // Todo
+    }
+
+    @Override
+    public String getTopicId() {
+        return null;  // Todo
     }
 
     protected void init() {
@@ -80,7 +91,10 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     private void addUserRole() {
-        userParticipationContainer.add( new Label( "userRole", getUserRole() ) );
+        privilegesContainer = new WebMarkupContainer( "myPrivileges" );
+        privilegesContainer.add( new Label( "userRole", getUserRole() ) );
+        privilegesContainer.add( makeHelpIcon( "helpPrivileges", "what-i-do", "my-privileges" ) );
+        userParticipationContainer.add( privilegesContainer );
     }
 
     private void addUserParticipationContainer() {
@@ -129,6 +143,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         };
         openAndConfirmedParticipationContainer.add( participationList );
+        openAndConfirmedParticipationContainer.add( makeHelpIcon( "helpParticipateAs", "what-i-do", "my-participation" ) );
         openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
     }
 
@@ -149,6 +164,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         newParticipationContainer.add(  newParticipationControls );
         addPartipationAgencyChoice( newParticipationControls, participationWrappers );
         addParticipationAgentChoice( newParticipationControls, participationWrappers );
+        newParticipationContainer.add( makeHelpIcon( "helpNewParticipation", "what-i-do", "adding-participation" ) );
     }
 
     private List<ParticipationWrapper> openAndConfirmedParticipationWrappers() {
@@ -292,6 +308,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         unconfirmedSupervisedParticipationContainer.add( participationList );
         unconfirmedSupervisedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity()
                 && !participationWrappers.isEmpty() );
+        unconfirmedSupervisedParticipationContainer
+                .add( makeHelpIcon( "helpConfirmation", "what-i-do", "my-to-be-confirmed" ) );
     }
 
     private void resetAllAndUpdate( AjaxRequestTarget target ) {

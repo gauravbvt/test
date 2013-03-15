@@ -337,7 +337,7 @@ public class GuidePanel extends AbstractUpdatablePanel implements IGuidePanel {
                 final Section nextSection = guide.derefSection( topicRef.getSectionId() );
                 final Topic nextTopic = nextSection == null
                         ? null
-                        : nextSection.derefTopic( topicRef.getTopicId() );
+                        : nextSection.findTopic( topicRef.getTopicId() );
                 AjaxLink<String> nextLink = new AjaxLink<String>( "doNextLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {

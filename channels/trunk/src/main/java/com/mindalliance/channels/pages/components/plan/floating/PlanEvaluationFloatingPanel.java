@@ -26,6 +26,16 @@ public class PlanEvaluationFloatingPanel extends AbstractFloatingCommandablePane
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "improving";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "all-issues";
+    }
+
     private void init() {
         addHeading();
         addPlanEvaluationPanel();

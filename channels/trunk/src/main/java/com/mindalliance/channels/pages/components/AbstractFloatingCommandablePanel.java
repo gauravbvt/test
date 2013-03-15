@@ -24,7 +24,7 @@ import java.util.Set;
  * Date: Sep 30, 2009
  * Time: 9:26:10 PM
  */
-abstract public class AbstractFloatingCommandablePanel extends AbstractCommandablePanel {
+abstract public class AbstractFloatingCommandablePanel extends AbstractCommandablePanel implements Guidable {
 
     /**
       * Expected screen resolution.
@@ -121,6 +121,8 @@ abstract public class AbstractFloatingCommandablePanel extends AbstractCommandab
         moveBar.add( new AttributeModifier( "onMouseDown", new Model<String>( moveScript ) ) );
         add( moveBar );
         addTitle();
+        // help
+        addHelp();
         // minimize
         addMinimize();
         // close -- blur any entry field to make sure any change is taken
@@ -168,6 +170,9 @@ abstract public class AbstractFloatingCommandablePanel extends AbstractCommandab
         } );*/
     }
 
+    private void addHelp() {
+        moveBar.add( makeHelpIcon( "help", this, "images/float-bar-help.png" ) );
+    }
 
     private void addMinimize() {
         minimizeLink = new AjaxFallbackLink( "minimize" ) {

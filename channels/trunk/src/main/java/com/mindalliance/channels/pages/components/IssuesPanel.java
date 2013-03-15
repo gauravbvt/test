@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * An issues panel.
  */
-public class IssuesPanel extends AbstractCommandablePanel {
+public class IssuesPanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * Maximum length of string displayed.
@@ -54,6 +54,16 @@ public class IssuesPanel extends AbstractCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "concepts";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "issue";
+    }
+
     private void init() {
         add( new Label( "kind", new PropertyModel<String>( this, "kind" ) ) );
 
@@ -70,6 +80,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
         };
         newIssueLink.setVisible( !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment() );
         add( newIssueLink );
+        add( makeHelpIcon( "help", this, "images/help_guide_issues.png" ) );
         createIssuePanels();
     }
 

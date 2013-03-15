@@ -120,6 +120,16 @@ public class DisseminationPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "analyzing";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "dissemination";
+    }
+
     private void init() {
         addCaption();
         addViewingControls();

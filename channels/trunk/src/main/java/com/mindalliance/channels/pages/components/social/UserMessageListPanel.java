@@ -96,8 +96,19 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return null;  // Todo
+    }
+
+    @Override
+    public String getTopicId() {
+        return null;  // Todo
+    }
+
     protected void init() {
         super.init();
+        add( makeHelpIcon( "helpMyMessages", "messages", "my-messages" ) );
         addShowHideBroadcastsLink();
         addShowHideBroadcastsLabel();
         addShowReceivedSentLink();
@@ -230,6 +241,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         newMessageContainer = new WebMarkupContainer( "newMessage" );
         newMessageContainer.setOutputMarkupId( true );
         newMessageContainer.setVisible( isPlanner() );
+        newMessageContainer.add( makeHelpIcon( "helpNewMessage", "messages", "new-message" ) );
         addOrReplace( newMessageContainer );
         addRecipientChoice( newMessageContainer );
         addAbout( newMessageContainer );

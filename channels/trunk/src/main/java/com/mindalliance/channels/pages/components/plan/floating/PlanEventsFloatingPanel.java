@@ -28,6 +28,16 @@ public class PlanEventsFloatingPanel extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "scoping";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "events";
+    }
+
     private void init() {
         addHeading();
         addPlanEventsPanel();

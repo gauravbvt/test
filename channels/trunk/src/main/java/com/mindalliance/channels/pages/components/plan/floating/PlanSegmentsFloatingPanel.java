@@ -32,6 +32,16 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "concepts";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "segment";
+    }
+
     private void init() {
         addHeading();
         addPlanName();

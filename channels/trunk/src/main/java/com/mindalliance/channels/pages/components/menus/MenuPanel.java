@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -29,7 +30,7 @@ import java.util.Set;
 /**
  * An abstract base class for menu panel.
  */
-public abstract class MenuPanel extends AbstractCommandablePanel {
+public abstract class MenuPanel extends AbstractCommandablePanel implements Guidable {
 
     /**
      * Class logger.
@@ -77,45 +78,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
                 } );
     }
 
-    /*
-       @Override
-       protected void onBeforeRender() {
-           super.onBeforeRender();
-           adjustMenuItems();
-       }
-
-
-       private void adjustMenuItems() {
-           try {
-               int maxItemLength = maxItemLength();
-               for ( Component menuItem : allMenuItems() ) {
-                   if ( menuItem instanceof LinkMenuItem ) {
-                       ( (LinkMenuItem) menuItem ).padName( maxItemLength );
-                   }
-               }
-           } catch ( CommandException e ) {
-               LOG.warn( "Fail to adjust menu items", e );
-           }
-
-       }
-
-
-       private int maxItemLength() throws CommandException {
-           int maxLength = 0;
-           for ( Component menuItem : allMenuItems() ) {
-               if ( menuItem instanceof LinkMenuItem ) {
-                   LinkMenuItem linkMenuItem = (LinkMenuItem) menuItem;
-                   String name = linkMenuItem.getName();
-                   maxLength = Math.max( maxLength, name.length() );
-               }
-           }
-           return maxLength;
-       }
-    */
     protected List<LinkMenuItem> allMenuItems() {
         if ( menuItems == null ) {
             try {
                 menuItems = getMenuItems();
+                menuItems.add( help( getSectionId(), getTopicId() ) );
             } catch ( CommandException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Failed to get menu items", e );
                 return new ArrayList<LinkMenuItem>();
@@ -362,7 +329,15 @@ public abstract class MenuPanel extends AbstractCommandablePanel {
         return new LinkMenuItem( "menuItem", new Model<String>("Help"), helpLink );
     }
 
+    @Override
+    public String getSectionId() {
+        return null;  // DEFAULT
+    }
 
+    @Override
+    public String getTopicId() {
+        return null;  // DEFAULT
+    }
 
     /**
      * A Model object wrapper.

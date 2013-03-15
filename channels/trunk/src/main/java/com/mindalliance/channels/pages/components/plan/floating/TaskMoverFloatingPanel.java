@@ -27,6 +27,16 @@ public class TaskMoverFloatingPanel  extends AbstractFloatingCommandablePanel {
         init();
     }
 
+    @Override
+    public String getSectionId() {
+        return "improving";
+    }
+
+    @Override
+    public String getTopicId() {
+        return "moving-tasks";
+    }
+
     private void init() {
         addHeading();
         addPlanEventsPanel();

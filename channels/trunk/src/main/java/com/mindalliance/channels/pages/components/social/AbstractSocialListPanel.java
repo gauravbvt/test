@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
@@ -14,7 +15,7 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
  * Date: Jul 22, 2010
  * Time: 5:00:18 PM
  */
-public class AbstractSocialListPanel extends AbstractUpdatablePanel {
+abstract public class AbstractSocialListPanel extends AbstractUpdatablePanel implements Guidable {
     private final boolean collapsible;
 
     public AbstractSocialListPanel( String id, boolean collapsible ) {

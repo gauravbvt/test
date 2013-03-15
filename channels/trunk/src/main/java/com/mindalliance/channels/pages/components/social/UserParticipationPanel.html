@@ -8,15 +8,21 @@
 <body>
 <wicket:panel>
     <div class="userInfo" wicket:id="userParticipation">
-        <div class="tabcontent-group">
-            <h3>My user privileges</h3>
+        <div wicket:id="myPrivileges" class="tabcontent-group">
+            <h3>
+                My user privileges
+                <img wicket:id = "helpPrivileges" class="help-icon"/>
+            </h3>
 
             <div class="tabcontent-content">
                 I am <span wicket:id="userRole">a planner</span>
             </div>
         </div>
         <div wicket:id="openAndConfirmedParticipation" class="tabcontent-group">
-            <h3>I participate as</h3>
+            <h3>
+                I participate as
+                <img wicket:id = "helpParticipateAs" class="help-icon"/>
+            </h3>
             <div wicket:id="noParticipation" class="tabcontent-content">No one yet</div>
             <div class="tabcontent-content">
                 <ul class="check-list">
@@ -29,7 +35,10 @@
             </div>
         </div>
         <div wicket:id="newParticipationContainer" class="tabcontent-group">
-            <h3 wicket:id="newParticipationLabel">I (also) participate in</h3>
+            <h3>
+                <span wicket:id="newParticipationLabel">I (also) participate in</span>
+                <img wicket:id = "helpNewParticipation" class="help-icon"/>
+            </h3>
             <div class="tabcontent-content" wicket:id="newParticipation">
                 <select wicket:id="agencies">
                     <option>org</option>
@@ -42,7 +51,10 @@
             </div>
         </div>
         <div wicket:id="unconfirmedSupervisedParticipation" class="tabcontent-group">
-            <h3>I await confirmation to participate as</h3>
+            <h3>
+                I await confirmation to participate as
+                <img wicket:id = "helpConfirmation" class="help-icon"/>
+            </h3>
 
             <div class="tabcontent-content">
                 <ul class="check-list">
