@@ -3746,7 +3746,7 @@ ul.attach li.controls {
     float: right;
     margin-right: 5px;
     margin-top: 2px;
-    curson: pointer;
+    cursor: pointer;
 }
 
 .floating .help-icon {
