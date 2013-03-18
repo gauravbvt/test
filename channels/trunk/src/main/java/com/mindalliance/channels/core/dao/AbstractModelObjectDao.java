@@ -18,6 +18,7 @@ import com.mindalliance.channels.core.model.Requirement;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.IteratorChain;
@@ -882,10 +883,7 @@ public abstract class AbstractModelObjectDao {
 
 
     private String sanitizeEntityName( String name ) {
-        return StringUtils.abbreviate( name.replaceAll( "[^\\w-]", " " )
-                .replaceAll( "\\n", " " )
-                .replaceAll( "\\s+", " " ).trim()
-                , ModelEntity.MAX_NAME_SIZE );
+        return StringUtils.abbreviate( ChannelsUtils.cleanUpName( name ), ModelEntity.MAX_NAME_SIZE );
     }
 
     public long getLastAssignedId() {

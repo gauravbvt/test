@@ -48,5 +48,19 @@ public interface QuestionnaireService extends GenericSqlService<Questionnaire, L
      */
     Questionnaire findRemediationQuestionnaire( CommunityService communityService, Issue issue );
 
-    void deleteIfNotUsed( CommunityService communityService, Questionnaire questionnaire );
+    /**
+     * Whether a questionnaire has been used.
+     * @param communityService a community service
+     * @param questionnaire a questionnaire
+     * @return whether used
+     */
+    boolean isUsed( CommunityService communityService, Questionnaire questionnaire );
+
+    /**
+     * Delete a given questionnaire if inactive and never used.
+     * @param communityService a community service
+     * @param questionnaire a questionnaire
+     * @return whether deleted
+     */
+    boolean deleteIfAllowed( CommunityService communityService, Questionnaire questionnaire );
 }

@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
-import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionService;
 import com.mindalliance.channels.social.services.QuestionnaireService;
@@ -37,8 +36,8 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     private RFISurveyService rfiSurveyService;
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    @Transactional( readOnly = true )
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<Questionnaire> select(
             CommunityService communityService,
             String about,
@@ -61,8 +60,8 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    @Transactional( readOnly = true )
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<Questionnaire> findApplicableQuestionnaires( CommunityService communityService, ModelObject modelObject ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -75,8 +74,8 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    @Transactional( readOnly = true )
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Questionnaire findRemediationQuestionnaire( CommunityService communityService, Issue issue ) {
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -91,19 +90,28 @@ public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnair
     }
 
     @Override
-    @Transactional
-    public void deleteIfNotUsed( CommunityService communityService, Questionnaire questionnaire ) {
-        if ( rfiSurveyService.findSurveys( communityService, questionnaire ).isEmpty() ) {
-            delete(  questionnaire );
-        }
+    public boolean isUsed( CommunityService communityService, Questionnaire questionnaire ) {
+        return !rfiSurveyService.findSurveys( communityService, questionnaire ).isEmpty();
     }
 
+    @Override
+    @Transactional
+    public boolean deleteIfAllowed( CommunityService communityService, Questionnaire q ) {
+        Questionnaire questionnaire = load( q.getId() );
+        if ( questionnaire != null && !questionnaire.isActive() && !isUsed( communityService, questionnaire ) ) {
+            delete( questionnaire );
+            return true;
+        } else
+            return false;
+    }
+
+    @Override
     @Transactional
     public void delete( Questionnaire questionnaire ) {
-        for ( Question question : questionnaire.getQuestions() ) {
-            questionService.delete( question );
+        boolean success = questionService.deleteQuestionsIfUnanswered( questionnaire );
+        if ( success ) {
+            super.delete( questionnaire );
         }
-        super.delete( questionnaire );
     }
 
 }

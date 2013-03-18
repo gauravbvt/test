@@ -51,11 +51,6 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     @SpringBean
     private ParticipationManager participationManager;
 
-
-    private String planCommunityUri;
-
-    private int planVersion;
-
     private List<UserParticipation> participations;
 
     private List<Agent> agents;
@@ -70,12 +65,8 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     }
 
 
-    public String getPlanCommunityUri() {
-        return planCommunityUri;
-    }
-
     protected int getPlanVersion() {
-        return planVersion;
+        return getPlanCommunity().getPlanVersion();
     }
 
     protected List<UserParticipation> getParticipations() {
@@ -90,8 +81,6 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         CommunityService communityService = getCommunityService();
         QueryService queryService = getQueryService();
         boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
-        planCommunityUri = communityService.getPlanCommunity().getUri();
-        planVersion = communityService.getPlan().getVersion();
         participations = isPlanner
                             ? userParticipationService.getAllActiveParticipations( communityService )
                             : userParticipationService.getActiveUserParticipations( getUser(), communityService );

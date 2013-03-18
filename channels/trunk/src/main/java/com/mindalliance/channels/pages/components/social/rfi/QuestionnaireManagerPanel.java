@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.social.model.rfi.Question;
@@ -77,6 +78,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
             protected void onUpdate( AjaxRequestTarget target ) {
                 addQuestionList();
                 target.add( questionsContainer );
+                target.add( nameField );
                 update( target, new Change( Change.Type.Updated, getQuestionnaire() ) );
             }
         } );
@@ -236,8 +238,9 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
     }
 
     public void setQuestionnaireName( String name ) {
+        String safeName = ChannelsUtils.cleanUpPhrase( name );
         Questionnaire questionnaire = getQuestionnaire();
-        questionnaire.setName( name );
+        questionnaire.setName( safeName );
         questionnaireService.save( questionnaire );
     }
 

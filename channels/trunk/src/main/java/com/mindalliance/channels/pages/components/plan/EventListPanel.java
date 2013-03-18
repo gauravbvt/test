@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -24,6 +25,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -43,6 +46,12 @@ import java.util.Set;
  * Time: 1:43:30 PM
  */
 public class EventListPanel extends AbstractCommandablePanel {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( EventListPanel.class );
+
 
     /**
      * Plan manager.
@@ -240,12 +249,16 @@ public class EventListPanel extends AbstractCommandablePanel {
                         UpdateObject.Action.Add ) );
 
             } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
-                Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
-                        "incidents",
-                        confirmedEvent,
-                        UpdateObject.Action.Remove ) );
-                getCommander().cleanup( Event.class, getName() );
+                try {
+                    Event confirmedEvent = getCommunityService().find( Event.class, getEvent().getId() );
+                    doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
+                            "incidents",
+                            confirmedEvent,
+                            UpdateObject.Action.Remove ) );
+                    getCommander().cleanup( Event.class, getName() );
+                } catch ( NotFoundException e ) {
+                    LOG.warn( "event not found with id " + getEvent().getId() );
+                }
             }
         }
 

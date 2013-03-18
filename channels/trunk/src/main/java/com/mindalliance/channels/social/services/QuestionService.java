@@ -41,38 +41,50 @@ public interface QuestionService extends GenericSqlService<Question, Long> {
 
     /**
      * Add a new question at the end.
-     * @param user a user
-     * @param questionnaire a questionnaire
      *
+     * @param user          a user
+     * @param questionnaire a questionnaire
      * @return a question
      */
     Question addNewQuestion( ChannelsUser user, Questionnaire questionnaire );
 
     /**
      * Move a choice in a multiple choice answer to a question up.
+     *
      * @param question a question
-     * @param choice a string
+     * @param choice   a string
      */
     void moveUpAnswerChoice( Question question, String choice );
 
     /**
      * Move a choice in a multiple choice answer to a question down.
+     *
      * @param question a question
-     * @param choice a string
+     * @param choice   a string
      */
     void moveDownAnswerChoice( Question question, String choice );
 
     /**
      * Delete a choice from a multiple choice answer to a question.
+     *
      * @param question a question
-     * @param choice a string
+     * @param choice   a string
      */
     void deleteAnswerChoice( Question question, String choice );
 
     /**
      * Add a choice to a multiple choice answer to a question.
+     *
      * @param question a question
-     * @param choice a string
+     * @param choice   a string
      */
     void addAnswerChoice( Question question, String choice );
+
+    /**
+     * Delete all questions in questionnaire if never answered.
+     *
+     * @param questionnaire a questionnaire
+     * @return whether successful
+     */
+    boolean deleteQuestionsIfUnanswered( Questionnaire questionnaire );
 }

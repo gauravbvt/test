@@ -552,8 +552,25 @@ public final class ChannelsUtils {
      * @return a string
      */
     public static String cleanUpName( String name ) {
-        return name.replaceAll( "\\s\\s*", " " );
+        return name.trim()
+                .replaceAll( "[\\n\\t]", " " ) // replace newlines and tabs by spaces
+                .replaceAll( "\\s\\s*", " " )  // trim multiple spaces
+                .replaceAll("[^\\sA-Za-z0-9äëïöüÄËÏÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ\\._\\-\\']", "_"); // replace "special" characters by underscore
     }
+
+    /**
+     * Clean up a name by removing extra spaces.
+     *
+     * @param name a string
+     * @return a string
+     */
+    public static String cleanUpPhrase( String name ) {
+        return name.trim()
+                .replaceAll( "[\\n\\t]", " " ) // replace newlines and tabs by spaces
+                .replaceAll( "\\s\\s*", " " )  // trim multiple spaces
+                .replaceAll("[^\\sA-Za-z0-9äëïöüÄËÏÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ\\._\\-\\'\\?\\!]", "_"); // replace "special" characters by underscore
+    }
+
 
     public static boolean isValidEmailAddress( String address ) {
         return address != null

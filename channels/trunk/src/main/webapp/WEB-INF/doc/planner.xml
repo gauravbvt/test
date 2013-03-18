@@ -256,21 +256,7 @@ The list is part of the plan's ''details''.]]></description>
                     </change>
                 </script>
             </item>
-            <next section="scoping" topic="requirements"/>
             <next section="profiling" topic="profiling-organization"/>
-        </topic>
-        <topic id="requirements">
-            <name>Define requirements</name>
-            <item>
-                <description><![CDATA[Specify the information sharing commitments between organizations that the collaboration plan is required to generate.]]></description>
-                <script>
-                    <action>Access requirement definitions</action>
-                    <change>
-                        <subjectPath>guide.unknownRequirement</subjectPath>
-                        <type>Expanded</type>
-                    </change>
-                </script>
-            </item>
         </topic>
         <topic id="add-define-segment">
             <name>Add and define a segment</name>
@@ -561,7 +547,6 @@ Note that all profile attributes are optional.]]>
                 </script>
             </item>
             <next section="profiling" topic="profiling-agent"/>
-            <next section="scoping" topic="requirements"/>
         </topic>
         <topic id="profiling-role">
             <name>Profile a role</name>

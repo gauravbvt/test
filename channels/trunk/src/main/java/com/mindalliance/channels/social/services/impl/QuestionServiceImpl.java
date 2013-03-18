@@ -5,11 +5,15 @@ import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
+import com.mindalliance.channels.social.services.AnswerSetService;
 import com.mindalliance.channels.social.services.QuestionService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,9 @@ import java.util.List;
  */
 @Repository
 public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> implements QuestionService {
+
+    @Autowired
+    private AnswerSetService answerSetService;
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -109,10 +116,33 @@ public class QuestionServiceImpl extends GenericSqlServiceImpl<Question, Long> i
     }
 
     @Override
+    @Transactional
     public void addAnswerChoice( Question question, String choice ) {
         List<String> choices = question.getAnswerChoices();
         if ( !choices.contains( choice ) ) choices.add( choice );
         question.setAnswerChoices( choices );
         save( question );
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteQuestionsIfUnanswered( Questionnaire questionnaire ) {
+        List<Question> questions = listQuestions( questionnaire );
+        boolean answered = CollectionUtils.exists(
+                questions,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return answerSetService.getAnswerCount( (Question)object ) > 0;
+                    }
+                }
+        );
+        if ( !answered ) {
+            for ( Question question : questions ) {
+                delete( question );
+            }
+            return true;
+        }
+        return false;
     }
 }

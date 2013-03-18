@@ -191,16 +191,20 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
                 "Delete this questionnaire?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                deleteQuestionnaire();
+                boolean deleted = deleteQuestionnaire();
                 addQuestionnaireTable();
                 target.add( questionnaireTable );
                 addQuestionnaireContainer();
                 target.add( questionnaireContainer );
+                if ( !deleted ) {
+                    Change change = Change.failed( "Could not delete because questionnaire is in use." );
+                    update( target, change );
+                }
             }
         };
         deleteButton.setVisible( selectedQuestionnaire != null
                 && !selectedQuestionnaire.isActive()
-                && rfiSurveyService.findSurveys( getCommunityService(), selectedQuestionnaire ).isEmpty()
+                && !questionnaireService.isUsed( getCommunityService(), selectedQuestionnaire )
         );
         questionnaireContainer.add( deleteButton );
         // activate
@@ -245,11 +249,13 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
         questionnaireContainer.addOrReplace( label );
     }
 
-    private void deleteQuestionnaire() {
+    private boolean deleteQuestionnaire() {
         if ( selectedQuestionnaire != null ) {
-            questionnaireService.deleteIfNotUsed( getCommunityService(), selectedQuestionnaire );
+            boolean deleted = questionnaireService.deleteIfAllowed( getCommunityService(), selectedQuestionnaire );
             selectedQuestionnaire = null;
+            return deleted;
         }
+        return false;
     }
 
     private void activateQuestionnaire() {

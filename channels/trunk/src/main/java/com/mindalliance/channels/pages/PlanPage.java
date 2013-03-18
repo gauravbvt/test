@@ -388,6 +388,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Help topic id.
      */
     private String topicId;
+    private AjaxLink<String> allSegmentsButton;
 
     /**
      * Used when page is called without parameters.
@@ -458,13 +459,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
         setSegment( sc );
         setPart( p );
         setExpansions( expanded );
-        addExpansion( Channels.ALL_SEGMENTS );
+        // addExpansion( Channels.ALL_SEGMENTS );
         for ( Long id : getExpansions() ) {
             commander.requestLockOn( getUser().getUsername(), id );
         }
         setVersioned( false );
         expanded.add( Channels.SOCIAL_ID );
-        expanded.add( Channels.GUIDE_ID );
         add( new Label( "sg-title",
                 new Model<String>( "Channels: " + getPlan().getVersionedName() ) ) );
         addBody();
@@ -622,6 +622,28 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanSearchingPanel( null );
     }
 
+    private void addAllSegmentsButton() {
+        allSegmentsButton = new AjaxLink<String>( "allSegmentsButton") {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                boolean isExpanded = getExpansions().contains( Channels.ALL_SEGMENTS );
+                Change change = new Change( isExpanded
+                        ? Change.Type.Collapsed
+                        : Change.Type.Expanded,
+                        Channels.ALL_SEGMENTS );
+                addTipTitle( allSegmentsButton,
+                        isExpanded
+                        ? "Closes the map of all segments in this plan"
+                        : "Opens a map of all segments in this plan" );
+                target.add(  allSegmentsButton );
+                update( target, change );
+            }
+        };
+        allSegmentsButton.setOutputMarkupId( true );
+        addTipTitle( allSegmentsButton, "Opens a map of all segments in this plan" );
+        form.addOrReplace(  allSegmentsButton );
+    }
+
     private void addRefreshNow() {
         refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -747,6 +769,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addPlanMenubar() {
+        addAllSegmentsButton();
         addPlanActionsMenu();
         addPlanShowMenu();
     }
