@@ -631,16 +631,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         ? Change.Type.Collapsed
                         : Change.Type.Expanded,
                         Channels.ALL_SEGMENTS );
-                addTipTitle( allSegmentsButton,
-                        isExpanded
-                        ? "Closes the map of all segments in this plan"
-                        : "Opens a map of all segments in this plan" );
-                target.add(  allSegmentsButton );
                 update( target, change );
             }
         };
         allSegmentsButton.setOutputMarkupId( true );
-        addTipTitle( allSegmentsButton, "Opens a map of all segments in this plan" );
+        addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this plan" );
         form.addOrReplace(  allSegmentsButton );
     }
 
