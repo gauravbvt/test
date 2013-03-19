@@ -15,7 +15,7 @@ a#quick-help-button {
 a#quick-help-button-low {  /** added by jf **/
     top: 120px;
     background: url("../images/quick-help.png") no-repeat scroll 3px 14px #1F7F5C;
-    width: 24px;
+    width: 12px;
     position: absolute;
     right: 0;
     text-align: left;
@@ -27,6 +27,7 @@ a#quick-help-button-low {  /** added by jf **/
 a#quick-help-button-low:hover {  /** added by jf **/
     background: url("../images/quick-help.png") no-repeat scroll 3px 14px #4A9E7F;
     border: 0;
+    width: 24px;
 }
 
 a#quick-help-button:hover {
