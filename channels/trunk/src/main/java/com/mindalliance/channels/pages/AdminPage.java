@@ -173,11 +173,11 @@ public class AdminPage extends AbstractChannelsWebPage {
                 }
             }
         };
-        deleteLink.setVisible( canBeDeletedPlan( getPlan() ));
+        deleteLink.setVisible( canBeDeletedPlan( getPlan() ) );
         WebMarkupContainer managePlanSubmit = new WebMarkupContainer( "managePlanSubmit" );
         managePlanSubmit.setVisible( getPlan().isDevelopment() );
-        Label homeLink = new Label("homeLink", "Home");
-        homeLink.add( new AjaxEventBehavior("onclick") {
+        Label homeLink = new Label( "homeLink", "Home" );
+        homeLink.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 // Do nothing
@@ -185,7 +185,7 @@ public class AdminPage extends AbstractChannelsWebPage {
         } );
         validationFeedbackPanel = new FeedbackPanel( "feedback" ) {
             @Override
-            protected String getCSSClass(final FeedbackMessage message) {
+            protected String getCSSClass( final FeedbackMessage message ) {
                 return "issues settings";  // customize here
             }
         };
@@ -287,7 +287,8 @@ public class AdminPage extends AbstractChannelsWebPage {
                                         }
                                     }
                                 } )
-                                .add( new ValidationStyler() )
+                                .add( new ValidationStyler() ),
+                        new Label( "thisPlan", getPlan().getUri() )
                 ) );
     }
 
