@@ -9,8 +9,10 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.model.AbstractModelObjectReferencingPPO;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.notification.Messageable;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,9 +40,10 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     private boolean closed = false;
     private boolean canBeForwarded = true;
     private Date deadline;
-    // Questionnaire's about.
+    // Questionnaire's about - a model object's label.
+    @Column( length = 2000 )
     private String about;
-    @OneToMany( mappedBy = "rfiSurvey", cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "rfiSurvey", cascade = CascadeType.ALL)
     private List<RFI> rfis;
 
     public RFISurvey() {
@@ -72,7 +75,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     }
 
     public void setAbout( String about ) {
-        this.about = about;
+        this.about = StringUtils.abbreviate( about, 2000 );
     }
 
     public boolean isClosed() {
@@ -165,7 +168,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
     @Override
     public List<String> getToUserNames( String topic, CommunityService communityService ) {
         List<String> usernames = new ArrayList<String>();
-        usernames.add(  getToUsername(  topic  ) );
+        usernames.add( getToUsername( topic ) );
         return usernames;
     }
 

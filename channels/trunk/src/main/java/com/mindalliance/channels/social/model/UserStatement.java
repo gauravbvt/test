@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.social.services.notification.Messageable;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
 
     public static final String STATEMENT = "statement";
 
-    @Column( length = 3000 )
+    @Column( length = 10000 )
     private String text;
 
     public UserStatement() {
@@ -47,7 +48,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
             ModelObject modelObject,
             PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username, modelObject );
-        this.text = text;
+        setText( text );
     }
 
     public String getText() {
@@ -55,7 +56,7 @@ abstract public class UserStatement extends AbstractModelObjectReferencingPPO im
     }
 
     public void setText( String text ) {
-        this.text = text;
+        this.text = StringUtils.abbreviate( text, 10000 );
     }
 
 

@@ -56,7 +56,7 @@ public class Question extends AbstractPersistentChannelsObject {
     // Multiple choice question follows pattern: "Question:::choice 1:::choice 2:::..."
     private String options = "";
 
-    @Column( length = 2000 )
+    @Column( length = 5000 )
     private String text = "";
 
     private boolean answerRequired = true;
@@ -88,7 +88,7 @@ public class Question extends AbstractPersistentChannelsObject {
     }
 
     public void setText( String text ) {
-        this.text = text;
+        this.text = StringUtils.abbreviate( text, 5000 );
     }
 
     public String getOptions() {

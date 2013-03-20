@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.orm.model;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,9 +36,9 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
     private Date created;
     private String username;
     private Date lastModified;
-    @Column(length=1000)
+    @Column(length=2000)
     private String communityUri;
-    @Column(length=1000)
+    @Column(length=2000)
     private String planUri;
     private int planVersion;
 
@@ -66,8 +67,8 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
     public AbstractPersistentChannelsObject( String communityUri, String planUri, int planVersion, String username ) {
         created = new Date( );
         this.username = username;
-        this.communityUri = communityUri;
-        this.planUri = planUri;
+        setCommunityUri( communityUri );
+        setPlanUri( planUri );
         this.planVersion = planVersion;
     }
 
@@ -80,8 +81,12 @@ public abstract class AbstractPersistentChannelsObject implements PersistentPlan
         this.created = created;
     }
 
+    public void setPlanUri( String planUri ) {
+        this.planUri = StringUtils.abbreviate( planUri, 2000 );
+    }
+
     public void setCommunityUri( String communityUri ) {
-        this.communityUri = communityUri;
+        this.communityUri = StringUtils.abbreviate( communityUri, 2000 );
     }
 
     public String getCommunityUri() {

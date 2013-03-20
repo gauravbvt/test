@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,7 +38,7 @@ public class AnswerSet extends AbstractPersistentChannelsObject {
 
     private boolean anonymous;
 
-    @Column( length = 3000 )
+    @Column( length = 10000 )
     private String comment;
 
     @OneToMany( mappedBy = "answerSet", cascade = CascadeType.ALL )
@@ -120,7 +121,7 @@ public class AnswerSet extends AbstractPersistentChannelsObject {
     }
 
     public void setComment( String comment ) {
-        this.comment = comment;
+        this.comment = StringUtils.abbreviate( comment, 10000 );
     }
 
     public Answer getOrCreateAnswer() {

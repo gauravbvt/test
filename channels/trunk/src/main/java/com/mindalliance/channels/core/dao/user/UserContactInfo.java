@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ public class UserContactInfo extends AbstractPersistentChannelsObject {
     private ChannelsUserInfo user;
     private long transmissionMediumId;
 
-    @Column(length=1000)
+    @Column(length=5000)
     private String address;
 
     public UserContactInfo() {}
@@ -35,7 +36,7 @@ public class UserContactInfo extends AbstractPersistentChannelsObject {
         super( username );
         this.user = user;
         this.transmissionMediumId = channel.getMedium().getId();
-        this.address = channel.getAddress();
+        setAddress( channel.getAddress() );
     }
 
     public ChannelsUserInfo getUser() {
@@ -59,6 +60,6 @@ public class UserContactInfo extends AbstractPersistentChannelsObject {
     }
 
     public void setAddress( String address ) {
-        this.address = address;
+        this.address = StringUtils.abbreviate( address, 5000 );
     }
 }

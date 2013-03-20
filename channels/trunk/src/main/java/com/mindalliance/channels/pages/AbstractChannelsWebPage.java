@@ -43,6 +43,8 @@ import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -986,7 +988,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     static public Plan getPlanFromParameters(
             PlanManager planManager,
-            ChannelsUser user,
+            final ChannelsUser user,
             PageParameters parameters ) {
         Plan plan = null;
         String encodedPlanUri = parameters.get( PLAN_PARM ).toString( null );
@@ -1031,8 +1033,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                 }
             } else {
                 if ( planVersion == p.getVersion() ) {
-                    if ( p.isProduction() || ( p.isDevelopment() && user.isPlanner( planUri
-                    ) ) )
+                    if ( p.isProduction() || ( p.isDevelopment() && user.isPlanner( p.getUri() ) ) )
                         plan = p;
                 }
             }
@@ -1041,16 +1042,28 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         if ( planUri != null && !planUri.isEmpty() && plan == null ) {
             plan = planManager.findProductionPlan( planUri );
         }
-        // if still no plan, panic and grab first one.
+        // if still no plan, panic and grab first authorized one.
         if ( plan == null ) {
             if ( plans.isEmpty() ) {
                 plans = planManager.getPlans();
             }
-            LOG.warn( "PANIC: selecting first plan" );
-            plan = plans.get( 0 );
+            LOG.warn( "PANIC: selecting first plan where user is authorized as planner" );
+            plan = (Plan)CollectionUtils.find(
+                    plans,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            Plan p = (Plan)object;
+                            return user.isPlanner( p.getUri() );
+                        }
+                    }
+            );
         }
+        if ( plan == null )  // throw the towel
+            throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
         return plan;
     }
+
 
     protected void setResponsePageWithPlan() {
         setResponsePage( AdminPage.class, makePlanParameters() );

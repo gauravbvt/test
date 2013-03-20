@@ -15,6 +15,7 @@ import com.mindalliance.channels.social.services.notification.Messageable;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -53,6 +54,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     private String surveyedUsername;
 
     // Employment = organization and role ids, and title
+    @Column( length=2000 )
     private String title;
     private Long organizationId;
     private Long roleId;
@@ -61,10 +63,12 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     private Date nagged;
     private boolean declined = false;
 
+    @Column( length=10000 )
     private String reasonDeclined = "";
 
     private boolean naggingRequested = false;
 
+    @Column( length=10000 )
     private String notifications;
 
     @OneToMany( mappedBy = "rfi", cascade = CascadeType.ALL )
@@ -87,7 +91,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     public RFI( String username, String surveyedUsername, Employment employment, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
         this.surveyedUsername = surveyedUsername;
-        title = employment.getTitle();
+        setTitle( employment.getTitle() );
         organizationId = employment.getOrganization().getId();
         roleId = employment.getRole().getId();
     }
@@ -115,7 +119,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     }
 
     public void setTitle( String title ) {
-        this.title = title;
+        this.title = StringUtils.abbreviate( title, 2000 );
     }
 
     public Long getOrganizationId() {
@@ -155,7 +159,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     }
 
     public void setReasonDeclined( String reasonDeclined ) {
-        this.reasonDeclined = reasonDeclined;
+        this.reasonDeclined = StringUtils.abbreviate( reasonDeclined, 10000 );
     }
 
     public Date getDeadline() {
@@ -194,6 +198,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
     }
 
     public void setNotifications( String notifications ) {
+        assert notifications.length() <= 10000;
         this.notifications = notifications;
     }
 
@@ -297,13 +302,13 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         if ( !list.contains( notification ) ) {
             list.add( notification );
         }
-        notifications = StringUtils.join( list, "," );
+        setNotifications( StringUtils.join( list, "," ) );
     }
 
     public void removeNotification( String notification ) {
         List<String> list = allNotifications();
         list.remove( notification );
-        notifications = StringUtils.join( list, "," );
+        setNotifications( StringUtils.join( list, "," ) );
     }
 
     public int compareUrgencyTo( RFI other, SurveysDAO surveysDAO ) {

@@ -223,6 +223,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel impleme
                 // update( target, new Change( Change.Type.Updated, getPlan(), "organizations" ) );
             }
         };
+        expectationActionLink.setVisible( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
         organizationContainer.add( expectationActionLink );
         Label expectationLabel = new Label(
                 "expectationAction",

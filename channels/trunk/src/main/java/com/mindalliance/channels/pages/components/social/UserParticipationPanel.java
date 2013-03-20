@@ -93,7 +93,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private void addUserRole() {
         privilegesContainer = new WebMarkupContainer( "myPrivileges" );
         privilegesContainer.add( new Label( "userRole", getUserRole() ) );
-        privilegesContainer.add( makeHelpIcon( "helpPrivileges", "what-i-do", "my-privileges" ) );
+        privilegesContainer.add( makeHelpIcon( "helpPrivileges", "what-i-do", "my-privileges", "images/help_guide_gray.png" ) );
         userParticipationContainer.add( privilegesContainer );
     }
 
@@ -143,7 +143,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         };
         openAndConfirmedParticipationContainer.add( participationList );
-        openAndConfirmedParticipationContainer.add( makeHelpIcon( "helpParticipateAs", "what-i-do", "my-participation" ) );
+        openAndConfirmedParticipationContainer.add( makeHelpIcon( "helpParticipateAs", "what-i-do", "my-participation", "images/help_guide_gray.png" ) );
         openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
     }
 
@@ -164,7 +164,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         newParticipationContainer.add(  newParticipationControls );
         addPartipationAgencyChoice( newParticipationControls, participationWrappers );
         addParticipationAgentChoice( newParticipationControls, participationWrappers );
-        newParticipationContainer.add( makeHelpIcon( "helpNewParticipation", "what-i-do", "adding-participation" ) );
+        newParticipationContainer.add( makeHelpIcon( "helpNewParticipation", "what-i-do", "adding-participation", "images/help_guide_gray.png" ) );
     }
 
     private List<ParticipationWrapper> openAndConfirmedParticipationWrappers() {
@@ -309,7 +309,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         unconfirmedSupervisedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity()
                 && !participationWrappers.isEmpty() );
         unconfirmedSupervisedParticipationContainer
-                .add( makeHelpIcon( "helpConfirmation", "what-i-do", "my-to-be-confirmed" ) );
+                .add( makeHelpIcon( "helpConfirmation", "what-i-do", "my-to-be-confirmed", "images/help_guide_gray.png" ) );
     }
 
     private void resetAllAndUpdate( AjaxRequestTarget target ) {

@@ -3,6 +3,7 @@ package com.mindalliance.channels.social.model.rfi;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,12 +20,12 @@ import java.util.Date;
 @Entity
 public class RFIForward extends AbstractPersistentChannelsObject {
 
-    @Column(length=1024)
+    @Column(length=1000)
     private String forwardToEmail;
 
     private Date dateForwarded;
 
-    @Column(length=3000)
+    @Column(length=5000)
     private String message = "";
 
     private boolean notified;
@@ -38,8 +39,8 @@ public class RFIForward extends AbstractPersistentChannelsObject {
     public RFIForward( PlanCommunity planCommunity, ChannelsUser user, RFI rfi, String forwardToEmail, String message  ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), user.getUsername()  );
         this.rfi = rfi;
-        this.forwardToEmail = forwardToEmail;
-        this.message = message;
+        setForwardToEmail( forwardToEmail );
+        setMessage( message );
     }
 
     // Assumes valid email
@@ -48,7 +49,7 @@ public class RFIForward extends AbstractPersistentChannelsObject {
     }
 
     public void setForwardToEmail( String forwardToEmail ) {
-        this.forwardToEmail = forwardToEmail;
+        this.forwardToEmail = StringUtils.abbreviate( forwardToEmail, 1000 );
     }
 
     public Date getDateForwarded() {
@@ -72,7 +73,7 @@ public class RFIForward extends AbstractPersistentChannelsObject {
     }
 
     public void setMessage( String message ) {
-        this.message = message;
+        this.message = StringUtils.abbreviate( message, 5000 );
     }
 
     public boolean isNotified() {

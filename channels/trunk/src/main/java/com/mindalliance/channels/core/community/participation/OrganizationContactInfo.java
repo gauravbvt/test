@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class OrganizationContactInfo extends AbstractPersistentChannelsObject {
     @ManyToOne
     private RegisteredOrganization registeredOrganization;
     private long transmissionMediumId;
-    @Column(length=1000)
+    @Column(length=5000)
     private String address;
 
     public OrganizationContactInfo() {
@@ -56,7 +57,7 @@ public class OrganizationContactInfo extends AbstractPersistentChannelsObject {
     }
 
     public void setAddress( String address ) {
-        this.address = address;
+        this.address = StringUtils.abbreviate( address, 5000 );
     }
 
     public RegisteredOrganization getRegisteredOrganization() {

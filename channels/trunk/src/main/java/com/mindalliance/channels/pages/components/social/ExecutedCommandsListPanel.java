@@ -66,7 +66,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
 
     protected void init() {
         super.init();
-        add( makeHelpIcon( "helpActivities", "activities", "planner-activities" ) );
+        add( makeHelpIcon( "helpActivities", "activities", "planner-activities", "images/help_guide_gray.png" ) );
         addShowHideLink();
         addShowHideLabel();
         planningEventsContainer = new WebMarkupContainer( "executedCommandsContainer" );

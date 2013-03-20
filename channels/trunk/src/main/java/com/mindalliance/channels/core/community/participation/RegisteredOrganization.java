@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,16 +41,16 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
      * The id of a plan-defined organization this proxies. -1 if the organization is not plan-defined.
      */
     private long fixedOrganizationId = -1;
-    @Column( length = 1000 )
     /**
      * If not plan defined, then name must be uniquely set.
      */
+    @Column( length = 2000 )
     private String name;
-    @Column( length = 2000 )
+    @Column( length = 10000 )
     private String description;
-    @Column( length = 2000 )
+    @Column( length = 10000 )
     private String mission;
-    @Column( length = 2000 )
+    @Column( length = 5000 )
     private String address;
     @ManyToOne
     private RegisteredOrganization parent;
@@ -75,7 +76,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
 
     public RegisteredOrganization( String username, String name, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
-        this.name = name;
+        this.name = StringUtils.abbreviate( name, 2000 );
     }
 
     public RegisteredOrganization( String username, long fixedOrganizationId, PlanCommunity planCommunity ) {
@@ -88,9 +89,9 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
                 registeredOrganization.getPlanUri(),
                 registeredOrganization.getPlanVersion(),
                 registeredOrganization.getUsername() );
-        name = registeredOrganization.getName();
-        description = registeredOrganization.getDescription();
-        mission = registeredOrganization.getMission();
+        setName( registeredOrganization.getName() );
+        setDescription( registeredOrganization.getDescription() );
+        setMission( registeredOrganization.getMission() );
         parent = registeredOrganization.getParent();
     }
 
@@ -115,7 +116,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public void setDescription( String description ) {
-        this.description = description;
+        this.description = StringUtils.abbreviate( description, 10000);
     }
 
     public String getMission() {
@@ -123,7 +124,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public void setMission( String mission ) {
-        this.mission = mission;
+        this.mission = StringUtils.abbreviate( mission, 10000 );
     }
 
     public String getAddress() {
@@ -131,7 +132,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public void setAddress( String address ) {
-        this.address = address;
+        this.address = StringUtils.abbreviate( address, 5000 );
     }
 
     public String getCommunityGivenName() {
@@ -149,10 +150,10 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public void updateWith( Agency update ) {
-        name = update.getName();
-        description = update.getDescription();
-        mission = update.getMission();
-        address = update.getAddress();
+        setName( update.getName() );
+        setDescription( update.getDescription() );
+        setMission( update.getMission() );
+        setAddress( update.getAddress() );
     }
 
     public Organization getFixedOrganization( CommunityService communityService ) {
@@ -168,7 +169,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
 
     public void setName( String name ) {
         assert fixedOrganizationId != -1;
-        this.name = name;
+        this.name = StringUtils.abbreviate( name, 2000 );
     }
 
     public RegisteredOrganization getParent() {

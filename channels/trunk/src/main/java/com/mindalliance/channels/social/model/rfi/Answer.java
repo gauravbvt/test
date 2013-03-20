@@ -1,6 +1,7 @@
 package com.mindalliance.channels.social.model.rfi;
 
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.UrlValidator;
 
 import javax.persistence.Column;
@@ -23,7 +24,7 @@ public class Answer extends AbstractPersistentChannelsObject {
     @ManyToOne
     private AnswerSet answerSet;
 
-    @Column( length = 3000 )
+    @Column( length = 10000 )
     private String text = "";
 
     private int sequence = 0;
@@ -56,7 +57,7 @@ public class Answer extends AbstractPersistentChannelsObject {
     }
 
     public void setText( String s ) {
-        text = s;
+        text = StringUtils.abbreviate( s, 10000 );
     }
 
     public void setYes() {

@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,21 +24,21 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     /**
      * Model object reference as string.
      */
-    @Column(length=2000)
+    @Column(length = 3000)
     private String moRef;
     /**
      * Model object label.
      */
-    @Column(length=1000)
+    @Column(length = 5000)
     private String moLabel;
-    
+
     private String moTypeName;
 
     public AbstractModelObjectReferencingPPO() {
     }
 
     public AbstractModelObjectReferencingPPO( String communityUri, String planUri, int planVersion, String username ) {
-        super( communityUri, planUri, planVersion, username);
+        super( communityUri, planUri, planVersion, username );
     }
 
     public AbstractModelObjectReferencingPPO(
@@ -47,8 +48,8 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
             String username,
             ModelObject modelObject ) {
         this( communityUri, planUri, planVersion, username );
-        moRef = new ModelObjectRef( modelObject ).asString();
-        moLabel = aboutLabel( modelObject );
+        setMoRef( new ModelObjectRef( modelObject ).asString() );
+        setMoLabel( aboutLabel( modelObject ) );
         moTypeName = modelObject.getTypeName();
     }
 
@@ -57,9 +58,12 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     }
 
     public void setMoRef( ModelObject modelObject ) {
-        moRef = new ModelObjectRef( modelObject ).asString();
-        moLabel = aboutLabel( modelObject );
-        moTypeName = modelObject.getTypeName();
+        String aMoRef = new ModelObjectRef( modelObject ).asString();
+        if ( aMoRef.length() <= 3000 ) {
+            moRef = aMoRef;
+            setMoLabel( aboutLabel( modelObject ) );
+            moTypeName = modelObject.getTypeName();
+        }
     }
 
     public void setMoRef( String moRef ) {
@@ -71,7 +75,7 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     }
 
     public void setMoLabel( String moLabel ) {
-        this.moLabel = moLabel;
+        this.moLabel = StringUtils.abbreviate( moLabel, 5000 );
     }
 
     public String getMoTypeName() {
@@ -79,6 +83,7 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     }
 
     public void setMoTypeName( String moTypeName ) {
+        assert moTypeName.length() <= 255;
         this.moTypeName = moTypeName;
     }
 
@@ -88,7 +93,8 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
             description = mo.getKindLabel() + " \"" + mo.getLabel() + "\"";
             if ( mo instanceof SegmentObject ) {
                 description += " in scenario \"" + ( (SegmentObject) mo ).getSegment().getLabel() + "\"";
-            }        }
+            }
+        }
         return description;
     }
 
@@ -100,12 +106,12 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     public ModelObjectRef getAboutRef() {
         return moRef == null ? null : ModelObjectRef.fromString( moRef );
     }
-    
+
     public ModelObject getModelObject( CommunityService communityService ) {
         ModelObject mo = null;
         ModelObjectRef modelObjectRef = getAboutRef();
         if ( modelObjectRef != null ) {
-            mo = (ModelObject)modelObjectRef.resolve( communityService );
+            mo = (ModelObject) modelObjectRef.resolve( communityService );
         }
         return mo;
     }
@@ -113,8 +119,8 @@ public abstract class AbstractModelObjectReferencingPPO extends AbstractPersiste
     public Segment getSegment( CommunityService communityService ) {
         Segment segment = null;
         ModelObject mo = getModelObject( communityService );
-        if ( mo != null && mo instanceof SegmentObject ){
-            segment = ((SegmentObject)mo).getSegment();
+        if ( mo != null && mo instanceof SegmentObject ) {
+            segment = ( (SegmentObject) mo ).getSegment();
         }
         return segment;
     }

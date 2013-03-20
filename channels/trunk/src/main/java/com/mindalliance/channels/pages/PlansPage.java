@@ -67,6 +67,8 @@ public class PlansPage extends AbstractChannelsBasicPage {
         super( parameters );
     }
 
+
+
     @Override
     protected void addContent() {
         addPlanName();

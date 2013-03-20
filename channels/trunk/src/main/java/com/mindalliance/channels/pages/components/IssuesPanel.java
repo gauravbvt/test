@@ -79,6 +79,7 @@ public class IssuesPanel extends AbstractCommandablePanel implements Guidable {
             }
         };
         newIssueLink.setVisible( !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment() );
+        addTipTitle( newIssueLink, "Click to report a new issue" );
         add( newIssueLink );
         add( makeHelpIcon( "help", this, "images/help_guide_issues.png" ) );
         createIssuePanels();

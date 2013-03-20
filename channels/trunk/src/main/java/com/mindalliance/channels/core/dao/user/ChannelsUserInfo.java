@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 
@@ -63,6 +64,7 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     /**
      * The email.
      */
+    @Column( length=2000 )
     private String email = "";
 
     /**
@@ -89,10 +91,10 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     /**
      * Plan accesses as string.
      */
-    @Column(length=2000)
+    @Column(length=20000)
     private String planAccesses;
 
-    @Column(length=1000)
+    @Column(length=2000)
     private String photo;
 
     /**
@@ -154,7 +156,7 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     public ChannelsUserInfo( String username, String fullName, String email ) {
         super( username );
         this.fullName = fullName;
-        this.email = email == null ? "" : email;
+        setEmail( email == null ? "" : email );
         processPlanAccesses();
     }
     
@@ -216,8 +218,9 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     }
 
     public void setEmail( String email ) {
-        if ( ChannelsUtils.isValidEmailAddress( email ) )
-            this.email = email;
+        String safeEmail = StringUtils.abbreviate( email, 2000 );
+        if ( ChannelsUtils.isValidEmailAddress( safeEmail ) )
+            this.email = safeEmail;
     }
 
     public String getFullName() {
@@ -253,7 +256,7 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     }
 
     public void setPhoto( String photo ) {
-        this.photo = photo;
+        this.photo = StringUtils.abbreviate( photo, 2000 );
     }
 
     /**

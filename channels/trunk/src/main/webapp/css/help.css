@@ -157,7 +157,7 @@ div.new-message img.help-icon {
 }
 
 h2.attachment-panel-add img.help-icon {
-    float:right;
+    float:left;
     margin-right: 10px;
     cursor: pointer;
 }

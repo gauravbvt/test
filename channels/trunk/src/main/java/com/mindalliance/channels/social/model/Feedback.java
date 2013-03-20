@@ -7,6 +7,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.pages.Channels;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 import javax.persistence.CascadeType;
@@ -66,9 +67,9 @@ public class Feedback extends UserStatement {
         }
     }
 
+    @Column(length=1000)
     private String fromEmail;
     private Type type;
-    @Column(length=1000)
     private String topic;
     private boolean urgent;
     private Date whenNotified;
@@ -116,6 +117,7 @@ public class Feedback extends UserStatement {
     }
 
     public void setTopic( String topic ) {
+        assert topic.length() <= 255;
         this.topic = topic;
     }
 
@@ -132,7 +134,7 @@ public class Feedback extends UserStatement {
     }
 
     public void setFromEmail( String fromEmail ) {
-        this.fromEmail = fromEmail;
+        this.fromEmail = StringUtils.abbreviate( fromEmail, 1000 );
     }
 
     public boolean isResolved() {

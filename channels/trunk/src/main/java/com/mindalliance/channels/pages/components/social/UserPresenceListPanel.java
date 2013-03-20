@@ -63,7 +63,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     protected void init() {
         super.init();
-        add( makeHelpIcon( "helpPresence", "presence", "planner-presence" ) );
+        add( makeHelpIcon( "helpPresence", "presence", "planner-presence", "images/help_guide_gray.png" ) );
         addShowHideLink();
         addShowHideLabel();
         presencesContainer = new WebMarkupContainer( "presencesContainer" );

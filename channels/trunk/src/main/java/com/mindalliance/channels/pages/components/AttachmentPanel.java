@@ -198,7 +198,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 target.add( controlsContainer );
             }
         };
-        showControlsLink.add( makeHelpIcon( "help", "concepts", "attachment" ) );
+        addTipTitle( showControlsLink, "Click to expand or collapse" );
+        showControlsLink.add( makeHelpIcon( "help", "concepts", "attachment", "images/help_guide_gray.png" ) );
         addAttachmentContainer.add( showControlsLink );
     }
 

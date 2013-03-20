@@ -175,6 +175,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 update( target, change );
             }
         };
+        addTipTitle( addPartLink, "Click to add a new task" );
         addPartLink.setOutputMarkupId( true );
         addPartLink.setVisible( getPlan().isDevelopment() );
         addOrReplace( addPartLink );

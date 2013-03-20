@@ -120,6 +120,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
             }
         };
         newLink.setVisible( getPlan().isDevelopment() );
+        addTipTitle( newLink, "Click to add a new " + ( isSends() ? "info capability" : "info need" ) );
         titleContainer.add( newLink );
         newLink.add( new Label( "addFlow", "Add +" ) );
         titleContainer.add( makeHelpIcon( "help", "info-sharing", isSends() ? "add-capability" : "add-need" ) );
@@ -282,7 +283,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         if ( change.isUpdated() ) {
             setSelectedFlowUpdated( true );
             if ( change.isForInstanceOf( Flow.class ) ) {
-                selectedFlow = (Flow)change.getSubject( getCommunityService() );
+                selectedFlow = (Flow) change.getSubject( getCommunityService() );
             }
         } else {
             if ( change.isForInstanceOf( Flow.class ) ) {
@@ -343,19 +344,19 @@ public class FlowListPanel extends AbstractCommandablePanel {
         final List<AbstractFlowPanel> flowPanels = new ArrayList<AbstractFlowPanel>();
         Iterator<Component> listItems = flowPanelsListView.iterator();
         while ( listItems.hasNext() ) {
-            ((MarkupContainer)listItems.next()).visitChildren(
+            ( (MarkupContainer) listItems.next() ).visitChildren(
                     Component.class,
                     new IVisitor<Component, Void>() {
-                @Override
-                public void component( Component component, final IVisit<Void> visit ) {
-                    if ( component instanceof AbstractFlowPanel ) {
-                        flowPanels.add( (AbstractFlowPanel) component );
-                        visit.stop();
-                    } else {
-                        visit.dontGoDeeper();
-                    }
-                }
-            } );
+                        @Override
+                        public void component( Component component, final IVisit<Void> visit ) {
+                            if ( component instanceof AbstractFlowPanel ) {
+                                flowPanels.add( (AbstractFlowPanel) component );
+                                visit.stop();
+                            } else {
+                                visit.dontGoDeeper();
+                            }
+                        }
+                    } );
         }
         return flowPanels;
     }

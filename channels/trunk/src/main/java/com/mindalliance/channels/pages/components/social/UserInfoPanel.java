@@ -145,7 +145,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
         addFullNameField();
         addEmailField();
         addPhotoFields();
-        userInfoContainer.add( makeHelpIcon( "helpIdentity", "about-me", "my-identity" ) );
+        userInfoContainer.add( makeHelpIcon( "helpIdentity", "about-me", "my-identity", "images/help_guide_gray.png" ) );
     }
 
     private void addFullNameField() {
@@ -296,14 +296,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                         ) ),
                         false,     // don't allow adding new media
                         true ) );  // restrict to immutable media
-        updatedContactContainer.add( makeHelpIcon( "helpContact", "about-me", "my-contact-info" ) );
+        updatedContactContainer.add( makeHelpIcon( "helpContact", "about-me", "my-contact-info", "images/help_guide_gray.png" ) );
         userInfoContainer.add( updatedContactContainer );
     }
 
     private void addPassword() {
         userPasswordContainer = new WebMarkupContainer( "userPassword" );
         addPasswordFields();
-        userPasswordContainer.add( makeHelpIcon( "helpPassword", "about-me", "my-password" ) );
+        userPasswordContainer.add( makeHelpIcon( "helpPassword", "about-me", "my-password", "images/help_guide_gray.png" ) );
         userInfoContainer.add( userPasswordContainer );
      }
 

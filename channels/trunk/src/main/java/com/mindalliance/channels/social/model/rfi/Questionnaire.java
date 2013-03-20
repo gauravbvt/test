@@ -58,7 +58,7 @@ public class Questionnaire extends AbstractPersistentChannelsObject {
      */
     private String about;
 
-    @Column( length = 1000 )
+    @Column( length = 2000 )
     private String name = "unnamed";
 
     @OneToMany( mappedBy = "questionnaire", cascade = CascadeType.ALL )
@@ -102,7 +102,7 @@ public class Questionnaire extends AbstractPersistentChannelsObject {
     }
 
     public void setName( String name ) {
-        this.name = name;
+        this.name = StringUtils.abbreviate( name, 2000 );
     }
 
     public List<Question> getQuestions() {

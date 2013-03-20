@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,8 +23,9 @@ public class ExecutedCommand extends AbstractPersistentChannelsObject {
 
     private String commandName;
     private String commandUndoes;
+    @Column(length=1000)
     private String changeProperty;
-    @Column(length=2000)
+    @Column(length=4000)
     private String commandTargetDescription;
     private boolean update;
     private Long changeId;
@@ -45,8 +47,8 @@ public class ExecutedCommand extends AbstractPersistentChannelsObject {
         this.type = type;
         commandName = command.getName();
         if ( type == Type.Undone )  commandUndoes = command.getUndoes();
-        changeProperty = change.getProperty();
-        commandTargetDescription = command.getTargetDescription();
+        setChangeProperty( change.getProperty() );
+        setCommandTargetDescription( command.getTargetDescription() );
         update = command instanceof UpdateObject;
         changeId = change.getId();
         executedOn = makeExecutedOn( change );
@@ -98,11 +100,11 @@ public class ExecutedCommand extends AbstractPersistentChannelsObject {
     }
 
     public void setChangeProperty( String changeProperty ) {
-        this.changeProperty = changeProperty;
+        this.changeProperty = StringUtils.abbreviate( changeProperty, 1000 );
     }
 
     public void setCommandTargetDescription( String commandTargetDescription ) {
-        this.commandTargetDescription = commandTargetDescription;
+        this.commandTargetDescription = StringUtils.abbreviate( commandTargetDescription, 4000 );
     }
 
     public void setUpdate( boolean update ) {
