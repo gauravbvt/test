@@ -79,7 +79,7 @@ a.quick-help-title:hover + div.quick-help-content {
 }
 
 div.quick-help-content h1 {
-    border-bottom: 1px solid #999999;
+    /*border-bottom: 1px solid #999999;*/
     color: #656565;
     font-family: 'Montserrat',sans-serif;
     font-size: 18px;
