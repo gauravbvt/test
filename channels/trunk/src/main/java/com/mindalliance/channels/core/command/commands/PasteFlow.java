@@ -39,7 +39,7 @@ public class PasteFlow extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "paste";
+        return "paste flow";
     }
 
     @Override

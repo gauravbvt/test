@@ -95,12 +95,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return null;  // Todo
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return null;  // Todo
     }
 
@@ -395,6 +395,8 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                     change.setMessage( isValidNewPassword()
                             ? "Your password is changed."
                             : "Your password was NOT changed (new password not confirmed)." );
+                } else {
+                    change.setMessage( "Changes were applied." );
                 }
                 resetAll();
                 target.add( UserInfoPanel.this );

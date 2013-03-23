@@ -27,12 +27,12 @@ public class ProtocolsMapFloatingPanel extends AbstractFloatingCommandablePanel 
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "improving";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "verify-procedures";
     }
 

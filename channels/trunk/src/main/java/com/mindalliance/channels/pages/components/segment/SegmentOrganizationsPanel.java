@@ -12,8 +12,8 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.GeomapLinkPanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntitiesPanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -43,12 +43,12 @@ public class SegmentOrganizationsPanel extends AbstractUpdatablePanel implements
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "segment-organizations";
     }
 

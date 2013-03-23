@@ -28,13 +28,13 @@ public class PlanVersionsFloatingPanel extends AbstractFloatingCommandablePanel 
     }
 
     @Override
-    public String getSectionId() {
-        return "concepts";
+    public String getHelpSectionId() {
+        return "improving";
     }
 
     @Override
-    public String getTopicId() {
-        return "plan";
+    public String getHelpTopicId() {
+        return "plan-versions";
     }
 
     private void init() {

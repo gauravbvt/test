@@ -21,11 +21,21 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
     private ParticipationManagerPanel participationManagerPanel;
 
     public ParticipationManagerPage() {
-        this( new PageParameters(  ) );
+        this( new PageParameters() );
     }
 
     public ParticipationManagerPage( PageParameters parameters ) {
         super( parameters );
+    }
+
+    @Override
+    protected String getHelpSectionId() {
+        return "participation-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-participation-page";
     }
 
     @Override
@@ -52,7 +62,7 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "Plan participation";
+        return "Community participation";
     }
 
     @Override
@@ -63,6 +73,11 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
         participationManagerPanel.updateContent( target );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
     }
 
 }

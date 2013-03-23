@@ -33,6 +33,10 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         super( s, model, expansions );
     }
 
+    @Override
+    public String getHelpTopicId() {
+        return "actions-plan";
+    }
 
     @Override
     protected List<CommandWrapper> getCommandWrappers() {

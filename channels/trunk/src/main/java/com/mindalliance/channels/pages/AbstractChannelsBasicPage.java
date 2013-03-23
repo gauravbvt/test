@@ -204,12 +204,22 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         quickHelpLink = new AjaxLink<String>( "quickHelpButton" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                helpPanel.selectTopicInSection( getDefaultUserRoleId(), getHelpSectionId(), getHelpTopicId(), target );
                 toggleQuickHelp( target );
             }
         };
         quickHelpLink.setOutputMarkupId( true );
         form.add(  quickHelpLink );
     }
+
+    protected String getHelpSectionId() {
+        return null;  // DEFAULT
+    }
+
+    protected String getHelpTopicId() {
+        return null;  // DEFAULT
+    }
+
 
     private void toggleQuickHelp( AjaxRequestTarget target ) {
         showingQuickHelp = !showingQuickHelp;
@@ -218,7 +228,6 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
 
     private void updateQuickHelpVisibility( AjaxRequestTarget target ) {
         makeVisible( quickHelpLink, !showingQuickHelp );
-        helpPanel.selectTopicInSection( null, null, target );
         makeVisible( helpPanel, showingQuickHelp );
         target.add( quickHelpLink );
         target.add( helpPanel );
@@ -227,23 +236,26 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     private void showHelp( Change change, AjaxRequestTarget target ) {
         showingQuickHelp = true;
         updateQuickHelpVisibility( target );
+        String userRoleId = change.hasQualifier("userRoleId") ? (String)change.getQualifier( "userRoleId" ) : null;
         sectionId = (String)change.getQualifier( "sectionId" );
         topicId = (String)change.getQualifier( "topicId" );
-        helpPanel.selectTopicInSection( sectionId, topicId, target );
+        helpPanel.selectTopicInSection( userRoleId, sectionId, topicId, target );
     }
 
     private void addQuickHelpPanel() {
-        helpPanel = new HelpPanel( "quickHelp", getGuideName(), getHelpContext() );
+        helpPanel = new HelpPanel( "quickHelp", getGuideName(), getDefaultUserRoleId(), getHelpContext() );
         makeVisible( helpPanel, false );
         form.add( helpPanel );
     }
+
+    protected abstract String getDefaultUserRoleId();
 
     protected Map<String, Object> getHelpContext() {
         return new HashMap<String,Object>(); //DEFAULT
     }
 
     protected String getGuideName() {
-        return "planner"; //todo - make abstract
+        return "channels_guide";
     }
 
     private void redirectHere() {

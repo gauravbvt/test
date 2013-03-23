@@ -6,11 +6,21 @@
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
                 <xs:element name="description" type="xs:string"/>
-                <xs:element ref="section" maxOccurs="unbounded"/>
+                <xs:element ref="role" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="role">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element ref="section" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="section">
         <xs:complexType>
             <xs:sequence>
@@ -78,8 +88,8 @@
 
     <xs:element name="next">
         <xs:complexType>
-            <xs:attribute name="section" type="xs:IDREF"/>
-            <xs:attribute name="topic" type="xs:IDREF"/>
+            <xs:attribute name="section" type="xs:IDREF" use="required"/>
+            <xs:attribute name="topic" type="xs:IDREF" use="required"/>
         </xs:complexType>
     </xs:element>
 

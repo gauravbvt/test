@@ -107,7 +107,8 @@ div.quick-help-content p a:hover {
 }
 
 div.quick-help-content ul {
-	margin: 0 0 0 17px;
+	margin: 0;
+    -webkit-padding-start: 20px;
 }
 
 div.quick-help-content ol {

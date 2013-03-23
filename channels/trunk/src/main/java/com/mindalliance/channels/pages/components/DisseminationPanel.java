@@ -121,12 +121,12 @@ public class DisseminationPanel extends AbstractFloatingCommandablePanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "dissemination";
     }
 

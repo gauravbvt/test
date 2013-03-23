@@ -43,12 +43,12 @@ public class SharingCommitmentsPanel extends AbstractFloatingCommandablePanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "concepts";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "commitment";
     }
 

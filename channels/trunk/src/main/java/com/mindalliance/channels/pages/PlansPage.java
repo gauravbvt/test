@@ -67,6 +67,21 @@ public class PlansPage extends AbstractChannelsBasicPage {
         super( parameters );
     }
 
+    @Override
+    protected String getHelpSectionId() {
+        return "plans-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-plans-page";
+    }
+
+
+    @Override
+    protected boolean isDomainPage() {
+        return true;
+    }
 
 
     @Override
@@ -333,6 +348,11 @@ public class PlansPage extends AbstractChannelsBasicPage {
      */
     protected void newMessage( AjaxRequestTarget target, Change change ) {
         socialPanel.newMessage( target, change );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "planner";
     }
 
     @Override

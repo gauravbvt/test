@@ -29,12 +29,12 @@ public class PlanEventsFloatingPanel extends AbstractFloatingCommandablePanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "scoping";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "events";
     }
 

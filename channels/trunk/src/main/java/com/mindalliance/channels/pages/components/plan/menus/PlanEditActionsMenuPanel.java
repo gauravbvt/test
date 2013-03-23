@@ -31,6 +31,11 @@ public class PlanEditActionsMenuPanel extends ActionMenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "actions-plan-details";
+    }
+
+    @Override
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = super.getMenuItems();
         Plan plan = getPlan();

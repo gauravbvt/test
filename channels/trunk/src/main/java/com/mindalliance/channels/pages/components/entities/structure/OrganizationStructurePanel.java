@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.entities.structure;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
@@ -40,12 +40,12 @@ public class OrganizationStructurePanel extends AbstractCommandablePanel impleme
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-organization";
     }
 

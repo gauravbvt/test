@@ -10,7 +10,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import com.mindalliance.channels.social.model.rfi.Questionnaire;
 import com.mindalliance.channels.social.services.QuestionnaireService;
 import com.mindalliance.channels.social.services.RFIService;
@@ -79,12 +79,12 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "learning";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "compose-questionnaire";
     }
 

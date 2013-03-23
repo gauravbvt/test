@@ -15,9 +15,9 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.diagrams.HierarchyDiagramPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencesAndMatchesPanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -107,12 +107,12 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel implements Gui
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "searching";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "taxonomies";
     }
 

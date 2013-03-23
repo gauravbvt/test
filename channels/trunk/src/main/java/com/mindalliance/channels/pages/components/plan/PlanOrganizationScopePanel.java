@@ -12,7 +12,7 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
@@ -63,12 +63,12 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel impleme
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "scoping";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "organizations";
     }
 

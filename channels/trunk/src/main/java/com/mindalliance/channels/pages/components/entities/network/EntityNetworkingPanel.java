@@ -7,8 +7,8 @@ import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.FilterableEntityFlowsPanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntityNetworkPanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 
@@ -47,12 +47,12 @@ public class EntityNetworkingPanel<T extends ModelEntity> extends AbstractUpdata
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "entity-network";
     }
 

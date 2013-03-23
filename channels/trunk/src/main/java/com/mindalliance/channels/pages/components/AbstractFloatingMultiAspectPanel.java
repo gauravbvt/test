@@ -9,6 +9,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -145,15 +146,15 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         showAspect( aspectShown, getChange() );
     }
 
-     public String getSectionId() {
+     public String getHelpSectionId() {
         return aspectPanel instanceof Guidable
-                ? ((Guidable)aspectPanel).getSectionId()
+                ? ((Guidable)aspectPanel).getHelpSectionId()
                 : null;
     }
 
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return aspectPanel instanceof Guidable
-                ? ((Guidable)aspectPanel).getTopicId()
+                ? ((Guidable)aspectPanel).getHelpTopicId()
                 : null;
     }
 

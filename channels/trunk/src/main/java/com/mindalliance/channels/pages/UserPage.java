@@ -434,6 +434,11 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     @Override
+    protected String getDefaultUserRoleId() {
+        return "user";
+    }
+
+    @Override
     protected String getContentsCssClass() {
         return "home-contents";
     }

@@ -1,4 +1,4 @@
-package com.mindalliance.channels.pages.components;
+package com.mindalliance.channels.pages.components.guide;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -9,7 +9,7 @@ package com.mindalliance.channels.pages.components;
  */
 public interface Guidable {
 
-    String getSectionId();
+    String getHelpSectionId();
 
-    String getTopicId();
+    String getHelpTopicId();
 }

@@ -76,6 +76,11 @@ public class HomePage extends AbstractChannelsBasicPage {
         target.add( gotoIconsContainer );
     }
 
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "user";
+    }
+
 
     private void addGotoLinks( ChannelsUser user ) {
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );

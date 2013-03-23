@@ -27,6 +27,16 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
     }
 
     @Override
+    protected String getHelpSectionId() {
+        return "requirements-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-requirements-page";
+    }
+
+    @Override
     protected void addContent() {
         addTitle();
         addRequirementsPanel();
@@ -72,6 +82,11 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
         requirementsManagerPanel.updateContent( target );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
     }
 
 }

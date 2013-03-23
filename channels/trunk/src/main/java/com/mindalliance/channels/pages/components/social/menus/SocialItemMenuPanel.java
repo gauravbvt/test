@@ -63,6 +63,11 @@ public class SocialItemMenuPanel extends MenuPanel {
         doInit();
     }
 
+    @Override
+    public String getHelpTopicId() {
+        return "messaging-menu";
+    }
+
     protected void init() {
         // do nothing
     }

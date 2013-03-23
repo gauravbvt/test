@@ -31,6 +31,11 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "actions-segment";
+    }
+
+    @Override
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = super.getMenuItems();
         // Task mover

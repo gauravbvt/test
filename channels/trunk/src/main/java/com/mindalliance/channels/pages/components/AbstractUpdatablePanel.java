@@ -38,6 +38,7 @@ import com.mindalliance.channels.pages.CommunityPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -715,7 +716,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         helpIcon.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                update(  target, Change.guide( guidable.getSectionId(), guidable.getTopicId() ) );
+                update(  target, Change.guide( guidable.getHelpSectionId(), guidable.getHelpTopicId() ) );
             }
         } );
         return helpIcon;
@@ -736,6 +737,25 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
                 update(  target, Change.guide( sectionId, topicId ) );
+            }
+        } );
+        return helpIcon;
+    }
+
+    protected Component makeHelpIcon( String id,
+                                      final String userRoleId,
+                                      final String sectionId,
+                                      final String topicId,
+                                      String iconSrc ) {
+        WebMarkupContainer helpIcon = new WebMarkupContainer( id );
+        helpIcon.setOutputMarkupId( true );
+        helpIcon.add( new AttributeModifier( "src", iconSrc) );
+        helpIcon.add( new AttributeModifier( "alt", "Help") );
+        addTipTitle( helpIcon, "Quick help" );
+        helpIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update(  target, Change.guide( userRoleId, sectionId, topicId ) );
             }
         } );
         return helpIcon;

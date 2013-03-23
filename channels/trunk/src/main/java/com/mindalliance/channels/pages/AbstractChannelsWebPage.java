@@ -38,7 +38,7 @@ import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
-import com.mindalliance.channels.guide.IGuidePanel;
+import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
 import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
@@ -986,7 +986,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         setPlan( plan );
     }
 
-    static public Plan getPlanFromParameters(
+   private Plan getPlanFromParameters(
             PlanManager planManager,
             final ChannelsUser user,
             PageParameters parameters ) {
@@ -1054,7 +1054,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                         @Override
                         public boolean evaluate( Object object ) {
                             Plan p = (Plan)object;
-                            return user.isPlanner( p.getUri() );
+                            return ( p.isProduction() && !isDomainPage() ) || user.isPlanner( p.getUri() );
                         }
                     }
             );
@@ -1062,6 +1062,10 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         if ( plan == null )  // throw the towel
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
         return plan;
+    }
+
+    protected boolean isDomainPage() {
+        return false; // DEFAULT
     }
 
 

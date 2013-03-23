@@ -2,6 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;

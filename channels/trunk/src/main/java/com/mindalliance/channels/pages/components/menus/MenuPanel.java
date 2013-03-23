@@ -8,7 +8,7 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -82,7 +82,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
         if ( menuItems == null ) {
             try {
                 menuItems = getMenuItems();
-                menuItems.add( help( getSectionId(), getTopicId() ) );
+                menuItems.add( help( getHelpSectionId(), getHelpTopicId() ) );
             } catch ( CommandException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Failed to get menu items", e );
                 return new ArrayList<LinkMenuItem>();
@@ -330,14 +330,10 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
     }
 
     @Override
-    public String getSectionId() {
-        return null;  // DEFAULT
+    public String getHelpSectionId() {
+        return "menus";  // DEFAULT
     }
 
-    @Override
-    public String getTopicId() {
-        return null;  // DEFAULT
-    }
 
     /**
      * A Model object wrapper.

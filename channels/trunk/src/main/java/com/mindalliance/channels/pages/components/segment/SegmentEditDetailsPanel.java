@@ -22,9 +22,9 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.TagsPanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -97,12 +97,12 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "scoping";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "add-define-segment";
     }
 

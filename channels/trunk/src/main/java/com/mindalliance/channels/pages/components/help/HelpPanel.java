@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.guide.ChangeQualifier;
 import com.mindalliance.channels.guide.Guide;
 import com.mindalliance.channels.guide.GuideReader;
-import com.mindalliance.channels.guide.IGuidePanel;
 import com.mindalliance.channels.guide.ScriptChange;
 import com.mindalliance.channels.guide.Section;
 import com.mindalliance.channels.guide.Topic;
@@ -14,9 +13,11 @@ import com.mindalliance.channels.guide.TopicDocument;
 import com.mindalliance.channels.guide.TopicItem;
 import com.mindalliance.channels.guide.TopicItemScript;
 import com.mindalliance.channels.guide.TopicRef;
+import com.mindalliance.channels.guide.UserRole;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import info.bliki.wiki.model.WikiModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -50,18 +51,21 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     private Guide guide;
 
     private String guideName;
+    private String defaultUserRoleId;
+    private String userRoleId;
     private String sectionId;
     private String topicId;
 
-    public HelpPanel( String id, String guideName, Map<String,Object> context ) {
+    public HelpPanel( String id, String guideName, String defaultUserRoleId, Map<String, Object> context ) {
         super( id );
         this.guideName = guideName;
+        this.defaultUserRoleId = defaultUserRoleId;
         guide = guideReader.getGuide( guideName );
         guide.setContext( context );
-        init( );
+        init();
     }
 
-    private void init( ) {
+    private void init() {
         addTitle();
         Topic topic = getTopic();
         addTopicName( topic );
@@ -75,7 +79,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Channels.GUIDE_ID );
-                update(  target, change );
+                update( target, change );
             }
         };
         titleLink.setOutputMarkupId( true );
@@ -85,7 +89,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     private void addTopicName( Topic topic ) {
         Label topicNameLabel = new Label( "topicName", topic.getName() );
         topicNameLabel.setOutputMarkupId( true );
-        addOrReplace( topicNameLabel  );
+        addOrReplace( topicNameLabel );
     }
 
     private void addTopicItems( Topic topic ) {
@@ -116,8 +120,8 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
             }
         };
         topicItemListView.setOutputMarkupId( true );
-        addOrReplace(  topicItemListView );
-     }
+        addOrReplace( topicItemListView );
+    }
 
     private void addDoNext( final Section section, Topic topic ) {
         List<TopicRef> topicRefs = topic.getNextTopics();
@@ -131,14 +135,17 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
             @Override
             protected void populateItem( ListItem<TopicRef> item ) {
                 TopicRef topicRef = item.getModelObject();
-                final Section nextSection = guide.derefSection( topicRef.getSectionId() );
+                UserRole userRole = getUserRole();
+                final Section nextSection = userRole != null
+                        ? userRole.findSection( topicRef.getSectionId() )
+                        : null;
                 final Topic nextTopic = nextSection == null
                         ? null
                         : nextSection.findTopic( topicRef.getTopicId() );
                 AjaxLink<String> nextLink = new AjaxLink<String>( "doNextLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        openOn( section, nextTopic, target );
+                        openOn( nextSection, nextTopic, target );
                     }
                 };
                 String sectionPrefix = ( nextSection == null || nextSection.equals( getSection() )
@@ -257,7 +264,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
                     + ( serverUrl.endsWith( File.separator ) ? "" : File.separator )
                     + "doc/" + guideName + "/" + topicDocument.getUrl();
             docLink.add( new AttributeModifier( "href", url ) );
-            docLink.add(  new AttributeModifier( "target", "_blank" ) );
+            docLink.add( new AttributeModifier( "target", "_blank" ) );
             addTipTitle( docLink, topicDocument.getTitle() );
         }
         docLink.setVisible( topicDocument != null );
@@ -271,17 +278,33 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
 
     @Override
     public void selectTopicInSection( String sectionId, String topicId, AjaxRequestTarget target ) {
+        selectTopicInSection( null, sectionId, topicId, target );
+    }
+
+    @Override
+    public void selectTopicInSection( String userRoleId, String sectionId, String topicId, AjaxRequestTarget target ) {
+        this.userRoleId = userRoleId;
         this.sectionId = sectionId;
         this.topicId = topicId;
-        init( );
+        init();
         target.add( this );
     }
 
+    private UserRole getUserRole() {
+        return guide.findUserRole(
+                userRoleId == null
+                        ? defaultUserRoleId
+                        : userRoleId );
+    }
+
     private Section getSection() {
-        return guide.findSection(
+        UserRole userRole = getUserRole();
+        return userRole != null
+                ? userRole.findSection(
                 sectionId == null
-                    ? guide.getSections().get( 0 ).getId()
-                    : sectionId );
+                        ? userRole.getSections().get( 0 ).getId()
+                        : sectionId )
+                : null;
     }
 
     private Topic getTopic() {
@@ -289,8 +312,8 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         return section != null ?
                 section.findTopic(
                         topicId == null
-                            ? section.getTopics().get( 0 ). getId()
-                            : topicId )
+                                ? section.getTopics().get( 0 ).getId()
+                                : topicId )
                 : null;
     }
 }

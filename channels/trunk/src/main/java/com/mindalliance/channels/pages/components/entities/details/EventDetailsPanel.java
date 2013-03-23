@@ -8,8 +8,8 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -52,12 +52,12 @@ public class EventDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-event";
     }
 

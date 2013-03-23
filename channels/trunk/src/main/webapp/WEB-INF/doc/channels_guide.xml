@@ -1,0 +1,2013 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="guide.xsd">
+    <name>Channels Guide</name>
+    <description>A guide for users of Channels</description>
+    <role id="user">
+        <name>For all users of Channels</name>
+        <section id="about-channels">
+            <name>User interface</name>
+            <topic id="intro">
+                <name>About Channels</name>
+                <item>
+                    <description>Channels is an online collaboration planning service. 
+                        
+It enables
+* analysts to build plans for information sharing-enabled collaboration,
+* communities of organizations to adopt and participate in these plans,
+* user to get collaboration protocols derived from participation in these communities,
+* and administrators to manage the Channels service.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="about-me">
+            <name>User interface</name>
+            <topic id="my-identity">
+                <name>My identity</name>
+                <item>
+                    <description>You can 
+* change the spelling of your name,
+* edit the email address Channels will use to communicate with you
+* upload a photo of yourself
+
+Make sure you press the Apply button for the changes to take effect.</description>
+                </item>
+            </topic>
+            <topic id="my-contact-info">
+                <name>My contact info</name>
+                <item>
+                    <description>Give the different ways your collaborators and supervisors will be able to contact you.
+
+Select means of communication (email, cell, pager etc.) and, for each one, give your contact info (an email address, a phone number etc.).</description>
+                </item>
+            </topic>
+            <topic id="my-password">
+                <name> My password</name>
+                <item>
+                    <description>You can change your password by first entering your current one and then entering (twice) an acceptably secure new password.
+                    
+Don't forget to press the Apply button for the password change to be effected.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="attachments">
+            <name>Attachments</name>
+            <topic id="add-attachment">
+                <name>Add attachment</name>
+                <item>
+                    <description>Click on the bar to expand the attachment controls. Use the controls to upload a file or enter a URL and then attach it to the current context.
+                    
+Assign a type to the attachment, the default being "Reference", to indicate your intent. Attachments of type "Picture" will typically be used as an icon.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="surveys-page">
+            <name>Plan surveys page</name>
+            <topic id="about-surveys-page">
+                <name>Planning surveys</name>
+                <item>
+                    <description>As a participant in a community, you may be asked by domain planners to answer surveys in order to help improve the collaboration plan.
+                        
+You can 
+                        
+* see the surveys you need to complete (and optionally complete them or forward them),
+* see those you completed (and revise you answers),
+* and see those you declined (and perhaps change your mind).</description>
+                </item>
+            </topic>
+        </section>
+        <section id="feedback-page">
+            <name>Feedback page</name>
+            <topic id="about-feedback-page">
+                <name>My feedback</name>
+                <item>
+                    <description>You can
+                        
+* browse and filter the list of all feedback messages you sent to the domain planners for the plan your community has adopted,
+* expand the conversation with domain planners spawned from a feedback,
+* and then add a comment to the conversation.
+                        
+You can mark a feedback as "resolved" once you consider that you have achieved your intended objective.</description>
+                </item>
+            </topic>
+        </section>
+    </role>
+    <role id="participant">
+        <name>For participants in collaboration communities</name>
+        <section id="communities-page">
+            <name>User interface</name>
+            <topic id="about-communities-page">
+                <name>All communities</name>
+                <item>
+                    <description>Organization and their members form collaboration communities, each based on a collaboration plan (its production version).
+                    
+You can:
+
+* create a new community by first selecting the collaboration plan on which it is based and by pressing the "Start it" button - you will be the founding planner for this community,
+* view an existing community (select the Go button next to its name in the list of communities).</description>
+                </item>
+            </topic>
+        </section>
+        <section id="community-page">
+            <name>Collaboration community</name>
+            <topic id="about-community-page">
+                <name>Collaboration community</name>
+                <item>
+                    <description>Authorized participants in a collaboration community can register organizations into the community and assign organizational roles (jobs) to themselves or other users.
+                    
+If you are a community planner, you can name the community, localize it and set collaboration requirements for it. If you are an authorized domain planner, you can access the community's plan.
+                    
+As a participant, you can access your collaboration protocols, the surveys you take part in, and replies to feedback you provide.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="what-i-do">
+            <name> What I do</name>
+            <topic id="my-privileges">
+                <name>My user privileges</name>
+                <item>
+                    <description>Your Channels user role which is either participant, community planner or administrator.</description>
+                </item>
+            </topic>
+            <topic id="my-participation">
+                <name>I participate as...</name>
+                <item>
+                    <description>You can accept to participate in roles that are open to all or in roles that have been assigned to you by authorized users.
+                    
+By check a box next to a role, you accept the role. By unchecking it, you turn down the role.</description>
+                </item>
+            </topic>
+            <topic id="adding-participation">
+                <name>I also participate in...</name>
+                <item>
+                     <description>Based on your user privileges or current participation, other roles in the community's organization may be available to you.
+                         
+First select an organization where there are such roles and then select the role. Your selection may be subject to supervisory confirmation.</description>
+                </item>
+            </topic>
+            <topic id="my-to-be-confirmed">
+                <name>I await confirmation to be...</name>
+                <item>
+                    <description>This a list of roles in which your participation awaits confirmation by supervisors. You can withdraw your candidature by unchecking the box next to the role.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="requirements-page">
+            <name>Requirements page</name>
+            <topic id="about-requirements-page">
+                <name>Collaboration requirements</name>
+                <item>
+                    <description>As a community planner you can define information sharing requirements between organizations.
+                        
+You can then examine to what extent each requirement is satisfiable by the applicable pairs of organization should they follow the plan.
+                    
+You can add a new requirement definition by pressing the New button in the Definitions tab.
+                    
+To edit a requirement definition, press on the Edit button next to it in the list of requirements.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="participation-page">
+            <name>Community participation page</name>
+            <topic id="about-participation-page">
+                <name>Community participation</name>
+                <item>
+                    <description>If so authorized, you can
+                    
+* register organizations into the community as "placeholder" organizations defined in the domain plan,
+* assign users to plan-defined roles in organizations in the community,
+* confirm the participation of users into roles you supervise,
+* review participation issues detected by Channels,
+* resign your status as community planner or bestow it on another user (if you are a community planner).</description>
+                </item>
+            </topic>
+        </section>
+        <section id="all-protocols-page">
+            <name>All protocols page</name>
+            <topic id="about-all-protocols-page">
+                <name>All collaboration protocols</name>
+                <item>
+                    <description>If you are a domain planner, you can access the collaboration protocols of all participants, else only your own.
+                    
+By clicking on a participation role, you access the protocols for the role. By clicking on a participant's name, you access the combined protocols for all the roles played by the participant in the community.</description>
+                </item>
+            </topic>    
+        </section>
+        <section id="protocols-page">
+            <name>Collaboration protocols page</name>
+            <topic id="about-protocols-page">
+                <name>Collaboration protocols</name>
+                <item>
+                    <description>Ths report lists the collaboration protocols of a participation given roles in a plan-based community.
+                    
+The protocols describe
+
+* expected tasks
+* what events or communications trigger them (if any)
+* sources of information needed to successfully execute the task
+* and who to notify of information acquired for or by doing the task.
+                    
+A contacts directory concludes the report.</description>
+                </item>
+            </topic>
+        </section>
+     </role>
+    <role id="planner">
+        <name>For developers of collaboration plans</name>
+        <section id="about-channels-planner">
+            <name>About Channels</name>
+            <topic id="channels-planner">
+                <name>Designing collaboration plans</name>
+                <item>
+                    <description>As a planner, you use Channels to design collaboration plans from which robust collaboration protocols are generated.
+                    
+A collaboration plan models how various types of organizations share or ought to share information to collaboratively prevent, respond to, or recover from a number of anticipated events that test their missions.
+                    
+Channels continuously examines these ''collaboration plans'' for gaps and brittleness, and suggests options for remediation.
+                    
+Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex collaboration plans.               
+                
+Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration protocols.
+                </description>
+                </item>
+                <next section="about-channels-planner" topic="protocols"/>
+                <next section="about-channels-planner" topic="development-team"/>
+                <next section="about-channels-planner" topic="attributions"/>
+            </topic>
+            <topic id="protocols">
+                <name>Generating collaboration protocols</name>
+                <item>
+                    <description>Channels computes personalized collaboration protocols from a collaboration plan and serves them to plan participants on demand.
+                    
+As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's protocols.
+                </description>
+                </item>
+            </topic>
+            <topic id="development-team">
+                <name>Development team</name>
+                <item>
+                    <description>
+* Jean-François Cloutier
+* Denis Ranger
+* Romit Chatterjee
+* Priyanka Gurav (AFourTech)
+* Mahesh Kulkarni (AFourTech)
+                </description>
+                </item>
+            </topic>
+            <topic id="attributions">
+                <name>Attributions</name>
+                <item>
+                    <description>Channels is built using these open source code libraries:
+                    
+* AOPAlliance [http://aopalliance.sourceforge.net/]
+* Apache Commons [http://commons.apache.org/]
+* Apache Lucene [http://lucene.apache.org/core/]
+* Apache Velocity [http://velocity.apache.org/]
+* Apache Wicket [http://wicket.apache.org/]
+* AspectJ [http://www.eclipse.org/aspectj/]
+* Bliki wiki [http://code.google.com/p/gwtwiki/]
+* EhCache [http://ehcache.org/]
+* Enunciate [http://enunciate.codehaus.org/]
+* Geonames [http://www.geonames.org/]
+* GraphViz [http://www.graphviz.org/]
+* Hibernate [http://www.hibernate.org/]
+* H2 [http://www.h2database.com/html/main.html]
+* Jamon [http://jamonapi.sourceforge.net/]
+* JWNL [http://sourceforge.net/projects/jwordnet/]
+* SLF4J [http://www.slf4j.org/]
+* JQWicket [http://code.google.com/p/jqwicket/]
+* Spring Framework [http://www.springsource.org/spring-framework/]
+* WordNet [http://wordnet.princeton.edu/]
+* XStream [http://xstream.codehaus.org/]
+
+Our thanks and admiration to all who contributed to these libraires.
+                </description>
+                </item>
+            </topic>
+        </section>
+        <section id="concepts">
+            <name>Key concepts</name>
+            <topic id="plan">
+                <name>Collaboration plan</name>
+                <item>
+                    <description>A collaboration plan is the combination of
+# a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
+# an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
+Applying an environment to a collaboration plan produces visualizations, analytics, diagnostics, reports and, crucially, collaboration protocols.
+
+A collaboration plan has one editable development version and one unchangeable (current) production version. The development version is released by an administrator. Upon releasing a new version of the plan, a copy of the development version becomes the new production version and the prior production version is retired. Finally, the development version number is incrementd by one.</description>
+                </item>
+            </topic>
+            <topic id="plan-element">
+                <name>Plan element</name>
+                <item>
+                    <description> Anything that contributes to the definition of a collaboration plan, be it a segment, a task, a flow, an entity, information etc. is considered a "plan element".</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="concepts" topic="segment"/>
+                <next section="concepts" topic="task"/>
+                <next section="concepts" topic="flow"/>
+                <next section="concepts" topic="information"/>
+            </topic>
+            <topic id="event">
+                <name>Event</name>
+                <item>
+                    <description>An event is an entity representing a transient change in the world that introduces risks and/or opportunities for organizations. 
+
+Risks and events should not be confused. An event can introduce risks to one organization while creating opportunities for another. 
+
+From the point of view of the plan, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="concepts" topic="protocol"/>
+            </topic>
+            <topic id="phase">
+                <name>Phase</name>
+                <item>
+                    <description>A phase is an entity representing a time period relative to the occurrence of events. A phase is either the time before, during or after events.
+
+A collaboration plan can elect to address what happens before, during or after of events, or a combination thereof.
+                </description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="scenario">
+                <name>Scenario</name>
+                <item>
+                    <description>The term ''scenario'' is used in collaboration planning to mean one phase of one event, possibly in the context of other past or current events.                
+                </description>
+                </item>
+            </topic>
+            <topic id="goal">
+                <name>Goal</name>
+                <item>
+                    <description>A goal is either a risk to, or an opportunity for, an organization that is introduced by the onset or conclusion of an event.
+                    
+Goals are achieved by carrying out tasks, or when an event terminates.                
+                </description>
+                </item>
+            </topic>
+            <topic id="segment">
+                <name>Segment</name>
+                <item>
+                    <description>Collaboration plans are composed of one or more or more segments. Each segment addresses a list of organizational goals for one scenario.
+
+No two segments should address identical goals in identical scenarios.
+
+Two segments are connected by the flows that span them and by how a task in one segment can start or end an events thus initiating the other segment.
+                </description>
+                </item>
+            </topic>
+            <topic id="information">
+                <name>Information</name>
+                <item>
+                    <description>Information is what is shared by collaborating agents (people or systems) via communication channels.
+                    
+Information is named and can be described by a list of essential elements.
+
+Information can be constrained to compliance with a named information product that defines a standard list of elements of information.
+
+An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
+                </description>
+                </item>
+                <next section="concepts" topic="info-product"/>
+                <next section="profiling" topic="profiling-info-product"/>
+            </topic>
+            <topic id="task">
+                <name>Task</name>
+                <item>
+                    <description>A task is an action or decision taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
+                </item>
+            </topic>
+            <topic id="need">
+                <name>Information need</name>
+                <item>
+                    <description>Specification of information needed to execute a task, plus requirements on its delivery.
+                    
+Delivery requirements include
+* timeliness
+* transmission media
+* information format
+                         </description>
+                </item>
+            </topic>
+            <topic id="capability">
+                <name>Information capability</name>
+                <item>
+                    <description>Specification of information acquired by or for the execution of a task that could be shared with "quality of service" commitments.
+
+Quality of service commitments include
+                        * timeliness
+                        * transmission media
+                        * information format
+                    </description>
+                </item>
+            </topic>
+            <topic id="flow">
+                <name>Information sharing flow</name>
+                <item>
+                    <description>Or flow, for short. How agents carrying out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.</description>
+                </item>
+            </topic>
+            <topic id="assignment">
+                <name>Task assignment</name>
+                <item>
+                    <description>The list of agents assigned to a task because their profiles match the definition of the task.</description>
+                </item>
+            </topic>
+            <topic id="commitment">
+                <name>Information sharing commitment</name>
+                <item>
+                    <description>The commitment by one agent to share information acquired doing a task with another agent who needs it to successfully do some other task.</description>
+                </item>
+            </topic>
+            <topic id="issue">
+                <name>Issue</name>
+                <item>
+                    <description>A problem with the plan that is either detected automatically by Channels or, upon review, by planners. An issue is either one of
+* validity (something is inherently wrong in the plan)
+* completeness (something is obviously missing from the plan)
+* robustness (something is making the plan likely to fail)</description>
+                </item>
+            </topic>
+            <topic id="attachment">
+                <name>Attachment</name>
+                <item>
+                    <description>You can attach uploaded or linked resources to a collaboration plan or community as a whole, or to any element of a collaboration plan.
+Attachments can be documents, graphics, videos etc. They can be named and categorized, typically as reference, picture or policy.</description>
+                </item>
+            </topic>
+            <topic id="info-product">
+                <name>Information product</name>
+                <item>
+                    <description>An information product is an entity representing a standard bundle of elements of information. An information product be defined as an extension of another information product to which it adds elements of information.
+                    
+It is recommended that info needs, capabilities and flows be defined in terms of information products.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="info-format">
+                <name>Information format</name>
+                <item>
+                    <description>An information format is an entity representing a standard format in which information is to be communicated.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="organization">
+                <name>Organization</name>
+                <item>
+                    <description>An organization is an entity representing an administrative unit (a corporation, an agency, a department, a project team etc.) with a name, a mission, possibly a parent organization, and that employs agents in roles of responsibility.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="concepts" topic="role"/>
+                <next section="concepts" topic="agent"/>
+            </topic>
+            <topic id="role">
+                <name>Role</name>
+                <item>
+                    <description>A role is an eneity representing a standard set of responsibilities that one or more organizations can assign to some of its members. A role, such as Manager, is different from a job title, such as Senior VP Sales.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="agent">
+                <name>Agent</name>
+                <item>
+                    <description>An agent is an entity representing a person or system, or a completely interchangeable group of persons or systems. An agent can be employed by one or more organizations in titled positions, each specified by a role.
+                    
+Agent ''types'' are not to be confused with ''roles''. Agent types are used to categorize agents independently of their roles. Examples of agent types are "adult", "trained in CPR", "licensed diver" etc.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="place">
+                <name>Place</name>
+                <item>
+                    <description>A place is an entity used to delimit jurisdictions of agents employed by organizations, to locate where tasks are to be executed, where events are of significance, and where a plan is meant to apply.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="medium">
+                <name>Transmission medium</name>
+                <item>
+                    <description>A transmission medium is an entity representing the means, technological or not, by which agents communicate.
+                        
+A transmission medium can be meant for broadcasting (to all), multicasting (to many) or narrowcasting (to one).</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="classification">
+                <name>Secrecy classification</name>
+                <item>
+                    <description>A classification system names secrecy classification levels. 
+                        
+Secrecy classifications are used to specify
+* the clearances of agents
+* the secrecy of elements of information
+* the security level of transmission media
+                    </description>
+                </item>
+                <next section="concepts" topic="agent"/>
+                <next section="concepts" topic="information"/>
+                <next section="concepts" topic="medium"/>
+            </topic>
+            <topic id="overriding">
+                <name>Overriding tasks</name>
+                <item>
+                    <description>A task with the same name as another task overrides it assigns a subset of the agents the other task assigns. An agent that is effectively only assigned to the overriding task (the more exclusive one), not the overridden task.</description>
+                </item>
+                <next section="concepts" topic="task"/>
+            </topic>
+            <topic id="protocol">
+                <name>Collaboration protocol</name>
+                <item>
+                    <description>A collaboration protocol is a task assigned to an agent, with attendant information sharing commitments from and toward other agents.
+                    
+Protocols are triggered by
+* observation of events,
+* notifications (from others or from self), 
+* by requests for information (from others or from self),
+* or by nothing (ongoing tasks)</description>
+                </item>
+                <next section="concepts" topic="assignment"/>
+                <next section="concepts" topic="commitment"/>
+            </topic>
+            <topic id="entity">
+                <name>Entity</name>
+                <item>
+                    <description>An entity is a grab bag term for "timeless things and concepts". Entities include
+* agents
+* events
+* information formats
+* information products
+* organizations
+* phases
+* places
+* roles
+* transmission media
+
+Channels distinguishes between "actual" entities and "types" (or categories) of entities. For example, IBM is an organization whereas "Corporation" is a type of organization.
+
+Entities are automatically created when they are first named in the definition of some plan element. No two entities of the same kind can have the same name in a plan.
+
+Entities can be categorizes by entity types of the same kind (IBM - an actual organization - is a Corporation -a type of organization - but it can not be a Manager - a role). Categorized entity types form taxonomies (a Police Chief is a Manager is an Employee).
+
+Events, information formats, information products, roles and transmission media are always types in Channels.</description>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+                <next section="concepts" topic="agent"/>
+                <next section="concepts" topic="event"/>
+                <next section="concepts" topic="info-product"/>
+                <next section="concepts" topic="info-format"/>
+                <next section="concepts" topic="organization"/>
+                <next section="concepts" topic="phase"/>
+                <next section="concepts" topic="place"/>
+                <next section="concepts" topic="role"/>
+                <next section="concepts" topic="medium"/>
+            </topic>
+            <topic id="impact">
+                <name>Impact of sharing</name>
+                <item>
+                    <description>Sharing information can impact the execution of tasks in different ways. It can
+* trigger the task
+* terminate the task
+* be critical (crucial) to the task's success
+* be useful
+
+When doing failure impact analysis, only flows that trigger, terminate or are crucial to the task's success are considered.
+                    </description>
+                </item>
+            </topic>
+            <topic id="usefulness">
+                <name>Useful tasks</name>
+                <item>
+                    <description>A task is considered useful if it directly achieves a goal or if its failure would prevent another task from achieving a goal.
+                    
+Only useful tasks are considered when doing failure impact analysis. A useless task is considered an issues by Channels.</description>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="concepts" topic="goal"/>
+            </topic>
+            <topic id="survey">
+                <name>Planning survey</name>
+                <item>
+                    <description>Planners can define surveys for various kinds of plan elements (surveys about tasks, about events, about the plan as a whole etc.).
+                    
+A survey is a questionnaire composed of required and optional questions. Questions can have single or multiple answers and they may allow free commentary.
+                    
+A survey is applied to one or more plan elements of the appropriate kind (a task survey can be applied to many tasks) and is then sent to one or more users with an optional deadline.
+                    
+Recipients of surveys can accept and answer the survey (and revise their answers at any time. Recipients can decline a survey or forward it to their contacts, who are then automatically registered as Channels users.</description>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+            </topic>
+            <topic id="tag">
+                <name>Tag</name>
+                <item>
+                    <description>A tag is a word or phrase used to tag plan elements in order to informally classify them. 
+                        
+Tags can belong to tag domains. For example, ''esf:transportation'' is the tag ''transportation'' in the tag domain ''esf''.
+                    
+Tag domains can optionally be predefined by attaching specially formatted text ''tag'' text files to the plan.
+                    
+A given tag can be applied without constraints to plan elements of different kinds. 
+                    
+One use of tags is to specify information in information sharing requirements.</description>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+            </topic>
+        </section>
+        <section id="plans-page">
+            <name>Domain plan page</name>
+            <topic id="about-plans-page">
+                <name>Domain plan</name>
+                <item>
+                    <description>As a domain planner, you can access domain plan editor and a summary report on all issues found in the plan.
+
+As a planner or authorized user you can access the planning surveys you participate in and the feedback you provided.
+                    
+Documents that have been attached to the plan are directly accessible. New ones can be added.
+                    
+You can switch to another plan - or another version of this plan - by mousing over the name of the plan in the "breadcrumbs" at the top of the page. A drop-down menu of plans will appear. If this page was accessed from a community, only the versions of the community-adopted plan are accessible.</description>
+                </item>
+                <next section="about-channels-planner" topic="channels-planner"/>
+                <next section="plan-editor" topic="about-plan-editor"/>
+            </topic>
+        </section>
+        <section id="plan-editor">
+            <name>Plan editor page</name>
+            <topic id="about-plan-editor">
+                <name>Collaboration plan editor</name>
+                <item>
+                    <description>As a collaboration planner, you use the plan editor to
+                    
+* define the scope of the plan in terms of risk/opportunity-causing events and of the organizations involved,
+* compose the plan from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
+* define for each segment the information sharing and tasks required to deal with these risks and opportunities
+* profile the "entities" (events, phases, organizations, roles etc.) referenced in the collaboration plan
+* report issues in addition to those automatically detected by Channels
+* view analytics to better understand the consequences, strengths and weaknesses of the plan
+                    </description>
+                </item>
+                <next section="about-channels-planner" topic="channels-planner"/>
+            </topic>
+         </section>
+        <section id="menus">
+            <name>Menus</name>
+            <topic id="show-plan">
+                <name>Plan show menu</name>
+                <item>
+                    <description>The options are
+* Planners/Hide planners - Hide or show the planners presence, activities and messages panel
+* About Plan - Open the plan details panel
+* About Plan Segment - Open the segment details panel</description>
+                </item>
+            </topic>
+            <topic id="actions-plan">
+                <name>Plan actions menu</name>
+                <item>
+                    <description>The options are
+* Send message - send a message to planners about this plan as a whole
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Paste task - Insert the copied task, if any, into the current segment
+* Paste attachment - Add the copied attachment, if any, to this plan as a whole
+* Add new task - Add a new task to the current segment
+* New issue - Report a new issue about this plan as a whole
+* Add new segment - Add a new segment to this plan
+* Remove this segment - Remove the current segment from this plan </description>
+                </item>
+            </topic>
+            <topic id="searching-menu">
+                <name>Searching menu</name>
+                <item>
+                    <description>The options are
+* Index - Open the index of all named elements in this plan
+* Tags - Open the panel with all the tags used in this plan
+* Taxonomies - Open the panel showing all entity taxonomies defined in this plan
+* Who's who - Open the panel listing all agents (people and systems) represented in this plan
+* All attachments - Open the panel listing all file and Web page attachments in this plan</description>
+                </item>
+            </topic>
+            <topic id="scoping-menu">
+                <name>Scoping menu</name>
+                <item>
+                    <description>The options are
+* Events in Scope - Open the panel with the editable list of all events in the scope of this plan
+* Organizations in Scope - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this plan
+* Classification Systems - Open the panel used to define the security classifications used in this plan</description>
+                </item>
+            </topic>
+            <topic id="improving-menu">
+                <name>Improving menu</name>
+                <item>
+                    <description>The options are
+* Task Mover - Open the panel used to easily move tasks from the current segment to another
+* Protocols Map - Open a visualization of how agents and organizations are being assigned to tasks and committed to share information
+* Plan Evaluation - Open a panel containing metrics of all issues found in this plan
+* All Issues - Open a panel listing all the issues found in this plan
+* Plan versions - Open a panel identifying the current version of this plan and allowing planners to vote on moving it to production</description>
+                </item>
+            </topic>
+            <topic id="learning-menu">
+                <name>Learning menu</name>
+                <item>
+                    <description>The options are
+* All feedback - Open a panel where all feedback sent about this plan are listed and can be responded to
+* All surveys - Open a panel from where surveys can be defined, launched and managed</description>
+                </item>
+            </topic>
+            <topic id="actions-segment">
+                <name>Segment actions menu</name>
+                <item>
+                    <description>The options are
+* Send message -  send a message to planners about this segment
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Paste attachment - Add the copied attachment, if any, to this segment
+* New issue - Report a new issue about this segment
+* Move tasks - Open the panel used to easily move tasks from this segment to another</description>
+                </item>
+            </topic>
+            <topic id="show-task">
+                <name>Task show menu</name>
+                <item>
+                    <description>The options are
+* Details/Hide details - Show or hide the task definition form
+* Assignments - Show the list of agents in scope that are assignable to the task given its definition
+* Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
+* Failure impacts - Open a panel showing the potential impacts of this task failing
+* Dissemination - Open a panel showing how elements of informations acquired for this tasks disseminate to other tasks
+* Surveys - Open a panel to launch or access surveys about this task
+* Agent - Open the profile panel for the agent referenced by the task (hidden if N/A)
+* Role - Open the profile panel for the role referenced by the task (hidden if N/A)
+* Organization - Open the profile panel for the organization referenced by the task (hidden if N/A)
+* Jurisdiction - Open the profile panel for the jurisdiction ( a place) referenced by the task (hidden if N/A)
+* Location - Open the profile panel for the location (a place) referenced by the task (hidden if N/A)
+* Event - Open the profile panel for the event referenced by the task (hidden if N/A)</description>
+                </item>
+            </topic>
+            <topic id="actions-task">
+                <name>Task actions menu</name>
+                <item>
+                    <description>The options are
+* Send message -  send a message to planners about this task
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Copy task - Copy this task
+* Cut task - Copy and remove this task
+* Set task from copy - Set the definition of this task from the last copied task
+* Paste attachment - Add the copied attachment, if any, to this task
+* Paste flow - Add copied info need or capability to this task 
+* New issue - Report a new issue about this task
+* Duplicate task - Add new task as a copy of this one
+* Satisfy info needs - Create all possible flows that satify this task's info needs, based on existing info capabilities
+* Disintermediate - Disconnect this task from all flows where it acts as a "middle man"</description>
+                </item>
+            </topic>
+            <topic id="show-flow">
+                <name>Need/Capability/Flow show menu</name>
+                <item>
+                    <description>The options are
+* Details / Hide details - Open or close the definition form 
+* Info product - Open the profile panel for the referenced info product (hidden if N/A)
+* Elements - Open the elements of information edit panel (hidden if definition form is closed)
+* Commitments - Open a panel with all computed info sharing commitments (hidden if N/A)
+* Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A) 
+* Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
+* Surveys - Open a panel to launch or access surveys about this info need/capability/flow
+* Send message - send a message to planners about this info need/capability/flow</description>
+                </item>
+            </topic>
+            <topic id="actions-flow">
+                <name>Need/capability/flow actions menu</name>
+                <item>
+                    <description>The options are
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Copy need/capability/flow - Take a copy
+* Duplicate need/capability/flow - Add a duplicate need/capability to the task
+* Remove need/capability/flow - Remove from the task
+* New issue - Report a new issue about this info need/capability/flow
+* Paste attachment - Add the copied attachment, if any, to this info need/capability/flow
+* Intermediate flow - Add a "middle man task" between the flow's source and target (hidden if N/A)
+* Breakup flow - Disconnect the source and target, adding capability and need if implied by the flow (hidden if N/A)</description>
+                </item>
+            </topic>
+            <topic id="issue-menu">
+                <name>Issue menu</name>
+                <item>
+                    <description>The options are
+* Show/Hide details - Show or hide the details of this issue reported by a planner
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Remove issue - Remove this issue (hidden if details not shown)
+* Paste attachment - Add the copied attachment, if any, to this reported issue (hidden if details not shown)</description>
+                </item>
+            </topic>
+            <topic id="actions-plan-details">
+                <name>Plan details actions menu</name>
+                <item>
+                    <description>The options are
+* Send message -  send a message to planners about this plan as a whole
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Paste attachment - Add the copied attachment, if any, to this plan
+* New issue - Report a new issue about this plan as a whole</description>
+                </item>
+            </topic>
+            <topic id="actions-entity">
+                <name>Entity actions menu</name>
+                <item>
+                    <description>The options are
+* Send message -  send a message to planners about this entity
+* Undo ... - Undo the last change made anywhere in this plan
+* Redo ... - Redo the last undone change
+* Paste attachment - Add the copied attachment, if any, to this entity
+* New issue - Report a new issue about this entity</description>
+                </item>
+            </topic>
+            <topic id="messaging-menu">
+                <name>Messaging menu</name>
+                <item>
+                    <description>The options are
+* Send message -  send a message
+* Delete this message - Delete this message I sent (hidden if message was also emailed)
+* Email this message / Resend email (hidden if message can not be emailed)</description>
+                </item>
+            </topic>
+        </section>
+        <section id="messages">
+            <name>Messages</name>
+            <topic id="my-messages">
+                <name>My messages</name>
+                <item>
+                    <description>You can see the messages you sent to fellow domain planners and the messages they sent you.
+                    
+You can filter out the messages you broadcasted to all planners</description>
+                </item>
+            </topic>
+            <topic id="new-message">
+                <name>Sending a message</name>
+                <item>
+                    <description>You can send a message to one planner or broadcast it to all planners.
+                    
+The message can be sent internally within Channels or it can also be sent by email. Note that messages sent only internally can be later deleted by the sender.</description>
+                </item>
+            </topic>
+        </section>
+        <section id="planners">
+            <name>Presence</name>
+            <topic id="presence">
+                <name>Presence</name>
+                <item>
+                    <description>This shows the list of all domain planners currently working on this collaboration plan.
+                    
+You can also see the list of all authorized planners for this plan, whether they are online or not.</description>
+                </item>
+            </topic>
+            <topic id="activities">
+                <name>Activities</name>
+                <item>
+                    <description>This gives you the list of the most recent changes made to the plan by yourself and other planners. You can hide your own activities.
+                        
+You can click on the name of the plan element that was changed to quickly navigate to it.</description>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+            </topic>
+        </section>
+        <section id="issues-page">
+            <name>Issues page</name>
+            <topic id="about-issues-page">
+                <name>Issues summary report</name>
+                <item>
+                    <description>The issues summary report provides metrics on all the issues found in a domain collaboration plan.
+                    
+The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.</description>
+                </item>
+                <next section="concepts" topic="issue"/>
+            </topic>
+        </section>
+        <section id="scoping">
+            <name>Scoping the plan</name>
+            <topic id="events">
+                <name>Name all events</name>
+                <item>
+                    <description><![CDATA[Name the '''events''' within the scope of the plan and identify those that are ''incidents''  &ndash; <small>events that are not caused by planned tasks.</small> &ndash;]]>
+            </description>
+                    <script>
+                        <action>Open all events</action>
+                        <change>
+                            <subjectId>-3</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Note that events can also be named anywhere they are used to define another plan element. When they are, they are automatically added to the scope of the plan.</description>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+                <next section="concepts" topic="event"/>
+                <next section="scoping" topic="phases"/>
+                <next section="profiling" topic="profiling-event"/>
+            </topic>
+            <topic id="phases">
+                <name>Name all phases</name>
+                <item>
+                    <description><![CDATA[Name the '''phases''' within the scope of the collaboration plan. Channels will now expect to see at least one segment for each combination of phase and event in scope.
+The list is part of the plan's ''details''.]]></description>
+                    <script>
+                        <action>Edit list of phases in scope</action>
+                        <change>
+                            <subjectPath>plan</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="phase"/>
+                <next section="scoping" topic="add-define-segment"/>
+                <next section="scoping" topic="organizations"/>
+                <next section="profiling" topic="profiling-phase"/>
+            </topic>
+            <topic id="organizations">
+                <name>Identify participating organizations</name>
+                <item>
+                    <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents assigned to tasks</small>. &ndash; .]]></description>
+                    <script>
+                        <action>Edit the list of participating organizations</action>
+                        <change>
+                            <subjectId>-4</subjectId>
+                            <type>Expanded</type>
+                            <property>All organizations</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="organization"/>
+                <next section="profiling" topic="profiling-organization"/>
+            </topic>
+            <topic id="all-segments">
+                <name>All segments</name>
+                <item>
+                    <description>All segments in the plan are grouped either by event or by phase. They are connected by cross-segment flows and by causation links.
+                    
+A cross-segment flow is a flow from a task in one segment to a task in another. A causation link is an event caused or terminated by a task in one segment that sets the conditions for another segment.
+   
+You can drill down on the cross-segment flows and on the causation links.</description>
+                </item>
+                <next section="concepts" topic="segment"/>
+            </topic>
+            <topic id="add-define-segment">
+                <name>Add and define a segment</name>
+                <item>
+                    <description><![CDATA[From the top action menu, add new segment, then name it and identify the ''scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
+                    <script>
+                        <action>Define a segment</action>
+                        <change>
+                            <subjectPath>page.segment</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="segment"/>                
+                <next section="scoping" topic="segment-goals"/>
+            </topic>
+            <topic id="segment-goals">
+                <name>Define a segment's goals</name>
+                <item>
+                    <description><![CDATA[Define a small number of goals the segment is meant to address. For each goal
+* set the type of goal,
+* the organization, type or actual, whose goal it is,
+* the severity/importance of the risk to be mitigated or gain to be achieved.
+Naming the goal is optional.]]></description>
+                    <script>
+                        <action>Set segment goals</action>
+                        <change>
+                            <subjectPath>page.segment</subjectPath>
+                            <type>Expanded</type>
+                            <property>goals</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="goal"/>
+                <next section="concepts" topic="segment"/>               
+            </topic>
+            <topic id="classifications">
+                <name>Define secrecy classifications</name>
+                <item>
+                    <description><![CDATA[Define a secrecy classification system to be used in setting
+* an agent's clearances,
+* the security of a transmission medium,
+* the classification level of shared elements of information.]]></description>
+                    <script>
+                        <action>Define classifications</action>
+                        <change>
+                            <subjectId>-6</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+            </topic>
+        </section>
+        <section id="info-sharing">
+            <name>Specifying info sharing</name>
+            <topic id="flow-map">
+                <name>Information flow maps</name>
+                <item>
+                    <description>Information flow maps depict how information is consumed and produced by tasks and to what effects.
+                    
+Represented in a flow map are
+* Events which initiation or termination triggers tasks
+* Event initiated or terminated by tasks
+* Goals (risks or opportunities) achieved by tasks
+* Tasks
+* The information needs and capabilities of tasks
+* Information sharing flows connecting tasks
+
+Flow maps can be maximized, reduced-to-fit, and simplified by hiding goals and info needs and capabilities.
+                    
+A task is brought into focus for editing by clicking on it in the flow map. Flows can also be opened for editing by clicking on them in the flow map.</description>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="concepts" topic="flow"/>
+                <next section="concepts" topic="information"/>                
+            </topic>
+            <topic id="add-task">
+                <name>Add a task</name>
+                <item>
+                    <description>Add new task to a segment by clicking ''ADD'' in the  Task panel or by selecting ''add new task'' from the top Actions menu.
+The newly created task is intially empty and presented as ''someone doing something''.</description>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="info-sharing" topic="define-task"/>
+            </topic>
+            <topic id="define-task">
+                <name>Define a task</name>
+                <item>
+                    <description>Define a task by
+* naming it
+* identifying where it is to be executed
+* profiling who is to be assigned to it
+* what goals it directly achieves
+* and more
+Note that as little and as much as wanted can be put into a task's definition.
+                </description>
+                    <script>
+                        <action>Open the task form</action>
+                        <change>
+                            <subjectPath>page.part</subjectPath>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="info-sharing" topic="add-need"/>
+                <next section="info-sharing" topic="add-capability"/>
+                <next section="info-sharing" topic="connect-with-flow"/>
+            </topic>
+            <topic id="add-need">
+                <name>Add info need to task</name>
+                <item>
+                    <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the Receives panel. An info need specifies information that agents assigned to the task need to receive to
+* trigger the task
+* enable it to succeed (critical)
+* terminate the task (useful)
+* improve its execution
+                </description>
+                </item>
+                <next section="concepts" topic="need"/>
+                <next section="info-sharing" topic="add-capability"/>
+                <next section="info-sharing" topic="define-flow"/>
+                <next section="info-sharing" topic="connect-with-flow"/>
+            </topic>
+            <topic id="add-capability">
+                <name>Add info capability to task</name>
+                <item>
+                    <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the Sends panel. An info capability specifies info agents assigned to a task expect to acquire and be able to share with others.</description>
+                </item>
+                <next section="concepts" topic="capability"/>
+                <next section="info-sharing" topic="add-need"/>
+                <next section="info-sharing" topic="define-flow"/>
+                <next section="info-sharing" topic="connect-with-flow"/>
+            </topic>
+            <topic id="define-flow">
+                <name>Define a send or receive</name>
+                <item>
+                    <description>Specify an info need, capability or sharing by
+* naming the information
+* requiring the information to be compliant with a named information product
+* listing its elements
+* indicating whether it is ''pushed'' or ''pulled'
+* the communication channels to use, each including transmission medium and, optionally, a required format
+* timeliness constraints
+* and more
+                </description>
+                    <script>
+                        <action>Open the send/receive form</action>
+                        <change>
+                            <subjectPath>guide.anyFlow</subjectPath>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="flow"/>
+                <next section="info-sharing" topic="connect-with-flow"/>
+                <next section="profiling" topic="profiling-medium"/>
+                <next section="profiling" topic="profiling-info-product"/>
+                <next section="profiling" topic="profiling-info-format"/>
+            </topic>
+            <topic id="eois">
+                <name>Elements of information</name>
+                <item>
+                    <description>You can name the essential elements of information of an information need, capability or flow, and set their properties.
+
+The properties of an element of information are
+* its name
+* the question it answers
+* its security classification
+* its handling instructions
+* if produced, how it transforms , if at all, received elements
+* if needed, whether its delivery is subject to timeliness constraints
+                </description>
+                </item>
+                <next section="concepts" topic="information"/>
+            </topic>
+            <topic id="connect-with-flow">
+                <name>Connect tasks with info sharing</name>
+                <item>
+                    <description>An information sharing flow connect a tasks that ''produces'' information with a tasks that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info need of another.
+A sharing flow is created by connecting an info need or a capability to a task. The flow appears in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
+                </description>
+                    <script>
+                        <action>Open the send/receive form</action>
+                        <change>
+                            <subjectPath>guide.anyFlow</subjectPath>
+                            <type>Expanded</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="flow"/>
+                <next section="concepts" topic="task"/>
+                <next section="info-sharing" topic="add-task"/>
+            </topic>
+            <topic id="task-overrides">
+                <name>Task overrides</name>
+                <item>
+                    <description>The list of tasks that either override this task or are overridden by it.</description>
+                </item>
+                <next section="concepts" topic="overriding"/>
+                <next section="concepts" topic="task"/>
+            </topic>
+        </section>
+        <section id="profiling">
+            <name>Defining the plan's environment</name>
+            <topic id="profiling-event">
+                <name>Profile an event</name>
+                <item>
+                    <description><![CDATA[Define an event (always a type, never an actual event) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with event types
+* locating where it would happen
+* stating whether the event can terminate on its own
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open an event profile</action>
+                        <change>
+                            <subjectPath>guide.anyEvent</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>All events are listed in '''All events''' </description>
+                    <script>
+                        <action>Open all events</action>
+                        <change>
+                            <subjectId>-3</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Events can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="event"/>
+                <next section="profiling" topic="profiling-phase"/>
+                <next section="profiling" topic="profiling-place"/>
+                <next section="scoping" topic="events"/>
+            </topic>
+            <topic id="profiling-phase">
+                <name>Profile a event phase</name>
+                <item>
+                    <description><![CDATA[Define a phase (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* specifying if it is a pre-, co- or post-event phase
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open a phase profile</action>
+                        <change>
+                            <subjectPath>guide.anyPhase</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>All phases are listed in the plan's '''details'''. </description>
+                    <script>
+                        <action>Open plan details</action>
+                        <change>
+                            <subjectPath>plan</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Phases can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="phase"/>
+                <next section="profiling" topic="profiling-phase"/>
+                <next section="scoping" topic="events"/>
+            </topic>
+            <topic id="profiling-organization">
+                <name>Profile an organization</name>
+                <item>
+                    <description><![CDATA[Define an actual or type of organization by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with organization types
+* If an actual organization, by
+** naming the parent organization
+** listing the agents it employs
+** listing sharing agreements with other organizations
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open an organization profile</action>
+                        <change>
+                            <subjectPath>guide.anyActualOrganization</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="organization"/>
+                <next section="profiling" topic="profiling-agent"/>
+            </topic>
+            <topic id="profiling-role">
+                <name>Profile a role</name>
+                <item>
+                    <description><![CDATA[Define a role (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open a role profile</action>
+                        <change>
+                            <subjectPath>guide.anyRole</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Roles can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="role"/>
+            </topic>
+            <topic id="profiling-agent">
+                <name>Profile an agent</name>
+                <item>
+                    <description><![CDATA[Define an actual or type of agent by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with agent types
+* If an actual agent, by
+** declaring it a person or system
+** setting clearances, languages, availability
+** setting constraints on users participating as this agent
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open an agent profile</action>
+                        <change>
+                            <subjectPath>guide.anyActualAgent</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Agents can be found in the plan's ''who's who''.</description>
+                    <script>
+                        <action>Open plan's who's who</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Who's who</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Agents can also be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="agent"/>
+                <next section="profiling" topic="profiling-organization"/>
+            </topic>
+            <topic id="profiling-place">
+                <name>Profile a place</name>
+                <item>
+                    <description><![CDATA[Define an actual or type of place by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it with place types (such as 'city', 'building' etc.)
+* if an actual place, by
+** naming what place it is within
+** giving a street address and postal code
+** identifying its geographical area
+* if a type of place, by
+** setting the place (type or actual) it must be in
+** the place it must contain
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open a place profile</action>
+                        <change>
+                            <subjectPath>guide.anyActualPlace</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Places can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="place"/>
+            </topic>
+            <topic id="profiling-medium">
+                <name>Profile a transmission medium</name>
+                <item>
+                    <description><![CDATA[Define a transmission medium (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* stating whether it is unicast, multicast or broadcast
+* naming the other media this one can delegate to
+* naming its level of security
+* giving the pattern the media's ''addresses'' must conform to
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open a transmission medium profile</action>
+                        <change>
+                            <subjectPath>guide.anyMedium</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Transmission media can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="medium"/>
+            </topic>
+            <topic id="profiling-info-product">
+                <name>Profile an information product</name>
+                <item>
+                    <description><![CDATA[Define an information product (always a type) by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* defining the elements of information flows standardized to this information product require
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open an information product profile</action>
+                        <change>
+                            <subjectPath>guide.anyInfoProduct</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Information products can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="info-product"/>
+            </topic>
+            <topic id="profiling-info-format">
+                <name>Profile an information format</name>
+                <item>
+                    <description><![CDATA[Define an information format (always a type) that can qualify communication channels by
+* renaming it &ndash; it was created when first named &ndash; 
+* categorizing it
+* and more
+Note that all profile attributes are optional.]]>
+                </description>
+                    <script>
+                        <action>Open an information format profile</action>
+                        <change>
+                            <subjectPath>guide.anyInfoFormat</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Information formats can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="info-format"/>
+            </topic>
+        </section>
+        <section id="analyzing">
+            <name>Analyzing the plan</name>
+            <topic id="entity-network">
+                <name>Info sharing commitment networks</name>
+                <item>
+                    <description>A collaboration plan determines how agents must commit to share information with one another.
+
+Commitment networks depict these info sharing commitment relationships between agents either directly or aggregated by role or organization.
+
+You can drill down on each commitment relationship to see the info sharing commitments it summarizes. 
+                </description>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="concepts" topic="commitment"/>
+            </topic>
+            <topic id="segment-organizations">
+                <name>Organizations in a segment</name>
+                <item>
+                    <description>You can see what organizations have agents assigned to a segment's task and how these organizations are linked by info sharing commitments.</description>
+                </item>
+                <next section="concepts" topic="segment"/>
+                <next section="concepts" topic="organization"/>
+            </topic>
+            <topic id="entity-analytics">
+                <name>Entity analytics</name>
+                <item>
+                    <description>You can see the different ways in which this entity is involved in the plan, and then drill down.</description>
+                </item>
+                <next section="concepts" topic="entity"/>
+            </topic>
+            <topic id="entity-issues">
+                <name>Entity issues</name>
+                <item>
+                    <description>Issues may have been detected or reported about this entity's profile. You can include issues about other plan elements that relate to the entity. You can also filter out issues that have been waived by planners (the default).
+                    
+You can browse a paginated table of these issues, filter them, sort them and drill down on them.
+                    
+To create or view an existing survey about the resolution of this issue, click on the survey icon.</description>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+                <next section="concepts" topic="entity"/>
+                <next section="concepts" topic="issue"/>
+            </topic>
+            <topic id="dissemination">
+                <name>Info dissemination</name>
+                <item>
+                    <description>You can visualize where, according to plan, individual elements of informations comsumed by a task would come from, and where elements of information produced by a task would end up.</description>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="concepts" topic="flow"/>
+                <next section="concepts" topic="information"/>
+            </topic>
+            <topic id="failure-impact">
+                <name>Failure impact</name>
+                <item>
+                    <description>You can visualize how the failure of a task or of a flow can cause the cascading failure of useful tasks thus jeopardizing the achiement of organizational goals.
+                    
+                    Only useful tasks and critical flows are considered when doing failure impact analysis.</description>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="concepts" topic="flow"/>
+                <next section="concepts" topic="impact"/>
+                <next section="concepts" topic="usefulness"/>
+            </topic>
+        </section>
+        <section id="improving">
+            <name>Improving the plan</name>
+            <topic id="issues">
+                <name>Issues</name>
+                <item>
+                    <description>Channels automatically detected issues about this plan element. You or other planners may also have reported issues about it.
+
+All issues about the plan element are listed. The planner-reported issues can be opened up to edit their names, description, severity and remediation options. When editing remediation options, start each one on a new line. 
+
+Some issues detected by Channels can be waived (marked as false positives).
+
+You can report a new issue by pressing the New button and then editing the issue. When describing remediation options, start each one on a new line.
+
+You can automatically create a survey about remediating an issue by pressing on the ''Create survey'' button. If a survey was already created, you can view it by pressing the the ''View survey'' button.
+                    </description>
+                </item>
+                <next section="concepts" topic="issue"/>
+                <next section="concepts" topic="plan-element"/>
+            </topic>
+            <topic id="plan-versions">
+                <name>Plan versions</name>
+                <item>
+                    <description>The current production and development versions for this plan are identified.
+
+You can vote to move the current development version of this in production if you believe it is ready. You can see the votes of other planners and send them messages. Note that only an administrator can actually put the current development version into production.</description>
+                </item>
+                <next section="concepts" topic="plan"/>
+            </topic>
+            <topic id="plan-evaluation">
+                <name>Plan evaluation</name>
+                <item>
+                    <description>The plan evaluation gives an accounting of the issues found in this plan. The metrics are expressed in terms of
+        * the three main types of issues (robustness, completeness, validity)
+        * their severity
+        * whether they were waived or not
+        * and how many different kinds of issues were found
+                    </description>
+                </item>
+               <next section="concepts" topic="issue"/>
+                <next section="improving" topic="all-issues"/>
+            </topic>
+            <topic id="all-issues">
+                <name>All issues</name>
+                <item>
+                    <description>All issues found in the plan are listed in a paged table. You can sort them, filter them, search on their names and drill down on them.
+                    </description>
+                </item>
+                <next section="concepts" topic="issue"/>
+                <next section="improving" topic="resolving-issues"/>
+            </topic>
+            <topic id="resolving-issues">
+                <name>Resolve issues</name>
+                <item>
+                    <description>An obvious way of improving a collaboration plan is to resolve issues detected by Channels or by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
+                    <script>
+                        <action>Open the All Issues table</action>
+                        <change>
+                            <subjectId>-10</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Metrics on all issues found in a plan provides a sense of the current quality of the collaboration plan.</description>
+                    <script>
+                        <action>See plan evaluation</action>
+                        <change>
+                            <subjectId>-9</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>If the resolution of an issue is not self-evident and requires input from stakeholders, a survey (with questionnaire) can be created about resolving the issue.</description>
+                </item>
+                <next section="concepts" topic="issue"/>
+                <next section="learning" topic="launch-remediation-survey"/>
+            </topic>
+            <topic id="moving-tasks">
+                <name>Move tasks across segments</name>
+                <item>
+                    <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To shrink a bloated segment, a new segment is usually created and tasks are moved to it.</description>
+                    <script>
+                        <action>Transfer tasks</action>
+                        <change>
+                            <subjectId>-7</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="task"/>
+                <next section="scoping" topic="add-define-segment"/>
+            </topic>
+            <topic id="tune-task-flow-definition">
+                <name>Adjust assignments and commitments</name>
+                <item>
+                    <description>Collaboration protocols are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
+                    
+A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
+                
+Which agents are assigned to a task is determined by
+* how a task specifies the agents assignable to it
+* what agents are in the plan's environments and how they are profiled
+* how the agents are employed (role, jurisdiction, organization)
+* how the taxonomies of role, agent, organization etc. are defined
+</description>
+                    <script>
+                        <action>See a task's assignments</action>
+                        <change>
+                            <subjectPath>page.part</subjectPath>
+                            <type>AspectViewed</type>
+                            <property>assignments</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Exactly what sharing commitments are generated for a flow depends on
+* what agents are assigned to the producing task and consuming task connected by the flow
+* what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
+* whether an overriding flow prohibits a pairing of agents
+</description>
+                    <script>
+                        <action>See a flow's sharing commitments</action>
+                        <change>
+                            <subjectPath>guide.anySharingFlow</subjectPath>
+                            <type>AspectViewed</type>
+                            <property>commitments</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="assignment"/>
+                <next section="concepts" topic="commitment"/>
+                <next section="improving" topic="verify-procedures"/>
+            </topic>
+            <topic id="verify-taxonomy">
+                <name>Verify an entity taxonomy</name>
+                <item>
+                    <description> Roles, agents, organizations, places, events etc. (entities) can be categorized.
+Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
+
+How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that are defined in terms of these entities.
+
+The meaning of a plan boils down to the task assignments and consequent sharing commitments (protocols) that are implied by the collaboration plan. 
+Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the protocols computed from a plan and thus its meaning.
+                
+Taxonomies are defined implictly by categorizing individual entities. Taxonomies can be visualized to verify that they are correct.
+                </description>
+                    <script>
+                        <action>View taxonomies</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Taxonomies</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="improving" topic="verify-procedures"/>
+            </topic>
+            <topic id="verify-procedures">
+                <name>Protocols map</name>
+                <item>
+                    <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments. The ''protocols map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
+                
+The map is focused on one agent or one organization (as an aggregate of agents). It shows the commitments that involved that egent or organizations.
+
+The other parties to the commitments can be aggregated by role, organization type or not at all.
+                </description>
+                    <script>
+                        <action>See protocols map</action>
+                        <change>
+                            <subjectId>-8</subjectId>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="protocol"/>
+                <next section="improving" topic="tune-task-flow-definition"/>
+                <next section="improving" topic="verify-taxonomy"/>
+            </topic>
+        </section>
+        <section id="learning">
+            <name>Learning</name>
+            <topic id="compose-questionnaire">
+                <name>Compose a survey questionnaire</name>
+                <item>
+                    <description>You can enlist the help of stakeholders via surveys. A survey is a questionnaire about elements of the plan or the plan as a whole.
+
+You compose questionnaires by adding, ordering, editing etc. statements and questions. Questions can be marked as required or optional.
+
+A questionnaire applies to the plan as a whole or to one kind of plan element (plan questionnaire, task questionnaires, event questionnaires etc.)
+
+Questionnaires can be activated and deactivated. They can be extended while they are being used in surveys. 
+</description>
+                    <script>
+                        <action>See the questionnaires</action>
+                        <change>
+                            <subjectPath>guide.unknownRFISurvey</subjectPath>
+                            <type>Expanded</type>
+                            <qualifier>
+                                <name>tab</name>
+                                <value>Questionnaires</value>
+                            </qualifier>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+                <next section="concepts" topic="survey"/>
+                <next section="learning" topic="launch-survey"/>
+            </topic>
+            <topic id="launch-survey">
+                <name>Launch a survey</name>
+                <item>
+                    <description>A survey is launched on the plan or on a plan element by applying a questionnaire to it.
+                    </description>
+                    <script>
+                        <action>View launched and launch-able surveys on a task</action>
+                        <change>
+                            <subjectPath>page.part</subjectPath>
+                            <type>AspectViewed</type>
+                            <property>surveys</property>
+                        </change>
+                    </script>
+                </item>
+                <item>
+                    <description>Once a survey is launched, it can be managed by
+* inviting users to participate
+* looking at the answers from survey participants
+* deactivating or reactivating the survey
+* editing the survey's questionnaire
+                </description>
+                    <script>
+                        <action>See all launched surveys</action>
+                        <change>
+                            <subjectPath>guide.unknownRFISurvey</subjectPath>
+                            <type>Expanded</type>
+                            <qualifier>
+                                <name>tab</name>
+                                <value>Surveys</value>
+                            </qualifier>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+                <next section="concepts" topic="survey"/>
+                <next section="learning" topic="add-survey-participants"/>
+                <next section="learning" topic="compose-questionnaire"/>
+            </topic>
+            <topic id="launch-remediation-survey">
+                <name>Launch an issue remediation survey</name>
+                <item>
+                    <description>Surveys can be launched on an issue that was detected. The questionnaire is automatically generated based on the remediation options. 
+
+The questionnaire can be modified and extended while the survey is ongoing. 
+
+An issue remediation survey is automatically deactivated when the issue disappears.
+
+Note that the issue remediation questionnaires are by default not shown in the list of all questionnaires; a checkbox must be checked to see them.
+                </description>
+                    <script>
+                        <action>See all remediation questionnaires</action>
+                        <change>
+                            <subjectPath>guide.unknownRFISurvey</subjectPath>
+                            <type>Expanded</type>
+                            <qualifier>
+                                <name>tab</name>
+                                <value>Questionnaires</value>
+                            </qualifier>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="survey"/>
+                <next section="learning" topic="add-survey-participants"/>
+                <next section="learning" topic="compose-questionnaire"/>
+            </topic>
+            <topic id="add-survey-participants">
+                <name>Invite participation to a survey</name>
+                <item>
+                    <description>Once a survey is launched, users can be invited to a survey. Users can be given a deadline to answer the required questions in the survey.
+After the deadline has passed, the survey is considered late. Late participants can be ''nagged'' (nags are sent by email).
+
+A participant can
+*accept the invitation by answering questions, 
+*decline the invitation
+*forward the survey to others (if it was marked as forwardable).
+
+Note that anyone who is forwarded a survey and who is not yet a user of Channels is automatically given a login, password and limited access to the plan as a participant.
+                </description>
+                    <script>
+                        <action>See all launched surveys</action>
+                        <change>
+                            <subjectPath>guide.unknownRFISurvey</subjectPath>
+                            <type>Expanded</type>
+                            <qualifier>
+                                <name>tab</name>
+                                <value>Surveys</value>
+                            </qualifier>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="survey"/>
+                <next section="learning" topic="survey-results"/>
+            </topic>
+            <topic id="survey-results">
+                <name>Lookup the results of a survey</name>
+                <item>
+                    <description>As participants in a survey answer the questionnaire, results are compiled and made available to all planners.
+
+Results can be viewed by opening the survey and selecting the ''results'' tabs.</description>
+                    <script>
+                        <action>See all launched surveys</action>
+                        <change>
+                            <subjectPath>guide.unknownRFISurvey</subjectPath>
+                            <type>Expanded</type>
+                            <qualifier>
+                                <name>tab</name>
+                                <value>Surveys</value>
+                            </qualifier>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="survey"/>
+                <next section="learning" topic="add-survey-participants"/>
+            </topic>
+            <topic id="feedback">
+                <name>Manage user feedback</name>
+                <item>
+                    <description>Users can ask questions, report problems and make suggestions via a feedback widget that appears in their home page, their protocols etc.
+
+You can see this feedback and reply to it. The user can then reply back etc. or mark the question, problem or suggestion as resolved.              
+                </description>
+                    <script>
+                        <action>Open feedback manager</action>
+                        <change>
+                            <subjectPath>unknownFeedback</subjectPath>
+                            <type>Expanded</type>
+                        </change>
+                    </script>
+                </item>
+            </topic>
+        </section>
+        <section id="searching">
+            <name>Searching in the plan</name>
+            <topic id="search-by-name">
+                <name>Search anything by name</name>
+                <item>
+                    <description>Every element of a plan that has a name can be found from the index.
+                    
+The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial name.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="plan"/>
+                <next section="searching" topic="references"/>
+            </topic>
+            <topic id="whos-who">
+                <name>Search for agents</name>
+                <item>
+                    <description>Every employement of every agent is aggregated in the ''who's who'' table.
+
+The table can be indexed by the name of the agent or by attributes of employment (organization, role, location of employer).</description>
+                    <script>
+                        <action>Open the plan's who's who</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Who's who</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="agent"/>
+            </topic>
+            <topic id="documents">
+                <name>Search for attachements</name>
+                <item>
+                    <description>Documents and Web pages of various types (policy, reference, picture etc.) can be attached to the plan and any element in it. 
+                    
+A table with all attachments in the plan can be found in the plan's ''attachments''.</description>
+                    <script>
+                        <action>Open the plan's attachments</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>All attachments</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="attachment"/>
+            </topic>
+            <topic id="tags">
+                <name>Search by tags</name>
+                <item>
+                    <description>The plan and every element in it can be tagged. 
+                    
+The list of all tags used in the plan can be looked up to see what has been marked by any given tag.</description>
+                    <script>
+                        <action>Open the tag index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Tags</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="tag"/>
+            </topic>
+            <topic id="taxonomies">
+                <name>Looking up a taxonomy</name>
+                <item>
+                    <description> The entity types used to categorize roles, agents, organizations, places, events etc. (entities) can themselves be categorized to create taxonomies.
+                    
+Changes to a taxonomy can have profound impacts on the protocols that are generated by the plan. 
+                   
+Taxonomies can be visualized to verify that they are correct.</description>
+                    <script>
+                        <action>View taxonomies</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Taxonomies</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="improving" topic="verify-procedures"/>
+            </topic>
+            <topic id="references">
+                <name>Cross-referencing plan elements</name>
+                <item>
+                    <description>Whenever a plan element is referenced by name in the definition of another, there will also be a link to get to the referenced element's definition.
+                    
+Also, most forms used to define an element of the plan contain a table listing all and linking to all other elements that reference it in their definitions.
+
+For example, at the bottom of in the profile of a role is an index of all other elements that reference the role or that match the role.</description>
+                    <script>
+                        <action>Open the a role profile to see its references</action>
+                        <change>
+                            <subjectPath>guide.anyRole</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="plan-element"/>
+            </topic>
+        </section>
+    </role>
+</guide>

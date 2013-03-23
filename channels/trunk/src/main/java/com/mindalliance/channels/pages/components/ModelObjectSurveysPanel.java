@@ -66,12 +66,12 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "learning";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "launch-survey";
     }
 

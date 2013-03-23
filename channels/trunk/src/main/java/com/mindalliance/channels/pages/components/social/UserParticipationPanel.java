@@ -68,12 +68,12 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return null;  // Todo
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return null;  // Todo
     }
 
@@ -93,7 +93,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private void addUserRole() {
         privilegesContainer = new WebMarkupContainer( "myPrivileges" );
         privilegesContainer.add( new Label( "userRole", getUserRole() ) );
-        privilegesContainer.add( makeHelpIcon( "helpPrivileges", "what-i-do", "my-privileges", "images/help_guide_gray.png" ) );
+        privilegesContainer.add( makeHelpIcon( "helpPrivileges", "participant", "what-i-do", "my-privileges", "images/help_guide_gray.png" ) );
         userParticipationContainer.add( privilegesContainer );
     }
 

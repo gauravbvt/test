@@ -50,13 +50,13 @@ public class OverridesPanel  extends AbstractFloatingCommandablePanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "info-sharing";
     }
 
     @Override
-    public String getTopicId() {
-        return "overriding";
+    public String getHelpTopicId() {
+        return "task-overrides";
     }
 
     private void init() {

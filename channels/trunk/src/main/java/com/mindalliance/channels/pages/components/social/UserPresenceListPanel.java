@@ -52,18 +52,18 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return null;  // Todo
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return null;  // Todo
     }
 
     protected void init() {
         super.init();
-        add( makeHelpIcon( "helpPresence", "presence", "planner-presence", "images/help_guide_gray.png" ) );
+        add( makeHelpIcon( "helpPresence", "planners", "presence", "images/help_guide_gray.png" ) );
         addShowHideLink();
         addShowHideLabel();
         presencesContainer = new WebMarkupContainer( "presencesContainer" );
@@ -113,7 +113,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     public List<ChannelsUser> getUsersPresent() {
         List<ChannelsUser> usersPresent = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userDao.getUsers( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userDao.getPlanners( getPlan().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
                 usersPresent.add( user );
             }

@@ -12,7 +12,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -72,12 +72,12 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-agent";
     }
 

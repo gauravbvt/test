@@ -559,6 +559,7 @@ CONFIGURATION NOTES:
         <property name="supportedClasses">
             <list>
                 <value>com.mindalliance.channels.guide.Guide</value>
+                <value>com.mindalliance.channels.guide.UserRole</value>
                 <value>com.mindalliance.channels.guide.Section</value>
                 <value>com.mindalliance.channels.guide.Topic</value>
                 <value>com.mindalliance.channels.guide.TopicRef</value>

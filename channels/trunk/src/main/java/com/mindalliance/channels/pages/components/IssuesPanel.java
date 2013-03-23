@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -55,13 +56,13 @@ public class IssuesPanel extends AbstractCommandablePanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
-        return "concepts";
+    public String getHelpSectionId() {
+        return "improving";
     }
 
     @Override
-    public String getTopicId() {
-        return "issue";
+    public String getHelpTopicId() {
+        return "issues";
     }
 
     private void init() {

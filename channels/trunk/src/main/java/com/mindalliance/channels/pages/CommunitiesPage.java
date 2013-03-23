@@ -26,6 +26,17 @@ public class CommunitiesPage extends AbstractChannelsBasicPage {
     }
 
     @Override
+    protected String getHelpSectionId() {
+        return "communities-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-communities-page";
+    }
+
+
+    @Override
     protected void addContent() {
         addAllCommunitiesPanel();
     }
@@ -33,6 +44,11 @@ public class CommunitiesPage extends AbstractChannelsBasicPage {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
         allCommunitiesPanel.updateContent( target );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
     }
 
 

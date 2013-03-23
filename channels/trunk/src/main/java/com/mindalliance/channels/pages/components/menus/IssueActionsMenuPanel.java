@@ -43,6 +43,11 @@ public class IssueActionsMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "issue-menu";
+    }
+
+    @Override
     protected void init() {
         // do nothing
     }
@@ -57,22 +62,22 @@ public class IssueActionsMenuPanel extends MenuPanel {
         synchronized ( commander ) {
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
 
+            // Show/hide details
+            menuItems.add( new LinkMenuItem( "menuItem",
+                    new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
+                    new AjaxFallbackLink( "link" ) {
+                        @Override
+                        public void onClick( AjaxRequestTarget target ) {
+                            update( target,
+                                    new Change( isCollapsed ?
+                                            Change.Type.Expanded :
+                                            Change.Type.Collapsed, getIssue() ) );
+                        }
+                    } ) );
+
             // Undo and redo
             menuItems.add( getUndoMenuItem( "menuItem" ) );
             menuItems.add( getRedoMenuItem( "menuItem" ) );
-
-            // Show/hide details
-            menuItems.add( new LinkMenuItem( "menuItem",
-                                             new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
-                                             new AjaxFallbackLink( "link" ) {
-                                                 @Override
-                                                 public void onClick( AjaxRequestTarget target ) {
-                                                     update( target,
-                                                             new Change( isCollapsed ?
-                                                                         Change.Type.Expanded :
-                                                                         Change.Type.Collapsed, getIssue() ) );
-                                                 }
-                                             } ) );
 
             // Commands
             if ( commander.isTimedOut( getUser().getUsername() ) )

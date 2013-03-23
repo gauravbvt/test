@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,12 +36,12 @@ public class PlanTagsPanel extends AbstractCommandablePanel implements Guidable 
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "searching";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "tags";
     }
 

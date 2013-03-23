@@ -11,9 +11,9 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -89,12 +89,12 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "searching";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "whos-who";
     }
 

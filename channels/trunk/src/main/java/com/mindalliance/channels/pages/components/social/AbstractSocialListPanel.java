@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 

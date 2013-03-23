@@ -33,13 +33,13 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
     }
 
     @Override
-    public String getSectionId() {
-        return "concepts";
+    public String getHelpSectionId() {
+        return "scoping";
     }
 
     @Override
-    public String getTopicId() {
-        return "segment";
+    public String getHelpTopicId() {
+        return "all-segments";
     }
 
     private void init() {

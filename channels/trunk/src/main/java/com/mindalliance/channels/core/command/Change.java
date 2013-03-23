@@ -215,6 +215,14 @@ public class Change implements Serializable {
         this.property = property;
     }
 
+    public static Change guide( String userRoleId, String sectionId, String topicId ) {
+        Change change = new Change( Type.Guide );
+        change.addQualifier( "userRoleId", userRoleId );
+        change.addQualifier( "sectionId", sectionId );
+        change.addQualifier( "topicId", topicId );
+        return change;
+    }
+
     public static Change guide( String sectionId, String topicId ) {
         Change change = new Change( Type.Guide );
         change.addQualifier( "sectionId", sectionId );

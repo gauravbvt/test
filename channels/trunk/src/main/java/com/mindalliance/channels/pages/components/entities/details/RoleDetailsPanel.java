@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.entities.details;
 
 import com.mindalliance.channels.core.model.ModelEntity;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.model.IModel;
 
 import java.util.Set;
@@ -21,12 +21,12 @@ public class RoleDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-role";
     }
 

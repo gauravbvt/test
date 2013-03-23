@@ -7,8 +7,8 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,13 +38,13 @@ public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel implement
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
-        return "analyzing-entities";
+    public String getHelpTopicId() {
+        return "entity-analytics";
     }
 
 

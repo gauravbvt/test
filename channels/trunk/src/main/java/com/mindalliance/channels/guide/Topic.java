@@ -74,4 +74,9 @@ public class Topic implements Serializable {
     public void setDocument( TopicDocument document ) {
         this.document = document;
     }
+
+    public String toString() {
+        return "Topic " + getId();
+    }
+
 }

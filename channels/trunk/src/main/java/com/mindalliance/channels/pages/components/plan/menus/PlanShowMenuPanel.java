@@ -44,6 +44,12 @@ public class PlanShowMenuPanel extends MenuPanel {
         super( s, "Show", model, expansions );
     }
 
+
+    @Override
+    public String getHelpTopicId() {
+        return "show-plan";
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -10,7 +10,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.ClassificationsPanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -82,12 +82,12 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-medium";
     }
 

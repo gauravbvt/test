@@ -28,7 +28,6 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.guide.IGuidePanel;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.DisseminationPanel;
@@ -36,6 +35,7 @@ import com.mindalliance.channels.pages.components.GeomapLinkPanel;
 import com.mindalliance.channels.pages.components.IndicatorAwareWebContainer;
 import com.mindalliance.channels.pages.components.ModelObjectSurveysPanel;
 import com.mindalliance.channels.pages.components.entities.EntityPanel;
+import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import com.mindalliance.channels.pages.components.help.HelpPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
@@ -428,6 +428,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     @Override
+    protected boolean isDomainPage() {
+        return true;
+    }
+
+    @Override
     protected boolean canTimeOut() {
         return true;
     }
@@ -513,6 +518,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         quickHelpLink = new AjaxLink<String>( "quickHelpButton" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                helpPanel.selectTopicInSection( "plan-editor", "about-plan-editor" , target );
                 toggleQuickHelp( target );
             }
         };
@@ -527,7 +533,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void updateQuickHelpVisibility( AjaxRequestTarget target ) {
         makeVisible( quickHelpLink, !showingQuickHelp );
-        // helpPanel.selectTopicInSection( null, null, target );
         makeVisible( helpPanel, showingQuickHelp );
         target.add( quickHelpLink );
         target.add( helpPanel );
@@ -542,9 +547,13 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addQuickHelpPanel() {
-        helpPanel = new HelpPanel( "quickHelp", getGuideName(), getHelpContext() );
+        helpPanel = new HelpPanel( "quickHelp", getGuideName(), getDefaultUserRoleId(), getHelpContext() );
         makeVisible( helpPanel, false );
         form.add( helpPanel );
+    }
+
+    private String getDefaultUserRoleId() {
+        return "planner";
     }
 
     private Map<String, Object> getHelpContext() {
@@ -554,7 +563,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     protected String getGuideName() {
-        return "planner";
+        return "channels_guide";
     }
 
     private void addHeader() {
@@ -851,6 +860,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         );
         if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
             addTipTitle( selectedPlanNameLabel, planName );
+        } else {
+            addTipTitle( selectedPlanNameLabel, "Click to edit the plan's details" );
         }
         selectedPlanLink.add( selectedPlanNameLabel );
         return selectedPlanLink;
@@ -886,6 +897,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         );
         if ( segmentName.length() > SEGMENT_NAME_MAX_LENGTH ) {
             addTipTitle( selectedSegmentNameLabel, segmentName );
+        } else {
+            addTipTitle( selectedSegmentNameLabel, "Click to edit the segment's details" );
         }
         selectedSegmentLink.add( selectedSegmentNameLabel );
         return selectedSegmentLink;
@@ -1228,17 +1241,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 getReadOnlyExpansions() );
         form.add( segmentPanel );
     }
-
-
-/*    private void addHelp() {
-        AjaxLink<String> helpLink = new AjaxLink<String>( "help-link" ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                update( target, Change.guide( "about-channels", "channels") );
-            }
-        };
-        form.add( helpLink );
-    }*/
 
     private void addNotifier( WebMarkupContainer body ) {
         notifier = new NotifierWebMarkupContainer( "notifier" );

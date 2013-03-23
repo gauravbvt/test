@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -56,12 +56,12 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel implements Guid
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-organization";
     }
 

@@ -24,10 +24,14 @@ public class PlanScopingMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "scoping-menu";
+    }
+
+    @Override
     public List<LinkMenuItem> getMenuItems() {
         synchronized ( getCommander() ) {
             List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
-            // menuItems.add( collapsible( Requirement.UNKNOWN, "Hide plan requirements", "Plan requirements" ) );
             menuItems.add( collapsible( Channels.ALL_EVENTS, "Hide events in scope", "Events in scope" ) );
             menuItems.add( collapsible( Channels.ALL_ORGANIZATIONS, "Hide organizations in scope", "Organizations in scope" ) );
             menuItems.add( collapsible( Channels.ALL_CLASSIFICATIONS, "Hide classification systems", "Classification systems" ) );

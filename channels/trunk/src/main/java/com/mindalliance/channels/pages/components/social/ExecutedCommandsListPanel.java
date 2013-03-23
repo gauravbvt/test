@@ -55,18 +55,18 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return null;  // Todo
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return null;  // Todo
     }
 
     protected void init() {
         super.init();
-        add( makeHelpIcon( "helpActivities", "activities", "planner-activities", "images/help_guide_gray.png" ) );
+        add( makeHelpIcon( "helpActivities", "planners", "activities", "images/help_guide_gray.png" ) );
         addShowHideLink();
         addShowHideLabel();
         planningEventsContainer = new WebMarkupContainer( "executedCommandsContainer" );

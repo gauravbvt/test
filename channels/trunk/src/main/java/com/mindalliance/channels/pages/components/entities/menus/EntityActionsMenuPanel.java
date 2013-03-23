@@ -27,6 +27,11 @@ public class EntityActionsMenuPanel extends ActionMenuPanel {
         super( id, model, null );
     }
 
+    @Override
+    public String getHelpTopicId() {
+        return "actions-entity";
+    }
+
     /**
      * {@inheritDoc}
      */

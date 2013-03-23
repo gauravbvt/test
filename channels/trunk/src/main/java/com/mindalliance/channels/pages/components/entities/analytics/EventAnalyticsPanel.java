@@ -10,7 +10,7 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -55,13 +55,13 @@ public class EventAnalyticsPanel extends AbstractUpdatablePanel  implements Filt
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
-        return "analyzing-entities";
+    public String getHelpTopicId() {
+        return "entity-analytics";
     }
 
 

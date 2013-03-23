@@ -38,6 +38,11 @@ public class FlowActionsMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "actions-flow";
+    }
+
+    @Override
     protected void init() {
         // do nothing
     }
@@ -78,17 +83,17 @@ public class FlowActionsMenuPanel extends MenuPanel {
             if ( flow.isSharing() )
                 commandWrappers.add( wrap( new DuplicateFlow( getUser().getUsername(), flow, isSend ), false ) );
 
-            commandWrappers.add( wrap( new AddUserIssue( getUser().getUsername(), flow ), false ) );
-
-            commandWrappers.add( wrap( new PasteAttachment( getUser().getUsername(), flow ), false ) );
-
             commandWrappers.add( wrap(
                   flow.isSharing() ? new DisconnectFlow( getUser().getUsername(), flow )
                                    : flow.isNeed()    ? new RemoveNeed( getUser().getUsername(), flow )
                                                       : new RemoveCapability( getUser().getUsername(), flow ),
                   CONFIRM ) );
 
-            if ( flow.isSharing() ) {
+        commandWrappers.add( wrap( new AddUserIssue( getUser().getUsername(), flow ), false ) );
+
+        commandWrappers.add( wrap( new PasteAttachment( getUser().getUsername(), flow ), false ) );
+
+        if ( flow.isSharing() ) {
                 commandWrappers.add( wrap( new AddIntermediate( getUser().getUsername(), flow ), false ) );
                 commandWrappers.add( wrap( new BreakUpFlow( getUser().getUsername(), flow ), CONFIRM ) );
             }

@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.EOIsEditPanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -31,12 +31,12 @@ public class InfoProductDetailsPanel extends EntityDetailsPanel implements Guida
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-info-product";
     }
 

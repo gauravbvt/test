@@ -17,8 +17,8 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -96,12 +96,12 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "scoping";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "segment-goals";
     }
 

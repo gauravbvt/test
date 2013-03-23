@@ -25,6 +25,11 @@ public class LearningMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "learning-menu";
+    }
+
+    @Override
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         menuItems.add( collapsible( Feedback.UNKNOWN, "Hide all feedback", "All feedback" ) );

@@ -97,6 +97,16 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         return result;
     }
 
+    @Override
+    protected String getHelpSectionId() {
+        return "protocols-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-protocols-page";
+    }
+
 
     @Override
     protected String getContentsCssClass() {
@@ -134,6 +144,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
         // do nothing
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
     }
 
     @Override

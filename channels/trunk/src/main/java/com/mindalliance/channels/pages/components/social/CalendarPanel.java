@@ -36,12 +36,12 @@ public class CalendarPanel extends AbstractSocialListPanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return null;  // Todo
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return null;  // Todo
     }
 

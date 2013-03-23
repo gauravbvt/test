@@ -26,6 +26,11 @@ public class PlanSearchingMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "searching-menu";
+    }
+
+    @Override
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         menuItems.add( showAspect( Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.INDEX ) );

@@ -44,6 +44,19 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
         super( parameters );
     }
 
+
+
+    @Override
+    protected String getHelpSectionId() {
+        return "surveys-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-surveys-page";
+    }
+
+
     private void processParameters( PageParameters parameters ) {
         String rfiId = parameters.get( RFI_PARM ).toString();
         if ( rfiId != null ) {
@@ -80,6 +93,11 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
         userRFIsPanel.updateContent( target );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "user";
     }
 
 

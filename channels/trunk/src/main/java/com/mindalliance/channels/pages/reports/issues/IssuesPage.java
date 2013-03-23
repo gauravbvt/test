@@ -32,6 +32,15 @@ public class IssuesPage extends AbstractChannelsBasicPage {
         return result;
     }
 
+    @Override
+    protected String getHelpSectionId() {
+        return "issues-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-issues-page";
+    }
 
     protected void addContent() {
         IssueMetrics issueMetrics = new IssueMetrics( getCommunityService() );
@@ -52,6 +61,11 @@ public class IssuesPage extends AbstractChannelsBasicPage {
     @Override
     protected String getFeedbackType() {
         return Feedback.ISSUES;
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "planner";
     }
 
     private void addIssuesSummary( IssueMetrics issueMetrics ) {

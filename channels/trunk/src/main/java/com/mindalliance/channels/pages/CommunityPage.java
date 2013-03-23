@@ -91,6 +91,18 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     @Override
+    protected String getHelpSectionId() {
+        return "community-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-community-page";
+    }
+
+
+
+    @Override
     protected void addContent() {
         addCommunityDetails();
         addCommunityDetailsDialog();
@@ -193,6 +205,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
             }
         };
         editButton.setVisible( isCommunityPlanner() );
+        addTipTitle( editButton, "Edit the name, description and locale of the community" );
         detailsContainer.add( editButton );
     }
 
@@ -439,6 +452,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
      */
     protected void newMessage( AjaxRequestTarget target, Change change ) {
         socialPanel.newMessage( target, change );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
     }
 
     @Override

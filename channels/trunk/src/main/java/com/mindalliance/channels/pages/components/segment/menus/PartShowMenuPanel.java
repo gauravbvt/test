@@ -29,6 +29,11 @@ public class PartShowMenuPanel extends MenuPanel {
         super( s, "Show", model, expansions );
     }
 
+    @Override
+    public String getHelpTopicId() {
+        return "show-task";
+    }
+
     /**
      * Find explicit or implicit, single, actual actor, if any.
      *

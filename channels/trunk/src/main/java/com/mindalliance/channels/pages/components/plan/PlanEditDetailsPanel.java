@@ -21,9 +21,9 @@ import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.IssuesPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencePanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -79,12 +79,12 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "concepts";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "plan";
     }
 

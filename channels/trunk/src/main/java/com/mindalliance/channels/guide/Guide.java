@@ -29,8 +29,8 @@ public class Guide implements Serializable {
 
     private String description;
 
-    @XStreamImplicit(itemFieldName = "section")
-    private List<Section> sections;
+    @XStreamImplicit(itemFieldName = "role")
+    private List<UserRole> userRoles;
     private Object context = this;
 
     public Guide() {
@@ -52,14 +52,33 @@ public class Guide implements Serializable {
         this.description = description;
     }
 
-    public List<Section> getSections() {
-        return sections;
+    public List<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public void setSections( List<Section> sections ) {
-        this.sections = sections;
+    public void setUserRoles( List<UserRole> userRoles ) {
+        this.userRoles = userRoles;
     }
 
+    public UserRole findUserRole( final String userRoleId ) {
+        UserRole userRole = null;
+        if ( userRoleId != null ) {
+            userRole = (UserRole) CollectionUtils.find( userRoles,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (UserRole) object ).getId().equals( userRoleId );
+                        }
+                    } );
+        }
+        if ( userRole == null ) {
+            LOG.warn( "User role " + userRoleId + " not found in guide " + getName() );
+            userRole = getUserRoles().get( 0 );
+        }
+        return userRole;
+    }
+
+/*
     public Section derefSection( final String groupId ) {
         return (Section) CollectionUtils.find(
                 sections,
@@ -92,6 +111,7 @@ public class Guide implements Serializable {
         }
         return section;
     }
+*/
 
     public void setContext( Map<String, Object> map ) {
         this.context = new LazyDynaMap( map );

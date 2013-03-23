@@ -35,7 +35,7 @@ public class RemoveIssue extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "remove";
+        return "remove issue";
     }
 
     @Override

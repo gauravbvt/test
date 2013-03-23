@@ -10,8 +10,8 @@ import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.pages.GeoMapPage;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.entities.PlaceReferencePanel;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -76,12 +76,12 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-place";
     }
 

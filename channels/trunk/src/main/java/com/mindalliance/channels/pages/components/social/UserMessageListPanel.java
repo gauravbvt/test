@@ -97,12 +97,12 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return null;  // Todo
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return null;  // Todo
     }
 
@@ -260,8 +260,9 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                     public Object getDisplayValue( ChannelsUser user ) {
                         return user == ALL_PLANNERS
                                 ? "All planners"
-                                : user == ALL_USERS
+ /*                               : user == ALL_USERS
                                 ? "Everyone"
+*/
                                 : user.getFullName() + " (" + user.getUsername() + ")";
                     }
 
@@ -292,7 +293,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 return collator.compare( user2.getNormalizedFullName(), user1.getNormalizedFullName() );
             }
         } );
-        recipients.add( ALL_USERS );
+       // recipients.add( ALL_USERS );
         recipients.add( ALL_PLANNERS );
         Collections.reverse( recipients );
         return recipients;

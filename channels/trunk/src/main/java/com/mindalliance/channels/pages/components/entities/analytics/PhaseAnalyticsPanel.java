@@ -6,7 +6,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.model.IModel;
@@ -36,13 +36,13 @@ public class PhaseAnalyticsPanel extends AbstractUpdatablePanel implements Guida
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
-        return "analyzing-entities";
+    public String getHelpTopicId() {
+        return "entity-analytics";
     }
 
     private void init() {

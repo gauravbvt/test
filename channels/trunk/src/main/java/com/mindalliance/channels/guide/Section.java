@@ -78,4 +78,8 @@ public class Section implements Serializable {
         }
         return topic;
     }
+
+    public String toString() {
+        return "Section " + getId();
+    }
 }

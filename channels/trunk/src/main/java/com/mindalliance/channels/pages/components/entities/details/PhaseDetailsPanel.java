@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Phase;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -36,12 +36,12 @@ public class PhaseDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "profiling";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "profiling-phase";
     }
 

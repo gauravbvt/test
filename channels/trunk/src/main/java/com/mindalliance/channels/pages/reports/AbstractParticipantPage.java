@@ -97,6 +97,11 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
         }
     }
 
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
+    }
+
     protected abstract String getFeedbackTopic();
 
     protected abstract void initReportBody(

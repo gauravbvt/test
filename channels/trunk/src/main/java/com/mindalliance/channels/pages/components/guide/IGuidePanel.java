@@ -1,4 +1,4 @@
-package com.mindalliance.channels.guide;
+package com.mindalliance.channels.pages.components.guide;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -21,5 +21,11 @@ public interface IGuidePanel {
     void setContext( Map<String,Object> context );
 
     void selectTopicInSection( String sectionId, String topicId, AjaxRequestTarget target );
+
+    void selectTopicInSection(
+            String userRoleId,
+            String sectionId,
+            String topicId,
+            AjaxRequestTarget target );
 
 }

@@ -29,12 +29,12 @@ public class FlowLegendPanel extends AbstractFloatingCommandablePanel {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "info-sharing";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "flow-map";
     }
 

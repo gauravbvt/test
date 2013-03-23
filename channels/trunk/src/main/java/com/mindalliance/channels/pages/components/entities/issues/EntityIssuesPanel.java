@@ -24,7 +24,7 @@ import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractIssueTablePanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -64,13 +64,13 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
     }
 
     @Override
-    public String getSectionId() {
-        return "concepts";
+    public String getHelpSectionId() {
+        return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
-        return "issue";
+    public String getHelpTopicId() {
+        return "entity-issues";
     }
 
     public ModelEntity getEntity() {

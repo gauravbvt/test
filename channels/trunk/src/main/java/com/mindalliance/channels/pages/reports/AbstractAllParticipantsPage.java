@@ -64,6 +64,11 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         return "allParticipants-contents";
     }
 
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "participant";
+    }
+
 
     protected int getPlanVersion() {
         return getPlanCommunity().getPlanVersion();

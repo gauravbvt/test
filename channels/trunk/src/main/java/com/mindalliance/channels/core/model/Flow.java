@@ -1645,6 +1645,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         Alarm,
         Announcement,
         Command,
+        Expertise,
         Feedback,
         Report;
 
@@ -1664,6 +1665,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     return "Thumbs up or down, evaluation, comment...";
                 case Alarm:
                     return "Signal of changes requiring outside intervention";
+                case Expertise:
+                    return "Expert knowledge or opinion";
                 default:
                     return name();
             }

@@ -20,7 +20,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- * A planner's table of contents to responders pages.
+ * Page giving access to all participant protocols.
  */
 
 public class AllProtocolsPage extends AbstractAllParticipantsPage {
@@ -32,6 +32,18 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
     public AllProtocolsPage( PageParameters parameters ) {
         super( parameters );
     }
+
+    @Override
+    protected String getHelpSectionId() {
+        return "all-protocols-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-all-protocols-page";
+    }
+
+
 
     @Override
     public String getPageName() {

@@ -12,9 +12,9 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.pages.components.Guidable;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -94,13 +94,13 @@ public class RoleAnalyticsPanel extends AbstractUpdatablePanel implements NameRa
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "analyzing";
     }
 
     @Override
-    public String getTopicId() {
-        return "analyzing-entities";
+    public String getHelpTopicId() {
+        return "entity-analytics";
     }
 
 

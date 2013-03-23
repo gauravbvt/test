@@ -28,6 +28,17 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
         super( parameters );
     }
 
+    @Override
+    protected String getHelpSectionId() {
+        return "feedback-page";
+    }
+
+    @Override
+    protected String getHelpTopicId() {
+        return "about-feedback-page";
+    }
+
+
     protected void addContent() {
         getContainer().add( new Label( "planName", getPlan().getName() ) );
         addUserFeedbackPanel();
@@ -36,6 +47,11 @@ public class FeedbackPage  extends AbstractChannelsBasicPage {
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
        allUserFeedbackPanel.updateContent( target );
+    }
+
+    @Override
+    protected String getDefaultUserRoleId() {
+        return "user";
     }
 
     @Override

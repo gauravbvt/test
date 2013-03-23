@@ -16,7 +16,7 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.components.AbstractIndexPanel;
-import com.mindalliance.channels.pages.components.Guidable;
+import com.mindalliance.channels.pages.components.guide.Guidable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,12 +48,12 @@ public class PlanIndexPanel extends AbstractIndexPanel implements Guidable {
     }
 
     @Override
-    public String getSectionId() {
+    public String getHelpSectionId() {
         return "searching";
     }
 
     @Override
-    public String getTopicId() {
+    public String getHelpTopicId() {
         return "search-by-name";
     }
 

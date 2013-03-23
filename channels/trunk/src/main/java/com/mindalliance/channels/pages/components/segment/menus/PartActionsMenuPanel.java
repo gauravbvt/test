@@ -38,6 +38,11 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
         super( s, model, expansions );
     }
 
+    @Override
+    public String getHelpTopicId() {
+        return "actions-task";
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -48,13 +53,6 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                 update( target, change );
             }
         } );
-        if ( isExpanded( getPart() ) && getCommander().isPartCopied( getUser().getUsername() ) ) {
-            commandWrappers.add( new CommandWrapper( new SetPartFromCopy( getUser().getUsername(), getPart() ) ) {
-                public void onExecuted( AjaxRequestTarget target, Change change ) {
-                    update( target, change );
-                }
-            } );
-        }
         commandWrappers.add( new CommandWrapper( new RemovePart( getUser().getUsername(), getPart() ), CONFIRM ) {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 Part part = getPart();
@@ -72,6 +70,11 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
             }
         } );
         if ( isExpanded( getPart() ) ) {
+            commandWrappers.add( new CommandWrapper( new SetPartFromCopy( getUser().getUsername(), getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
             commandWrappers.add( new CommandWrapper( new PasteAttachment( getUser().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

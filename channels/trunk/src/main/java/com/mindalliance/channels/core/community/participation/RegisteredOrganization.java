@@ -150,6 +150,7 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public void updateWith( Agency update ) {
+        assert fixedOrganizationId == -1;  // not a plan-defined, fixed organization
         setName( update.getName() );
         setDescription( update.getDescription() );
         setMission( update.getMission() );
@@ -168,7 +169,6 @@ public class RegisteredOrganization extends AbstractPersistentChannelsObject {
     }
 
     public void setName( String name ) {
-        assert fixedOrganizationId != -1;
         this.name = StringUtils.abbreviate( name, 2000 );
     }
 

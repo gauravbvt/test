@@ -24,6 +24,11 @@ public class PlanImprovingMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getHelpTopicId() {
+        return "improving-menu";
+    }
+
+    @Override
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Task mover" ) );
