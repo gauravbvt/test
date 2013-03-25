@@ -65,6 +65,10 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         init();
     }
 
+    public String getUserRoleId() {
+        return userRoleId;
+    }
+
     private void init() {
         addTitle();
         Topic topic = getTopic();
@@ -163,7 +167,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     }
 
     private void openOn( Section section, Topic topic, AjaxRequestTarget target ) {
-        selectTopicInSection( section.getId(), topic.getId(), target );
+        selectTopicInSection( getUserRoleId(), section.getId(), topic.getId(), target );
     }
 
 

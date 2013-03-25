@@ -181,4 +181,12 @@ public interface CommunityService {
      * @return a boolean
      */
     boolean isForDomain();
+
+    /**
+     * Remove a persistent model object.
+     *
+     * @param object the object
+     */
+    void remove( ModelObject object );
+
 }

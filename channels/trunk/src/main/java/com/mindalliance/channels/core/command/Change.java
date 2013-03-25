@@ -217,7 +217,8 @@ public class Change implements Serializable {
 
     public static Change guide( String userRoleId, String sectionId, String topicId ) {
         Change change = new Change( Type.Guide );
-        change.addQualifier( "userRoleId", userRoleId );
+        if ( userRoleId != null )
+            change.addQualifier( "userRoleId", userRoleId );
         change.addQualifier( "sectionId", sectionId );
         change.addQualifier( "topicId", topicId );
         return change;

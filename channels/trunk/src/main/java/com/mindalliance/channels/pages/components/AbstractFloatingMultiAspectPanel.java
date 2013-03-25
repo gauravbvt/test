@@ -146,7 +146,12 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
         showAspect( aspectShown, getChange() );
     }
 
-     public String getHelpSectionId() {
+    @Override
+    public String getUserRoleId() {
+        return null;  // DEFAULT
+    }
+
+    public String getHelpSectionId() {
         return aspectPanel instanceof Guidable
                 ? ((Guidable)aspectPanel).getHelpSectionId()
                 : null;

@@ -9,6 +9,8 @@ package com.mindalliance.channels.pages.components.guide;
  */
 public interface Guidable {
 
+    String getUserRoleId();
+
     String getHelpSectionId();
 
     String getHelpTopicId();

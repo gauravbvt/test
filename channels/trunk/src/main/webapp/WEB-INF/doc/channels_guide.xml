@@ -211,7 +211,7 @@ A contacts directory concludes the report.</description>
                 </item>
             </topic>
         </section>
-     </role>
+    </role>
     <role id="planner">
         <name>For developers of collaboration plans</name>
         <section id="about-channels-planner">
@@ -2007,6 +2007,21 @@ For example, at the bottom of in the profile of a role is an index of all other 
                     </script>
                 </item>
                 <next section="concepts" topic="plan-element"/>
+            </topic>
+        </section>
+        <section id="user-issues">
+            <name>Issues</name>
+            <topic id="adding-issue">
+                <name>Reporting an issue</name>
+                <item>
+                    <description>You can report an issue about the current context by pressing the New button, and then
+* providing a brief description of the issue
+* giving the type of issue (validity, completeness or robustness)
+* optionally tagging the issue
+* rating the severity of the issue
+* giving options for its remediation (start each option on a new line)</description>
+                </item>
+                <next section="concepts" topic="issue"/>
             </topic>
         </section>
     </role>

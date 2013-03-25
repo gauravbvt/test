@@ -158,6 +158,11 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         this.expansions = expansions;
     }
 
+    public String getUserRoleId() {
+        return null;  // DEFAULT
+    }
+
+
     protected IModel<? extends Identifiable> getModel() {
         return model;
     }

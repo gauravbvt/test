@@ -11,7 +11,6 @@ import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -32,7 +31,7 @@ import java.util.Set;
 /**
  * An issues panel.
  */
-public class IssuesPanel extends AbstractCommandablePanel implements Guidable {
+public class IssuesPanel extends AbstractCommandablePanel {
 
     /**
      * Maximum length of string displayed.
@@ -55,15 +54,6 @@ public class IssuesPanel extends AbstractCommandablePanel implements Guidable {
         init();
     }
 
-    @Override
-    public String getHelpSectionId() {
-        return "improving";
-    }
-
-    @Override
-    public String getHelpTopicId() {
-        return "issues";
-    }
 
     private void init() {
         add( new Label( "kind", new PropertyModel<String>( this, "kind" ) ) );
@@ -82,7 +72,7 @@ public class IssuesPanel extends AbstractCommandablePanel implements Guidable {
         newIssueLink.setVisible( !getPlanCommunity().isDomainCommunity() || getPlan().isDevelopment() );
         addTipTitle( newIssueLink, "Click to report a new issue" );
         add( newIssueLink );
-        add( makeHelpIcon( "help", this, "images/help_guide_issues.png" ) );
+        add( makeHelpIcon( "help", "planner", "user-issues", "adding-issue", "images/help_guide_issues.png" ) );
         createIssuePanels();
     }
 

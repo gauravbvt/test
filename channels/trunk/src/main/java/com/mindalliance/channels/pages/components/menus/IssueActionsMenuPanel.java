@@ -43,6 +43,11 @@ public class IssueActionsMenuPanel extends MenuPanel {
     }
 
     @Override
+    public String getUserRoleId() {
+        return "planner";
+    }
+
+    @Override
     public String getHelpTopicId() {
         return "issue-menu";
     }
@@ -107,7 +112,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
         List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
         Issue issue = getIssue();
         if ( !issue.isDetected() ) {
-            commandWrappers.add( new CommandWrapper( new RemoveIssue( getUser().getUsername(), (UserIssue)issue ) ) {
+            commandWrappers.add( new CommandWrapper( new RemoveIssue( getUser().getUsername(), (UserIssue)issue ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );

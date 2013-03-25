@@ -296,6 +296,16 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public void remove( ModelObject object ) {
+        beforeRemove( object );
+        getDao().remove( object );
+    }
+
+    private void beforeRemove( ModelObject object ) {
+        // Do nothing
+    }
+
+    @Override
     public <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name ) {
         return safeFindOrCreate( clazz, name, null );
     }

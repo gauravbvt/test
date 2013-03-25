@@ -82,7 +82,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
         if ( menuItems == null ) {
             try {
                 menuItems = getMenuItems();
-                menuItems.add( help( getHelpSectionId(), getHelpTopicId() ) );
+                menuItems.add( help( getUserRoleId(), getHelpSectionId(), getHelpTopicId() ) );
             } catch ( CommandException e ) {
                 LoggerFactory.getLogger( getClass() ).warn( "Failed to get menu items", e );
                 return new ArrayList<LinkMenuItem>();
@@ -319,11 +319,11 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
                 } );
     }
 
-    protected LinkMenuItem help( final String sectionId, final String topicId ) {
+    protected LinkMenuItem help( final String userRoleId, final String sectionId, final String topicId ) {
         AjaxLink<String> helpLink = new AjaxLink<String>( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, Change.guide( sectionId, topicId ) );
+                update( target, Change.guide( userRoleId, sectionId, topicId ) );
             }
         };
         return new LinkMenuItem( "menuItem", new Model<String>("Help"), helpLink );

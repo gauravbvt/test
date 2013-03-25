@@ -2757,5 +2757,14 @@ div.manage-plan a.button {
     padding: 8px 10px 7px;
 }
 
+/* Added by JF */
+.issues .help-icon {
+    float: right;
+    cursor:pointer;
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+
 
 

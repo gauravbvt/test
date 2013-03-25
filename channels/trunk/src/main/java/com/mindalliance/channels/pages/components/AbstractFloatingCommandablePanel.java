@@ -334,4 +334,8 @@ abstract public class AbstractFloatingCommandablePanel extends AbstractCommandab
         return 10000;
     }
 
+    @Override
+    public String getUserRoleId() {
+        return null;  // Default
+    }
 }

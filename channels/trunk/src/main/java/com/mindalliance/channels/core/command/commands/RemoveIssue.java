@@ -12,8 +12,8 @@ import com.mindalliance.channels.core.command.Change.Type;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.UserIssue;
-import com.mindalliance.channels.core.query.QueryService;
 
 /**
  * Remove issue command.
@@ -40,10 +40,10 @@ public class RemoveIssue extends AbstractCommand {
 
     @Override
     public Change execute( Commander commander ) throws CommandException {
-        QueryService queryService = commander.getQueryService();
+        CommunityService communityService = commander.getCommunityService();
         UserIssue issue = commander.resolve( UserIssue.class, (Long) get( "issue" ) );
         describeTarget( issue );
-        queryService.remove( issue );
+        communityService.remove( issue );
         releaseAnyLockOn( commander, issue );
         return new Change( Type.Removed, issue );
     }
