@@ -92,31 +92,34 @@
     </bean>
     <bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider" id="daoAuthenticationProvider">
         <property name="userDetailsService">
-            <ref bean="inMemoryDaoImpl"/>
+            <ref bean="jdbcDaoImpl"/>
         </property>
     </bean>
     <bean class="com.wavemaker.runtime.security.EnhancedInMemoryDaoImpl" id="inMemoryDaoImpl">
         <property name="userMap">
             <value>
-                scott=demo,ROLE_DEFAULT_NO_ROLES
+                demo=demo,ROLE_DEFAULT_NO_ROLES
             </value>
         </property>
     </bean>
     <bean class="com.wavemaker.runtime.security.EnhancedJdbcDaoImpl" id="jdbcDaoImpl">
         <property name="dataSource">
-            <ref bean="jdbcDataSource"/>
+            <ref bean="analystDBDataSource"/>
         </property>
         <property name="usersByUsernameQuery">
-            <value>SELECT first_name, last_name, 1 FROM employee WHERE first_name = ?</value>
+            <value>SELECT id, hash, 1, name FROM user WHERE name = ?</value>
         </property>
         <property name="authoritiesByUsernameQuery">
-            <value>SELECT first_name, "DEFAULT_NO_ROLES" FROM employee WHERE first_name = ?</value>
+            <value>SELECT id, role FROM user WHERE id = ?</value>
         </property>
         <property name="rolePrefix">
             <value>ROLE_</value>
         </property>
         <property name="usernameBasedPrimaryKey">
             <value>true</value>
+        </property>
+        <property name="authoritiesByUsernameQueryParamType">
+            <value>integer</value>
         </property>
     </bean>
     <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbcDataSource"/>

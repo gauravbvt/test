@@ -11,6 +11,9 @@
         <property name="sequence" type="short">
             <column name="sequence"/>
         </property>
+        <property name="tenantId" type="integer">
+            <column name="tenant_id" not-null="true"/>
+        </property>
         <set name="documentses" inverse="true" cascade="">
             <key>
                 <column name="category"/>

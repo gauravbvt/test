@@ -1,13 +1,11 @@
 
 package com.analystdb.data;
 
-import java.util.HashSet;
-import java.util.Set;
 
 
 /**
  *  analystDB.Analysis
- *  02/10/2013 19:29:36
+ *  03/26/2013 11:09:00
  * 
  */
 public class Analysis {
@@ -17,7 +15,6 @@ public class Analysis {
     private String description;
     private String name;
     private Integer version;
-    private Set<com.analystdb.data.Plan> plans = new HashSet<com.analystdb.data.Plan>();
 
     public Long getId() {
         return id;
@@ -57,14 +54,6 @@ public class Analysis {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Set<com.analystdb.data.Plan> getPlans() {
-        return plans;
-    }
-
-    public void setPlans(Set<com.analystdb.data.Plan> plans) {
-        this.plans = plans;
     }
 
 }

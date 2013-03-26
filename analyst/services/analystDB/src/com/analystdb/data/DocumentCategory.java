@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  *  analystDB.DocumentCategory
- *  02/10/2013 19:29:36
+ *  03/26/2013 11:09:00
  * 
  */
 public class DocumentCategory {
@@ -15,6 +15,7 @@ public class DocumentCategory {
     private Integer id;
     private String name;
     private Short sequence;
+    private Integer tenantId;
     private Set<com.analystdb.data.Documents> documentses = new HashSet<com.analystdb.data.Documents>();
 
     public Integer getId() {
@@ -39,6 +40,14 @@ public class DocumentCategory {
 
     public void setSequence(Short sequence) {
         this.sequence = sequence;
+    }
+
+    public Integer getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Integer tenantId) {
+        this.tenantId = tenantId;
     }
 
     public Set<com.analystdb.data.Documents> getDocumentses() {

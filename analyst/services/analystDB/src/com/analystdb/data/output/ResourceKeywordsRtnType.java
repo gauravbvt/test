@@ -4,7 +4,7 @@ package com.analystdb.data.output;
 
 
 /**
- * Generated for query "resourceKeywords" on 02/12/2013 13:52:49
+ * Generated for query "resourceKeywords" on 03/26/2013 11:09:07
  * 
  */
 public class ResourceKeywordsRtnType {

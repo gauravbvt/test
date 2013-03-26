@@ -297,16 +297,6 @@ wm.types = {
 					"required": true,
 					"type": "java.lang.String"
 				},
-				"plans": {
-					"exclude": [],
-					"fieldOrder": 5,
-					"fieldSubType": null,
-					"include": [],
-					"isList": true,
-					"noChange": [],
-					"required": false,
-					"type": "com.analystdb.data.Plan"
-				},
 				"project": {
 					"exclude": [],
 					"fieldOrder": 4,
@@ -439,11 +429,142 @@ wm.types = {
 			"liveService": true,
 			"service": "analystDB"
 		},
+		"com.analystdb.data.Decision": {
+			"fields": {
+				"decisionFlows": {
+					"exclude": [],
+					"fieldOrder": 5,
+					"fieldSubType": null,
+					"include": [],
+					"isList": true,
+					"noChange": [],
+					"required": false,
+					"type": "com.analystdb.data.DecisionFlow"
+				},
+				"description": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.String"
+				},
+				"id": {
+					"exclude": ["insert"],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Integer"
+				},
+				"importance": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.Byte"
+				},
+				"interview": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Interview"
+				},
+				"name": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": true,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.DecisionFlow": {
+			"fields": {
+				"decision": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Decision"
+				},
+				"flow": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Flow"
+				},
+				"id": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update", "insert"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "com.analystdb.data.DecisionFlowId"
+				}
+			},
+			"internal": false,
+			"liveService": true,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.DecisionFlowId": {
+			"fields": {
+				"decision": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update", "insert"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Integer"
+				},
+				"flow": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update", "insert"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Long"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
 		"com.analystdb.data.DocumentCategory": {
 			"fields": {
 				"documentses": {
 					"exclude": [],
-					"fieldOrder": 3,
+					"fieldOrder": 4,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -480,6 +601,16 @@ wm.types = {
 					"noChange": [],
 					"required": false,
 					"type": "java.lang.Short"
+				},
+				"tenantId": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Integer"
 				}
 			},
 			"internal": false,
@@ -500,7 +631,7 @@ wm.types = {
 				},
 				"documentCategory": {
 					"exclude": [],
-					"fieldOrder": 2,
+					"fieldOrder": 3,
 					"fieldSubType": null,
 					"include": [],
 					"isList": false,
@@ -510,7 +641,7 @@ wm.types = {
 				},
 				"flows": {
 					"exclude": [],
-					"fieldOrder": 3,
+					"fieldOrder": 4,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -527,6 +658,16 @@ wm.types = {
 					"noChange": ["delete", "read", "update"],
 					"required": true,
 					"type": "java.lang.Integer"
+				},
+				"tenantId": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Integer"
 				}
 			},
 			"internal": false,
@@ -535,6 +676,16 @@ wm.types = {
 		},
 		"com.analystdb.data.Flow": {
 			"fields": {
+				"decisionFlows": {
+					"exclude": [],
+					"fieldOrder": 9,
+					"fieldSubType": null,
+					"include": [],
+					"isList": true,
+					"noChange": [],
+					"required": false,
+					"type": "com.analystdb.data.DecisionFlow"
+				},
 				"description": {
 					"exclude": [],
 					"fieldOrder": 4,
@@ -554,16 +705,6 @@ wm.types = {
 					"noChange": [],
 					"required": false,
 					"type": "com.analystdb.data.Documents"
-				},
-				"flowAttributes": {
-					"exclude": [],
-					"fieldOrder": 9,
-					"fieldSubType": null,
-					"include": [],
-					"isList": true,
-					"noChange": [],
-					"required": false,
-					"type": "com.analystdb.data.FlowAttribute"
 				},
 				"fromActor": {
 					"exclude": [],
@@ -640,63 +781,6 @@ wm.types = {
 			"liveService": true,
 			"service": "analystDB"
 		},
-		"com.analystdb.data.FlowAttribute": {
-			"fields": {
-				"flow": {
-					"exclude": [],
-					"fieldOrder": 4,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "com.analystdb.data.Flow"
-				},
-				"id": {
-					"exclude": ["insert"],
-					"fieldOrder": 0,
-					"fieldSubType": null,
-					"include": ["delete", "read", "update"],
-					"isList": false,
-					"noChange": ["delete", "read", "update"],
-					"required": true,
-					"type": "java.lang.Long"
-				},
-				"name": {
-					"exclude": [],
-					"fieldOrder": 1,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "java.lang.String"
-				},
-				"val": {
-					"exclude": [],
-					"fieldOrder": 2,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "java.lang.String"
-				},
-				"version": {
-					"exclude": [],
-					"fieldOrder": 3,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": false,
-					"type": "java.lang.Integer"
-				}
-			},
-			"internal": false,
-			"liveService": true,
-			"service": "analystDB"
-		},
 		"com.analystdb.data.Interview": {
 			"fields": {
 				"approachs": {
@@ -708,6 +792,16 @@ wm.types = {
 					"noChange": [],
 					"required": false,
 					"type": "com.analystdb.data.Approach"
+				},
+				"decisions": {
+					"exclude": [],
+					"fieldOrder": 7,
+					"fieldSubType": null,
+					"include": [],
+					"isList": true,
+					"noChange": [],
+					"required": false,
+					"type": "com.analystdb.data.Decision"
 				},
 				"done": {
 					"exclude": [],
@@ -721,7 +815,7 @@ wm.types = {
 				},
 				"flows": {
 					"exclude": [],
-					"fieldOrder": 8,
+					"fieldOrder": 9,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -741,7 +835,7 @@ wm.types = {
 				},
 				"issueComments": {
 					"exclude": [],
-					"fieldOrder": 7,
+					"fieldOrder": 8,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -1294,78 +1388,11 @@ wm.types = {
 			"liveService": false,
 			"service": "analystDB"
 		},
-		"com.analystdb.data.Plan": {
-			"fields": {
-				"analysis": {
-					"exclude": [],
-					"fieldOrder": 5,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "com.analystdb.data.Analysis"
-				},
-				"approved": {
-					"exclude": [],
-					"fieldOrder": 3,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "java.lang.Boolean"
-				},
-				"description": {
-					"exclude": [],
-					"fieldOrder": 1,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": false,
-					"type": "java.lang.String"
-				},
-				"id": {
-					"exclude": ["insert"],
-					"fieldOrder": 0,
-					"fieldSubType": null,
-					"include": ["delete", "read", "update"],
-					"isList": false,
-					"noChange": ["delete", "read", "update"],
-					"required": true,
-					"type": "java.lang.Long"
-				},
-				"name": {
-					"exclude": [],
-					"fieldOrder": 2,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "java.lang.String"
-				},
-				"version": {
-					"exclude": [],
-					"fieldOrder": 4,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": false,
-					"type": "java.lang.Integer"
-				}
-			},
-			"internal": false,
-			"liveService": true,
-			"service": "analystDB"
-		},
 		"com.analystdb.data.Project": {
 			"fields": {
 				"analysises": {
 					"exclude": [],
-					"fieldOrder": 5,
+					"fieldOrder": 6,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -1395,7 +1422,7 @@ wm.types = {
 				},
 				"issueCategories": {
 					"exclude": [],
-					"fieldOrder": 4,
+					"fieldOrder": 5,
 					"fieldSubType": null,
 					"include": [],
 					"isList": true,
@@ -1423,16 +1450,6 @@ wm.types = {
 					"required": true,
 					"type": "java.lang.String"
 				},
-				"projectFileses": {
-					"exclude": [],
-					"fieldOrder": 6,
-					"fieldSubType": null,
-					"include": [],
-					"isList": true,
-					"noChange": [],
-					"required": false,
-					"type": "com.analystdb.data.ProjectFiles"
-				},
 				"resources": {
 					"exclude": [],
 					"fieldOrder": 8,
@@ -1443,6 +1460,16 @@ wm.types = {
 					"required": false,
 					"type": "com.analystdb.data.Resource"
 				},
+				"tenantId": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Integer"
+				},
 				"version": {
 					"exclude": [],
 					"fieldOrder": 3,
@@ -1452,53 +1479,6 @@ wm.types = {
 					"noChange": [],
 					"required": false,
 					"type": "java.lang.Integer"
-				}
-			},
-			"internal": false,
-			"liveService": true,
-			"service": "analystDB"
-		},
-		"com.analystdb.data.ProjectFiles": {
-			"fields": {
-				"content": {
-					"exclude": [],
-					"fieldOrder": 2,
-					"fieldSubType": null,
-					"include": [],
-					"isList": true,
-					"noChange": [],
-					"required": false,
-					"type": "byte"
-				},
-				"description": {
-					"exclude": [],
-					"fieldOrder": 1,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": false,
-					"type": "java.lang.String"
-				},
-				"name": {
-					"exclude": [],
-					"fieldOrder": 0,
-					"fieldSubType": null,
-					"include": ["delete", "read", "update", "insert"],
-					"isList": false,
-					"noChange": ["delete", "read", "update"],
-					"required": true,
-					"type": "java.lang.Integer"
-				},
-				"project": {
-					"exclude": [],
-					"fieldOrder": 3,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "com.analystdb.data.Project"
 				}
 			},
 			"internal": false,
@@ -1632,6 +1612,150 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": false,
+					"type": "java.lang.Integer"
+				}
+			},
+			"internal": false,
+			"liveService": true,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.Tenant": {
+			"fields": {
+				"disabled": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.Boolean"
+				},
+				"expires": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.util.Date"
+				},
+				"logo": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.String"
+				},
+				"name": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"tenantId": {
+					"exclude": ["insert"],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Integer"
+				}
+			},
+			"internal": false,
+			"liveService": true,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.User": {
+			"fields": {
+				"disabled": {
+					"exclude": [],
+					"fieldOrder": 5,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.Boolean"
+				},
+				"email": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.String"
+				},
+				"hash": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.lang.String"
+				},
+				"id": {
+					"exclude": ["insert"],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": ["delete", "read", "update"],
+					"isList": false,
+					"noChange": ["delete", "read", "update"],
+					"required": true,
+					"type": "java.lang.Integer"
+				},
+				"lastSeen": {
+					"exclude": [],
+					"fieldOrder": 4,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": false,
+					"type": "java.util.Date"
+				},
+				"name": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"role": {
+					"exclude": [],
+					"fieldOrder": 7,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"tenantId": {
+					"exclude": [],
+					"fieldOrder": 6,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
 					"type": "java.lang.Integer"
 				}
 			},
@@ -2020,33 +2144,6 @@ wm.types = {
 			"liveService": false,
 			"service": "analystDB"
 		},
-		"com.analystdb.data.output.ProjectPlansRtnType": {
-			"fields": {
-				"analysis": {
-					"exclude": [],
-					"fieldOrder": 1,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "java.lang.String"
-				},
-				"plan": {
-					"exclude": [],
-					"fieldOrder": 0,
-					"fieldSubType": null,
-					"include": [],
-					"isList": false,
-					"noChange": [],
-					"required": true,
-					"type": "com.analystdb.data.Plan"
-				}
-			},
-			"internal": false,
-			"liveService": false,
-			"service": "analystDB"
-		},
 		"com.analystdb.data.output.RecentInterviewsRtnType": {
 			"fields": {
 				"approaches": {
@@ -2284,7 +2381,7 @@ dojo.declare("Analyst", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "0.r4738", 
+	"projectSubVersion": "0.r4791", 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 

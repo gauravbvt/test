@@ -329,8 +329,15 @@ dojo.declare("wizard", wm.Page, {
         }		
 	},
 	documentsNewButtonClick: function(inSender) {
-        var cc = this.documentcategoryLiveVariable1.getData()[0];
-		this.documentsDojoGrid.addRow({documentCategory: cc,document:"(New Document)"}, true, false)
+        this.documentsDojoGrid.addRow({id:0,documentCategory: null,document:"(New Document)"}, true);
+	},
+	documentcategoryDojoGridLiveEditBeforeUpdate: function(inSender, inData) {
+    	// Clean up for bug in update...
+        delete inData.tenantId;
+	},
+	documentsDojoGridLiveEditBeforeUpdate: function(inSender, inData) {
+        // Clean up for bug in update...
+        delete inData.tenantId;
 	},
 	_end: 0
 });

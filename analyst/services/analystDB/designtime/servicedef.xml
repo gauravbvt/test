@@ -4,10 +4,6 @@
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.output.AllIssuesRtnType" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="getFlowAttributeById">
-        <parameter name="id" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.FlowAttribute" isList="false"/>
-    </operation>
     <operation operationType="hqlquery" name="resourceValues">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <parameter name="keyword" typeRef="java.lang.String" isList="false"/>
@@ -57,10 +53,6 @@
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.output.IssueCategoryCountsRtnType" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="projectPlans">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.ProjectPlansRtnType" isList="true"/>
-    </operation>
     <operation operationType="hqlquery" name="otherIssueApproaches">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <parameter name="issue" typeRef="java.lang.Long" isList="false"/>
@@ -106,15 +98,19 @@
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <return typeRef="com.analystdb.data.output.RecentInterviewsRtnType" isList="true"/>
     </operation>
+    <operation operationType="hqlquery" name="allDocsWithIssues">
+        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
+        <return typeRef="com.analystdb.data.output.AllDocsWithIssuesRtnType" isList="true"/>
+    </operation>
     <operation operationType="hqlquery" name="documentIssues">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
         <parameter name="document" typeRef="java.lang.Integer" isList="false"/>
         <parameter name="phase" typeRef="java.lang.Integer" isList="false"/>
         <return typeRef="com.analystdb.data.output.DocumentIssuesRtnType" isList="true"/>
     </operation>
-    <operation operationType="hqlquery" name="allDocsWithIssues">
-        <parameter name="project" typeRef="java.lang.Long" isList="false"/>
-        <return typeRef="com.analystdb.data.output.AllDocsWithIssuesRtnType" isList="true"/>
+    <operation operationType="hqlquery" name="getDocumentsById">
+        <parameter name="id" typeRef="java.lang.Integer" isList="false"/>
+        <return typeRef="com.analystdb.data.Documents" isList="false"/>
     </operation>
     <operation operationType="hqlquery" name="flowsByProject">
         <parameter name="project" typeRef="java.lang.Long" isList="false"/>
@@ -135,7 +131,6 @@
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
             <element name="project" typeRef="com.analystdb.data.Project" isList="false" allowNull="false"/>
-            <element name="plans" typeRef="com.analystdb.data.Plan" isList="true" allowNull="true"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.Approach" supportsQuickData="true">
             <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false">
@@ -157,6 +152,35 @@
             <element name="interview" typeRef="com.analystdb.data.Interview" isList="false" allowNull="false"/>
             <element name="issueApproachs" typeRef="com.analystdb.data.IssueApproach" isList="true" allowNull="true"/>
         </dataobject>
+        <dataobject javaType="com.analystdb.data.Decision" supportsQuickData="true">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="importance" typeRef="java.lang.Byte" isList="false" allowNull="true"/>
+            <element name="interview" typeRef="com.analystdb.data.Interview" isList="false" allowNull="false"/>
+            <element name="decisionFlows" typeRef="com.analystdb.data.DecisionFlow" isList="true" allowNull="true"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.DecisionFlow" supportsQuickData="true">
+            <element name="id" typeRef="com.analystdb.data.DecisionFlowId" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element name="flow" typeRef="com.analystdb.data.Flow" isList="false" allowNull="false"/>
+            <element name="decision" typeRef="com.analystdb.data.Decision" isList="false" allowNull="false"/>
+        </dataobject>
         <dataobject javaType="com.analystdb.data.DocumentCategory" supportsQuickData="true">
             <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
                 <require>delete</require>
@@ -169,6 +193,7 @@
             </element>
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="sequence" typeRef="java.lang.Short" isList="false" allowNull="true"/>
+            <element name="tenantId" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
             <element name="documentses" typeRef="com.analystdb.data.Documents" isList="true" allowNull="true"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.Documents" supportsQuickData="true">
@@ -182,6 +207,7 @@
                 <exclude>insert</exclude>
             </element>
             <element name="document" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="tenantId" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
             <element name="documentCategory" typeRef="com.analystdb.data.DocumentCategory" isList="false" allowNull="true"/>
             <element name="flows" typeRef="com.analystdb.data.Flow" isList="true" allowNull="true"/>
         </dataobject>
@@ -203,22 +229,7 @@
             <element name="interview" typeRef="com.analystdb.data.Interview" isList="false" allowNull="false"/>
             <element name="documents" typeRef="com.analystdb.data.Documents" isList="false" allowNull="true"/>
             <element name="issueCommentFlowses" typeRef="com.analystdb.data.IssueCommentFlows" isList="true" allowNull="true"/>
-            <element name="flowAttributes" typeRef="com.analystdb.data.FlowAttribute" isList="true" allowNull="true"/>
-        </dataobject>
-        <dataobject javaType="com.analystdb.data.FlowAttribute" supportsQuickData="true">
-            <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-                <exclude>insert</exclude>
-            </element>
-            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
-            <element name="val" typeRef="java.lang.String" isList="false" allowNull="false"/>
-            <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
-            <element name="flow" typeRef="com.analystdb.data.Flow" isList="false" allowNull="false"/>
+            <element name="decisionFlows" typeRef="com.analystdb.data.DecisionFlow" isList="true" allowNull="true"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.Interview" supportsQuickData="true">
             <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false">
@@ -236,6 +247,7 @@
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
             <element name="resource" typeRef="com.analystdb.data.Resource" isList="false" allowNull="false"/>
             <element name="approachs" typeRef="com.analystdb.data.Approach" isList="true" allowNull="true"/>
+            <element name="decisions" typeRef="com.analystdb.data.Decision" isList="true" allowNull="true"/>
             <element name="issueComments" typeRef="com.analystdb.data.IssueComment" isList="true" allowNull="true"/>
             <element name="flows" typeRef="com.analystdb.data.Flow" isList="true" allowNull="true"/>
         </dataobject>
@@ -346,22 +358,6 @@
             <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
             <element name="issueCategory" typeRef="com.analystdb.data.IssueCategory" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.Plan" supportsQuickData="true">
-            <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-                <exclude>insert</exclude>
-            </element>
-            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
-            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
-            <element name="approved" typeRef="java.lang.Boolean" isList="false" allowNull="false"/>
-            <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
-            <element name="analysis" typeRef="com.analystdb.data.Analysis" isList="false" allowNull="false"/>
-        </dataobject>
         <dataobject javaType="com.analystdb.data.Project" supportsQuickData="true">
             <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false">
                 <require>delete</require>
@@ -375,25 +371,11 @@
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
+            <element name="tenantId" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
             <element name="issueCategories" typeRef="com.analystdb.data.IssueCategory" isList="true" allowNull="true"/>
             <element name="analysises" typeRef="com.analystdb.data.Analysis" isList="true" allowNull="true"/>
-            <element name="projectFileses" typeRef="com.analystdb.data.ProjectFiles" isList="true" allowNull="true"/>
             <element name="issues" typeRef="com.analystdb.data.Issue" isList="true" allowNull="true"/>
             <element name="resources" typeRef="com.analystdb.data.Resource" isList="true" allowNull="true"/>
-        </dataobject>
-        <dataobject javaType="com.analystdb.data.ProjectFiles" supportsQuickData="true">
-            <element name="name" typeRef="java.lang.Integer" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-            <element name="description" typeRef="java.lang.String" isList="false" allowNull="true"/>
-            <element name="content" typeRef="byte" isList="true" allowNull="true"/>
-            <element name="project" typeRef="com.analystdb.data.Project" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.Resource" supportsQuickData="true">
             <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false">
@@ -426,6 +408,59 @@
             <element name="val" typeRef="java.lang.String" isList="false" allowNull="false"/>
             <element name="version" typeRef="java.lang.Integer" isList="false" allowNull="true"/>
             <element name="resource" typeRef="com.analystdb.data.Resource" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.Tenant" supportsQuickData="true">
+            <element name="tenantId" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="logo" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="disabled" typeRef="java.lang.Boolean" isList="false" allowNull="true"/>
+            <element name="expires" typeRef="java.util.Date" isList="false" allowNull="true"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.User" supportsQuickData="true">
+            <element name="id" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+                <exclude>insert</exclude>
+            </element>
+            <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="email" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="hash" typeRef="java.lang.String" isList="false" allowNull="true"/>
+            <element name="lastSeen" typeRef="java.util.Date" isList="false" allowNull="true"/>
+            <element name="disabled" typeRef="java.lang.Boolean" isList="false" allowNull="true"/>
+            <element name="tenantId" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
+            <element name="role" typeRef="java.lang.String" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.DecisionFlowId" name="id" supportsQuickData="false">
+            <element name="decision" typeRef="java.lang.Integer" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element name="flow" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
         </dataobject>
         <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
             <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
@@ -510,10 +545,6 @@
             <element name="approaches" typeRef="java.lang.Long" isList="false" allowNull="false"/>
             <element name="flows" typeRef="java.lang.Long" isList="false" allowNull="false"/>
             <element name="issues" typeRef="java.lang.Long" isList="false" allowNull="false"/>
-        </dataobject>
-        <dataobject javaType="com.analystdb.data.output.ProjectPlansRtnType" supportsQuickData="false">
-            <element name="plan" typeRef="com.analystdb.data.Plan" isList="false" allowNull="false"/>
-            <element name="analysis" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.IssueFlowsRtnType" supportsQuickData="false">
             <element name="flow" typeRef="com.analystdb.data.Flow" isList="false" allowNull="false"/>

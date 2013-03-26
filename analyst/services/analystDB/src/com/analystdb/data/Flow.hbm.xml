@@ -32,11 +32,11 @@
             </key>
             <one-to-many class="com.analystdb.data.IssueCommentFlows"/>
         </set>
-        <set name="flowAttributes" inverse="true" cascade="">
+        <set name="decisionFlows" inverse="true" cascade="">
             <key>
                 <column name="flow" not-null="true"/>
             </key>
-            <one-to-many class="com.analystdb.data.FlowAttribute"/>
+            <one-to-many class="com.analystdb.data.DecisionFlow"/>
         </set>
     </class>
 </hibernate-mapping>

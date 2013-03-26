@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  *  analystDB.Flow
- *  02/10/2013 19:29:36
+ *  03/26/2013 11:09:00
  * 
  */
 public class Flow {
@@ -21,7 +21,7 @@ public class Flow {
     private String description;
     private Integer version;
     private Set<com.analystdb.data.IssueCommentFlows> issueCommentFlowses = new HashSet<com.analystdb.data.IssueCommentFlows>();
-    private Set<com.analystdb.data.FlowAttribute> flowAttributes = new HashSet<com.analystdb.data.FlowAttribute>();
+    private Set<com.analystdb.data.DecisionFlow> decisionFlows = new HashSet<com.analystdb.data.DecisionFlow>();
 
     public Long getId() {
         return id;
@@ -95,12 +95,12 @@ public class Flow {
         this.issueCommentFlowses = issueCommentFlowses;
     }
 
-    public Set<com.analystdb.data.FlowAttribute> getFlowAttributes() {
-        return flowAttributes;
+    public Set<com.analystdb.data.DecisionFlow> getDecisionFlows() {
+        return decisionFlows;
     }
 
-    public void setFlowAttributes(Set<com.analystdb.data.FlowAttribute> flowAttributes) {
-        this.flowAttributes = flowAttributes;
+    public void setDecisionFlows(Set<com.analystdb.data.DecisionFlow> decisionFlows) {
+        this.decisionFlows = decisionFlows;
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 
 /**
  *  analystDB.Project
- *  02/10/2013 19:29:36
+ *  03/26/2013 11:09:00
  * 
  */
 public class Project {
@@ -16,9 +16,9 @@ public class Project {
     private String name;
     private String description;
     private Integer version;
+    private Integer tenantId;
     private Set<com.analystdb.data.IssueCategory> issueCategories = new HashSet<com.analystdb.data.IssueCategory>();
     private Set<com.analystdb.data.Analysis> analysises = new HashSet<com.analystdb.data.Analysis>();
-    private Set<com.analystdb.data.ProjectFiles> projectFileses = new HashSet<com.analystdb.data.ProjectFiles>();
     private Set<com.analystdb.data.Issue> issues = new HashSet<com.analystdb.data.Issue>();
     private Set<com.analystdb.data.Resource> resources = new HashSet<com.analystdb.data.Resource>();
 
@@ -54,6 +54,14 @@ public class Project {
         this.version = version;
     }
 
+    public Integer getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Integer tenantId) {
+        this.tenantId = tenantId;
+    }
+
     public Set<com.analystdb.data.IssueCategory> getIssueCategories() {
         return issueCategories;
     }
@@ -68,14 +76,6 @@ public class Project {
 
     public void setAnalysises(Set<com.analystdb.data.Analysis> analysises) {
         this.analysises = analysises;
-    }
-
-    public Set<com.analystdb.data.ProjectFiles> getProjectFileses() {
-        return projectFileses;
-    }
-
-    public void setProjectFileses(Set<com.analystdb.data.ProjectFiles> projectFileses) {
-        this.projectFileses = projectFileses;
     }
 
     public Set<com.analystdb.data.Issue> getIssues() {

@@ -17,11 +17,5 @@
         <many-to-one name="project" class="com.analystdb.data.Project">
             <column name="project" not-null="true"/>
         </many-to-one>
-        <set name="plans" inverse="true" cascade="">
-            <key>
-                <column name="analysis" not-null="true"/>
-            </key>
-            <one-to-many class="com.analystdb.data.Plan"/>
-        </set>
     </class>
 </hibernate-mapping>

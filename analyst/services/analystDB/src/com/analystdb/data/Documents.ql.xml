@@ -3,9 +3,9 @@
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<!-- Generated 02/10/2013 19:29:33
+<!-- Generated 03/26/2013 11:08:58
 
-Queries for entity: FlowAttribute.
+Queries for entity: Documents.
 
 @design.generated: Marks a generated query.
 
@@ -14,13 +14,13 @@ Queries for entity: FlowAttribute.
 <hibernate-mapping>
 
     <query 
-        name="getFlowAttributeById"
+        name="getDocumentsById"
         comment="Example HQL Query
                  @design.generated">
                  
-        <query-param name="id" type="java.lang.Long"/>
+        <query-param name="id" type="java.lang.Integer"/>
 
-            from FlowAttribute _a where _a.id=:id 
+            from Documents _a where _a.id=:id 
 
     </query>
 

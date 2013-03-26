@@ -5,13 +5,12 @@ package com.analystdb;
 
 /**
  *  Query names for service "analystDB"
- *  03/01/2013 08:14:50
+ *  03/26/2013 11:09:11
  * 
  */
 public class AnalystDBConstants {
 
     public final static String allIssuesQueryName = "allIssues";
-    public final static String getFlowAttributeByIdQueryName = "getFlowAttributeById";
     public final static String resourceValuesQueryName = "resourceValues";
     public final static String otherFlowIssuesQueryName = "otherFlowIssues";
     public final static String maxIssueSequenceQueryName = "maxIssueSequence";
@@ -23,7 +22,6 @@ public class AnalystDBConstants {
     public final static String upcomingInterviewsQueryName = "upcomingInterviews";
     public final static String resourceKeywordsQueryName = "resourceKeywords";
     public final static String issueCategoryCountsQueryName = "issueCategoryCounts";
-    public final static String projectPlansQueryName = "projectPlans";
     public final static String otherIssueApproachesQueryName = "otherIssueApproaches";
     public final static String documentIssueCountQueryName = "documentIssueCount";
     public final static String issueFlowsQueryName = "issueFlows";
@@ -34,8 +32,9 @@ public class AnalystDBConstants {
     public final static String addressedIssuesQueryName = "addressedIssues";
     public final static String otherApproachIssuesQueryName = "otherApproachIssues";
     public final static String recentInterviewsQueryName = "recentInterviews";
-    public final static String documentIssuesQueryName = "documentIssues";
     public final static String allDocsWithIssuesQueryName = "allDocsWithIssues";
+    public final static String documentIssuesQueryName = "documentIssues";
+    public final static String getDocumentsByIdQueryName = "getDocumentsById";
     public final static String flowsByProjectQueryName = "flowsByProject";
 
 }

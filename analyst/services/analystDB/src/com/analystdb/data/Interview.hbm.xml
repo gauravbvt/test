@@ -26,6 +26,12 @@
             </key>
             <one-to-many class="com.analystdb.data.Approach"/>
         </set>
+        <set name="decisions" inverse="true" cascade="">
+            <key>
+                <column name="interview" not-null="true"/>
+            </key>
+            <one-to-many class="com.analystdb.data.Decision"/>
+        </set>
         <set name="issueComments" inverse="true" cascade="">
             <key>
                 <column name="interview" not-null="true"/>

@@ -95,13 +95,13 @@
 		}],
 		"returnType": "[com.analystdb.data.Flow]"
 	}, {
-		"name": "getFlowAttributeById",
+		"name": "getDocumentsById",
 		"operationType": "hqlquery",
 		"parameters": [{
 			"name": "id",
-			"type": "java.lang.Long"
+			"type": "java.lang.Integer"
 		}],
-		"returnType": "com.analystdb.data.FlowAttribute"
+		"returnType": "com.analystdb.data.Documents"
 	}, {
 		"name": "interviewIssues",
 		"operationType": "hqlquery",
@@ -208,14 +208,6 @@
 			"type": "java.lang.Long"
 		}],
 		"returnType": "[com.analystdb.data.Flow]"
-	}, {
-		"name": "projectPlans",
-		"operationType": "hqlquery",
-		"parameters": [{
-			"name": "project",
-			"type": "java.lang.Long"
-		}],
-		"returnType": "[com.analystdb.data.output.ProjectPlansRtnType]"
 	}, {
 		"name": "recentInterviews",
 		"operationType": "hqlquery",

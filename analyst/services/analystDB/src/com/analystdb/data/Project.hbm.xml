@@ -14,6 +14,9 @@
         <property name="version" type="integer">
             <column name="version"/>
         </property>
+        <property name="tenantId" type="integer">
+            <column name="tenant_id" not-null="true"/>
+        </property>
         <set name="issueCategories" inverse="true" cascade="">
             <key>
                 <column name="project" not-null="true"/>
@@ -25,12 +28,6 @@
                 <column name="project" not-null="true"/>
             </key>
             <one-to-many class="com.analystdb.data.Analysis"/>
-        </set>
-        <set name="projectFileses" inverse="true" cascade="">
-            <key>
-                <column name="project" not-null="true"/>
-            </key>
-            <one-to-many class="com.analystdb.data.ProjectFiles"/>
         </set>
         <set name="issues" inverse="true" cascade="">
             <key>

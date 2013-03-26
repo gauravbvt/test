@@ -1,0 +1,30 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.analystdb.data.User" table="user" dynamic-insert="false" dynamic-update="false">
+        <id name="id" type="integer">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="63" not-null="true"/>
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="63"/>
+        </property>
+        <property name="hash" type="string">
+            <column name="hash"/>
+        </property>
+        <property name="lastSeen" type="timestamp">
+            <column name="lastSeen" length="19"/>
+        </property>
+        <property name="disabled" type="boolean">
+            <column name="disabled"/>
+        </property>
+        <property name="tenantId" type="integer">
+            <column name="tenant_id" not-null="true"/>
+        </property>
+        <property name="role" type="string">
+            <column name="role" length="45" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

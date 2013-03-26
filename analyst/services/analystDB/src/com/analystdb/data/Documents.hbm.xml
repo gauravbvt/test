@@ -8,6 +8,9 @@
         <property name="document" type="string">
             <column name="document" length="63"/>
         </property>
+        <property name="tenantId" type="integer">
+            <column name="tenant_id" not-null="true"/>
+        </property>
         <many-to-one name="documentCategory" class="com.analystdb.data.DocumentCategory">
             <column name="category"/>
         </many-to-one>

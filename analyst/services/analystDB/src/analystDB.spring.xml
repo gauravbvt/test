@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- Generated 02/10/2013 19:29:33
+<!-- Generated 03/26/2013 11:08:58
 
 Configuration for 'analystDB' database service
 
@@ -90,27 +90,28 @@ Configuration for 'analystDB' database service
         <property name="mappingResources">
             <list>
 
-<value>com/analystdb/data/FlowAttribute.hbm.xml</value>
 <value>com/analystdb/data/Documents.hbm.xml</value>
+<value>com/analystdb/data/Decision.hbm.xml</value>
 <value>com/analystdb/data/IssueCategory.hbm.xml</value>
 <value>com/analystdb/data/IssueCommentFlows.hbm.xml</value>
 <value>com/analystdb/data/IssueIssueCategory.hbm.xml</value>
+<value>com/analystdb/data/User.hbm.xml</value>
+<value>com/analystdb/data/DecisionFlow.hbm.xml</value>
 <value>com/analystdb/data/Resource.hbm.xml</value>
-<value>com/analystdb/data/ProjectFiles.hbm.xml</value>
 <value>com/analystdb/data/Interview.hbm.xml</value>
 <value>com/analystdb/data/Issue.hbm.xml</value>
 <value>com/analystdb/data/DocumentCategory.hbm.xml</value>
 <value>com/analystdb/data/IssueApproach.hbm.xml</value>
 <value>com/analystdb/data/IssueComment.hbm.xml</value>
 <value>com/analystdb/data/IssueAttribute.hbm.xml</value>
-<value>com/analystdb/data/Plan.hbm.xml</value>
+<value>com/analystdb/data/Tenant.hbm.xml</value>
 <value>com/analystdb/data/Flow.hbm.xml</value>
 <value>com/analystdb/data/Approach.hbm.xml</value>
 <value>com/analystdb/data/Project.hbm.xml</value>
 <value>com/analystdb/data/ResourceAttribute.hbm.xml</value>
 <value>com/analystdb/data/Analysis.hbm.xml</value>
 
-<value>com/analystdb/data/FlowAttribute.ql.xml</value>
+<value>com/analystdb/data/Documents.ql.xml</value>
 <value>com/analystdb/data/app-queries.ql.xml</value>
 
             </list>

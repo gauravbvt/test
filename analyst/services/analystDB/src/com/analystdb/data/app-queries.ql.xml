@@ -26,6 +26,12 @@ order by ic.issue.sequence
 from Issue i
 where i.project.id = :project
     </query>
+    <query name="issueApproaches">
+        <query-param name="issue" type="java.lang.Long"/>
+        select ia.approach as approach
+from IssueApproach ia join fetch ia.approach.interview
+where ia.id.issueId = :issue
+    </query>
     <query name="issuesByCategory">
         <query-param name="project" type="java.lang.Long"/>
         <query-param name="category" type="java.lang.Long"/>
@@ -74,12 +80,13 @@ order by i.scheduled
         <query-param name="project" type="java.lang.Long"/>
         select distinct k.name from ResourceAttribute k where k.resource.project.id = :project order by k.name
     </query>
-    <query name="projectPlans">
+    <query name="otherIssueApproaches">
         <query-param name="project" type="java.lang.Long"/>
-        select p as plan, p.analysis.name as analysis
-from Plan p
-where p.analysis.project.id = :project
-order by p.name
+        <query-param name="issue" type="java.lang.Long"/>
+        from Approach a
+where a.interview.resource.project.id = :project
+and not a.id in (select ia.approach.id from IssueApproach ia where ia.issue.id = :issue)
+order by a.name
     </query>
     <query name="issueCategoryCounts">
         <query-param name="project" type="java.lang.Long"/>
@@ -88,14 +95,6 @@ from IssueIssueCategory iic
 where iic.issue.project.id = :project
 group by iic.issueCategory
 order by iic.issueCategory.name
-    </query>
-    <query name="otherIssueApproaches">
-        <query-param name="project" type="java.lang.Long"/>
-        <query-param name="issue" type="java.lang.Long"/>
-        from Approach a
-where a.interview.resource.project.id = :project
-and not a.id in (select ia.approach.id from IssueApproach ia where ia.issue.id = :issue)
-order by a.name
     </query>
     <query name="documentIssueCount">
         <query-param name="project" type="java.lang.Long"/>
@@ -145,6 +144,12 @@ from IssueComment ic
 where ic.interview.resource.id = :resource
 order by ic.interview.resource.name
     </query>
+    <query name="addressedIssues">
+        <query-param name="project" type="java.lang.Long"/>
+        from Issue i
+where i.project.id = :project
+and exists (select ia.id.approachId from IssueApproach ia where ia.id.issueId = i.id )
+    </query>
     <query name="otherApproachIssues">
         <query-param name="approach" type="java.lang.Long"/>
         <query-param name="project" type="java.lang.Long"/>
@@ -189,17 +194,5 @@ order by icf.issueComment.issue.sequence
         from Flow f join fetch f.interview
 where f.interview.resource.project.id = :project
 order by f.fromActor, f.toActor, f.name
-    </query>
-    <query name="addressedIssues">
-        <query-param name="project" type="java.lang.Long"/>
-        from Issue i
-where i.project.id = :project
-and exists (select ia.id.approachId from IssueApproach ia where ia.id.issueId = i.id )
-    </query>
-    <query name="issueApproaches">
-        <query-param name="issue" type="java.lang.Long"/>
-        select ia.approach as approach
-from IssueApproach ia join fetch ia.approach.interview
-where ia.id.issueId = :issue
     </query>
 </hibernate-mapping>

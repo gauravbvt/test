@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  *  analystDB.Interview
- *  02/10/2013 19:29:36
+ *  03/26/2013 11:09:00
  * 
  */
 public class Interview {
@@ -20,6 +20,7 @@ public class Interview {
     private Boolean done;
     private Integer version;
     private Set<com.analystdb.data.Approach> approachs = new HashSet<com.analystdb.data.Approach>();
+    private Set<com.analystdb.data.Decision> decisions = new HashSet<com.analystdb.data.Decision>();
     private Set<com.analystdb.data.IssueComment> issueComments = new HashSet<com.analystdb.data.IssueComment>();
     private Set<com.analystdb.data.Flow> flows = new HashSet<com.analystdb.data.Flow>();
 
@@ -77,6 +78,14 @@ public class Interview {
 
     public void setApproachs(Set<com.analystdb.data.Approach> approachs) {
         this.approachs = approachs;
+    }
+
+    public Set<com.analystdb.data.Decision> getDecisions() {
+        return decisions;
+    }
+
+    public void setDecisions(Set<com.analystdb.data.Decision> decisions) {
+        this.decisions = decisions;
     }
 
     public Set<com.analystdb.data.IssueComment> getIssueComments() {
