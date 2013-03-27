@@ -5,7 +5,7 @@ import com.analystdb.data.Interview;
 
 
 /**
- * Generated for query "recentInterviews" on 03/26/2013 11:09:07
+ * Generated for query "recentInterviews" on 03/27/2013 19:42:24
  * 
  */
 public class RecentInterviewsRtnType {
@@ -16,6 +16,7 @@ public class RecentInterviewsRtnType {
     private Long approaches;
     private Long flows;
     private Long issues;
+    private Long decisions;
 
     public Long getId() {
         return id;
@@ -63,6 +64,14 @@ public class RecentInterviewsRtnType {
 
     public void setIssues(Long issues) {
         this.issues = issues;
+    }
+
+    public Long getDecisions() {
+        return decisions;
+    }
+
+    public void setDecisions(Long decisions) {
+        this.decisions = decisions;
     }
 
 }

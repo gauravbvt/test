@@ -5,7 +5,7 @@ import com.analystdb.data.Approach;
 
 
 /**
- * Generated for query "issueApproaches" on 03/26/2013 11:09:07
+ * Generated for query "issueApproaches" on 03/27/2013 19:42:24
  * 
  */
 public class IssueApproachesRtnType {

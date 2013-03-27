@@ -2,6 +2,7 @@
 package com.analystdb;
 
 import java.util.List;
+import com.analystdb.data.Decision;
 import com.analystdb.data.IssueCategory;
 import com.analystdb.data.IssueComment;
 import com.analystdb.data.output.AllDocsWithIssuesRtnType;
@@ -32,7 +33,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  *  Operations for service "analystDB"
- *  03/26/2013 11:09:11
+ *  03/27/2013 19:45:16
  * 
  */
 @SuppressWarnings("unchecked")
@@ -80,6 +81,10 @@ public class AnalystDB
         return ((List<IssueCategory> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherCategoriesQueryName), project, issue, pagingOptions));
     }
 
+    public List<Decision> otherFlowDecisions(Long project, Long flow, PagingOptions pagingOptions) {
+        return ((List<Decision> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherFlowDecisionsQueryName), project, flow, pagingOptions));
+    }
+
     public List<ApproachIssuesRtnType> approachIssues(Long project, Long approach, PagingOptions pagingOptions) {
         return ((List<ApproachIssuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.approachIssuesQueryName), project, approach, pagingOptions));
     }
@@ -88,16 +93,20 @@ public class AnalystDB
         return ((List<UpcomingInterviewsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.upcomingInterviewsQueryName), project, pagingOptions));
     }
 
+    public List<com.analystdb.data.Flow> otherDecisionFlows(Long project, Integer decision, PagingOptions pagingOptions) {
+        return ((List<com.analystdb.data.Flow> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherDecisionFlowsQueryName), project, decision, pagingOptions));
+    }
+
     public List<ResourceKeywordsRtnType> resourceKeywords(Long project, PagingOptions pagingOptions) {
         return ((List<ResourceKeywordsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.resourceKeywordsQueryName), project, pagingOptions));
     }
 
-    public List<IssueCategoryCountsRtnType> issueCategoryCounts(Long project, PagingOptions pagingOptions) {
-        return ((List<IssueCategoryCountsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.issueCategoryCountsQueryName), project, pagingOptions));
-    }
-
     public List<com.analystdb.data.Approach> otherIssueApproaches(Long project, Long issue, PagingOptions pagingOptions) {
         return ((List<com.analystdb.data.Approach> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherIssueApproachesQueryName), project, issue, pagingOptions));
+    }
+
+    public List<IssueCategoryCountsRtnType> issueCategoryCounts(Long project, PagingOptions pagingOptions) {
+        return ((List<IssueCategoryCountsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.issueCategoryCountsQueryName), project, pagingOptions));
     }
 
     public List<DocumentIssueCountRtnType> documentIssueCount(Long project, Integer category, PagingOptions pagingOptions) {
@@ -136,12 +145,12 @@ public class AnalystDB
         return ((List<RecentInterviewsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.recentInterviewsQueryName), project, pagingOptions));
     }
 
-    public List<AllDocsWithIssuesRtnType> allDocsWithIssues(Long project, PagingOptions pagingOptions) {
-        return ((List<AllDocsWithIssuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.allDocsWithIssuesQueryName), project, pagingOptions));
-    }
-
     public List<DocumentIssuesRtnType> documentIssues(Long project, Integer document, Integer phase, PagingOptions pagingOptions) {
         return ((List<DocumentIssuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.documentIssuesQueryName), project, document, phase, pagingOptions));
+    }
+
+    public List<AllDocsWithIssuesRtnType> allDocsWithIssues(Long project, PagingOptions pagingOptions) {
+        return ((List<AllDocsWithIssuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.allDocsWithIssuesQueryName), project, pagingOptions));
     }
 
     public com.analystdb.data.Documents getDocumentsById(Integer id, PagingOptions pagingOptions) {

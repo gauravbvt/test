@@ -1903,6 +1903,16 @@ wm.types = {
 					"required": true,
 					"type": "java.lang.Long"
 				},
+				"decisions": {
+					"exclude": [],
+					"fieldOrder": 6,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
 				"flows": {
 					"exclude": [],
 					"fieldOrder": 4,

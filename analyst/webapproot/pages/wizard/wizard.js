@@ -339,5 +339,49 @@ dojo.declare("wizard", wm.Page, {
         // Clean up for bug in update...
         delete inData.tenantId;
 	},
-	_end: 0
+	decisionLiveForm1BeforeServiceCall: function(inSender, inOperation, inData) {
+    	if ( "insert" == inOperation ) {
+            inData.id = 0;
+            inData.interview = this.interviewDojoGrid1.selectedItem.data.interview;
+		}
+	},
+	addButton5Click: function(inSender) {
+        var availableGrid = this.availableGrid5;
+        var selected = availableGrid.selectedItem.dataSet.data;
+        availableGrid.deleteRow(availableGrid.getSelectedIndex());
+
+        var decision = this.decisionDojoGrid.selectedItem.dataSet.data;
+        var data = {id:{decision:decision.id,flow:selected.id},flow:selected,decision:decision};
+
+        var live = this.decisionFlows;
+        live.operation = "insert";
+        live.sourceData.setData(data);
+        live.update();
+        live.sourceData.setData(null);
+        live.operation = "read";
+        live.update();
+	},
+    removeButton5Click: function(inSender) {
+        this.allRemoveButtonClick(inSender,this.availableGrid5,this.selectedGrid5,this.decisionFlows);    	
+	},
+    addButton7Click: function(inSender) {
+        var availableGrid = this.availableGrid7;
+        var selected = availableGrid.selectedItem.dataSet.data;
+        availableGrid.deleteRow(availableGrid.getSelectedIndex());
+
+        var flow = this.flowDojoGrid.selectedItem.dataSet.data;
+        var data = {id:{decision:selected.id,flow:flow.id},flow:flow,decision:selected};
+
+        var live = this.flowDecisions;
+        live.operation = "insert";
+        live.sourceData.setData(data);
+        live.update();
+        live.sourceData.setData(null);
+        live.operation = "read";
+        live.update();
+	},
+    removeButton7Click: function(inSender) {
+        this.allRemoveButtonClick(inSender,this.availableGrid7,this.selectedGrid7,this.flowDecisions);        
+	},
+  _end: 0
 });

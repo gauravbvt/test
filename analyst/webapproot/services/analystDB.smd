@@ -176,6 +176,28 @@
 		}],
 		"returnType": "[com.analystdb.data.IssueCategory]"
 	}, {
+		"name": "otherDecisionFlows",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "decision",
+			"type": "java.lang.Integer"
+		}],
+		"returnType": "[com.analystdb.data.Flow]"
+	}, {
+		"name": "otherFlowDecisions",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "flow",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.Decision]"
+	}, {
 		"name": "otherFlowIssues",
 		"operationType": "hqlquery",
 		"parameters": [{

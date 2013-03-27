@@ -159,8 +159,8 @@ order by i.sequence
     </query>
     <query name="recentInterviews">
         <query-param name="project" type="java.lang.Long"/>
-        select  i.id as id, i.resource.name as resource, i as interview, count(distinct a.id) as approaches, count(distinct f.id) as flows, count(distinct ic.id) as issues
-from Interview i  left join i.flows f left join i.approachs a left join i.issueComments ic
+        select  i.id as id, i.resource.name as resource, i as interview, count(distinct a.id) as approaches, count(distinct f.id) as flows, count(distinct ic.id) as issues, count(distinct dec.id) as decisions
+from Interview i  left join i.flows f left join i.approachs a left join i.issueComments ic left join i.decisions dec
 where i.resource.project.id = :project
 and i.done = 1
 and i.scheduled in (select max(s.scheduled) from Interview s where s.resource = i.resource and s.done = 1)
@@ -194,5 +194,19 @@ order by icf.issueComment.issue.sequence
         from Flow f join fetch f.interview
 where f.interview.resource.project.id = :project
 order by f.fromActor, f.toActor, f.name
+    </query>
+    <query name="otherDecisionFlows">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="decision" type="java.lang.Integer"/>
+        from Flow f
+where f.interview.resource.project.id = :project and not f.id in (select df.flow.id from DecisionFlow df where df.decision.id = :decision)
+order by f.fromActor,f.toActor,f.name
+    </query>
+    <query name="otherFlowDecisions">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="flow" type="java.lang.Long"/>
+        from Decision d
+where d.interview.resource.project.id = :project and not d.id in (select df.decision.id from DecisionFlow df where df.flow.id = :flow)
+order by d.name
     </query>
 </hibernate-mapping>

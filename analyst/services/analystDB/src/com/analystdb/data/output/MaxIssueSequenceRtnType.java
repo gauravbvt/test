@@ -4,7 +4,7 @@ package com.analystdb.data.output;
 
 
 /**
- * Generated for query "maxIssueSequence" on 03/26/2013 11:09:07
+ * Generated for query "maxIssueSequence" on 03/27/2013 19:42:24
  * 
  */
 public class MaxIssueSequenceRtnType {
