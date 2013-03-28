@@ -209,4 +209,15 @@ order by f.fromActor,f.toActor,f.name
 where d.interview.resource.project.id = :project and not d.id in (select df.decision.id from DecisionFlow df where df.flow.id = :flow)
 order by d.name
     </query>
+    <query name="decisionCounts">
+        <query-param name="project" type="java.lang.Long"/>
+        select d as decision,
+(select count(*) from DecisionFlow df where df.id.decision=d.id) as flows,
+(select count(distinct icf.issueComment.issue) from IssueCommentFlows icf where icf.id.flows in (select df.id.flow from DecisionFlow df where df.id.decision = d.id)) as issues,
+(select count(distinct ia.id.approachId) from IssueApproach ia where ia.id.issueId in
+(select icf.issueComment.issue.id from IssueCommentFlows icf where icf.id.flows in (select df.id.flow from DecisionFlow df where df.id.decision = d.id))) as approaches
+from Decision d join fetch d.interview
+where d.interview.resource.project.id = :project
+order by d.name
+    </query>
 </hibernate-mapping>

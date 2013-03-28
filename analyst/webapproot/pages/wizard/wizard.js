@@ -362,7 +362,9 @@ dojo.declare("wizard", wm.Page, {
         live.update();
 	},
     removeButton5Click: function(inSender) {
-        this.allRemoveButtonClick(inSender,this.availableGrid5,this.selectedGrid5,this.decisionFlows);    	
+        var selected = this.availableGrid5.selectedItem.dataSet.data;
+        this.allRemoveButtonClick(inSender,this.availableGrid5,this.selectedGrid5,this.decisionFlows);   
+        this.availableGrid5.addRow(selected, true, true);
 	},
     addButton7Click: function(inSender) {
         var availableGrid = this.availableGrid7;

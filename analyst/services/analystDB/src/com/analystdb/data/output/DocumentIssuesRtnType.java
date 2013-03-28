@@ -5,7 +5,7 @@ import com.analystdb.data.Issue;
 
 
 /**
- * Generated for query "documentIssues" on 03/27/2013 19:42:24
+ * Generated for query "documentIssues" on 03/28/2013 15:31:08
  * 
  */
 public class DocumentIssuesRtnType {

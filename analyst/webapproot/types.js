@@ -1588,6 +1588,53 @@ wm.types = {
 			"liveService": false,
 			"service": "analystDB"
 		},
+		"com.analystdb.data.output.DecisionCountsRtnType": {
+			"fields": {
+				"approaches": {
+					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"decision": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "com.analystdb.data.Decision"
+				},
+				"flows": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"issues": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
 		"com.analystdb.data.output.DocumentCategoryIssueCountsRtnType": {
 			"fields": {
 				"category": {

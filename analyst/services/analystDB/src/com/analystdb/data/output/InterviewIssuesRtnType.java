@@ -4,7 +4,7 @@ package com.analystdb.data.output;
 
 
 /**
- * Generated for query "interviewIssues" on 03/27/2013 19:42:24
+ * Generated for query "interviewIssues" on 03/28/2013 15:31:08
  * 
  */
 public class InterviewIssuesRtnType {

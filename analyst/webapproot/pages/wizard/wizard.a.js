@@ -346,7 +346,9 @@ live.operation = "read";
 live.update();
 },
 removeButton5Click: function(inSender) {
+var selected = this.availableGrid5.selectedItem.dataSet.data;
 this.allRemoveButtonClick(inSender,this.availableGrid5,this.selectedGrid5,this.decisionFlows);
+this.availableGrid5.addRow(selected, true, true);
 },
 addButton7Click: function(inSender) {
 var availableGrid = this.availableGrid7;
@@ -614,7 +616,7 @@ wire: ["wm.Wire", {"expression":undefined,"source":"Edit_Interviews","targetProp
 }]
 }]
 }],
-showSummary: ["wm.NavigationCall", {}, {"onBeforeUpdate":"allDocsWithIssues","onBeforeUpdate1":"docCatIssuesVariable1","onBeforeUpdate10":"issueCategoriesVariable1","onBeforeUpdate11":"addressedIssues","onBeforeUpdate2":"flowsByProjectVariable1","onBeforeUpdate3":"approachIssueCountVariable1","onBeforeUpdate4":"issueLiveVariable1","onBeforeUpdate6":"docIssuesVariable1","onBeforeUpdate7":"allIssues","onBeforeUpdate9":"issuesByCategoryVariable1"}, {
+showSummary: ["wm.NavigationCall", {}, {"onBeforeUpdate":"allDocsWithIssues","onBeforeUpdate1":"docCatIssuesVariable1","onBeforeUpdate10":"issueCategoriesVariable1","onBeforeUpdate11":"addressedIssues","onBeforeUpdate2":"flowsByProjectVariable1","onBeforeUpdate3":"approachIssueCountVariable1","onBeforeUpdate4":"issueLiveVariable1","onBeforeUpdate6":"docIssuesVariable1","onBeforeUpdate7":"allIssues","onBeforeUpdate9":"issuesByCategoryVariable1","onBeforeUpdate12":"decisionCountsVariable"}, {
 input: ["wm.ServiceInput", {"type":"gotoLayerInputs"}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"Edit_Summary","targetProperty":"layer"}, {}]
@@ -736,13 +738,13 @@ liveView: ["wm.LiveView", {"dataType":"com.analystdb.data.Decision","view":[{"ca
 }],
 decisionFlows: ["wm.LiveVariable", {"autoUpdate":false,"inFlightBehavior":"executeLast","startUpdate":false,"type":"com.analystdb.data.DecisionFlow"}, {}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"decisionLiveForm1.liveVariable","targetProperty":"filter.decision"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"decisionDojoGrid.selectedItem","targetProperty":"filter.decision"}, {}]
 }],
-liveView: ["wm.LiveView", {"dataType":"com.analystdb.data.DecisionFlow","related":["flow"],"view":[{"caption":"FromActor","sortable":true,"dataIndex":"flow.fromActor","type":"java.lang.String","displayType":"Text","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":2001},{"caption":"ToActor","sortable":true,"dataIndex":"flow.toActor","type":"java.lang.String","displayType":"Text","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":2002},{"caption":"Name","sortable":true,"dataIndex":"flow.name","type":"java.lang.String","displayType":"Text","required":true,"widthUnits":"px","includeLists":true,"includeForms":true,"order":2003}]}, {}]
+liveView: ["wm.LiveView", {"dataType":"com.analystdb.data.DecisionFlow","related":["flow","flow.interview"],"view":[{"caption":"FromActor","sortable":true,"dataIndex":"flow.fromActor","type":"java.lang.String","displayType":"Text","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":5001},{"caption":"ToActor","sortable":true,"dataIndex":"flow.toActor","type":"java.lang.String","displayType":"Text","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":5002},{"caption":"Name","sortable":true,"dataIndex":"flow.name","type":"java.lang.String","displayType":"Text","required":true,"widthUnits":"px","includeLists":true,"includeForms":true,"order":5003},{"caption":"Id","sortable":true,"dataIndex":"flow.interview.id","type":"java.lang.Long","displayType":"Number","required":true,"widthUnits":"px","includeLists":true,"includeForms":true,"order":6000}]}, {}]
 }],
 flowDecisions: ["wm.LiveVariable", {"autoUpdate":false,"inFlightBehavior":"executeLast","startUpdate":false,"type":"com.analystdb.data.DecisionFlow"}, {}, {
 binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"flowLiveForm1.liveVariable","targetProperty":"filter.flow"}, {}]
+wire: ["wm.Wire", {"expression":undefined,"source":"flowDojoGrid.selectedItem","targetProperty":"filter.flow"}, {}]
 }],
 liveView: ["wm.LiveView", {"dataType":"com.analystdb.data.DecisionFlow","related":["decision"],"view":[{"caption":"Name","sortable":true,"dataIndex":"decision.name","type":"java.lang.String","displayType":"Text","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":6001},{"caption":"Description","sortable":true,"dataIndex":"decision.description","type":"java.lang.String","displayType":"Text","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":6002},{"caption":"Importance","sortable":true,"dataIndex":"decision.importance","type":"java.lang.Byte","displayType":"Number","required":false,"widthUnits":"px","includeLists":true,"includeForms":true,"order":6003}]}, {}]
 }],
@@ -759,6 +761,13 @@ input: ["wm.ServiceInput", {"type":"otherFlowDecisionsInputs"}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.selectedItem.id","targetProperty":"project"}, {}],
 wire1: ["wm.Wire", {"expression":undefined,"source":"flowDojoGrid.selectedItem.id","targetProperty":"flow"}, {}]
+}]
+}]
+}],
+decisionCountsVariable: ["wm.ServiceVariable", {"inFlightBehavior":"executeLast","operation":"decisionCounts","service":"analystDB"}, {}, {
+input: ["wm.ServiceInput", {"type":"decisionCountsInputs"}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"projectDojoGrid.selectedItem.id","targetProperty":"project"}, {}]
 }]
 }]
 }],
@@ -878,14 +887,14 @@ doneButton4: ["wm.Button", {"caption":"Done","imageIndex":0,"imageList":"app.sil
 genericDialog1: ["wm.GenericDialog", {"button1Caption":"Add","button1Close":true,"button2Caption":"Cancel","button2Close":true,"desktopHeight":"117px","height":"127px","showInput":true,"title":"Add an issue category","userPrompt":"Category name:"}, {"onButton1Click":"genericDialog1Button1Click","onButton2Click":"genericDialog1.hide"}],
 EditDecisionFlows: ["wm.DesignableDialog", {"buttonBarId":"buttonBar","containerWidgetId":"containerWidget","title":"Associate flows with this decision","width":"700px"}, {"onShow":"selectedGrid5.deselectAll","onShow1":"availableGrid5.deselectAll","onShow2":"addButton5.disable","onShow3":"removeButton5.disable"}, {
 containerWidget5: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","padding":"5","verticalAlign":"top","width":"100%"}, {}, {
-selectedGrid5: ["wm.DojoGrid", {"columns":[{"show":true,"field":"flow.fromActor","title":"From","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flow.toActor","title":"To","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flow.name","title":"Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>From: \" + ${flow.fromActor} + \"</div>\"\n+ \"<div class='MobileRow'>To: \" + ${flow.toActor} + \"</div>\"\n+ \"<div class='MobileRow'>Name: \" + ${flow.name} + \"</div>\"\n","mobileColumn":true}],"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {"onDeselect":"removeButton5.disable","onSelect":"removeButton5.enable"}, {
+selectedGrid5: ["wm.DojoGrid", {"columns":[{"show":true,"field":"flow.fromActor","title":"From","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flow.toActor","title":"To","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flow.name","title":"Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>From: \" + ${flow.fromActor} + \"</div>\"\n+ \"<div class='MobileRow'>To: \" + ${flow.toActor} + \"</div>\"\n+ \"<div class='MobileRow'>Name: \" + ${flow.name} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"flow.interview.id","title":"Flow.interview.id","width":"80px","displayType":"Number","align":"right","formatFunc":""}],"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {"onDeselect":"removeButton5.disable","onSelect":"removeButton5.enable"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"decisionFlows","targetProperty":"dataSet"}, {}]
 }]
 }],
 panel6: ["wm.Panel", {"fitToContentWidth":true,"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"82px"}, {}, {
 addButton5: ["wm.Button", {"caption":"Add","imageIndex":3,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"addButton5Click"}],
-removeButton5: ["wm.Button", {"caption":"Remove","imageIndex":5,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"removeButton5Click","onclick1":"otherDecisionFlowsVariable"}]
+removeButton5: ["wm.Button", {"caption":"Remove","imageIndex":5,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"removeButton5Click"}]
 }],
 availableGrid5: ["wm.DojoGrid", {"columns":[{"show":false,"field":"id","title":"Id","width":"80px","align":"right","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"fromActor","title":"From","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"toActor","title":"To","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"version","title":"Version","width":"80px","align":"right","formatFunc":"","mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>From: \" + ${fromActor} + \"</div>\"\n+ \"<div class='MobileRow'>To: \" + ${toActor} + \"</div>\"\n+ \"<div class='MobileRow'>Name: \" + ${name} + \"</div>\"\n","mobileColumn":true}],"height":"100%","margin":"4","minDesktopHeight":60,"primaryKeyFields":["id"]}, {"onDeselect":"addButton5.disable","onSelect":"addButton5.enable"}, {
 binding: ["wm.Binding", {}, {}, {
@@ -1082,35 +1091,6 @@ tabLayers2: ["wm.TabLayers", {}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":"!${recentInterviewsVariable1.isEmpty}","targetProperty":"showing"}, {}]
 }],
-layer9: ["wm.Layer", {"horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
-binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":"\"Documents (\" + ${allDocsWithIssues.count} + \")\"","targetProperty":"caption"}, {}]
-}],
-html14: ["wm.Html", {"autoSizeHeight":true,"height":"48px","html":"<div class=\"note\">Documents with pending issues. Select a phase and document to filter the issues list.</div>","minDesktopHeight":15}, {}],
-dojoChart2Panel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-dojoGrid2: ["wm.DojoGrid", {"columns":[{"show":true,"field":"phase","title":"Phase","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"issues","title":"Issues","width":"60px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Phase: \" + ${phase} + \"</div>\"\n+ \"<div class='MobileRow'>Issues: \" + ${issues} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"category.id","title":"Category.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"category.sequence","title":"Category.sequence","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"category.name","title":"Category.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"category.tenantId","title":"Category.tenantId","width":"100%","displayType":"Java.lang.Integer","align":"left","formatFunc":""}],"dsType":"com.analystdb.data.output.DocumentCategoryIssueCountsRtnType","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {"onSelect":"docIssuesCountsVariable1","onSelect1":"dojoGrid3.deselectAll","onSelect2":"docIssuesVariable1"}, {
-binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"docCatIssuesVariable1","targetProperty":"dataSet"}, {}]
-}]
-}],
-dojoGrid3: ["wm.DojoGrid", {"columns":[{"show":true,"field":"doc","title":"Document","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"issues","title":"Issues","width":"60px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Document: \" + ${doc} + \"</div>\"\n+ \"<div class='MobileRow'>Issues: \" + ${issues} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false}],"dsType":"com.analystdb.data.output.DocumentIssueCountRtnType","margin":"4","minDesktopHeight":60,"primaryKeyFields":["id"],"singleClickEdit":true}, {"onSelect":"docIssuesVariable1"}, {
-binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"docIssuesCountsVariable1","targetProperty":"dataSet"}, {}],
-wire1: ["wm.Wire", {"expression":undefined,"source":"dojoGrid2.isRowSelected","targetProperty":"showing"}, {}]
-}]
-}]
-}],
-summaryDocIssuesGrid1: ["wm.DojoGrid", {"columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","editorProps":{"restrictValues":true},"expression":"\"<div class='MobileRowTitle'>Description: \" + ${issue.description} + \"</div>\"\n+ \"<div class='MobileRow'>Approaches: \" + wm.List.prototype.numberFormatter({}, null,null,null,${approaches}) + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"issue.id","title":"Issue.id","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"issue.project.id","title":"Issue.project.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.description","title":"Issue.project.description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.name","title":"Issue.project.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.version","title":"Issue.project.version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"issue.sequence","title":"Issue","width":"50px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"expression":"\"I-\" + ${issue.sequence}","mobileColumn":false},{"show":true,"field":"issue.description","title":"Description","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"issue.name","title":"Issue.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.version","title":"Issue.version","width":"100%","align":"left","formatFunc":"","expression":"","mobileColumn":false},{"show":true,"field":"approaches","title":"Approaches","width":"90px","align":"center","formatFunc":"wm_number_formatter","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.tenantId","title":"Issue.project.tenantId","width":"100%","displayType":"Java.lang.Integer","align":"left","formatFunc":""}],"dsType":"com.analystdb.data.output.DocumentIssuesRtnType","height":"100%","margin":"4","minDesktopHeight":60,"primaryKeyFields":["id"],"singleClickEdit":true}, {"onSelect":"summaryDocIssuesGrid1Select"}, {
-binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":undefined,"source":"docIssuesVariable1","targetProperty":"dataSet"}, {}]
-}]
-}],
-progressBar1: ["wm.dijit.ProgressBar", {"height":"24px","hint":"Documents with issues","width":"100%"}, {}, {
-binding: ["wm.Binding", {}, {}, {
-wire: ["wm.Wire", {"expression":"${allDocsWithIssues.count} * 100 / ${documentsLiveVariable2.count}","targetProperty":"progress"}, {}]
-}]
-}]
-}],
 layer4: ["wm.Layer", {"horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":"\"Issues (\" + ${allIssues.count} + \")\"","targetProperty":"caption"}, {}]
@@ -1140,6 +1120,35 @@ wire: ["wm.Wire", {"expression":"${addressedIssues.count} * 100 / ${allIssues.co
 }]
 }]
 }],
+layer9: ["wm.Layer", {"horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":"\"Documents (\" + ${allDocsWithIssues.count} + \")\"","targetProperty":"caption"}, {}]
+}],
+html14: ["wm.Html", {"autoSizeHeight":true,"height":"48px","html":"<div class=\"note\">Documents with pending issues. Select a phase and document to filter the issues list.</div>","minDesktopHeight":15}, {}],
+dojoChart2Panel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+dojoGrid2: ["wm.DojoGrid", {"columns":[{"show":true,"field":"phase","title":"Phase","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"issues","title":"Issues","width":"60px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Phase: \" + ${phase} + \"</div>\"\n+ \"<div class='MobileRow'>Issues: \" + ${issues} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"category.id","title":"Category.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"category.sequence","title":"Category.sequence","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"category.name","title":"Category.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"category.tenantId","title":"Category.tenantId","width":"100%","displayType":"Java.lang.Integer","align":"left","formatFunc":""}],"dsType":"com.analystdb.data.output.DocumentCategoryIssueCountsRtnType","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {"onSelect":"docIssuesCountsVariable1","onSelect1":"dojoGrid3.deselectAll","onSelect2":"docIssuesVariable1"}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"docCatIssuesVariable1","targetProperty":"dataSet"}, {}]
+}]
+}],
+dojoGrid3: ["wm.DojoGrid", {"columns":[{"show":true,"field":"doc","title":"Document","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"issues","title":"Issues","width":"60px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Document: \" + ${doc} + \"</div>\"\n+ \"<div class='MobileRow'>Issues: \" + ${issues} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false}],"dsType":"com.analystdb.data.output.DocumentIssueCountRtnType","margin":"4","minDesktopHeight":60,"primaryKeyFields":["id"],"singleClickEdit":true}, {"onSelect":"docIssuesVariable1"}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"docIssuesCountsVariable1","targetProperty":"dataSet"}, {}],
+wire1: ["wm.Wire", {"expression":undefined,"source":"dojoGrid2.isRowSelected","targetProperty":"showing"}, {}]
+}]
+}]
+}],
+summaryDocIssuesGrid1: ["wm.DojoGrid", {"columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","editorProps":{"restrictValues":true},"expression":"\"<div class='MobileRowTitle'>Description: \" + ${issue.description} + \"</div>\"\n+ \"<div class='MobileRow'>Approaches: \" + wm.List.prototype.numberFormatter({}, null,null,null,${approaches}) + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"issue.id","title":"Issue.id","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"issue.project.id","title":"Issue.project.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.description","title":"Issue.project.description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.name","title":"Issue.project.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.version","title":"Issue.project.version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"issue.sequence","title":"Issue","width":"50px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"expression":"\"I-\" + ${issue.sequence}","mobileColumn":false},{"show":true,"field":"issue.description","title":"Description","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"issue.name","title":"Issue.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.version","title":"Issue.version","width":"100%","align":"left","formatFunc":"","expression":"","mobileColumn":false},{"show":true,"field":"approaches","title":"Approaches","width":"90px","align":"center","formatFunc":"wm_number_formatter","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"issue.project.tenantId","title":"Issue.project.tenantId","width":"100%","displayType":"Java.lang.Integer","align":"left","formatFunc":""}],"dsType":"com.analystdb.data.output.DocumentIssuesRtnType","height":"100%","margin":"4","minDesktopHeight":60,"primaryKeyFields":["id"],"singleClickEdit":true}, {"onSelect":"summaryDocIssuesGrid1Select"}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"docIssuesVariable1","targetProperty":"dataSet"}, {}]
+}]
+}],
+progressBar1: ["wm.dijit.ProgressBar", {"height":"24px","hint":"Documents with issues","width":"100%"}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":"${allDocsWithIssues.count} * 100 / ${documentsLiveVariable2.count}","targetProperty":"progress"}, {}]
+}]
+}]
+}],
 layer5: ["wm.Layer", {"horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":"\"Flows (\" + ${flowsByProjectVariable1.count} + \")\"","targetProperty":"caption"}, {}]
@@ -1159,6 +1168,16 @@ html11: ["wm.Html", {"autoSizeHeight":true,"height":"48px","html":"<div class=\"
 dojoGrid6: ["wm.DojoGrid", {"columns":[{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","editorProps":{"restrictValues":true},"expression":"\"<div class='MobileRowTitle'>Approach: \" + ${approach.name} + \"</div>\"\n+ \"<div class='MobileRow'>Description: \" + ${approach.description} + \"</div>\"\n+ \"<div class='MobileRow'>Issues: \" + ${issues} + \"</div>\"\n+ \"<div class='MobileRow'>Start: \" + wm.List.prototype.dateFormatter({}, null,null,null,${approach.start}) + \"</div>\"\n+ \"<div class='MobileRow'>End: \" + wm.List.prototype.dateFormatter({}, null,null,null,${approach.end}) + \"</div>\"\n+ \"<div class='MobileRow'>Approved: \" + ${approach.approved} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"approach.id","title":"Approach.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.id","title":"Approach.interview.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.scheduled","title":"Approach.interview.scheduled","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.done","title":"Approach.interview.done","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.id","title":"Approach.interview.resource.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.project.id","title":"Approach.interview.resource.project.id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.project.description","title":"Approach.interview.resource.project.description","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"approach.interview.resource.project.name","title":"Approach.interview.resource.project.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.project.version","title":"Approach.interview.resource.project.version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.description","title":"Approach.interview.resource.description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.name","title":"Approach.interview.resource.name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.resource.version","title":"Approach.interview.resource.version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.notes","title":"Approach.interview.notes","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"approach.interview.version","title":"Approach.interview.version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"approach.name","title":"Approach","width":"50%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"approach.description","title":"Description","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"issues","title":"Issues","width":"60px","align":"center","formatFunc":"","formatProps":null,"editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"approach.version","title":"Approach.version","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"approach.start","title":"Start","width":"60px","align":"left","formatFunc":"wm_date_formatter","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"approach.end","title":"End","width":"60px","align":"left","formatFunc":"wm_date_formatter","editorProps":null,"mobileColumn":false},{"show":true,"field":"approach.cost","title":"Cost","width":"60px","align":"left","constraints":{"min":0},"editorProps":{"restrictValues":true},"expression":"if ( ${approach.cost} == null ) { \"\"; } else { ${approach.cost}; }","mobileColumn":false},{"show":true,"field":"approach.approved","title":"Approved","width":"70px","align":"left","formatFunc":"","fieldType":"dojox.grid.cells.Bool","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"approach.interview.resource.project.tenantId","title":"Approach.interview.resource.project.tenantId","width":"100%","displayType":"Java.lang.Integer","align":"left","formatFunc":""}],"height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {"onSelect":"switchToApproach"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"approachIssueCountVariable1","targetProperty":"dataSet"}, {}]
+}]
+}]
+}],
+layer22: ["wm.Layer", {"horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":"\"Decisions (\" + ${decisionCountsVariable.count} + \")\"","targetProperty":"caption"}, {}]
+}],
+dojoGrid13: ["wm.DojoGrid", {"columns":[{"show":false,"field":"decision.id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.scheduled","title":"Scheduled","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.done","title":"Done","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.project.tenantId","title":"TenantId","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.project.id","title":"Id","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.project.description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.project.name","title":"Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.project.version","title":"Version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.name","title":"Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.resource.version","title":"Version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.notes","title":"Notes","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"decision.interview.version","title":"Version","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"decision.name","title":"Name","width":"50%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"decision.description","title":"Description","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"decision.importance","title":"Importance","width":"90px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flows","title":"Flows","width":"90px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>Name: \" + ${decision.name} + \"</div>\"\n+ \"<div class='MobileRow'>Description: \" + ${decision.description} + \"</div>\"\n+ \"<div class='MobileRow'>Importance: \" + ${decision.importance} + \"</div>\"\n+ \"<div class='MobileRow'>Flows: \" + ${flows} + \"</div>\"\n+ \"<div class='MobileRow'>Issues: \" + ${issues} + \"</div>\"\n+ \"<div class='MobileRow'>Approaches: \" + ${approaches} + \"</div>\"\n","mobileColumn":true},{"show":true,"field":"issues","title":"Issues","width":"90px","align":"center","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"approaches","title":"Approaches","width":"90px","align":"center","formatFunc":"","mobileColumn":false}],"dsType":"com.analystdb.data.output.DecisionCountsRtnType","height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"decisionCountsVariable","targetProperty":"dataSet"}, {}]
 }]
 }]
 }]
@@ -1345,8 +1364,8 @@ decisionNewButton: ["wm.Button", {"_classes":{"domNode":["iconButton"]},"caption
 }]
 }]
 }],
-Edit_Decision: ["wm.Layer", {"autoScroll":true,"borderColor":"","caption":"Edit Decision","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {}, {
-decisionLiveForm1: ["wm.LiveForm", {"alwaysPopulateEditors":true,"height":"100%","horizontalAlign":"left","liveEditing":false,"margin":"4","verticalAlign":"top"}, {"onBeforeServiceCall":"decisionLiveForm1BeforeServiceCall","onCancelEdit":"Edit_Interview","onDeleteData":"Edit_Interview","onSuccess":"decisionLivePanel1.popupLiveFormSuccess","onSuccess1":"recentInterviewsVariable1"}, {
+Edit_Decision: ["wm.Layer", {"autoScroll":true,"borderColor":"","caption":"Edit Decision","horizontalAlign":"left","themeStyleType":"ContentPanel","verticalAlign":"top"}, {"onShow":"dojoGrid11.deselectAll"}, {
+decisionLiveForm1: ["wm.LiveForm", {"alwaysPopulateEditors":true,"height":"100%","horizontalAlign":"left","liveEditing":false,"margin":"4","verticalAlign":"top"}, {"onBeforeServiceCall":"decisionLiveForm1BeforeServiceCall","onSuccess2":"decisionLiveVariable1","onSuccess":"recentInterviewsVariable1","onSuccess3":"Edit_Interview"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"decisionDojoGrid.selectedItem","targetProperty":"dataSet"}, {}]
 }],
@@ -1364,7 +1383,7 @@ binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"decisionDojoGrid.emptySelection","targetProperty":"showing"}, {}]
 }]
 }],
-decisionSaveButton: ["wm.Button", {"caption":"Save","imageIndex":0,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"decisionLiveForm1.saveDataIfValid","onclick2":"Edit_Interview"}, {
+decisionSaveButton: ["wm.Button", {"caption":"Save","imageIndex":0,"imageList":"app.silkIconList","margin":"4"}, {"onclick":"decisionLiveForm1.saveDataIfValid"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":"${decisionLiveForm1.invalid} || !${decisionLiveForm1.isDirty}","targetId":null,"targetProperty":"disabled"}, {}]
 }]
@@ -1373,8 +1392,13 @@ wire: ["wm.Wire", {"expression":"${decisionLiveForm1.invalid} || !${decisionLive
 }],
 descriptionEditor7: ["wm.LargeTextArea", {"border":"0","caption":"Description","captionAlign":"right","captionPosition":"left","captionSize":"140px","changeOnKey":true,"dataValue":"Very puzzling...","desktopHeight":"100px","emptyValue":"emptyString","formField":"description","height":"100px","width":"100%"}, {}],
 slider1: ["wm.Slider", {"caption":"Importance","captionSize":"140px","dataValue":1,"desktopHeight":"26px","emptyValue":"zero","formField":"importance","height":"26px","maximum":5,"width":"100%"}, {}],
+html19Panel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+binding: ["wm.Binding", {}, {}, {
+wire: ["wm.Wire", {"expression":undefined,"source":"decisionDojoGrid.isRowSelected","targetProperty":"showing"}, {}]
+}],
+html19: ["wm.Html", {"autoSizeHeight":true,"height":"48px","html":"<div class=\"note\">This decision is connected to the following flows</div>","minDesktopHeight":15}, {}],
 dojoGrid11Panel: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-dojoGrid11: ["wm.DojoGrid", {"columns":[{"show":true,"field":"flow.fromActor","title":"From","width":"50%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"flow.toActor","title":"To","width":"50%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flow.name","title":"Subject","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>From: \" + ${flow.fromActor} + \"</div>\"\n+ \"<div class='MobileRow'>To: \" + ${flow.toActor} + \"</div>\"\n+ \"<div class='MobileRow'>Subject: \" + ${flow.name} + \"</div>\"\n","mobileColumn":true}],"dsType":"com.analystdb.data.DecisionFlow","height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {}, {
+dojoGrid11: ["wm.DojoGrid", {"columns":[{"show":true,"field":"flow.fromActor","title":"From","width":"50%","align":"left","formatFunc":"","mobileColumn":false},{"show":true,"field":"flow.toActor","title":"To","width":"50%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":true,"field":"flow.name","title":"Subject","width":"100%","align":"left","formatFunc":"","editorProps":{"restrictValues":true},"mobileColumn":false},{"show":false,"field":"PHONE COLUMN","title":"-","width":"100%","align":"left","expression":"\"<div class='MobileRowTitle'>From: \" + ${flow.fromActor} + \"</div>\"\n+ \"<div class='MobileRow'>To: \" + ${flow.toActor} + \"</div>\"\n+ \"<div class='MobileRow'>Subject: \" + ${flow.name} + \"</div>\"\n","mobileColumn":true},{"show":false,"field":"flow.interview.id","title":"Flow.interview.id","width":"80px","displayType":"Number","align":"right","formatFunc":""}],"dsType":"com.analystdb.data.DecisionFlow","height":"100%","margin":"4","minDesktopHeight":60,"singleClickEdit":true}, {"onSelect":"switchToFlow"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"decisionFlows","targetProperty":"dataSet"}, {}]
 }]
@@ -1382,6 +1406,7 @@ wire: ["wm.Wire", {"expression":undefined,"source":"decisionFlows","targetProper
 button21: ["wm.Button", {"_classes":{"domNode":["iconButton"]},"caption":undefined,"imageIndex":75,"imageList":"app.silkIconList","margin":"4","width":"32px"}, {"onclick":"otherDecisionFlowsVariable","onclick1":"EditDecisionFlows.show"}, {
 binding: ["wm.Binding", {}, {}, {
 wire: ["wm.Wire", {"expression":undefined,"source":"decisionDojoGrid.emptySelection","targetProperty":"disabled"}, {}]
+}]
 }]
 }]
 }]

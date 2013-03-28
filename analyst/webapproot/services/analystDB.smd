@@ -54,6 +54,14 @@
 		}],
 		"returnType": "[com.analystdb.data.Approach]"
 	}, {
+		"name": "decisionCounts",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.DecisionCountsRtnType]"
+	}, {
 		"name": "documentCategoryIssueCounts",
 		"operationType": "hqlquery",
 		"parameters": [{

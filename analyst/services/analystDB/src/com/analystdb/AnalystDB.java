@@ -9,6 +9,7 @@ import com.analystdb.data.output.AllDocsWithIssuesRtnType;
 import com.analystdb.data.output.AllIssuesRtnType;
 import com.analystdb.data.output.ApproachIssueCountRtnType;
 import com.analystdb.data.output.ApproachIssuesRtnType;
+import com.analystdb.data.output.DecisionCountsRtnType;
 import com.analystdb.data.output.DocumentCategoryIssueCountsRtnType;
 import com.analystdb.data.output.DocumentIssueCountRtnType;
 import com.analystdb.data.output.DocumentIssuesRtnType;
@@ -33,7 +34,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  *  Operations for service "analystDB"
- *  03/27/2013 19:45:16
+ *  03/28/2013 15:32:02
  * 
  */
 @SuppressWarnings("unchecked")
@@ -119,6 +120,10 @@ public class AnalystDB
 
     public List<com.analystdb.data.Approach> availableApproaches(Long issue, Long project, PagingOptions pagingOptions) {
         return ((List<com.analystdb.data.Approach> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.availableApproachesQueryName), issue, project, pagingOptions));
+    }
+
+    public List<DecisionCountsRtnType> decisionCounts(Long project, PagingOptions pagingOptions) {
+        return ((List<DecisionCountsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.decisionCountsQueryName), project, pagingOptions));
     }
 
     public List<com.analystdb.data.Flow> otherIssueFlows(Long project, Long issueComment, PagingOptions pagingOptions) {
