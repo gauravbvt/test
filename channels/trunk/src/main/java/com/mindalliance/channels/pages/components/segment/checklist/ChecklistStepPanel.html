@@ -22,76 +22,87 @@
             </td>
         </tr>
         <tr wicket:id="requiredContainer">
-            <th align="right">
+            <th>
                 <input wicket:id="required" type="checkbox"/> Required
             </th>
             <td colspan="2">&nbsp;</td>
         </tr>
-        <tr class="step-constraint" wicket:id="aftersContainer">
-            <th align="right">After</th>
-            <td>
-                <table>
-                    <tr wicket:id="afters">
-                        <td><span wicket:id="after">other step</span> </td>
-                        <td>
-                            <a class="delete" wicket:id="deleteAfter" href="#">
-                                <img src="images/delete.png" alt="Delete prerequisite step"/>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr wicket:id="addAfterContainer">
-                        <td colspan="2">
-                            <select wicket:id="addAfter">
-                                <option>Another step</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
+
+        <tr wicket:id="constraintsContainer">
+            <td colspan="2">
+               <table>
+                   <tr class="step-constraint" wicket:id="aftersContainer">
+                       <th align="right">After</th>
+                       <td>
+                           <table>
+                               <tr wicket:id="afters">
+                                   <td><span wicket:id="after">other step</span> </td>
+                                   <td>
+                                       <a class="delete" wicket:id="deleteAfter" href="#">
+                                           <img src="images/delete.png" alt="Delete prerequisite step"/>
+                                       </a>
+                                   </td>
+                               </tr>
+                               <tr wicket:id="addAfterContainer">
+                                   <td colspan="2">
+                                       <select wicket:id="addAfter">
+                                           <option>Another step</option>
+                                       </select>
+                                   </td>
+                               </tr>
+                           </table>
+                       </td>
+                       <td>&nbsp;</td>
+                   </tr>
+                   <tr class="step-constraint" wicket:id="ifsContainer">
+                       <th align="right">If</th>
+                       <td>
+                           <table>
+                               <tr wicket:id="ifs">
+                                   <td><span wicket:id="if">condition</span> </td>
+                                   <td>
+                                       <a class="delete" wicket:id="deleteIf" href="#">
+                                           <img src="images/delete.png" alt="Delete if"/>
+                                       </a>
+                                   </td>
+                               </tr>
+                               <tr wicket:id="addIfContainer">
+                                   <td colspan="2">
+                                       <span wicket:id="addIf">[guard panel]</span>
+                                   </td>
+                               </tr>
+                           </table>
+                       </td>
+                       <td>&nbsp;</td>
+                   </tr>
+                   <tr class="step-constraint" wicket:id="unlessesContainer">
+                       <th align="right">Unless</th>
+                       <td>
+                           <table>
+                               <tr wicket:id="unlesses">
+                                   <td><span wicket:id="unless">condition</span> </td>
+                                   <td>
+                                       <a class="delete" wicket:id="deleteUnless" href="#">
+                                           <img src="images/delete.png" alt="Delete unless"/>
+                                       </a>
+                                   </td>
+                               </tr>
+                               <tr wicket:id="addUnlessContainer">
+                                   <td colspan="2">
+                                       <span wicket:id="addUnless">[guard panel]</span>
+                                   </td>
+                               </tr>
+                           </table>
+                       </td>
+                       <td>&nbsp;</td>
+                   </tr>
+
+               </table>
             </td>
             <td>&nbsp;</td>
         </tr>
-        <tr class="step-constraint" wicket:id="ifsContainer">
-            <th align="right">If</th>
-            <td>
-                <table>
-                    <tr wicket:id="ifs">
-                        <td><span wicket:id="if">condition</span> </td>
-                        <td>
-                            <a class="delete" wicket:id="deleteIf" href="#">
-                                <img src="images/delete.png" alt="Delete if"/>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr wicket:id="addIfContainer">
-                        <td colspan="2">
-                            <span wicket:id="addIf">[guard panel]</span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr class="step-constraint" wicket:id="unlessesContainer">
-            <th align="right">Unless</th>
-            <td>
-                <table>
-                    <tr wicket:id="unlesses">
-                        <td><span wicket:id="unless">condition</span> </td>
-                        <td>
-                            <a class="delete" wicket:id="deleteUnless" href="#">
-                                <img src="images/delete.png" alt="Delete unless"/>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr wicket:id="addUnlessContainer">
-                        <td colspan="2">
-                            <span wicket:id="addUnless">[guard panel]</span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>&nbsp;</td>
-        </tr>
+
+
      </table>
 </wicket:panel>
 </body>

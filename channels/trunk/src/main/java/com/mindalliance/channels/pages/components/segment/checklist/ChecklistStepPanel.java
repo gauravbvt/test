@@ -50,6 +50,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
     private int index;
     private boolean edited;
     private WebMarkupContainer stepContainer;
+    private WebMarkupContainer constraintsContainer;
 
     public ChecklistStepPanel( String id, Part part, Step step, boolean edited, int index ) {
         super( id );
@@ -65,18 +66,16 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         String cssClasses = index % 2 == 0  ? "data-table step even-step" : "data-table step odd-step" ;
         if ( edited )
             cssClasses = cssClasses + " expanded-step";
-        stepContainer.add( new AttributeModifier( "class",  cssClasses ) );
+        stepContainer.add( new AttributeModifier( "class", cssClasses ) );
         add( stepContainer );
         addStepLabel();
         addDeleteStep();
         addEditDoneButton();
         addStepRequired();
-        addIfGuards();
-        addUnlessGuards();
-        addPrerequisiteSteps();
+        addConstraints();
     }
 
-    private void addStepRequired() {
+     private void addStepRequired() {
         WebMarkupContainer requiredContainer = new WebMarkupContainer( "requiredContainer" );
         requiredContainer.setVisible( edited && step.isActionStep() );
         stepContainer.add( requiredContainer );
@@ -179,10 +178,25 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         stepContainer.add( editDoneLink );
     }
 
+    private void addConstraints() {
+        constraintsContainer = new WebMarkupContainer( "constraintsContainer" );
+        constraintsContainer.setVisible( edited || isConstrained( step ) );
+        stepContainer.add( constraintsContainer );
+        addIfGuards();
+        addUnlessGuards();
+        addPrerequisiteSteps();
+    }
+
+    private boolean isConstrained( Step step ) {
+        return getChecklist().hasGuards( step, POSITIVE )
+                || getChecklist().hasGuards( step, !POSITIVE )
+                || getChecklist().hasPrerequisites( step );
+    }
+
     private void addIfGuards() {
         WebMarkupContainer ifsContainer = new WebMarkupContainer( "ifsContainer" );
         ifsContainer.setVisible( edited || getChecklist().hasGuards( step, POSITIVE ) );
-        stepContainer.add( ifsContainer );
+        constraintsContainer.add( ifsContainer );
         List<StepGuard> ifGuards = getIfGuards();
         ListView<StepGuard> ifListView = new ListView<StepGuard>(
                 "ifs",
@@ -254,7 +268,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         List<StepGuard> unlessGuards = getUnlessGuards();
         WebMarkupContainer unlessesContainer = new WebMarkupContainer( "unlessesContainer" );
         unlessesContainer.setVisible( edited || getChecklist().hasGuards( step, !POSITIVE ) );
-        stepContainer.add( unlessesContainer );
+        constraintsContainer.add( unlessesContainer );
         ListView<StepGuard> unlessListView = new ListView<StepGuard>(
                 "unlesses",
                 unlessGuards
@@ -326,7 +340,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         WebMarkupContainer aftersContainer = new WebMarkupContainer( "aftersContainer" );
         aftersContainer.setVisible( edited
                 || getChecklist().hasPrerequisites( step ) );
-        stepContainer.add( aftersContainer );
+        constraintsContainer.add( aftersContainer );
         ListView<StepOrder> prerequisiteListView = new ListView<StepOrder>(
                 "afters",
                 stepOrders

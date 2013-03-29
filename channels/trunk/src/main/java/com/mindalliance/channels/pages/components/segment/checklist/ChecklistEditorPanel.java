@@ -45,7 +45,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
 
     private void init() {
         addStepPanels();
-        addNewStepField();
+        addNewStep();
         addConfirmation();
     }
 
@@ -70,7 +70,10 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
         return editedStepRef != null && step.getRef().equals( editedStepRef );
     }
 
-    private void addNewStepField() {
+    private void addNewStep() {
+        WebMarkupContainer newStepContainer = new WebMarkupContainer( "newStepContainer" );
+        newStepContainer.setVisible( isLockedByUser( getPart() ) );
+        add( newStepContainer );
         actionStepText = new TextField<String>(
                 "newStep",
                 new PropertyModel<String>( this, "newActionStep" ) );
@@ -83,8 +86,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
             }
         } );
         addTipTitle( actionStepText, "Enter a new action step and press return" );
-        actionStepText.setVisible( isLockedByUser( getPart() ) );
-        add( actionStepText );
+        newStepContainer.add( actionStepText );
     }
 
     private List<Step> getSteps() {
