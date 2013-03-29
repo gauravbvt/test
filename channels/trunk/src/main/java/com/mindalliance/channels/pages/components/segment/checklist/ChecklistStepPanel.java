@@ -62,7 +62,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
 
     private void init() {
         stepContainer = new WebMarkupContainer( "stepContainer" );
-        String cssClasses = index % 2 == 0  ? "step even-step" : "step odd-step" ;
+        String cssClasses = index % 2 == 0  ? "data-table step even-step" : "data-table step odd-step" ;
         if ( edited )
             cssClasses = cssClasses + " expanded-step";
         stepContainer.add( new AttributeModifier( "class",  cssClasses ) );

@@ -3765,6 +3765,8 @@ ul.attach li.controls {
 
 .checklist ul {
     list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 .checklist .step {
@@ -3776,14 +3778,24 @@ ul.attach li.controls {
 }
 
 .checklist .step .edit-step {
-    float: right;
-    margin-right: 10px;
+
 }
 
-.checklist .expanded-step {
-    border-style: dashed;
-    border-width: 1px;
+.checklist .data-table.expanded-step {
+    border: 5px solid #CCCCCC;
+    background: #ffffff;
 }
+
+.checklist .data-table td.delete-button,
+.checklist .data-table td.edit-button {
+    text-align: right;
+}
+
+.checklist .data-table.expanded-step td.delete-button,
+.checklist .data-table.expanded-step td.edit-button {
+	padding: 15px;
+}
+
 
 .checklist .step .delete {
     float: right;
@@ -3800,22 +3812,25 @@ ul.attach li.controls {
 }
 
 .checklist .step .action-step {
-    background: transparent url('../images/step_action.png') no-repeat 0 50%;
+    background: transparent url('../images/step_action.png') no-repeat 0 0;
     padding-left: 20px;
 }
 
 .checklist .step .notification-step {
-    background: transparent url('../images/step_notification.png') no-repeat 0 50%;
+    background: transparent url('../images/step_notification.png') no-repeat 0 0;
     padding-left: 20px;
 }
 
 .checklist .step .request-step {
-    background: transparent url('../images/step_request.png') no-repeat 0 50%;
+    background: transparent url('../images/step_request.png') no-repeat 0 0;
     padding-left: 20px;
 }
 
 .checklist .step .edited-step {
+    background: url("../images/step_notification.png") no-repeat scroll 10px 12px transparent;
+    display: block;
     font-weight: bold;
+    padding: 10px 10px 10px 40px;
 }
 
 .checklist div.new-step {
