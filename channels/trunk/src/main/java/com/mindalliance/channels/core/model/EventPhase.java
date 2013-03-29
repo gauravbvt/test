@@ -132,4 +132,8 @@ public class EventPhase implements Serializable, Comparable<EventPhase> {
         result = 31 * result + ( eventLevel != null ? eventLevel.hashCode() : 0 );
         return result;
     }
+
+    public EventTiming getEventTiming() {
+        return new EventTiming( getPhase().getTiming(), getEvent() );
+    }
 }

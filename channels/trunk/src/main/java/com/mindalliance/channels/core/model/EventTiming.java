@@ -49,7 +49,7 @@ public class EventTiming implements Serializable {
 
     public boolean implies( EventTiming other, Place planLocale ) {
         return timing.equals( other.getTiming() ) && other.getEvent().narrowsOrEquals( event, planLocale )
-               && eventLevelImplied( eventLevel, other.getEventLevel() );
+                && eventLevelImplied( eventLevel, other.getEventLevel() );
     }
 
     public boolean isConcurrent() {
@@ -58,7 +58,7 @@ public class EventTiming implements Serializable {
 
     public boolean narrowsOrEquals( EventTiming other, Place locale ) {
         return timing == other.getTiming() && Level.isSubsumedBy( eventLevel, other.getEventLevel() )
-               && event.narrowsOrEquals( other.getEvent(), locale );
+                && event.narrowsOrEquals( other.getEvent(), locale );
     }
 
     /**
@@ -101,7 +101,7 @@ public class EventTiming implements Serializable {
         if ( obj instanceof EventTiming ) {
             EventTiming other = (EventTiming) obj;
             return timing == other.getTiming() && eventLevel == other.getEventLevel() && event != null
-                   && event.equals( other.getEvent() );
+                    && event.equals( other.getEvent() );
         } else {
             return false;
         }
@@ -139,5 +139,25 @@ public class EventTiming implements Serializable {
             sb.append( ")" );
         }
         return sb.toString();
+    }
+
+    public EventTiming getEventTimingAfterThis() {
+        return timing == Timing.PreEvent
+                ? new EventTiming( Timing.Concurrent, getEvent() )
+                : timing == Timing.Concurrent
+                ? new EventTiming( Timing.PostEvent, getEvent() )
+                : null;
+    }
+
+    public String getStepConditionLabel() {
+        return ( timing == Timing.Concurrent
+                ? ""
+                : timing == Timing.PostEvent
+                ? "Is over: "
+                : "Anticipating: " ) + getEvent();
+    }
+
+    public String getLabel() {
+        return toString();
     }
 }

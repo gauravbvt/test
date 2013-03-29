@@ -6,7 +6,9 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +31,7 @@ public class MappedObject implements Serializable {
 
     public MappedObject( Mappable mappable ) {
         this( mappable.getClass() );
-        Map<String,Object> objectMap = new HashMap<String, Object>();
+        Map<String, Object> objectMap = new HashMap<String, Object>();
         mappable.map( objectMap );
         for ( Map.Entry<String, Object> mapped : objectMap.entrySet() )
             set( mapped.getKey(), mapped.getValue() );
@@ -56,6 +58,7 @@ public class MappedObject implements Serializable {
 
     /**
      * Reconstitute mapped object.
+     *
      * @param commander a commander
      * @return an object
      * @throws CommandException if conversion from map fails
@@ -70,7 +73,14 @@ public class MappedObject implements Serializable {
                             object,
                             name,
                             ( (ModelObjectRef) value ).resolve( commander.getCommunityService() ) );
-                } else {
+                } else if ( value instanceof MappedList ) {
+                    List<MappedObject> mappedObjects = ((MappedList)value).getMappedObjects();
+                    List<Mappable> list = new ArrayList<Mappable>();
+                    for ( MappedObject mappedObj : mappedObjects ) {
+                        list.add( (Mappable)mappedObj.fromMap( commander ) );
+                    }
+                    PropertyUtils.setSimpleProperty( object, name, list );
+                } else  {
                     PropertyUtils.setSimpleProperty( object, name, value );
                 }
             }

@@ -65,6 +65,7 @@ import com.mindalliance.channels.pages.components.segment.PartAssignmentsPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
+import com.mindalliance.channels.pages.components.segment.checklist.ChecklistFloatingPanel;
 import com.mindalliance.channels.pages.components.social.rfi.AllSurveysPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
@@ -234,6 +235,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * The assignments panel.
      */
     private Component assignmentsPanel;
+    /**
+     * The part checklist panel.
+     */
+    private Component checklistPanel;
 
     /**
      * The commitments panel.
@@ -602,6 +607,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void addFloatingPanels() {
         addEntityPanel();
         addAssignmentsPanel();
+        addChecklistPanel();
         addCommitmentsPanel();
         addEOIsPanel();
         addFailureImpactsPanel();
@@ -1357,6 +1363,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     getReadOnlyExpansions() );
         }
         form.addOrReplace( assignmentsPanel );
+    }
+
+    private void addChecklistPanel() {
+        Part partViewed = getModelObjectViewed( Part.class, "checklist" );
+        if ( partViewed == null ) {
+            checklistPanel = new Label( "checklist", "" );
+            checklistPanel.setOutputMarkupId( true );
+            makeVisible( checklistPanel, false );
+        } else {
+            checklistPanel = new ChecklistFloatingPanel( "checklist",
+                    new Model<Part>( partViewed ) );
+        }
+        form.addOrReplace( checklistPanel );
+
     }
 
     private void addCommitmentsPanel() {
@@ -2243,6 +2263,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshEntityPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "assignments" ) ) {
             refreshAssignmentsPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "checklist" ) ) {
+            refreshChecklistPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "overrides" ) ) {
             refreshOverridesPanel( target, change, updated );
         } else if ( change.isForInstanceOf( SegmentObject.class ) && change.isForProperty( "failure" ) ) {
@@ -2394,6 +2416,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         refreshSegmentEditPanel( target, change, updated );
         refreshEntityPanel( target, change, updated );
         refreshAssignmentsPanel( target, change, updated );
+        refreshChecklistPanel( target, change, updated );
         refreshCommitmentsPanel( target, change, updated );
         refreshEOIsPanel( target, change, updated );
         refreshSegmentPanel( target, change, updated );
@@ -2500,6 +2523,21 @@ public final class PlanPage extends AbstractChannelsWebPage {
             target.add( assignmentsPanel );
         } else if ( assignmentsPanel instanceof PartAssignmentsPanel ) {
             ( (PartAssignmentsPanel) assignmentsPanel ).refresh( target, change, updated );
+        }
+    }
+
+    private void refreshChecklistPanel(
+            AjaxRequestTarget target,
+            Change change,
+            List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getCommunityService() );
+        if ( identifiable != null
+                && identifiable instanceof Part
+                && change.isAspect( "checklist" ) ) {
+            addChecklistPanel();
+            target.add( checklistPanel );
+        } else if ( checklistPanel instanceof ChecklistFloatingPanel ) {
+            ( (ChecklistFloatingPanel) checklistPanel ).refresh( target, change, updated );
         }
     }
 

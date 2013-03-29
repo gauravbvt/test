@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
@@ -108,8 +109,11 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      */
     private boolean prohibited = false;
 
+    private Checklist checklist;
+
     public Part() {
         adjustName();
+        checklist = new Checklist( this );
     }
 
     public static String classLabel() {
@@ -148,6 +152,20 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     public void setTask( String task ) {
         this.task = task == null || task.length() == 0 ? DEFAULT_TASK : task;
+    }
+
+    public Checklist getChecklist() {
+        return checklist;
+    }
+
+    public Checklist getEffectiveChecklist() {
+        return checklist == null
+                ? new Checklist( this )
+                : checklist;
+    }
+
+    public void setChecklist( Checklist checklist ) {
+        this.checklist = checklist;
     }
 
     private void adjustName() {
@@ -749,7 +767,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @return a boolean
      */
     public boolean isUseful() {
-        return !goals.isEmpty() || terminatesEventPhase && getSegment().hasTerminatingRisks();
+        return !goals.isEmpty() || terminatesEventPhase && getSegment().hasTerminatingGoals();
     }
 
     /**
@@ -834,8 +852,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     public List<Goal> getGoalsAchieved() {
         Set<Goal> goals = new HashSet<Goal>();
         goals.addAll( this.goals );
-        if ( terminatesEventPhase && getSegment().hasTerminatingRisks() ) {
-            goals.addAll( getSegment().getRisks() );
+        if ( terminatesEventPhase ) {
+            goals.addAll( getSegment().getTerminatingGoals() );
         }
         return new ArrayList<Goal>( goals );
     }

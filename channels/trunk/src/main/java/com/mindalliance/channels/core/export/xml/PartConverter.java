@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -151,6 +152,11 @@ public class PartConverter extends AbstractChannelsConverter {
         writer.startNode( "prohibited" );
         writer.setValue( Boolean.toString( part.isProhibited() ) );
         writer.endNode();
+        if ( !part.getChecklist().isEmpty() ) {
+            writer.startNode( "checklist" );
+            context.convertAnother( part.getChecklist() );
+            writer.endNode();
+        }
         // Part user issues
         exportUserIssues( part, writer, context );
     }
@@ -265,6 +271,10 @@ public class PartConverter extends AbstractChannelsConverter {
                 part.setCategory( Part.Category.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "prohibited" ) ) {
                 part.setProhibited( reader.getValue().equals( "true" ) );
+            } else if ( nodeName.equals( "checklist" ) ) {
+                Checklist checklist = (Checklist)context.convertAnother( part, Checklist.class );
+                checklist.setPart( part );
+                part.setChecklist( checklist );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

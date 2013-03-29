@@ -201,7 +201,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
-        <property name="timeout" value="300"/>
+        <property name="timeout" value="300000"/> <!-- 300 -->
      </bean>
 
     <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"

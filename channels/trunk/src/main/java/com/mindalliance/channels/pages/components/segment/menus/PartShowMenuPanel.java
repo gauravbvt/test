@@ -69,6 +69,17 @@ public class PartShowMenuPanel extends MenuPanel {
             };
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
+        // View checklist
+        AjaxFallbackLink checklistLink = new AjaxFallbackLink( "link" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist" ) );
+            }
+        };
+        menuItems.add( new LinkMenuItem(
+                "menuItem",
+                new Model<String>( "Checklist" ),
+                checklistLink ) );
         // View part assignments
         AjaxFallbackLink assignmentsLink = new AjaxFallbackLink( "link" ) {
             @Override

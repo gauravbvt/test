@@ -142,6 +142,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                 allowMessageDelete,
                 updatable );
         menu.setVisible( !menu.isEmpty() && isPlanner() /*&& !getUsername().equals( this.getPersistentPlanObjectUsername() ) */);
+        makeVisible( menu, menu.isEmpty() );
         socialItemContainer.add( menu );
     }
 

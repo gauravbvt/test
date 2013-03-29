@@ -1,7 +1,11 @@
 package com.mindalliance.channels.api.issues;
 
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.model.Segment;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -16,7 +20,7 @@ import java.io.Serializable;
  * Date: 12/14/11
  * Time: 3:13 PM
  */
-@XmlType( propOrder = { "id", "type", "name", "description" } )
+@XmlType( propOrder = { "id", "type", "category", "name", "description" } )
 public class AboutData  implements Serializable {
 
     private ModelObject modelObject;
@@ -37,6 +41,22 @@ public class AboutData  implements Serializable {
     @XmlElement
     public String getType() {
         return modelObject.getTypeName();
+    }
+
+    // Categories = { plan, segment, task , flow, entity, other }
+    @XmlElement
+    public String getCategory() {
+        return modelObject instanceof Plan
+                ? "plan"
+                : modelObject instanceof Segment
+                ? "segment"
+                : modelObject instanceof Part
+                ? "task"
+                : modelObject instanceof Flow
+                ? "flow"
+                : modelObject instanceof ModelEntity
+                ? "entity"
+                : "other";
     }
 
     @XmlElement

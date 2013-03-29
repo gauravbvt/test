@@ -265,6 +265,23 @@ public class Goal implements Serializable, Mappable {
         return label;
     }
 
+    public String getStepConditionLabel() {
+        String label = "";
+        if ( getName().isEmpty() ) {
+            label += ( category != null ? category.getGroup() : "" )
+                    + (isPositive() ? " gain " : " risk ")
+                    + ( category != null
+                    ? " of " + category.getName( positive )
+                    : "" ).toLowerCase();
+        } else {
+            label += "\"" +  getName() + "\"";
+        }
+        label += isRiskMitigation()
+                ? " is mitigated"
+                : " is achieved";
+        return label;
+    }
+
     /**
      * Return a success label for the goals.
      *

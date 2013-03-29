@@ -47,6 +47,7 @@ import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.Transformation;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.XppReader;
@@ -213,6 +214,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new SegmentConverter( this ) );
             stream.registerConverter( new GoalConverter( this ) );
             stream.registerConverter( new PartConverter( this ) );
+            stream.registerConverter( new ChecklistConverter( this ) );
             stream.registerConverter( new FlowConverter( this ) );
             stream.registerConverter( new ElementOfInformationConverter( this ) );
             stream.registerConverter( new ActorConverter( this ) );
@@ -260,6 +262,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "issue", UserIssue.class );
             stream.alias( "segment", Segment.class );
             stream.alias( "goal", Goal.class );
+            stream.alias( "checklist", Checklist.class );
             stream.alias( "channel", Channel.class );
             stream.alias( "job", Job.class );
             stream.alias( "export", Export.class );

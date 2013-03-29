@@ -632,28 +632,28 @@ public class Segment extends ModelObject {
     }
 
     /**
-     * At least one risk ends with segment.
+     * At least one goal is achieved when the segment ends.
      *
      * @return a boolean
      */
-    public boolean hasTerminatingRisks() {
-        return !getTerminatingRisks().isEmpty();
+    public boolean hasTerminatingGoals() {
+        return !getTerminatingGoals().isEmpty();
     }
 
 
     /**
-     * Get all risks that terminate with the segment.
+     * Get all goals achieved when the segment terminates.
      *
      * @return a list of goals
      */
     @SuppressWarnings( "unchecked" )
-    public List<Goal>  getTerminatingRisks() {
+    public List<Goal> getTerminatingGoals() {
         return (List<Goal>)CollectionUtils.select( goals,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         Goal goal = (Goal) object;
-                        return goal.isRiskMitigation() && goal.isEndsWithSegment();
+                        return goal.isEndsWithSegment();
                     }
                 }
         );

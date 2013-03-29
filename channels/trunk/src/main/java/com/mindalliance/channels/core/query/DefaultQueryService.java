@@ -289,7 +289,7 @@ public abstract class DefaultQueryService implements QueryService {
                 max = goal.getLevel();
         }
         if ( part.isTerminatesEventPhase() ) {
-            for ( Goal goal : part.getSegment().getTerminatingRisks() ) {
+            for ( Goal goal : part.getSegment().getTerminatingGoals() ) {
                 if ( goal.getLevel().getOrdinal() > max.getOrdinal() )
                     max = goal.getLevel();
             }

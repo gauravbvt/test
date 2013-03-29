@@ -475,6 +475,39 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 message, getShortName( getSource(), false ), getShortName( getTarget(), false ) );
     }
 
+    /**
+     * Provide a description of the flow as a step in a checklist.
+     *
+     * @return the description
+     */
+    public String getStepTitle( boolean prerequisite ) {
+        String message = getName();
+        if ( message == null || message.trim().isEmpty() )
+            message = "something";
+        StringBuilder sb = new StringBuilder( );
+        String intentLabel = getIntent() == null
+                ? "information"
+                : getIntent().getLabel().toLowerCase();
+        if ( isAskedFor() ) {
+           sb.append( prerequisite ? "Getting " : "Get " )
+                   .append( intentLabel )
+                   .append( " \"" )
+                   .append( message )
+                   .append( "\"" )
+                   .append( " from " )
+                   .append( getShortName( getSource(), false ) );
+        } else {
+            sb.append( prerequisite ? "Sending " : "Send " )
+                    .append( intentLabel )
+                    .append( " \"" )
+                    .append( message )
+                    .append( "\"" )
+                    .append( " to " )
+                    .append( getShortName( getTarget(), false ) );
+        }
+        return sb.toString();
+    }
+
 
     /**
      * Provide a description of the flow, when viewed as a receive.
@@ -1007,7 +1040,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean isSharing() {
-        return  getSource().isPart() && getTarget().isPart();
+        return getSource().isPart() && getTarget().isPart();
     }
 
     /**
@@ -1059,7 +1092,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a list of elements of information
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<ElementOfInformation> getEOISWithSameClassifications() {
         List<Classification> allClassifications = getAllEOIClassifications();
         List<ElementOfInformation> eoisCopy = new ArrayList<ElementOfInformation>();
@@ -1118,7 +1151,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return a list of classifications
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Classification> getAllEOIClassifications() {
         Set<Classification> allClassifications = new HashSet<Classification>();
         for ( ElementOfInformation eoi : getEffectiveEois() ) {
@@ -1454,7 +1487,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         super.initFromMap( state, communityService );
         if ( state.containsKey( "standardized" ) )
