@@ -31,6 +31,7 @@ public class PlanImprovingMenuPanel extends MenuPanel {
     @Override
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
+        menuItems.add( collapsible( Channels.ALL_CHECKLISTS, "Hide all checklists", "All checklists" ) );
         menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Task mover" ) );
         menuItems.add( collapsible( Channels.PROTOCOLS_MAP, "Hide protocols map", "Protocols map" ) );
         menuItems.add( collapsible( Channels.PLAN_EVALUATION, "Hide plan evaluation", "Plan evaluation" ) );

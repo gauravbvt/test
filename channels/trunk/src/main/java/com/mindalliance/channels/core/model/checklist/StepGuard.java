@@ -88,7 +88,7 @@ public class StepGuard implements Serializable, Mappable {
     @Override
     public boolean equals( Object object ) {
         return object instanceof StepGuard
-                && positive == ((StepGuard)object).isPositive()
+               && positive == ((StepGuard)object).isPositive()
                 && conditionRef.equals( ((StepGuard)object).getConditionRef() )
                 && stepRef.equals( ((StepGuard)object).getStepRef() );
     }

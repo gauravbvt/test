@@ -175,7 +175,7 @@ CONFIGURATION NOTES:
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
-        <property name="timeout" value="10000"/>
+        <property name="timeout" value="300"/>
         <property name="maxAttempts" value="2"/>
         <property name="tempDir" value="${channels.home}${file.separator}temp"/>
     </bean>
@@ -336,6 +336,10 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceholderOrganizationWithoutCustodian"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationHasPlaceholderParent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistIsEmpty"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasCircularPrerequisites"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasContradictoryConditions"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistUnconfirmed"/>
             </list>
         </property>
     </bean>

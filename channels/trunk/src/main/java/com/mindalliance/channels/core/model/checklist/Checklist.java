@@ -86,7 +86,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final boolean positive ) {
         return (List<StepGuard>) CollectionUtils.select(
                 listEffectiveStepGuards( listEffectiveSteps(), listEffectiveConditions() ),
@@ -99,7 +99,7 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final List<Step> steps, final List<Condition> conditions ) {
         return (List<StepGuard>) CollectionUtils.select(
                 getStepGuards(),
@@ -167,7 +167,7 @@ public class Checklist implements Serializable, Mappable {
         return confirmationSignature != null && confirmationSignature.equals( computeSignature() );
     }
 
-    public void setConfirmed( boolean val) {
+    public void setConfirmed( boolean val ) {
         if ( val )
             confirm();
         else
@@ -363,7 +363,7 @@ public class Checklist implements Serializable, Mappable {
 
     private List<Step> safePrerequisiteStepsFor( Step step, HashSet<Step> visited ) {
         visited.add( step );
-        List<Step> prereqSteps = new ArrayList<Step>(  );
+        List<Step> prereqSteps = new ArrayList<Step>();
         for ( StepOrder stepOrder : listStepOrdersFor( step ) ) {
             Step prereqStep = derefStep( stepOrder.getPrerequisiteStepRef() );
             if ( prereqStep != null && !visited.contains( prereqStep ) ) {
@@ -374,8 +374,28 @@ public class Checklist implements Serializable, Mappable {
         return prereqSteps;
     }
 
+    public boolean hasCircularPrerequisites( Step step ) {
+        return safeHasCircularPrerequisites( step, step, new HashSet<Step>() );
+    }
+
+    private boolean safeHasCircularPrerequisites( Step baseStep, Step step, HashSet<Step> visited ) {
+        visited.add( step );
+        for ( StepOrder stepOrder : listStepOrdersFor( step ) ) {
+            Step prereqStep = derefStep( stepOrder.getPrerequisiteStepRef() );
+            if ( prereqStep != null ) {
+                if ( prereqStep.equals( baseStep ) ) {
+                    return true;
+                } else if ( !visited.contains( prereqStep ) ) {
+                    return safeHasCircularPrerequisites( baseStep, prereqStep, visited );
+                }
+            }
+        }
+        return false;
+    }
+
+
     public void sort( List<Step> steps ) {
-        Collections.sort( steps ,new Comparator<Step>() {
+        Collections.sort( steps, new Comparator<Step>() {
             @Override
             public int compare( Step s1, Step s2 ) {
                 List<Step> preS1 = listPrerequisiteStepsFor( s1 );
@@ -385,14 +405,14 @@ public class Checklist implements Serializable, Mappable {
                 if ( !preS1.isEmpty() && preS2.isEmpty() )
                     return 1;
                 if ( preS1.contains( s2 ) && !preS2.contains( s1 ) )
-                         return -1;
+                    return -1;
                 if ( preS2.contains( s1 ) && !preS1.contains( s2 ) )
-                        return 1;
+                    return 1;
                 if ( preS1.size() < preS2.size() ) return -1;
                 if ( preS2.size() < preS1.size() ) return 1;
                 return s1.getLabel().compareTo( s2.getLabel() );
             }
-        });
+        } );
     }
 
     /**
@@ -453,7 +473,7 @@ public class Checklist implements Serializable, Mappable {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        StepGuard stepGuard = (StepGuard)object;
+                        StepGuard stepGuard = (StepGuard) object;
                         return stepGuard.isPositive() == positive && stepGuard.getStepRef().equals( stepRef );
                     }
                 }
@@ -467,7 +487,7 @@ public class Checklist implements Serializable, Mappable {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        StepOrder stepOrder = (StepOrder)object;
+                        StepOrder stepOrder = (StepOrder) object;
                         return stepOrder.getStepRef().equals( stepRef );
                     }
                 }
@@ -481,7 +501,21 @@ public class Checklist implements Serializable, Mappable {
             map.put( "confirmationSignature", confirmationSignature );
         map.put( "actionSteps", new MappedList<ActionStep>( getActionSteps() ) );
         map.put( "localConditions", new MappedList<LocalCondition>( getLocalConditions() ) );
-        map.put( "stepOrders", new MappedList<StepOrder>( getStepOrders()) );
-        map.put( "stepGuards", new MappedList<StepGuard>( getStepGuards()) );
+        map.put( "stepOrders", new MappedList<StepOrder>( getStepOrders() ) );
+        map.put( "stepGuards", new MappedList<StepGuard>( getStepGuards() ) );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<StepGuard> listEffectiveStepGuardsFor( Step step, boolean positive ) {
+        final String stepRef = step.getRef();
+        return (List<StepGuard>) CollectionUtils.select(
+                listEffectiveStepGuards( positive ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (StepGuard) object ).getStepRef().equals( stepRef );
+                    }
+                }
+        );
     }
 }

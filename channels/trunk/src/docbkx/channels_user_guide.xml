@@ -10044,6 +10044,41 @@
                 <entry><para>No</para></entry>
               </row>
               
+              <row>
+                <entry><para>Task checklist has steps with invalid prerequisites</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Change the steps this step must come after</para>
+                  </listitem>
+                  <listitem>
+                    <para>or remove the step if it is an action step.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
+              <row>
+                <entry><para>Task checklist has contradictory conditions</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Remove the "if" condition that is repeated as an "unless" condition"</para>
+                  </listitem>
+                  <listitem>
+                    <para>or remove the "unless" condition that is repeated as an "if" condition.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
+              
             </tbody>
           </tgroup>
         </informaltable>
@@ -10824,6 +10859,38 @@
                 </itemizedlist></entry>
                 <entry><para>No</para></entry>
               </row>
+              
+              <row>
+                <entry><para>Task has a default checklist</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Add action steps</para>
+                  </listitem>
+                  <listitem>
+                    <para>or set conditions or prerequisites on steps.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+
+              <row>
+                <entry><para>Task checklist is not confirmed</para></entry>
+                
+                <entry><para>Depends on impacted tasks</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Confirm the checklist once deemed satisfactory</para>
+                  </listitem>
+                 </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+              
               
             </tbody>
           </tgroup>

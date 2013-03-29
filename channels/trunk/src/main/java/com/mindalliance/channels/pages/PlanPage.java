@@ -39,6 +39,7 @@ import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import com.mindalliance.channels.pages.components.help.HelpPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
+import com.mindalliance.channels.pages.components.plan.floating.AllChecklistsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllFeedbackFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllIssuesFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanClassificationsFloatingPanel;
@@ -310,6 +311,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component allIssuesPanel;
     private Component planVersionsPanel;
     private Component planSearchingPanel;
+    private Component allChecklistsPanel;
 
     /**
      * Refresh button.
@@ -629,6 +631,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanEvaluationPanel();
         addAllIssuesPanel();
         addPlanVersionsPanel();
+        addAllChecklistsPanel();
         // learning
         // addUserParticipationPanel();
         addAllFeedbackPanel();
@@ -1151,6 +1154,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( allIssuesPanel );
     }
+
+    private void addAllChecklistsPanel() {
+        if ( !getExpansions().contains( Channels.ALL_CHECKLISTS ) ) {
+            allChecklistsPanel = new Label( "allChecklists", "" );
+            allChecklistsPanel.setOutputMarkupId( true );
+            makeVisible( allChecklistsPanel, false );
+        } else {
+            allChecklistsPanel = new AllChecklistsFloatingPanel(
+                    "allChecklists",
+                    new Model<Plan>( getPlan() ) );
+        }
+        form.addOrReplace( allChecklistsPanel );
+    }
+
 
     private void addPlanVersionsPanel() {
         if ( !getExpansions().contains( Channels.PLAN_VERSIONS ) ) {
@@ -2193,6 +2210,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     || change.isExpanded()
                     || ( change.isCollapsed() && changes.get( change.getId() ) == null ) ) {
                 openOrCloseChild( change, target );
+                if ( change.isAspectClosed() && change.isForProperty( "checklist" ) ) {
+                    refresh( target, change, updated );
+                }
             } else if ( change.isUndoing() || change.isUnknown() || change.isRecomposed()
                     || change.isAdded() && change.isForInstanceOf( Part.class ) ) {
                 refreshAll( target );
@@ -2249,6 +2269,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshPlanEvaluationPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_ISSUES ) {
             refreshAllIssuesPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_CHECKLISTS ) {
+            refreshAllChecklistsPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_VERSIONS ) {
             refreshPlanVersionsPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_SEARCHING ) {
@@ -2433,6 +2455,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         refreshProtocolsMapPanel( target, change, updated );
         refreshPlanEvaluationPanel( target, change, updated );
         refreshAllIssuesPanel( target, change, updated );
+        refreshAllChecklistsPanel( target, change, updated );
         refreshPlanVersionsPanel( target, change, updated );
         // refreshUserParticipationPanel( target, change, updated );
         refreshPlanSearchingPanel( target, change, updated );
@@ -2753,6 +2776,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     updated );
         }
     }
+
+    private void refreshAllChecklistsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( id == Channels.ALL_CHECKLISTS
+                && change.isDisplay() ) {
+            addAllChecklistsPanel();
+            target.add( allChecklistsPanel );
+        } else if ( allChecklistsPanel instanceof AllChecklistsFloatingPanel ) {
+            ( (AllChecklistsFloatingPanel) allChecklistsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
 
     private void refreshPlanVersionsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();

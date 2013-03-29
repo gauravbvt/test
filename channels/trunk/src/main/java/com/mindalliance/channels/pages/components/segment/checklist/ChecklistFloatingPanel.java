@@ -28,12 +28,12 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
 
     @Override
     public String getHelpSectionId() {
-        return "checklist";  // Todo - add doc
+        return "info-sharing";
     }
 
     @Override
     public String getHelpTopicId() {
-        return "edit-checklist";  // Todo - add doc
+        return "edit-checklist";
     }
 
     private void init() {

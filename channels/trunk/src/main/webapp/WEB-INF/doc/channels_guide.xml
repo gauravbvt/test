@@ -615,6 +615,17 @@ One use of tags is to specify information in information sharing requirements.</
                 </item>
                 <next section="concepts" topic="plan-element"/>
             </topic>
+            <topic id="checklist">
+                <name>Checklist</name>
+                <item>
+                    <description>A collaboration checklist lists the steps required to successfully execute a task. A step can be either an information request, a notification or some other stated action.
+
+A step may be required or optional. It may need to come after other steps and may be subject to some conditions being present or absent.
+
+The communication steps of a checklist are implied by the flows in and out of a task (requested info to be received and notifications to be sent). The conditions can be the goals achieved and events triggered by the task, or othere stated conditions.
+                    </description>
+                </item>
+            </topic>
         </section>
         <section id="plans-page">
             <name>Domain plan page</name>
@@ -733,6 +744,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <item>
                     <description>The options are
 * Details/Hide details - Show or hide the task definition form
+* Checklist - Show the task's checklist (enabled only when the task form is open)
 * Assignments - Show the list of agents in scope that are assignable to the task given its definition
 * Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
 * Failure impacts - Open a panel showing the potential impacts of this task failing
@@ -1158,6 +1170,28 @@ A sharing flow is created by connecting an info need or a capability to a task. 
                 </item>
                 <next section="concepts" topic="overriding"/>
                 <next section="concepts" topic="task"/>
+            </topic>
+            <topic id="edit-checklist">
+                <name>Editing a checklist</name>
+                <item>
+                    <description>A checklist comes pre-populated with the requested information to be received and the notifications to be sent defined for the task. These communication steps can not be removed from the checklist. Action steps can be added and removed.
+
+A step can be given:
+* Prerequisite steps  - steps it must come "after"
+* Conditions that must be present for the step to be taken ("if")
+* Conditions that must be absent for the step to be taken ("unless")
+
+Action steps (not communication steps) can be marked as "required", else they are optional.
+
+Conditions applicable on steps are either:
+* Goals achieved by the task
+* Events triggered or terminated by the task
+* Conditions added to the checklist
+
+A checklist must be confirmed to be deployed. Any change to the implied communication steps or to the action steps requires a new confirmation.</description>
+                </item>
+                <next section="concepts" topic="checklist"/>
+                <next section="improving" topic="all-checklists"/>
             </topic>
         </section>
         <section id="profiling">
@@ -1736,6 +1770,19 @@ The other parties to the commitments can be aggregated by role, organization typ
                 <next section="concepts" topic="protocol"/>
                 <next section="improving" topic="tune-task-flow-definition"/>
                 <next section="improving" topic="verify-taxonomy"/>
+            </topic>
+            <topic id="all-checklists">
+                <name>All checklists</name>
+                <item>
+                    <description>All the checklists (one for each task in the plan) are listed, to be sorted on the task names, segment names and their confirmation status.
+                    
+Checklists can be filtered to see only the ones confirmed or not confirmed, or to see only the checklists in a given segment.
+
+Clicking on the name of a tasks or a segment, takes you to it.
+                    </description>
+                </item>
+                <next section="concepts" topic="checklist"/>
+                <next section="info-sharing" topic="edit-checklist"/>
             </topic>
         </section>
         <section id="learning">
