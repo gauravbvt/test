@@ -175,7 +175,7 @@ CONFIGURATION NOTES:
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
         <property name="algo" value="dot"/>
-        <property name="timeout" value="300"/>
+        <property name="timeout" value="10000"/> <!-- 10 secs -->
         <property name="maxAttempts" value="2"/>
         <property name="tempDir" value="${channels.home}${file.separator}temp"/>
     </bean>
@@ -201,7 +201,7 @@ CONFIGURATION NOTES:
     </bean>
 
     <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
-        <property name="timeout" value="1800"/>
+        <property name="timeout" value="300"/>  <!-- 300 secs -->
      </bean>
 
     <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"

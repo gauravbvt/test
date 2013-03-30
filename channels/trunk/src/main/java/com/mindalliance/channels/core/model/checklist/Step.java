@@ -20,4 +20,5 @@ public abstract class Step implements Serializable {
     public abstract String getLabel();
 
     public abstract String getPrerequisiteLabel();
+
 }

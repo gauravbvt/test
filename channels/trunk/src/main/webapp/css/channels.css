@@ -1666,6 +1666,11 @@ div.import-dialog {
 
 */
 
+.menubar .dropmenu .disabled {
+    font-style: oblique;
+    cursor: default;
+}
+
 /* ----- Floating Panels ----- */
 
 div.float-bar,

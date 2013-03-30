@@ -37,6 +37,7 @@ public class Checklist implements Serializable, Mappable {
     private List<StepOrder> stepOrders = new ArrayList<StepOrder>();
     private List<StepGuard> stepGuards = new ArrayList<StepGuard>();
     private String confirmationSignature;
+    private boolean confirmationPending;
 
     public Checklist() {
     }
@@ -152,7 +153,19 @@ public class Checklist implements Serializable, Mappable {
     }
 
     private String computeSignature() {
-        return Integer.toString( hashCode() );
+        int signature = 1;
+        List<Step> effectiveSteps = listEffectiveSteps();
+        for ( Step step : effectiveSteps ) {
+            signature = signature + step.hashCode();
+        }
+        for ( StepOrder stepOrder : listEffectiveStepOrders( effectiveSteps ) ) {
+            signature = signature + stepOrder.hashCode();
+        }
+        for ( StepGuard stepGuard : listEffectiveStepGuards( effectiveSteps, listEffectiveConditions() ) ) {
+            signature = signature + stepGuard.hashCode();
+        }
+        return Integer.toString( signature );
+
     }
 
     public String getConfirmationSignature() {
@@ -164,12 +177,20 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public boolean isConfirmed() {
+        if ( confirmationPending ) {
+            confirm();
+            confirmationPending = false;
+        }
         return confirmationSignature != null && confirmationSignature.equals( computeSignature() );
     }
 
     public void setConfirmed( boolean val ) {
-        if ( val )
-            confirm();
+        if ( val ) {
+            if ( part == null )    // must delay confirmation signing when loading from XML
+                confirmationPending = true;
+            else
+                confirm();
+        }
         else
             confirmationSignature = null;
     }

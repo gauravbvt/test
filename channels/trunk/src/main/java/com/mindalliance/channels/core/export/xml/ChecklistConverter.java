@@ -72,11 +72,10 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.endNode();
             writer.endNode();
         }
-        if ( checklist.getConfirmationSignature() != null ) {
-            writer.startNode( "confirmationSignature" );
-            writer.setValue( checklist.getConfirmationSignature() );
+       // confirmed
+            writer.startNode( "confirmed" );
+            writer.setValue( Boolean.toString( checklist.isConfirmed() ) );
             writer.endNode();
-        }
     }
 
     @Override
@@ -119,8 +118,8 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 stepGuard.setStepRef( reader.getValue() );
                 reader.moveUp();
                 checklist.addStepGuard( stepGuard );
-            } else if ( nodeName.equals( "confirmationSignature" ) ) {
-                checklist.setConfirmationSignature( reader.getValue() );
+            } else if ( nodeName.equals( "confirmed" ) ) {
+                checklist.setConfirmed( Boolean.parseBoolean( reader.getValue() ) );
             }
             reader.moveUp();
         }
