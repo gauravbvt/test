@@ -177,4 +177,10 @@ public interface Issue extends Identifiable, Serializable {
      */
     boolean isRobustness();
 
+    /**
+     * Whether an issue has a given tag
+     * @param tag
+     * @return a boolean
+     */
+    boolean hasTag( String tag );
 }

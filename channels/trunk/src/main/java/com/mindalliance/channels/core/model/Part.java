@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -1387,6 +1388,18 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
                 } );
     }
 
+    public int countChecklistIssues( Analyst analyst, PlanService planService ) {
+        return CollectionUtils.select(
+                analyst.listIssues( planService, this, true, false ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Issue issue = (Issue) object;
+                        return issue.hasTag( "checklist" );
+                    }
+                }
+        ).size();
+    }
 
 
 

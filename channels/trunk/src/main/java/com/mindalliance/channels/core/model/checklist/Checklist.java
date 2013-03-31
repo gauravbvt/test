@@ -221,12 +221,14 @@ public class Checklist implements Serializable, Mappable {
         List<CommunicationStep> communicationSteps = new ArrayList<CommunicationStep>();
         for ( Flow sharing : part.getAllSharingReceives() ) {
             if ( !sharing.isTriggeringToTarget() && sharing.isAskedFor() ) {
-                communicationSteps.add( new CommunicationStep( sharing ) );
+                communicationSteps.add( new CommunicationStep( sharing, false ) );
             }
         }
         for ( Flow sharing : part.getAllSharingSends() ) {
             if ( sharing.isNotification() ) {
-                communicationSteps.add( new CommunicationStep( sharing ) );
+                communicationSteps.add( new CommunicationStep( sharing, false ) );
+            } else if ( sharing.isTriggeringToSource() ) {
+                communicationSteps.add( new CommunicationStep( sharing, true ) );
             }
         }
         return communicationSteps;

@@ -3817,17 +3817,27 @@ ul.attach li.controls {
 }
 
 .checklist .step .action-step {
-    background: transparent url('../images/step_action.png') no-repeat 0 0;
+    background: transparent url('../images/step_action.png') no-repeat 0 -2px;
     padding-left: 20px;
 }
 
 .checklist .step .notification-step {
-    background: transparent url('../images/step_notification.png') no-repeat 0 0;
+    background: transparent url('../images/step_notification.png') no-repeat 0 -2px;
     padding-left: 20px;
 }
 
 .checklist .step .request-step {
-    background: transparent url('../images/step_request.png') no-repeat 0 0;
+    background: transparent url('../images/step_request.png') no-repeat 0 -2px;
+    padding-left: 20px;
+}
+
+.checklist .step .answer-step {
+    background: transparent url('../images/step_answer.png') no-repeat 0 -2px;
+    padding-left: 20px;
+}
+
+.checklist .step .terminating-notification-step {
+    background: transparent url('../images/step_terminating_notification.png') no-repeat 0 -2px;
     padding-left: 20px;
 }
 
@@ -3851,4 +3861,10 @@ ul.attach li.controls {
     float:right;
     margin: 20px 10px 5px 0;
     font-size: 1.5em;
+}
+
+.checklist-icon {
+    float:right;
+    margin-right: 5px;
+    cursor: pointer;
 }

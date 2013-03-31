@@ -1,6 +1,8 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
@@ -8,12 +10,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +43,10 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
      * Category of issues to show.
      */
     private String status = ALL;
+    /**
+     * Show only checklist that have issues.
+     */
+    private boolean onlyIfWithIssues = false;
 
     private ChecklistsTable checklistsTable;
 
@@ -61,6 +69,7 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
     }
 
     private void addFilters() {
+        // status
         DropDownChoice<String> statusChoice = new DropDownChoice<String>(
                 "status",
                 new PropertyModel<String>( this, "status"),
@@ -75,39 +84,116 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
             }
         } );
         addOrReplace( statusChoice );
-
+       // issues
+        AjaxCheckBox withIssuesCheckBox = new AjaxCheckBox(
+                "withIssues",
+                new PropertyModel<Boolean>( this, "onlyIfWithIssues" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addChecklistsTable();
+                target.add( checklistsTable );
+            }
+        };
+        withIssuesCheckBox.setOutputMarkupId( true );
+        addOrReplace( withIssuesCheckBox );
     }
 
     private void addChecklistsTable() {
         checklistsTable = new ChecklistsTable(
                 "checklistTable",
-                new PropertyModel<List<Part>>( this, "checklistedParts")
+                new PropertyModel<List<PartWrapper>>( this, "checklistedParts")
         );
         addOrReplace( checklistsTable );
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<Part> getChecklistedParts() {
-        return (List<Part>) CollectionUtils.select(
+    public List<PartWrapper> getChecklistedParts() {
+        List<PartWrapper> wrappers = new ArrayList<PartWrapper>(  );
+        List<Part> parts = (List<Part>) CollectionUtils.select(
                 getCommunityService().getPlanService().list( Part.class ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         Part part = (Part)object;
-                        return status.equals( ALL )
+                        return ( status.equals( ALL )
                                 || ( status.equals( CONFIRMED )
                                 ? part.getChecklist().isConfirmed()
-                                : !part.getChecklist().isConfirmed() );
+                                : !part.getChecklist().isConfirmed() )
+                                )
+                                && ( !isOnlyIfWithIssues() || hasChecklistIssues( part ) );
                     }
                 }
         );
+        for (Part part : parts) {
+            wrappers.add(  new PartWrapper( part ) );
+        }
+        return wrappers;
+    }
+
+    private boolean hasChecklistIssues( Part part ) {
+        return countChecklistIssues( part ) > 0;
+    }
+
+    public int countChecklistIssues( Part part ) {
+        return part.countChecklistIssues( getAnalyst(), getPlanService() );
+    }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus( String status ) {
+        this.status = status;
+    }
+
+    public boolean isOnlyIfWithIssues() {
+        return onlyIfWithIssues;
+    }
+
+    public void setOnlyIfWithIssues( boolean onlyIfWithIssues ) {
+        this.onlyIfWithIssues = onlyIfWithIssues;
+    }
+
+    public class PartWrapper implements Serializable {
+
+        private Part part;
+
+        PartWrapper( Part part ) {
+            this.part = part;
+        }
+
+        public Part getPart() {
+            return part;
+        }
+
+        public String getLabel() {
+            return part.getLabel();
+        }
+
+        public Segment getSegment() {
+            return part.getSegment();
+        }
+
+        public Checklist getChecklist() {
+            return part.getChecklist();
+        }
+
+        public int getChecklistIssueCount() {
+            return countChecklistIssues( part );
+        }
+
+        public String getConfirmed() {
+            return getChecklist().isConfirmed() ? "Yes" : "No";
+        }
     }
 
     private class ChecklistsTable extends AbstractFilterableTablePanel {
 
-        private IModel<List<Part>> partsModel;
+        private IModel<List<PartWrapper>> partsModel;
 
-        private ChecklistsTable( String id, IModel<List<Part>> partsModel  ) {
+        private ChecklistsTable( String id, IModel<List<PartWrapper>> partsModel  ) {
             super( id, PAGE_SIZE );
             this.partsModel = partsModel;
             initTable();
@@ -117,21 +203,21 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
         private void initTable() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
-            columns.add( makeLinkColumn( "Checklist for task", "", "label", EMPTY ) );
-            columns.add( makeFilterableColumn(
+            columns.add( makeLinkColumn( "Checklist for task", "part", "label", EMPTY ) );
+            columns.add( makeFilterableLinkColumn(
                     "in segment",
                     "segment",
                     "segment.name",
                     EMPTY,
-                    "segment.description",
                     ChecklistsTable.this ));
-            columns.add( makeColumn( "is confirmed", "checklist.confirmed", EMPTY )
+            columns.add( makeColumn( "has issues", "checklistIssueCount", EMPTY ) );
+            columns.add( makeColumn( "is confirmed", "confirmed", EMPTY )
             );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "checklists",
                     columns,
-                    new SortableBeanProvider<Part>(
+                    new SortableBeanProvider<PartWrapper>(
                             getFilteredParts(),
                             "label" ),
                     getPageSize() ) );
@@ -139,8 +225,8 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
         }
 
         @SuppressWarnings( "unchecked" )
-        private List<Part> getFilteredParts() {
-            return (List<Part>)CollectionUtils.select(
+        private List<PartWrapper> getFilteredParts() {
+            return (List<PartWrapper>)CollectionUtils.select(
                     partsModel.getObject(),
                     new Predicate() {
                         @Override

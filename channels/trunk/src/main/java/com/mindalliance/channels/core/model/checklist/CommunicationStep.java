@@ -15,9 +15,18 @@ public class CommunicationStep extends Step {
 
     private Flow sharing;
 
+    private boolean answer;
+
     public CommunicationStep( Flow sharing ) {
         this.sharing = sharing;
+        answer = false;
     }
+
+    public CommunicationStep( Flow sharing, boolean answer ) {
+        this.sharing = sharing;
+        this.answer = answer;
+    }
+
 
     public Flow getSharing() {
         return sharing;
@@ -40,12 +49,12 @@ public class CommunicationStep extends Step {
 
     @Override
     public String getLabel() {
-        return ( isNotification() ? "(Required) " : "" ) + getSharing().getStepTitle( false );
+        return ( isNotification() || isAnswer() ? "(Required) " : "" ) + getSharing().getStepTitle( false, answer );
     }
 
     @Override
     public String getPrerequisiteLabel() {
-        return getSharing().getStepTitle( true );
+        return getSharing().getStepTitle( true, isAnswer() );
     }
 
     public static boolean isCommunicationStepRef( String stepRef ) {
@@ -65,5 +74,17 @@ public class CommunicationStep extends Step {
 
     public boolean isNotification() {
         return sharing.isNotification();
+    }
+
+    public boolean isRequest() {
+        return sharing.isAskedFor() && !answer;
+    }
+
+    public boolean isAnswer() {
+        return sharing.isAskedFor() && answer;
+    }
+
+    public boolean isTerminatingNotification() {
+        return getSharing().isNotification() && getSharing().isTerminatingToSource();
     }
 }

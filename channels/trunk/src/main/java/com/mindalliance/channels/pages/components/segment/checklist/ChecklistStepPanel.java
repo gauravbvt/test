@@ -129,7 +129,17 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         } else {
             if ( step.isCommunicationStep() ) {
                 CommunicationStep communicationStep = (CommunicationStep) step;
-                sb.append( communicationStep.isNotification() ? " notification-step" : " request-step" );
+                String stepClass;
+                if ( communicationStep.isNotification()) {
+                  stepClass = communicationStep.isTerminatingNotification()
+                          ? "terminating-notification-step"
+                          :" notification-step";
+                } else {
+                   stepClass = communicationStep.isAnswer()
+                           ? " answer-step"
+                           : " request-step";
+                }
+                sb.append( stepClass );
             }
         }
         return sb.toString();

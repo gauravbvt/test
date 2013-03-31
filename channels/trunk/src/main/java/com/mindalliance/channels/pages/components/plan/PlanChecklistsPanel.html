@@ -9,9 +9,9 @@
 <wicket:panel>
     <div class="filters">
         Show <select wicket:id="status">
-        <option>All</option>
-    </select> checklists
-        <wicket:child/>
+                <option>All</option>
+            </select> checklists
+        <input wicket:id="withIssues" type="checkbox"/> but only those that have issues
     </div>
     <span wicket:id="checklistTable">[checklist table]</span>
 </wicket:panel>

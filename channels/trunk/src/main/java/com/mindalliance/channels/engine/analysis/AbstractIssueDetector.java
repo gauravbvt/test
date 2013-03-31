@@ -17,6 +17,7 @@ import com.mindalliance.channels.engine.geo.GeoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -135,6 +136,12 @@ public abstract class AbstractIssueDetector implements IssueDetector {
         issue.setDetectorLabel( getKindLabel() );
         issue.setCanBeWaived( canBeWaived() );
         issue.setDefaultRemediators( queryService.findAllPlanners() );
+        issue.setDetectorTags( getTags() );
+    }
+
+    // Default
+    protected List<String> getTags() {
+        return new ArrayList<String> ();
     }
 
     @Override

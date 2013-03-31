@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.MessageFormat;
@@ -196,6 +198,19 @@ public class UserIssue extends ModelObject implements Issue {
     @Override
     public boolean isRobustness() {
         return getType().equals( Issue.ROBUSTNESS );
+    }
+
+    @Override
+    public boolean hasTag( final String tag ) {
+        return CollectionUtils.exists(
+                getTags(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Tag)object).getName().equals( tag );
+                    }
+                }
+        );
     }
 
     /**

@@ -37,16 +37,24 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     }
 
     private void init() {
+        addChecklistTitle();
         addPartTitle();
         addChecklistEditor();
     }
 
+    private void addChecklistTitle() {
+        getContentContainer().add(
+                new Label( "checklistTitle", getPart().getChecklist().isConfirmed()
+                        ? "Confirmed checklist"
+                        : "Unconfirmed checklist" ) );
+    }
+
     private void addPartTitle() {
-        getContentContainer().add(  new Label( "partTitle", getPart().getTask() ) );
+        getContentContainer().add( new Label( "partTitle", getPart().getTask() ) );
     }
 
     private void addChecklistEditor() {
-        checklistEditor = new ChecklistEditorPanel( "editor", new PropertyModel<Part>(this, "part") );
+        checklistEditor = new ChecklistEditorPanel( "editor", new PropertyModel<Part>( this, "part" ) );
         getContentContainer().addOrReplace( checklistEditor );
     }
 

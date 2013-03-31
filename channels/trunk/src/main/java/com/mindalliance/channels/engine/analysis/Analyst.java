@@ -186,6 +186,7 @@ public interface Analyst extends CommandListener {
      */
     List<String> findRealizabilityProblems( Plan plan, Commitment commitment, QueryService queryService );
 
+
     /**
      * Find any relationship between a plan segment and another. A relationship is one or more external flow in the
      * from-segment referencing a connector in the to-segment.

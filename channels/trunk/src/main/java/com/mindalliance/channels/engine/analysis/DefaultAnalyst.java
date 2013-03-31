@@ -292,7 +292,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                 else if ( issue.isCompleteness() ) completenessCount++;
                 else if ( issue.isRobustness() ) robustnessCount++;
             }
-            sb.append(  "Issues: " );
+            sb.append( "Issues: " );
             if ( validityCount > 0 )
                 sb.append( validityCount ).append( " validity" );
             if ( completenessCount > 0 ) {
@@ -640,7 +640,6 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
 
-
     @Override
     public Boolean canBeRealized( Commitment commitment, Plan plan, QueryService queryService ) {
         return findRealizabilityProblems( plan, commitment, queryService ).isEmpty();
@@ -821,34 +820,34 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                     sb.append( ", or " );
                                 sb.append( "agents do not have access to required transmission media" );
                             }*/ else {
-                                List<Commitment> reachable =
-                                        reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
-                                if ( reachable.isEmpty() ) {
+                            List<Commitment> reachable =
+                                    reachableFilter( availabilitiesCoincideIfRequired, mediaUsed, locale );
+                            if ( reachable.isEmpty() ) {
+                                if ( sb.length() == 0 )
+                                    sb.append( "in all sharing commitments, " );
+                                else
+                                    sb.append( ", or " );
+                                sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                            } else {
+                                List<Commitment> agentsQualified =
+                                        agentsQualifiedFilter( reachable, mediaUsed, locale );
+                                if ( agentsQualified.isEmpty() ) {
                                     if ( sb.length() == 0 )
                                         sb.append( "in all sharing commitments, " );
                                     else
                                         sb.append( ", or " );
-                                    sb.append( "the agent to be contacted is not reachable (no contact info)" );
+                                    sb.append( "both agents are not qualified to use a transmission medium" );
                                 } else {
-                                    List<Commitment> agentsQualified =
-                                            agentsQualifiedFilter( reachable, mediaUsed, locale );
-                                    if ( agentsQualified.isEmpty() ) {
+                                    List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
+                                    if ( languageOverlap.isEmpty() ) {
                                         if ( sb.length() == 0 )
                                             sb.append( "in all sharing commitments, " );
                                         else
                                             sb.append( ", or " );
-                                        sb.append( "both agents are not qualified to use a transmission medium" );
-                                    } else {
-                                        List<Commitment> languageOverlap = commonLanguageFilter( plan, agentsQualified );
-                                        if ( languageOverlap.isEmpty() ) {
-                                            if ( sb.length() == 0 )
-                                                sb.append( "in all sharing commitments, " );
-                                            else
-                                                sb.append( ", or " );
-                                            sb.append( "agents do not speak a common language" );
-                                        }
+                                        sb.append( "agents do not speak a common language" );
                                     }
-                    //            }
+                                }
+                                //            }
                             }
                         }
                         if ( sb.length() > 0 ) {
@@ -904,25 +903,25 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                             if ( mediaDeployed.isEmpty() )
                                 remediations.add( "make sure that the agents that are available"
                                         + " to each other also have access to required transmission media" );
-*/                            else {
-                                List<Commitment> reachable =
-                                        reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
-                                if ( reachable.isEmpty() )
-                                    remediations.add( "make sure that the agents that are available"
-                                            + " to each other also have known contact information" );
-                                else {
-                                    List<Commitment> agentsQualified =
-                                            agentsQualifiedFilter( reachable, mediaUsed, locale );
-                                    if ( agentsQualified.isEmpty() ) {
-                                        remediations.add( "make sure that agents that are available to each other"
-                                                + " and reachable are also qualified to use the transmission media" );
-                                        remediations.add( "add channels with transmission media requiring no qualification" );
-                                    } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
-                                        remediations.add( "make sure that agents that are available to each other, "
-                                                + "reachable and qualified to use the transmission media "
-                                                + "can also speak a common language" );
-                                    }
-                    //            }
+*/ else {
+                            List<Commitment> reachable =
+                                    reachableFilter( availabilitcoincideIfRequired, mediaUsed, locale );
+                            if ( reachable.isEmpty() )
+                                remediations.add( "make sure that the agents that are available"
+                                        + " to each other also have known contact information" );
+                            else {
+                                List<Commitment> agentsQualified =
+                                        agentsQualifiedFilter( reachable, mediaUsed, locale );
+                                if ( agentsQualified.isEmpty() ) {
+                                    remediations.add( "make sure that agents that are available to each other"
+                                            + " and reachable are also qualified to use the transmission media" );
+                                    remediations.add( "add channels with transmission media requiring no qualification" );
+                                } else if ( commonLanguageFilter( plan, commitments ).isEmpty() ) {
+                                    remediations.add( "make sure that agents that are available to each other, "
+                                            + "reachable and qualified to use the transmission media "
+                                            + "can also speak a common language" );
+                                }
+                                //            }
                             }
                         }
                     }
@@ -933,7 +932,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where agreements are in place if required.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> agreedToFilter( List<Commitment> commitments, final QueryService queryService ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
             @Override
@@ -944,7 +943,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where agent availabilities coincide if required.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> availabilitiesCoincideIfRequiredFilter( List<Commitment> commitments,
                                                                      final List<TransmissionMedium> mediaUsed,
                                                                      final Place planLocale ) {
@@ -1003,7 +1002,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
 */
 
     // Filter commitments where agent to eb contacted has known contact info.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> reachableFilter( List<Commitment> commitments, final List<TransmissionMedium> mediaUsed,
                                               final Place planLocale ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
@@ -1029,7 +1028,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where both agents are qualified to use a transmission medium.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Commitment> agentsQualifiedFilter( List<Commitment> commitments,
                                                     final List<TransmissionMedium> mediaUsed, final Place planLocale ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
@@ -1056,7 +1055,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     // Filter commitments where agents can understand one another.
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private static List<Commitment> commonLanguageFilter( final Plan plan, List<Commitment> commitments ) {
         return (List<Commitment>) CollectionUtils.select( commitments, new Predicate() {
             @Override
@@ -1120,7 +1119,7 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
     }
 
     @Override
-    public int unwaivedIssuesCount( Requirement requirement, CommunityService communityService) {
+    public int unwaivedIssuesCount( Requirement requirement, CommunityService communityService ) {
         return unwaivedIssuesCount( requirement, communityService.getPlanService() );
     }
 

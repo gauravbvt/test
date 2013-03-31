@@ -12,6 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,6 +81,11 @@ public class ChecklistHasContradictoryConditions extends AbstractIssueDetector {
     @Override
     public String getTestedProperty() {
         return null;
+    }
+
+    @Override
+    protected List<String> getTags() {
+        return Arrays.asList( "checklist" );
     }
 
     @Override

@@ -342,9 +342,11 @@ A collaboration plan can elect to address what happens before, during or after o
             <topic id="goal">
                 <name>Goal</name>
                 <item>
-                    <description>A goal is either a risk to, or an opportunity for, an organization that is introduced by the onset or conclusion of an event.
+                    <description>In Channels, a goal is understood as a ''mission-level'' goal of one or more of the organizations involved in the plan. A goal is a risk to be mitigated or an opportunity to be seized, any of which is introduced by the onset or conclusion of an event.
                     
-Goals are achieved by carrying out tasks, or when an event terminates.                
+These goals are achieved by carrying out tasks, or thay can be automatically achieved when an event terminates.
+
+Mission-level goals are not to be confused with the implied and unstated goals of successfully executing a task or sharing information.
                 </description>
                 </item>
             </topic>
@@ -744,7 +746,6 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <item>
                     <description>The options are
 * Details/Hide details - Show or hide the task definition form
-* Checklist - Show the task's checklist (enabled only when the task form is open)
 * Assignments - Show the list of agents in scope that are assignable to the task given its definition
 * Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
 * Failure impacts - Open a panel showing the potential impacts of this task failing

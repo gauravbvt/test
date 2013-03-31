@@ -480,7 +480,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      *
      * @return the description
      */
-    public String getStepTitle( boolean prerequisite ) {
+    public String getStepTitle( boolean prerequisite, boolean answer ) {
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
@@ -489,6 +489,16 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 ? "information"
                 : getIntent().getLabel().toLowerCase();
         if ( isAskedFor() ) {
+            if ( answer ) {
+                sb.append( prerequisite ? "Answering " : "Answer " )
+                        .append( intentLabel )
+                        .append( " \"" )
+                        .append( message )
+                        .append( "\"" )
+                        .append( " to " )
+                        .append( getShortName( getTarget(), false ) );
+
+            } else {
            sb.append( prerequisite ? "Getting " : "Get " )
                    .append( intentLabel )
                    .append( " \"" )
@@ -496,6 +506,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                    .append( "\"" )
                    .append( " from " )
                    .append( getShortName( getSource(), false ) );
+            }
         } else {
             sb.append( prerequisite ? "Sending " : "Send " )
                     .append( intentLabel )
@@ -504,6 +515,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     .append( "\"" )
                     .append( " to " )
                     .append( getShortName( getTarget(), false ) );
+            if ( isTerminatingToSource() ) {
+                if ( !prerequisite ) sb.append( " - and stop" );
+            }
         }
         return sb.toString();
     }

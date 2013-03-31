@@ -138,6 +138,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
      * Task title container.
      */
     private WebMarkupContainer taskTitleContainer;
+    private WebMarkupContainer checklistIcon;
 
     //-------------------------------
     public SegmentPanel( String id, IModel<Segment> segmentModel, IModel<Part> partModel, Set<Long> expansions ) {
@@ -159,6 +160,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         addPartTitleContainer();
         addPartMediaPanel();
         addPartHelp();
+        addChecklistIcon();
         addOverridesImage();
         addPartPanel();
         addReceivesFlowPanel();
@@ -225,6 +227,32 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
         partMediaPanel = new MediaReferencesPanel( "partMedia", partModel, getExpansions() );
         partMediaPanel.setOutputMarkupId( true );
         addOrReplace( partMediaPanel );
+    }
+
+    private void addChecklistIcon() {
+        checklistIcon = new WebMarkupContainer( "checklist" );
+        checklistIcon.setOutputMarkupId( true );
+        addOrReplace( checklistIcon );
+        checklistIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Expanded, getPart() ) );
+                update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist" ) );
+            }
+        } );
+        int issueCount = getPart().countChecklistIssues( getAnalyst(), getPlanService() );
+        checklistIcon.add( new AttributeModifier(
+                "src",
+                issueCount == 0
+                        ? "images/checklist.png"
+                        : "images/checklist_issues.png") );
+        addTipTitle(
+                checklistIcon,
+                "Open the checklist and show the details of the task if hidden"
+                + ( issueCount > 0
+                        ? (" - " + issueCount + (issueCount > 1 ? " issues" : " issue") )
+                        : "")
+        );
     }
 
     private void addPartHelp() {
@@ -485,8 +513,10 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     public void refreshMenus( AjaxRequestTarget target ) {
         addPartActionsMenu();
         addPartShowMenu();
+        addChecklistIcon();
         target.add( partShowMenu );
         target.add( partActionsMenu );
+        target.add( checklistIcon );
     }
 
     /**

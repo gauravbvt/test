@@ -29,6 +29,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
      * User names of the default remediators.
      */
     private List<String> defaultRemediators;
+
+    /**
+     * Detector tags.
+     */
+    private List<String> detectorTags;
     /**
      * Label for the detector.
      */
@@ -120,6 +125,11 @@ public class DetectedIssue extends AnalysisObject implements Issue {
         return getType().equals( Issue.ROBUSTNESS );
     }
 
+    @Override
+    public boolean hasTag( String tag ) {
+        return getDetectorTags().contains( tag );
+    }
+
     public void setDetectorLabel( String detectorLabel ) {
         this.detectorLabel = detectorLabel;
     }
@@ -130,6 +140,14 @@ public class DetectedIssue extends AnalysisObject implements Issue {
 
     public void setDefaultRemediators( List<String> defaultRemediators ) {
         this.defaultRemediators = defaultRemediators;
+    }
+
+    public List<String> getDetectorTags() {
+        return detectorTags;
+    }
+
+    public void setDetectorTags( List<String> detectorTags ) {
+        this.detectorTags = detectorTags;
     }
 
     /**

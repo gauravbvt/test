@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
@@ -71,23 +70,22 @@ public class PartShowMenuPanel extends MenuPanel {
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Hide details" ), hideLink ) );
         }
         // View checklist
-        final boolean enabled = isExpanded( getPart() );
+/*
         AjaxFallbackLink checklistLink = new AjaxFallbackLink( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                if ( enabled )
-                    update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist" ) );
+                update( target, new Change( Change.Type.Expanded, getPart() ) );
+                update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist" ) );
             }
         };
-        if ( !enabled ) {
-            addTipTitle( checklistLink, "Open the task (show details) to enable access to its checklist" );
-            checklistLink.add( new AttributeModifier( "class", new Model<String>( "disabled" ) ) );
-        }
+        addTipTitle( checklistLink, "Open the checklist editor (and show the details of the task if hidden)" );
+
 
         menuItems.add( new LinkMenuItem(
                 "menuItem",
                 new Model<String>( "Checklist" ),
                 checklistLink ) );
+*/
         // View part assignments
         AjaxFallbackLink assignmentsLink = new AjaxFallbackLink( "link" ) {
             @Override
