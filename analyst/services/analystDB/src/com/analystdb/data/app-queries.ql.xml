@@ -225,4 +225,33 @@ from Decision d join fetch d.interview
 where d.interview.resource.project.id = :project
 order by d.name
     </query>
+    <query name="metadataKeys">
+        <query-param name="project" type="java.lang.Long"/>
+        select distinct ra.name as dimension from ResourceAttribute ra
+where ra.resource.project.id = :project
+order by ra.name
+    </query>
+    <query name="metadataCount">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="name" type="java.lang.String"/>
+        select ra.val as value, count(distinct ic.issue) as issues
+from ResourceAttribute ra join ra.resource.interviews int join int.issueComments ic
+where ra.resource.project.id = :project and ra.name = :name
+group by ra.val
+order by ra.val
+    </query>
+    <query name="test">
+        from Resource r
+where exists (from ResourceAttribute ra where ra.resource.id = r.id and ra.name=&apos;VPU&apos; and ra.val=&apos;South Asia&apos;)
+    </query>
+    <query name="metadataIssues">
+        <query-param name="project" type="java.lang.Long"/>
+        <query-param name="name" type="java.lang.String"/>
+        <query-param name="value" type="java.lang.String"/>
+        select ic.issue.sequence as issue, ic.issue.description as description
+from ResourceAttribute ra join ra.resource.interviews int join int.issueComments ic
+where ra.resource.project.id = :project and ra.name = :name and ra.val = :value
+group by ic.issue
+order by ic.issue.sequence
+    </query>
 </hibernate-mapping>

@@ -1948,6 +1948,77 @@ wm.types = {
 			"liveService": false,
 			"service": "analystDB"
 		},
+		"com.analystdb.data.output.MetadataCountRtnType": {
+			"fields": {
+				"issues": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"value": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.output.MetadataIssuesRtnType": {
+			"fields": {
+				"description": {
+					"exclude": [],
+					"fieldOrder": 1,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				},
+				"issue": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Integer"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
+		"com.analystdb.data.output.MetadataKeysRtnType": {
+			"fields": {
+				"dimension": {
+					"exclude": [],
+					"fieldOrder": 0,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.String"
+				}
+			},
+			"internal": false,
+			"liveService": false,
+			"service": "analystDB"
+		},
 		"com.analystdb.data.output.RecentInterviewsRtnType": {
 			"fields": {
 				"approaches": {

@@ -162,6 +162,39 @@
 		}],
 		"returnType": "com.analystdb.data.output.MaxIssueSequenceRtnType"
 	}, {
+		"name": "metadataCount",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "name",
+			"type": "java.lang.String"
+		}],
+		"returnType": "[com.analystdb.data.output.MetadataCountRtnType]"
+	}, {
+		"name": "metadataIssues",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}, {
+			"name": "name",
+			"type": "java.lang.String"
+		}, {
+			"name": "value",
+			"type": "java.lang.String"
+		}],
+		"returnType": "[com.analystdb.data.output.MetadataIssuesRtnType]"
+	}, {
+		"name": "metadataKeys",
+		"operationType": "hqlquery",
+		"parameters": [{
+			"name": "project",
+			"type": "java.lang.Long"
+		}],
+		"returnType": "[com.analystdb.data.output.MetadataKeysRtnType]"
+	}, {
 		"name": "otherApproachIssues",
 		"operationType": "hqlquery",
 		"parameters": [{
@@ -265,6 +298,11 @@
 			"type": "java.lang.String"
 		}],
 		"returnType": "[com.analystdb.data.output.ResourceValuesRtnType]"
+	}, {
+		"name": "test",
+		"operationType": "hqlquery",
+		"parameters": null,
+		"returnType": "[com.analystdb.data.Resource]"
 	}, {
 		"name": "upcomingInterviews",
 		"operationType": "hqlquery",

@@ -5,7 +5,7 @@ import com.analystdb.data.Decision;
 
 
 /**
- * Generated for query "decisionCounts" on 04/03/2013 11:06:10
+ * Generated for query "decisionCounts" on 04/03/2013 19:27:05
  * 
  */
 public class DecisionCountsRtnType {

@@ -5,6 +5,7 @@ import java.util.List;
 import com.analystdb.data.Decision;
 import com.analystdb.data.IssueCategory;
 import com.analystdb.data.IssueComment;
+import com.analystdb.data.Resource;
 import com.analystdb.data.output.AllDocsWithIssuesRtnType;
 import com.analystdb.data.output.AllIssuesRtnType;
 import com.analystdb.data.output.ApproachIssueCountRtnType;
@@ -18,6 +19,9 @@ import com.analystdb.data.output.IssueApproachesRtnType;
 import com.analystdb.data.output.IssueCategoryCountsRtnType;
 import com.analystdb.data.output.IssueFlowsRtnType;
 import com.analystdb.data.output.IssuesByCategoryRtnType;
+import com.analystdb.data.output.MetadataCountRtnType;
+import com.analystdb.data.output.MetadataIssuesRtnType;
+import com.analystdb.data.output.MetadataKeysRtnType;
 import com.analystdb.data.output.RecentInterviewsRtnType;
 import com.analystdb.data.output.ResourceKeywordsRtnType;
 import com.analystdb.data.output.ResourceValuesRtnType;
@@ -34,7 +38,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  *  Operations for service "analystDB"
- *  04/03/2013 11:07:35
+ *  04/03/2013 19:29:29
  * 
  */
 @SuppressWarnings("unchecked")
@@ -51,6 +55,14 @@ public class AnalystDB
 
     public List<ResourceValuesRtnType> resourceValues(Long project, String keyword, PagingOptions pagingOptions) {
         return ((List<ResourceValuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.resourceValuesQueryName), project, keyword, pagingOptions));
+    }
+
+    public List<Resource> test(PagingOptions pagingOptions) {
+        return ((List<Resource> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.testQueryName), pagingOptions));
+    }
+
+    public List<MetadataIssuesRtnType> metadataIssues(Long project, String name, String value, PagingOptions pagingOptions) {
+        return ((List<MetadataIssuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.metadataIssuesQueryName), project, name, value, pagingOptions));
     }
 
     public List<IssueComment> otherFlowIssues(Long flow, Long project, PagingOptions pagingOptions) {
@@ -78,6 +90,10 @@ public class AnalystDB
         return ((List<ApproachIssueCountRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.approachIssueCountQueryName), project, pagingOptions));
     }
 
+    public List<MetadataKeysRtnType> metadataKeys(Long project, PagingOptions pagingOptions) {
+        return ((List<MetadataKeysRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.metadataKeysQueryName), project, pagingOptions));
+    }
+
     public List<IssueCategory> otherCategories(Long project, Long issue, PagingOptions pagingOptions) {
         return ((List<IssueCategory> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherCategoriesQueryName), project, issue, pagingOptions));
     }
@@ -90,12 +106,12 @@ public class AnalystDB
         return ((List<ApproachIssuesRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.approachIssuesQueryName), project, approach, pagingOptions));
     }
 
-    public List<UpcomingInterviewsRtnType> upcomingInterviews(Long project, PagingOptions pagingOptions) {
-        return ((List<UpcomingInterviewsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.upcomingInterviewsQueryName), project, pagingOptions));
-    }
-
     public List<com.analystdb.data.Flow> otherDecisionFlows(Long project, Integer decision, PagingOptions pagingOptions) {
         return ((List<com.analystdb.data.Flow> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherDecisionFlowsQueryName), project, decision, pagingOptions));
+    }
+
+    public List<UpcomingInterviewsRtnType> upcomingInterviews(Long project, PagingOptions pagingOptions) {
+        return ((List<UpcomingInterviewsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.upcomingInterviewsQueryName), project, pagingOptions));
     }
 
     public List<ResourceKeywordsRtnType> resourceKeywords(Long project, PagingOptions pagingOptions) {
@@ -108,6 +124,10 @@ public class AnalystDB
 
     public List<IssueCategoryCountsRtnType> issueCategoryCounts(Long project, PagingOptions pagingOptions) {
         return ((List<IssueCategoryCountsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.issueCategoryCountsQueryName), project, pagingOptions));
+    }
+
+    public List<MetadataCountRtnType> metadataCount(Long project, String name, PagingOptions pagingOptions) {
+        return ((List<MetadataCountRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.metadataCountQueryName), project, name, pagingOptions));
     }
 
     public List<DocumentIssueCountRtnType> documentIssueCount(Long project, Integer category, PagingOptions pagingOptions) {
@@ -142,12 +162,12 @@ public class AnalystDB
         return ((List<com.analystdb.data.Issue> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.addressedIssuesQueryName), project, pagingOptions));
     }
 
-    public List<com.analystdb.data.Issue> otherApproachIssues(Long approach, Long project, PagingOptions pagingOptions) {
-        return ((List<com.analystdb.data.Issue> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherApproachIssuesQueryName), approach, project, pagingOptions));
-    }
-
     public List<RecentInterviewsRtnType> recentInterviews(Long project, PagingOptions pagingOptions) {
         return ((List<RecentInterviewsRtnType> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.recentInterviewsQueryName), project, pagingOptions));
+    }
+
+    public List<com.analystdb.data.Issue> otherApproachIssues(Long approach, Long project, PagingOptions pagingOptions) {
+        return ((List<com.analystdb.data.Issue> ) dsMgr.invoke(taskMgr.getQueryTask(), (AnalystDBConstants.otherApproachIssuesQueryName), approach, project, pagingOptions));
     }
 
     public List<DocumentIssuesRtnType> documentIssues(Long project, Integer document, Integer phase, PagingOptions pagingOptions) {
