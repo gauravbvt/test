@@ -7,7 +7,9 @@ import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.AllProceduresData;
+import com.mindalliance.channels.api.procedures.AllProtocolsData;
 import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.api.procedures.ProtocolsData;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -82,17 +84,51 @@ public interface PlanCommunityEndPoint {
      */
     PlanScopeData getPlanScope( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
 
-
-/*
     @GET
-    @Path( "plan/{uri}/actor/{actorId}/org/{orgId}/procedures" )
+    @Path( "plan/{uri}/protocols" )
     @Produces( MediaType.APPLICATION_XML )
-    */
-/*
+    /**
+     * Get the protocols of the user if he/she participates in the identified plan as one or more agents.
+     * @param uri a plan's URI
+     * @return the protocols of the agents representing the user in the plan
+     */
+    ProtocolsData getMyProtocols( @PathParam( "uri" ) String uri );
 
-    ProceduresData getActorProcedures( @PathParam( "uri" ) String uri,
-                                       @PathParam( "actorId" ) String actorId );
-*/
+    @GET
+    @Path( "plan/{uri}/version/{version}/allProtocols" )
+    @Produces( MediaType.APPLICATION_XML )
+    /**
+     * Get the protocols of every participating users.
+     * @param uri a plan's URI
+     * @param version a plan's version
+     * @return the protocols of all users participating in the plan
+     */
+    AllProtocolsData getAllProtocols( @PathParam( "uri" ) String uri,
+                                        @PathParam( "version" ) String version );
+
+
+    @GET
+    @Path( "plan/{uri}/version/{version}/user/{user}/protocols" )
+    @Produces( MediaType.APPLICATION_XML )
+    ProtocolsData getUserProtocols(
+            @PathParam("uri") String uri,
+            @PathParam( "version" ) String version,
+            @PathParam("user") String username );
+
+
+    @GET
+    @Path("plan/{uri}/version/{version}/agent/{agentId}/org/{orgParticipationId}/protocols")
+    @Produces( MediaType.APPLICATION_XML )
+/**
+ *     Get the protocols of an agent in an organization.
+ */
+    ProtocolsData getAgentProtocols( @PathParam("uri") String uri,
+                                       @PathParam("version") String version,
+                                       @PathParam("agentId") String agentId,
+                                       @PathParam("orgParticipationId") String orgParticipationId );  // agent in dynamically participating organization
+
+
+   /////////// OBSOLETE //////////////
 
     @GET
     @Path( "plan/{uri}/procedures" )
@@ -117,6 +153,28 @@ public interface PlanCommunityEndPoint {
                                      @PathParam( "version" ) String version );
 
 
+     @GET
+    @Path( "plan/{uri}/version/{version}/user/{user}/procedures" )
+    @Produces( MediaType.APPLICATION_XML )
+    ProceduresData getUserProcedures(
+            @PathParam("uri") String uri,
+            @PathParam( "version" ) String version,
+            @PathParam("user") String username );
+
+
+    @GET
+    @Path("plan/{uri}/version/{version}/agent/{agentId}/org/{orgParticipationId}/procedures")
+    @Produces( MediaType.APPLICATION_XML )
+/**
+ *     Get the procedures of an agent in an organization.
+ */
+    ProceduresData getAgentProcedures( @PathParam("uri") String uri,
+                                      @PathParam("version") String version,
+                                      @PathParam("agentId") String agentId,
+                                      @PathParam("orgParticipationId") String orgParticipationId );  // agent in dynamically participating organization
+
+    ///////////// END OBSOLETE /////////////////
+
     @GET
     @Path( "plan/{uri}/version/{version}/issues" )
     @Produces( MediaType.APPLICATION_XML )
@@ -126,34 +184,6 @@ public interface PlanCommunityEndPoint {
      * @return plan issues
      */
     IssuesData getIssues( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
-
-    @GET
-    @Path( "plan/{uri}/version/{version}/user/{user}/procedures" )
-    @Produces( MediaType.APPLICATION_XML )
-    ProceduresData getUserProcedures(
-            @PathParam("uri") String uri,
-            @PathParam( "version" ) String version,
-            @PathParam("user") String username );
-
-/*
-
-    @GET
-    @Path( "plan/{uri}/version/{version}/agent/{agentId}/procedures" )
-    @Produces( MediaType.APPLICATION_XML )
-*/
-ProceduresData getAgentProcedures(/* @PathParam("uri")*/ String uri,
-                                       /*@PathParam( "version" )*/ String version,
-                                       /*@PathParam("agentId")*/ String agentId );   // agent in plan-defined organization
-/*
-    @GET
-    @Path("plan/{uri}/version/{version}/agent/{agentId}/org/{orgParticipationId}/protocols")
-    @Produces( MediaType.APPLICATION_XML )
-*/
-    ProceduresData getAgentProtocols( /*@PathParam("uri")*/ String uri,
-                                      /*@PathParam("version")*/ String version,
-                                      /*@PathParam("agentId")*/ String agentId,
-                                      /*@PathParam("orgParticipationId")*/ String orgParticipationId );  // agent in dynamically participating organization
-
 
 
     @GET
@@ -170,13 +200,6 @@ ProceduresData getAgentProcedures(/* @PathParam("uri")*/ String uri,
                                 @PathParam( "version" ) String version,
                                 @PathParam("user") String username );
 
- /*   @GET
-    @Path( "plan/{uri}/version/{version}/agent/{agentId}/directory" )
-    @Produces( MediaType.APPLICATION_XML )
-     DirectoryData getAgentDirectory( @PathParam("uri") String uri,
-                                    @PathParam( "version" ) String version,
-                                    @PathParam("agentId") String agentId );
-*/
     @GET
     @Path( "plan/{uri}/directory" )
     @Produces( MediaType.APPLICATION_XML )

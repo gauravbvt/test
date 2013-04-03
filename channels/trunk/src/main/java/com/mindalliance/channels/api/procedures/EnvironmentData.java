@@ -42,8 +42,8 @@ import java.util.Set;
  * Date: 12/9/11
  * Time: 3:43 PM
  */
-@XmlType( propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media",
-        "infoProducts", "formats"} )
+@XmlType(propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media",
+        "infoProducts", "formats"})
 public class EnvironmentData implements Serializable {
 
     /**
@@ -61,6 +61,7 @@ public class EnvironmentData implements Serializable {
     private List<MediumData> media;
     private List<InfoProductData> infoProducts;
     private List<InfoFormatData> infoFormats;
+    private ProtocolsData protocols;
 
     public EnvironmentData() {
         // required
@@ -68,6 +69,11 @@ public class EnvironmentData implements Serializable {
 
     public EnvironmentData( String serverUrl, ProceduresData procedures, CommunityService communityService ) {
         this.procedures = procedures;
+        initData( serverUrl, communityService );
+    }
+
+    public EnvironmentData( String serverUrl, ProtocolsData protocols, CommunityService communityService ) {
+        this.protocols = protocols;
         initData( serverUrl, communityService );
     }
 
@@ -155,16 +161,16 @@ public class EnvironmentData implements Serializable {
         Set<Long> added = new HashSet<Long>();
         for ( Long id : allInfoFormatIds() ) {
             try {
-            InfoFormat infoFormat = planService.find( InfoFormat.class, id );
-            infoFormats.add( new InfoFormatData( serverUrl, infoFormat, communityService ) );
-            added.add( id );
-            for ( ModelEntity category : infoFormat.getAllTypes() ) {
-                if ( !added.contains( category.getId() ) ) {
-                    infoFormats.add( new InfoFormatData( serverUrl, (InfoFormat) category, communityService ) );
-                    added.add( category.getId() );
+                InfoFormat infoFormat = planService.find( InfoFormat.class, id );
+                infoFormats.add( new InfoFormatData( serverUrl, infoFormat, communityService ) );
+                added.add( id );
+                for ( ModelEntity category : infoFormat.getAllTypes() ) {
+                    if ( !added.contains( category.getId() ) ) {
+                        infoFormats.add( new InfoFormatData( serverUrl, (InfoFormat) category, communityService ) );
+                        added.add( category.getId() );
+                    }
                 }
-            }
-            } catch( NotFoundException e) {
+            } catch ( NotFoundException e ) {
                 LOG.warn( "Info format not found at " + id ); // todo - dev vs prod worlds - prevent this at the source
             }
         }
@@ -266,47 +272,47 @@ public class EnvironmentData implements Serializable {
         }
     }
 
-    @XmlElement( name = "event" )
+    @XmlElement(name = "event")
     public List<EventData> getEvents() {
         return events;
     }
 
-    @XmlElement( name = "phase" )
+    @XmlElement(name = "phase")
     public List<PhaseData> getPhases() {
         return phases;
     }
 
-    @XmlElement( name = "organization" )
+    @XmlElement(name = "organization")
     public List<OrganizationData> getOrganizations() {
         return orgs;
     }
 
-    @XmlElement( name = "agent" )
+    @XmlElement(name = "agent")
     public List<ActorData> getActors() {
         return actors;
     }
 
-    @XmlElement( name = "role" )
+    @XmlElement(name = "role")
     public List<RoleData> getRoles() throws NotFoundException {
         return roles;
     }
 
-    @XmlElement( name = "place" )
+    @XmlElement(name = "place")
     public List<PlaceData> getPlaces() {
         return places;
     }
 
-    @XmlElement( name = "transmissionMedium" )
+    @XmlElement(name = "transmissionMedium")
     public List<MediumData> getMedia() throws NotFoundException {
         return media;
     }
 
-    @XmlElement( name = "infoProduct" )
+    @XmlElement(name = "infoProduct")
     public List<InfoProductData> getInfoProducts() throws NotFoundException {
         return infoProducts;
     }
 
-    @XmlElement( name = "format" )
+    @XmlElement(name = "format")
     public List<InfoFormatData> getFormats() throws NotFoundException {
         return infoFormats;
     }
@@ -314,90 +320,121 @@ public class EnvironmentData implements Serializable {
 
     private Set<Long> allEventIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allEventIds() );
-        }
+        if ( procedures != null )  // todo - obsolete
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allEventIds() );
+            }
+        if ( protocols != null )
+            allIds.addAll( protocols.allEventsIds() );
         return allIds;
     }
 
     private Set<Long> allPhaseIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allPhaseIds() );
-        }
+        if ( procedures != null )  // todo - obsolete
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allPhaseIds() );
+            }
+        if ( protocols != null )
+            allIds.addAll( protocols.allPhaseIds() );
         return allIds;
     }
 
     private Set<Long> allOrganizationIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( EmploymentData employment : procedures.getEmployments() ) {
-            Long orgId = employment.getOrganizationId();
-            if ( orgId != null )
-                allIds.add( orgId );
+        if ( procedures != null ) { // todo - obsolete
+            for ( EmploymentData employment : procedures.getEmployments() ) {
+                Long orgId = employment.getOrganizationId();
+                if ( orgId != null )
+                    allIds.add( orgId );
+            }
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allOrganizationIds() );
+            }
         }
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allOrganizationIds() );
-        }
+        if ( protocols != null )
+            allIds.addAll( protocols.allOrganizationIds() );
         return allIds;
     }
 
     private Set<Long> allActorIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( EmploymentData employment : procedures.getEmployments() ) {
-            allIds.addAll( employment.allActorIds() );
-            if ( employment.getSupervisorId() != null )
-                allIds.add( employment.getSupervisorId() );
+        if ( procedures != null ) {  // todo - obsolete
+            for ( EmploymentData employment : procedures.getEmployments() ) {
+                allIds.addAll( employment.allActorIds() );
+                if ( employment.getSupervisorId() != null )
+                    allIds.add( employment.getSupervisorId() );
+            }
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allActorIds() );
+            }
         }
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allActorIds() );
-        }
+        if ( protocols != null )
+            allIds.addAll( protocols.allActorIds() );
         return allIds;
     }
 
     private Set<Long> allRoleIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( EmploymentData employment : procedures.getEmployments() ) {
-            allIds.add( employment.getRoleId() );
+        if ( procedures != null ) { // todo - obsolete
+            for ( EmploymentData employment : procedures.getEmployments() ) {
+                allIds.add( employment.getRoleId() );
+            }
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allRoleIds() );
+            }
         }
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allRoleIds() );
-        }
+        if ( protocols != null )
+            allIds.addAll( protocols.allRoleIds() );
         return allIds;
     }
 
     private Set<Long> allPlaceIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( EmploymentData employment : procedures.getEmployments() ) {
-            if ( employment.getJurisdictionId() != null )
-                allIds.add( employment.getJurisdictionId() );
+        if ( procedures != null ) { // todo - obsolete
+            for ( EmploymentData employment : procedures.getEmployments() ) {
+                if ( employment.getJurisdictionId() != null )
+                    allIds.add( employment.getJurisdictionId() );
+            }
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allPlaceIds() );
+            }
         }
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allPlaceIds() );
-        }
+        if ( protocols != null )
+            allIds.addAll( protocols.allPlaceIds() );
         return allIds;
     }
 
     private Set<Long> allMediumIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allMediumIds() );
-        }
+        if ( procedures != null )  // todo - obsolete
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allMediumIds() );
+            }
+        if ( protocols != null )
+            allIds.addAll( protocols.allMediumIds() );
         return allIds;
     }
 
     private Set<Long> allInfoProductIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allInfoProductIds() );
-        }
+        if ( procedures != null )  // todo - obsolete
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allInfoProductIds() );
+            }
+        if ( protocols != null )
+            allIds.addAll( protocols.allInfoProductIds() );
         return allIds;
     }
 
     private Set<Long> allInfoFormatIds() {
         Set<Long> allIds = new HashSet<Long>();
-        for ( ProcedureData procedure : procedures.getProcedures() ) {
-            allIds.addAll( procedure.allInfoFormatIds() );
-        }
+        if ( procedures != null )  // todo - obsolete
+            for ( ProcedureData procedure : procedures.getProcedures() ) {
+                allIds.addAll( procedure.allInfoFormatIds() );
+            }
+        if ( protocols != null )
+            allIds.addAll( protocols.allInfoFormatIds() );
         return allIds;
     }
 

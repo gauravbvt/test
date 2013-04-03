@@ -175,17 +175,19 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                         = organizationParticipationService.load( organizationParticipationId );
                 if ( organizationParticipation == null ) throw new NotFoundException();
                 agent = new Agent( actor, organizationParticipation, getCommunityService() );
-                proceduresData = planCommunityEndPoint.getAgentProtocols(
+                proceduresData = planCommunityEndPoint.getAgentProcedures(
                         planCommunity.getUri(),
                         Integer.toString( planCommunity.getPlanVersion() ),
                         Long.toString( agentId ),
                         Long.toString( organizationParticipationId ) );
             } else {
-                agent = new Agent( actor );
+                /*agent = new Agent( actor );
                 proceduresData = planCommunityEndPoint.getAgentProcedures(
                         planCommunity.getUri(),
                         Integer.toString( planCommunity.getPlanVersion() ),
-                        Long.toString( agentId ) );
+                        Long.toString( agentId ),
+                        null );*/
+                throw new Exception( "Failed to retrieve protocols" );
             }
         } else {
             protocolsUser = username == null ? null : getUserDao().getUserNamed( username );

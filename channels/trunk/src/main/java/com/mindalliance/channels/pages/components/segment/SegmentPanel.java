@@ -250,7 +250,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
                 checklistIcon,
                 "Open the checklist and show the details of the task if hidden"
                 + ( issueCount > 0
-                        ? (" - " + issueCount + (issueCount > 1 ? " issues" : " issue") )
+                        ? (" - " + issueCount + (issueCount > 1 ? " checklist issues" : " checklist issue") )
                         : "")
         );
     }
