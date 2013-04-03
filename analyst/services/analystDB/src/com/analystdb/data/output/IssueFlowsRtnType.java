@@ -5,7 +5,7 @@ import com.analystdb.data.Flow;
 
 
 /**
- * Generated for query "issueFlows" on 03/28/2013 15:31:08
+ * Generated for query "issueFlows" on 04/03/2013 11:06:10
  * 
  */
 public class IssueFlowsRtnType {

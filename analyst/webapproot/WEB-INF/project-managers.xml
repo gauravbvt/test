@@ -25,10 +25,10 @@
                         <value>com.analystdb.data.ResourceAttribute</value>
                         <value>com.analystdb.data.Tenant</value>
                         <value>com.analystdb.data.User</value>
-                        <value>com.analystdb.data.IssueApproachId</value>
-                        <value>com.analystdb.data.IssueIssueCategoryId</value>
                         <value>com.analystdb.data.IssueCommentFlowsId</value>
+                        <value>com.analystdb.data.IssueIssueCategoryId</value>
                         <value>com.analystdb.data.DecisionFlowId</value>
+                        <value>com.analystdb.data.IssueApproachId</value>
                         <value>com.analystdb.data.output.DocumentIssuesRtnType</value>
                         <value>com.analystdb.data.output.MaxIssueSequenceRtnType</value>
                         <value>com.analystdb.data.output.ResourceKeywordsRtnType</value>

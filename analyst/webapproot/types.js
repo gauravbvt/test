@@ -1868,6 +1868,16 @@ wm.types = {
 			"fields": {
 				"approaches": {
 					"exclude": [],
+					"fieldOrder": 3,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
+				"comments": {
+					"exclude": [],
 					"fieldOrder": 2,
 					"fieldSubType": null,
 					"include": [],
@@ -1878,7 +1888,7 @@ wm.types = {
 				},
 				"documents": {
 					"exclude": [],
-					"fieldOrder": 4,
+					"fieldOrder": 5,
 					"fieldSubType": null,
 					"include": [],
 					"isList": false,
@@ -1888,7 +1898,7 @@ wm.types = {
 				},
 				"flows": {
 					"exclude": [],
-					"fieldOrder": 3,
+					"fieldOrder": 4,
 					"fieldSubType": null,
 					"include": [],
 					"isList": false,

@@ -36,6 +36,7 @@ where ia.id.issueId = :issue
         <query-param name="project" type="java.lang.Long"/>
         <query-param name="category" type="java.lang.Long"/>
         select distinct i.id as key, i as issue,
+(select count(*) from IssueComment ic where ic.issue.id = i.id ) as comments,
 (select count(*) from IssueApproach ia where ia.issue.id = i.id ) as approaches,
 (select count(distinct icf.flow.id) from IssueCommentFlows icf where icf.issueComment.issue.id = i.id ) as flows,
 (select count(distinct icf.flow.documents) from IssueCommentFlows icf where icf.issueComment.issue.id = i.id and not icf.flow.documents is null) as documents
@@ -159,7 +160,11 @@ order by i.sequence
     </query>
     <query name="recentInterviews">
         <query-param name="project" type="java.lang.Long"/>
-        select  i.id as id, i.resource.name as resource, i as interview, count(distinct a.id) as approaches, count(distinct f.id) as flows, count(distinct ic.id) as issues, count(distinct dec.id) as decisions
+        select  i.id as id, i.resource.name as resource, i as interview,
+count(distinct a.id) as approaches,
+count(distinct f.id) as flows,
+count(distinct ic.id) as issues,
+count(distinct dec.id) as decisions
 from Interview i  left join i.flows f left join i.approachs a left join i.issueComments ic left join i.decisions dec
 where i.resource.project.id = :project
 and i.done = 1

@@ -5,13 +5,14 @@ import com.analystdb.data.Issue;
 
 
 /**
- * Generated for query "issuesByCategory" on 03/28/2013 15:31:08
+ * Generated for query "issuesByCategory" on 04/03/2013 11:06:10
  * 
  */
 public class IssuesByCategoryRtnType {
 
     private Long key;
     private Issue issue;
+    private Long comments;
     private Long approaches;
     private Long flows;
     private Long documents;
@@ -30,6 +31,14 @@ public class IssuesByCategoryRtnType {
 
     public void setIssue(Issue issue) {
         this.issue = issue;
+    }
+
+    public Long getComments() {
+        return comments;
+    }
+
+    public void setComments(Long comments) {
+        this.comments = comments;
     }
 
     public Long getApproaches() {
