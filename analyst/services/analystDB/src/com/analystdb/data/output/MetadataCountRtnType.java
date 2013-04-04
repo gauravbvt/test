@@ -4,13 +4,14 @@ package com.analystdb.data.output;
 
 
 /**
- * Generated for query "metadataCount" on 04/04/2013 08:31:55
+ * Generated for query "metadataCount" on 04/04/2013 11:00:53
  * 
  */
 public class MetadataCountRtnType {
 
     private String value;
     private Long issues;
+    private Long resources;
 
     public String getValue() {
         return value;
@@ -26,6 +27,14 @@ public class MetadataCountRtnType {
 
     public void setIssues(Long issues) {
         this.issues = issues;
+    }
+
+    public Long getResources() {
+        return resources;
+    }
+
+    public void setResources(Long resources) {
+        this.resources = resources;
     }
 
 }

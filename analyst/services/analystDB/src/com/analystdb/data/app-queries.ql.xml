@@ -234,7 +234,7 @@ order by ra.name
     <query name="metadataCount">
         <query-param name="project" type="java.lang.Long"/>
         <query-param name="name" type="java.lang.String"/>
-        select ra.val as value, count(distinct ic.issue) as issues
+        select ra.val as value, count(distinct ic.issue) as issues, count(distinct ic.interview.resource) as resources
 from ResourceAttribute ra join ra.resource.interviews int join int.issueComments ic
 where ra.resource.project.id = :project and ra.name = :name
 group by ra.val

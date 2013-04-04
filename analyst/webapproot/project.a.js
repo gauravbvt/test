@@ -2213,6 +2213,16 @@ wm.types = {
 					"required": true,
 					"type": "java.lang.Long"
 				},
+				"resources": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
 				"value": {
 					"exclude": [],
 					"fieldOrder": 0,
@@ -2519,7 +2529,7 @@ dojo.declare("Analyst", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "0.r4823", 
+	"projectSubVersion": "0.r4824", 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 

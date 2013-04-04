@@ -5,7 +5,7 @@ package com.analystdb;
 
 /**
  *  Query names for service "analystDB"
- *  04/04/2013 08:36:15
+ *  04/04/2013 11:01:28
  * 
  */
 public class AnalystDBConstants {

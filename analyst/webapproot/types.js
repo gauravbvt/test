@@ -1960,6 +1960,16 @@ wm.types = {
 					"required": true,
 					"type": "java.lang.Long"
 				},
+				"resources": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
+				},
 				"value": {
 					"exclude": [],
 					"fieldOrder": 0,
