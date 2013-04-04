@@ -2230,7 +2230,7 @@ wm.types = {
 		},
 		"com.analystdb.data.output.MetadataIssuesRtnType": {
 			"fields": {
-				"description": {
+				"comments": {
 					"exclude": [],
 					"fieldOrder": 1,
 					"fieldSubType": null,
@@ -2238,7 +2238,7 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": true,
-					"type": "java.lang.String"
+					"type": "java.lang.Long"
 				},
 				"issue": {
 					"exclude": [],
@@ -2248,7 +2248,7 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": true,
-					"type": "java.lang.Integer"
+					"type": "com.analystdb.data.Issue"
 				}
 			},
 			"internal": false,
@@ -2519,7 +2519,7 @@ dojo.declare("Analyst", wm.Application, {
 	"name": "", 
 	"phoneGapLoginPage": "Login", 
 	"phoneMain": "", 
-	"projectSubVersion": "0.r4821", 
+	"projectSubVersion": "0.r4823", 
 	"projectVersion": 1, 
 	"studioVersion": "6.5.2.Release", 
 	"tabletMain": "", 

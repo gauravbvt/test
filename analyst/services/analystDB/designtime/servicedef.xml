@@ -474,26 +474,6 @@
             <element name="tenantId" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
             <element name="role" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
-        <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
-            <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-            <element name="approachId" typeRef="java.lang.Long" isList="false" allowNull="false">
-                <require>delete</require>
-                <require>read</require>
-                <require>update</require>
-                <require>insert</require>
-                <noChange>delete</noChange>
-                <noChange>read</noChange>
-                <noChange>update</noChange>
-            </element>
-        </dataobject>
         <dataobject javaType="com.analystdb.data.IssueIssueCategoryId" name="id" supportsQuickData="false">
             <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
                 <require>delete</require>
@@ -525,6 +505,26 @@
                 <noChange>update</noChange>
             </element>
             <element name="flows" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+        </dataobject>
+        <dataobject javaType="com.analystdb.data.IssueApproachId" name="id" supportsQuickData="false">
+            <element name="issueId" typeRef="java.lang.Long" isList="false" allowNull="false">
+                <require>delete</require>
+                <require>read</require>
+                <require>update</require>
+                <require>insert</require>
+                <noChange>delete</noChange>
+                <noChange>read</noChange>
+                <noChange>update</noChange>
+            </element>
+            <element name="approachId" typeRef="java.lang.Long" isList="false" allowNull="false">
                 <require>delete</require>
                 <require>read</require>
                 <require>update</require>
@@ -571,8 +571,8 @@
             <element name="name" typeRef="java.lang.String" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.MetadataIssuesRtnType" supportsQuickData="false">
-            <element name="issue" typeRef="java.lang.Integer" isList="false" allowNull="false"/>
-            <element name="description" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="issue" typeRef="com.analystdb.data.Issue" isList="false" allowNull="false"/>
+            <element name="comments" typeRef="java.lang.Long" isList="false" allowNull="false"/>
         </dataobject>
         <dataobject javaType="com.analystdb.data.output.RecentInterviewsRtnType" supportsQuickData="false">
             <element name="id" typeRef="java.lang.Long" isList="false" allowNull="false"/>

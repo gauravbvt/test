@@ -1977,7 +1977,7 @@ wm.types = {
 		},
 		"com.analystdb.data.output.MetadataIssuesRtnType": {
 			"fields": {
-				"description": {
+				"comments": {
 					"exclude": [],
 					"fieldOrder": 1,
 					"fieldSubType": null,
@@ -1985,7 +1985,7 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": true,
-					"type": "java.lang.String"
+					"type": "java.lang.Long"
 				},
 				"issue": {
 					"exclude": [],
@@ -1995,7 +1995,7 @@ wm.types = {
 					"isList": false,
 					"noChange": [],
 					"required": true,
-					"type": "java.lang.Integer"
+					"type": "com.analystdb.data.Issue"
 				}
 			},
 			"internal": false,

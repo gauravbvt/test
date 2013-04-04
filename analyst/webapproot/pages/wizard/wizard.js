@@ -385,5 +385,9 @@ dojo.declare("wizard", wm.Page, {
     removeButton7Click: function(inSender) {
         this.allRemoveButtonClick(inSender,this.availableGrid7,this.selectedGrid7,this.flowDecisions);        
 	},
-  _end: 0
+  dojoGrid15Select: function(inSender) {
+        this.issueForm.setDataSet( inSender.selectedItem.data.issue );        
+        this.showIssue.update();		
+	},
+	_end: 0
 });

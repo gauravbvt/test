@@ -248,7 +248,7 @@ where exists (from ResourceAttribute ra where ra.resource.id = r.id and ra.name=
         <query-param name="project" type="java.lang.Long"/>
         <query-param name="name" type="java.lang.String"/>
         <query-param name="value" type="java.lang.String"/>
-        select ic.issue.sequence as issue, ic.issue.description as description
+        select ic.issue as issue, count(ic) as comments
 from ResourceAttribute ra join ra.resource.interviews int join int.issueComments ic
 where ra.resource.project.id = :project and ra.name = :name and ra.val = :value
 group by ic.issue

@@ -4,7 +4,7 @@ package com.analystdb.data.output;
 
 
 /**
- * Generated for query "metadataCount" on 04/03/2013 19:27:05
+ * Generated for query "metadataCount" on 04/04/2013 08:31:55
  * 
  */
 public class MetadataCountRtnType {

@@ -1,31 +1,32 @@
 
 package com.analystdb.data.output;
 
+import com.analystdb.data.Issue;
 
 
 /**
- * Generated for query "metadataIssues" on 04/03/2013 19:27:05
+ * Generated for query "metadataIssues" on 04/04/2013 08:31:55
  * 
  */
 public class MetadataIssuesRtnType {
 
-    private Integer issue;
-    private String description;
+    private Issue issue;
+    private Long comments;
 
-    public Integer getIssue() {
+    public Issue getIssue() {
         return issue;
     }
 
-    public void setIssue(Integer issue) {
+    public void setIssue(Issue issue) {
         this.issue = issue;
     }
 
-    public String getDescription() {
-        return description;
+    public Long getComments() {
+        return comments;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setComments(Long comments) {
+        this.comments = comments;
     }
 
 }
