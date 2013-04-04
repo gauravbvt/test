@@ -1824,7 +1824,7 @@ wm.types = {
 				},
 				"issues": {
 					"exclude": [],
-					"fieldOrder": 2,
+					"fieldOrder": 3,
 					"fieldSubType": null,
 					"include": [],
 					"isList": false,
@@ -1841,6 +1841,16 @@ wm.types = {
 					"noChange": [],
 					"required": true,
 					"type": "java.lang.String"
+				},
+				"resources": {
+					"exclude": [],
+					"fieldOrder": 2,
+					"fieldSubType": null,
+					"include": [],
+					"isList": false,
+					"noChange": [],
+					"required": true,
+					"type": "java.lang.Long"
 				}
 			},
 			"internal": false,

@@ -91,11 +91,13 @@ order by a.name
     </query>
     <query name="issueCategoryCounts">
         <query-param name="project" type="java.lang.Long"/>
-        select iic.issueCategory as category, iic.issueCategory.name as name, count(iic.issue.id) as issues
-from IssueIssueCategory iic
+        select iic.issueCategory as category, iic.issueCategory.name as name,
+count(distinct r.id) as resources,
+count(distinct i.id) as issues
+from IssueIssueCategory iic join iic.issue i join i.issueComments ic join ic.interview.resource r
 where iic.issue.project.id = :project
 group by iic.issueCategory
-order by iic.issueCategory.name
+order by iic.issueCategory.name,i.sequence,r.name
     </query>
     <query name="documentIssueCount">
         <query-param name="project" type="java.lang.Long"/>
