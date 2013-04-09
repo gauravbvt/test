@@ -1,16 +1,17 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.PlanCommunityEndPoint;
+import com.mindalliance.channels.api.community.CommunityIdentifierData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.api.procedures.ObservationData;
-import com.mindalliance.channels.api.procedures.ProcedureData;
-import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.api.procedures.ProtocolsData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
+import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
@@ -48,18 +49,18 @@ import java.util.Map;
 
 /**
  * A page with a user's (or agent's) protocols.
- * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 6/22/12
- * Time: 10:45 AM
+ * Date: 4/9/13
+ * Time: 10:38 AM
  */
-public class ProtocolsPage extends AbstractChannelsBasicPage {
+public class ChecklistsPage extends AbstractChannelsBasicPage {
 
-    private static final Logger LOG = LoggerFactory.getLogger( ProtocolsPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ChecklistsPage.class );
 
     private PlanSummaryData planSummaryData;
-    private ProceduresData proceduresData;
+    private ProtocolsData protocolsData;
     private ProtocolsFinder finder;
     private String username;
     private Long agentId;
@@ -81,7 +82,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private WebMarkupContainer protocolsContainer;
     private WebMarkupContainer directoryContainer;
 
-    public ProtocolsPage( PageParameters parameters ) {
+    public ChecklistsPage( PageParameters parameters ) {
         super( parameters );
     }
 
@@ -115,7 +116,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "Protocols";
+        return "Checklists";
     }
 
     @Override
@@ -157,7 +158,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         intermediates.add( new PagePathItem(
                 AllProtocolsPage.class,
                 getParameters(),
-                "All collaboration protocols" ) );
+                "All collaboration checklists" ) );
         return intermediates;
     }
 
@@ -166,7 +167,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         CommunityService communityService = getCommunityService();
         PlanCommunity planCommunity = communityService.getPlanCommunity();
         planSummaryData = planCommunityEndPoint.getPlan(
-                planCommunity.getUri(),
+                planCommunity.getPlanUri(),
                 Integer.toString( planCommunity.getPlanVersion() ) );
         if ( agentId != null ) {
             Actor actor = getQueryService().find( Actor.class, agentId );
@@ -175,18 +176,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                         = organizationParticipationService.load( organizationParticipationId );
                 if ( organizationParticipation == null ) throw new NotFoundException();
                 agent = new Agent( actor, organizationParticipation, getCommunityService() );
-                proceduresData = planCommunityEndPoint.getAgentProcedures(
+                protocolsData = planCommunityEndPoint.getAgentProtocols(
                         planCommunity.getUri(),
-                        Integer.toString( planCommunity.getPlanVersion() ),
                         Long.toString( agentId ),
                         Long.toString( organizationParticipationId ) );
             } else {
-                /*agent = new Agent( actor );
-                proceduresData = planCommunityEndPoint.getAgentProcedures(
-                        planCommunity.getUri(),
-                        Integer.toString( planCommunity.getPlanVersion() ),
-                        Long.toString( agentId ),
-                        null );*/
                 throw new Exception( "Failed to retrieve protocols" );
             }
         } else {
@@ -195,12 +189,11 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 throw new Exception( "Failed to retrieve protocols" );
             else {
                 if ( protocolsUser.isPlanner( communityService.getPlan().getUri() ) ) {
-                    proceduresData = planCommunityEndPoint.getUserProcedures(
+                    protocolsData = planCommunityEndPoint.getUserProtocols(
                             planCommunity.getUri(),
-                            Integer.toString( planCommunity.getPlanVersion() ),
                             username );
                 } else if ( getUser().getUsername().equals( username ) ) {
-                    proceduresData = planCommunityEndPoint.getMyProcedures( planCommunity.getUri() );
+                    protocolsData = planCommunityEndPoint.getMyProtocols( planCommunity.getUri() );
                 } else {
                     throw new Exception( "Failed to retrieve protocols" );
                 }
@@ -208,7 +201,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         }
         finder = new ProtocolsFinder(
                 planCommunityEndPoint.getServerUrl(),
-                proceduresData,
+                protocolsData,
                 communityService,
                 protocolsUser,
                 planCommunityEndPoint,
@@ -228,8 +221,9 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     // ABOUT
 
     private void addAboutProtocols() {
-        PlanIdentifierData planIdentifierData = proceduresData.getPlanIdentifier();
-        getContainer().add( new Label( "communityName", planIdentifierData.getName() ) );
+        CommunityIdentifierData communityIdentifierData = protocolsData.getCommunityIdentifier();
+        PlanIdentifierData planIdentifierData = communityIdentifierData.getPlanIdentifier();
+        getContainer().add( new Label( "communityName", communityIdentifierData.getName() ) );
         aboutContainer = new WebMarkupContainer( "about" );
         getContainer().add( aboutContainer );
         aboutContainer
@@ -253,7 +247,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private void addParticipation() {
         Label employmentsList = new Label(
                 "participationList",
-                asString( proceduresData.getEmployments() ));
+                asString( protocolsData.getEmployments() ));
         getContainer().add( employmentsList );
     }
 
@@ -263,7 +257,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
         for ( int i=0; i<count; i++ ) {
             sb.append( employments.get( i ).getLabel() );
             if ( i == count - 2  ) {
-               sb.append( " and " );
+                sb.append( " and " );
             } else if ( i != count - 1 && count > 1 ) {
                 sb.append( ", " );
             }
@@ -291,34 +285,34 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private void addOngoingFinder() {
-        List<ProcedureData> procedures = finder.getOngoingProcedures();
+        List<ChecklistData> checklists = finder.getOngoingProcedures();
         WebMarkupContainer ongoingToc = new WebMarkupContainer( "ongoing-toc" );
         finderContainer.add( ongoingToc );
-        ongoingToc.setVisible( !procedures.isEmpty() );
-        ongoingToc.add( makeProcedureLinks( "ongoingLinks", procedures ) );
+        ongoingToc.setVisible( !checklists.isEmpty() );
+        ongoingToc.add( makeChecklistLinks( "ongoingLinks", checklists ) );
     }
 
-    private ListView<ProcedureData> makeProcedureLinks( String id, List<ProcedureData> procedureDataList ) {
-        List<ProcedureData> sortedProcedureDataList = new ArrayList<ProcedureData>( procedureDataList );
-        Collections.sort( sortedProcedureDataList, new Comparator<ProcedureData>() {
+    private ListView<ChecklistData> makeChecklistLinks( String id, List<ChecklistData> checklistDataList ) {
+        List<ChecklistData> sortedChecklistDataList = new ArrayList<ChecklistData>( checklistDataList );
+        Collections.sort( sortedChecklistDataList, new Comparator<ChecklistData>() {
             @Override
-            public int compare( ProcedureData pd1, ProcedureData pd2 ) {
+            public int compare( ChecklistData pd1, ChecklistData pd2 ) {
                 return pd1.getLabel().compareTo( pd2.getLabel() );
             }
         } );
-        return new ListView<ProcedureData>(
+        return new ListView<ChecklistData>(
                 id,
-                sortedProcedureDataList
+                sortedChecklistDataList
         ) {
             @Override
-            protected void populateItem( ListItem<ProcedureData> item ) {
-                item.add( new ProcedureDataLinkPanel( "procLink", item.getModelObject(), finder ) );
+            protected void populateItem( ListItem<ChecklistData> item ) {
+                item.add( new ChecklistDataLinkPanel( "checklistLink", item.getModelObject(), finder ) );
             }
         };
     }
 
     private void addOnObservationFinder() {
-        final Map<ObservationData, List<ProcedureData>> onObservations = finder.getOnObservationProcedures();
+        final Map<ObservationData, List<ChecklistData>> onObservations = finder.getOnObservationChecklists();
         WebMarkupContainer observationsToc = new WebMarkupContainer( "observations-toc" );
         finderContainer.add( observationsToc );
         observationsToc.setVisible( !onObservations.isEmpty() );
@@ -334,7 +328,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                 item.add( new Label( "witness", ChannelsUtils.lcFirst( observationData.getObservationActiveVerb() ) ) );
                 Label observationLabel = new Label( "observation", ChannelsUtils.lcFirst( observationData.getLabel() ) );
                 item.add( observationLabel );
-                item.add( makeProcedureLinks( "procLinks", onObservations.get( observationData ) ) );
+                item.add( makeChecklistLinks( "checklistLinks", onObservations.get( observationData ) ) );
             }
         };
         observationsToc.add( observationList );
@@ -368,14 +362,14 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<ContactData> item ) {
                 ContactData contactData = item.getModelObject();
                 // requests
-                Map<TriggerData, List<ProcedureData>> triggeringRequests =
+                Map<TriggerData, List<ChecklistData>> triggeringRequests =
                         finder.getTriggeringRequestsFrom( contactData );
                 WebMarkupContainer requestsFromInterlocutor = new WebMarkupContainer( "askedYou" );
                 item.add( requestsFromInterlocutor );
                 requestsFromInterlocutor.setVisible( !triggeringRequests.isEmpty() );
                 requestsFromInterlocutor.add( makeInterlocutorRequestsListView( triggeringRequests, contactData ) );
                 // notifications
-                Map<TriggerData, List<ProcedureData>> triggeringNotifications =
+                Map<TriggerData, List<ChecklistData>> triggeringNotifications =
                         finder.getTriggeringNotificationsFrom( contactData );
                 WebMarkupContainer notificationsFromInterlocutor = new WebMarkupContainer( "notifiedYou" );
                 item.add( notificationsFromInterlocutor );
@@ -386,7 +380,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private ListView<TriggerData> makeInterlocutorRequestsListView(
-            final Map<TriggerData, List<ProcedureData>> triggeringRequests, final ContactData contactData ) {
+            final Map<TriggerData, List<ChecklistData>> triggeringRequests, final ContactData contactData ) {
         List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringRequests.keySet() );
         Collections.sort(
                 sortedTriggers,
@@ -413,14 +407,14 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                                 : ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
-                item.add( makeProcedureLinks( "procLinks", triggeringRequests.get( triggerData ) ) );
+                item.add( makeChecklistLinks( "checklistLinks", triggeringRequests.get( triggerData ) ) );
             }
         };
         return interlocutorRequestsListView;
     }
 
     private ListView<TriggerData> makeInterlocutorNotificationsListView(
-            final Map<TriggerData, List<ProcedureData>> triggeringNotifications, final ContactData contactData ) {
+            final Map<TriggerData, List<ChecklistData>> triggeringNotifications, final ContactData contactData ) {
         List<TriggerData> sortedTriggers = new ArrayList<TriggerData>( triggeringNotifications.keySet() );
         Collections.sort(
                 sortedTriggers,
@@ -447,7 +441,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
                                 : ( ChannelsUtils.lcFirst( communicatedContext.getTriggerLabel() ) ) );
                 commContextLabel.setVisible( communicatedContext != null );
                 item.add( commContextLabel );
-                item.add( makeProcedureLinks( "procLinks", triggeringNotifications.get( triggerData ) ) );
+                item.add( makeChecklistLinks( "checklistLinks", triggeringNotifications.get( triggerData ) ) );
             }
         };
         return interlocutorNotificationsListView;
@@ -458,80 +452,67 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     private void addProtocols() {
         protocolsContainer = new WebMarkupContainer( "protocols" );
         getContainer().add( protocolsContainer );
-        addOngoingProcedures();
-        addOnObservationProcedures();
-        addOnRequestProcedures();
-        addOnNotificationProcedures();
-        addOnDiscoveryProcedures();
-        addOnResearchProcedures();
+        addOngoingChecklists();
+        addOnObservationChecklists();
+        addOnRequestChecklists();
+        addOnNotificationChecklists();
     }
 
 
-    private void addOngoingProcedures() {
-        List<ProcedureData> sortedProcedures = new ArrayList<ProcedureData>( finder.getOngoingProcedures() );
+    private void addOngoingChecklists() {
+        List<ChecklistData> sortedChecklists = new ArrayList<ChecklistData>( finder.getOngoingProcedures() );
         Collections.sort(
-                sortedProcedures,
-                new Comparator<ProcedureData>() {
+                sortedChecklists,
+                new Comparator<ChecklistData>() {
                     @Override
-                    public int compare( ProcedureData pd1, ProcedureData pd2 ) {
+                    public int compare( ChecklistData pd1, ChecklistData pd2 ) {
                         return pd1.getLabel().compareTo( pd2.getLabel() );
                     }
                 } );
         WebMarkupContainer ongoingContainer = new WebMarkupContainer( "ongoing" );
         protocolsContainer.add( ongoingContainer );
-        ongoingContainer.setVisible( !sortedProcedures.isEmpty() );
-        ListView<ProcedureData> ongoingProcsListView = new ListView<ProcedureData>(
+        ongoingContainer.setVisible( !sortedChecklists.isEmpty() );
+        ListView<ChecklistData> ongoingChecklistsListView = new ListView<ChecklistData>(
                 "ongoingProcedures",
-                sortedProcedures
+                sortedChecklists
         ) {
             @Override
-            protected void populateItem( ListItem<ProcedureData> item ) {
-                ProcedureData procedureData = item.getModelObject();
-                item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
+            protected void populateItem( ListItem<ChecklistData> item ) {
+                ChecklistData checklistData = item.getModelObject();
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder ) );
             }
         };
-        ongoingContainer.add( ongoingProcsListView );
+        ongoingContainer.add( ongoingChecklistsListView );
     }
 
-    private void addOnObservationProcedures() {
-        protocolsContainer.add( makeEventTriggeredProceduresContainer(
+    private void addOnObservationChecklists() {
+        protocolsContainer.add( makeEventTriggeredChecklistsContainer(
                 "onObservations",
-                finder.getOnObservationProcedures() ) );
+                finder.getOnObservationChecklists() ) );
     }
 
 
-    private void addOnRequestProcedures() {
-        protocolsContainer.add( makeTriggeredProceduresContainer(
+    private void addOnRequestChecklists() {
+        protocolsContainer.add( makeTriggeredChecklistContainer(
                 "onRequests",
-                finder.getOnRequestProcedures() ) );
+                finder.getOnRequestChecklists() ) );
     }
 
-    private void addOnNotificationProcedures() {
-        protocolsContainer.add( makeTriggeredProceduresContainer(
+    private void addOnNotificationChecklists() {
+        protocolsContainer.add( makeTriggeredChecklistContainer(
                 "onNotifications",
-                finder.getOnNotificationProcedures() ) );
+                finder.getOnNotificationChecklists() ) );
     }
 
-    private void addOnDiscoveryProcedures() {
-        protocolsContainer.add( makeTriggeredProceduresContainer(
-                "onDiscoveries",
-                finder.getOnDiscoveryProcedures() ) );
-    }
 
-    private void addOnResearchProcedures() {
-        protocolsContainer.add( makeTriggeredProceduresContainer(
-                "onResearches",
-                finder.getOnResearchProcedures() ) );
-    }
-
-    private WebMarkupContainer makeTriggeredProceduresContainer(
+    private WebMarkupContainer makeTriggeredChecklistContainer(
             String procsContainerId,
-            final Map<TriggerData, List<ProcedureData>> procedureDataMap
+            final Map<TriggerData, List<ChecklistData>> checklistDataMap
     ) {
         WebMarkupContainer procsContainer = new WebMarkupContainer( procsContainerId );
-        procsContainer.setVisible( !procedureDataMap.isEmpty() );
+        procsContainer.setVisible( !checklistDataMap.isEmpty() );
         protocolsContainer.add( procsContainer );
-        List<TriggerData> triggers = finder.sortTriggerData( procedureDataMap.keySet() );
+        List<TriggerData> triggers = finder.sortTriggerData( checklistDataMap.keySet() );
         procsContainer.add( new ListView<TriggerData>(
                 "triggered",
                 triggers
@@ -539,7 +520,7 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             @Override
             protected void populateItem( ListItem<TriggerData> item ) {
                 TriggerData trigger = item.getModelObject();
-                item.add( makeProcedurePanels( "procedures", procedureDataMap.get( trigger ), trigger ) );
+                item.add( makeChecklistPanels( "checklists", checklistDataMap.get( trigger ), trigger ) );
             }
         }
         );
@@ -547,28 +528,26 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
     }
 
     private AbstractDataPanel makeTriggerDataPanel( String id, TriggerData triggerData ) {
-        /*if ( triggerData.isOnObserving() )
+/*
+        if ( triggerData.isOnObserving() )
             return new ObservationTriggerDataPanel( id, triggerData, finder );
-        else */
+        else
+*/
         if ( triggerData.isOnNotificationFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnRequestFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
-        else if ( triggerData.isOnDiscovering() )
-            return new SelfTriggerDataPanel( id, triggerData, finder );
-        else if ( triggerData.isOnResearching() )
-            return new SelfTriggerDataPanel( id, triggerData, finder );
         else throw new RuntimeException( "Unknown trigger " + triggerData.getLabel() );
     }
 
-    private WebMarkupContainer makeEventTriggeredProceduresContainer(
+    private WebMarkupContainer makeEventTriggeredChecklistsContainer(
             String procsContainerId,
             final Map<ObservationData,
-                    List<ProcedureData>> procedureDataMap ) {
+                    List<ChecklistData>> checklistDataMap ) {
         WebMarkupContainer procsContainer = new WebMarkupContainer( procsContainerId );
-        procsContainer.setVisible( !procedureDataMap.isEmpty() );
+        procsContainer.setVisible( !checklistDataMap.isEmpty() );
         protocolsContainer.add( procsContainer );
-        List<ObservationData> triggers = new ArrayList<ObservationData>( procedureDataMap.keySet() );
+        List<ObservationData> triggers = new ArrayList<ObservationData>( checklistDataMap.keySet() );
         finder.sortObservations( triggers );
         procsContainer.add( new ListView<ObservationData>(
                 "triggered",
@@ -578,47 +557,47 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
             protected void populateItem( ListItem<ObservationData> item ) {
                 ObservationData observationData = item.getModelObject();
                 item.add(
-                        makeProcedurePanels(
-                                "procedures",
-                                procedureDataMap.get( observationData ),
+                        makeChecklistPanels(
+                                "checklists",
+                                checklistDataMap.get( observationData ),
                                 observationData )
-                         );
+                );
             }
         }
         );
         return procsContainer;
     }
 
-    private ListView<ProcedureData> makeProcedurePanels(
+    private ListView<ChecklistData> makeChecklistPanels(
             String id,
-            List<ProcedureData> procedureDataList,
+            List<ChecklistData> checklistDataList,
             final ObservationData observationData ) {
-        return new ListView<ProcedureData>(
+        return new ListView<ChecklistData>(
                 id,
-                procedureDataList
+                checklistDataList
         ) {
             @Override
-            protected void populateItem( ListItem<ProcedureData> item ) {
+            protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( new ObservationTriggerDataPanel( "trigger", observationData, finder ) );
-                ProcedureData procedureData = item.getModelObject();
-                item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
+                ChecklistData checklistData = item.getModelObject();
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder ) );
             }
         };
     }
 
-    private ListView<ProcedureData> makeProcedurePanels(
+    private ListView<ChecklistData> makeChecklistPanels(
             String id,
-            List<ProcedureData> procedureDataList,
+            List<ChecklistData> checklistDataList,
             final TriggerData triggerData ) {
-        return new ListView<ProcedureData>(
+        return new ListView<ChecklistData>(
                 id,
-                procedureDataList
+                checklistDataList
         ) {
             @Override
-            protected void populateItem( ListItem<ProcedureData> item ) {
+            protected void populateItem( ListItem<ChecklistData> item ) {
                 item.add( makeTriggerDataPanel( "trigger", triggerData ) );
-                ProcedureData procedureData = item.getModelObject();
-                item.add( new ProcedureDataPanel( "procedure", procedureData, finder ) );
+                ChecklistData checklistData = item.getModelObject();
+                item.add( new ChecklistDataPanel( "checklist", checklistData, finder ) );
             }
         };
     }
@@ -678,3 +657,4 @@ public class ProtocolsPage extends AbstractChannelsBasicPage {
 
 
 }
+

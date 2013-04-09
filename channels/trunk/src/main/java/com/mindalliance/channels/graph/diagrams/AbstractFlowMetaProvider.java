@@ -219,7 +219,7 @@ public abstract class AbstractFlowMetaProvider<V extends Node, E>
                 iconName = "blank";
             else {
                 negated = !getPlan().isViewableByAll() && getAnalyst().isEffectivelyConceptual( getQueryService(),
-                                                                                           part )
+                                                                                           part ) // todo - this has failed with NullPointerException on timed update - why?
                                         ? ImagingService.NEGATED
                                         : "";
                 iconName = imagingService.findIconName(

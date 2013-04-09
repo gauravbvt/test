@@ -45,7 +45,7 @@ public class CommunityConverter extends AbstractChannelsConverter {
 
     @Override
     public void marshal( Object source, HierarchicalStreamWriter writer, MarshallingContext context ) {
-        PlanCommunity planCommunity = (PlanCommunity)source;
+        PlanCommunity planCommunity = (PlanCommunity) source;
         CommunityDao communityDao = getCommunityDao();
         writer.addAttribute( "id", Long.toString( planCommunity.getId() ) );
         writer.addAttribute( "uri", planCommunity.getUri() );
@@ -62,6 +62,9 @@ public class CommunityConverter extends AbstractChannelsConverter {
         writer.endNode();
         writer.startNode( "name" );
         writer.setValue( planCommunity.getName() );
+        writer.endNode();
+        writer.startNode( "dateCreated" );
+        writer.setValue( getDateFormat().format( planCommunity.getDateCreated() ) );
         writer.endNode();
         writer.startNode( "description" );
         writer.setValue( planCommunity.getDescription() );
@@ -130,6 +133,12 @@ public class CommunityConverter extends AbstractChannelsConverter {
                 LOG.info( "Plan community last saved with last id " + reader.getValue() );
             } else if ( nodeName.equals( "name" ) ) {
                 planCommunity.setName( reader.getValue() );
+            } else if ( nodeName.equals( "dateCreated" ) ) {
+                try {
+                    planCommunity.setDateCreated( getDateFormat().parse( reader.getValue() ) );
+                } catch ( ParseException e ) {
+                    throw new RuntimeException( e );
+                }
             } else if ( nodeName.equals( "idShift" ) ) {
                 try {
                     Date date = getDateFormat().parse( reader.getAttribute( "date" ) );

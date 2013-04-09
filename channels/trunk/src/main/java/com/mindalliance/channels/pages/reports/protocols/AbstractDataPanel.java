@@ -1,11 +1,16 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.google.code.jqwicket.ui.tiptip.TipTipBehavior;
+import com.google.code.jqwicket.ui.tiptip.TipTipOptions;
 import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.util.List;
 
@@ -65,4 +70,24 @@ public abstract class AbstractDataPanel extends Panel {
     public ProtocolsFinder getFinder() {
         return finder;
     }
+
+    protected Component addTipTitle( Component component, String title ) {
+        return addTipTitle( component, new Model<String>( title ) );
+    }
+
+    protected Component addTipTitle( Component component, String title, boolean keepAlive ) {
+        return addTipTitle( component, new Model<String>( title ), keepAlive );
+    }
+
+    protected Component addTipTitle( Component component, IModel<String> titleModel ) {
+        return addTipTitle( component, titleModel, false );
+    }
+
+    protected Component addTipTitle( Component component, IModel<String> titleModel, boolean keepAlive ) {
+        TipTipOptions options = new TipTipOptions().maxWidth( "400px" ).keepAlive( keepAlive );
+        component.add( new AttributeModifier( "title", titleModel ) );
+        component.add( new TipTipBehavior( options ) );
+        return component;
+    }
+
 }

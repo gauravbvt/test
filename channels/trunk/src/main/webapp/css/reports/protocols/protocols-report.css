@@ -596,3 +596,40 @@ div.documentation-top label {
     font-style: italic;
     font-size: smaller;
 }
+
+/* Checklist */
+
+
+.checklist ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.checklist .step {
+    margin-bottom: 6px;
+}
+
+.checklist .even-step {
+    background: #e8e8e8;
+}
+
+.checklist .step th {
+    padding-top: 0px;
+    padding-right: 5px;
+    font-weight: bold;
+}
+
+.checklist .step .step-constraint {
+    height: 2em;
+}
+
+.checklist .step .optional {
+    background: transparent url('../../../images/checkbox_optional.png') no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.checklist .step .required {
+    background: transparent url('../../../images/checkbox_required.png') no-repeat 0 -1px;
+    padding-left: 20px;
+}

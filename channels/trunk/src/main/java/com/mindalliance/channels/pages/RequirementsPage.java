@@ -71,7 +71,7 @@ public class RequirementsPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "Plan requirements";
+        return "Collaboration requirements";
     }
 
     @Override

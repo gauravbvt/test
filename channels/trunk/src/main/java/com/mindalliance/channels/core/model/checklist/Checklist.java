@@ -63,6 +63,7 @@ public class Checklist implements Serializable, Mappable {
         List<Step> effectiveSteps = new ArrayList<Step>();
         effectiveSteps.addAll( getActionSteps() );
         effectiveSteps.addAll( listCommunicationSteps() );
+        effectiveSteps.addAll( listSubTaskSteps() );
         return effectiveSteps;
     }
 
@@ -190,8 +191,7 @@ public class Checklist implements Serializable, Mappable {
                 confirmationPending = true;
             else
                 confirm();
-        }
-        else
+        } else
             confirmationSignature = null;
     }
 
@@ -220,24 +220,45 @@ public class Checklist implements Serializable, Mappable {
     private List<CommunicationStep> listCommunicationSteps() {
         List<CommunicationStep> communicationSteps = new ArrayList<CommunicationStep>();
         for ( Flow sharing : part.getAllSharingReceives() ) {
-            if ( !sharing.isTriggeringToTarget() && sharing.isAskedFor() ) {
+            if ( !sharing.isTriggeringToTarget() && !sharing.isToSelf() && sharing.isAskedFor() ) {
                 communicationSteps.add( new CommunicationStep( sharing, false ) );
             }
         }
         for ( Flow sharing : part.getAllSharingSends() ) {
-            if ( sharing.isNotification() ) {
-                communicationSteps.add( new CommunicationStep( sharing, false ) );
-            } else if ( sharing.isTriggeringToSource() ) {
-                communicationSteps.add( new CommunicationStep( sharing, true ) );
+            if ( !sharing.isToSelf() ) {
+                if ( sharing.isNotification() ) {
+                    communicationSteps.add( new CommunicationStep( sharing, false ) );
+                } else if ( sharing.isTriggeringToSource() ) {
+                    communicationSteps.add( new CommunicationStep( sharing, true ) );
+                }
             }
         }
         return communicationSteps;
     }
 
+    private List<SubTaskStep> listSubTaskSteps() {
+        List<SubTaskStep> subTaskSteps = new ArrayList<SubTaskStep>();
+        for ( Flow sharing : part.getAllSharingReceives() ) {
+            if ( SubTaskStep.isSubTask( sharing ) ) {
+                subTaskSteps.add( new SubTaskStep( sharing ) );
+            }
+        }
+        for ( Flow sharing : part.getAllSharingSends() ) {
+            if ( SubTaskStep.isSubTask( sharing ) ) {
+                subTaskSteps.add( new SubTaskStep( sharing ) );
+            }
+        }
+        return subTaskSteps;
+    }
+
     public Step derefStep( String stepRef ) {
         return ActionStep.isActionStepRef( stepRef )
                 ? findActionStep( stepRef )
-                : findCommunicationStep( stepRef );
+                : CommunicationStep.isCommunicationStepRef( stepRef )
+                ? findCommunicationStep( stepRef )
+                : SubTaskStep.isSubTaskStepRef( stepRef )
+                ? findSubTaskStep( stepRef )
+                : null;
     }
 
     private ActionStep findActionStep( final String stepRef ) {
@@ -264,6 +285,17 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
+    private SubTaskStep findSubTaskStep( final String stepRef ) {
+        return (SubTaskStep) CollectionUtils.find(
+                listSubTaskSteps(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (SubTaskStep) object ).getRef().equals( stepRef );
+                    }
+                }
+        );
+    }
 
     public Condition deRefCondition( String conditionRef ) {
         return EventTimingCondition.isEventTimingRef( conditionRef )
@@ -423,17 +455,19 @@ public class Checklist implements Serializable, Mappable {
             public int compare( Step s1, Step s2 ) {
                 List<Step> preS1 = listPrerequisiteStepsFor( s1 );
                 List<Step> preS2 = listPrerequisiteStepsFor( s2 );
+                if ( preS1.isEmpty() && preS2.isEmpty() )
+                    return s1.getLabel().compareTo( s2.getLabel() );
                 if ( preS1.isEmpty() && !preS2.isEmpty() )
                     return -1;
                 if ( !preS1.isEmpty() && preS2.isEmpty() )
                     return 1;
-                if ( preS1.contains( s2 ) && !preS2.contains( s1 ) )
-                    return -1;
                 if ( preS2.contains( s1 ) && !preS1.contains( s2 ) )
+                    return -1;
+                if ( preS1.contains( s2 ) && !preS2.contains( s1 ) )
                     return 1;
                 if ( preS1.size() < preS2.size() ) return -1;
                 if ( preS2.size() < preS1.size() ) return 1;
-                return s1.getLabel().compareTo( s2.getLabel() );
+                else return s1.getLabel().compareTo( s2.getLabel() );
             }
         } );
     }
@@ -528,7 +562,7 @@ public class Checklist implements Serializable, Mappable {
         map.put( "stepGuards", new MappedList<StepGuard>( getStepGuards() ) );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuardsFor( Step step, boolean positive ) {
         final String stepRef = step.getRef();
         return (List<StepGuard>) CollectionUtils.select(
@@ -537,6 +571,19 @@ public class Checklist implements Serializable, Mappable {
                     @Override
                     public boolean evaluate( Object object ) {
                         return ( (StepGuard) object ).getStepRef().equals( stepRef );
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Step> listStepsWithPrerequisite( final Step step ) {
+        return (List<Step>)CollectionUtils.select(
+                listEffectiveSteps(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return listPrerequisiteStepsFor( (Step)object ).contains( step );
                     }
                 }
         );

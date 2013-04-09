@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.procedures.AgencyData;
+import com.mindalliance.channels.api.community.AgencyData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
 import com.mindalliance.channels.core.community.CommunityService;

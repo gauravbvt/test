@@ -32,7 +32,7 @@ abstract public class ModelObjectData  implements Serializable {
     public ModelObjectData( String serverUrl, ModelObject modelObject, CommunityService communityService ) {
         this.serverUrl = serverUrl;
         assert modelObject != null;
-         this.modelObject = modelObject;
+        this.modelObject = modelObject;
         plan = communityService.getPlan();
         planCommunity = communityService.getPlanCommunity();
         documentation = new DocumentationData(  serverUrl, modelObject );

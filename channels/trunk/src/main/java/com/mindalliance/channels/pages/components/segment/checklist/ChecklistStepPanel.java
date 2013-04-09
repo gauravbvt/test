@@ -12,6 +12,7 @@ import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepGuard;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
+import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -63,7 +64,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
 
     private void init() {
         stepContainer = new WebMarkupContainer( "stepContainer" );
-        String cssClasses = index % 2 == 0  ? "data-table step even-step" : "data-table step odd-step" ;
+        String cssClasses = index % 2 == 0 ? "data-table step even-step" : "data-table step odd-step";
         if ( edited )
             cssClasses = cssClasses + " expanded-step";
         stepContainer.add( new AttributeModifier( "class", cssClasses ) );
@@ -75,7 +76,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addConstraints();
     }
 
-     private void addStepRequired() {
+    private void addStepRequired() {
         WebMarkupContainer requiredContainer = new WebMarkupContainer( "requiredContainer" );
         requiredContainer.setVisible( edited && step.isActionStep() );
         stepContainer.add( requiredContainer );
@@ -126,21 +127,30 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
             sb.append( " edited-step" );
         if ( step.isActionStep() ) {
             sb.append( " action-step" );
-        } else {
-            if ( step.isCommunicationStep() ) {
-                CommunicationStep communicationStep = (CommunicationStep) step;
-                String stepClass;
-                if ( communicationStep.isNotification()) {
-                  stepClass = communicationStep.isTerminatingNotification()
-                          ? "terminating-notification-step"
-                          :" notification-step";
-                } else {
-                   stepClass = communicationStep.isAnswer()
-                           ? " answer-step"
-                           : " request-step";
-                }
-                sb.append( stepClass );
+        } else if ( step.isCommunicationStep() ) {
+            CommunicationStep communicationStep = (CommunicationStep) step;
+            String stepClass;
+            if ( communicationStep.isNotification() ) {
+                stepClass = communicationStep.isTerminatingNotification()
+                        ? "terminating-notification-step"
+                        : " notification-step";
+            } else {
+                stepClass = communicationStep.isAnswer()
+                        ? " answer-step"
+                        : " request-step";
             }
+            sb.append( stepClass );
+        } else if ( step.isSubTaskStep() ) {
+            SubTaskStep subTaskStep = (SubTaskStep) step;
+            String stepClass = "";
+            if ( subTaskStep.isFollowUp() ) {
+                stepClass = subTaskStep.isTerminatingOnFollowUp()
+                        ? " terminating-followup-step"
+                        : " followup-step";
+            } else if ( subTaskStep.isResearch() ) {
+                stepClass = " research-step";
+            }
+            sb.append( stepClass );
         }
         return sb.toString();
     }
@@ -261,7 +271,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         ifsContainer.add( addIfContainer );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<StepGuard> getIfGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().getStepGuards(),
@@ -332,7 +342,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         unlessesContainer.add( addUnlessContainer );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<StepGuard> getUnlessGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().getStepGuards(),
@@ -415,7 +425,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                     }
                 }
         );
-        prereqStepChoice.add(  new AjaxFormComponentUpdatingBehavior( "onchange") {
+        prereqStepChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Updated, part );
@@ -426,14 +436,12 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addAfterContainer.add( prereqStepChoice );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Step> getPrerequisiteChoices() {
         List<Step> choices = getChecklist().listEffectiveSteps();
         choices.remove( step );
-        for ( StepOrder stepOrder : getChecklist().listStepOrdersFor( step ) ) {
-            Step prerequisiteStep = getChecklist().derefStep( stepOrder.getStepRef() );
-            if ( prerequisiteStep  != null ) choices.remove( prerequisiteStep );
-        }
+        choices.removeAll( getChecklist().listPrerequisiteStepsFor( step ) );
+        choices.removeAll( getChecklist().listStepsWithPrerequisite( step ) );
         Collections.sort( choices, new Comparator<Step>() {
             @Override
             public int compare( Step s1, Step s2 ) {

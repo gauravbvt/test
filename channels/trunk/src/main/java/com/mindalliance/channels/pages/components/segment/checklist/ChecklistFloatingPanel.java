@@ -3,11 +3,14 @@ package com.mindalliance.channels.pages.components.segment.checklist;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+
+import java.util.List;
 
 /**
  * Part checklist panel.
@@ -20,6 +23,7 @@ import org.apache.wicket.model.PropertyModel;
 public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
 
     private ChecklistEditorPanel checklistEditor;
+    private Label checklistTitle;
 
     public ChecklistFloatingPanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel );
@@ -43,10 +47,12 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     }
 
     private void addChecklistTitle() {
-        getContentContainer().add(
-                new Label( "checklistTitle", getPart().getChecklist().isConfirmed()
-                        ? "Confirmed checklist"
-                        : "Unconfirmed checklist" ) );
+        checklistTitle =   new Label( "checklistTitle", getPart().getChecklist().isConfirmed()
+                ? "Confirmed checklist"
+                : "Unconfirmed checklist" );
+        checklistTitle.setOutputMarkupId( true );
+        getContentContainer().addOrReplace( checklistTitle );
+
     }
 
     private void addPartTitle() {
@@ -81,5 +87,16 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     public Part getPart() {
         return (Part) getModel().getObject();
     }
+
+    @Override
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isForInstanceOf( Part.class ) && change.isUpdated() && change.isForProperty( "checklist" ) ) {
+            addChecklistTitle();
+            target.add( checklistTitle );
+        } else {
+            super.updateWith( target, change, updated );
+        }
+    }
+
 
 }

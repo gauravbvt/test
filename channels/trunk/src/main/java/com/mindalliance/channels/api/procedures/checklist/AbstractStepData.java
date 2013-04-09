@@ -12,31 +12,30 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Web Service data fro a step in a checklist.
+ * Web Service data for the collaboration act in the step of a checklist.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 4/1/13
  * Time: 9:07 PM
  */
-public abstract class StepData implements Serializable {
+public abstract class AbstractStepData implements Serializable {
 
-    private int index;
     private ChecklistData checklist;
     private List<ConditionData> ifConditions;
     private List<ConditionData> unlessConditions;
     private Step step;
     private List<Integer> prerequisites;
 
-    public StepData() {
+    public AbstractStepData() {
         // required
     }
 
-    public StepData( Step step,
-                     ChecklistData checklist,
-                     String serverUrl,
-                     CommunityService communityService,
-                     ChannelsUser user ) {
+    public AbstractStepData( Step step,
+                             ChecklistData checklist,
+                             String serverUrl,
+                             CommunityService communityService,
+                             ChannelsUser user ) {
         this.step = step;
         this.checklist = checklist;
         initData( serverUrl, communityService, user );
@@ -51,7 +50,6 @@ public abstract class StepData implements Serializable {
     }
 
     protected void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        index = getChecklist().indexOfStep( step );
         prerequisites = getChecklist().prerequisiteIndicesOfStep( step );
         initConditions( serverUrl, communityService, user );
     }
@@ -92,10 +90,6 @@ public abstract class StepData implements Serializable {
 
     public List<Integer> getPrerequisites() {
         return prerequisites;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     public Step getStep() {
@@ -166,4 +160,5 @@ public abstract class StepData implements Serializable {
     public Set<Long> allInfoFormatIds() {
         return new HashSet<Long>(  );
     }
+
 }

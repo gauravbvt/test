@@ -27,7 +27,8 @@ public class CommunityEmployment implements Serializable {
     private Agency employer;
 
     public CommunityEmployment( Employment employment,
-                                Agent agent, Agency employer,
+                                Agent agent,
+                                Agency employer,
                                 CommunityService communityService ) {
         this.employment = employment;
         this.agent = agent;

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table wicket:id="stepContainer" class="step">
+        <tr>
+            <td>
+                <span wicket:id="act">do something</span>  <!-- CSS classes: "even-step" or "odd-step" + "required-step" (or nothing) + "action-step" or "notification-step" or "request-step"   -->
+               <!-- <a wicket:id="link" href="#">
+                    <span wicket:id="taskName">I do sub-task "something"</span>
+                </a>     -->
+            </td>
+        </tr>
+        <tr wicket:id="constraintsContainer">
+            <td>
+                <table>
+                    <tr class="step-constraint" wicket:id="aftersContainer">
+                        <th align="right">After</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="afters">
+                                    <td><span wicket:id="after">other step</span> </td>
+                                </tr>
+                             </table>
+                        </td>
+                    </tr>
+                    <tr class="step-constraint" wicket:id="ifsContainer">
+                        <th align="right">If</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="ifs">
+                                    <td><span wicket:id="if">condition</span> </td>
+                                </tr>
+                             </table>
+                        </td>
+                    </tr>
+                    <tr class="step-constraint" wicket:id="unlessesContainer">
+                        <th align="right">Unless</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="unlesses">
+                                    <td><span wicket:id="unless">condition</span> </td>
+                                 </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</wicket:panel>
+</body>
+</html>

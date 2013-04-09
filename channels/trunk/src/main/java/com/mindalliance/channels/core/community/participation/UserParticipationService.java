@@ -86,4 +86,5 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
             CommunityService communityService );
 
     boolean isValid( UserParticipation userParticipation, CommunityService communityService );
-}
+
+ }

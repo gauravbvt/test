@@ -17,8 +17,13 @@ public abstract class Step implements Serializable {
 
     public abstract boolean isCommunicationStep();
 
+    public abstract boolean isSubTaskStep();
+
     public abstract String getLabel();
 
     public abstract String getPrerequisiteLabel();
 
+    public abstract boolean isTerminating();
+
+    public abstract boolean isRequired();
 }

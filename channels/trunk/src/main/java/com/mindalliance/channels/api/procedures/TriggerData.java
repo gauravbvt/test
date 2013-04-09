@@ -1,12 +1,12 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -26,21 +26,16 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:16 AM
  */
-@XmlType( propOrder = {"situation", "anytime", "onObservation", "onDiscovery", "onResearch", "onNotification",
-        "onRequest", "requestingTask", "ongoing"} )
+@XmlType( propOrder = {"situation", "onObservation", "onNotification", "onRequest", "ongoing"} )
 public class TriggerData extends AbstractProcedureElementData {
 
     private Flow notificationFromOther;
     private Flow requestFromOther;
     private EventPhase eventPhase;
-    private Flow notificationToSelf;
     private NotificationData onNotification;
     private RequestData onRequest;
-    private Flow requestToSelf;
     private boolean ongoing = false;
     private List<EventTiming> eventPhaseContext;
-    private DiscoveryData discoveryData;
-    private ResearchData researchData;
     private SituationData situationData;
     private String serverUrl;
 
@@ -104,20 +99,8 @@ public class TriggerData extends AbstractProcedureElementData {
         this.eventPhaseContext = eventPhaseContext;
     }
 
-    public void setNotificationToSelf( Flow notificationToSelf ) {
-        this.notificationToSelf = notificationToSelf;
-        ongoing = false;
-    }
-
-    public void setRequestToSelf( Flow requestToSelf ) {
-        this.requestToSelf = requestToSelf;
-        ongoing = false;
-    }
-
     // Called after nature of trigger is set.
     public void initTrigger( CommunityService communityService ) {
-        initDiscoveryData( communityService );
-        initResearchData( communityService );
         initOnNotification( communityService );
         initOnRequest( communityService );
         initSituationData( communityService );
@@ -159,30 +142,6 @@ public class TriggerData extends AbstractProcedureElementData {
             onNotification = null;
     }
 
-    private void initResearchData( CommunityService communityService ) {
-        if ( requestToSelf != null )
-            researchData = new ResearchData(
-                    serverUrl,
-                    communityService,
-                    requestToSelf,
-                    getAssignment(),
-                    getUser() );
-        else
-            researchData = null;
-
-    }
-
-    private void initDiscoveryData( CommunityService communityService ) {
-        if ( notificationToSelf != null )
-            discoveryData = new DiscoveryData(
-                    serverUrl,
-                    communityService,
-                    notificationToSelf,
-                    getUser() );
-        else
-            discoveryData = null;
-
-    }
 
     ///// END INITIALIZATION
 
@@ -191,22 +150,6 @@ public class TriggerData extends AbstractProcedureElementData {
         return ongoing;
     }
 
-    @XmlElement
-    public String getAnytime() {
-        return notificationFromOther == null && requestFromOther == null && eventPhase == null
-                ? "true"
-                : null;
-    }
-
-    @XmlElement
-    public TaskData getRequestingTask() {
-        return researchData != null ? researchData.getConsumingTask() : null;
-    }
-
-    @XmlElement
-    public DiscoveryData getOnDiscovery() {
-        return discoveryData;
-    }
 
     @XmlElement
     public ObservationData getOnObservation() {
@@ -214,11 +157,6 @@ public class TriggerData extends AbstractProcedureElementData {
             return new ObservationData( eventPhase, eventPhaseContext );
         else
             return null;
-    }
-
-    @XmlElement
-    public ResearchData getOnResearch() {
-        return researchData;
     }
 
     @XmlElement
@@ -358,15 +296,6 @@ public class TriggerData extends AbstractProcedureElementData {
         return eventPhase != null;
     }
 
-    public boolean isOnDiscovering() {
-        return notificationToSelf != null;
-    }
-
-    public boolean isOnResearching() {
-        return requestToSelf != null;
-    }
-
-
     @WebMethod( exclude = true )
     public String getLabel() {
         if ( eventPhase != null ) {
@@ -421,14 +350,6 @@ public class TriggerData extends AbstractProcedureElementData {
         return eventPhase;
     }
 
-    public Flow commitmentToSelf() {
-        return notificationToSelf;
-    }
-
-    public Flow requestToSelf() {
-        return requestToSelf;
-    }
-
     public List<EventTiming> eventPhaseContext() {
         return eventPhaseContext;
     }
@@ -440,8 +361,6 @@ public class TriggerData extends AbstractProcedureElementData {
             return ongoing == other.getOngoing()
                     && equalOrBothNull( notificationFromOther, other.notificationFromOther() )
                     && equalOrBothNull( requestFromOther, other.requestFromOther() )
-                    && equalOrBothNull( requestToSelf, other.requestToSelf() )
-                    && equalOrBothNull( notificationToSelf, other.commitmentToSelf() )
                     && equalOrBothNull( eventPhase, other.eventPhase() )
                     && equalOrBothNull( eventPhaseContext, other.eventPhaseContext() ) ;
         } else {
@@ -455,8 +374,6 @@ public class TriggerData extends AbstractProcedureElementData {
         if ( ongoing ) result = 31 * result;
         if ( notificationFromOther != null ) result = 31 * result +  notificationFromOther.hashCode();
         if ( requestFromOther != null ) result = 31 * result +  requestFromOther.hashCode();
-        if ( requestToSelf != null ) result = 31 * result +  requestToSelf.hashCode();
-        if ( notificationToSelf != null ) result = 31 * result +  notificationToSelf.hashCode();
         if ( eventPhase != null ) result = 31 * result +  eventPhase.hashCode();
          if ( eventPhaseContext != null ) {
             for ( EventTiming eventTiming : eventPhaseContext ) {
@@ -466,8 +383,14 @@ public class TriggerData extends AbstractProcedureElementData {
         return result;
     }
 
-
-    public Part discoveringPart() {
-        return discoveryData.getDiscoveringPart();
+    public Set<ContactData> allContacts() {
+        Set<ContactData> allContacts = new HashSet<ContactData>(  );
+        if ( onNotification != null ) {
+            allContacts.addAll( onNotification.getContacts() );
+        }
+        if ( onRequest != null ) {
+            allContacts.addAll( onRequest.getContacts() );
+        }
+        return allContacts;
     }
 }

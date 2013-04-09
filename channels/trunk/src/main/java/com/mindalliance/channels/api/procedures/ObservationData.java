@@ -85,8 +85,8 @@ public class ObservationData  implements Serializable {
         return phase.isPreEvent()
                 ? "The possibility of"
                 : phase.isConcurrent()
-                ? "The beginning of"
-                : "The ending of event";
+                ? "The onset of"
+                : "The end of event";
     }
 
     public String getScenarioLabel() {

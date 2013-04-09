@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
-import com.mindalliance.channels.api.procedures.ProcedureData;
+import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,24 +12,24 @@ import org.apache.wicket.markup.html.basic.Label;
  * Date: 6/25/12
  * Time: 1:22 PM
  */
-public class ProcedureDataLinkPanel extends AbstractDataPanel {
-    private ProcedureData procedureData;
+public class ChecklistDataLinkPanel extends AbstractDataPanel {
+    private ChecklistData checklistData;
 
-    public ProcedureDataLinkPanel( String id, ProcedureData procedureData, ProtocolsFinder finder ) {
+    public ChecklistDataLinkPanel( String id, ChecklistData checklistData, ProtocolsFinder finder ) {
         super( id, finder );
-        this.procedureData = procedureData;
+        this.checklistData = checklistData;
         init( finder );
     }
 
     private void init( ProtocolsFinder finder ) {
         WebMarkupContainer link = new WebMarkupContainer( "link" );
-        link.add(  new AttributeModifier( "href", "#" + procedureData.getAnchor() ) );
+        link.add(  new AttributeModifier( "href", "#" + checklistData.getAnchor() ) );
         add( link );
-        link.add( new Label( "taskName", procedureData.getTaskLabel() ) );
+        link.add( new Label( "taskName", checklistData.getTaskLabel() ) );
         WebMarkupContainer responsibility = new WebMarkupContainer( "responsibility" );
         responsibility.setVisible( finder.isMultipleParticipation() );
         link.add(  responsibility );
-        responsibility.add( new Label( "title", procedureData.getTitleOrRole() )  );
-        responsibility.add( new Label( "org", procedureData.getOrganizationLabel() )  );
+        responsibility.add( new Label( "title", checklistData.getTitleOrRole() ) );
+        responsibility.add( new Label( "org", checklistData.getOrganizationLabel() )  );
     }
 }

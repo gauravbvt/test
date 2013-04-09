@@ -118,7 +118,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
             CommunityEmployment employment,
             CommunityCommitment commitment,
             CommunityService communityService ) {
-        return ContactData.findContactsFromEmployment(
+        return ContactData.findContactsFromEmploymentAndCommitment(
                 serverUrl,
                 employment,
                 commitment,

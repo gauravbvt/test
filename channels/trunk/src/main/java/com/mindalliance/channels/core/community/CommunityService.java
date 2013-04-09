@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
@@ -12,7 +11,6 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -62,23 +60,6 @@ public interface CommunityService {
 
     boolean isCustodianOf( ChannelsUser user, Organization placeholder );
 
-    /**
-     * Find all users that participate a a given actor.
-     *
-     * @param actor an actor
-     * @return a list of users
-     */
-    List<ChannelsUser> findUsersParticipatingAs( Actor actor );   // todo --obsolete
-
-    /**
-     * Whether participation as actor possible given current participation.
-     * @param actor an actor
-     * @param activeParticipations  a list of active participations
-     * @return  a boolean -- not cached
-     */
-    Boolean meetsPreEmploymentConstraint( Actor actor, // todo -- obsolete
-                                          List<UserParticipation> activeParticipations );
-
     CommunityCommitments getAllCommitments( Boolean includeToSelf );
 
     CommunityCommitments findAllCommitments( Flow flow, Boolean includeToSelf );
@@ -102,6 +83,8 @@ public interface CommunityService {
     ParticipationAnalyst getParticipationAnalyst();
 
     Boolean isCommunityPlanner( ChannelsUser user );
+
+    List<ChannelsUser> getCommunityPlanners( );
 
     <T extends ModelObject> List<T> list( Class<T> clazz );
 

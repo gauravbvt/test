@@ -2,11 +2,11 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.participation.CommunityPlanner;
 import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
 import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
@@ -39,11 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Community service implementation.
@@ -241,6 +238,15 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
+    public List<ChannelsUser> getCommunityPlanners() {
+        List<ChannelsUser> users = new ArrayList<ChannelsUser>(  );
+        for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( this ) ) {
+            users.add( new ChannelsUser( communityPlanner.getUserInfo() ) );
+        }
+        return users;
+    }
+
+    @Override
     public <T extends ModelObject> List<T> list( Class<T> clazz ) {
         return getDao().list( clazz );
     }
@@ -329,40 +335,7 @@ public class CommunityServiceImpl implements CommunityService {
         );
     }
 
-    @Override
-    public List<ChannelsUser> findUsersParticipatingAs( Actor actor ) {
-        Set<ChannelsUser> users = new HashSet<ChannelsUser>();
-        List<UserParticipation> participations = userParticipationService.getParticipationsAsAgent( new Agent( actor ), this );
-        ChannelsUserDao userDao = planService.getUserDao();
-        for ( UserParticipation participation : participations ) {
-            if ( !actor.isSupervisedParticipation()
-                    || userParticipationConfirmationService.isConfirmedByAllSupervisors( participation, this ) ) {
-                ChannelsUser user = userDao.getUserNamed( participation.getParticipant().getUsername() );
-                if ( user != null ) {
-                    users.add( user );
-                }
-            }
-        }
-        return new ArrayList<ChannelsUser>( users );
-    }
-
-    @Override
-    public Boolean meetsPreEmploymentConstraint( Actor actor,
-                                                 List<UserParticipation> activeParticipations ) {
-        if ( !actor.isParticipationRestrictedToEmployed() ) return true;
-        List<Organization> actorEmployers = planService.findDirectAndIndirectEmployers(
-                planService.findAllEmploymentsForActor( actor ) );
-        List<Organization> myPlannedEmployers = new ArrayList<Organization>();
-        for ( UserParticipation participation : activeParticipations ) {
-            Actor participationActor = participation.getAgent( this ).getActor( );
-            if ( participationActor != null && !participationActor.isOpenParticipation() )
-                myPlannedEmployers.addAll( planService.findDirectAndIndirectEmployers(
-                        planService.findAllEmploymentsForActor( participationActor ) ) );
-        }
-        return !Collections.disjoint( myPlannedEmployers, actorEmployers );
-    }
-
-    ///////////////////////
+     ///////////////////////
 
     @Override
     public CommunityCommitments getAllCommitments( Boolean includeToSelf ) {

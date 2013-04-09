@@ -1,7 +1,6 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.ActorData;
-import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.entities.EventData;
 import com.mindalliance.channels.api.entities.InfoFormatData;
 import com.mindalliance.channels.api.entities.InfoProductData;
@@ -51,7 +50,6 @@ public class EnvironmentData implements Serializable {
      */
     private static final Logger LOG = LoggerFactory.getLogger( EnvironmentData.class );
 
-    private ProceduresData procedures;
     private List<EventData> events;
     private List<PhaseData> phases;
     private List<OrganizationData> orgs;
@@ -65,11 +63,6 @@ public class EnvironmentData implements Serializable {
 
     public EnvironmentData() {
         // required
-    }
-
-    public EnvironmentData( String serverUrl, ProceduresData procedures, CommunityService communityService ) {
-        this.procedures = procedures;
-        initData( serverUrl, communityService );
     }
 
     public EnvironmentData( String serverUrl, ProtocolsData protocols, CommunityService communityService ) {
@@ -287,7 +280,7 @@ public class EnvironmentData implements Serializable {
         return orgs;
     }
 
-    @XmlElement(name = "agent")
+    @XmlElement(name = "actor")
     public List<ActorData> getActors() {
         return actors;
     }
@@ -320,120 +313,54 @@ public class EnvironmentData implements Serializable {
 
     private Set<Long> allEventIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null )  // todo - obsolete
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allEventIds() );
-            }
-        if ( protocols != null )
             allIds.addAll( protocols.allEventsIds() );
         return allIds;
     }
 
     private Set<Long> allPhaseIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null )  // todo - obsolete
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allPhaseIds() );
-            }
-        if ( protocols != null )
             allIds.addAll( protocols.allPhaseIds() );
         return allIds;
     }
 
     private Set<Long> allOrganizationIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null ) { // todo - obsolete
-            for ( EmploymentData employment : procedures.getEmployments() ) {
-                Long orgId = employment.getOrganizationId();
-                if ( orgId != null )
-                    allIds.add( orgId );
-            }
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allOrganizationIds() );
-            }
-        }
-        if ( protocols != null )
             allIds.addAll( protocols.allOrganizationIds() );
         return allIds;
     }
 
     private Set<Long> allActorIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null ) {  // todo - obsolete
-            for ( EmploymentData employment : procedures.getEmployments() ) {
-                allIds.addAll( employment.allActorIds() );
-                if ( employment.getSupervisorId() != null )
-                    allIds.add( employment.getSupervisorId() );
-            }
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allActorIds() );
-            }
-        }
-        if ( protocols != null )
             allIds.addAll( protocols.allActorIds() );
         return allIds;
     }
 
     private Set<Long> allRoleIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null ) { // todo - obsolete
-            for ( EmploymentData employment : procedures.getEmployments() ) {
-                allIds.add( employment.getRoleId() );
-            }
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allRoleIds() );
-            }
-        }
-        if ( protocols != null )
             allIds.addAll( protocols.allRoleIds() );
         return allIds;
     }
 
     private Set<Long> allPlaceIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null ) { // todo - obsolete
-            for ( EmploymentData employment : procedures.getEmployments() ) {
-                if ( employment.getJurisdictionId() != null )
-                    allIds.add( employment.getJurisdictionId() );
-            }
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allPlaceIds() );
-            }
-        }
-        if ( protocols != null )
             allIds.addAll( protocols.allPlaceIds() );
         return allIds;
     }
 
     private Set<Long> allMediumIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null )  // todo - obsolete
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allMediumIds() );
-            }
-        if ( protocols != null )
             allIds.addAll( protocols.allMediumIds() );
         return allIds;
     }
 
     private Set<Long> allInfoProductIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null )  // todo - obsolete
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allInfoProductIds() );
-            }
-        if ( protocols != null )
             allIds.addAll( protocols.allInfoProductIds() );
         return allIds;
     }
 
     private Set<Long> allInfoFormatIds() {
         Set<Long> allIds = new HashSet<Long>();
-        if ( procedures != null )  // todo - obsolete
-            for ( ProcedureData procedure : procedures.getProcedures() ) {
-                allIds.addAll( procedure.allInfoFormatIds() );
-            }
-        if ( protocols != null )
             allIds.addAll( protocols.allInfoFormatIds() );
         return allIds;
     }

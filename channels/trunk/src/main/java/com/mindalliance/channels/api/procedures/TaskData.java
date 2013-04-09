@@ -18,7 +18,9 @@ import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Web Service data element for a task assignment according to a plan.
@@ -73,7 +75,7 @@ public class TaskData extends AbstractProcedureElementData {
         teamContacts = new ArrayList<ContactData>();
         if ( getAssignment() != null )
         for ( CommunityEmployment employment : getTeamEmployments() ) {
-            teamContacts.addAll( ContactData.findContactsFromEmployment(
+            teamContacts.addAll( ContactData.findContactsFromEmploymentAndCommitment(
                     serverUrl,
                     employment,
                     null,
@@ -230,5 +232,12 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
 
+    public Set<Long> allPlaceIds() {
+        Set<Long> ids = new HashSet<Long>(  );
+        if ( getLocation() != null ) {
+            ids.add( getLocation().getId() );
+        }
+        return ids;
+    }
 }
 

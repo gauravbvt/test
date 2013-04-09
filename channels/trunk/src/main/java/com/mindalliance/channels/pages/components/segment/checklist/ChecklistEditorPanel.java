@@ -37,6 +37,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
     private String editedStepRef;
     private TextField<String> actionStepText;
     private WebMarkupContainer stepsContainer;
+    private AjaxCheckBox confirmedCheckBox;
 
     public ChecklistEditorPanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel );
@@ -123,17 +124,19 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
     }
 
     private void addConfirmation() {
-        AjaxCheckBox confirmedCheckBox = new AjaxCheckBox(
+        confirmedCheckBox = new AjaxCheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( this, "confirmed" )
         ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Updated, getPart() );
+                change.setProperty( "checklist" );
                 update( target, change );
             }
         };
-        add( confirmedCheckBox );
+        confirmedCheckBox.setOutputMarkupId( true );
+        addOrReplace( confirmedCheckBox );
     }
 
     public boolean isConfirmed() {
@@ -159,9 +162,8 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
                 editedStepRef = (String) change.getQualifier( "stepRef" );
             else if ( change.isCollapsed() || change.hasQualifier( "deleted-step" ) )
                 editedStepRef = null;
-        } else {
-            super.changed( change );
         }
+        super.changed( change );
     }
 
     @Override
@@ -169,8 +171,9 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
         if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "checklist" ) ) {
             addStepPanels();
             target.add( stepsContainer );
-        } else {
-            super.updateWith( target, change, updated );
+            addConfirmation();
+            target.add( confirmedCheckBox );
         }
+        super.updateWith( target, change, updated );
     }
 }

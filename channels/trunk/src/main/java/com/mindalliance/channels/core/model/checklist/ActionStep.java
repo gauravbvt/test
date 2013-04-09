@@ -57,6 +57,11 @@ public class ActionStep extends Step implements Mappable {
     }
 
     @Override
+    public boolean isSubTaskStep() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return ( isRequired() ? "(Required) " : "" ) + action;
     }
@@ -64,6 +69,11 @@ public class ActionStep extends Step implements Mappable {
     @Override
     public String getPrerequisiteLabel() {
         return "Completion of " + action;
+    }
+
+    @Override
+    public boolean isTerminating() {
+        return false;
     }
 
     public static boolean isActionStepRef( String stepRef ) {
@@ -89,6 +99,11 @@ public class ActionStep extends Step implements Mappable {
         return object instanceof ActionStep
                 && required == ( (ActionStep) object ).isRequired()
                 && action.equals( ( (ActionStep) object ).getAction() );
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ": " + getLabel();
     }
 
 }

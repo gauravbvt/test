@@ -4,7 +4,7 @@
       xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
       lang="en">
 <head>
-    <title>Channels - Protocols Report</title>
+    <title>Channels - Checklists Report</title>
     <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
     <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
 </head>
@@ -13,9 +13,7 @@
     <a wicket:id="anchor" name="tbd"></a>
 
     <h4 class="taskName">
-        <span wicket:id="taskName">I do task X</span> <!-- <br/>as
-        <span wicket:id="title">title or role</span><br/>at
-        <span wicket:id="org">org</span> -->
+        <span wicket:id="taskName">I do task X</span>
     </h4>
     <div class="failureImpact-small" wicket:id="failureImpact">Failure to carry out this task could have
         <span wicket:id="severity">extreme</span>
@@ -59,30 +57,10 @@
 
     </div>
 
-    <div wicket:id="receives">
-        <div wicket:id="inNotifications"> <!--repeated -->
-            <div wicket:id="inNotification"> [commitment panel]</div>
-        </div>
-        <div wicket:id="outRequests"> <!--repeated -->
-            <div wicket:id="outRequest"> [commitment panel]</div>
-        </div>
-    </div>
-
-    <div wicket:id="sends">
-        <div wicket:id="outNotifications"> <!--repeated -->
-            <div wicket:id="outNotification"> [commitment panel]</div>
-        </div>
-        <div wicket:id="inRequests"> <!--repeated -->
-            <div wicket:id="inRequest"> [commitment panel]</div>
-        </div>
-    </div>
-
-    <div wicket:id="selfTriggeredTasks">
-        <div wicket:id="researchTasks"> <!-- repeated -->
-            <div wicket:id="researchTask">[sub procedure data panel]</div>
-        </div>
-        <div wicket:id="followUpTasks"> <!-- repeated -->
-            <div wicket:id="followUpTask">[sub procedure data panel]</div>
+    <div class="checklist" wicket:id="checklist">
+        <label>My checklist</label>
+        <div wicket:id="steps"> <!--repeated -->
+            <span wicket:id="step">[checklist step data panel]</span>
         </div>
     </div>
 

@@ -31,7 +31,7 @@ import com.mindalliance.channels.pages.png.UserPhotoPng;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
-import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
+import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -231,7 +231,7 @@ public class Channels extends WebApplication
 
         mountPage( "allProtocols", AllProtocolsPage.class );
         mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
-        mountPage( "protocols", ProtocolsPage.class );
+        mountPage( "protocols", ChecklistsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );
         mountPage( "plan", PlanPage.class );
         mountPage( "admin", AdminPage.class );

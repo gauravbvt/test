@@ -2,8 +2,8 @@ package com.mindalliance.channels.api.directory;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
-import com.mindalliance.channels.api.procedures.ProcedureData;
-import com.mindalliance.channels.api.procedures.ProceduresData;
+import com.mindalliance.channels.api.procedures.ProtocolsData;
+import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,15 +26,16 @@ import java.util.List;
 @XmlType( propOrder = {"date", "planIdentifier", "employments", "dateVersioned", "contacts"} )
 public class DirectoryData implements Serializable {
 
-    private ProceduresData proceduresData;
+    private ProtocolsData protocolsData;
+
     private List<ContactData> directoryContacts;
 
     public DirectoryData() {
         // required
     }
 
-    public DirectoryData( ProceduresData proceduresData ) {
-        this.proceduresData = proceduresData;
+    public DirectoryData( ProtocolsData protocolsData ) {
+        this.protocolsData = protocolsData;
         initData( );
     }
 
@@ -44,7 +45,7 @@ public class DirectoryData implements Serializable {
 
     private void initDirectoryContacts(  ) {
         directoryContacts = new ArrayList<ContactData>();
-        for ( ProcedureData procedureData : proceduresData.getProcedures() ) {
+        for ( ChecklistData procedureData : protocolsData.getChecklists() ) {
             directoryContacts.addAll( procedureData.allContacts() );
         }
 
@@ -57,18 +58,18 @@ public class DirectoryData implements Serializable {
 
     @XmlElement( name = "plan" )
     public PlanIdentifierData getPlanIdentifier() {
-        return proceduresData.getPlanIdentifier();
+        return protocolsData.getPlanIdentifier();
     }
 
     @XmlElement
     public String getDateVersioned() {
-        return proceduresData.getDateVersioned();
+        return protocolsData.getDateVersioned();
     }
 
     @XmlElement( name = "employment" )
     // Get given actor's or user's employments
     public List<EmploymentData> getEmployments() {
-        return proceduresData.getEmployments();
+        return protocolsData.getEmployments();
     }
 
     @XmlElement( name = "contact" )

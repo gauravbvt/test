@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -337,6 +338,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
         communityPlannerService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
+        planCommunity.setDateCreated( new Date() );
         return planCommunity;
     }
 

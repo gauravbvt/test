@@ -32,9 +32,11 @@ import java.util.Set;
  * Date: 3/20/12
  * Time: 9:13 PM
  */
-@XmlType( propOrder = {"id", "ref", "normalizedContactName", "picture", "employment", "workChannels",
-        "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"} )
+@XmlType(propOrder = {"id", "ref", "normalizedContactName", "picture", "employment", "workChannels",
+        "personalChannels", "supervisorContacts", "organizationChannels", "bypassToAll", "bypassContacts"})
 public class ContactData implements Serializable {
+
+    private static final String USER_PHOTO_PATH = "users/photos/";
 
     private CommunityEmployment employment;
     private CommunityCommitment commitment; // can be null if not in the context of a notification or request
@@ -80,14 +82,60 @@ public class ContactData implements Serializable {
     }
 
     /**
-     * Find a user's contacts from san employment.
+     * Find a user's contacts from an employment.
      *
-     * @param employment               an employment
-     * @param communityService             a community service
-     * @param userInfo                 a user info
+     * @param employment       an employment
+     * @param communityService a community service
      * @return a list of contact data
      */
     static public List<ContactData> findContactsFromEmployment(
+            String serverUrl,
+            CommunityEmployment employment,
+            CommunityService communityService ) {
+        List<ContactData> contactList = new ArrayList<ContactData>();
+        Agent agent = employment.getAgent();
+        if ( agent.isAnonymousParticipation() ) {
+            contactList.add( new ContactData(
+                    serverUrl,
+                    employment,
+                    null,
+                    true,
+                    communityService ) );
+        } else {
+            List<UserParticipation> participations = getParticipations(
+                    agent,
+                    communityService );
+            if ( participations.isEmpty() || !agent.isSingularParticipation() ) {
+                contactList.add( new ContactData(
+                        serverUrl,
+                        employment,
+                        null,
+                        true,
+                        communityService ) );
+            }
+            for ( UserParticipation otherParticipation : participations ) {
+                contactList.add( new ContactData(
+                        serverUrl,
+                        employment,
+                        otherParticipation.getParticipant(),
+                        true,
+                        communityService ) );
+            }
+        }
+        return contactList;
+    }
+
+
+    /**
+     * Find a user's contacts from an employment and commitment.
+     *
+     * @param employment       an employment
+     * @param commitment       a community commitment
+     * @param communityService a community service
+     * @param userInfo         a user info
+     * @return a list of contact data
+     */
+    static public List<ContactData> findContactsFromEmploymentAndCommitment(
             String serverUrl,
             CommunityEmployment employment,
             CommunityCommitment commitment,
@@ -141,19 +189,20 @@ public class ContactData implements Serializable {
         initPictureUrl( serverUrl );
     }
 
-     private void initPictureUrl( String serverUrl ) {
+    private void initPictureUrl( String serverUrl ) {
         String url = userInfo == null
-                        ? getAgent().getActor().getImageUrl()
-                        : userInfo.getPhoto();
+                ? getAgent().getActor().getImageUrl()
+                : userInfo.getPhoto();
         if ( url != null ) {
             String prefix = serverUrl.endsWith( "/" ) ? serverUrl : ( serverUrl + "/" );
+            prefix += USER_PHOTO_PATH;
             pictureUrl = StringEscapeUtils.escapeXml( url.toLowerCase().startsWith( "http" )
                     ? url
                     : prefix + url );
         }
     }
 
-    private void initPersonalChannels( CommunityService communityService  ) {
+    private void initPersonalChannels( CommunityService communityService ) {
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
             for ( Channel channel : communityService.getPlanService()
@@ -238,7 +287,7 @@ public class ContactData implements Serializable {
             Set<ContactData> bypassContactSet = new HashSet<ContactData>();
             for ( CommunityEmployment bypassEmployment : findBypassContactEmployments( communityService ) ) {
                 bypassEmploymentSet.add( bypassEmployment );
-                bypassContactSet.addAll( findContactsFromEmployment(
+                bypassContactSet.addAll( findContactsFromEmploymentAndCommitment(
                         serverUrl,
                         bypassEmployment,
                         null,   // todo -- bypassing is not transitive, right?
@@ -274,6 +323,15 @@ public class ContactData implements Serializable {
         return new ArrayList<CommunityEmployment>( bypassEmployments );
     }
 
+    // Find list of participation as agent.
+    static private List<UserParticipation> getParticipations(
+            Agent agent,
+            CommunityService communityService ) {
+        UserParticipationService userParticipationService = communityService.getUserParticipationService();
+        return userParticipationService.getParticipationsAsAgent(
+                agent,
+                communityService );
+     }
 
     // Find list of participation as agent other than by the user.
     static private List<UserParticipation> getOtherParticipations(
@@ -310,7 +368,7 @@ public class ContactData implements Serializable {
         return employment;
     }
 
-    @XmlElement( name = "name" )
+    @XmlElement(name = "name")
     public String getNormalizedContactName() {
         if ( userInfo == null )
             return getAgent().getName();
@@ -328,28 +386,28 @@ public class ContactData implements Serializable {
         return commitment == null ? null : anchor();
     }
 
-    @XmlElement( name = "identity" )
+    @XmlElement(name = "identity")
     public EmploymentData getEmployment() {
-       return new EmploymentData( contactedEmployment() );
+        return new EmploymentData( contactedEmployment() );
     }
 
-    @XmlElement( name = "workChannel" )
+    @XmlElement(name = "workChannel")
     public List<ChannelData> getWorkChannels() {
         return workChannels;
     }
 
-    @XmlElement( name = "supervisor" )
+    @XmlElement(name = "supervisor")
     public List<ContactData> getSupervisorContacts() {
         return supervisorContacts;
     }
 
 
-    @XmlElement( name = "organizationChannel" )
+    @XmlElement(name = "organizationChannel")
     public List<ChannelData> getOrganizationChannels() {
         return organizationChannels;
     }
 
-    @XmlElement( name = "personalChannel" )
+    @XmlElement(name = "personalChannel")
     public List<ChannelData> getPersonalChannels() {
         return personalChannels;
 
@@ -361,7 +419,7 @@ public class ContactData implements Serializable {
     }
 
 
-    @XmlElement( name = "bypassContact" )
+    @XmlElement(name = "bypassContact")
     public List<ContactData> getBypassContacts() {
         return bypassContacts;
     }

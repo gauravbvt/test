@@ -4,7 +4,6 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Checklist;
-import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
@@ -38,7 +37,7 @@ public class ChecklistTerminatingStepNotTerminating extends AbstractIssueDetecto
         List<Issue> issues = new ArrayList<Issue>();
         if ( !checklist.isEmpty() ) {
             for ( Step step : checklist.listEffectiveSteps() ) {
-                if ( step.isCommunicationStep() && ( (CommunicationStep) step ).isTerminatingNotification() ) {
+                if ( step.isTerminating() ) {
                     for ( Step otherStep : checklist.listEffectiveSteps() ) {
                         if ( !otherStep.equals( step ) ) {
                             List prerequisites = checklist.listPrerequisiteStepsFor( otherStep );

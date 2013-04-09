@@ -261,13 +261,10 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     private Organization findPlanOrganization( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
             return getFixedOrganization();
+        } else if ( isParticipatingAsPlaceholder() ) {
+            return getPlaceholder( communityService );
         } else {
-            RegisteredOrganization registered = getEffectiveRegistereOrganization();
-            if ( registered != null ) {
-                return registered.getFixedOrganization( communityService );
-            } else {
-                return null;
-            }
+            return null;
         }
     }
 
@@ -470,9 +467,9 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        RegisteredOrganization registration = ((Agency) object).getRegistration();
+                        RegisteredOrganization registration = ( (Agency) object ).getRegistration();
                         return registration != null
-                            && organizationParticipationService.isAgencyRegisteredAs( registration, placeholder, communityService );
+                                && organizationParticipationService.isAgencyRegisteredAs( registration, placeholder, communityService );
                     }
                 }
         );

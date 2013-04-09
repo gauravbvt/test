@@ -47,7 +47,7 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
 
     @Override
     public String getPageName() {
-        return "All Collaboration Protocols";
+        return "All Collaboration Checklists";
     }
 
     @Override
@@ -75,12 +75,12 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                                 String participatingUsername = p.getParticipant().getUsername();
                                 ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
                                 item.add(
-                                        new BookmarkablePageLink<ProtocolsPage>(
-                                                "participant", ProtocolsPage.class, makeUserParameters( participatingUsername ) )
+                                        new BookmarkablePageLink<ChecklistsPage>(
+                                                "participant", ChecklistsPage.class, makeUserParameters( participatingUsername ) )
                                                 .add( new Label( "participantName", participatingUser.getFullName() )
                                                         .setRenderBodyOnly( true ) ),
-                                        new BookmarkablePageLink<ProtocolsPage>(
-                                                "participation", ProtocolsPage.class, makeAgentParameters( participatingUsername, agent ) )
+                                        new BookmarkablePageLink<ChecklistsPage>(
+                                                "participation", ChecklistsPage.class, makeAgentParameters( participatingUsername, agent ) )
                                                 .add( new Label( "participationName", agent.getName() )
                                                         .setRenderBodyOnly( true ) )
                                 );
@@ -99,15 +99,15 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                                     protected void populateItem( ListItem<Agent> item ) {
                                         final Agent agent = item.getModelObject();
                                         PageParameters parameters =
-                                                ProtocolsPage.createParameters(
+                                                ChecklistsPage.createParameters(
                                                         agent,
                                                         getPlanCommunityUri(),
                                                         getPlan().getUri(),
                                                         getPlanVersion() );
 
                                         item.add(
-                                                new BookmarkablePageLink<ProtocolsPage>(
-                                                        "agent", ProtocolsPage.class, parameters )
+                                                new BookmarkablePageLink<ChecklistsPage>(
+                                                        "agent", ChecklistsPage.class, parameters )
                                                         .add( new Label( "agentName", agent.getName() )
                                                                 .setRenderBodyOnly( true ) ),
 

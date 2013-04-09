@@ -3841,8 +3841,22 @@ ul.attach li.controls {
     padding-left: 20px;
 }
 
+.checklist .step .research-step {
+    background: transparent url('../images/step_research.png') no-repeat 0 -2px;
+    padding-left: 20px;
+}
+
+.checklist .step .followup-step {
+    background: transparent url('../images/step_followup.png') no-repeat 0 -2px;
+    padding-left: 20px;
+}
+
+.checklist .step .terminating-followup-step {
+    background: transparent url('../images/step_terminating_followup.png') no-repeat 0 -2px;
+    padding-left: 20px;
+}
+
 .checklist .step .edited-step {
-    background: url("../images/step_notification.png") no-repeat scroll 10px 12px transparent;
     display: block;
     font-weight: bold;
     padding: 10px 10px 10px 40px;
@@ -3867,4 +3881,13 @@ ul.attach li.controls {
     float:right;
     margin-right: 5px;
     cursor: pointer;
+}
+
+.checklist div.new-step {
+    margin: 20px 0px 0px 0px;
+}
+
+.checklist div.new-step img {
+    vertical-align: middle;
+    margin-left: 2px;
 }

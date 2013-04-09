@@ -84,14 +84,14 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agency> findAgenciesParticipatingAs( final Organization placeholder, final CommunityService communityService ) {
-        return (List<Agency>)CollectionUtils.select(
+        return (List<Agency>) CollectionUtils.select(
                 getAllKnownAgencies( communityService ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Organization org = ((Agency)object).getPlaceholder( communityService );
+                        Organization org = ( (Agency) object ).getPlaceholder( communityService );
                         return org != null && org.equals( placeholder );
                     }
                 }
@@ -153,19 +153,19 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Override
     public Agent findAgentNamed( final String name, CommunityService communityService ) {
-        return (Agent)CollectionUtils.find(
+        return (Agent) CollectionUtils.find(
                 getAllKnownAgents( communityService ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Agent)object).getName().equals( name );
+                        return ( (Agent) object ).getName().equals( name );
                     }
                 }
         );
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agent> findSelfAssignableOpenAgents( final CommunityService communityService, final ChannelsUser user ) {
         PlanService planService = communityService.getPlanService();
         List<Agent> agents = new ArrayList<Agent>();
@@ -320,6 +320,33 @@ public class ParticipationManagerImpl implements ParticipationManager {
         return employments;
     }
 
+    @Override
+    public List<CommunityEmployment> findAllEmploymentsBy( Agency agency, CommunityService communityService ) {
+        List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
+        OrganizationParticipation organizationParticipation = agency.getOrganizationParticipation();
+        Organization fixedOrganization = agency.getFixedOrganization();
+        if ( organizationParticipation != null || fixedOrganization != null ) {
+            for ( Job job : agency.getAllJobs( communityService ) ) {
+                Agent agent = fixedOrganization != null
+                        ? new Agent( job.getActor() )
+                        : new Agent( job.getActor(), organizationParticipation, communityService );
+                Organization organization =
+                        fixedOrganization != null
+                                ? fixedOrganization
+                                : organizationParticipation.getPlaceholderOrganization( communityService );
+                Employment employment = new Employment( organization, job );
+                CommunityEmployment communityEmployment = new CommunityEmployment(
+                        employment,
+                        agent,
+                        agency,
+                        communityService
+                );
+                employments.add( communityEmployment );
+            }
+        }
+        return employments;
+    }
+
 
     private boolean alreadyParticipatingAs( final Agent agent,
                                             List<UserParticipation> currentParticipations ) {
@@ -412,7 +439,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agent> findAllUnassignedAgents( final CommunityService communityService ) {
         return (List<Agent>) CollectionUtils.select(
                 getAllKnownAgents( communityService ),
@@ -434,7 +461,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Organization> findAllPlaceholders( CommunityService communityService ) {
         return (List<Organization>) CollectionUtils.select(
                 communityService.getPlanService().listActualEntities( Organization.class, true ),
@@ -447,7 +474,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Organization> findAllUnassignedPlaceholders( final CommunityService communityService ) {
         return (List<Organization>) CollectionUtils.select(
                 findAllPlaceholders( communityService ),
@@ -488,7 +515,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
             Organization org = communityService.getPlanService().find( Organization.class, id ); // todo - COMMUNITY - id could have shifted since recorded
             agency = new Agency( org );
         } else {
-            OrganizationParticipation orgParticipation = organizationParticipationService.load( id - ( Long.MAX_VALUE / 2) );
+            OrganizationParticipation orgParticipation = organizationParticipationService.load( id - ( Long.MAX_VALUE / 2 ) );
             if ( orgParticipation != null ) {
                 agency = new Agency( orgParticipation, communityService );
             }

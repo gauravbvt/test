@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Plan requirements management panel.
+ * Collaboration requirements management panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

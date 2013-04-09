@@ -43,9 +43,9 @@ public class OrganizationParticipationServiceImpl
     @Transactional( readOnly = true )
     public List<Agency> listParticipatingAgencies( CommunityService communityService ) {
         Set<Agency> agencies = new HashSet<Agency>();
-        for ( OrganizationParticipation registration : getAllOrganizationParticipations( communityService ) ) {
-            if ( isValid( registration, communityService ) ) {
-                Agency agency = new Agency( registration, communityService );
+        for ( OrganizationParticipation orgParticipation : getAllOrganizationParticipations( communityService ) ) {
+            if ( isValid( orgParticipation, communityService ) ) {
+                Agency agency = new Agency( orgParticipation, communityService );
                 agencies.add( agency );
             }
         }

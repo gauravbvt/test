@@ -84,7 +84,7 @@ public class CommunityAssignment implements Serializable {
     }
 
     public Agent getSupervisor() {
-        return employment.getAgent();
+        return employment.getSupervisor();
     }
 
     public Role getRole() {

@@ -41,7 +41,7 @@ import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
-import com.mindalliance.channels.pages.reports.protocols.ProtocolsPage;
+import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -415,23 +415,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                     new PageParameters(),
                     null,
                     planCommunity );
-/*
-            guidelinesLink = newTargetedLink(
-                    id,
-                    "",
-                    AllProtocolsPage.class,
-                    AbstractParticipantPage.createParameters(
-                            new ResourceSpec(),
-                            planCommunity,
-                            getPlan().getVersion() ), // version needed?
-                    null,
-                    planCommunity );
-*/
+
         } else {
             Actor actor = userParticipations.get( 0 ).getAgent( getCommunityService() ).getActor(); // todo - COMMUNITY - agents!
             guidelinesLink = newTargetedLink( id,
                     "",
-                    ProtocolsPage.class,
+                    ChecklistsPage.class,
                     AbstractParticipantPage.createParameters(
                             actor,
                             planCommunity ),

@@ -29,7 +29,7 @@ public class ResearchData extends AbstractProcedureElementData {
     private DocumentationData documentation;
 
     public ResearchData() {
-        super();
+        // required
     }
 
     public ResearchData(

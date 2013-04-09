@@ -45,6 +45,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     private String communityCalendarHost = "";
     private String communityCalendarPrivateTicket = "";
     private boolean development;
+    private Date dateCreated;
 
     public PlanCommunity() {
 
@@ -62,6 +63,14 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
     public void setId( long id ) {
         this.id = id;
+    }
+
+    public void setDateCreated( Date dateCreated ) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated == null ? new Date() : dateCreated;
     }
 
     public void setUri( String uri ) {
@@ -290,4 +299,5 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         hash = hash + 31 * Long.valueOf( getPlanVersion() ).hashCode();
         return hash;
     }
+
 }

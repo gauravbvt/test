@@ -34,7 +34,7 @@ public class CommunicationStep extends Step {
 
     @Override
     public String getRef() {
-        return "flow|" + sharing.getId();
+        return REF_PREFIX + sharing.getId();
     }
 
     @Override
@@ -48,13 +48,28 @@ public class CommunicationStep extends Step {
     }
 
     @Override
+    public boolean isSubTaskStep() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
-        return ( isNotification() || isAnswer() ? "(Required) " : "" ) + getSharing().getStepTitle( false, answer );
+        return ( isRequired() ? "(Required) " : "" ) + getSharing().getStepTitle( false, answer );
     }
 
     @Override
     public String getPrerequisiteLabel() {
         return getSharing().getStepTitle( true, isAnswer() );
+    }
+
+    @Override
+    public boolean isTerminating() {
+        return isNotification() && getSharing().isTerminatingToSource();
+    }
+
+    @Override
+    public boolean isRequired() {
+        return isNotification() || isAnswer();
     }
 
     public static boolean isCommunicationStepRef( String stepRef ) {
@@ -69,7 +84,7 @@ public class CommunicationStep extends Step {
     @Override
     public boolean equals( Object object ) {
         return object instanceof CommunicationStep
-                && sharing.equals( ((CommunicationStep)object).getSharing() );
+                && sharing.equals( ( (CommunicationStep) object ).getSharing() );
     }
 
     public boolean isNotification() {
@@ -87,4 +102,10 @@ public class CommunicationStep extends Step {
     public boolean isTerminatingNotification() {
         return getSharing().isNotification() && getSharing().isTerminatingToSource();
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ": " + getLabel();
+    }
+
 }

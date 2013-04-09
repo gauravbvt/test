@@ -1615,4 +1615,16 @@ public interface QueryService {
      */
     String makeNameForNewEntity( Class<? extends ModelEntity> entityClass );
 
+    /**
+     * Find all referenced placeholder organizations.
+     * @return a list of organizations.
+     */
+    List<Organization> listPlaceholderOrganizations();
+
+    /**
+     * Find all referenced non-placeholder organizations.
+     * @return a list of organizations.
+     */
+    List<Organization> listFixedOrganizations();
+
 }

@@ -1,8 +1,9 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
+import com.mindalliance.channels.api.community.AgencyData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.procedures.AgencyData;
 import com.mindalliance.channels.api.procedures.AssignmentData;
+import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
@@ -11,12 +12,10 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.checklist.Checklist;
-import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
-import javax.jws.WebMethod;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
@@ -33,7 +32,7 @@ import java.util.Set;
  * Date: 4/1/13
  * Time: 3:11 PM
  */
-@XmlType( propOrder = {"anchor", "agentName", "actorId", "triggers", "assignment", "steps"} )
+@XmlType( propOrder = {"anchor", "agentName", "actorId", "employerName", "triggers", "assignmentData", "steps"} )
 public class ChecklistData implements Serializable {
 
     private Checklist checklist;
@@ -49,10 +48,11 @@ public class ChecklistData implements Serializable {
      */
     private List<TriggerData> triggers;
 
-    /**'
+    /**
+     * '
      * All steps.
      */
-    private List<StepData> steps;
+    private List<ChecklistStepData> steps;
 
     public ChecklistData() {
         // required
@@ -72,7 +72,12 @@ public class ChecklistData implements Serializable {
     }
 
     private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        assignmentData = new AssignmentData( serverUrl, communityService, assignment, user, this );
+        assignmentData = new AssignmentData(
+                serverUrl,
+                assignment,
+                benefitingCommitments,
+                committingCommitments,
+                communityService, user );
         checklist = assignment.getPart().getChecklist();
         sortedSteps = checklist.listEffectiveSteps();
         checklist.sort( sortedSteps );
@@ -81,8 +86,8 @@ public class ChecklistData implements Serializable {
         initSteps( serverUrl, communityService, user );
     }
 
-    private void initEmployer( String serverUrl, CommunityService communityService) {
-        employer = new AgencyData( serverUrl, assignment.getAgency(),  communityService  );
+    private void initEmployer( String serverUrl, CommunityService communityService ) {
+        employer = new AgencyData( serverUrl, assignment.getAgency(), communityService );
     }
 
     private void initTriggers( String serverUrl, CommunityService communityService ) {
@@ -102,13 +107,6 @@ public class ChecklistData implements Serializable {
                 triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
-            // information discovery (notifications to self)
-            for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
-                triggerData.setNotificationToSelf( triggerSelfNotification );
-                triggerData.initTrigger( communityService );
-                triggers.add( triggerData );
-            }
             // triggering notifications (from others)
             for ( Flow triggerNotification : triggeringNotificationsFromOthers() ) {
                 TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
@@ -123,36 +121,7 @@ public class ChecklistData implements Serializable {
                 triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
-            // triggering requests to self
-            for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
-                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
-                triggerData.setRequestToSelf( triggerRequest );
-                triggerData.initTrigger( communityService );
-                triggers.add( triggerData );
-            }
         }
-    }
-
-    private List<Flow> triggeringNotificationsToSelf() {
-        Set<Flow> triggerNotificationsToSelf = new HashSet<Flow>();
-        for ( CommunityCommitment commitment : benefitingCommitments.toSelf() ) {
-            Flow flow = commitment.getSharing();
-            if ( flow.isNotification() && flow.isTriggeringToTarget() && commitment.isToSelf() ) {
-                triggerNotificationsToSelf.add( commitment.getSharing() );
-            }
-        }
-        return new ArrayList<Flow>( triggerNotificationsToSelf );
-    }
-
-    private List<Flow> triggeringRequestsToSelf() {
-        Set<Flow> triggerRequestsToSelf = new HashSet<Flow>();
-        for ( CommunityCommitment commitment : committingCommitments ) {
-            Flow flow = commitment.getSharing();
-            if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
-                triggerRequestsToSelf.add( commitment.getSharing() );
-            }
-        }
-        return new ArrayList<Flow>( triggerRequestsToSelf );
     }
 
     private List<Flow> triggeringNotificationsFromOthers() {
@@ -177,22 +146,10 @@ public class ChecklistData implements Serializable {
         return new ArrayList<Flow>( triggerRequests );
     }
 
-
-    @WebMethod( exclude = true )
-    public CommunityCommitments getBenefitingCommitments() {
-        return benefitingCommitments;
-    }
-
-    @WebMethod( exclude = true )
-    public CommunityCommitments getCommittingCommitments() {
-        return committingCommitments;
-    }
-
     private void initSteps( String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        steps = new ArrayList<StepData>(  );
-        Checklist checklist = checklist();
-        for (Step step : sortedSteps ) {
-           steps.add( makeStepData( step, serverUrl, communityService, user ) );
+        steps = new ArrayList<ChecklistStepData>();
+        for ( Step step : sortedSteps ) {
+            steps.add( new ChecklistStepData( step, this, serverUrl, communityService, user ) );
         }
     }
 
@@ -200,24 +157,8 @@ public class ChecklistData implements Serializable {
         return sortedSteps.indexOf( step );
     }
 
-    private StepData makeStepData( Step step, String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        if ( step.isActionStep() ) {
-            return new ActionStepData( step, this, serverUrl, communityService, user );
-        } else {
-            CommunicationStep communicationStep = (CommunicationStep)step;
-            if ( communicationStep.isNotification() ) {
-                return new NotificationStepData( step, this, serverUrl, communityService, user );
-            } else if ( communicationStep.isRequest() ) {
-                return new RequestStepData( step, this, serverUrl, communityService, user );
-            } else if ( communicationStep.isAnswer() ) {
-                return new AnswerStepData( step, this, serverUrl, communityService, user );
-            } else {
-                throw new RuntimeException( "Unknown communication step" );
-            }
-        }
-    }
     @XmlElement( name = "step" )
-    public List<StepData> getSteps() {
+    public List<ChecklistStepData> getSteps() {
         return steps;
     }
 
@@ -230,7 +171,7 @@ public class ChecklistData implements Serializable {
         return assignment.getAgent().getName();
     }
 
-    @XmlElement( name = "agentId" )
+    @XmlElement( name = "actorId" )
     public Long getActorId() {
         return assignment.getAgent().getActorId();
     }
@@ -253,9 +194,9 @@ public class ChecklistData implements Serializable {
             if ( eventId != null )
                 ids.add( eventId );
         }
-        ids.addAll( getAssignment().allEventIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allEventIds() );
+        ids.add( getTask().getEventId() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allEventIds() );
         }
         return ids;
     }
@@ -267,9 +208,9 @@ public class ChecklistData implements Serializable {
             if ( phaseId != null )
                 ids.add( phaseId );
         }
-        ids.addAll( getAssignment().allPhaseIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allPhaseIds() );
+        ids.add( getTask().getPhaseId() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allPhaseIds() );
         }
         return ids;
     }
@@ -279,10 +220,10 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allOrganizationIds() );
         }
-        ids.addAll( getAssignment().allOrganizationIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allOrganizationIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allOrganizationIds() );
         }
+        ids.addAll( getEmployer().allOrganizationIds() );
         return ids;
     }
 
@@ -291,9 +232,8 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allActorIds() );
         }
-        ids.addAll( getAssignment().allActorIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allActorIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allActorIds() );
         }
         return ids;
     }
@@ -303,9 +243,8 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allRoleIds() );
         }
-        ids.addAll( getAssignment().allRoleIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allRoleIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allRoleIds() );
         }
         return ids;
     }
@@ -315,9 +254,9 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allPlaceIds() );
         }
-        ids.addAll( getAssignment().allPlaceIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allPlaceIds() );
+        ids.addAll( getTask().allPlaceIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allPlaceIds() );
         }
         return ids;
     }
@@ -327,10 +266,10 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allMediumIds() );
         }
-        ids.addAll( getAssignment().allMediumIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allMediumIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allMediumIds() );
         }
+        ids.addAll( getEmployer().allMediumIds() );
         return ids;
     }
 
@@ -339,9 +278,8 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allInfoProductIds() );
         }
-        ids.addAll( getAssignment().allInfoProductIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allInfoProductIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allInfoProductIds() );
         }
         return ids;
     }
@@ -351,13 +289,58 @@ public class ChecklistData implements Serializable {
         for ( TriggerData trigger : getTriggers() ) {
             ids.addAll( trigger.allInfoFormatIds() );
         }
-        ids.addAll( getAssignment().allInfoFormatIds() );
-        for ( StepData step : getSteps() ) {
-            ids.addAll(  step.allInfoFormatIds() );
+        for ( ChecklistStepData step : getSteps() ) {
+            ids.addAll( step.allInfoFormatIds() );
         }
         return ids;
     }
 
+    public String getLabel() {
+        return "I do task \"" + getTask().getLabel() + "\"";
+    }
+
+    @XmlElement( name = "assignment" )
+    public AssignmentData getAssignmentData() {
+        return assignmentData;
+    }
+
+    @XmlElement
+    public String getEmployerName() {
+        return employer != null
+                ? employer.getName()
+                : null;
+    }
+
+    public Set<ContactData> allContacts() {
+        Set<ContactData> allContacts = new HashSet<ContactData>();
+        for ( TriggerData trigger : getTriggers() ) {
+            allContacts.addAll( trigger.allContacts() );
+        }
+        for ( ChecklistStepData stepData : getSteps() ) {
+            allContacts.addAll( stepData.allContacts() );
+        }
+        return allContacts;
+    }
+
+    public AgencyData getEmployer() {
+        return employer;
+    }
+
+    public List<Integer> prerequisiteIndicesOfStep( Step step ) {
+        List<Integer> indices = new ArrayList<Integer>();
+        for ( Step prerequisite : checklist.listPrerequisiteStepsFor( step ) ) {
+            indices.add( indexOfStep( prerequisite ) );
+        }
+        return indices;
+    }
+
+    public CommunityAssignment getAssignment() {
+        return assignment;
+    }
+
+    private TaskData getTask() {
+        return getAssignmentData().getTask();
+    }
 
     public boolean isOngoing() {
         return CollectionUtils.exists(
@@ -366,28 +349,6 @@ public class ChecklistData implements Serializable {
                     @Override
                     public boolean evaluate( Object object ) {
                         return ( (TriggerData) object ).getOngoing();
-                    }
-                } );
-    }
-
-    public boolean isTriggeredByDiscovery() {
-        return CollectionUtils.exists(
-                getTriggers(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (TriggerData) object ).getOnDiscovery() != null;
-                    }
-                } );
-    }
-
-    public boolean isTriggeredByResearch() {
-        return CollectionUtils.exists(
-                getTriggers(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (TriggerData) object ).getOnResearch() != null;
                     }
                 } );
     }
@@ -455,66 +416,29 @@ public class ChecklistData implements Serializable {
                 }
         );
     }
-
-    @SuppressWarnings( "unchecked" )
-    public List<TriggerData> getDiscoveryTriggers() {
-        return (List<TriggerData>) CollectionUtils.select(
-                getTriggers(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (TriggerData) object ).isOnDiscovering();
-                    }
-                }
-        );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public List<TriggerData> getResearchTriggers() {
-        return (List<TriggerData>) CollectionUtils.select(
-                getTriggers(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (TriggerData) object ).isOnResearching();
-                    }
-                }
-        );
-    }
-
-    public String getLabel() {
+    public String getTaskLabel() {
         StringBuilder sb = new StringBuilder();
         if ( isOngoing() ) {
             sb.append( "I constantly do task \"" );
-        } else if ( isTriggeredByDiscovery() ) {
-            sb.append( "I follow up with task \"" );
-        } else if ( isTriggeredByResearch() ) {
-            sb.append( "To find what you need, I do task \"" );
-        } else {
+        }else {
             sb.append( "I do task \"" );
         }
-        sb.append( getAssignment().getLabel() );
+        sb.append( getTask().getName() );
+        sb.append( "\"" );
         return sb.toString();
     }
 
-    @XmlElement
-    public AssignmentData getAssignment() {
-        return assignmentData;
+    public String getTitleOrRole() {
+        return getAssignmentData().getTitle();
     }
 
-    public List<ContactData> allContacts() {
-        return null;  //Todo
+    public String getOrganizationLabel() {
+        return getAssignmentData().getAgencyLabel();
     }
 
-    public AgencyData employer() {
-        return employer;
+    public boolean hasSends() {
+        return getAssignmentData().hasReceives();
     }
 
-    public List<Integer> prerequisiteIndicesOfStep( Step step ) {
-        List<Integer> indices = new ArrayList<Integer>(  );
-        for ( Step prerequisite : checklist.listPrerequisiteStepsFor( step ) ) {
-             indices.add( indexOfStep( prerequisite ) );
-        }
-        return indices;
-    }
+
 }

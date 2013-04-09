@@ -98,7 +98,7 @@ public class NotificationData extends AbstractFlowData {
             if ( isInitiating() ) {  // notifying
                 CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
                 employments.add( employment );
-                contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                contactDataSet.addAll( ContactData.findContactsFromEmploymentAndCommitment(
                         serverUrl,
                         employment,
                         commitment,
@@ -107,7 +107,7 @@ public class NotificationData extends AbstractFlowData {
             } else { // being notified
                 CommunityEmployment employment = commitment.getCommitter().getEmployment();
                 employments.add( employment );
-                contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                contactDataSet.addAll( ContactData.findContactsFromEmploymentAndCommitment(
                         serverUrl,
                         employment,
                         commitment,

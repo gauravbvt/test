@@ -71,6 +71,16 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         return result;
     }
 
+    public CommunityCommitments notToSelf() {
+        CommunityCommitments result = new CommunityCommitments( locale );
+        for ( CommunityCommitment commitment : this ) {
+            if ( !commitment.isToSelf() )
+                result.add( commitment );
+        }
+        return result;
+    }
+
+
 
     public CommunityCommitments notifications() {
         CommunityCommitments result = new CommunityCommitments( locale );
@@ -207,4 +217,4 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
         return new ArrayList<CommunityCommitment>( commitments );
     }
 
-}
+ }

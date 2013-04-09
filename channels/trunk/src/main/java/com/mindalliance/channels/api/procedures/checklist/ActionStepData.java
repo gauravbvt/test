@@ -16,8 +16,8 @@ import java.util.List;
  * Date: 4/1/13
  * Time: 9:25 PM
  */
-@XmlType( name = "actionStep", propOrder = {"index", "label", "action", "ifConditions", "unlessConditions", "prerequisites"} )
-public class ActionStepData extends StepData {
+@XmlType( name = "actionStep", propOrder = {"label", "action", "ifConditions", "unlessConditions", "prerequisites"} )
+public class ActionStepData extends AbstractStepData {
 
     public ActionStepData() {
         // required
@@ -29,12 +29,6 @@ public class ActionStepData extends StepData {
                            CommunityService communityService,
                            ChannelsUser user ) {
         super( step, checklist, serverUrl, communityService, user );
-    }
-
-    @Override
-    @XmlElement
-    public int getIndex() {
-        return super.getIndex();
     }
 
     @Override

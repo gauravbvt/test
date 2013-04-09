@@ -7,12 +7,8 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.model.Actor;
-import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -32,7 +28,7 @@ import java.util.Set;
  */
 @XmlType( propOrder = {"id", "information", "intent", "intentText", "communicatedContext", "taskFailed", "receiptConfirmationRequested",
         "instructions", "contactAll", "maxDelay", "contacts", "mediumIds", "failureImpact",
-        "consumingTask", "impactOnConsumingTask", /*"agreements",*/ "documentation"} )
+        "consumingTask", "impactOnConsumingTask", "documentation"} )
 public class RequestData extends AbstractFlowData {
 
     private List<CommunityCommitment> commitments;
@@ -99,7 +95,7 @@ public class RequestData extends AbstractFlowData {
             if ( isInitiating() ) {  // asking
                 CommunityEmployment employment = commitment.getCommitter().getEmployment();
                 contactedEmployments.add( employment );
-                contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                contactDataSet.addAll( ContactData.findContactsFromEmploymentAndCommitment(
                         serverUrl,
                         employment,
                         commitment,
@@ -108,9 +104,9 @@ public class RequestData extends AbstractFlowData {
             } else { // replying
                 CommunityEmployment employment = commitment.getBeneficiary().getEmployment();
                 contactedEmployments.add( employment );
-                contactDataSet.addAll( ContactData.findContactsFromEmployment(
+                contactDataSet.addAll( ContactData.findContactsFromEmploymentAndCommitment(
                         serverUrl,
-                         employment,
+                        employment,
                         commitment,
                         communityService,
                         userInfo ) ) ;
@@ -223,14 +219,6 @@ public class RequestData extends AbstractFlowData {
         return impactOnConsumingTask;
     }
 
-/*
-    @Override
-    @XmlElement( name = "agreement" )
-    public List<AgreementData> getAgreements() {
-        return super.getAgreements();
-    }
-*/
-
     @XmlElement
     @Override
     public DocumentationData getDocumentation() {
@@ -246,20 +234,6 @@ public class RequestData extends AbstractFlowData {
     @Override
     public boolean isNotification() {
         return false;
-    }
-
-
-    @SuppressWarnings( "unchecked" )
-    private List<Actor> findDirectContacts() {
-        return (List<Actor>) CollectionUtils.collect(
-                findContactEmployments(),
-                new Transformer() {
-                    @Override
-                    public Object transform( Object input ) {
-                        return ( (Employment) input ).getActor();
-                    }
-                }
-        );
     }
 
 

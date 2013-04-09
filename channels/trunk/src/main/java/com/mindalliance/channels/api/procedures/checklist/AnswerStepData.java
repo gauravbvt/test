@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -17,13 +18,18 @@ import java.util.Set;
  * Date: 4/1/13
  * Time: 10:06 PM
  */
-@XmlType( name = "answerStep", propOrder = {"index","label", "answer", "ifConditions", "unlessConditions", "prerequisites"})
+@XmlType( name = "answerStep", propOrder = {"label", "answer", "ifConditions", "unlessConditions", "prerequisites"})
 public class AnswerStepData extends CommunicationStepData {
 
     private RequestData request;
 
     public AnswerStepData() {
         // required
+    }
+
+    @Override
+    public List<ContactData> allContacts() {
+        return request.getContacts();
     }
 
     public AnswerStepData( Step step,
@@ -36,19 +42,14 @@ public class AnswerStepData extends CommunicationStepData {
 
     @Override
     protected void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        super.initData(  serverUrl, communityService, user );
         request = new RequestData(
                 serverUrl,
                 communityService,
                 getCommunicationStep().getSharing(),
                 true,
-                getChecklist().getAssignment().getAssignment(),
+                getChecklist().getAssignment(),
                 user );
-    }
-
-    @Override
-    @XmlElement
-    public int getIndex() {
-        return super.getIndex();
     }
 
     @Override

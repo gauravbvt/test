@@ -3326,6 +3326,32 @@ public abstract class DefaultQueryService implements QueryService {
         return name;
     }
 
+    @Override
+    public List<Organization> listPlaceholderOrganizations() {
+        return (List<Organization>)CollectionUtils.select(
+                listActualEntities( Organization.class, true ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Organization)object).isPlaceHolder();
+                    }
+                }
+        );
+    }
+
+    public List<Organization> listFixedOrganizations() {
+        return (List<Organization>)CollectionUtils.select(
+                listActualEntities( Organization.class, true ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !((Organization)object).isPlaceHolder();
+                    }
+                }
+        );
+    }
+
+
     @SuppressWarnings( "unchecked" )
     @Override
     public List<Organization> findDirectAndIndirectEmployers( List<Employment> employments ) {
@@ -3390,5 +3416,6 @@ public abstract class DefaultQueryService implements QueryService {
     public void setSurveysDAO( SurveysDAO surveysDAO ) {
         this.surveysDAO = surveysDAO;
     }
+
 }
 

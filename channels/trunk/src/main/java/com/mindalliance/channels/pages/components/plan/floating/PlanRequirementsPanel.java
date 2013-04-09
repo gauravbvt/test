@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Plan requirements panel.
+ * Collaboration requirements panel.
  * Copyright (C) 2008 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf

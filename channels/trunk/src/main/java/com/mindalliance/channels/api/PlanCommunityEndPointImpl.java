@@ -1,14 +1,14 @@
 package com.mindalliance.channels.api;
 
+import com.mindalliance.channels.api.community.CommunitySummariesData;
+import com.mindalliance.channels.api.community.CommunitySummaryData;
 import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.issues.IssuesData;
 import com.mindalliance.channels.api.plan.PlanReleaseData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
-import com.mindalliance.channels.api.procedures.AllProceduresData;
 import com.mindalliance.channels.api.procedures.AllProtocolsData;
-import com.mindalliance.channels.api.procedures.ProceduresData;
 import com.mindalliance.channels.api.procedures.ProtocolsData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
@@ -56,7 +56,7 @@ import java.util.List;
  * Date: 11/29/11
  * Time: 11:34 AM
  */
-@Path("/isp")
+@Path( "/isp" )
 @WebService(
         endpointInterface = "com.mindalliance.channels.api.PlanCommunityEndPoint"
 )
@@ -96,6 +96,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     @Autowired
     private CommunityServiceFactory communityServiceFactory;
+
+    /// PLANS
 
 
     @Override
@@ -209,331 +211,6 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public ProtocolsData getMyProtocols( String uri ) {
-        LOG.info( "Getting user protocols for community " + uri );
-        try {
-            ChannelsUser user = ChannelsUser.current( userDao );
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
-                    user,
-                    communityService );
-            return new ProtocolsData(
-                    serverUrl,
-                    communityService,
-                    participations,
-                    user );
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public ProtocolsData getUserProtocols( String uri,
-                                            String version,
-                                            String username ) {
-        LOG.info( "Getting user protocols for community " + uri );
-        try {
-            ChannelsUser user = ChannelsUser.current( userDao );
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
-                    user,
-                    communityService );
-            return new ProtocolsData(
-                    serverUrl,
-                    communityService,
-                    participations,
-                    user );
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public AllProtocolsData getAllProtocols( String uri,
-                                              String version ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
-        LOG.info( "Getting all user protocols for all participants in community " + uri );
-        try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
-            CommunityService communityService = getCommunityService( planCommunity );
-            AllProtocolsData allProtocolsData = new AllProtocolsData();
-            for ( ChannelsUser channelsUser : userDao.getUsers( uri ) ) {
-                channelsUser.setCommunityService( communityService );
-                List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
-                        channelsUser,
-                        communityService
-                );
-                if ( !participationList.isEmpty() ) {
-                    ProtocolsData protocolsData = getUserProtocols( uri, version, channelsUser.getUsername() );
-                    allProtocolsData.addProtocolsData( protocolsData );
-                }
-            }
-            return allProtocolsData;
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public ProtocolsData getAgentProtocols(String uri,
-                                            String version,
-                                            String agentId,
-                                            String orgParticipationId ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
-        LOG.info( "Getting protocols of agent " + agentId
-                + " for organization participation" + orgParticipationId
-                + " in community " + uri
-                + " and plan version " + version );
-        try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
-            CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) );
-            OrganizationParticipation organizationParticipation =
-                    organizationParticipationService.load( Long.parseLong( orgParticipationId ) );
-            if ( organizationParticipation == null ) throw new NotFoundException();
-            return new ProtocolsData(
-                    serverUrl,
-                    communityService,
-                    new Agent( actor, organizationParticipation, communityService ),
-                    user );
-        } catch ( Exception e ) {
-            LOG.warn( "No protocols available for agent " + agentId, e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + uri )
-                            .build() );
-        }
-    }
-
-
-    ///////// OBSOLETE ////////////
-
-    @Override
-    public ProceduresData getMyProcedures( String uri ) {
-        LOG.info( "Getting user procedures for community " + uri );
-        try {
-            ChannelsUser user = ChannelsUser.current( userDao );
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
-                    user,
-                    communityService );
-            return new ProceduresData(
-                    serverUrl,
-                    communityService,
-                    participations,
-                    user );
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No procedures available for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public ProceduresData getUserProcedures( String uri, String version, String username ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
-        LOG.info( "Getting " + username + "'s procedures for community " + uri + " version " + version );
-        try {
-            ChannelsUser protocolsUser = userDao.getUserNamed( username );
-            PlanCommunity planCommunity = authorize( user, uri, version );
-            CommunityService communityService = getCommunityService( planCommunity );
-            protocolsUser.setCommunityService( communityService );
-            List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
-                    protocolsUser,
-                    communityService
-            );
-            if ( participationList.isEmpty() ) {
-                throw new Exception( username + " does not participate in community " + uri + " version " + version );
-            }
-            return new ProceduresData(
-                    serverUrl,
-                    communityService,
-                    participationList,
-                    protocolsUser );
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No procedures available for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public AllProceduresData getAllProcedures( String uri, String version ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
-        LOG.info( "Getting all user procedures for all participants in community " + uri );
-        try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
-            CommunityService communityService = getCommunityService( planCommunity );
-            AllProceduresData allProceduresData = new AllProceduresData();
-            for ( ChannelsUser channelsUser : userDao.getUsers( uri ) ) {
-                channelsUser.setCommunityService( communityService );
-                List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
-                        channelsUser,
-                        communityService
-                );
-                if ( !participationList.isEmpty() ) {
-                    ProceduresData proceduresData = getUserProcedures( uri, version, channelsUser.getUsername() );
-                    allProceduresData.addProceduresData( proceduresData );
-                }
-            }
-            return allProceduresData;
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No procedures available for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public ProceduresData getAgentProcedures( String uri,
-                                              String version,
-                                              String agentId,
-                                              String orgParticipationId ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
-        LOG.info( "Getting protocols of agent " + agentId
-                + " for organization participation" + orgParticipationId
-                + " in community " + uri
-                + " and plan version " + version );
-        try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
-            CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) );
-            OrganizationParticipation organizationParticipation =
-                    organizationParticipationService.load( Long.parseLong( orgParticipationId ) );
-            if ( organizationParticipation == null ) throw new NotFoundException();
-            return new ProceduresData(
-                    serverUrl,
-                    communityService,
-                    new Agent( actor, organizationParticipation, communityService ) );
-        } catch ( Exception e ) {
-            LOG.warn( "No protocols available for agent " + agentId, e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No protocols available for community " + uri )
-                            .build() );
-        }
-    }
-
-    ///////// END OBSOLETE ////////////
-
-    @Override
-    public DirectoryData getUserDirectory(
-            String uri,
-            String version,
-            String username ) {
-        try {
-            ProceduresData proceduresData = getUserProcedures( uri, version, username );
-            return new DirectoryData( proceduresData );
-        } catch ( Exception e ) {
-            LOG.warn( "Failed to retrieve directory", e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No procedures available for community " + uri )
-                            .build() );
-        }
-    }
-
-/*
-    @Override
-    public DirectoryData getAgentDirectory(
-            String uri,
-            String version,
-            String agentId ) {
-        try {
-            ProceduresData proceduresData = getAgentProcedures( uri, version, agentId );
-            return new DirectoryData( proceduresData );
-        } catch ( Exception e ) {
-            LOG.warn( "Failed to retrieve directory", e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( "No procedures available for community " + uri )
-                            .build() );
-        }
-    }
-*/
-
-    @Override
-    public DirectoryData getMyDirectory( String uri ) {
-        LOG.info( "Getting user directory for production version of plan " + uri );
-        try {
-            ChannelsUser user = ChannelsUser.current( userDao );
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            CommunityService communityService = getCommunityService( planCommunity );
-            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
-                    user,
-                    communityService );
-            if ( participations.isEmpty() ) {
-                throw new Exception( user.getUsername() + " does not participate in community " + uri );
-            }
-            ProceduresData proceduresData = getMyProcedures( uri );
-            return new DirectoryData( proceduresData );
-        } catch ( Exception e ) {
-            LOG.warn( e.getMessage(), e );
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( e.getMessage() + " for community " + uri )
-                            .build() );
-        }
-    }
-
-    private PlanCommunity authorizeParticipant( ChannelsUser user, String uri ) throws Exception {
-        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( uri ); // if domain plan community, development plan community implied
-        CommunityService communityService = getCommunityService( planCommunity );
-        Plan plan = communityService.getPlan();
-        if ( plan == null || user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED ) ) { // todo - COMMUNITY - authorize for community not plan
-            throw new Exception( user.getUsername() + " is not authorized to access community " + uri );
-        }
-        user.setCommunityService( communityService );
-        return planCommunity;
-    }
-
-    // Only planners can request access to a specific version of a plan.
-    private PlanCommunity authorize( ChannelsUser user, String uri, String version ) throws Exception {
-        PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri, Integer.parseInt( version ) );
-        CommunityService communityService = getCommunityService( planCommunity );
-        Plan plan = communityService.getPlan();
-        if ( user == null
-                || plan == null
-                || ( plan.isDevelopment() && !user.isPlanner( uri ) )
-                || ( plan.isProduction() && !user.isParticipant( uri ) ) )
-            throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
-        user.setCommunityService( communityService );
-        return planCommunity;
-    }
-
-    @Override
     public IssuesData getIssues( String uri, String version ) {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userDao );
@@ -550,26 +227,6 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
- /*   private boolean canSeeProcedures( ChannelsUser user, Actor actor, PlanCommunity planCommunity ) { // todo -agents and agencies
-        // Planner can see any actor's procedures
-        Plan plan = planCommunity.getPlan();
-        if ( plan.isViewableByAll() || user.isPlanner( plan.getUri() ) )
-            return true;
-        // Participating user can see own procedures. Supervisor can procedures of supervised.
-        List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
-                user,
-                getPlanCommunity( plan ) );
-        for ( UserParticipation participation : participations ) {
-            Actor participant = participation.getAgent( planCommunity ).getActor();   // todo - agents!
-            if ( participant != null
-                    && ( participant.equals( actor )
-                    || planCommunity.getPlanService().findSupervised( participant ).contains( actor ) ) )
-                return true;
-        }
-        return false;
-    }
-*/
-    @Override
     public void addFeedback(
             String uri,
             String type,
@@ -586,60 +243,6 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     Feedback.PROTOCOLS,
                     feedback,
                     Boolean.parseBoolean( urgent ) );
-        } catch ( Exception e ) {
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( e.getMessage() + " for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public void acceptParticipation( String uri, String agentId ) {
-        LOG.info( "Adding user participation in community " + uri );
-        ChannelsUser user = ChannelsUser.current( userDao );
-        try {
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = getCommunityService( planCommunity ).getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo = agents
-            if ( participationManager.isParticipationSelfAssignable( new Agent( actor ), user, communityService ) ) {
-                UserParticipation participation = new UserParticipation(
-                        user.getUsername(),
-                        user,
-                        new Agent( actor ),
-                        planCommunity );
-                userParticipationService.accept( participation, communityService );
-            } else {
-                throw new Exception( "Participation was not accepted" );
-            }
-        } catch ( Exception e ) {
-            throw new WebApplicationException(
-                    Response
-                            .status( Response.Status.BAD_REQUEST )
-                            .entity( e.getMessage() + " for community " + uri )
-                            .build() );
-        }
-    }
-
-    @Override
-    public void refuseParticipation( String uri, String agentId ) {
-        LOG.info( "Refusing user participation in community " + uri );
-        ChannelsUser user = ChannelsUser.current( userDao );
-        try {
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
-            CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo - COMMUNITY - agents!
-            UserParticipation userParticipation = userParticipationService.getParticipation(
-                    user,
-                    new Agent( actor ),
-                    communityService
-            );
-            if ( userParticipation != null ) {
-                userParticipationService.refuse( userParticipation, communityService );
-            } else {
-                throw new Exception( "Participation was not refused" );
-            }
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -669,12 +272,226 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
+
+    //// COMMUNITIES
+
+
     @Override
-    public void addContactInfo( String uri, String mediumId, String address ) {
+    public CommunitySummariesData getAllCommunities() {
+        LOG.info( "Getting all community summaries" );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        try {
+            List<CommunitySummaryData> summaries = new ArrayList<CommunitySummaryData>();
+            for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
+                if ( !planCommunity.isDomainCommunity() ) {
+                    CommunityService communityService = getCommunityService( planCommunity );
+                    if ( communityService.isCommunityPlanner( user ) ) {
+                        summaries.add( new CommunitySummaryData( getServerUrl(), communityService ) );
+                    }
+                }
+            }
+            return new CommunitySummariesData( summaries );
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() + " for communities" )
+                            .build() );
+        }
+    }
+
+    @Override
+    public CommunitySummaryData getCommunity( String communityUri ) {
+        LOG.info( "Getting community summary for " + communityUri );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        try {
+            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            if ( !planCommunity.isDomainCommunity() ) {
+                CommunityService communityService = communityServiceFactory.getService( planCommunity );
+                return new CommunitySummaryData( serverUrl, communityService );
+            } else {
+                throw new WebApplicationException(
+                        Response
+                                .status( Response.Status.BAD_REQUEST )
+                                .entity( "No such community" + communityUri )
+                                .build() );
+            }
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() + " for community" + communityUri )
+                            .build() );
+        }
+    }
+
+/*
+    @Override
+    public UserParticipationData getMyParticipation( String communityUri ) {
+        return null;  // Todo
+    }
+*/
+
+    @Override
+    public AllProtocolsData getAllProtocols( String communityUri ) {
+        ChannelsUser user = ChannelsUser.current( userDao );
+        LOG.info( "Getting all user protocols for all participants in community " + communityUri );
+        try {
+            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            AllProtocolsData allProtocolsData = new AllProtocolsData();
+            for ( ChannelsUser channelsUser : userDao.getUsers( communityUri ) ) {
+                channelsUser.setCommunityService( communityService );
+                List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
+                        channelsUser,
+                        communityService
+                );
+                if ( !participationList.isEmpty() ) {
+                    ProtocolsData protocolsData = getUserProtocols( communityUri, channelsUser.getUsername() );
+                    allProtocolsData.addProtocolsData( protocolsData );
+                }
+            }
+            return allProtocolsData;
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No protocols available for community " + communityUri )
+                            .build() );
+        }
+    }
+
+
+    @Override
+    public ProtocolsData getMyProtocols( String communityUri ) {
+        LOG.info( "Getting user protocols for community " + communityUri );
+        try {
+            ChannelsUser user = ChannelsUser.current( userDao );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+                    user,
+                    communityService );
+            return new ProtocolsData(
+                    serverUrl,
+                    communityService,
+                    participations,
+                    user );
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No protocols available for community " + communityUri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public ProtocolsData getUserProtocols( String communityUri,
+                                           String username ) {
+        LOG.info( "Getting user protocols for community " + communityUri );
+        try {
+            ChannelsUser user = ChannelsUser.current( userDao );
+            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+                    user,
+                    communityService );
+            return new ProtocolsData(
+                    serverUrl,
+                    communityService,
+                    participations,
+                    user );
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No protocols available for community " + communityUri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public ProtocolsData getAgentProtocols( String communityUri,
+                                            String agentId,
+                                            String orgParticipationId ) {
+        ChannelsUser user = ChannelsUser.current( userDao );
+        LOG.info( "Getting protocols of agent " + agentId
+                + " for organization participation" + orgParticipationId
+                + " in community " + communityUri );
+        try {
+            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) );
+            OrganizationParticipation organizationParticipation =
+                    organizationParticipationService.load( Long.parseLong( orgParticipationId ) );
+            if ( organizationParticipation == null ) throw new NotFoundException();
+            return new ProtocolsData(
+                    serverUrl,
+                    communityService,
+                    new Agent( actor, organizationParticipation, communityService ),
+                    user );
+        } catch ( Exception e ) {
+            LOG.warn( "No protocols available for agent " + agentId, e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No protocols available for community " + communityUri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public DirectoryData getUserDirectory(
+            String communityUri,
+            String username ) {
+        try {
+            ProtocolsData protocolsData = getUserProtocols( communityUri, username );
+            return new DirectoryData( protocolsData );
+        } catch ( Exception e ) {
+            LOG.warn( "Failed to retrieve directory", e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( "No procedures available for community " + communityUri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public DirectoryData getMyDirectory( String communityUri ) {
+        LOG.info( "Getting user directory for production version of plan " + communityUri );
+        try {
+            ChannelsUser user = ChannelsUser.current( userDao );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
+                    user,
+                    communityService );
+            if ( participations.isEmpty() ) {
+                throw new Exception( user.getUsername() + " does not participate in community " + communityUri );
+            }
+            ProtocolsData protocolsData = getMyProtocols( communityUri );
+            return new DirectoryData( protocolsData );
+        } catch ( Exception e ) {
+            LOG.warn( e.getMessage(), e );
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() + " for community " + communityUri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public void addContactInfo( String communityUri, String mediumId, String address ) {
         LOG.info( "Adding user contact info " );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             if ( !medium.isAddressValid( address ) ) throw new Exception( "Invalid address" );
@@ -692,11 +509,11 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public void removeContactInfo( String uri, String mediumId, String address ) {
+    public void removeContactInfo( String communityUri, String mediumId, String address ) {
         LOG.info( "Removing user contact info " );
         ChannelsUser user = ChannelsUser.current( userDao );
         try {
-            PlanCommunity planCommunity = authorizeParticipant( user, uri );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             userContactInfoService.removeChannel( user.getUserInfo(), new Channel( medium, address ) );
@@ -707,6 +524,105 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                             .entity( e.getMessage() )
                             .build() );
         }
+    }
+
+    @Override
+    public void acceptParticipation( String communityUri, String agentId ) {
+        LOG.info( "Adding user participation in community " + communityUri );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        try {
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = getCommunityService( planCommunity ).getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo = agents
+            if ( participationManager.isParticipationSelfAssignable( new Agent( actor ), user, communityService ) ) {
+                UserParticipation participation = new UserParticipation(
+                        user.getUsername(),
+                        user,
+                        new Agent( actor ),
+                        planCommunity );
+                userParticipationService.accept( participation, communityService );
+            } else {
+                throw new Exception( "Participation was not accepted" );
+            }
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() + " for community " + communityUri )
+                            .build() );
+        }
+    }
+
+    @Override
+    public void refuseParticipation( String communityUri, String agentId ) {
+        LOG.info( "Refusing user participation in community " + communityUri );
+        ChannelsUser user = ChannelsUser.current( userDao );
+        try {
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
+            CommunityService communityService = getCommunityService( planCommunity );
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo - COMMUNITY - agents!
+            UserParticipation userParticipation = userParticipationService.getParticipation(
+                    user,
+                    new Agent( actor ),
+                    communityService
+            );
+            if ( userParticipation != null ) {
+                userParticipationService.refuse( userParticipation, communityService );
+            } else {
+                throw new Exception( "Participation was not refused" );
+            }
+        } catch ( Exception e ) {
+            throw new WebApplicationException(
+                    Response
+                            .status( Response.Status.BAD_REQUEST )
+                            .entity( e.getMessage() + " for community " + communityUri )
+                            .build() );
+        }
+    }
+
+///////////////
+
+    private PlanCommunity authorizeParticipant( ChannelsUser user, String communityUri ) throws Exception {
+        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri ); // if domain plan community, development plan community implied
+        if ( planCommunity == null )
+            throw new Exception( "No such community " + communityUri );
+        CommunityService communityService = getCommunityService( planCommunity );
+        Plan plan = communityService.getPlan();
+        if ( plan == null || user.getRole( communityUri ).equals( ChannelsUser.UNAUTHORIZED ) ) {
+            throw new Exception( user.getUsername() + " is not authorized to access community " + communityUri );
+        }
+        user.setCommunityService( communityService );
+        return planCommunity;
+    }
+
+    private PlanCommunity authorizeCommunityLeader( ChannelsUser user, String communityUri ) throws Exception {
+        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri ); // if domain plan community, development plan community implied
+        if ( planCommunity == null )
+            throw new Exception( "No such community " + communityUri );
+        CommunityService communityService = getCommunityService( planCommunity );
+        if ( !communityService.isCommunityPlanner( user ) ) { //
+            throw new Exception( user.getUsername() + " is not authorized to access community " + communityUri );
+        }
+        user.setCommunityService( communityService );
+        return planCommunity;
+    }
+
+
+    // Only planners can request access to a specific version of a plan.
+    private PlanCommunity authorize( ChannelsUser user, String uri, String version ) throws Exception {
+        // domain plan community
+        PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri, Integer.parseInt( version ) );
+        if ( planCommunity == null || !planCommunity.isDomainCommunity() )
+            throw new Exception( "No such plan " + uri );
+        CommunityService communityService = getCommunityService( planCommunity );
+        Plan plan = communityService.getPlan();
+        if ( user == null
+                || plan == null
+                || ( plan.isDevelopment() && !user.isPlanner( uri ) )
+                || ( plan.isProduction() && !user.isParticipant( uri ) ) )
+            throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
+        user.setCommunityService( communityService );
+        return planCommunity;
     }
 
     private String makeInvitation( ChannelsUserInfo invitedUser, CommunityService communityService ) {
@@ -722,7 +638,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 .append( "To participate in the plan community " )
                 .append( planCommunity.getName() )
                 .append( " designed by " )
-                .append(plan.getClient() )
+                .append( plan.getClient() )
                 .append( ",\ngo to " )
                 .append( homePageUrl )
                 .append( "\nand login with your email address " )
@@ -741,12 +657,12 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     //////////////////////////////////////////////////////////
 
-    @WebMethod(exclude = true)
+    @WebMethod( exclude = true )
     public void setServerUrl( String serverUrl ) {
         this.serverUrl = serverUrl;
     }
 
-    @WebMethod(exclude = true)
+    @WebMethod( exclude = true )
     public String getServerUrl() {
         return serverUrl
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" );
@@ -765,5 +681,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( uri );
         return getCommunityService( planCommunity );
     }
+
+    /// OBSOLETE
 
 }

@@ -343,7 +343,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
     private String getGotoProtocolsDescription( ChannelsUser user, Plan plan ) {
         return user.isPlanner( plan.getUri() )
-                ? "Set how users participate in the plan and view their collaboration protocols."
+                ? "Set how users participate in the plan and view their collaboration checklists."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
 

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
+import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -11,13 +12,14 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Web service data for a notification collaboration step in a checklist.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 4/1/13
  * Time: 10:05 PM
  */
-@XmlType( name = "notificationStep", propOrder = {"index","label", "notification", "ifConditions", "unlessConditions", "prerequisites"})
+@XmlType( name = "notificationStep", propOrder = {"label", "notification", "ifConditions", "unlessConditions", "prerequisites"})
 public class NotificationStepData extends CommunicationStepData {
 
     private NotificationData notification;
@@ -36,19 +38,14 @@ public class NotificationStepData extends CommunicationStepData {
 
     @Override
     protected void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        super.initData(  serverUrl, communityService, user );
         notification = new NotificationData(
                 serverUrl,
                 communityService,
                 getCommunicationStep().getSharing(),
                 true,
-                getChecklist().getAssignment().getAssignment(),
+                getChecklist().getAssignment(),
                 user );
-    }
-
-    @Override
-    @XmlElement
-    public int getIndex() {
-        return super.getIndex();
     }
 
     @Override
@@ -127,5 +124,9 @@ public class NotificationStepData extends CommunicationStepData {
         Set<Long> ids = super.allInfoFormatIds();
         ids.addAll( notification.getInfoFormatIds() );
         return ids;
+    }
+
+    public List<ContactData> allContacts() {
+        return notification.getContacts();
     }
 }

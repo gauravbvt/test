@@ -21,12 +21,14 @@ public interface ParticipationManager {
 
     /**
      * Get participation analyst;
+     *
      * @return a participation analyst
      */
     ParticipationAnalyst getParticipationAnalyst();
 
     /**
      * Get the list of all known agencies (all fixed and registered organizations).
+     *
      * @param communityService a community service
      * @return a list of agencies
      */
@@ -34,7 +36,8 @@ public interface ParticipationManager {
 
     /**
      * Get the list of all agencies participating as a given placeholder organization.
-     * @param placeholder an organization
+     *
+     * @param placeholder      an organization
      * @param communityService a community service
      * @return a list of agencies
      */
@@ -42,7 +45,8 @@ public interface ParticipationManager {
 
     /**
      * Get the agency given unique name.
-     * @param agencyName an agency name
+     *
+     * @param agencyName       an agency name
      * @param communityService a community service
      * @return an agency or null
      */
@@ -50,6 +54,7 @@ public interface ParticipationManager {
 
     /**
      * Get the list of all known agents (from all fixed and registered organizations).
+     *
      * @param communityService a community service
      * @return a list of agents
      */
@@ -57,7 +62,8 @@ public interface ParticipationManager {
 
     /**
      * Get agent given name.
-     * @param name a unique agent name
+     *
+     * @param name             a unique agent name
      * @param communityService a community service
      * @return an agent or null
      */
@@ -65,7 +71,8 @@ public interface ParticipationManager {
 
     /**
      * Find all agencies employing a given agent.
-     * @param agent an agent
+     *
+     * @param agent            an agent
      * @param communityService a community service
      * @return a list of agencies
      */
@@ -73,24 +80,36 @@ public interface ParticipationManager {
 
     /**
      * Find all employments of an agent in a community.
-     * @param agent an agent
+     *
+     * @param agent            an agent
      * @param communityService a community service
      * @return a list of community employments
      */
     List<CommunityEmployment> findAllEmploymentsForAgent( Agent agent, CommunityService communityService );
 
     /**
-     * Find all agents with unconstrained participation and available to user.
+     * Lists all agent employments by a given agency.
+     *
+     * @param agency           an agency
      * @param communityService a community service
-     * @param user a Channels user
+     * @return a list of community employments
+     */
+    List<CommunityEmployment> findAllEmploymentsBy( Agency agency, CommunityService communityService );
+
+    /**
+     * Find all agents with unconstrained participation and available to user.
+     *
+     * @param communityService a community service
+     * @param user             a Channels user
      * @return a list of agents
      */
     List<Agent> findSelfAssignableOpenAgents( CommunityService communityService, ChannelsUser user );
 
     /**
      * Whether a participation as a given agent is available to a given user.
-     * @param agent an agent
-     * @param user a Channels user
+     *
+     * @param agent            an agent
+     * @param user             a Channels user
      * @param communityService a community service
      * @return a boolean
      */
@@ -98,8 +117,9 @@ public interface ParticipationManager {
 
     /**
      * Whether a given user can self assign a participation as a given agent.
-     * @param agent an agent
-     * @param user a user
+     *
+     * @param agent            an agent
+     * @param user             a user
      * @param communityService a community service
      * @return a boolean
      */
@@ -107,9 +127,10 @@ public interface ParticipationManager {
 
     /**
      * Whether participating as an agent meets pre-employment requirement given active participations.
-     * @param agent an agent
+     *
+     * @param agent                an agent
      * @param activeParticipations list of user participations
-     * @param communityService a community service
+     * @param communityService     a community service
      * @return a boolean
      */
     boolean meetsPreEmploymentConstraint(
@@ -119,7 +140,8 @@ public interface ParticipationManager {
 
     /**
      * Find all agents supervising a given agent.
-     * @param agent an agent
+     *
+     * @param agent            an agent
      * @param communityService a community service
      * @return a list of agents
      */
@@ -127,44 +149,49 @@ public interface ParticipationManager {
 
     /**
      * Are two users related by commitment or task-co-assignment?
+     *
      * @param communityService a community service
-     * @param user a user
-     * @param otherUser another user
+     * @param user             a user
+     * @param otherUser        another user
      * @return a boolean
      */
     boolean areCollaborators( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Is first user supervised other?
+     *
      * @param communityService a community service
-     * @param user a user
-     * @param otherUser another user
+     * @param user             a user
+     * @param otherUser        another user
      * @return a boolean
      */
     boolean isSupervisedBy( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Is first user supervisor of the other?
+     *
      * @param communityService a community service
-     * @param user a user
-     * @param otherUser another user
+     * @param user             a user
+     * @param otherUser        another user
      * @return a boolean
      */
     boolean isSupervisorOf( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Do two users share a common employer?
+     *
      * @param communityService a community service
-     * @param user a user
-     * @param otherUser another user
+     * @param user             a user
+     * @param otherUser        another user
      * @return a boolean
      */
     boolean areColleagues( CommunityService communityService, ChannelsUser user, ChannelsUser otherUser );
 
     /**
      * Whether user has authority over a participation.
-     * @param communityService a community service
-     * @param user a user
+     *
+     * @param communityService  a community service
+     * @param user              a user
      * @param userParticipation a plan participation
      * @return a boolean
      */
@@ -177,6 +204,7 @@ public interface ParticipationManager {
 
     /**
      * Find all agents no user participates as.
+     *
      * @param communityService a community service
      * @return a list of agents
      */
@@ -184,6 +212,7 @@ public interface ParticipationManager {
 
     /**
      * Find all unassigned placeholder organizations.
+     *
      * @param communityService a community service
      * @return a list of organziations
      */
@@ -191,8 +220,9 @@ public interface ParticipationManager {
 
     /**
      * Get top registered organization given one.
+     *
      * @param registeredOrganization a registered organization
-     * @param communityService a community service
+     * @param communityService       a community service
      * @return a registered organization - the given one if it has no parent
      */
     RegisteredOrganization getTopRegisteredOrganization( RegisteredOrganization registeredOrganization,
@@ -200,8 +230,9 @@ public interface ParticipationManager {
 
     /**
      * Get ancestors of a given registered organization.
+     *
      * @param registeredOrganization a registered organization
-     * @param communityService a community service
+     * @param communityService       a community service
      * @return a list of registered organizations
      */
     List<RegisteredOrganization> ancestorsOf( RegisteredOrganization registeredOrganization,
@@ -209,10 +240,12 @@ public interface ParticipationManager {
 
     /**
      * Finds agency by id.
-     * @param agencyId a long - positive if fixed, negative if participation as placeholder
+     *
+     * @param agencyId         a long - positive if fixed, negative if participation as placeholder
      * @param communityService a community service
      * @return an agency
      * @throws NotFoundException if not found
      */
     Agency findAgencyById( long agencyId, CommunityService communityService ) throws NotFoundException;
+
 }

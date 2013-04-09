@@ -1,5 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
+import com.mindalliance.channels.api.community.AgencyData;
+import com.mindalliance.channels.api.community.CommunityIdentifierData;
 import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
@@ -34,7 +36,7 @@ import java.util.Set;
  * Time: 2:45 PM
  */
 @XmlRootElement( name = "protocols", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "planIdentifier", "userEmail", "userFullName", "dateVersioned", "actorIds",
+@XmlType( propOrder = {"date", "communityIdentifier", "userEmail", "userFullName", "dateVersioned", "actorIds",
         "employments", "checklists", "expectedRequests", "environment"} )
 public class ProtocolsData implements Serializable {
 
@@ -45,7 +47,7 @@ public class ProtocolsData implements Serializable {
     private List<EmploymentData> employments;
     private List<Agent> participatingAgents;
     private EnvironmentData environmentData;
-    private PlanIdentifierData planIdentifierData;
+    private CommunityIdentifierData communityIdentifierData;
     private String dateVersioned;
 
     public ProtocolsData() {
@@ -86,7 +88,7 @@ public class ProtocolsData implements Serializable {
         initChecklistsAndRequests( serverUrl, communityService, user );
         initEmployments( communityService );
         environmentData = new EnvironmentData( serverUrl, this, communityService );
-        planIdentifierData = new PlanIdentifierData( communityService );
+        communityIdentifierData = new CommunityIdentifierData( serverUrl, communityService );
         dateVersioned = new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" )
                 .format( communityService.getPlan().getWhenVersioned() );
     }
@@ -119,7 +121,7 @@ public class ProtocolsData implements Serializable {
                     allCommitments.benefiting( assignment ),
                     committingCommitments,
                     user ) );
-            for ( CommunityCommitment commitment : committingCommitments.requests() ) {
+            for ( CommunityCommitment commitment : committingCommitments.requests().notToSelf() ) {
                 expectedRequests.add( new RequestData(
                         serverUrl,
                         communityService,
@@ -148,9 +150,13 @@ public class ProtocolsData implements Serializable {
         return new SimpleDateFormat( "yyyy/MM/dd H:mm:ss z" ).format( new Date() );
     }
 
-    @XmlElement( name = "plan" )
     public PlanIdentifierData getPlanIdentifier() {
-        return planIdentifierData;
+        return communityIdentifierData.getPlanIdentifier();
+    }
+
+    @XmlElement( name = "community" )
+    public CommunityIdentifierData getCommunityIdentifier() {
+        return communityIdentifierData;
     }
 
     @XmlElement
@@ -230,7 +236,7 @@ public class ProtocolsData implements Serializable {
     public Set<AgencyData> allEmployers() {
         Set<AgencyData> allEmployers = new HashSet<AgencyData>();
         for ( ChecklistData checklistData : getChecklists() ) {
-            allEmployers.add( checklistData.employer() );
+            allEmployers.add( checklistData.getEmployer() );
         }
         return allEmployers;
     }
