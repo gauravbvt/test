@@ -15,8 +15,7 @@
         <a href="#directory">Your contacts directory</a>
     </div>
     <h1>
-        Checklists
-        for <span wicket:id="communityName">Community name</span>
+        My checklists for <span wicket:id="communityName">Community name</span>
     </h1>
 
     <div class="plandetails-cont">
@@ -50,7 +49,7 @@
     </div>
 
     <div wicket:id="finder">
-        <h2>What is expected of me</h2>
+        <h2>What I'm expected to do</h2>
         <!-- Table of content -->
         <div class="ongoing-toc" wicket:id="ongoing-toc">
             <h3>My ongoing tasks</h3>
@@ -61,7 +60,7 @@
             </ul>
         </div>
         <div class="observations-toc" wicket:id="observations-toc">
-            <h3>What I'm expected do when I notice certain things</h3>
+            <h3>Tasks I do when I notice certain things</h3>
             <ul>
                 <li wicket:id="observations">  <!-- repeated -->
                     <div class="toc-trigger">
@@ -76,7 +75,7 @@
             </ul>
         </div>
         <div class="communications-toc" wicket:id="communications-toc">
-            <h3>What I'm expected to do when I'm notified or asked for information</h3>
+            <h3>Tasks I do when I'm notified or asked for information</h3>
 
             <div wicket:id="commSections">  <!-- repeated -->
                 <h6 wicket:id="letter">A</h6>
@@ -117,11 +116,15 @@
                 </div>
             </div>
         </div>
-        <div>[EXPECTED REQUESTS HERE]</div>
+    </div>
+
+    <div class="expected-queries" wicket:id="expectedQueries">
+        <h2>What I am expected to answer right away</h2>
+        <div class="procedures" wicket:id="queries">[queries panel]</div>
     </div>
 
     <div wicket:id="protocols">
-        <h2>My task checklists</h2>
+        <h2>My tasks</h2>
 
         <div wicket:id="ongoing">
             <div class="ongoingProcedures" wicket:id="ongoingProcedures"> <!-- repeated -->
@@ -147,6 +150,22 @@
             </div>
         </div>
         <div wicket:id="onNotifications">
+            <div class="triggered" wicket:id="triggered"> <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="onFollowUps">
+            <div class="triggered" wicket:id="triggered"> <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="onResearches">
             <div class="triggered" wicket:id="triggered"> <!-- repeated -->
                 <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
                     <div class="trigger" wicket:id="trigger">[trigger panel]</div>

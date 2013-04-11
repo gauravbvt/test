@@ -81,6 +81,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private WebMarkupContainer finderContainer;
     private WebMarkupContainer protocolsContainer;
     private WebMarkupContainer directoryContainer;
+    private WebMarkupContainer queriesContainer;
 
     public ChecklistsPage( PageParameters parameters ) {
         super( parameters );
@@ -116,7 +117,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "Checklists";
+        return "Participant's Checklists";
     }
 
     @Override
@@ -158,7 +159,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         intermediates.add( new PagePathItem(
                 AllProtocolsPage.class,
                 getParameters(),
-                "All collaboration checklists" ) );
+                "All Participants' Checklists" ) );
         return intermediates;
     }
 
@@ -214,6 +215,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         addParticipation();
         addDocumentation();
         addProtocolsFinder();
+        addExpectedQueries();
         addProtocols();
         addDirectory();
     }
@@ -447,6 +449,15 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         return interlocutorNotificationsListView;
     }
 
+    // Expected queries (non-triggering requests)
+
+    private void addExpectedQueries() {
+        queriesContainer = new WebMarkupContainer( "expectedQueries" );
+        queriesContainer.setVisible( !finder.getExpectedQueries().isEmpty() );
+        getContainer().add( queriesContainer );
+        queriesContainer.add(  new QueriesPanel( "queries", finder ) );
+    }
+
     // PROTOCOLS
 
     private void addProtocols() {
@@ -456,6 +467,9 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         addOnObservationChecklists();
         addOnRequestChecklists();
         addOnNotificationChecklists();
+        addOnFollowUpChecklists();
+        addOnResearchChecklists();
+
     }
 
 
@@ -504,6 +518,19 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 finder.getOnNotificationChecklists() ) );
     }
 
+    private void addOnFollowUpChecklists() {
+        protocolsContainer.add( makeTriggeredChecklistContainer(
+                "onFollowUps",
+                finder.getOnFollowUpChecklists() ) );
+    }
+
+    private void addOnResearchChecklists() {
+        protocolsContainer.add( makeTriggeredChecklistContainer(
+                "onResearches",
+                finder.getOnResearchChecklists() ) );
+    }
+
+
 
     private WebMarkupContainer makeTriggeredChecklistContainer(
             String procsContainerId,
@@ -528,16 +555,16 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     }
 
     private AbstractDataPanel makeTriggerDataPanel( String id, TriggerData triggerData ) {
-/*
-        if ( triggerData.isOnObserving() )
-            return new ObservationTriggerDataPanel( id, triggerData, finder );
-        else
-*/
         if ( triggerData.isOnNotificationFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
         else if ( triggerData.isOnRequestFromOther() )
             return new CommTriggerDataPanel( id, triggerData, finder );
+        else if ( triggerData.isOnFollowingUp() )
+            return new SelfTriggerDataPanel( id, triggerData, finder );
+        else if ( triggerData.isOnResearching() )
+            return new SelfTriggerDataPanel( id, triggerData, finder );
         else throw new RuntimeException( "Unknown trigger " + triggerData.getLabel() );
+
     }
 
     private WebMarkupContainer makeEventTriggeredChecklistsContainer(

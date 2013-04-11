@@ -4,6 +4,7 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
@@ -36,6 +37,7 @@ public class RequestData extends AbstractFlowData {
     private List<ContactData> contacts;
     private List<CommunityEmployment> contactEmployments;
     private String impactOnConsumingTask;
+    private AssignmentData assignmentData;
 
     public RequestData() {
         // required
@@ -67,7 +69,20 @@ public class RequestData extends AbstractFlowData {
         initCommitments( communityService );
         initContactEmployments( serverUrl, communityService, userInfo );
         initConsumingTask( serverUrl, communityService );
+        initAssignmentData( serverUrl, communityService, new ChannelsUser( userInfo ) );
         initOtherData( communityService );
+    }
+
+    private void initAssignmentData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        CommunityCommitments commitments = communityService.findAllCommitments( getSharing(), false );
+        assignmentData = new AssignmentData(
+                serverUrl,
+                getAssignment(),
+                commitments.benefiting( getAssignment() ),
+                commitments.committing( getAssignment() ),
+                communityService,
+                user
+        );
     }
 
     private void initCommitments( CommunityService communityService ) {
@@ -236,5 +251,7 @@ public class RequestData extends AbstractFlowData {
         return false;
     }
 
-
+    public AssignmentData getAssignmentData() {
+        return assignmentData;
+    }
 }

@@ -47,7 +47,7 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
 
     @Override
     public String getPageName() {
-        return "All Collaboration Checklists";
+        return "All Participants' Checklists";
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.procedures.NotificationData;
 import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -50,6 +51,13 @@ public class AnswerStepData extends CommunicationStepData {
                 true,
                 getChecklist().getAssignment(),
                 user );
+        setFlowData( new NotificationData(
+                serverUrl,
+                communityService,
+                request.getSharing(),
+                false,
+                getChecklist().getAssignment(),
+                user ) );
     }
 
     @Override

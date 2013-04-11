@@ -490,7 +490,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 : getIntent().getLabel().toLowerCase();
         if ( isAskedFor() ) {
             if ( answer ) {
-                sb.append( prerequisite ? "Answering " : "Answer " )
+                sb.append( prerequisite ? "Answering with " : "Answer with " )
                         .append( intentLabel )
                         .append( " \"" )
                         .append( message )
@@ -499,7 +499,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         .append( getShortName( getTarget(), false ) );
 
             } else {
-           sb.append( prerequisite ? "Getting " : "Get " )
+           sb.append( prerequisite ? "Asking for " : "Ask for " )
                    .append( intentLabel )
                    .append( " \"" )
                    .append( message )

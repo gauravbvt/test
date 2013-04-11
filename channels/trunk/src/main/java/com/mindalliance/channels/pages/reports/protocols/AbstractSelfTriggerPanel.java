@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import java.util.List;
 
 /**
- * OBSOLETE
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -27,7 +26,9 @@ public class AbstractSelfTriggerPanel extends AbstractTriggerDataPanel {
     protected void addInformation() {
         add( new Label(
                 "header",
-                "OBSOLETE"
+                getTriggerData().isOnFollowingUp()
+                        ? "Upon acquiring"
+                        : "When researching"
         ) );
         add( new Label( "information", getInformationData().getName() ) );
     }
@@ -50,7 +51,9 @@ public class AbstractSelfTriggerPanel extends AbstractTriggerDataPanel {
     }
 
     protected InformationData getInformationData() {
-        return null; // OBSOLETE
+        return getTriggerData().isOnFollowingUp()
+                ? getTriggerData().getOnFollowUp().getInformation()
+                : getTriggerData().getOnResearch().getInformation();
     }
 
     protected List<ElementOfInformationData> getEois() {

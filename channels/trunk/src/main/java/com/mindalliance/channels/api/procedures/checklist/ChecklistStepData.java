@@ -33,7 +33,7 @@ public class ChecklistStepData implements Serializable {
     private RequestStepData requestStep;
     private AnswerStepData answerStep;
     private ResearchStepData researchStep;
-    private FollowUpActData followUpStep;
+    private FollowUpStepData followUpStep;
 
     public ChecklistStepData() {
         // required
@@ -69,7 +69,7 @@ public class ChecklistStepData implements Serializable {
             if ( subTaskStep.isResearch() ) {
                 researchStep = new ResearchStepData( step, checklist, serverUrl, communityService, user );
             } else if ( subTaskStep.isFollowUp() ) {
-                followUpStep = new FollowUpActData(step, checklist, serverUrl, communityService, user);
+                followUpStep = new FollowUpStepData(step, checklist, serverUrl, communityService, user);
             }  else {
                 throw new RuntimeException( "Unknown sub-task step" );
             }
@@ -105,7 +105,7 @@ public class ChecklistStepData implements Serializable {
     }
 
     @XmlElement
-    public FollowUpActData getFollowUpStep() {
+    public FollowUpStepData getFollowUpStep() {
         return followUpStep;
     }
 
@@ -183,4 +183,5 @@ public class ChecklistStepData implements Serializable {
     public Step getStep() {
         return getStepData().getStep();
     }
+
 }

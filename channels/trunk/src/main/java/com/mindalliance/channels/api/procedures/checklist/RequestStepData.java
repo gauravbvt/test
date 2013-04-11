@@ -50,6 +50,13 @@ public class RequestStepData extends CommunicationStepData {
                 true,
                 getChecklist().getAssignment(),
                 user );
+        setFlowData( new RequestData(
+                serverUrl,
+                communityService,
+                request.getSharing(),
+                true,
+                getChecklist().getAssignment(),
+                user ) );
     }
 
     @Override

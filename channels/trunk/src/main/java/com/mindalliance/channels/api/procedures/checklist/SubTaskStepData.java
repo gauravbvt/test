@@ -15,6 +15,7 @@ import com.mindalliance.channels.core.model.checklist.SubTaskStep;
  */
 public abstract class SubTaskStepData extends AbstractStepData {
 
+
     public SubTaskStepData() {
         // required
     }
@@ -23,7 +24,7 @@ public abstract class SubTaskStepData extends AbstractStepData {
                             ChecklistData checklist,
                             String serverUrl,
                             CommunityService communityService,
-                            ChannelsUser user )  {
+                            ChannelsUser user ) {
         super( step, checklist, serverUrl, communityService, user );
     }
 
@@ -36,6 +37,7 @@ public abstract class SubTaskStepData extends AbstractStepData {
     }
 
     protected SubTaskStep getSubTaskStep() {
-        return (SubTaskStep)getStep();
+        return (SubTaskStep) getStep();
     }
+
 }

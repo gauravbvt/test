@@ -2,6 +2,9 @@ package com.mindalliance.channels.api.procedures.checklist;
 
 import com.mindalliance.channels.api.procedures.FollowUpData;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Step;
@@ -19,18 +22,18 @@ import java.util.List;
  * Time: 8:34 PM
  */
 @XmlType( name = "followUpStep", propOrder = {"label", "followUp", "ifConditions", "unlessConditions", "prerequisites"} )
-public class FollowUpActData  extends SubTaskStepData {
+public class FollowUpStepData extends SubTaskStepData {
 
     private FollowUpData followUp;
 
-    public FollowUpActData() {
+    public FollowUpStepData() {
         // required
     }
-    public FollowUpActData( Step step,
-                            ChecklistData checklist,
-                            String serverUrl,
-                            CommunityService communityService,
-                            ChannelsUser user ) {
+    public FollowUpStepData( Step step,
+                             ChecklistData checklist,
+                             String serverUrl,
+                             CommunityService communityService,
+                             ChannelsUser user ) {
         super( step, checklist, serverUrl, communityService, user );
     }
 
@@ -41,9 +44,19 @@ public class FollowUpActData  extends SubTaskStepData {
                 serverUrl,
                 communityService,
                 getSubTaskStep().getSharing(),
-                getChecklist().getAssignment(),
+                getFollowUpAssignment( communityService ),
                 user
         );
+     }
+
+    private CommunityAssignment getFollowUpAssignment( CommunityService communityService ) {
+        CommunityCommitments allCommitments = communityService.findAllCommitments(
+                getSubTaskStep().getSharing(),
+                true
+        );
+        CommunityCommitments followUpCommitments = allCommitments.committing( getChecklist().getAssignment() );
+        CommunityCommitment followUpCommitment = followUpCommitments.iterator().next();
+        return followUpCommitment.getBeneficiary();
     }
 
     @Override

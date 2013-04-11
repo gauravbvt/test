@@ -239,13 +239,13 @@ public class Checklist implements Serializable, Mappable {
     private List<SubTaskStep> listSubTaskSteps() {
         List<SubTaskStep> subTaskSteps = new ArrayList<SubTaskStep>();
         for ( Flow sharing : part.getAllSharingReceives() ) {
-            if ( SubTaskStep.isSubTask( sharing ) ) {
-                subTaskSteps.add( new SubTaskStep( sharing ) );
+            if ( SubTaskStep.isSubTask( sharing, false ) ) {
+                subTaskSteps.add( new SubTaskStep( sharing, false ) );
             }
         }
         for ( Flow sharing : part.getAllSharingSends() ) {
-            if ( SubTaskStep.isSubTask( sharing ) ) {
-                subTaskSteps.add( new SubTaskStep( sharing ) );
+            if ( SubTaskStep.isSubTask( sharing, true ) ) {
+                subTaskSteps.add( new SubTaskStep( sharing, true ) );
             }
         }
         return subTaskSteps;

@@ -2,6 +2,9 @@ package com.mindalliance.channels.api.procedures.checklist;
 
 import com.mindalliance.channels.api.procedures.ResearchData;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.checklist.Step;
 
@@ -41,10 +44,21 @@ public class ResearchStepData extends SubTaskStepData {
                 serverUrl,
                 communityService,
                 getSubTaskStep().getSharing(),
-                getChecklist().getAssignment(),
+                getResearchAssignment( communityService ),
                 user
         );
     }
+
+    private CommunityAssignment getResearchAssignment( CommunityService communityService ) {
+        CommunityCommitments allCommitments = communityService.findAllCommitments(
+                getSubTaskStep().getSharing(),
+                true
+        );
+        CommunityCommitments researchCommitments = allCommitments.benefiting( getChecklist().getAssignment() );
+        CommunityCommitment researchCommitment = researchCommitments.iterator().next();
+        return researchCommitment.getCommitter();
+    }
+
 
     @Override
     @XmlElement( name = "if" )

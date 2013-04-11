@@ -6,6 +6,7 @@ import com.mindalliance.channels.api.ModelObjectData;
 import com.mindalliance.channels.api.directory.ContactData;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -89,5 +90,28 @@ public abstract class AbstractDataPanel extends Panel {
         component.add( new TipTipBehavior( options ) );
         return component;
     }
+
+    /**
+     * Set and update a component's visibility.
+     *
+     * @param target    an ajax request target
+     * @param component a component
+     * @param visible   a boolean
+     */
+    protected static void makeVisible( AjaxRequestTarget target, Component component, boolean visible ) {
+        makeVisible( component, visible );
+        target.add( component );
+    }
+
+    /**
+     * Set a component's visibility.
+     *
+     * @param component a component
+     * @param visible   a boolean
+     */
+    protected static void makeVisible( Component component, boolean visible ) {
+        component.add( new AttributeModifier( "style", new Model<String>( visible ? "" : "display:none" ) ) );
+    }
+
 
 }

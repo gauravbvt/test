@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -51,7 +52,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
         String cssClasses = index % 2 == 0 ? "data-table step even-step" : "data-table step odd-step";
         stepContainer.add( new AttributeModifier( "class", cssClasses ) );
         add( stepContainer );
-        addStepLabel();
+        addStepAct();
         addConstraints();
     }
 
@@ -61,10 +62,20 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
     }
 
 
-    private void addStepLabel() {
+    private void addStepAct() {
+        Component actPanel = getStep().isActionStep()
+                ? new ActionStepDataPanel( "act", stepData, getFinder() )
+                : getStep().isCommunicationStep()
+                ? new CommunicationStepDataPanel( "act", stepData, getFinder() )
+                : new SubTaskStepDataPanel( "act", stepData, getFinder() );
+        actPanel.add( new AttributeModifier( "class", getStep().isRequired() ? "required" : "optional" ) );
+        stepContainer.add( actPanel );
+    }
+
+    private Label makeLocalActStep(  ) {
         Label actLabel = new Label( "act", getStep().getLabel() );
-        actLabel.add( new AttributeModifier( "class", getStep().isRequired() ? "required" : "optional" ) );
-        stepContainer.add( actLabel );
+        actLabel.add(  new AttributeModifier("class", "step-act") );
+        return actLabel;
     }
 
     private void addConstraints() {

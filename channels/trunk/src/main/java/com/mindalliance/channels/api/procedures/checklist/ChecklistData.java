@@ -121,6 +121,20 @@ public class ChecklistData implements Serializable {
                 triggerData.initTrigger( communityService );
                 triggers.add( triggerData );
             }
+            // follow ups
+            for ( Flow triggerSelfNotification : triggeringNotificationsToSelf() ) {
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
+                triggerData.setNotificationToSelf( triggerSelfNotification );
+                triggerData.initTrigger( communityService );
+                triggers.add( triggerData );
+            }
+            // research
+            for ( Flow triggerRequest : triggeringRequestsToSelf() ) {
+                TriggerData triggerData = new TriggerData( serverUrl, communityService, assignment, user );
+                triggerData.setRequestToSelf( triggerRequest );
+                triggerData.initTrigger( communityService );
+                triggers.add( triggerData );
+            }
         }
     }
 
@@ -145,6 +159,29 @@ public class ChecklistData implements Serializable {
         }
         return new ArrayList<Flow>( triggerRequests );
     }
+
+    private List<Flow> triggeringNotificationsToSelf() {
+        Set<Flow> triggerNotificationsToSelf = new HashSet<Flow>();
+        for ( CommunityCommitment commitment : benefitingCommitments.toSelf() ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isNotification() && flow.isTriggeringToTarget() && commitment.isToSelf() ) {
+                triggerNotificationsToSelf.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerNotificationsToSelf );
+    }
+
+    private List<Flow> triggeringRequestsToSelf() {
+        Set<Flow> triggerRequestsToSelf = new HashSet<Flow>();
+        for ( CommunityCommitment commitment : committingCommitments ) {
+            Flow flow = commitment.getSharing();
+            if ( flow.isAskedFor() && flow.isTriggeringToSource() && commitment.isToSelf() ) {
+                triggerRequestsToSelf.add( commitment.getSharing() );
+            }
+        }
+        return new ArrayList<Flow>( triggerRequestsToSelf );
+    }
+
 
     private void initSteps( String serverUrl, CommunityService communityService, ChannelsUser user ) {
         steps = new ArrayList<ChecklistStepData>();
@@ -416,6 +453,35 @@ public class ChecklistData implements Serializable {
                 }
         );
     }
+
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getFollowUpTriggers() {
+        return (List<TriggerData>) CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).isOnFollowingUp();
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<TriggerData> getResearchTriggers() {
+        return (List<TriggerData>) CollectionUtils.select(
+                getTriggers(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (TriggerData) object ).isOnResearching();
+                    }
+                }
+        );
+    }
+
+
+
     public String getTaskLabel() {
         StringBuilder sb = new StringBuilder();
         if ( isOngoing() ) {

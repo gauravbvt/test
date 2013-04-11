@@ -16,21 +16,23 @@ public class SubTaskStep extends Step {
     public static final String REF_PREFIX = "sub|";
 
     private Flow sharing;
+    private boolean sending;
 
-    public SubTaskStep( Flow sharing ) {
+    public SubTaskStep( Flow sharing, boolean sending ) {
         this.sharing = sharing;
+        this.sending = sending;
     }
 
-    public static boolean isSubTask( Flow flow ) {
-        return isResearchSharing( flow ) || isFollowUpSharing( flow );
+    public static boolean isSubTask( Flow flow, boolean sending ) {
+        return isResearchSharing( flow, sending ) || isFollowUpSharing( flow, sending );
     }
 
-    private static boolean isFollowUpSharing( Flow flow ) {
-        return flow.isNotification() && flow.isTriggeringToTarget() && flow.isToSelf();
+    private static boolean isFollowUpSharing( Flow flow, boolean sending ) {
+        return sending && flow.isNotification() && flow.isTriggeringToTarget() && flow.isToSelf();
     }
 
-    private static boolean isResearchSharing( Flow flow ) {
-        return flow.isAskedFor() && flow.isTriggeringToSource() && flow.isToSelf();
+    private static boolean isResearchSharing( Flow flow, boolean sending ) {
+        return !sending && flow.isAskedFor() && flow.isTriggeringToSource() && flow.isToSelf();
     }
 
     public static boolean isSubTaskStepRef( String stepRef ) {
@@ -38,11 +40,11 @@ public class SubTaskStep extends Step {
     }
 
     public boolean isResearch() {
-        return isResearchSharing( sharing );
+        return isResearchSharing( sharing, sending );
     }
 
     public boolean isFollowUp() {
-        return isFollowUpSharing( sharing );
+        return isFollowUpSharing( sharing, sending );
     }
 
     @Override

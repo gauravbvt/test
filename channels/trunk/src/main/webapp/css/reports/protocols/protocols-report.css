@@ -626,10 +626,26 @@ div.documentation-top label {
 
 .checklist .step .optional {
     background: transparent url('../../../images/checkbox_optional.png') no-repeat 0 -1px;
-    padding-left: 20px;
 }
 
 .checklist .step .required {
     background: transparent url('../../../images/checkbox_required.png') no-repeat 0 -1px;
+}
+
+.checklist .step-act {
     padding-left: 20px;
 }
+
+.checklist .more  {
+    float: right;
+}
+
+/* queries */
+
+div.protocols-content div.expected-queries h3 {
+    padding: 30px 0;
+}
+
+
+
+

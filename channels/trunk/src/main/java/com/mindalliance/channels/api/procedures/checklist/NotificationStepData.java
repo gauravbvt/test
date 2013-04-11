@@ -19,7 +19,7 @@ import java.util.Set;
  * Date: 4/1/13
  * Time: 10:05 PM
  */
-@XmlType( name = "notificationStep", propOrder = {"label", "notification", "ifConditions", "unlessConditions", "prerequisites"})
+@XmlType(name = "notificationStep", propOrder = {"label", "notification", "ifConditions", "unlessConditions", "prerequisites"})
 public class NotificationStepData extends CommunicationStepData {
 
     private NotificationData notification;
@@ -38,7 +38,7 @@ public class NotificationStepData extends CommunicationStepData {
 
     @Override
     protected void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
-        super.initData(  serverUrl, communityService, user );
+        super.initData( serverUrl, communityService, user );
         notification = new NotificationData(
                 serverUrl,
                 communityService,
@@ -46,10 +46,17 @@ public class NotificationStepData extends CommunicationStepData {
                 true,
                 getChecklist().getAssignment(),
                 user );
+        setFlowData( new NotificationData(
+                serverUrl,
+                communityService,
+                notification.getSharing(),
+                true,
+                getChecklist().getAssignment(),
+                user ) );
     }
 
     @Override
-    @XmlElement (name = "if")
+    @XmlElement(name = "if")
     public List<ConditionData> getIfConditions() {
         return super.getIfConditions();
     }
@@ -61,13 +68,13 @@ public class NotificationStepData extends CommunicationStepData {
     }
 
     @Override
-    @XmlElement( name = "after" )
+    @XmlElement(name = "after")
     public List<Integer> getPrerequisites() {
         return super.getPrerequisites();
     }
 
     @Override
-    @XmlElement ( name = "unless" )
+    @XmlElement(name = "unless")
     public List<ConditionData> getUnlessConditions() {
         return super.getUnlessConditions();
     }

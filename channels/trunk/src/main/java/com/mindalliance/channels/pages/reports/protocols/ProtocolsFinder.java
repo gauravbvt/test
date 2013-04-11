@@ -7,6 +7,7 @@ import com.mindalliance.channels.api.directory.DirectoryData;
 import com.mindalliance.channels.api.plan.PlanScopeData;
 import com.mindalliance.channels.api.procedures.ObservationData;
 import com.mindalliance.channels.api.procedures.ProtocolsData;
+import com.mindalliance.channels.api.procedures.RequestData;
 import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
@@ -50,6 +51,9 @@ public class ProtocolsFinder implements Serializable {
     private Map<TriggerData, List<ChecklistData>> onNotifications;
     private Map<ContactData, Map<TriggerData, List<ChecklistData>>> onNotificationsByContact;
     private Map<ContactData, Map<TriggerData, List<ChecklistData>>> onRequestsByContact;
+    private Map<TriggerData, List<ChecklistData>> onFollowUps;
+    private Map<TriggerData, List<ChecklistData>> onResearches;
+    private List<RequestData> expectedQueries;
     private Set<ContactData> rolodex;
     private PlanScopeData planScopeData;
     private DirectoryData directoryData;
@@ -84,10 +88,14 @@ public class ProtocolsFinder implements Serializable {
         onRequestsByContact = new HashMap<ContactData, Map<TriggerData, List<ChecklistData>>>();
         onRequests = new HashMap<TriggerData, List<ChecklistData>>();
         onNotifications = new HashMap<TriggerData, List<ChecklistData>>();
+        onFollowUps = new HashMap<TriggerData, List<ChecklistData>>();
+        onResearches = new HashMap<TriggerData, List<ChecklistData>>();
+        expectedQueries = new ArrayList<RequestData>();
         rolodex = new HashSet<ContactData>();
         for ( ChecklistData checklistData : protocolsData.getChecklists() ) {
             processChecklistData( checklistData, communityService, user );
         }
+        expectedQueries = protocolsData.getExpectedQueries();
     }
 
     private void processChecklistData(
@@ -114,7 +122,12 @@ public class ProtocolsFinder implements Serializable {
                     rolodex.add( contactData );
                 }
             }
-
+            for ( TriggerData triggerData : checklistData.getFollowUpTriggers() ) {
+                addTo( onFollowUps, triggerData, checklistData );
+            }
+            for ( TriggerData triggerData : checklistData.getResearchTriggers() ) {
+                addTo( onResearches, triggerData, checklistData );
+            }
         }
         // add contacts not yet added as direct, trigger contacts
         rolodex.addAll( checklistData.allContacts() );
@@ -168,6 +181,9 @@ public class ProtocolsFinder implements Serializable {
         if ( !list.contains( triggerData ) ) list.add( triggerData );
     }
 
+    public List<RequestData> getExpectedQueries() {
+        return expectedQueries;
+    }
 
     public List<ChecklistData> getOngoingProcedures() {
         return ongoingProcedures;
@@ -183,6 +199,14 @@ public class ProtocolsFinder implements Serializable {
 
     public Map<TriggerData, List<ChecklistData>> getOnNotificationChecklists() {
         return onNotifications;
+    }
+
+    public Map<TriggerData, List<ChecklistData>> getOnFollowUpChecklists() {
+        return onFollowUps;
+    }
+
+    public Map<TriggerData, List<ChecklistData>> getOnResearchChecklists() {
+        return onResearches;
     }
 
     @SuppressWarnings("unchecked")

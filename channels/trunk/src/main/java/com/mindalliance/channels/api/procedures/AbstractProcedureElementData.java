@@ -60,4 +60,13 @@ abstract public class AbstractProcedureElementData  implements Serializable {
     protected String getUsername() {
         return user == null ? null : StringEscapeUtils.escapeXml( user.getUsername() );
     }
+
+    public String getAnchor() {
+        return Long.toString( getAssignment().getPart().getId() );
+    }
+
+    public String getTaskLabel() {
+        return "\"" + getAssignment().getPart().getTask() + "\"";
+    }
+
 }

@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
@@ -18,12 +19,12 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 12/12/11
  * Time: 8:49 PM
  */
-@XmlType( propOrder = {"information", "maxDelay", "researchTask", "consumingTask", "instructions",
+@XmlType( propOrder = {"information", "maxDelay", "researchAssignment", "consumingTask", "instructions",
         "failureImpact", "documentation"} )
 public class ResearchData extends AbstractProcedureElementData {
 
     private Flow requestToSelf;
-    private TaskData researchTaskData;
+    private AssignmentData researchAssignmentData;
     private TaskData consumingTaskData;
     private String failureImpact;
     private DocumentationData documentation;
@@ -40,30 +41,35 @@ public class ResearchData extends AbstractProcedureElementData {
             ChannelsUser user ) {
         super( communityService, assignment, user );
         this.requestToSelf = requestToSelf;
-        initData( serverUrl, communityService );
+        initData( serverUrl, communityService, user );
     }
 
-    private void initData( String serverUrl, CommunityService communityService ) {
-        initResearchTask( serverUrl, communityService );
+    private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        initResearchAssignment( serverUrl, communityService, user );
         initConsumingTaskData( serverUrl, communityService );
         failureImpact = communityService.getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
         documentation =  new DocumentationData( serverUrl, requestToSelf );
     }
 
     private void initConsumingTaskData( String serverUrl, CommunityService communityService ) {
-        consumingTaskData = new TaskData(
+         consumingTaskData = new TaskData(
                 serverUrl,
                 communityService,
                 (Part)requestToSelf.getTarget(),
                 getUser() );
     }
 
-    private void initResearchTask( String serverUrl, CommunityService communityService ) {
-        researchTaskData = new TaskData(
+    private void initResearchAssignment( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        CommunityCommitments allCommitments = communityService.getAllCommitments( true );   // include commitments to self
+        allCommitments.committing( getAssignment() );
+        researchAssignmentData = new AssignmentData(
                 serverUrl,
+                getAssignment(),
+                allCommitments.benefiting( getAssignment() ),
+                allCommitments.committing( getAssignment() ),
                 communityService,
-                (Part)requestToSelf.getSource(),
-                getUser() );
+                user
+        );
     }
 
     @XmlElement
@@ -77,8 +83,13 @@ public class ResearchData extends AbstractProcedureElementData {
     }
 
     @XmlElement
+    public AssignmentData getResearchAssignment() {
+        return researchAssignmentData;
+    }
+
+
     public TaskData getResearchTask() {
-        return researchTaskData;
+        return researchAssignmentData.getTask();
     }
 
     @XmlElement

@@ -35,15 +35,15 @@ import java.util.Set;
  * Date: 4/1/13
  * Time: 2:45 PM
  */
-@XmlRootElement( name = "protocols", namespace = "http://mind-alliance.com/api/isp/v1/" )
-@XmlType( propOrder = {"date", "communityIdentifier", "userEmail", "userFullName", "dateVersioned", "actorIds",
-        "employments", "checklists", "expectedRequests", "environment"} )
+@XmlRootElement(name = "protocols", namespace = "http://mind-alliance.com/api/isp/v1/")
+@XmlType(propOrder = {"date", "communityIdentifier", "userEmail", "userFullName", "dateVersioned", "actorIds",
+        "employments", "checklists", "expectedQueries", "environment"})
 public class ProtocolsData implements Serializable {
 
     private List<Agent> agents;
     private ChannelsUser user;
     private List<ChecklistData> checklists;
-    private List<RequestData> expectedRequests;
+    private List<RequestData> expectedQueries;
     private List<EmploymentData> employments;
     private List<Agent> participatingAgents;
     private EnvironmentData environmentData;
@@ -104,7 +104,6 @@ public class ProtocolsData implements Serializable {
 
     private void initChecklistsAndRequests( String serverUrl, CommunityService communityService, ChannelsUser user ) {
         checklists = new ArrayList<ChecklistData>();
-        expectedRequests = new ArrayList<RequestData>(  );
         CommunityCommitments allCommitments = communityService.getAllCommitments( true );   // include commitments to self
         Set<CommunityAssignment> assignments = new HashSet<CommunityAssignment>();
         for ( Agent agent : agents ) {
@@ -121,16 +120,22 @@ public class ProtocolsData implements Serializable {
                     allCommitments.benefiting( assignment ),
                     committingCommitments,
                     user ) );
-            for ( CommunityCommitment commitment : committingCommitments.requests().notToSelf() ) {
-                expectedRequests.add( new RequestData(
-                        serverUrl,
-                        communityService,
-                        commitment.getSharing(),
-                        false,
-                        assignment,
-                        user));
+        }
+        expectedQueries = new ArrayList<RequestData>();
+        for ( CommunityCommitment commitment : allCommitments.requests().notToSelf() ) {
+            for ( CommunityAssignment assignment : assignments ) {
+                if ( commitment.getCommitter().equals( assignment ) ) {
+                    expectedQueries.add( new RequestData(
+                            serverUrl,
+                            communityService,
+                            commitment.getSharing(),
+                            false, // not initiating
+                            assignment,
+                            user ) );
+                }
             }
         }
+
     }
 
     private void initParticipatingAgents(
@@ -154,7 +159,7 @@ public class ProtocolsData implements Serializable {
         return communityIdentifierData.getPlanIdentifier();
     }
 
-    @XmlElement( name = "community" )
+    @XmlElement(name = "community")
     public CommunityIdentifierData getCommunityIdentifier() {
         return communityIdentifierData;
     }
@@ -164,7 +169,7 @@ public class ProtocolsData implements Serializable {
         return dateVersioned;
     }
 
-    @XmlElement( name = "agentId" )
+    @XmlElement(name = "agentId")
     public List<Long> getActorIds() {
         List<Long> agentIds = new ArrayList<Long>();
         for ( Agent agent : agents ) {
@@ -177,20 +182,20 @@ public class ProtocolsData implements Serializable {
         return participatingAgents;
     }
 
-    @XmlElement( name = "employment" )
+    @XmlElement(name = "employment")
     // Get given actor's or user's employments
     public List<EmploymentData> getEmployments() {
         return employments;
     }
 
-    @XmlElement( name = "checklist" )
+    @XmlElement(name = "checklist")
     public List<ChecklistData> getChecklists() {
         return checklists;
     }
 
-    @XmlElement( name = "expectedRequest" )
-    public List<RequestData> getExpectedRequests() {
-        return expectedRequests;
+    @XmlElement(name = "expectedRequest")
+    public List<RequestData> getExpectedQueries() {
+        return expectedQueries;
     }
 
 
@@ -227,7 +232,7 @@ public class ProtocolsData implements Serializable {
         for ( ChecklistData checklistData : getChecklists() ) {
             allContacts.addAll( checklistData.allContacts() );
         }
-        for ( RequestData expectedRequest : getExpectedRequests()) {
+        for ( RequestData expectedRequest : getExpectedQueries() ) {
             allContacts.addAll( expectedRequest.getContacts() );
         }
         return allContacts;
@@ -242,7 +247,7 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allEventsIds() {
-        Set<Long> ids = new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>();
         for ( ChecklistData checklistData : getChecklists() ) {
             ids.addAll( checklistData.allEventIds() );
         }
@@ -250,7 +255,7 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allPhaseIds() {
-        Set<Long> ids = new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>();
         for ( ChecklistData checklistData : getChecklists() ) {
             ids.addAll( checklistData.allPhaseIds() );
         }
@@ -258,8 +263,8 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allOrganizationIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
             ids.addAll( requestData.allOrganizationIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
@@ -269,9 +274,9 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allActorIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
-            ids.addAll( requestData.allActorIds() ) ;
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
+            ids.addAll( requestData.allActorIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
             ids.addAll( checklistData.allActorIds() );
@@ -280,8 +285,8 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allRoleIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
             ids.addAll( requestData.allRoleIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
@@ -291,8 +296,8 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allPlaceIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
             ids.addAll( requestData.allPlaceIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
@@ -302,9 +307,9 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allMediumIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
-            ids.addAll( requestData.getMediumIds()) ;
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
+            ids.addAll( requestData.getMediumIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
             ids.addAll( checklistData.allMediumIds() );
@@ -313,9 +318,9 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allInfoProductIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
-            ids.addAll( requestData.getInfoProductIds() ) ;
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
+            ids.addAll( requestData.getInfoProductIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
             ids.addAll( checklistData.allInfoProductIds() );
@@ -324,9 +329,9 @@ public class ProtocolsData implements Serializable {
     }
 
     public Set<Long> allInfoFormatIds() {
-        Set<Long> ids = new HashSet<Long>(  );
-        for ( RequestData requestData : getExpectedRequests() ) {
-            ids.addAll( requestData.getInfoFormatIds() ) ;
+        Set<Long> ids = new HashSet<Long>();
+        for ( RequestData requestData : getExpectedQueries() ) {
+            ids.addAll( requestData.getInfoFormatIds() );
         }
         for ( ChecklistData checklistData : getChecklists() ) {
             ids.addAll( checklistData.allInfoFormatIds() );

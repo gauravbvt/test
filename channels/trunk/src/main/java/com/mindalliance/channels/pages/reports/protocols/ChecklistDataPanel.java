@@ -26,7 +26,7 @@ import java.util.Set;
  * Date: 4/9/13
  * Time: 11:19 AM
  */
-public class ChecklistDataPanel  extends AbstractDataPanel {
+public class ChecklistDataPanel extends AbstractDataPanel {
 
     private ChecklistData checklistData;
     private WebMarkupContainer taskDetailsContainer;
@@ -73,7 +73,7 @@ public class ChecklistDataPanel  extends AbstractDataPanel {
         Level severity = getTask().getFailureSeverity();
         String severityText = getTask().getFailureImpact().toLowerCase();
         WebMarkupContainer impactContainer = new WebMarkupContainer( "failureImpact" );
-        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText) );
+        impactContainer.add( new AttributeModifier( "class", "failureImpact-small " + severityText ) );
         add( impactContainer );
         impactContainer.setVisible( severity.ordinal() > Level.Low.ordinal() );
         Label severityLabel = new Label( "severity", severityText );
@@ -111,11 +111,20 @@ public class ChecklistDataPanel  extends AbstractDataPanel {
     }
 
     private void addTeammates() {
-        Set<ContactData> contacts = new HashSet<ContactData>(  );
+        Set<ContactData> contacts = new HashSet<ContactData>();
         contacts.addAll( checklistData.getAssignmentData().getTask().getTeamContacts() );
         WebMarkupContainer teamContainer = new WebMarkupContainer( "teammates" );
         teamContainer.setVisible( !contacts.isEmpty() );
-        taskDetailsContainer.add(  teamContainer );
+        taskDetailsContainer.add( teamContainer );
+        // teammates label
+        Label teammatesLabel = new Label(
+                "teammatesLabel",
+                contacts.size() > 1
+                        ? "My teammates are"
+                        : "My teammate is"
+        );
+        teamContainer.add( teammatesLabel );
+        // teammates list
         ListView<ContactData> contactsListView = new ListView<ContactData>(
                 "teammateContacts",
                 new ArrayList<ContactData>( contacts )

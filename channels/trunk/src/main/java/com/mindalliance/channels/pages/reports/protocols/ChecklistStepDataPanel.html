@@ -7,14 +7,11 @@
         lang="en">
 <body>
 <wicket:panel>
-    <table wicket:id="stepContainer" class="step">
+    <table wicket:id="stepContainer"> <!-- CSS class: "data-table step"  + "even-step" or "odd-step" -->
         <tr>
             <td>
-                <span wicket:id="act">do something</span>  <!-- CSS classes: "even-step" or "odd-step" + "required-step" (or nothing) + "action-step" or "notification-step" or "request-step"   -->
-               <!-- <a wicket:id="link" href="#">
-                    <span wicket:id="taskName">I do sub-task "something"</span>
-                </a>     -->
-            </td>
+                <span wicket:id="act">[step act panel]</span>  <!-- CSS classes: "step-act" + "required" or "optional"   -->
+             </td>
         </tr>
         <tr wicket:id="constraintsContainer">
             <td>
@@ -51,8 +48,7 @@
                     </tr>
                 </table>
             </td>
-            <td>&nbsp;</td>
-        </tr>
+         </tr>
     </table>
 </wicket:panel>
 </body>

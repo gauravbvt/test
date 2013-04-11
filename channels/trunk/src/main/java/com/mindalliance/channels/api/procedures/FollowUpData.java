@@ -2,9 +2,9 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Part;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -18,12 +18,12 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 4/8/13
  * Time: 9:00 PM
  */
-@XmlType( propOrder = {"information", "maxDelay", "followUpTask", "instructions",
+@XmlType( propOrder = {"information", "maxDelay", "followUpAssignment", "instructions",
         "failureImpact", "documentation"} )
 public class FollowUpData  extends AbstractProcedureElementData {
 
     private Flow notificationToSelf;
-    private TaskData followUpTaskData;
+    private AssignmentData followUpAssignmentData;
     private String failureImpact;
     private DocumentationData documentation;
 
@@ -38,21 +38,33 @@ public class FollowUpData  extends AbstractProcedureElementData {
                          ChannelsUser user ) {
         super( communityService, assignment, user );
         this.notificationToSelf = notificationToSelf;
-        initData( serverUrl, communityService );
+        initData( serverUrl, communityService, user );
     }
 
-    private void initData( String serverUrl, CommunityService communityService ) {
-        initFollowUpTask( serverUrl, communityService );
+    private void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        initFollowUpTask( serverUrl, communityService, user );
         failureImpact = communityService.getPlanService().computeSharingPriority( getSharing() ).getNegativeLabel();
         documentation =  new DocumentationData( serverUrl, notificationToSelf );
     }
 
-    private void initFollowUpTask( String serverUrl, CommunityService communityService ) {
+    private void initFollowUpTask( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        CommunityCommitments allCommitments = communityService.getAllCommitments( true );   // include commitments to self
+        allCommitments.committing( getAssignment() );
+        followUpAssignmentData = new AssignmentData(
+                serverUrl,
+                getAssignment(),
+                allCommitments.benefiting( getAssignment() ),
+                allCommitments.committing( getAssignment() ),
+                communityService,
+                user
+        );
+/*
         followUpTaskData = new TaskData(
                 serverUrl,
                 communityService,
                 (Part)notificationToSelf.getTarget(),
                 getUser() );
+*/
     }
 
     @XmlElement
@@ -66,8 +78,8 @@ public class FollowUpData  extends AbstractProcedureElementData {
     }
 
     @XmlElement
-    public TaskData getFollowUpTask() {
-        return followUpTaskData;
+    public AssignmentData getFollowUpAssignment() {
+        return followUpAssignmentData;
     }
 
 
