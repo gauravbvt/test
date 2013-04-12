@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class CommunityServiceFactoryImpl implements CommunityServiceFactory, ApplicationContextAware {
 
-    private final Map<PlanCommunity,CommunityService> services = new HashMap<PlanCommunity, CommunityService>();
+    private final Map<PlanCommunity, CommunityService> services = new HashMap<PlanCommunity, CommunityService>();
 
     private ApplicationContext applicationContext;
     private PlanServiceFactory planServiceFactory;
@@ -48,6 +48,11 @@ public class CommunityServiceFactoryImpl implements CommunityServiceFactory, App
                 planCommunity.getPlanVersion() ) );
         services.put( planCommunity, result );
         return result;
+    }
+
+    @Override
+    public synchronized void removeService( PlanCommunity planCommunity ) {
+        services.remove( planCommunity );
     }
 
     public void setPlanServiceFactory( PlanServiceFactory planServiceFactory ) {

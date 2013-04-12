@@ -36,9 +36,9 @@ Make sure you press the Apply button for the changes to take effect.</descriptio
             <topic id="my-contact-info">
                 <name>My contact info</name>
                 <item>
-                    <description>Give the different ways your collaborators and supervisors will be able to contact you.
-
-Select means of communication (email, cell, pager etc.) and, for each one, give your contact info (an email address, a phone number etc.).</description>
+                    <description>This allows you to provide different ways for your collaborators and supervisors to contact you.
+         
+         You can select means of communication (email, cell, pager, etc.) and, for each one, give your contact info (an email address, a phone number etc.).</description>
                 </item>
             </topic>
             <topic id="my-password">
@@ -84,10 +84,10 @@ You can
                     <description>You can
                         
 * browse and filter the list of all feedback messages you sent to the domain planners for the plan your community has adopted,
-* expand the conversation with domain planners spawned from a feedback,
-* and then add a comment to the conversation.
+* expand the conversation with domain planners spawned from feedback,
+* and add a comment to the conversation.
                         
-You can mark a feedback as "resolved" once you consider that you have achieved your intended objective.</description>
+You can mark feedback as "resolved" once you consider that you have achieved your intended objective.</description>
                 </item>
             </topic>
         </section>
@@ -99,7 +99,7 @@ You can mark a feedback as "resolved" once you consider that you have achieved y
             <topic id="about-communities-page">
                 <name>All communities</name>
                 <item>
-                    <description>Organization and their members form collaboration communities, each based on a collaboration plan (its production version).
+                    <description>Organization and their members form collaboration communities, each based on a collaboration plan (a production version).
                     
 You can:
 
@@ -115,9 +115,9 @@ You can:
                 <item>
                     <description>Authorized participants in a collaboration community can register organizations into the community and assign organizational roles (jobs) to themselves or other users.
                     
-If you are a community planner, you can name the community, localize it and set collaboration requirements for it. If you are an authorized domain planner, you can access the community's plan.
+If you are a community planner, you can name the community, localize it, update it to a new version of the domain plan, and set collaboration requirements for it. If you are an authorized domain planner, you can access the community's plan.
                     
-As a participant, you can access your collaboration protocols, the surveys you take part in, and replies to feedback you provide.</description>
+As a participant, you can access your collaboration checklists, the surveys you take part in, and replies to feedback you provide.</description>
                 </item>
             </topic>
         </section>
@@ -132,9 +132,9 @@ As a participant, you can access your collaboration protocols, the surveys you t
             <topic id="my-participation">
                 <name>I participate as...</name>
                 <item>
-                    <description>You can accept to participate in roles that are open to all or in roles that have been assigned to you by authorized users.
+                    <description>You can accept to participate in roles that are open to "all" or in roles that have been assigned to you by authorized users.
                     
-By check a box next to a role, you accept the role. By unchecking it, you turn down the role.</description>
+By check a box next to a role, you accept the role. By unchecking an already checked box, you turn down the role.</description>
                 </item>
             </topic>
             <topic id="adding-participation">
@@ -148,7 +148,7 @@ First select an organization where there are such roles and then select the role
             <topic id="my-to-be-confirmed">
                 <name>I await confirmation to be...</name>
                 <item>
-                    <description>This a list of roles in which your participation awaits confirmation by supervisors. You can withdraw your candidature by unchecking the box next to the role.</description>
+                    <description>This a list of roles in which your participation awaits confirmation by supervisors. You can withdraw your request by unchecking the box next to the role.</description>
                 </item>
             </topic>
         </section>
@@ -159,7 +159,7 @@ First select an organization where there are such roles and then select the role
                 <item>
                     <description>As a community planner you can define information sharing requirements between organizations.
                         
-You can then examine to what extent each requirement is satisfiable by the applicable pairs of organization should they follow the plan.
+You can then examine to what extent each requirement can be satisfied by the applicable pairs of organizations, should they follow the plan.
                     
 You can add a new requirement definition by pressing the New button in the Definitions tab.
                     
@@ -178,7 +178,7 @@ To edit a requirement definition, press on the Edit button next to it in the lis
 * assign users to plan-defined roles in organizations in the community,
 * confirm the participation of users into roles you supervise,
 * review participation issues detected by Channels,
-* resign your status as community planner or bestow it on another user (if you are a community planner).</description>
+* resign your status as community planner or bestow it on another user.</description>
                 </item>
             </topic>
         </section>
@@ -187,25 +187,28 @@ To edit a requirement definition, press on the Edit button next to it in the lis
             <topic id="about-all-protocols-page">
                 <name>All collaboration protocols</name>
                 <item>
-                    <description>If you are a domain planner, you can access the collaboration protocols of all participants, else only your own.
+                    <description>If you are a domain planner, you can access the collaboration checklists of all participants; otherwise, you only have access to your own.
                     
-By clicking on a participation role, you access the protocols for the role. By clicking on a participant's name, you access the combined protocols for all the roles played by the participant in the community.</description>
+By clicking on a participation role, you access the checklists for the role. By clicking on a participant's name, you access the combined checklists for all the roles played by the participant in the community.</description>
                 </item>
             </topic>    
         </section>
         <section id="protocols-page">
-            <name>Collaboration protocols page</name>
+            <name>Collaboration checklists page</name>
             <topic id="about-protocols-page">
-                <name>Collaboration protocols</name>
+                <name>Collaboration checklists</name>
                 <item>
-                    <description>Ths report lists the collaboration protocols of a participation given roles in a plan-based community.
+                    <description>Ths report lists the collaboration checklists of a participation given roles in a plan-based community.
                     
-The protocols describe
+The checklists describe
 
 * expected tasks
 * what events or communications trigger them (if any)
-* sources of information needed to successfully execute the task
-* and who to notify of information acquired for or by doing the task.
+* the steps, with or without constraints, by which tasks are executed, including
+    * actions to be taken
+    * queries to be made
+    * self-assigned "research" sub-tasks
+    * self-assigned follow up tasks
                     
 A contacts directory concludes the report.</description>
                 </item>
@@ -219,7 +222,7 @@ A contacts directory concludes the report.</description>
             <topic id="channels-planner">
                 <name>Designing collaboration plans</name>
                 <item>
-                    <description>As a planner, you use Channels to design collaboration plans from which robust collaboration protocols are generated.
+                    <description>As a planner, you use Channels to design collaboration plans from which robust collaboration checklists are generated.
                     
 A collaboration plan models how various types of organizations share or ought to share information to collaboratively prevent, respond to, or recover from a number of anticipated events that test their missions.
                     
@@ -227,7 +230,7 @@ Channels continuously examines these ''collaboration plans'' for gaps and brittl
                     
 Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex collaboration plans.               
                 
-Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration protocols.
+Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration checklists.
                 </description>
                 </item>
                 <next section="about-channels-planner" topic="protocols"/>
@@ -235,11 +238,11 @@ Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of i
                 <next section="about-channels-planner" topic="attributions"/>
             </topic>
             <topic id="protocols">
-                <name>Generating collaboration protocols</name>
+                <name>Generating collaboration checklists</name>
                 <item>
-                    <description>Channels computes personalized collaboration protocols from a collaboration plan and serves them to plan participants on demand.
+                    <description>Channels computes personalized collaboration checklists from a collaboration plan and provides them to plan participants on demand.
                     
-As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's protocols.
+As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's checklists.
                 </description>
                 </item>
             </topic>
@@ -292,17 +295,20 @@ Our thanks and admiration to all who contributed to these libraires.
                 <name>Collaboration plan</name>
                 <item>
                     <description>A collaboration plan is the combination of
-# a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
-# an environment that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
-Applying an environment to a collaboration plan produces visualizations, analytics, diagnostics, reports and, crucially, collaboration protocols.
+* a model of how information is to be acquired and shared so that tasks that achieve organizational goals can be successfully carried out
+* a plan scope that identifies the plan's participants, namely, people and systems in roles of responsibility within organizations
 
-A collaboration plan has one editable development version and one unchangeable (current) production version. The development version is released by an administrator. Upon releasing a new version of the plan, a copy of the development version becomes the new production version and the prior production version is retired. Finally, the development version number is incrementd by one.</description>
+Applying a scope to a collaboration model produces visualizations, analytics, diagnostics, reports and, crucially, collaboration checklists.
+
+A collaboration plan has one editable development version, zero or one production version (read-only) and any number of retired versions (also read-only). 
+
+The development version is released by an administrator. Upon releasing a new version of the plan, a copy of the development version becomes the new production version and the prior production version is retired. Finally, the development version number is incrementd by one.</description>
                 </item>
             </topic>
             <topic id="plan-element">
                 <name>Plan element</name>
                 <item>
-                    <description> Anything that contributes to the definition of a collaboration plan, be it a segment, a task, a flow, an entity, information etc. is considered a "plan element".</description>
+                    <description> Anything that contributes to the definition of a collaboration plan, be it a segment, a task, a flow, an entity, information etc. is considered a plan element.</description>
                 </item>
                 <next section="concepts" topic="entity"/>
                 <next section="concepts" topic="segment"/>
@@ -342,9 +348,9 @@ A collaboration plan can elect to address what happens before, during or after o
             <topic id="goal">
                 <name>Goal</name>
                 <item>
-                    <description>In Channels, a goal is understood as a ''mission-level'' goal of one or more of the organizations involved in the plan. A goal is a risk to be mitigated or an opportunity to be seized, any of which is introduced by the onset or conclusion of an event.
+                    <description>In Channels, a goal is understood as a ''mission-level'' goal of one or more of the organizations involved in the plan. A goal is either a risk to be mitigated or an opportunity to be seized due to the onset or conclusion of an event.
                     
-These goals are achieved by carrying out tasks, or thay can be automatically achieved when an event terminates.
+Goals are achieved by successfully carrying out tasks, or they are automatically achieved when an event terminates.
 
 Mission-level goals are not to be confused with the implied and unstated goals of successfully executing a task or sharing information.
                 </description>
@@ -353,24 +359,24 @@ Mission-level goals are not to be confused with the implied and unstated goals o
             <topic id="segment">
                 <name>Segment</name>
                 <item>
-                    <description>Collaboration plans are composed of one or more or more segments. Each segment addresses a list of organizational goals for one scenario.
+                    <description>Collaboration plans are composed of one or more or more segments. Each segment addresses a list of organizational goals in one scenario.
 
 No two segments should address identical goals in identical scenarios.
 
-Two segments are connected by the flows that span them and by how a task in one segment can start or end an events thus initiating the other segment.
+Two segments are connected by the flows that span them and by how a task in one segment can start or end an events, thus initiating the other segment.
                 </description>
                 </item>
             </topic>
             <topic id="information">
                 <name>Information</name>
                 <item>
-                    <description>Information is what is shared by collaborating agents (people or systems) via communication channels.
+                    <description>Information is shared by collaborating agents (people or systems) via communication channels.
                     
-Information is named and can be described by a list of essential elements.
+Information is named and can be described by a list of its essential elements.
 
 Information can be constrained to compliance with a named information product that defines a standard list of elements of information.
 
-An element of information also has a name and can be accompanied by handling instructions and given a secrecy classification.
+Each element of information has a name, can be accompanied by handling instructions and be given a secrecy classification.
                 </description>
                 </item>
                 <next section="concepts" topic="info-product"/>
@@ -385,7 +391,7 @@ An element of information also has a name and can be accompanied by handling ins
             <topic id="need">
                 <name>Information need</name>
                 <item>
-                    <description>Specification of information needed to execute a task, plus requirements on its delivery.
+                    <description>Specification of information needed to execute a task, plus requirements on its manner of delivery.
                     
 Delivery requirements include
 * timeliness
@@ -407,9 +413,9 @@ Quality of service commitments include
                 </item>
             </topic>
             <topic id="flow">
-                <name>Information sharing flow</name>
+                <name>Information sharing flow (or, simply, flow)</name>
                 <item>
-                    <description>Or flow, for short. How agents carrying out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.</description>
+                    <description>How agents who carry out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.</description>
                 </item>
             </topic>
             <topic id="assignment">
@@ -443,7 +449,9 @@ Attachments can be documents, graphics, videos etc. They can be named and catego
             <topic id="info-product">
                 <name>Information product</name>
                 <item>
-                    <description>An information product is an entity representing a standard bundle of elements of information. An information product be defined as an extension of another information product to which it adds elements of information.
+                    <description>An information product is an entity representing a standard bundle of elements of information. 
+                        
+An information product be defined as an extension of another information product to which it adds elements of information.
                     
 It is recommended that info needs, capabilities and flows be defined in terms of information products.</description>
                 </item>
@@ -459,7 +467,7 @@ It is recommended that info needs, capabilities and flows be defined in terms of
             <topic id="organization">
                 <name>Organization</name>
                 <item>
-                    <description>An organization is an entity representing an administrative unit (a corporation, an agency, a department, a project team etc.) with a name, a mission, possibly a parent organization, and that employs agents in roles of responsibility.</description>
+                    <description>An organization is an entity representing an administrative unit (a corporation, an agency, a department, a project team etc.) with a name, a mission, (and possibly a parent organization) and that employs agents in roles of responsibility.</description>
                 </item>
                 <next section="concepts" topic="entity"/>
                 <next section="concepts" topic="role"/>

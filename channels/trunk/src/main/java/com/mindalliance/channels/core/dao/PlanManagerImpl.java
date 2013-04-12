@@ -203,6 +203,24 @@ public class PlanManagerImpl implements PlanManager {
         }
     }
 
+    @Override
+    public PlanDao getDao( String uri, int v ) {
+        synchronized ( daoIndex ) {
+            Version version = planDefinitionManager.get( uri, v );
+            if ( version == null )
+                return null;
+
+            PlanDao result = daoIndex.get( version );
+            if ( result == null ) {
+                result = createDao( version );
+                daoIndex.put( version, result );
+            }
+
+            return result;
+        }
+    }
+
+
     private PlanDao createDao( Version version ) {
         try {
             PlanDao dao = new PlanDao( version );
@@ -294,13 +312,14 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    public Plan getPlan( String uri, int version ) {
+    public Plan getPlan( String uri, int v ) {
 
         PlanDefinition definition = planDefinitionManager.get( uri );
         if ( definition != null ) {
-            Version v = definition.get( version );
-            if ( v != null )
-                return getDao( uri, v.isDevelopment() ).getPlan();
+            Version version = definition.get( v );
+            if ( version != null )
+//                return getDao( uri, v.isDevelopment() ).getPlan(); // todo - WRONG: only dev or prod, no retired version
+                return getDao( uri, v ).getPlan();
         }
 
         return null;

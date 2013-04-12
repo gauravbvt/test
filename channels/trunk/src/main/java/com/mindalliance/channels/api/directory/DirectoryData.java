@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.directory;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.plan.PlanIdentifierData;
 import com.mindalliance.channels.api.procedures.ProtocolsData;
-import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -44,11 +43,7 @@ public class DirectoryData implements Serializable {
     }
 
     private void initDirectoryContacts(  ) {
-        directoryContacts = new ArrayList<ContactData>();
-        for ( ChecklistData procedureData : protocolsData.getChecklists() ) {
-            directoryContacts.addAll( procedureData.allContacts() );
-        }
-
+        directoryContacts = new ArrayList<ContactData>( protocolsData.allContacts() );
     }
 
     @XmlElement

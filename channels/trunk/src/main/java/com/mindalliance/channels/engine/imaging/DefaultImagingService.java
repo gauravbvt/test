@@ -136,10 +136,13 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
     }
 
     private BufferedImage getImage( CommunityService communityService, String url ) throws IOException {
+        BufferedImage image = null;
         File uploadedFile = attachmentManager.getUploadedFile( communityService, url );
-        BufferedImage image = isUploadedFileDocument( url )
-                ? ImageIO.read( uploadedFile )
-                : isFileDocument( url ) ? ImageIO.read( new File( url ) ) : ImageIO.read( new URL( url ) );
+        if ( uploadedFile.exists() ) {
+            image = isUploadedFileDocument( url )
+                    ? ImageIO.read( uploadedFile )
+                    : isFileDocument( url ) ? ImageIO.read( new File( url ) ) : ImageIO.read( new URL( url ) );
+        }
         if ( image == null ) {
             LOG.warn( "No image at " + url );
             throw new IOException( "No image at " + url );
@@ -167,8 +170,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
             createNumberedIcons( communityService, resized, width, modelObject );
 
         } catch ( IOException e ) {
-            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ')',
-                    e );
+            LOG.warn( "Failed to iconize uploaded image at " + url + " (" + e.getMessage() + ')' );
             return false;
         }
         return true;
@@ -266,12 +268,12 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         try {
             File squareIconFile = getIconFile( communityService, modelObject, "_squared.png" );
             if ( squareIconFile.exists() ) {
-                String prefix = getIconFilePrefix(communityService  );
+                String prefix = getIconFilePrefix( communityService );
 
                 String absolutePath = squareIconFile.getAbsolutePath();
                 String relPath = absolutePath.substring( prefix.length() );
                 String encodedPath = relPath.replaceAll(
-                        File.separatorChar=='\\'
+                        File.separatorChar == '\\'
                                 ? "\\\\" :
                                 File.separator, SEPARATOR );
 

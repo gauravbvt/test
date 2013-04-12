@@ -25,7 +25,6 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
-import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.PagePathItem;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import com.mindalliance.channels.social.model.Feedback;
@@ -87,12 +86,10 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         super( parameters );
     }
 
-    public static PageParameters createParameters( Agent agent, String communityUri, String planUri, int version ) {
+    public static PageParameters createParameters( Agent agent, String communityUri ) {
 
         PageParameters result = new PageParameters();
         result.set( AbstractAllParticipantsPage.COMMUNITY_PARM, communityUri );
-        result.set( AbstractChannelsWebPage.PLAN_PARM, planUri );
-        result.set( AbstractChannelsWebPage.VERSION_PARM, version );
         result.set( AbstractAllParticipantsPage.AGENT, agent.getId() );
         if ( agent.getOrganizationParticipation() != null )
             result.set( AbstractAllParticipantsPage.ORG, agent.getOrganizationParticipation().getId() );

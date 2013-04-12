@@ -101,9 +101,7 @@ public class AllProtocolsPage extends AbstractAllParticipantsPage {
                                         PageParameters parameters =
                                                 ChecklistsPage.createParameters(
                                                         agent,
-                                                        getPlanCommunityUri(),
-                                                        getPlan().getUri(),
-                                                        getPlanVersion() );
+                                                        getPlanCommunityUri() );
 
                                         item.add(
                                                 new BookmarkablePageLink<ChecklistsPage>(

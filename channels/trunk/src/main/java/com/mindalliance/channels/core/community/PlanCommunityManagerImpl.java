@@ -72,6 +72,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             Collections.synchronizedMap(
                     new HashMap<CommunityDefinition, CommunityDao>() );
 
+    private List<PlanCommunity> planCommunities;
+
     /**
      * Name of the default support community.
      */
@@ -110,6 +112,10 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
 
     public PlanCommunityManagerImpl() {
+    }
+
+    private void resetPlanCommunities() {
+        planCommunities = null;
     }
 
     public String getServerUrl() {
@@ -207,23 +213,24 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         }
     }
 
-    public List<PlanCommunity> getPlanCommunities() {
-        List<PlanCommunity> result = new ArrayList<PlanCommunity>();
-        synchronized ( this ) {
+    public synchronized List<PlanCommunity> getPlanCommunities() {
+        if ( planCommunities == null ) {
+            planCommunities = new ArrayList<PlanCommunity>();
             for ( CommunityDefinition definition : communityDefinitionManager ) {
                 String uri = definition.getUri();
                 CommunityDao dao = getDao( uri );
                 if ( dao != null ) {
-                    result.add( dao.getPlanCommunity() );
+                    planCommunities.add( dao.getPlanCommunity() );
                     initialize( dao.getPlanCommunity() );
                 }
             }
             for ( Plan plan : planManager.getPlans() ) {
-                result.add( getDomainPlanCommunity( plan ) );
+                planCommunities.add( getDomainPlanCommunity( plan ) );
             }
+            Collections.sort( planCommunities );
+            planCommunities = Collections.unmodifiableList( planCommunities );
         }
-        Collections.sort( result );
-        return Collections.unmodifiableList( result );
+        return planCommunities;
     }
 
     @Override
@@ -330,6 +337,23 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         // clearing done via aspect
     }
 
+    /**
+     * Takes snapshot of community with a given plan version.
+     * Doesn't change the plan community's version (change effective only on reload)
+     * @param planCommunity a plan community
+     * @param version a version
+     */
+    private void saveWithVersion( PlanCommunity planCommunity, int version ) {
+        try {
+            CommunityDao dao = getDao( planCommunity );
+            dao.saveWithVersion( importExportFactory.createExporter( "daemon", dao ), version );
+
+        } catch ( IOException e ) {
+            throw new RuntimeException( "Failed to save community", e );
+        }
+    }
+
+
     @Override
     public PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder ) {
         CommunityDefinition communityDefinition = communityDefinitionManager.create(
@@ -393,6 +417,21 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     @Override
     public boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
         return communityPlannerService.isPlanner( user, communityServiceFactory.getService( planCommunity ) );
+    }
+
+    @Override
+    // The order of the statements is crucial - many side-effects.
+    public synchronized void updateToPlanVersion( PlanCommunity planCommunity, int version ) throws IOException {
+        assert !planCommunity.isDomainCommunity();
+        saveWithVersion( planCommunity, version ); // save updated to XML - id shifts will happen on reload. planCommunity not changed.
+        CommunityDefinition oldDefinition = communityDefinitionManager.updateToPlanVersion( planCommunity, version );
+        // continues here if community definition update successful
+        // force a reload
+        resetPlanCommunities();
+        daoIndex.remove( oldDefinition );
+        communityServiceFactory.removeService( planCommunity );
+        commanderFactory.reset( planCommunity );
+        clearCache();
     }
 
     // Make sure a plan community is fully loaded and initialized.

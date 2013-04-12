@@ -3,15 +3,18 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.community.CommunityDetailsPanel;
 import com.mindalliance.channels.pages.components.community.CommunityStatusPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
@@ -20,6 +23,7 @@ import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -36,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,12 +77,16 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     @SpringBean
     private ParticipationAnalyst participationAnalyst;
 
+    @SpringBean
+    private PlanManager planManager;
+
+    @SpringBean
+    private PlanCommunityManager planCommunityManager;
+
     private SocialPanel socialPanel;
     private WebMarkupContainer gotoIconsContainer;
     private ModalWindow detailsDialog;
     private WebMarkupContainer detailsContainer;
-    private WebMarkupContainer referencesContainer;
-    private WebMarkupContainer attachmentsContainer;
 
     public CommunityPage() {
         this( new PageParameters() );
@@ -101,10 +110,10 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
 
-
     @Override
     protected void addContent() {
         addCommunityDetails();
+        addUpdateVersionButton();
         addCommunityDetailsDialog();
         addAttachments();
         addGotoLinks( getCommunityService(), getUser() );
@@ -171,7 +180,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private void addCommunityDescription() {
-        Label label = new Label( "description", getPlanCommunity().getDescription()  );
+        Label label = new Label( "description", getPlanCommunity().getDescription() );
         label.setOutputMarkupId( true );
         detailsContainer.addOrReplace( label );
     }
@@ -185,7 +194,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private void addPlanVersion() {
-        Label label = new Label( "planVersion", "Based on " + getPlan().getVersionedName() );
+        Label label = new Label( "planVersion", "Based on " + getPlan().getSimpleVersionedName() );
         label.setOutputMarkupId( true );
         detailsContainer.addOrReplace( label );
 
@@ -207,6 +216,31 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         editButton.setVisible( isCommunityPlanner() );
         addTipTitle( editButton, "Edit the name, description and locale of the community" );
         detailsContainer.add( editButton );
+    }
+
+    private void addUpdateVersionButton() {
+        String planUri = getPlanCommunity().getPlanUri();
+        int planVersion = getPlanCommunity().getPlanVersion();
+        final int latestProdVersion = planManager.findProductionPlan( planUri ).getVersion();
+        ConfirmedAjaxFallbackLink<String> updateVersionButton = new ConfirmedAjaxFallbackLink<String>(
+                "updateVersion",
+                "Are you sure you want to upgrade to the latest production version of the plan?" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                try {
+                    planCommunityManager.updateToPlanVersion( getPlanCommunity(), latestProdVersion );
+                    setResponsePage( CommunityPage.class, getPageParameters() );
+                } catch ( Exception e ) {
+                    updateWith(
+                            target,
+                            Change.message( "Update failed." ),
+                            new ArrayList<Updatable>() );
+                }
+            }
+        };
+        updateVersionButton.add( new AttributeModifier( "value", "Update to version " + latestProdVersion ) );
+        updateVersionButton.setVisible( planVersion != latestProdVersion && isCommunityPlanner() );
+        detailsContainer.add( updateVersionButton );
     }
 
     private boolean isCommunityPlanner() {

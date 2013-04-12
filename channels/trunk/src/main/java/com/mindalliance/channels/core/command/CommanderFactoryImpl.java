@@ -88,6 +88,10 @@ public class CommanderFactoryImpl implements CommanderFactory, InitializingBean 
         }
     }
 
+    public void reset( PlanCommunity planCommunity ) {
+        commanders.remove( planCommunity );
+    }
+
     /**
      * Listeners on all commanders.
      */

@@ -77,6 +77,8 @@ public interface PlanManager extends CommandListener {
      */
     PlanDao getDao( String uri, boolean development );
 
+    PlanDao getDao( String uri, int v );
+
     PlanDefinitionManager getPlanDefinitionManager();
 
     /**

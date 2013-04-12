@@ -53,13 +53,13 @@ public class CommunityConverter extends AbstractChannelsConverter {
         writer.addAttribute( "planVersion", Integer.toString( planCommunity.getPlanVersion() ) );
         writer.startNode( "lastId" );
         writer.setValue( String.valueOf( communityDao.getIdGenerator().getIdCounter( planCommunity.getUri() ) ) );
+        writer.endNode();
         for ( Date date : planCommunity.getIdShifts().keySet() ) {
             writer.startNode( "idShift" );
             writer.addAttribute( "date", getDateFormat().format( date ) );
             writer.addAttribute( "shift", Long.toString( planCommunity.getIdShifts().get( date ) ) );
             writer.endNode();
         }
-        writer.endNode();
         writer.startNode( "name" );
         writer.setValue( planCommunity.getName() );
         writer.endNode();

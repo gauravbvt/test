@@ -615,7 +615,8 @@ div.documentation-top label {
 }
 
 .checklist .step th {
-    padding-top: 0px;
+    vertical-align: top;
+    padding-top: 3px;
     padding-right: 5px;
     font-weight: bold;
 }

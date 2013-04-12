@@ -131,6 +131,20 @@ public class PlanDefinitionManager implements InitializingBean, Iterable<PlanDef
                 : definition.getProductionVersion();
     }
 
+    /**
+     * Find appropriate version of a plan.
+     *
+     * @param uri         the plan uri
+     * @param v the version number
+     * @return the plan version or null if not found
+     */
+    public Version get( String uri, int v  ) {
+        PlanDefinition definition = definitions.get( uri );
+
+        return definition.get( v );
+    }
+
+
     //---------------------------
 
     /**

@@ -365,4 +365,20 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
             }
         ).size();
     }
+
+    /**
+     * Update the plan community's definition to a new plan version and persist.
+     * @param planCommunity a plan community
+     * @param version a plan version
+     * @return the old community definition
+     */
+    public synchronized CommunityDefinition updateToPlanVersion( PlanCommunity planCommunity, int version ) throws IOException {
+        CommunityDefinition oldDefinition = definitions.remove( planCommunity.getUri() );
+        getOrCreate(
+                planCommunity.getUri(),
+                planCommunity.getPlanUri(),
+                version
+        );
+        return oldDefinition;
+    }
 }

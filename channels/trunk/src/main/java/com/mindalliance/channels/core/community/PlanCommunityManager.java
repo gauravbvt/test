@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -75,7 +76,7 @@ public interface PlanCommunityManager extends CommandListener {
     /**
      * Create a new community for a given plan.
      *
-     * @param plan a plan
+     * @param plan    a plan
      * @param founder a user
      * @return a PlanCommunity
      */
@@ -83,6 +84,7 @@ public interface PlanCommunityManager extends CommandListener {
 
     /**
      * List the usernames who are members of communities having adopted a given plan.
+     *
      * @param plan a plan
      * @return a list of usernames
      */
@@ -90,6 +92,7 @@ public interface PlanCommunityManager extends CommandListener {
 
     /**
      * Find a plan community with a given plan in which the user is a participant, community planner or model planner.
+     *
      * @param plan a plan
      * @param user a Channels user
      * @return a plan community or null
@@ -98,6 +101,7 @@ public interface PlanCommunityManager extends CommandListener {
 
     /**
      * Return the directory where a given plan community is persisted.
+     *
      * @param planCommunity a plan community
      * @return a plan community
      */
@@ -105,15 +109,27 @@ public interface PlanCommunityManager extends CommandListener {
 
     /**
      * Add a community listener.
+     *
      * @param aCommunityListener a community listener
      */
     void addListener( CommunityListener aCommunityListener );
 
     /**
      * Whether a given user is community planner for a given plan community.
-     * @param user a Channels user
+     *
+     * @param user          a Channels user
      * @param planCommunity a plan community
      * @return a plan community
      */
     boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity );
+
+    /**
+     * Update a plan community to another version of its plan.
+     *
+     * @param planCommunity a plan community
+     * @param version       a plan version
+     * @throws IOException if update failed
+     */
+    void updateToPlanVersion( PlanCommunity planCommunity, int version ) throws IOException;
+
 }

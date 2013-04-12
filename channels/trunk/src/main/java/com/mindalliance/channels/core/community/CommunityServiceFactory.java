@@ -17,4 +17,9 @@ public interface CommunityServiceFactory {
      */
     CommunityService getService( PlanCommunity planCommunity );
 
+    /**
+     * Remove service for an obsolete planCommunity.
+     * @param planCommunity a plan community
+     */
+    void removeService( PlanCommunity planCommunity );
 }

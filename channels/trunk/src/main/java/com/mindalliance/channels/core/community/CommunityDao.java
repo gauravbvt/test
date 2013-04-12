@@ -96,6 +96,13 @@ public class CommunityDao extends AbstractModelObjectDao {
         doSave( exporter );
     }
 
+    public synchronized void saveWithVersion( Exporter exporter, int version ) throws IOException {
+        int oldVersion = planCommunity.getPlanVersion();
+        planCommunity.setPlanVersion( version );
+        doSave( exporter );
+        planCommunity.setPlanVersion( oldVersion );
+    }
+
     @Override
     public boolean isLoaded() {
         return planCommunity != null;

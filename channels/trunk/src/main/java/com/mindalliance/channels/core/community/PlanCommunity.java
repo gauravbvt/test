@@ -40,7 +40,7 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
     private boolean closed;
 
     private String plannerSupportCommunity = "";
-    private String userSupportCommunity;
+    private String userSupportCommunity = "";
     private String communityCalendar = "";
     private String communityCalendarHost = "";
     private String communityCalendarPrivateTicket = "";
@@ -59,6 +59,25 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         id = plan.getId();
         name = plan.getName();
         development = plan.isDevelopment();
+    }
+
+    public PlanCommunity( PlanCommunity planCommunity ) {
+        uri = planCommunity.getUri();
+        planUri = planCommunity.getPlanUri();
+        planVersion = planCommunity.getPlanVersion();
+        id = planCommunity.getId();
+        name = planCommunity.getName();
+        development = planCommunity.isDevelopment();
+        idShifts = planCommunity.getIdShifts();
+        communityLocale = planCommunity.getCommunityLocale();
+        description = planCommunity.getDescription();
+        closed = planCommunity.isClosed();
+        dateCreated = planCommunity.getDateCreated();
+        plannerSupportCommunity = planCommunity.getPlannerSupportCommunity();
+        userSupportCommunity = planCommunity.getUserSupportCommunity();
+        communityCalendar = planCommunity.getCommunityCalendar();
+        communityCalendarHost = planCommunity.getCommunityCalendarHost();
+        communityCalendarPrivateTicket = planCommunity.getCommunityCalendarPrivateTicket();
     }
 
     public void setId( long id ) {
