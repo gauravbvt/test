@@ -15,7 +15,7 @@
 It enables
 * analysts to build plans for information sharing-enabled collaboration,
 * communities of organizations to adopt and participate in these plans,
-* user to get collaboration protocols derived from participation in these communities,
+* user to get collaboration checklists derived from participation in these communities,
 * and administrators to manage the Channels service.</description>
                 </item>
             </topic>
@@ -183,9 +183,9 @@ To edit a requirement definition, press on the Edit button next to it in the lis
             </topic>
         </section>
         <section id="all-protocols-page">
-            <name>All protocols page</name>
+            <name>All checklists page</name>
             <topic id="about-all-protocols-page">
-                <name>All collaboration protocols</name>
+                <name>All collaboration checklists</name>
                 <item>
                     <description>If you are a domain planner, you can access the collaboration checklists of all participants; otherwise, you only have access to your own.
                     
@@ -205,13 +205,14 @@ The checklists describe
 * expected tasks
 * what events or communications trigger them (if any)
 * the steps, with or without constraints, by which tasks are executed, including
-    * actions to be taken
-    * queries to be made
-    * self-assigned "research" sub-tasks
-    * self-assigned follow up tasks
+** actions to be taken
+** queries to be made
+** self-assigned "research" sub-tasks
+** self-assigned follow up tasks
                     
 A contacts directory concludes the report.</description>
                 </item>
+                <next section="concepts" topic="checklist"/>
             </topic>
         </section>
     </role>
@@ -406,9 +407,9 @@ Delivery requirements include
                     <description>Specification of information acquired by or for the execution of a task that could be shared with "quality of service" commitments.
 
 Quality of service commitments include
-                        * timeliness
-                        * transmission media
-                        * information format
+* timeliness
+* transmission media
+* information format
                     </description>
                 </item>
             </topic>
@@ -483,7 +484,9 @@ It is recommended that info needs, capabilities and flows be defined in terms of
             <topic id="agent">
                 <name>Agent</name>
                 <item>
-                    <description>An agent is an entity representing a person or system, or a completely interchangeable group of persons or systems. An agent can be employed by one or more organizations in titled positions, each specified by a role.
+                    <description>An agent is an entity representing a person or system, or a completely interchangeable group of persons or systems. 
+                        
+An agent can be employed by one or more organizations in titled positions, each specified by a role.
                     
 Agent ''types'' are not to be confused with ''roles''. Agent types are used to categorize agents independently of their roles. Examples of agent types are "adult", "trained in CPR", "licensed diver" etc.</description>
                 </item>
@@ -523,16 +526,18 @@ Secrecy classifications are used to specify
             <topic id="overriding">
                 <name>Overriding tasks</name>
                 <item>
-                    <description>A task with the same name as another task overrides it assigns a subset of the agents the other task assigns. An agent that is effectively only assigned to the overriding task (the more exclusive one), not the overridden task.</description>
+                    <description>A task with the same name as another task overrides it if it assigns a subset of the agents the other task assigns.
+                        
+An agent is assigned to the overriding task (the more exclusive one), not the overridden task.</description>
                 </item>
                 <next section="concepts" topic="task"/>
             </topic>
             <topic id="protocol">
-                <name>Collaboration protocol</name>
+                <name>Collaboration checklist</name>
                 <item>
-                    <description>A collaboration protocol is a task assigned to an agent, with attendant information sharing commitments from and toward other agents.
+                    <description>A collaboration checklist is a task assigned to an agent, with attendant activity and information sharing steps detailing its execution.
                     
-Protocols are triggered by
+Checklists are triggered by
 * observation of events,
 * notifications (from others or from self), 
 * by requests for information (from others or from self),
@@ -559,9 +564,11 @@ Channels distinguishes between "actual" entities and "types" (or categories) of 
 
 Entities are automatically created when they are first named in the definition of some plan element. No two entities of the same kind can have the same name in a plan.
 
-Entities can be categorizes by entity types of the same kind (IBM - an actual organization - is a Corporation -a type of organization - but it can not be a Manager - a role). Categorized entity types form taxonomies (a Police Chief is a Manager is an Employee).
+Entities can be categorized by entity types of the same kind (IBM - an actual organization - is a Corporation -a type of organization - but it can not be a Manager - a role). 
 
-Events, information formats, information products, roles and transmission media are always types in Channels.</description>
+Categorized entity types form taxonomies (a Police Chief is a Manager is an Employee).
+
+Events, information formats, information products, phases, roles and transmission media are always types in Channels.</description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
                 <next section="concepts" topic="agent"/>
@@ -592,7 +599,7 @@ When doing failure impact analysis, only flows that trigger, terminate or are cr
                 <item>
                     <description>A task is considered useful if it directly achieves a goal or if its failure would prevent another task from achieving a goal.
                     
-Only useful tasks are considered when doing failure impact analysis. A useless task is considered an issues by Channels.</description>
+Only useful tasks are considered when doing failure impact analysis. A useless task is considered an issue by Channels.</description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="goal"/>
@@ -606,7 +613,7 @@ A survey is a questionnaire composed of required and optional questions. Questio
                     
 A survey is applied to one or more plan elements of the appropriate kind (a task survey can be applied to many tasks) and is then sent to one or more users with an optional deadline.
                     
-Recipients of surveys can accept and answer the survey (and revise their answers at any time. Recipients can decline a survey or forward it to their contacts, who are then automatically registered as Channels users.</description>
+Recipients of surveys can accept and answer the survey and revise their answers at any time. Recipients can decline a survey or forward it to their contacts, who are then automatically registered as Channels users.</description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
             </topic>
@@ -621,18 +628,30 @@ Tag domains can optionally be predefined by attaching specially formatted text '
                     
 A given tag can be applied without constraints to plan elements of different kinds. 
                     
-One use of tags is to specify information in information sharing requirements.</description>
+One use of tags is to specify information in collaboration requirements.</description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
             </topic>
             <topic id="checklist">
                 <name>Checklist</name>
                 <item>
-                    <description>A collaboration checklist lists the steps required to successfully execute a task. A step can be either an information request, a notification or some other stated action.
+                    <description>A collaboration checklist lists the steps required to successfully execute a task. 
+                        
+A step can be either
 
-A step may be required or optional. It may need to come after other steps and may be subject to some conditions being present or absent.
+* some stated activity (other than communicating)
+* an information request, 
+* a notification or some other stated action
+* a self-assigned research sub-task
+* a self-assigned follow up sub-task
 
-The communication steps of a checklist are implied by the flows in and out of a task (requested info to be received and notifications to be sent). The conditions can be the goals achieved and events triggered by the task, or othere stated conditions.
+A step may be required or optional. It may have to be preceded by other steps and may also be subject to some stated conditions being present or absent.
+
+The communication steps of a checklist are implied by the flows in and out of a task, to and from other agents(requested info to be received and notifications to be sent). 
+
+The sub-task steps are implied by flows to self - research sub-tasks are triggering requests to self and followup sub-tasks are triggering notifications to self.
+
+The conditions on executing steps can be the goals achieved and events triggered by the task, or other stated conditions.
                     </description>
                 </item>
             </topic>
@@ -687,7 +706,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Plan actions menu</name>
                 <item>
                     <description>The options are
-* Send message - send a message to planners about this plan as a whole
+* Send message - Send a message to planners about this plan as a whole
 * Undo ... - Undo the last change made anywhere in this plan
 * Redo ... - Redo the last undone change
 * Paste task - Insert the copied task, if any, into the current segment
@@ -733,7 +752,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Learning menu</name>
                 <item>
                     <description>The options are
-* All feedback - Open a panel where all feedback sent about this plan are listed and can be responded to
+* All feedback - Open a panel where all feedback sent about this plan is listed and can be responded to
 * All surveys - Open a panel from where surveys can be defined, launched and managed</description>
                 </item>
             </topic>
@@ -741,7 +760,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Segment actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  send a message to planners about this segment
+* Send message -  Send a message to planners about this segment
 * Undo ... - Undo the last change made anywhere in this plan
 * Redo ... - Redo the last undone change
 * Paste attachment - Add the copied attachment, if any, to this segment
@@ -771,7 +790,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Task actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  send a message to planners about this task
+* Send message -  Send a message to planners about this task
 * Undo ... - Undo the last change made anywhere in this plan
 * Redo ... - Redo the last undone change
 * Copy task - Copy this task
@@ -782,7 +801,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
 * New issue - Report a new issue about this task
 * Duplicate task - Add new task as a copy of this one
 * Satisfy info needs - Create all possible flows that satify this task's info needs, based on existing info capabilities
-* Disintermediate - Disconnect this task from all flows where it acts as a "middle man"</description>
+* Disintermediate - Disconnect this task from all flows where it acts as an intermediary</description>
                 </item>
             </topic>
             <topic id="show-flow">
@@ -796,7 +815,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
 * Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A) 
 * Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
 * Surveys - Open a panel to launch or access surveys about this info need/capability/flow
-* Send message - send a message to planners about this info need/capability/flow</description>
+* Send message - Send a message to planners about this info need/capability/flow</description>
                 </item>
             </topic>
             <topic id="actions-flow">
@@ -829,7 +848,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Plan details actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  send a message to planners about this plan as a whole
+* Send message -  Send a message to planners about this plan as a whole
 * Undo ... - Undo the last change made anywhere in this plan
 * Redo ... - Redo the last undone change
 * Paste attachment - Add the copied attachment, if any, to this plan
@@ -840,7 +859,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Entity actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  send a message to planners about this entity
+* Send message -  Send a message to planners about this entity
 * Undo ... - Undo the last change made anywhere in this plan
 * Redo ... - Redo the last undone change
 * Paste attachment - Add the copied attachment, if any, to this entity
@@ -851,7 +870,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <name>Messaging menu</name>
                 <item>
                     <description>The options are
-* Send message -  send a message
+* Send message -  Send a message
 * Delete this message - Delete this message I sent (hidden if message was also emailed)
 * Email this message / Resend email (hidden if message can not be emailed)</description>
                 </item>
@@ -862,7 +881,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
             <topic id="my-messages">
                 <name>My messages</name>
                 <item>
-                    <description>You can see the messages you sent to fellow domain planners and the messages they sent you.
+                    <description>You can see the messages you sent to fellow collaboration planners and the messages they sent you.
                     
 You can filter out the messages you broadcasted to all planners</description>
                 </item>
@@ -881,7 +900,7 @@ The message can be sent internally within Channels or it can also be sent by ema
             <topic id="presence">
                 <name>Presence</name>
                 <item>
-                    <description>This shows the list of all domain planners currently working on this collaboration plan.
+                    <description>This shows the list of all domain planners currently working on this domain collaboration plan.
                     
 You can also see the list of all authorized planners for this plan, whether they are online or not.</description>
                 </item>
@@ -953,7 +972,7 @@ The list is part of the plan's ''details''.]]></description>
             <topic id="organizations">
                 <name>Identify participating organizations</name>
                 <item>
-                    <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents assigned to tasks</small>. &ndash; .]]></description>
+                    <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents they employ assigned to tasks</small>. &ndash; .]]></description>
                     <script>
                         <action>Edit the list of participating organizations</action>
                         <change>
@@ -1038,14 +1057,14 @@ Naming the goal is optional.]]></description>
                     <description>Information flow maps depict how information is consumed and produced by tasks and to what effects.
                     
 Represented in a flow map are
-* Events which initiation or termination triggers tasks
+* Events which initiations or terminations trigger tasks
 * Event initiated or terminated by tasks
 * Goals (risks or opportunities) achieved by tasks
 * Tasks
 * The information needs and capabilities of tasks
 * Information sharing flows connecting tasks
 
-Flow maps can be maximized, reduced-to-fit, and simplified by hiding goals and info needs and capabilities.
+Flow maps can be maximized, reduced-to-fit, and simplified by hiding goals, and info needs and capabilities.
                     
 A task is brought into focus for editing by clicking on it in the flow map. Flows can also be opened for editing by clicking on them in the flow map.</description>
                 </item>
@@ -1093,7 +1112,7 @@ Note that as little and as much as wanted can be put into a task's definition.
 * trigger the task
 * enable it to succeed (critical)
 * terminate the task (useful)
-* improve its execution
+* or improve its execution
                 </description>
                 </item>
                 <next section="concepts" topic="need"/>
@@ -1118,7 +1137,7 @@ Note that as little and as much as wanted can be put into a task's definition.
 * naming the information
 * requiring the information to be compliant with a named information product
 * listing its elements
-* indicating whether it is ''pushed'' or ''pulled'
+* indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
 * the communication channels to use, each including transmission medium and, optionally, a required format
 * timeliness constraints
 * and more
@@ -1140,7 +1159,7 @@ Note that as little and as much as wanted can be put into a task's definition.
             <topic id="eois">
                 <name>Elements of information</name>
                 <item>
-                    <description>You can name the essential elements of information of an information need, capability or flow, and set their properties.
+                    <description>You can list the essential elements of information of an information need, capability or flow, and set their properties.
 
 The properties of an element of information are
 * its name
@@ -1148,7 +1167,7 @@ The properties of an element of information are
 * its security classification
 * its handling instructions
 * if produced, how it transforms , if at all, received elements
-* if needed, whether its delivery is subject to timeliness constraints
+* if defining an info need, whether its delivery is subject to timeliness constraints
                 </description>
                 </item>
                 <next section="concepts" topic="information"/>
@@ -1157,7 +1176,10 @@ The properties of an element of information are
                 <name>Connect tasks with info sharing</name>
                 <item>
                     <description>An information sharing flow connect a tasks that ''produces'' information with a tasks that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info need of another.
+
 A sharing flow is created by connecting an info need or a capability to a task. The flow appears in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
+
+Tasks in different segments can only be connected via their respective, defined info need and info capability.
                 </description>
                     <script>
                         <action>Open the send/receive form</action>
@@ -1183,28 +1205,30 @@ A sharing flow is created by connecting an info need or a capability to a task. 
             <topic id="edit-checklist">
                 <name>Editing a checklist</name>
                 <item>
-                    <description>A checklist comes pre-populated with the requested information to be received and the notifications to be sent defined for the task. These communication steps can not be removed from the checklist. Action steps can be added and removed.
+                    <description>A checklist comes pre-populated with steps representing the requested information to be received, the notifications to be sent, the research and follow-up sub-tasks that are defined for the task as flows. 
+                        
+These communication steps can not be removed from the checklist. Action steps, representing simple activities requiring no communication or new information, can be added and removed.
 
 A step can be given:
-* Prerequisite steps  - steps it must come "after"
+* Prerequisite steps  - steps the step must come "after"
 * Conditions that must be present for the step to be taken ("if")
 * Conditions that must be absent for the step to be taken ("unless")
 
-Action steps (not communication steps) can be marked as "required", else they are optional.
+Action steps (not communication steps) can be marked as "required", else they are optional. Communication and sub-task steps are marked as required if they are notifications or follow-ups.
 
 Conditions applicable on steps are either:
 * Goals achieved by the task
 * Events triggered or terminated by the task
-* Conditions added to the checklist
+* Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
 
-A checklist must be confirmed to be deployed. Any change to the implied communication steps or to the action steps requires a new confirmation.</description>
+A checklist must be confirmed to be deployed to participants as such. Any change to the implied communication steps or to the action steps requires a re-confirmation.</description>
                 </item>
                 <next section="concepts" topic="checklist"/>
                 <next section="improving" topic="all-checklists"/>
             </topic>
         </section>
         <section id="profiling">
-            <name>Defining the plan's environment</name>
+            <name>Defining the plan's scope</name>
             <topic id="profiling-event">
                 <name>Profile an event</name>
                 <item>
@@ -1303,9 +1327,7 @@ Note that all profile attributes are optional.]]>
 * categorizing it with organization types
 * If an actual organization, by
 ** naming the parent organization
-** listing the agents it employs
-** listing sharing agreements with other organizations
-* and more
+** listing the agents it employs, with titles and roles, and optionally jurisdictions and supervisors
 Note that all profile attributes are optional.]]>
                 </description>
                     <script>
@@ -1590,9 +1612,9 @@ To create or view an existing survey about the resolution of this issue, click o
             <topic id="failure-impact">
                 <name>Failure impact</name>
                 <item>
-                    <description>You can visualize how the failure of a task or of a flow can cause the cascading failure of useful tasks thus jeopardizing the achiement of organizational goals.
+                    <description>You can visualize how the failure of a task or of a flow can cause the cascading failures of useful tasks, thus jeopardizing the achiement of organizational goals.
                     
-                    Only useful tasks and critical flows are considered when doing failure impact analysis.</description>
+Only useful tasks and critical flows are considered when doing failure impact analysis.</description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="flow"/>
@@ -1632,10 +1654,10 @@ You can vote to move the current development version of this in production if yo
                 <name>Plan evaluation</name>
                 <item>
                     <description>The plan evaluation gives an accounting of the issues found in this plan. The metrics are expressed in terms of
-        * the three main types of issues (robustness, completeness, validity)
-        * their severity
-        * whether they were waived or not
-        * and how many different kinds of issues were found
+* the three main types of issues (robustness, completeness, validity)
+* their severity
+* whether they were waived or not
+* and how many different kinds of issues were found
                     </description>
                 </item>
                <next section="concepts" topic="issue"/>
@@ -1653,7 +1675,7 @@ You can vote to move the current development version of this in production if yo
             <topic id="resolving-issues">
                 <name>Resolve issues</name>
                 <item>
-                    <description>An obvious way of improving a collaboration plan is to resolve issues detected by Channels or by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
+                    <description>An obvious way of improving a collaboration plan is to resolve issues detected by Channels and by planners. The 'All issues" table aggregates all individual issues found in a plan.</description>
                     <script>
                         <action>Open the All Issues table</action>
                         <change>
@@ -1663,7 +1685,7 @@ You can vote to move the current development version of this in production if yo
                     </script>
                 </item>
                 <item>
-                    <description>Metrics on all issues found in a plan provides a sense of the current quality of the collaboration plan.</description>
+                    <description>Metrics on all issues found in a plan provide a sense of the current quality of the collaboration plan.</description>
                     <script>
                         <action>See plan evaluation</action>
                         <change>
@@ -1696,7 +1718,7 @@ You can vote to move the current development version of this in production if yo
             <topic id="tune-task-flow-definition">
                 <name>Adjust assignments and commitments</name>
                 <item>
-                    <description>Collaboration protocols are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
+                    <description>Collaboration checklists are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
                     
 A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
                 
@@ -1737,15 +1759,15 @@ Which agents are assigned to a task is determined by
             <topic id="verify-taxonomy">
                 <name>Verify an entity taxonomy</name>
                 <item>
-                    <description> Roles, agents, organizations, places, events etc. (entities) can be categorized.
-Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
+                    <description> Entities (i.e. roles, agents, organizations, places, events etc.) can be categorized. Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
 
 How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that are defined in terms of these entities.
 
-The meaning of a plan boils down to the task assignments and consequent sharing commitments (protocols) that are implied by the collaboration plan. 
-Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the protocols computed from a plan and thus its meaning.
+The meaning of a plan boils down to the task assignments and consequent sharing commitments (checklists) that are implied by the collaboration plan. 
+
+Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the checklists computed from a plan, and thus its meaning.
                 
-Taxonomies are defined implictly by categorizing individual entities. Taxonomies can be visualized to verify that they are correct.
+Taxonomies are defined implictly by categorizing individual entities. The best way to verify that taxonomies are correct is to visualize them.
                 </description>
                     <script>
                         <action>View taxonomies</action>
@@ -1891,13 +1913,14 @@ Note that the issue remediation questionnaires are by default not shown in the l
             <topic id="add-survey-participants">
                 <name>Invite participation to a survey</name>
                 <item>
-                    <description>Once a survey is launched, users can be invited to a survey. Users can be given a deadline to answer the required questions in the survey.
+                    <description>Once a survey is launched, users can be invited to participate in it. Users can be given a deadline to answer all of the survey's required questions. 
+                        
 After the deadline has passed, the survey is considered late. Late participants can be ''nagged'' (nags are sent by email).
 
 A participant can
 *accept the invitation by answering questions, 
 *decline the invitation
-*forward the survey to others (if it was marked as forwardable).
+*forward the survey to others (if it was marked as forwardable by planners).
 
 Note that anyone who is forwarded a survey and who is not yet a user of Channels is automatically given a login, password and limited access to the plan as a participant.
                 </description>
@@ -1921,7 +1944,7 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
                 <item>
                     <description>As participants in a survey answer the questionnaire, results are compiled and made available to all planners.
 
-Results can be viewed by opening the survey and selecting the ''results'' tabs.</description>
+Results can be viewed by opening the survey and selecting the Results tabs.</description>
                     <script>
                         <action>See all launched surveys</action>
                         <change>
@@ -1940,7 +1963,7 @@ Results can be viewed by opening the survey and selecting the ''results'' tabs.<
             <topic id="feedback">
                 <name>Manage user feedback</name>
                 <item>
-                    <description>Users can ask questions, report problems and make suggestions via a feedback widget that appears in their home page, their protocols etc.
+                    <description>Users can ask questions, report problems and make suggestions via a feedback widget that appears in their home page, their checklists etc.
 
 You can see this feedback and reply to it. The user can then reply back etc. or mark the question, problem or suggestion as resolved.              
                 </description>
@@ -2030,7 +2053,7 @@ The list of all tags used in the plan can be looked up to see what has been mark
                 <item>
                     <description> The entity types used to categorize roles, agents, organizations, places, events etc. (entities) can themselves be categorized to create taxonomies.
                     
-Changes to a taxonomy can have profound impacts on the protocols that are generated by the plan. 
+Changes to a taxonomy can have profound impacts on the collaboration checklists that are generated by the plan. 
                    
 Taxonomies can be visualized to verify that they are correct.</description>
                     <script>
@@ -2050,9 +2073,9 @@ Taxonomies can be visualized to verify that they are correct.</description>
                 <item>
                     <description>Whenever a plan element is referenced by name in the definition of another, there will also be a link to get to the referenced element's definition.
                     
-Also, most forms used to define an element of the plan contain a table listing all and linking to all other elements that reference it in their definitions.
+Also, most forms used to define an element of the plan contain a table listing and linking to all other elements that reference it in their definitions.
 
-For example, at the bottom of in the profile of a role is an index of all other elements that reference the role or that match the role.</description>
+For example, at the bottom of in the profile of a role is an index of all other plan elements that reference the role or that match the role.</description>
                     <script>
                         <action>Open the a role profile to see its references</action>
                         <change>

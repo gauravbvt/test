@@ -32,7 +32,8 @@ import java.util.Set;
  * Date: 4/1/13
  * Time: 3:11 PM
  */
-@XmlType( propOrder = {"anchor", "agentName", "actorId", "employerName", "triggers", "assignmentData", "steps"} )
+@XmlType( propOrder = {"confirmed", "anchor", "agentName", "actorId", "employerName",
+        "triggers", "assignmentData", "steps"} )
 public class ChecklistData implements Serializable {
 
     private Checklist checklist;
@@ -507,4 +508,8 @@ public class ChecklistData implements Serializable {
     }
 
 
+    @XmlElement
+    public boolean getConfirmed() {
+        return checklist().isConfirmed();
+    }
 }

@@ -156,6 +156,9 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     private void addSteps() {
         WebMarkupContainer stepsContainer = new WebMarkupContainer( "checklist" );
         add( stepsContainer );
+        stepsContainer.add( new Label(
+                "confirmed",
+                checklistData.getConfirmed() ? "Confirmed" : "Not confirmed") );
         ListView<ChecklistStepData> stepListView = new ListView<ChecklistStepData>(
                 "steps",
                 checklistData.getSteps()
