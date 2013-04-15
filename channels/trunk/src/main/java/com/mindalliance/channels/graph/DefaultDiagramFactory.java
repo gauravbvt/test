@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -19,6 +20,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
+import com.mindalliance.channels.graph.diagrams.ChecklistFlowDiagram;
 import com.mindalliance.channels.graph.diagrams.DisseminationDiagram;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
@@ -191,5 +193,11 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
                 diagramSize,
                 orientation
         );
+    }
+
+    @Override
+    public Diagram newChecklistFlowDiagram( Part part, double[] diagramSize, String orientation ) {
+        LOG.debug( "Making checklist flow diagram" );
+        return new ChecklistFlowDiagram( part, diagramSize, orientation );
     }
 }

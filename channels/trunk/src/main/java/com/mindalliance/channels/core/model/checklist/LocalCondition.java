@@ -35,7 +35,7 @@ public class LocalCondition extends Condition implements Mappable {
         return getState().isEmpty();
     }
 
-    protected String getRef() {
+    public String getRef() {
         return REF_PREFIX + state;
     }
 

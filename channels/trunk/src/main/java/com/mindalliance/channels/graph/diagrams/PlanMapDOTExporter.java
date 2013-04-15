@@ -36,6 +36,7 @@ public class PlanMapDOTExporter extends AbstractDOTExporter<Segment, SegmentRela
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void exportVertices( CommunityService communityService, PrintWriter out, Graph<Segment, SegmentRelationship> g ) {
         PlanMapMetaProvider metaProvider = (PlanMapMetaProvider) getMetaProvider();
         if ( metaProvider.isGroupByPhase() || metaProvider.isGroupByEvent() ) {

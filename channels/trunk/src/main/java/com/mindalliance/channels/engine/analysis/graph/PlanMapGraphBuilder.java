@@ -6,10 +6,10 @@
 
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -58,7 +58,7 @@ public class PlanMapGraphBuilder implements GraphBuilder<Segment, SegmentRelatio
 
         for ( Segment segment : segments ) {
             for ( Segment other : segments ) {
-                if ( segment != other ) {
+                if ( !segment.equals( other ) ) {
                     SegmentRelationship scRel = analyst.findSegmentRelationship( queryService, segment, other );
                     if ( scRel != null )
                         digraph.addEdge( segment, other, scRel );

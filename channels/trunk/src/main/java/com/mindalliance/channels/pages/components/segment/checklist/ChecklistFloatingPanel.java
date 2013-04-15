@@ -5,7 +5,9 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -43,6 +45,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     private void init() {
         addChecklistTitle();
         addPartTitle();
+        addChecklistFlowIcon();
         addChecklistEditor();
     }
 
@@ -58,6 +61,21 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     private void addPartTitle() {
         getContentContainer().add( new Label( "partTitle", getPart().getTask() ) );
     }
+
+    private void addChecklistFlowIcon() {
+        WebMarkupContainer checklistFlowIcon = new WebMarkupContainer( "checklist-flow-icon" );
+        getContentContainer().add( checklistFlowIcon );
+        checklistFlowIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.AspectViewed, getPart(), "checklist-flow" ) );
+            }
+        } );
+        addTipTitle(
+                checklistFlowIcon,
+                "Open the checklist flow diagram");
+    }
+
 
     private void addChecklistEditor() {
         checklistEditor = new ChecklistEditorPanel( "editor", new PropertyModel<Part>( this, "part" ) );

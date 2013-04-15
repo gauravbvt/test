@@ -3891,3 +3891,7 @@ ul.attach li.controls {
     vertical-align: middle;
     margin-left: 2px;
 }
+
+.checklist-flow-icon {
+    cursor: pointer;
+}

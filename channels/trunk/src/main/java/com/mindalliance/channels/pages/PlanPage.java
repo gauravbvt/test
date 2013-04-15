@@ -67,6 +67,7 @@ import com.mindalliance.channels.pages.components.segment.SegmentEditPanel;
 import com.mindalliance.channels.pages.components.segment.SegmentPanel;
 import com.mindalliance.channels.pages.components.segment.SharingCommitmentsPanel;
 import com.mindalliance.channels.pages.components.segment.checklist.ChecklistFloatingPanel;
+import com.mindalliance.channels.pages.components.segment.checklist.ChecklistFlowFloatingPanel;
 import com.mindalliance.channels.pages.components.social.rfi.AllSurveysPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
@@ -127,7 +128,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * The 'part' parameter in the URL.
      */
-    static final String PART_PARM = "node";
+    public static final String PART_PARM = "node";
 
     /**
      * Class logger.
@@ -240,6 +241,10 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * The part checklist panel.
      */
     private Component checklistPanel;
+    /**
+     * The part checklist flow panel.
+     */
+    private Component checklistFlowPanel;
 
     /**
      * The commitments panel.
@@ -610,6 +615,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addEntityPanel();
         addAssignmentsPanel();
         addChecklistPanel();
+        addChecklistFlowPanel();
         addCommitmentsPanel();
         addEOIsPanel();
         addFailureImpactsPanel();
@@ -1393,6 +1399,20 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     new Model<Part>( partViewed ) );
         }
         form.addOrReplace( checklistPanel );
+
+    }
+
+    private void addChecklistFlowPanel() {
+        Part partViewed = getModelObjectViewed( Part.class, "checklist-flow" );
+        if ( partViewed == null ) {
+            checklistFlowPanel = new Label( "checklist-flow", "" );
+            checklistFlowPanel.setOutputMarkupId( true );
+            makeVisible( checklistFlowPanel, false );
+        } else {
+            checklistFlowPanel = new ChecklistFlowFloatingPanel( "checklist-flow",
+                    new Model<Part>( partViewed ) );
+        }
+        form.addOrReplace( checklistFlowPanel );
 
     }
 
@@ -2287,6 +2307,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshAssignmentsPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "checklist" ) ) {
             refreshChecklistPanel( target, change, updated );
+            refreshChecklistFlowPanel( target, change, updated );
+        } else if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "checklist-flow" ) ) {
+            refreshChecklistFlowPanel( target, change, updated );
         } else if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "overrides" ) ) {
             refreshOverridesPanel( target, change, updated );
         } else if ( change.isForInstanceOf( SegmentObject.class ) && change.isForProperty( "failure" ) ) {
@@ -2439,6 +2462,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         refreshEntityPanel( target, change, updated );
         refreshAssignmentsPanel( target, change, updated );
         refreshChecklistPanel( target, change, updated );
+        refreshChecklistFlowPanel( target, change, updated );
         refreshCommitmentsPanel( target, change, updated );
         refreshEOIsPanel( target, change, updated );
         refreshSegmentPanel( target, change, updated );
@@ -2561,6 +2585,21 @@ public final class PlanPage extends AbstractChannelsWebPage {
             target.add( checklistPanel );
         } else if ( checklistPanel instanceof ChecklistFloatingPanel ) {
             ( (ChecklistFloatingPanel) checklistPanel ).refresh( target, change, updated );
+        }
+    }
+
+    private void refreshChecklistFlowPanel(
+            AjaxRequestTarget target,
+            Change change,
+            List<Updatable> updated ) {
+        Identifiable identifiable = change.getSubject( getCommunityService() );
+        if ( identifiable != null
+                && identifiable instanceof Part
+                && change.isAspect( "checklist-flow" ) ) {
+            addChecklistFlowPanel();
+            target.add( checklistFlowPanel );
+        } else if ( checklistFlowPanel instanceof ChecklistFlowFloatingPanel ) {
+            ( (ChecklistFlowFloatingPanel) checklistFlowPanel ).refresh( target, change, updated );
         }
     }
 

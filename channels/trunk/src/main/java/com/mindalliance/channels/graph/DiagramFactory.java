@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Node;
+import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
@@ -210,4 +211,13 @@ public interface DiagramFactory<Vertex, Edge> {
             RequirementRelationship selectedRequirementRel,
             double[] diagramSize,
             String orientation );
+
+    /**
+     * Instantiates a checklist flow diagram.
+     * @param part a part
+     * @param diagramSize an array of doubles
+     * @param orientation a string
+     * @return a checklist flow diagram
+     */
+    Diagram newChecklistFlowDiagram( Part part, double[] diagramSize, String orientation );
 }

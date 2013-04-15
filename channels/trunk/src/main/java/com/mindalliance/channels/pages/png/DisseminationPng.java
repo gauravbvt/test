@@ -69,7 +69,7 @@ public class DisseminationPng extends DiagramPng {
                 if ( segmentObject == null )
                     segmentObject = segment.getNode( id );
             } catch ( Exception ignored ) {
-                LOG.warn( "Invalid failed segment object specified in parameters." );
+                LOG.warn( "Invalid segment object specified in parameters." );
             }
         }
         boolean showTargets = parameters.get( SHOW_TARGETS ).toBoolean();

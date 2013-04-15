@@ -1,7 +1,5 @@
 package com.mindalliance.channels.core.model.checklist;
 
-import java.io.Serializable;
-
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -9,9 +7,10 @@ import java.io.Serializable;
  * Date: 3/24/13
  * Time: 11:50 PM
  */
-public abstract class Condition implements Serializable {
+public abstract class Condition extends AbstractChecklistElement {
 
-    protected abstract String getRef();
+    public static final String IF = "If";
+    public static final String UNLESS = "Unless";
 
     public abstract boolean isEventTimingCondition();
 
@@ -20,4 +19,15 @@ public abstract class Condition implements Serializable {
     public abstract boolean isLocalCondition();
 
     public abstract String getLabel();
-}
+
+    @Override
+    public boolean isCondition() {
+        return true;
+    }
+
+    @Override
+    public Condition getCondition() {
+        return this;
+    }
+
+ }

@@ -13,7 +13,6 @@ public class EventTimingCondition extends Condition {
 
     public static final String REF_PREFIX = "et|";
 
-
     private EventTiming eventTiming;
 
     public EventTimingCondition( EventTiming eventTiming ) {
@@ -25,7 +24,7 @@ public class EventTimingCondition extends Condition {
     }
 
     @Override
-    protected String getRef() {
+    public String getRef() {
         return REF_PREFIX + eventTiming.getTiming().name() + "|" + eventTiming.getEvent().getId();
     }
 

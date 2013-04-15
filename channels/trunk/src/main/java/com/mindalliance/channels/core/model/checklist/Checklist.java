@@ -64,6 +64,9 @@ public class Checklist implements Serializable, Mappable {
         effectiveSteps.addAll( getActionSteps() );
         effectiveSteps.addAll( listCommunicationSteps() );
         effectiveSteps.addAll( listSubTaskSteps() );
+        for ( Step step : effectiveSteps ) {
+            step.setId( effectiveSteps.indexOf( step ) );
+        }
         return effectiveSteps;
     }
 
@@ -72,6 +75,9 @@ public class Checklist implements Serializable, Mappable {
         conditions.addAll( getLocalConditions() );
         conditions.addAll( listEventTimingConditions() );
         conditions.addAll( listGoalConditions() );
+        for ( Condition condition : conditions ) {
+            condition.setId( conditions.indexOf( condition ));
+        }
         return conditions;
     }
 
@@ -410,6 +416,17 @@ public class Checklist implements Serializable, Mappable {
             }
         }
         return stepOrders;
+    }
+
+    public List<Step>listStepsJustBefore( Step step ) {
+        List<Step> priorSteps = new ArrayList<Step>();
+        for ( StepOrder stepOrder : listStepOrdersFor( step ) ) {
+            Step prereqStep = derefStep( stepOrder.getPrerequisiteStepRef() );
+            if ( prereqStep != null ) {
+                priorSteps.add( prereqStep );
+            }
+        }
+        return priorSteps;
     }
 
     public List<Step> listPrerequisiteStepsFor( Step step ) {

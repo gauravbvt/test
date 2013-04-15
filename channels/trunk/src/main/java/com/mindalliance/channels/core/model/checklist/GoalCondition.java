@@ -24,7 +24,7 @@ public class GoalCondition extends Condition {
     }
 
     @Override
-    protected String getRef() {
+    public String getRef() {
         return REF_PREFIX +  goal.getCategoryLabel() + "|" + goal.getOrganization().getId() + "|" + goal.getLevel().name();
     }
 

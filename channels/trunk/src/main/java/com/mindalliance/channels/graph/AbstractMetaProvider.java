@@ -133,7 +133,7 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      * @return a plan
      */
     protected Plan getPlan() {
-        // TODO -- Demeter's law...
+        // TODO -- get from a parameter instead
         return ChannelsUser.plan();
     }
 

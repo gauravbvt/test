@@ -15,6 +15,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.graph.DiagramFactory;
+import com.mindalliance.channels.pages.png.ChecklistPng;
 import com.mindalliance.channels.pages.png.DisseminationPng;
 import com.mindalliance.channels.pages.png.EntitiesNetworkPng;
 import com.mindalliance.channels.pages.png.EntityNetworkPng;
@@ -310,6 +311,13 @@ public class Channels extends WebApplication
         ) );
         mountResource( "dissemination.png", new PngReference(
                 DisseminationPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+        mountResource( "checklist.png", new PngReference(
+                ChecklistPng.class,
                 getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),

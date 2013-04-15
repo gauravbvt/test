@@ -27,7 +27,6 @@ public class CommunicationStep extends Step {
         this.answer = answer;
     }
 
-
     public Flow getSharing() {
         return sharing;
     }

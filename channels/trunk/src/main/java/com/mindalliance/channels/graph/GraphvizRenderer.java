@@ -266,7 +266,7 @@ public class GraphvizRenderer<V, E> implements GraphRenderer<V, E> {
      *
      * @param dot    Graph description in DOT language
      * @param name   a file name without extension
-     * @param format a Grpahviz output format ("png", "svg", "imap" etc.)
+     * @param format a Graphviz output format ("png", "svg", "imap" etc.)
      * @param output the rendered graph
      * @throws IOException          if generation fails
      * @throws InterruptedException if generation fails

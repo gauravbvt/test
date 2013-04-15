@@ -115,6 +115,10 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
         this.imageDirectory = imageDirectory;
     }
 
+    public String getImageDirPath() {
+        return imageDirPath();
+    }
+
     @Override
     public File getIconDirectoryFile() throws IOException {
         return iconDirectory.getFile();

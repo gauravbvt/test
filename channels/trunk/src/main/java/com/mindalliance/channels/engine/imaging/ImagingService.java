@@ -135,4 +135,10 @@ public interface ImagingService {
      * @return boolean whether successful
      */
     boolean squarify( String filePath, File iconFile );
+
+    /**
+     * Get image dir path.
+     * @return a string
+     */
+    String getImageDirPath();
 }

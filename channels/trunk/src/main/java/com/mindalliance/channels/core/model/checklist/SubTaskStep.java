@@ -49,15 +49,19 @@ public class SubTaskStep extends Step {
 
     @Override
     public String getLabel() {
-        String subTask = isResearch()
-                ? ( (Part) sharing.getSource() ).getTask()
-                : ( (Part) sharing.getTarget() ).getTask();
+        String subTask = getSubTask().getTask();
         String label = isResearch()
                 ? ( "Research \"" + sharing.getName() + "\" by doing \"" + subTask + "\"" )
                 : ( "(Required) Follow up with \"" + sharing.getName() + "\" by doing \"" + subTask + "\"" );
         if ( getSharing().isTerminatingToSource() )
             label += " - and stop";
         return label;
+    }
+
+    public Part getSubTask() {
+        return isResearch()
+                ? ( (Part) sharing.getSource() )
+                : ( (Part) sharing.getTarget() );
     }
 
     @Override
