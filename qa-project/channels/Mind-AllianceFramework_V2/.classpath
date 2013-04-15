@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceFramework_V2/lib/commons-configuration-1.8.jar"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceFramework_V2/lib/commons-configuration-1.8-javadoc.jar"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceFramework_V2/lib/imap.jar"/>
@@ -31,5 +30,10 @@
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0-srcs.jar"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceFramework_V2/lib/selenium-server-standalone-2.24.1.jar"/>
 	<classpathentry kind="lib" path="D:/channels/Mind-AllianceFramework_V2/lib/smtp.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre6/lib/rt.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre6/lib/resources.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre1.6.0_18/lib/rt.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.6.0_23/jre/lib/rt.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre6/lib/jce.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
