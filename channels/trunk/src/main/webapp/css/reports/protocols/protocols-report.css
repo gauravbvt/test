@@ -654,6 +654,11 @@ div.protocols-content div.expected-queries h3 {
     padding-left: 5px;
 }
 
+.checklist-flow {
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
 
 
 
