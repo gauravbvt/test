@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
+import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Condition;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -62,14 +64,17 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
 
 
     private final Part part;
+    private final boolean interactive;
 
     public ChecklistFlowMetaProvider( Part part,
                                       String outputFormat,
                                       Resource imageDirectory,
                                       Analyst analyst,
-                                      PlanService planService ) {
+                                      PlanService planService,
+                                      boolean interactive ) {
         super( outputFormat, imageDirectory, analyst, planService );
         this.part = part;
+        this.interactive = interactive;
     }
 
     @Override
@@ -79,7 +84,34 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
 
     @Override
     public URLProvider<ChecklistElement, ChecklistElementRelationship> getURLProvider() {
-        return null;
+        return new URLProvider<ChecklistElement, ChecklistElementRelationship>() {
+            @Override
+            public String getGraphURL( ChecklistElement vertex ) {
+                return null;
+            }
+
+            @Override
+            public String getVertexURL( ChecklistElement vertex ) {
+                if ( interactive ) {
+                    Checklist checklist = (Checklist) getContext();
+                    List<Step> steps = checklist.listEffectiveSteps();
+                    int index = Integer.parseInt( "" + vertex.getId() );
+                    if ( index >= 0 && index < steps.size() ) {
+                        Step step = steps.get( index );
+                        if ( !step.isActionStep() ) {
+                            Object[] args = {checklist.getPart().getId(), vertex.getId()};
+                            return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                        }
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public String getEdgeURL( ChecklistElementRelationship edge ) {
+                return null;
+            }
+        };
     }
 
     @Override

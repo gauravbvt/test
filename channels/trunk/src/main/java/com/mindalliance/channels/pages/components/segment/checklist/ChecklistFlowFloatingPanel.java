@@ -65,7 +65,8 @@ public class ChecklistFlowFloatingPanel  extends AbstractFloatingCommandablePane
                 new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
         checklistFlowDiagramPanel = new ChecklistFlowDiagramPanel( "checklistFlow",
                 new PropertyModel<Part>( this, "part" ),
-                settings );
+                settings,
+                true );
         checklistFlowDiagramPanel.setOutputMarkupId( true );
         getContentContainer().addOrReplace( checklistFlowDiagramPanel );
     }

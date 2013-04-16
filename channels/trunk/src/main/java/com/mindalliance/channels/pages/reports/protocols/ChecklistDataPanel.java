@@ -214,7 +214,8 @@ public class ChecklistDataPanel extends AbstractDataPanel {
                 ? new ChecklistFlowDiagramPanel(
                 "flowDiagram",
                 new PropertyModel<Part>( this, "part" ),
-                settings )
+                settings,
+                false )  // todo - make interactive to link to subtasks in report
                 : new Label( "flowDiagram", "" );
         diagram.add( new AttributeModifier( "class", getCssClass() ) );
         checklistFlowContainer.add( diagram );

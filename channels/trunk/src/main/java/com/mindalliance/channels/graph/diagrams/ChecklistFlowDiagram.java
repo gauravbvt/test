@@ -26,10 +26,12 @@ import java.io.OutputStream;
 public class ChecklistFlowDiagram extends AbstractDiagram<ChecklistElement, ChecklistElementRelationship> {
 
     private final Part part;
+    private final boolean interactive;
 
-    public ChecklistFlowDiagram( Part part, double[] diagramSize, String orientation ) {
+    public ChecklistFlowDiagram( Part part, double[] diagramSize, String orientation, boolean interactive ) {
         super(diagramSize, orientation );
         this.part = part;
+        this.interactive = interactive;
     }
 
     @Override
@@ -58,7 +60,13 @@ public class ChecklistFlowDiagram extends AbstractDiagram<ChecklistElement, Chec
                                                      Resource imageDirectory,
                                                      Analyst analyst,
                                                      PlanService planService ) {
-        ChecklistFlowMetaProvider metaProvider = new ChecklistFlowMetaProvider( part, outputFormat, imageDirectory, analyst, planService );
+        ChecklistFlowMetaProvider metaProvider = new ChecklistFlowMetaProvider(
+                part,
+                outputFormat,
+                imageDirectory,
+                analyst,
+                planService,
+                interactive );
         double[] diagramSize = getDiagramSize();
         if ( diagramSize != null )
             metaProvider.setGraphSize( diagramSize );

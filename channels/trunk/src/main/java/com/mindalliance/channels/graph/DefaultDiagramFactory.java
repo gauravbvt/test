@@ -196,8 +196,8 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     }
 
     @Override
-    public Diagram newChecklistFlowDiagram( Part part, double[] diagramSize, String orientation ) {
+    public Diagram newChecklistFlowDiagram( Part part, double[] diagramSize, String orientation, boolean interactive ) {
         LOG.debug( "Making checklist flow diagram" );
-        return new ChecklistFlowDiagram( part, diagramSize, orientation );
+        return new ChecklistFlowDiagram( part, diagramSize, orientation, interactive );
     }
 }

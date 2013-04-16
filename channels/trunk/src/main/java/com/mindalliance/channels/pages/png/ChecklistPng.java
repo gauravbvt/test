@@ -33,9 +33,11 @@ public class ChecklistPng extends DiagramPng {
                                    DiagramFactory diagramFactory ) throws DiagramException {
         Segment segment = PlanPage.findSegment( communityService.getPlanService(), parameters );
         Part part = null;
+        boolean interactive = !parameters.get( "interactive" ).isNull();
         if ( segment != null ) {
             try {
             part = PlanPage.findPart( segment, parameters );
+
             } catch ( Exception ignored ) {
                 LOG.warn( "Invalid part specified in parameters." );
             }
@@ -46,7 +48,8 @@ public class ChecklistPng extends DiagramPng {
             return diagramFactory.newChecklistFlowDiagram(
                     part,
                     diagramSize,
-                    orientation
+                    orientation,
+                    interactive
             );
         }
     }
