@@ -99,7 +99,7 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
                             condition,
                             allConditions.indexOf( condition ) );
                     setContext( conditionHolder, toStepHolder, checklist );
-                    digraph.addVertex( condition );
+                    digraph.addVertex( conditionHolder );
                     if ( !digraph.containsEdge( conditionHolder, toStepHolder ) )
                         digraph.addEdge(
                                 conditionHolder,
@@ -131,11 +131,14 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
                         condition1,
                         condition2,
                         new ChecklistElementRelationship( condition1, condition2, checklist ) );
+        }
+        if ( !stepConditions.isEmpty() ) {
             // last condition to toStep
             long idLast = ( 1000 * stepConditions.size() ) + toStepHolder.getId();
             ChecklistElementHolder lastCondition = new ChecklistElementHolder(
                     stepConditions.get( stepConditions.size() - 1 ),
                     idLast );
+            digraph.addVertex( lastCondition );
             if ( !digraph.containsEdge( lastCondition, toStepHolder ) )
                 digraph.addEdge(
                         lastCondition,
@@ -150,6 +153,6 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
                              Checklist checklist ) {
         boolean isIf = checklist.listConditionsFor( toStepHolder.getStep(), true )
                 .contains( conditionHolder.getCondition() );
-        conditionHolder.setContext( isIf ? Condition.IF : Condition.UNLESS);
+        conditionHolder.setContext( isIf ? Condition.IF : Condition.UNLESS );
     }
 }
