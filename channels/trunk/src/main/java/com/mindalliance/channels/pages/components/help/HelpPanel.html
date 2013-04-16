@@ -12,12 +12,24 @@
         <a wicket:id="title" class="quick-help-title" href="#">
             Help
         </a>
-        <div class="quick-help-content">
+        <a wicket:id="glossary" class="quick-help-glossary">glossary</a>
+        <a wicket:id="back" class="quick-help-back">back</a>
+        <div wicket:id="content" class="quick-help-content">
             <h1 wicket:id="topicName">What is a Community?</h1>
             <div wicket:id="topicItems">
                 <div wicket:id="description">Description from wikimedia format</div>
                 <a wicket:id="actionLink" class="window"><span wicket:id="action"> Do it</span></a>
             </div>
+            <div wicket:id="definitionsContainer" class="definitions">
+                <ul>
+                    <li wicket:id="definitions">
+                        <a wicket:id="definitionLink" href="#">
+                            <span wicket:id="definitionText">Name</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <div wicket:id="doNextContainer" class="nextActivities">
                 Next:
                 <ul>

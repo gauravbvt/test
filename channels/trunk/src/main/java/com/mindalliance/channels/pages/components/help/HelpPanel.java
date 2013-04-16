@@ -35,6 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -55,6 +56,10 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     private String userRoleId;
     private String sectionId;
     private String topicId;
+    private Stack<Section> sectionStack = new Stack<Section>();
+    private Stack<Topic> topicStack = new Stack<Topic>();
+    private AjaxLink<String> backLink;
+    private WebMarkupContainer content;
 
     public HelpPanel( String id, String guideName, String defaultUserRoleId, Map<String, Object> context ) {
         super( id );
@@ -65,15 +70,25 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         init();
     }
 
+    private void init() {
+        addTitle();
+        addGlossary();
+        addBack();
+        content = new WebMarkupContainer( "content" );
+        content.setOutputMarkupId( true );
+        add( content );
+        initContent();
+    }
+
     public String getUserRoleId() {
         return userRoleId;
     }
 
-    private void init() {
-        addTitle();
+    private void initContent() {
         Topic topic = getTopic();
         addTopicName( topic );
         addTopicItems( topic );
+        addDefinitions( getSection(), topic );
         addDoNext( getSection(), topic );
         addDocumentLink( topic );
     }
@@ -90,10 +105,49 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         addOrReplace( titleLink );
     }
 
+    private void addGlossary() {
+        AjaxLink<String> glossaryLink = new AjaxLink<String>( "glossary" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                selectTopicInSection( getUserRoleId(), "concepts", "glossary", target );
+            }
+        };
+        glossaryLink.setOutputMarkupId( true );
+        add( glossaryLink );
+    }
+
+
+    private void addBack() {
+        backLink = new AjaxLink<String>( "back" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                goBack( target );
+            }
+        };
+        backLink.setOutputMarkupId( true );
+        makeVisible( backLink, canGoBack() );
+        addOrReplace( backLink );
+    }
+
+    private void goBack( AjaxRequestTarget target ) {
+        if ( canGoBack() ) {
+            Section priorSection = sectionStack.pop();
+            Topic priorTopic = topicStack.pop();
+            addBack();
+            target.add( backLink );
+            selectTopicInSection( getUserRoleId(), priorSection.getId(), priorTopic.getId(), target );
+        }
+    }
+
+    private boolean canGoBack() {
+        return !sectionStack.isEmpty() && !topicStack.isEmpty();
+    }
+
+
     private void addTopicName( Topic topic ) {
         Label topicNameLabel = new Label( "topicName", topic.getName() );
         topicNameLabel.setOutputMarkupId( true );
-        addOrReplace( topicNameLabel );
+        content.addOrReplace( topicNameLabel );
     }
 
     private void addTopicItems( Topic topic ) {
@@ -124,8 +178,44 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
             }
         };
         topicItemListView.setOutputMarkupId( true );
-        addOrReplace( topicItemListView );
+        content.addOrReplace( topicItemListView );
     }
+
+    private void addDefinitions( final Section section, Topic topic ) {
+        List<TopicRef> topicRefs = topic.getSortedDefinitions( getUserRole() );
+        WebMarkupContainer doDefinitionsContainer = new WebMarkupContainer( "definitionsContainer" );
+        doDefinitionsContainer.setOutputMarkupId( true );
+        doDefinitionsContainer.setVisible( !topicRefs.isEmpty() );
+        ListView<TopicRef> doDefinitionListView = new ListView<TopicRef>(
+                "definitions",
+                topicRefs
+        ) {
+            @Override
+            protected void populateItem( ListItem<TopicRef> item ) {
+                TopicRef topicRef = item.getModelObject();
+                UserRole userRole = getUserRole();
+                final Section defSection = userRole != null
+                        ? userRole.findSection( topicRef.getSectionId() )
+                        : null;
+                final Topic defTopic = defSection == null
+                        ? null
+                        : defSection.findTopic( topicRef.getTopicId() );
+                AjaxLink<String> defLink = new AjaxLink<String>( "definitionLink" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        openOn( defSection, defTopic, target );
+                    }
+                };
+                String labelString = defTopic == null ? "???" : defTopic.getName();
+                Label defLabel = new Label( "definitionText", labelString );
+                defLink.add( defLabel );
+                item.add( defLink );
+            }
+        };
+        doDefinitionsContainer.add( doDefinitionListView );
+        content.addOrReplace( doDefinitionsContainer );
+    }
+
 
     private void addDoNext( final Section section, Topic topic ) {
         List<TopicRef> topicRefs = topic.getNextTopics();
@@ -163,10 +253,25 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
             }
         };
         doNextContainer.add( doNextListView );
-        addOrReplace( doNextContainer );
+        content.addOrReplace( doNextContainer );
+    }
+
+    private void rememberState() {
+        UserRole userRole = getUserRole();
+        Section currentSection = userRole.findSection( sectionId );
+        Topic currentTopic = null;
+        if ( currentSection != null )
+            currentTopic = currentSection.findTopic( topicId );
+        if ( currentSection != null && currentTopic != null ) {
+            sectionStack.push( currentSection );
+            topicStack.push( currentTopic );
+        }
     }
 
     private void openOn( Section section, Topic topic, AjaxRequestTarget target ) {
+        rememberState();
+        addBack();
+        target.add( backLink );
         selectTopicInSection( getUserRoleId(), section.getId(), topic.getId(), target );
     }
 
@@ -272,7 +377,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
             addTipTitle( docLink, topicDocument.getTitle() );
         }
         docLink.setVisible( topicDocument != null );
-        addOrReplace( docLink );
+        content.addOrReplace( docLink );
     }
 
     @Override
@@ -290,8 +395,8 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         this.userRoleId = userRoleId;
         this.sectionId = sectionId;
         this.topicId = topicId;
-        init();
-        target.add( this );
+        initContent();
+        target.add( content );
     }
 
     private UserRole getUserRole() {

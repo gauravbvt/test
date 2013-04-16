@@ -66,7 +66,7 @@ a.quick-help-title:hover {
 div.quick-help-content {
     border-bottom: 5px solid #1F7F5C;
     border-left: 5px solid #1F7F5C;
-    padding: 11px 12px 12px;
+    padding: 15px 12px 12px;
 	color: #4F4F4F;
     font-family: 'Open Sans',sans-serif;
     font-size: 11px;
@@ -161,4 +161,10 @@ h2.attachment-panel-add img.help-icon {
     float:left;
     margin-right: 10px;
     cursor: pointer;
+}
+
+.quick-help-back, .quick-help-glossary {
+    text-transform: uppercase;
+    float: right;
+    margin-right: 12px;
 }

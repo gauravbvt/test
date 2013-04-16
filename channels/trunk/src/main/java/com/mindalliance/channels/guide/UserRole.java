@@ -86,4 +86,10 @@ public class UserRole implements Serializable {
         return "User role " + getId();
     }
 
+    public Topic deref( TopicRef topicRef ) {
+        Section section = findSection( topicRef.getSectionId() );
+        return section != null
+                ? section.findTopic( topicRef.getTopicId() )
+                : null;
+    }
 }

@@ -292,6 +292,44 @@ Our thanks and admiration to all who contributed to these libraires.
         </section>
         <section id="concepts">
             <name>Key concepts</name>
+            <topic id="glossary">
+                <name>Glossary</name>
+                <item>
+                    <description>A glossary of collaboration planning terms</description>
+                </item>
+                <definition section="concepts" topic="plan"/>
+                <definition section="concepts" topic="plan-element"/>
+                <definition section="concepts" topic="event"/>
+                <definition section="concepts" topic="phase"/>
+                <definition section="concepts" topic="scenario"/>
+                <definition section="concepts" topic="goal"/>
+                <definition section="concepts" topic="segment"/>
+                <definition section="concepts" topic="information"/>
+                <definition section="concepts" topic="task"/>
+                <definition section="concepts" topic="need"/>
+                <definition section="concepts" topic="capability"/>
+                <definition section="concepts" topic="flow"/>
+                <definition section="concepts" topic="assignment"/>
+                <definition section="concepts" topic="commitment"/>
+                <definition section="concepts" topic="issue"/>
+                <definition section="concepts" topic="attachment"/>
+                <definition section="concepts" topic="info-product"/>
+                <definition section="concepts" topic="info-format"/>
+                <definition section="concepts" topic="organization"/>
+                <definition section="concepts" topic="role"/>
+                <definition section="concepts" topic="agent"/>
+                <definition section="concepts" topic="place"/>
+                <definition section="concepts" topic="medium"/>
+                <definition section="concepts" topic="classification"/>
+                <definition section="concepts" topic="overriding"/>
+                <definition section="concepts" topic="checklist-trigger"/>
+                <definition section="concepts" topic="entity"/>
+                <definition section="concepts" topic="impact"/>
+                <definition section="concepts" topic="usefulness"/>
+                <definition section="concepts" topic="survey"/>
+                <definition section="concepts" topic="tag"/>
+                <definition section="concepts" topic="checklist"/>
+            </topic>
             <topic id="plan">
                 <name>Collaboration plan</name>
                 <item>

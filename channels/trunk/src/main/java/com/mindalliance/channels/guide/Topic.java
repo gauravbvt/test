@@ -6,6 +6,8 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -27,6 +29,11 @@ public class Topic implements Serializable {
 
     @XStreamImplicit( itemFieldName = "next" )
     private List<TopicRef> nextTopics;
+
+    @XStreamImplicit( itemFieldName = "definition" )
+    private List<TopicRef> definitions;
+
+    private List<TopicRef> sortedDefinitions;
 
     @XStreamAlias( value = "document" )
     private TopicDocument document;
@@ -58,6 +65,35 @@ public class Topic implements Serializable {
     public void setTopicItems( List<TopicItem> topicItems ) {
         this.topicItems = topicItems;
     }
+
+    public List<TopicRef> getDefinitions() {
+        return definitions == null ? new ArrayList<TopicRef>(  ) : definitions;
+    }
+
+    public void setDefinitions( List<TopicRef> definitions ) {
+        this.definitions = definitions;
+    }
+
+    public List<TopicRef> getSortedDefinitions( final UserRole userRole ) {
+        if ( sortedDefinitions == null ) {
+            sortedDefinitions = new ArrayList<TopicRef>();
+            sortedDefinitions.addAll( getDefinitions() );
+            Collections.sort(
+                    sortedDefinitions,
+                    new Comparator<TopicRef>() {
+                        @Override
+                        public int compare( TopicRef tr1, TopicRef tr2 ) {
+                            Topic t1 = userRole.deref( tr1 );
+                            Topic t2 = userRole.deref( tr2 );
+                            return ( t1 != null && t2 != null )
+                                    ? t1.getName().compareTo( t2.getName() )
+                                    : 0;
+                        }
+                    } );
+        }
+        return sortedDefinitions;
+    }
+
 
     public List<TopicRef> getNextTopics() {
         return nextTopics == null ? new ArrayList<TopicRef>() : nextTopics;
