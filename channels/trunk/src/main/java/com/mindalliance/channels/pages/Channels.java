@@ -31,7 +31,7 @@ import com.mindalliance.channels.pages.png.UploadedReference;
 import com.mindalliance.channels.pages.png.UserPhotoPng;
 import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
 import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
-import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
+import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.wicket.markup.html.WebPage;
@@ -230,7 +230,7 @@ public class Channels extends WebApplication
 
         getMarkupSettings().setStripWicketTags( true );
 
-        mountPage( "allProtocols", AllProtocolsPage.class );
+        mountPage( "allProtocols", AllChecklistsPage.class );
         mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
         mountPage( "protocols", ChecklistsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );

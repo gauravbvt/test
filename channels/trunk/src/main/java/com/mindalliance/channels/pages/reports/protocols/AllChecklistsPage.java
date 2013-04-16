@@ -23,13 +23,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * Page giving access to all participant protocols.
  */
 
-public class AllProtocolsPage extends AbstractAllParticipantsPage {
+public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
-    public AllProtocolsPage() {
+    public AllChecklistsPage() {
         super( new PageParameters() );
     }
 
-    public AllProtocolsPage( PageParameters parameters ) {
+    public AllChecklistsPage( PageParameters parameters ) {
         super( parameters );
     }
 

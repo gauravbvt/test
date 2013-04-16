@@ -647,6 +647,13 @@ div.protocols-content div.expected-queries h3 {
     padding: 30px 0;
 }
 
+/* checklist flow */
+.checklist-flow-icon {
+    vertical-align: middle;
+    cursor: pointer;
+    padding-left: 5px;
+}
+
 
 
 

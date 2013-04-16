@@ -8,11 +8,18 @@ import com.mindalliance.channels.api.procedures.TaskData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistStepData;
 import com.mindalliance.channels.core.model.Level;
+import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.pages.components.diagrams.ChecklistFlowDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,6 +39,9 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     private WebMarkupContainer taskDetailsContainer;
     private WebMarkupContainer receivesContainer;
     private WebMarkupContainer sendsContainer;
+    private boolean showingChecklistFlow;
+    private WebMarkupContainer checklistContainer;
+    private WebMarkupContainer checklistFlowContainer;
 
     public ChecklistDataPanel( String id,
                                ChecklistData checklistData,
@@ -48,6 +58,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         addTaskDetails();
         addDocumentation();
         addSteps();
+        addChecklistFlowDiagram();
     }
 
     private void addTaskName() {
@@ -154,11 +165,12 @@ public class ChecklistDataPanel extends AbstractDataPanel {
     // STEPS
 
     private void addSteps() {
-        WebMarkupContainer stepsContainer = new WebMarkupContainer( "checklist" );
-        add( stepsContainer );
-        stepsContainer.add( new Label(
+        checklistContainer = new WebMarkupContainer( "checklist" );
+        add( checklistContainer );
+        checklistContainer.add( new Label(
                 "confirmed",
-                checklistData.getConfirmed() ? "Confirmed" : "Not confirmed") );
+                checklistData.getConfirmed() ? "Confirmed" : "Not confirmed" ) );
+        addChecklistFlowIcon();
         ListView<ChecklistStepData> stepListView = new ListView<ChecklistStepData>(
                 "steps",
                 checklistData.getSteps()
@@ -174,7 +186,46 @@ public class ChecklistDataPanel extends AbstractDataPanel {
                         getFinder() ) );
             }
         };
-        stepsContainer.add( stepListView );
+        checklistContainer.add( stepListView );
     }
 
+    private void addChecklistFlowIcon() {
+        WebMarkupContainer checklistFlowIcon = new WebMarkupContainer( "checklist-flow-icon" );
+        checklistContainer.add( checklistFlowIcon );
+        checklistFlowIcon.add( new AjaxEventBehavior( "onclick" ) {
+            @Override
+            protected void onEvent( AjaxRequestTarget target ) {
+                showingChecklistFlow = !showingChecklistFlow;
+                addChecklistFlowDiagram();
+                target.add( checklistFlowContainer );
+            }
+        } );
+        addTipTitle(
+                checklistFlowIcon,
+                "Open the checklist flow diagram" );
+    }
+
+    private void addChecklistFlowDiagram() {
+        checklistFlowContainer = new WebMarkupContainer( "checklistFlow" );
+        checklistFlowContainer.setOutputMarkupId( true );
+        makeVisible( checklistFlowContainer, showingChecklistFlow );
+        Settings settings = new Settings( "." + getCssClass() + " " + ".picture", null, null, true, true );
+        Component diagram = showingChecklistFlow
+                ? new ChecklistFlowDiagramPanel(
+                "flowDiagram",
+                new PropertyModel<Part>( this, "part" ),
+                settings )
+                : new Label( "flowDiagram", "" );
+        diagram.add( new AttributeModifier( "class", getCssClass() ) );
+        checklistFlowContainer.add( diagram );
+        checklistContainer.addOrReplace( checklistFlowContainer );
+    }
+
+    private String getCssClass() {
+        return "flow-" + getPart().getId();
+    }
+
+    public Part getPart() {
+        return checklistData.getAssignment().getPart();
+    }
 }

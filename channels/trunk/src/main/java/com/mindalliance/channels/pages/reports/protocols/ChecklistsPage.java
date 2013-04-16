@@ -154,7 +154,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     public List<PagePathItem> getIntermediatePagesPathItems() {
         List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
         intermediates.add( new PagePathItem(
-                AllProtocolsPage.class,
+                AllChecklistsPage.class,
                 getParameters(),
                 "All Participants' Checklists" ) );
         return intermediates;

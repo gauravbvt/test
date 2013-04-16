@@ -40,7 +40,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
-import com.mindalliance.channels.pages.reports.protocols.AllProtocolsPage;
+import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.commons.collections.CollectionUtils;
@@ -411,7 +411,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             guidelinesLink = newTargetedLink(
                     id,
                     "",
-                    AllProtocolsPage.class,
+                    AllChecklistsPage.class,
                     new PageParameters(),
                     null,
                     planCommunity );
