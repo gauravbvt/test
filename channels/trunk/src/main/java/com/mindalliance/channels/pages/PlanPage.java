@@ -2237,6 +2237,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
                     || change.isAdded() && change.isForInstanceOf( Part.class ) ) {
                 refreshAll( target );
             } else if ( change.isUpdated() && isExpanded( change.getId() ) ) {
+                if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "checklist" ) ) {
+                    refreshChecklistFlowPanel( target, change, updated );
+                }
                 Change accumulatedChange = changes.get( change.getId() );
                 if ( accumulatedChange == null ) {
                     changes.put( change.getId(), change );
@@ -2249,10 +2252,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             } else if ( change.isForInstanceOf( Flow.class ) && change.isExpanded() ) {
                 updateMaximizedFlow( target, change );
                 refreshHeadersMenusAndNavigation( target, change, updated );
-                // refreshSegmentPanel( target, change, updated );
-            }/* else if ( change.isCopied() ) {
-                refreshAllMenus( target );
-            } */ else if ( change.isRefreshNeeded() ) {
+            } else if ( change.isRefreshNeeded() ) {
                 change.setScript( "alert('The action failed because the page was out of sync.');" );
                 refreshAll( target );
             } else if ( change.isCommunicated() ) {

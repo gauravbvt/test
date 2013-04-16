@@ -158,12 +158,15 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
     @Override
     public void changed( Change change ) {
         if ( change.isForInstanceOf( Part.class ) && change.isForProperty( "checklist" ) ) {
-            if ( change.isExpanded() )
+            if ( change.isExpanded() )  // step is expanded
                 editedStepRef = (String) change.getQualifier( "stepRef" );
-            else if ( change.isCollapsed() || change.hasQualifier( "deleted-step" ) )
+            else if ( change.isCollapsed() || change.hasQualifier( "deleted-step" ) ) // step collapsed or deleted
                 editedStepRef = null;
+            else
+                super.changed( change );
+        } else {
+            super.changed( change );
         }
-        super.changed( change );
     }
 
     @Override
@@ -173,7 +176,11 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
             target.add( stepsContainer );
             addConfirmation();
             target.add( confirmedCheckBox );
+            if ( !change.isExpanded() && !change.isCollapsed() ) {
+                super.updateWith( target, change, updated );
+            }
+        } else {
+            super.updateWith( target, change, updated );
         }
-        super.updateWith( target, change, updated );
     }
 }

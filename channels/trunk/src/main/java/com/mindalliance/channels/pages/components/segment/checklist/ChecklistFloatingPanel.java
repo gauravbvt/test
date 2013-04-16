@@ -111,9 +111,8 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
         if ( change.isForInstanceOf( Part.class ) && change.isUpdated() && change.isForProperty( "checklist" ) ) {
             addChecklistTitle();
             target.add( checklistTitle );
-        } else {
-            super.updateWith( target, change, updated );
         }
+        super.updateWith( target, change, updated );
     }
 
 

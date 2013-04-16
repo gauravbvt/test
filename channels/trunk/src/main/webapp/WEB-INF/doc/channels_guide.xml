@@ -1221,10 +1221,25 @@ Conditions applicable on steps are either:
 * Events triggered or terminated by the task
 * Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
 
-A checklist must be confirmed to be deployed to participants as such. Any change to the implied communication steps or to the action steps requires a re-confirmation.</description>
+A checklist must be confirmed to be deployed to participants as such. Any change to the implied communication steps or to the action steps requires a re-confirmation.
+                    
+A process flow describing the execution of the checklist is accessed by clicking on the flow icon next to the name of the task.</description>
                 </item>
                 <next section="concepts" topic="checklist"/>
+                <next section="info-sharing" topic="checklist-flow"/>
                 <next section="improving" topic="all-checklists"/>
+            </topic>
+            <topic id="checklist-flow">
+                <name>Checklist flow diagram</name>
+                <item>
+                    <description>The checklist flow diagram depicts how the steps in the checklist are to be executed.
+
+The green dot represents start of execution and the red dot its end. Execution is from left to right. 
+
+Steps that can be executed in parallel are depicted in parallel. Steps that must precede one another are depicted in sequences.
+
+Steps that are executed conditionally are preceded by ''if'' and/or ''unless'' conditions. If there is more than one condition constraining a step, the conditions precede the step in a sequence.</description>
+                </item>
             </topic>
         </section>
         <section id="profiling">
