@@ -4,9 +4,9 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Segment;
-import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
+import com.mindalliance.channels.engine.analysis.graph.ChecklistsMapGraphBuilder;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.pages.components.diagrams.ProcedureMapDiagramPanel;
+import com.mindalliance.channels.pages.components.diagrams.ChecklistsMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -40,7 +40,7 @@ import java.util.List;
  * Date: 2/7/11
  * Time: 2:35 PM
  */
-public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
+public class PlanChecklistsMapPanel extends AbstractUpdatablePanel {
 
     /**
      * Expected screen resolution.
@@ -91,7 +91,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     private Label sizingLabel;
 
-    private Component procedureMapDiagramPanel;
+    private Component checklistsMapDiagramPanel;
 
     /**
      * Width, height dimension constraints on the plan map diagram.
@@ -101,7 +101,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
     private double[] diagramSize = new double[2];
 
 
-    public PlanProcedureMapPanel( String id ) {
+    public PlanChecklistsMapPanel( String id ) {
         super( id );
         init();
     }
@@ -118,7 +118,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         addFocusChoice();
         addFocusEntityField();
         addDisplayButton();
-        addProcedureMapDiagramPanel();
+        addChecklistsMapDiagramPanel();
         addMapSizing();
     }
 
@@ -240,8 +240,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         displayButton.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
-                addProcedureMapDiagramPanel();
-                target.add( procedureMapDiagramPanel );
+                addChecklistsMapDiagramPanel();
+                target.add( checklistsMapDiagramPanel );
                 addMapSizing();
                 target.add( sizingLabel );
             }
@@ -252,18 +252,18 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
 
     }
 
-    private void addProcedureMapDiagramPanel() {
+    private void addChecklistsMapDiagramPanel() {
         if ( focus == null || focus.isEmpty() ) {
-            procedureMapDiagramPanel = new Label( "procedure-map", "" );
-            procedureMapDiagramPanel.add( new AttributeModifier(
+            checklistsMapDiagramPanel = new Label( "procedure-map", "" );
+            checklistsMapDiagramPanel.add( new AttributeModifier(
                     "style",
                     new Model<String>( "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
         } else {
             Settings settings = diagramSize[0] <= 0.0 || diagramSize[1] <= 0.0 ? new Settings(
                     DOM_IDENTIFIER, null, null, true, true )
                     : new Settings( DOM_IDENTIFIER, null, diagramSize, true, true );
-            procedureMapDiagramPanel =
-                    new ProcedureMapDiagramPanel(
+            checklistsMapDiagramPanel =
+                    new ChecklistsMapDiagramPanel(
                             "procedure-map",
                             isPlanSelected() ? null : segment,
                             isSummarizeByOrgType(),
@@ -271,7 +271,7 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                             isSummarizeByRole(),
                             getFocusEntity(),
                             settings );
-            ProceduresGraphBuilder graphBuilder = new ProceduresGraphBuilder(
+            ChecklistsMapGraphBuilder graphBuilder = new ChecklistsMapGraphBuilder(
                     isPlanSelected() ? null : segment,
                     isSummarizeByOrgType(),
                     isSummarizeByOrg(),
@@ -279,15 +279,15 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                     getFocusEntity() );
             graphBuilder.setQueryService( getQueryService() );
             boolean noProcedures = !graphBuilder.hasCommitments();
-            procedureMapDiagramPanel.add( new AttributeModifier(
+            checklistsMapDiagramPanel.add( new AttributeModifier(
                     "style",
                     new Model<String>(
                             noProcedures
                                     ? "background:url('images/no-procedures.png') 270px 0 no-repeat #ffffff;"
                                     : "background:url('images/map-background.png') 270px 0 no-repeat #ffffff;" ) ) );
         }
-        procedureMapDiagramPanel.setOutputMarkupId( true );
-        addOrReplace( procedureMapDiagramPanel );
+        checklistsMapDiagramPanel.setOutputMarkupId( true );
+        addOrReplace( checklistsMapDiagramPanel );
     }
 
     public boolean isPlanSelected() {
@@ -332,18 +332,18 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
                     diagramSize = new double[2];
                 }
                 reducedToFit = !reducedToFit;
-                addProcedureMapDiagramPanel();
-                target.add( procedureMapDiagramPanel );
+                addChecklistsMapDiagramPanel();
+                target.add( checklistsMapDiagramPanel );
                 addMapSizing();
                 target.add( sizingLabel );
             }
         } );
-        makeVisible( sizingLabel, isProcedureMapDisplayed() );
+        makeVisible( sizingLabel, isChecklistsMapDisplayed() );
         addOrReplace( sizingLabel );
     }
 
-    private boolean isProcedureMapDisplayed() {
-        return procedureMapDiagramPanel instanceof ProcedureMapDiagramPanel;
+    private boolean isChecklistsMapDisplayed() {
+        return checklistsMapDiagramPanel instanceof ChecklistsMapDiagramPanel;
     }
 
     public Segment getSegment() {
@@ -493,8 +493,8 @@ public class PlanProcedureMapPanel extends AbstractUpdatablePanel {
         this.segment = segment;
         addSegmentChoice();
         target.add( segmentChoice );
-        addProcedureMapDiagramPanel();
-        target.add( procedureMapDiagramPanel );
+        addChecklistsMapDiagramPanel();
+        target.add( checklistsMapDiagramPanel );
     }
 }
 

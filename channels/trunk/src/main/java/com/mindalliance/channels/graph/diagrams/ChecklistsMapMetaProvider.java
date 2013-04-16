@@ -30,7 +30,7 @@ import org.springframework.core.io.Resource;
 import java.text.MessageFormat;
 import java.util.List;
 
-public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Commitment> {
+public class ChecklistsMapMetaProvider extends AbstractMetaProvider<Assignment, Commitment> {
 
     /**
      * Color for subgraph contour.
@@ -92,8 +92,8 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
     private static final String PROC_EDGE_URL_FORMAT =
             "?graph={0,number,0}&edge={1,number,0}&_actor={2,number,0}&_role={3,number,0}&_org={4,number,0}";
 
-    public ProceduresMetaProvider( Segment segment, String outputFormat, Resource imageDirectory, Analyst analyst,
-                                   QueryService queryService ) {
+    public ChecklistsMapMetaProvider( Segment segment, String outputFormat, Resource imageDirectory, Analyst analyst,
+                                      QueryService queryService ) {
         super( outputFormat, imageDirectory, analyst, queryService );
         this.segment = segment;
     }
@@ -255,7 +255,7 @@ public class ProceduresMetaProvider extends AbstractMetaProvider<Assignment, Com
                 // assuming a bitmap format
             } else {
                 list.add( new DOTAttribute( "image",
-                                            getIcon( communityService, ProceduresMetaProvider.this.getAnalyst().getImagingService(),
+                                            getIcon( communityService, ChecklistsMapMetaProvider.this.getAnalyst().getImagingService(),
                                                      assignment ) ) );
                 list.add( new DOTAttribute( "labelloc", "b" ) );
                 if ( highlighted ) {

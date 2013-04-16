@@ -26,12 +26,12 @@ import java.util.Map;
  * Date: 2/9/11
  * Time: 10:30 AM
  */
-public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
+public class ChecklistsMapDiagramPanel extends AbstractDiagramPanel {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( ProcedureMapDiagramPanel.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ChecklistsMapDiagramPanel.class );
 
 
     private Segment segment;
@@ -40,7 +40,7 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
     private boolean summarizeByRole;
     private ModelEntity focusEntity;
 
-    public ProcedureMapDiagramPanel(
+    public ChecklistsMapDiagramPanel(
             String id,
             Segment segment,
             boolean summarizeByOrgType,
@@ -59,12 +59,12 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
 
     @Override
     protected String getContainerId() {
-        return "mappedProcedures";
+        return "mappedChecklists";
     }
 
     @Override
     protected Diagram makeDiagram() {
-        return getDiagramFactory().newProcedureMapDiagram(
+        return getDiagramFactory().newChecklistsMapDiagram(
                 segment,
                 summarizeByOrgType,
                 summarizeByOrg,
@@ -154,8 +154,6 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
         try {
             QueryService queryService = getQueryService();
             Segment segment = queryService.find( Segment.class, Long.valueOf( graphId ) );
-
-            // todo - deconstruct vertex id
             Part part = (Part) segment.getNode( Long.valueOf( vertexId ) );
             if ( part != null ) {
                 String js = scroll( domIdentifier, scrollTop, scrollLeft );
@@ -164,8 +162,9 @@ public class ProcedureMapDiagramPanel extends AbstractDiagramPanel {
                 change.addQualifier( "focus", focusEntity );
                 processExtras( extras, change );
                 change.setScript( js );
-                this.update( target, change );
-
+                update( target, change );
+                // show checklist flow
+                update( target, new Change( Change.Type.AspectViewed, part, "checklist-flow" ) );
             } else {
                 throw new NotFoundException();
             }

@@ -4,7 +4,7 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
-import com.mindalliance.channels.pages.components.plan.PlanProcedureMapPanel;
+import com.mindalliance.channels.pages.components.plan.PlanChecklistsMapPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -17,11 +17,11 @@ import org.apache.wicket.model.IModel;
  * Date: 7/4/12
  * Time: 5:35 PM
  */
-public class ProtocolsMapFloatingPanel extends AbstractFloatingCommandablePanel {
+public class ChecklistsMapFloatingPanel extends AbstractFloatingCommandablePanel {
 
-    private PlanProcedureMapPanel protocolsMapPanel;
+    private PlanChecklistsMapPanel protocolsMapPanel;
 
-    public ProtocolsMapFloatingPanel( String id, IModel<Plan> planModel ) {
+    public ChecklistsMapFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
         init();
     }
@@ -33,7 +33,7 @@ public class ProtocolsMapFloatingPanel extends AbstractFloatingCommandablePanel 
 
     @Override
     public String getHelpTopicId() {
-        return "verify-procedures";
+        return "verify-checklists";
     }
 
     private void init() {
@@ -44,23 +44,23 @@ public class ProtocolsMapFloatingPanel extends AbstractFloatingCommandablePanel 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Protocols map" ) );
+                "Checklists map" ) );
     }
 
     private void addProtocolsMapPanel() {
-        protocolsMapPanel = new PlanProcedureMapPanel( "map" );
+        protocolsMapPanel = new PlanChecklistsMapPanel( "map" );
         getContentContainer().add( protocolsMapPanel );
     }
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        Change change = new Change( Change.Type.Collapsed, Channels.PROTOCOLS_MAP);
+        Change change = new Change( Change.Type.Collapsed, Channels.CHECKLISTS_MAP );
         update( target, change );
     }
 
     @Override
     protected String getTitle() {
-        return "Protocols map";
+        return "Checklists map";
     }
 
     @Override

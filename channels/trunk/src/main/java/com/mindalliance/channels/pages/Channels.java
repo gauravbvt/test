@@ -81,7 +81,7 @@ public class Channels extends WebApplication
     public static final long ALL_SEGMENTS = -5;
     public static final long ALL_CLASSIFICATIONS = -6;
     public static final long TASK_MOVER = -7;
-    public static final long PROTOCOLS_MAP = -8;
+    public static final long CHECKLISTS_MAP = -8;
     public static final long PLAN_EVALUATION = -9;
     public static final long ALL_ISSUES = -10;
     public static final long PLAN_VERSIONS = -11;

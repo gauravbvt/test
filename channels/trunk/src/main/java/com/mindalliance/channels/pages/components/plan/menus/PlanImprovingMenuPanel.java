@@ -33,7 +33,7 @@ public class PlanImprovingMenuPanel extends MenuPanel {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         menuItems.add( collapsible( Channels.ALL_CHECKLISTS, "Hide all checklists", "All checklists" ) );
         menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Task mover" ) );
-        menuItems.add( collapsible( Channels.PROTOCOLS_MAP, "Hide protocols map", "Protocols map" ) );
+        menuItems.add( collapsible( Channels.CHECKLISTS_MAP, "Hide checklists map", "Checklists map" ) );
         menuItems.add( collapsible( Channels.PLAN_EVALUATION, "Hide plan evaluation", "Plan evaluation" ) );
         menuItems.add( collapsible( Channels.ALL_ISSUES, "Hide all issues", "All issues" ) );
         menuItems.add( collapsible( Channels.PLAN_VERSIONS, "Hide plan versions", "Plan versions" ) );

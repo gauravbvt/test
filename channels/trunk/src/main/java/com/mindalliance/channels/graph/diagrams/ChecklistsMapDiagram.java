@@ -13,7 +13,7 @@ import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.engine.analysis.graph.ProceduresGraphBuilder;
+import com.mindalliance.channels.engine.analysis.graph.ChecklistsMapGraphBuilder;
 import com.mindalliance.channels.graph.AbstractDiagram;
 import com.mindalliance.channels.graph.DiagramException;
 import com.mindalliance.channels.graph.DiagramFactory;
@@ -24,12 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 
-public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment> {
+public class ChecklistsMapDiagram extends AbstractDiagram<Assignment, Commitment> {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( ProcedureMapDiagram.class );
+    private static final Logger LOG = LoggerFactory.getLogger( ChecklistsMapDiagram.class );
 
     private Segment segment;
 
@@ -41,9 +41,9 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
 
     private ModelEntity focusEntity;
 
-    public ProcedureMapDiagram( Segment segment, boolean summarizeByOrgType, boolean summarizeByOrg,
-                                boolean summarizeByRole, ModelEntity focusEntity, double[] diagramSize,
-                                String orientation ) {
+    public ChecklistsMapDiagram( Segment segment, boolean summarizeByOrgType, boolean summarizeByOrg,
+                                 boolean summarizeByRole, ModelEntity focusEntity, double[] diagramSize,
+                                 String orientation ) {
         super( diagramSize, orientation );
         this.segment = segment;
         this.summarizeByOrgType = summarizeByOrgType;
@@ -59,12 +59,12 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
         double[] diagramSize = getDiagramSize();
         String orientation = getOrientation();
         PlanService planService = communityService.getPlanService();
-        ProceduresGraphBuilder graphBuilder =
-                new ProceduresGraphBuilder( segment, summarizeByOrgType, summarizeByOrg, summarizeByRole, focusEntity );
+        ChecklistsMapGraphBuilder graphBuilder =
+                new ChecklistsMapGraphBuilder( segment, summarizeByOrgType, summarizeByOrg, summarizeByRole, focusEntity );
         graphBuilder.setQueryService( planService );
         Graph<Assignment, Commitment> graph = graphBuilder.buildDirectedGraph();
         GraphRenderer<Assignment, Commitment> graphRenderer = diagramFactory.getGraphRenderer();
-        ProceduresMetaProvider metaProvider = new ProceduresMetaProvider( segment,
+        ChecklistsMapMetaProvider metaProvider = new ChecklistsMapMetaProvider( segment,
                                                                           outputFormat,
                                                                           diagramFactory.getImageDirectory(),
                                                                           analyst,
@@ -73,7 +73,7 @@ public class ProcedureMapDiagram extends AbstractDiagram<Assignment, Commitment>
             metaProvider.setGraphSize( diagramSize );
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
-        ProceduresDOTExporter dotExporter = new ProceduresDOTExporter( metaProvider );
+        ChecklistsMapDOTExporter dotExporter = new ChecklistsMapDOTExporter( metaProvider );
         graphRenderer.render( communityService, graph, dotExporter, outputFormat, ticket, outputStream );
     }
 }

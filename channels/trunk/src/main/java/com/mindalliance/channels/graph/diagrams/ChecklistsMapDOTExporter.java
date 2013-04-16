@@ -38,7 +38,7 @@ import java.util.Set;
 /**
  * Procedures DOT exporter.
  */
-public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commitment> {
+public class ChecklistsMapDOTExporter extends AbstractDOTExporter<Assignment, Commitment> {
 
     /**
      * Start vertex.
@@ -65,7 +65,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
      */
     private Map<EventPhase, Set<Assignment>> autoStarters = new HashMap<EventPhase, Set<Assignment>>();
 
-    public ProceduresDOTExporter( MetaProvider<Assignment, Commitment> metaProvider ) {
+    public ChecklistsMapDOTExporter( MetaProvider<Assignment, Commitment> metaProvider ) {
         super( metaProvider );
     }
 
@@ -133,7 +133,7 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
 
     @Override
     protected void exportVertices( CommunityService communityService, PrintWriter out, Graph<Assignment, Commitment> g ) {
-        ProceduresMetaProvider metaProvider = (ProceduresMetaProvider) getMetaProvider();
+        ChecklistsMapMetaProvider metaProvider = (ChecklistsMapMetaProvider) getMetaProvider();
         if ( !getEventPhaseStarts( communityService.getPlanService() ).isEmpty() )
             exportStarts( communityService, out, metaProvider );
         Map<Segment, Set<Assignment>> segmentAssignments = new HashMap<Segment, Set<Assignment>>();
@@ -206,8 +206,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                                                    AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
-        attributes.add( new DOTAttribute( "fontsize", ProceduresMetaProvider.NODE_FONT_SIZE ) );
-        attributes.add( new DOTAttribute( "fontname", ProceduresMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "fontsize", ChecklistsMapMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", ChecklistsMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         String label = sanitize( eventPhase.toString() + " starts" );
         attributes.add( new DOTAttribute( "label", label ) );
@@ -227,8 +227,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
                                                   AbstractMetaProvider<Assignment, Commitment> metaProvider ) {
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", AbstractMetaProvider.FONTCOLOR ) );
-        attributes.add( new DOTAttribute( "fontsize", ProceduresMetaProvider.NODE_FONT_SIZE ) );
-        attributes.add( new DOTAttribute( "fontname", ProceduresMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "fontsize", ChecklistsMapMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", ChecklistsMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         String label = sanitize( eventPhase.toString() + " stops" );
         attributes.add( new DOTAttribute( "label", label ) );
@@ -400,8 +400,8 @@ public class ProceduresDOTExporter extends AbstractDOTExporter<Assignment, Commi
         Part part = assignment == null ? null : assignment.getPart();
         List<DOTAttribute> attributes = DOTAttribute.emptyList();
         attributes.add( new DOTAttribute( "fontcolor", ifVisibleColor( part, AbstractMetaProvider.FONTCOLOR ) ) );
-        attributes.add( new DOTAttribute( "fontsize", ProceduresMetaProvider.NODE_FONT_SIZE ) );
-        attributes.add( new DOTAttribute( "fontname", ProceduresMetaProvider.NODE_FONT ) );
+        attributes.add( new DOTAttribute( "fontsize", ChecklistsMapMetaProvider.NODE_FONT_SIZE ) );
+        attributes.add( new DOTAttribute( "fontname", ChecklistsMapMetaProvider.NODE_FONT ) );
         attributes.add( new DOTAttribute( "labelloc", "b" ) );
         String label = sanitize( goal.getSuccessLabel( ) );
         attributes.add( new DOTAttribute( "label", label ) );

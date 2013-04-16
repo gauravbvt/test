@@ -327,7 +327,7 @@ Risks and events should not be confused. An event can introduce risks to one org
 From the point of view of the plan, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
                 </item>
                 <next section="concepts" topic="entity"/>
-                <next section="concepts" topic="protocol"/>
+                <next section="concepts" topic="checklist-trigger"/>
             </topic>
             <topic id="phase">
                 <name>Phase</name>
@@ -532,8 +532,8 @@ An agent is assigned to the overriding task (the more exclusive one), not the ov
                 </item>
                 <next section="concepts" topic="task"/>
             </topic>
-            <topic id="protocol">
-                <name>Collaboration checklist</name>
+            <topic id="checklist-trigger">
+                <name>Checklist trigger</name>
                 <item>
                     <description>A collaboration checklist is a task assigned to an agent, with attendant activity and information sharing steps detailing its execution.
                     
@@ -543,6 +543,8 @@ Checklists are triggered by
 * by requests for information (from others or from self),
 * or by nothing (ongoing tasks)</description>
                 </item>
+                <next section="concepts" topic="task"/>
+                <next section="concepts" topic="checklist"/>
                 <next section="concepts" topic="assignment"/>
                 <next section="concepts" topic="commitment"/>
             </topic>
@@ -1769,7 +1771,7 @@ Which agents are assigned to a task is determined by
                 </item>
                 <next section="concepts" topic="assignment"/>
                 <next section="concepts" topic="commitment"/>
-                <next section="improving" topic="verify-procedures"/>
+                <next section="improving" topic="verify-checklists"/>
             </topic>
             <topic id="verify-taxonomy">
                 <name>Verify an entity taxonomy</name>
@@ -1794,26 +1796,28 @@ Taxonomies are defined implictly by categorizing individual entities. The best w
                     </script>
                 </item>
                 <next section="concepts" topic="entity"/>
-                <next section="improving" topic="verify-procedures"/>
+                <next section="improving" topic="verify-checklists"/>
             </topic>
-            <topic id="verify-procedures">
-                <name>Protocols map</name>
+            <topic id="verify-checklists">
+                <name>Checklists map</name>
                 <item>
-                    <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments. The ''protocols map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
+                    <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments. The ''checklists map'' makes it easy to see if the sharing commitments generated from the plan are the intended ones.
                 
 The map is focused on one agent or one organization (as an aggregate of agents). It shows the commitments that involved that egent or organizations.
 
 The other parties to the commitments can be aggregated by role, organization type or not at all.
-                </description>
+
+Clicking on an assigned task navigates to the task's definition and opens the checklist flow diagram for this task.</description>
                     <script>
-                        <action>See protocols map</action>
+                        <action>See checklists map</action>
                         <change>
                             <subjectId>-8</subjectId>
                             <type>Expanded</type>
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="protocol"/>
+                <next section="concepts" topic="checklist"/>
+                <next section="info-sharing" topic="checklist-flow"/>
                 <next section="improving" topic="tune-task-flow-definition"/>
                 <next section="improving" topic="verify-taxonomy"/>
             </topic>
@@ -2081,7 +2085,7 @@ Taxonomies can be visualized to verify that they are correct.</description>
                     </script>
                 </item>
                 <next section="concepts" topic="entity"/>
-                <next section="improving" topic="verify-procedures"/>
+                <next section="improving" topic="verify-checklists"/>
             </topic>
             <topic id="references">
                 <name>Cross-referencing plan elements</name>

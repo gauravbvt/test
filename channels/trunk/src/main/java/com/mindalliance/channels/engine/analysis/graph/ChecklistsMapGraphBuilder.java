@@ -25,7 +25,7 @@ import org.jgrapht.graph.DirectedMultigraph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitment> {
+public class ChecklistsMapGraphBuilder implements GraphBuilder<Assignment, Commitment> {
 
     private final Segment segment;
 
@@ -39,8 +39,8 @@ public class ProceduresGraphBuilder implements GraphBuilder<Assignment, Commitme
 
     private QueryService queryService;
 
-    public ProceduresGraphBuilder( Segment segment, boolean summarizeByOrgType, boolean summarizedByOrg,
-                                   boolean summarizedByRole, ModelEntity focusEntity ) {
+    public ChecklistsMapGraphBuilder( Segment segment, boolean summarizeByOrgType, boolean summarizedByOrg,
+                                      boolean summarizedByRole, ModelEntity focusEntity ) {
         this.segment = segment;
         this.summarizeByOrgType = summarizeByOrgType;
         this.summarizedByOrg = summarizedByOrg;

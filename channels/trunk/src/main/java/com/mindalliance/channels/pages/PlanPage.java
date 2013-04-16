@@ -42,6 +42,7 @@ import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllChecklistsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllFeedbackFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllIssuesFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.ChecklistsMapFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanClassificationsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEvaluationFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEventsFloatingPanel;
@@ -49,7 +50,6 @@ import com.mindalliance.channels.pages.components.plan.floating.PlanOrganization
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanVersionsFloatingPanel;
-import com.mindalliance.channels.pages.components.plan.floating.ProtocolsMapFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.TaskMoverFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.menus.LearningMenuPanel;
 import com.mindalliance.channels.pages.components.plan.menus.PlanActionsMenuPanel;
@@ -615,7 +615,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addEntityPanel();
         addAssignmentsPanel();
         addChecklistPanel();
-        addChecklistFlowPanel();
+        addChecklistFlowPanel( null );
         addCommitmentsPanel();
         addEOIsPanel();
         addFailureImpactsPanel();
@@ -1123,12 +1123,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addProtocolsMapPanel() {
-        if ( !getExpansions().contains( Channels.PROTOCOLS_MAP ) ) {
+        if ( !getExpansions().contains( Channels.CHECKLISTS_MAP ) ) {
             protocolsMapPanel = new Label( "protocolsMap", "" );
             protocolsMapPanel.setOutputMarkupId( true );
             makeVisible( protocolsMapPanel, false );
         } else {
-            protocolsMapPanel = new ProtocolsMapFloatingPanel(
+            protocolsMapPanel = new ChecklistsMapFloatingPanel(
                     "protocolsMap",
                     new Model<Plan>( getPlan() ) );
         }
@@ -1402,8 +1402,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     }
 
-    private void addChecklistFlowPanel() {
-        Part partViewed = getModelObjectViewed( Part.class, "checklist-flow" );
+    private void addChecklistFlowPanel( Part partViewed ) {
         if ( partViewed == null ) {
             checklistFlowPanel = new Label( "checklist-flow", "" );
             checklistFlowPanel.setOutputMarkupId( true );
@@ -2283,7 +2282,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshAllClassificationsPanel( target, change, updated );
         } else if ( change.getId() == Channels.TASK_MOVER ) {
             refreshTaskMoverPanel( target, change, updated );
-        } else if ( change.getId() == Channels.PROTOCOLS_MAP ) {
+        } else if ( change.getId() == Channels.CHECKLISTS_MAP ) {
             refreshProtocolsMapPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_EVALUATION ) {
             refreshPlanEvaluationPanel( target, change, updated );
@@ -2596,7 +2595,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( identifiable != null
                 && identifiable instanceof Part
                 && change.isAspect( "checklist-flow" ) ) {
-            addChecklistFlowPanel();
+            addChecklistFlowPanel( change.isAspectClosed() ? null : (Part)identifiable );
             target.add( checklistFlowPanel );
         } else if ( checklistFlowPanel instanceof ChecklistFlowFloatingPanel ) {
             ( (ChecklistFlowFloatingPanel) checklistFlowPanel ).refresh( target, change, updated );
@@ -2779,12 +2778,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void refreshProtocolsMapPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         long id = change.getId();
-        if ( id == Channels.PROTOCOLS_MAP
+        if ( id == Channels.CHECKLISTS_MAP
                 && change.isDisplay() ) {
             addProtocolsMapPanel();
             target.add( protocolsMapPanel );
-        } else if ( protocolsMapPanel instanceof ProtocolsMapFloatingPanel ) {
-            ( (ProtocolsMapFloatingPanel) protocolsMapPanel ).refresh( target,
+        } else if ( protocolsMapPanel instanceof ChecklistsMapFloatingPanel ) {
+            ( (ChecklistsMapFloatingPanel) protocolsMapPanel ).refresh( target,
                     change,
                     updated );
         }

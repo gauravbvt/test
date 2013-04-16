@@ -82,7 +82,7 @@ public class ProceduresPng extends DiagramPng {
                 LOG.error( "Invalid focus entity specified in parameters.", ignored );
             }
         }
-        return diagramFactory.newProcedureMapDiagram(
+        return diagramFactory.newChecklistsMapDiagram(
                 segment,
                 summarizeByOrgType,
                 summarizeByOrg,

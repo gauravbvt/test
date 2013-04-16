@@ -178,7 +178,7 @@ public interface DiagramFactory<Vertex, Edge> {
                                      double[] diagramSize, String orientation );
 
     /**
-     * Instantiates a procedure map diagram.
+     * Instantiates a checklists map diagram.
      *
      * @param segment segment as scope, or null for all plan
      * @param summarizeByOrgType a boolean
@@ -187,11 +187,11 @@ public interface DiagramFactory<Vertex, Edge> {
      * @param focusEntity an organization or agent
      * @param diagramSize an array of doubles
      * @param orientation a string
-     * @return a procedure map diagram
+     * @return a checklists map diagram
      */
-    Diagram newProcedureMapDiagram( Segment segment, boolean summarizeByOrgType, boolean summarizeByOrg,
-                                                boolean summarizeByRole, ModelEntity focusEntity, double[] diagramSize,
-                                                String orientation );
+    Diagram newChecklistsMapDiagram( Segment segment, boolean summarizeByOrgType, boolean summarizeByOrg,
+                                     boolean summarizeByRole, ModelEntity focusEntity, double[] diagramSize,
+                                     String orientation );
 
     /**
       * Instantiates a requirement networking  diagram.

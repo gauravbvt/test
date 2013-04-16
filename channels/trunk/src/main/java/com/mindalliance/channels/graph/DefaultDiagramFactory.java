@@ -21,6 +21,7 @@ import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.graph.diagrams.ChecklistFlowDiagram;
+import com.mindalliance.channels.graph.diagrams.ChecklistsMapDiagram;
 import com.mindalliance.channels.graph.diagrams.DisseminationDiagram;
 import com.mindalliance.channels.graph.diagrams.EntitiesNetworkDiagram;
 import com.mindalliance.channels.graph.diagrams.EntityNetworkDiagram;
@@ -28,7 +29,6 @@ import com.mindalliance.channels.graph.diagrams.FailureImpactsDiagram;
 import com.mindalliance.channels.graph.diagrams.FlowMapDiagram;
 import com.mindalliance.channels.graph.diagrams.HierarchyDiagram;
 import com.mindalliance.channels.graph.diagrams.PlanMapDiagram;
-import com.mindalliance.channels.graph.diagrams.ProcedureMapDiagram;
 import com.mindalliance.channels.graph.diagrams.RequiredNetworkingDiagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,12 +162,12 @@ public class DefaultDiagramFactory<V, E> implements DiagramFactory {
     }
 
     @Override
-    public Diagram newProcedureMapDiagram( Segment segment, boolean summarizeByOrgType,
-                                                       boolean summarizeByOrg, boolean summarizeByRole,
-                                                       ModelEntity focusEntity, double[] diagramSize,
-                                                       String orientation ) {
-        LOG.debug( "Making procedure map diagram" );
-        return new ProcedureMapDiagram( segment,
+    public Diagram newChecklistsMapDiagram( Segment segment, boolean summarizeByOrgType,
+                                            boolean summarizeByOrg, boolean summarizeByRole,
+                                            ModelEntity focusEntity, double[] diagramSize,
+                                            String orientation ) {
+        LOG.debug( "Making checklists map diagram" );
+        return new ChecklistsMapDiagram( segment,
                                         summarizeByOrgType,
                                         summarizeByOrg,
                                         summarizeByRole,
