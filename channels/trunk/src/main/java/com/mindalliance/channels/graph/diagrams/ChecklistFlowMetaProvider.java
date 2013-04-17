@@ -143,7 +143,13 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     }
 
     private String getIconLabelSeparated( ChecklistElement cle ) {
-        return AbstractMetaProvider.separate( getIconLabel( cle ), LINE_WRAP_SIZE );
+        int lineWrapSize = LINE_WRAP_SIZE;
+        String label = "";
+        do {
+            label = AbstractMetaProvider.separate( getIconLabel( cle ), lineWrapSize );
+            lineWrapSize++;
+        } while ( label.split( "\\|" ).length > 5 );
+        return label;
     }
 
     private String getIconLabel( ChecklistElement cle ) {

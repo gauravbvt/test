@@ -202,7 +202,7 @@ public class ChecklistDataPanel extends AbstractDataPanel {
         } );
         addTipTitle(
                 checklistFlowIcon,
-                "Open the checklist flow diagram" );
+                "Open/close the checklist flow diagram" );
     }
 
     private void addChecklistFlowDiagram() {
