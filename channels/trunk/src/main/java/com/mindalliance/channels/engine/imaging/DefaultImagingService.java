@@ -182,7 +182,8 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
 
     private boolean squarify( CommunityService communityService, String url, ModelObject modelObject ) {
         try {
-            BufferedImage image = getImage( communityService, url );
+            BufferedImage image = ImageIO.read( new File( url ) );
+           // BufferedImage image = getImage( communityService, url );
             BufferedImage icon = doSquarify( image );
             ImageIO.write( icon, "png", getIconFile( communityService, modelObject, "_squared.png" ) );
             return true;

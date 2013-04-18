@@ -3895,3 +3895,10 @@ ul.attach li.controls {
 .checklist-flow-icon {
     cursor: pointer;
 }
+
+/* Segment scenario */
+
+.scenario th {
+    padding: 5px 5px 10px 10px;
+    text-align: right;
+}

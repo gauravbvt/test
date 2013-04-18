@@ -23,7 +23,6 @@ import com.mindalliance.channels.social.services.FeedbackService;
 import com.mindalliance.channels.social.services.RFIService;
 import com.mindalliance.channels.social.services.SurveysDAO;
 import com.mindalliance.channels.social.services.UserMessageService;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -113,7 +112,6 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     @Override
     protected void addContent() {
         addCommunityDetails();
-        addUpdateVersionButton();
         addCommunityDetailsDialog();
         addAttachments();
         addGotoLinks( getCommunityService(), getUser() );
@@ -142,10 +140,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     private void addCommunityDetails() {
         detailsContainer = new WebMarkupContainer( "details" );
         detailsContainer.setOutputMarkupId( true );
+        getContainer().addOrReplace( detailsContainer );
         addDetailLabels();
         addEditButton();
         addStatusPanel();
-        getContainer().addOrReplace( detailsContainer );
+        addUpdateVersionButton();
     }
 
     private void addDetailLabels() {
@@ -238,9 +237,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
                 }
             }
         };
-        updateVersionButton.add( new AttributeModifier( "value", "Update to version " + latestProdVersion ) );
-        updateVersionButton.setVisible( planVersion != latestProdVersion && isCommunityPlanner() );
-        detailsContainer.add( updateVersionButton );
+        updateVersionButton.setOutputMarkupId( true );
+        Label updateVersionLabel = new Label( "updateVersionLabel", "Update to version " + latestProdVersion );
+        updateVersionButton.add( updateVersionLabel );
+        makeVisible( updateVersionButton, planVersion != latestProdVersion && isCommunityPlanner() );
+        detailsContainer.addOrReplace( updateVersionButton );
     }
 
     private boolean isCommunityPlanner() {
@@ -534,9 +535,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
             if ( change.isCollapsed() || change.isUpdated() ) {
                 detailsDialog.close( target );
                 detailsDialog = null;
-                if ( change.isUpdated() ) {
-                    addDetailLabels();
-                }
+                addDetailLabels();
                 target.add( detailsContainer );
             }
             if ( change.isForProperty( "participation" ) ) {

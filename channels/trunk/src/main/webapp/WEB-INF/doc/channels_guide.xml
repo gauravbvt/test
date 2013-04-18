@@ -380,7 +380,7 @@ A collaboration plan can elect to address what happens before, during or after o
             <topic id="scenario">
                 <name>Scenario</name>
                 <item>
-                    <description>The term ''scenario'' is used in collaboration planning to mean one phase of one event, possibly in the context of other past or current events.                
+                    <description>The term ''scenario'' is used in collaboration planning to mean a phase of an event being planned for, possibly occuring in the context of other past or current events.                
                 </description>
                 </item>
             </topic>
@@ -1051,6 +1051,37 @@ You can drill down on the cross-segment flows and on the causation links.</descr
                     </script>
                 </item>
                 <next section="concepts" topic="segment"/>                
+                <next section="scoping" topic="segment-details"/>
+                <next section="scoping" topic="segment-scenario"/>
+                <next section="scoping" topic="segment-goals"/>
+            </topic>
+            <topic id="segment-details">
+                <name>Segment details</name>
+                <item>
+                    <description>You can:
+* name or rename the segment
+* give it a description
+* give it tags
+* attach documents to it
+* add a new issue</description>
+                </item>
+                <next section="concepts" topic="segment"/>        
+                <next section="scoping" topic="segment-scenario"/>
+                <next section="scoping" topic="segment-goals"/>
+            </topic>
+            <topic id="segment-scenario">
+                <name>Define a segment's scenario</name>
+                <item>
+                    <description>You can:
+* identify the phase of the event
+* identify the event
+* rate the event severity that qualifies an event for this scenario
+* specify a context in terms of other events occurring or having occurred
+                    </description>
+                </item>
+                <next section="concepts" topic="segment"/>        
+                <next section="concepts" topic="scenario"/>        
+                <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-goals"/>
             </topic>
             <topic id="segment-goals">
@@ -1079,6 +1110,9 @@ Naming the goal is optional.]]></description>
                     <description>All goals defined in all segments of the plan are presented in a table that can be sorted, filtered and paged.</description>
                 </item>
                 <next section="concepts" topic="goal"/>
+                <next section="concepts" topic="segment"/>
+                <next section="concepts" topic="phase"/>
+                <next section="concepts" topic="event"/>
             </topic>
             <topic id="classifications">
                 <name>Define secrecy classifications</name>
