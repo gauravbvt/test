@@ -41,6 +41,7 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.plan.PlanEditPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllChecklistsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllFeedbackFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.AllGoalsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.AllIssuesFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.ChecklistsMapFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanClassificationsFloatingPanel;
@@ -317,6 +318,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component planVersionsPanel;
     private Component planSearchingPanel;
     private Component allChecklistsPanel;
+    private Component allGoalsPanel;
 
     /**
      * Refresh button.
@@ -626,8 +628,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         addPlanEditPanel( null );
         addFlowLegendPanel();
         // scoping
-        // addRequirementsPanel();
         addAllEventsPanel();
+        addAllGoalsPanel();
         addAllOrganizationsPanel( null );
         addAllSegmentsPanel();
         addAllClassificationsPanel();
@@ -1064,6 +1066,19 @@ public final class PlanPage extends AbstractChannelsWebPage {
         }
         form.addOrReplace( allEventsPanel );
     }
+
+    private void addAllGoalsPanel() {
+        if ( !getExpansions().contains( Channels.ALL_GOALS ) ) {
+            allGoalsPanel = new Label( "allGoals", "" );
+            allGoalsPanel.setOutputMarkupId( true );
+            makeVisible( allGoalsPanel, false );
+        } else {
+            allGoalsPanel = new AllGoalsFloatingPanel(
+                    "allGoals" );
+        }
+        form.addOrReplace( allGoalsPanel );
+    }
+
 
     private void addAllOrganizationsPanel( Change change ) {
         if ( !getExpansions().contains( Channels.ALL_ORGANIZATIONS ) ) {
@@ -2290,6 +2305,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshAllIssuesPanel( target, change, updated );
         } else if ( change.getId() == Channels.ALL_CHECKLISTS ) {
             refreshAllChecklistsPanel( target, change, updated );
+        } else if ( change.getId() == Channels.ALL_GOALS ) {
+            refreshAllGoalsPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_VERSIONS ) {
             refreshPlanVersionsPanel( target, change, updated );
         } else if ( change.getId() == Channels.PLAN_SEARCHING ) {
@@ -2479,6 +2496,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         refreshPlanEvaluationPanel( target, change, updated );
         refreshAllIssuesPanel( target, change, updated );
         refreshAllChecklistsPanel( target, change, updated );
+        refreshAllGoalsPanel( target, change, updated );
         refreshPlanVersionsPanel( target, change, updated );
         // refreshUserParticipationPanel( target, change, updated );
         refreshPlanSearchingPanel( target, change, updated );
@@ -2823,6 +2841,19 @@ public final class PlanPage extends AbstractChannelsWebPage {
             target.add( allChecklistsPanel );
         } else if ( allChecklistsPanel instanceof AllChecklistsFloatingPanel ) {
             ( (AllChecklistsFloatingPanel) allChecklistsPanel ).refresh( target,
+                    change,
+                    updated );
+        }
+    }
+
+    private void refreshAllGoalsPanel( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        long id = change.getId();
+        if ( id == Channels.ALL_GOALS
+                && change.isDisplay() ) {
+            addAllGoalsPanel();
+            target.add( allGoalsPanel );
+        } else if ( allGoalsPanel instanceof AllGoalsFloatingPanel ) {
+            ( (AllGoalsFloatingPanel) allGoalsPanel ).refresh( target,
                     change,
                     updated );
         }

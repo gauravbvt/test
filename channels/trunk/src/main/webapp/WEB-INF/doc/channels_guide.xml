@@ -773,6 +773,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <item>
                     <description>The options are
 * Events in Scope - Open the panel with the editable list of all events in the scope of this plan
+* Goals in Scope - Open the panel showing all goals defined in this plan
 * Organizations in Scope - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this plan
 * Classification Systems - Open the panel used to define the security classifications used in this plan</description>
                 </item>
@@ -1071,6 +1072,13 @@ Naming the goal is optional.]]></description>
                 </item>
                 <next section="concepts" topic="goal"/>
                 <next section="concepts" topic="segment"/>               
+            </topic>
+            <topic id="all-goals">
+                <name>All goals</name>
+                <item>
+                    <description>All goals defined in all segments of the plan are presented in a table that can be sorted, filtered and paged.</description>
+                </item>
+                <next section="concepts" topic="goal"/>
             </topic>
             <topic id="classifications">
                 <name>Define secrecy classifications</name>

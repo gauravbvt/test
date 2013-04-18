@@ -89,6 +89,7 @@ public class Channels extends WebApplication
     public static final long PLAN_SEARCHING = -13;
     public static final long BIBLIOGRAPHY = -17;  // todo - check reference to -17 in guide
     public static final long ALL_CHECKLISTS = -18;
+    public static final long ALL_GOALS = -19;
 
     public static final long UNKNOWN_FEEDBACK_ID = Long.MIN_VALUE;
     public static final long UNKNOWN_QUESTIONNAIRE_ID = Long.MIN_VALUE + 1;
