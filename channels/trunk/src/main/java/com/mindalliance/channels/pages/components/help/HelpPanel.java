@@ -60,6 +60,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     private Stack<Topic> topicStack = new Stack<Topic>();
     private AjaxLink<String> backLink;
     private WebMarkupContainer content;
+    private AjaxLink<String> glossaryLink;
 
     public HelpPanel( String id, String guideName, String defaultUserRoleId, Map<String, Object> context ) {
         super( id );
@@ -106,14 +107,15 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     }
 
     private void addGlossary() {
-        AjaxLink<String> glossaryLink = new AjaxLink<String>( "glossary" ) {
+        glossaryLink = new AjaxLink<String>( "glossary" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 selectTopicInSection( getUserRoleId(), "concepts", "glossary", target );
             }
         };
         glossaryLink.setOutputMarkupId( true );
-        add( glossaryLink );
+        makeVisible( glossaryLink, getUserRole().getId().equals( "planner" ) );
+        addOrReplace( glossaryLink );
     }
 
 
@@ -395,6 +397,8 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         this.userRoleId = userRoleId;
         this.sectionId = sectionId;
         this.topicId = topicId;
+        addGlossary();
+        target.add( glossaryLink );
         initContent();
         target.add( content );
     }

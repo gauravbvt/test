@@ -782,7 +782,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
                 <item>
                     <description>The options are
 * Task Mover - Open the panel used to easily move tasks from the current segment to another
-* Protocols Map - Open a visualization of how agents and organizations are being assigned to tasks and committed to share information
+* Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and committed to share information (as reflected in their task checklists)
 * Plan Evaluation - Open a panel containing metrics of all issues found in this plan
 * All Issues - Open a panel listing all the issues found in this plan
 * Plan versions - Open a panel identifying the current version of this plan and allowing planners to vote on moving it to production</description>

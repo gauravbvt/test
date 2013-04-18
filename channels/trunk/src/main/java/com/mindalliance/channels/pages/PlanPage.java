@@ -1124,12 +1124,12 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void addProtocolsMapPanel() {
         if ( !getExpansions().contains( Channels.CHECKLISTS_MAP ) ) {
-            protocolsMapPanel = new Label( "protocolsMap", "" );
+            protocolsMapPanel = new Label( "checklistsMap", "" );
             protocolsMapPanel.setOutputMarkupId( true );
             makeVisible( protocolsMapPanel, false );
         } else {
             protocolsMapPanel = new ChecklistsMapFloatingPanel(
-                    "protocolsMap",
+                    "checklistsMap",
                     new Model<Plan>( getPlan() ) );
         }
         form.addOrReplace( protocolsMapPanel );

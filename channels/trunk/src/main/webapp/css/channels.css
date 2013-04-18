@@ -636,7 +636,7 @@ div.cancelSend {
 }
 
 div.cancelSend input,
-div.group.last input.refresh {
+div.group.last .refresh {
     background: url("../images/signout-bg.png") repeat-x scroll 0 0 transparent;
     border: 1px solid #A7A9AC;
     color: #727272;
@@ -650,12 +650,12 @@ div.group.last input.refresh {
 }
 
 div.cancelSend input:hover,
-div.group.last input.refresh:hover {
+div.group.last .refresh:hover {
     color: #000000;
     border: 1px solid #000000;
 }
 
-div.group.last input.refresh {
+div.group.last .refresh {
     margin-right: 8px;
 }
 

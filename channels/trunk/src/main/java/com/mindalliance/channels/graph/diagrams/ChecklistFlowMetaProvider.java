@@ -175,7 +175,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( " by doing " )
                         .append( subTaskStep.getSubTask().getTask() );
             }
-        } else { // condition
+        } else if ( cle.isCondition() ) { // condition
             Condition condition = cle.getCondition();
             String ifUnless = cle.getContext().toUpperCase() + " ";
             if ( condition.isLocalCondition() ) {

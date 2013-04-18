@@ -5,7 +5,7 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 
 /**
  * Abstract social list panel.
@@ -28,7 +28,7 @@ abstract public class AbstractSocialListPanel extends AbstractUpdatablePanel imp
     }
 
     private void addHideSocial() {
-        AjaxFallbackLink hideSocialLink = new AjaxFallbackLink( "hideAll" ) {
+        AjaxLink hideSocialLink = new AjaxLink( "hideAll" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Channels.SOCIAL_ID );
                 change.setMessage( "To re-open, select Planners in the top Show menu." );

@@ -84,6 +84,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
                 addStepPanels();
                 target.add( stepsContainer );
                 target.add( actionStepText );
+                update( target, new Change( Change.Type.Updated, getPart(), "checklist") );
             }
         } );
         addTipTitle( actionStepText, "Enter a new action step and press return" );

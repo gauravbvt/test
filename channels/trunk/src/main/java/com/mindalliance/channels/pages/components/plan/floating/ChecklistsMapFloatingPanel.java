@@ -10,7 +10,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
 /**
- * Protocols Map Floating Panel.
+ * Checklists Map Floating Panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -19,7 +19,7 @@ import org.apache.wicket.model.IModel;
  */
 public class ChecklistsMapFloatingPanel extends AbstractFloatingCommandablePanel {
 
-    private PlanChecklistsMapPanel protocolsMapPanel;
+    private PlanChecklistsMapPanel checklistsMapPanel;
 
     public ChecklistsMapFloatingPanel( String id, IModel<Plan> planModel ) {
         super( id, planModel );
@@ -38,7 +38,7 @@ public class ChecklistsMapFloatingPanel extends AbstractFloatingCommandablePanel
 
     private void init() {
         addHeading();
-        addProtocolsMapPanel();
+        addChecklistsMapPanel();
     }
 
     private void addHeading() {
@@ -47,9 +47,9 @@ public class ChecklistsMapFloatingPanel extends AbstractFloatingCommandablePanel
                 "Checklists map" ) );
     }
 
-    private void addProtocolsMapPanel() {
-        protocolsMapPanel = new PlanChecklistsMapPanel( "map" );
-        getContentContainer().add( protocolsMapPanel );
+    private void addChecklistsMapPanel() {
+        checklistsMapPanel = new PlanChecklistsMapPanel( "map" );
+        getContentContainer().add( checklistsMapPanel );
     }
 
     @Override

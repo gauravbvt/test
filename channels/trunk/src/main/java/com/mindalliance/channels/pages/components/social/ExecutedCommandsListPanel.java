@@ -7,7 +7,7 @@ import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.ExecutedCommand;
 import com.mindalliance.channels.social.services.ExecutedCommandService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -38,11 +38,11 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     boolean allShown = false;
     private boolean othersOnly = false;
     private WebMarkupContainer planningEventsContainer;
-    private AjaxFallbackLink showHideLink;
+    private AjaxLink showHideLink;
     private Label showHideLabel;
     private WebMarkupContainer noCommandContainer;
-    private AjaxFallbackLink showAFew;
-    private AjaxFallbackLink showMore;
+    private AjaxLink showAFew;
+    private AjaxLink showMore;
     private Updatable updatable;
     private boolean showProfile;
     private Date whenLastRefreshed;
@@ -80,7 +80,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowHideLink() {
-        showHideLink = new AjaxFallbackLink( "hideShowLink" ) {
+        showHideLink = new AjaxLink( "hideShowLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 othersOnly = !othersOnly;
                 addShowHideLabel();
@@ -139,7 +139,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowMore() {
-        showMore = new AjaxFallbackLink( "showMore" ) {
+        showMore = new AjaxLink( "showMore" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow += MORE;
                 addExecutedCommands();
@@ -151,7 +151,7 @@ public class ExecutedCommandsListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowAFew() {
-        showAFew = new AjaxFallbackLink( "showFew" ) {
+        showAFew = new AjaxLink( "showFew" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
                 addExecutedCommands();

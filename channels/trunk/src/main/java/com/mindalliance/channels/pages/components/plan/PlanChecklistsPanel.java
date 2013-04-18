@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.plan;
 
+import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.checklist.Checklist;
@@ -156,6 +157,12 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
         this.onlyIfWithIssues = onlyIfWithIssues;
     }
 
+    public void update( AjaxRequestTarget target, Object object, String action ) {
+        if ( object instanceof PartWrapper && action.equals( "showFlow" ) ) {
+            update( target, new Change( Change.Type.AspectViewed, ((PartWrapper)object).getPart(), "checklist-flow" ) );
+        }
+    }
+
     public class PartWrapper implements Serializable {
 
         private Part part;
@@ -211,8 +218,16 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
                     EMPTY,
                     ChecklistsTable.this ));
             columns.add( makeColumn( "has issues", "checklistIssueCount", EMPTY ) );
-            columns.add( makeColumn( "is confirmed", "confirmed", EMPTY )
-            );
+            columns.add( makeColumn( "is confirmed", "confirmed", EMPTY )  );
+            columns.add( makeActionLinkColumn(
+                    "",
+                    "Show",
+                    "showFlow",
+                    null,
+                    "part",
+                    "more",
+                    PlanChecklistsPanel.this
+            ));
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "checklists",

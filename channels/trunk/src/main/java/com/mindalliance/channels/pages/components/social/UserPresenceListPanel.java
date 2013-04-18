@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.services.PresenceRecordService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -41,7 +41,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     private boolean showProfile;
     private WebMarkupContainer presencesContainer;
     private boolean showHereOnly = true;
-    private AjaxFallbackLink showHideLink;
+    private AjaxLink showHideLink;
     private Label showHideLabel;
 
     public UserPresenceListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
@@ -73,7 +73,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowHideLink() {
-        showHideLink = new AjaxFallbackLink( "hideShowLink" ) {
+        showHideLink = new AjaxLink( "hideShowLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 showHereOnly = !showHereOnly;
                 addShowHideLabel();

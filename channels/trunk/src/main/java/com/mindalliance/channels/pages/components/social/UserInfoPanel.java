@@ -18,7 +18,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -354,7 +354,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void addButtons() {
-        AjaxFallbackLink<String> reset = new AjaxFallbackLink<String>( "reset1" ) {
+        AjaxLink<String> reset = new AjaxLink<String>( "reset1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetAll();
@@ -362,7 +362,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         };
         userInfoContainer.add( reset );
-        AjaxFallbackLink<String> otherReset = new AjaxFallbackLink<String>( "reset2" ) {
+        AjaxLink<String> otherReset = new AjaxLink<String>( "reset2" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetAll();
@@ -370,14 +370,14 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             }
         };
         userPasswordContainer.add( otherReset );
-        AjaxFallbackLink<String> applyButton = new AjaxFallbackLink<String>( "apply1" ) {
+        AjaxLink<String> applyButton = new AjaxLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 applyChanges( target );
             }
         };
         userInfoContainer.add( applyButton );
-        AjaxFallbackLink<String> otherApplyButton = new AjaxFallbackLink<String>( "apply2" ) {
+        AjaxLink<String> otherApplyButton = new AjaxLink<String>( "apply2" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 applyChanges( target );

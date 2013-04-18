@@ -14,8 +14,8 @@ import com.mindalliance.channels.social.model.UserStatement;
 import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -72,14 +72,14 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private ModelObject newMessageAbout;
     private String newMessageText = "";
     private Label aboutMessagesLabel;
-    private AjaxFallbackLink showAFew;
-    private AjaxFallbackLink showMore;
+    private AjaxLink showAFew;
+    private AjaxLink showMore;
     private Updatable updatable;
     private boolean showProfile;
     private WebMarkupContainer newMessageContainer;
-    private AjaxFallbackLink showHideBroadcastsLink;
+    private AjaxLink showHideBroadcastsLink;
     private Label showHideBroadcastsLabel;
-    private AjaxFallbackLink sentReceivedLink;
+    private AjaxLink sentReceivedLink;
     private Label sentReceivedLabel;
     private Date whenLastRefreshed;
 
@@ -126,7 +126,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowHideBroadcastsLink() {
-        showHideBroadcastsLink = new AjaxFallbackLink( "hideShowBroadcastsLink" ) {
+        showHideBroadcastsLink = new AjaxLink( "hideShowBroadcastsLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 privateOnly = !privateOnly;
                 addShowHideBroadcastsLabel();
@@ -148,7 +148,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowReceivedSentLink() {
-        sentReceivedLink = new AjaxFallbackLink( "sentReceivedLink" ) {
+        sentReceivedLink = new AjaxLink( "sentReceivedLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 showReceived = !showReceived;
                 addShowReceivedSentLabel();
@@ -213,7 +213,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowMore() {
-        showMore = new AjaxFallbackLink( "showMore" ) {
+        showMore = new AjaxLink( "showMore" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow += MORE;
                 addUserMessages();
@@ -225,7 +225,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addShowAFew() {
-        showAFew = new AjaxFallbackLink( "showFew" ) {
+        showAFew = new AjaxLink( "showFew" ) {
             public void onClick( AjaxRequestTarget target ) {
                 numberToShow = A_FEW;
                 showAFew.setEnabled( false );
@@ -339,7 +339,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addReset( final WebMarkupContainer newMessageContainer ) {
-        AjaxFallbackLink cancelLink = new AjaxFallbackLink( "reset" ) {
+        AjaxLink cancelLink = new AjaxLink( "reset" ) {
             public void onClick( AjaxRequestTarget target ) {
                 resetNewMessage( target );
             }
@@ -348,7 +348,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addSend( final WebMarkupContainer newMessageContainer ) {
-        AjaxFallbackLink sendLink = new AjaxFallbackLink( "send" ) {
+        AjaxLink sendLink = new AjaxLink( "send" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
                     sendNewMessage( false, getUser() );
@@ -369,7 +369,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     private void addSendAndEmail( final WebMarkupContainer newMessageContainer ) {
-        AjaxFallbackLink sendAndEmailLink = new IndicatingAjaxFallbackLink( "sendAndEmail" ) {
+        AjaxLink sendAndEmailLink = new IndicatingAjaxLink( "sendAndEmail" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( !getNewMessageText().isEmpty() ) {
                     boolean success = sendNewMessage( true, getUser() );

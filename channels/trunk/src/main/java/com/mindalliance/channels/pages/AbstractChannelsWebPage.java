@@ -247,7 +247,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             getCommander().requestLockOn( getUser().getUsername(), change.getId() );
         } else if ( change.isForInstanceOf( Identifiable.class ) ) {
             Identifiable identifiable = change.getSubject( getCommunityService() );
-            if ( !ModelObject.isUnknownModelObject( identifiable )
+            if ( identifiable != null && !ModelObject.isUnknownModelObject( identifiable )
                     && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
                     && getCommander().isLockable( change.getClassName() ) ) {
                 getCommander().requestLockOn( getUser().getUsername(), change.getId() );
