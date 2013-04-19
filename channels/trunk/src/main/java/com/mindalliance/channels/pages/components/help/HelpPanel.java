@@ -110,6 +110,9 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
         glossaryLink = new AjaxLink<String>( "glossary" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                rememberState();
+                addBack();
+                target.add( backLink );
                 selectTopicInSection( getUserRoleId(), "concepts", "glossary", target );
             }
         };

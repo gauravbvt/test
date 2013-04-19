@@ -71,6 +71,10 @@ div.quick-help-content {
     font-family: 'Open Sans',sans-serif;
     font-size: 11px;
     line-height: 22px;
+
+    height: 400px;
+    overflow-x: auto;
+
 }
 
 a.quick-help-title:hover + div.quick-help-content {
@@ -163,8 +167,20 @@ h2.attachment-panel-add img.help-icon {
     cursor: pointer;
 }
 
-.quick-help-back, .quick-help-glossary {
+#quick-help a.quick-help-glossary, #quick-help a.quick-help-back {
+    color: #1F7F5C;
     text-transform: uppercase;
-    float: right;
+    /*float: right;*/
     margin-right: 12px;
+}
+
+
+
+#quick-help a.quick-help-glossary {
+    padding: 15px 12px 12px;
+    border-left: 5px solid #1F7F5C;
+}
+
+#quick-help a.quick-help-back {
+    padding: 15px 0 12px;
 }

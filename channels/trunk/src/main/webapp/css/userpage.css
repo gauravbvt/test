@@ -772,10 +772,10 @@ div.title-desc {
 }
 
 h1.subtitle {
-    background: none repeat scroll 0 0 papayawhip;
+    background: none repeat scroll 0 0 rgb(213, 221, 255);
     border-bottom: 1px solid #CCCCCC;
     border-top: 1px solid #CCCCCC;
-    font-family: georgia;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 28px;
     font-weight: normal;
     margin: 10px 0;

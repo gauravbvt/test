@@ -533,8 +533,10 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
         if ( change.isForInstanceOf( PlanCommunity.class ) ) {
             if ( change.isCollapsed() || change.isUpdated() ) {
-                detailsDialog.close( target );
-                detailsDialog = null;
+                if ( detailsDialog != null ) {
+                    detailsDialog.close( target );
+                    detailsDialog = null;
+                }
                 addDetailLabels();
                 target.add( detailsContainer );
             }

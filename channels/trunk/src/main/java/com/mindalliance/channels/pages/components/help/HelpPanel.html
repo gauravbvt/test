@@ -9,13 +9,16 @@
 <body>
 <wicket:panel>
     <div id="quick-help">
-        <a wicket:id="title" class="quick-help-title" href="#">
-            Help
-        </a>
-        <a wicket:id="glossary" class="quick-help-glossary">glossary</a>
-        <a wicket:id="back" class="quick-help-back">back</a>
+        <div>
+            <a wicket:id="title" class="quick-help-title" href="#">
+                Help
+            </a>
+            <a wicket:id="glossary" class="quick-help-glossary">glossary</a>
+            <a wicket:id="back" class="quick-help-back">back</a>
+        </div>
         <div wicket:id="content" class="quick-help-content">
             <h1 wicket:id="topicName">What is a Community?</h1>
+
             <div wicket:id="topicItems">
                 <div wicket:id="description">Description from wikimedia format</div>
                 <a wicket:id="actionLink" class="window"><span wicket:id="action"> Do it</span></a>
