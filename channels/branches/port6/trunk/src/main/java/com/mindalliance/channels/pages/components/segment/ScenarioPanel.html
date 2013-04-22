@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <span class="scenario">
+    <h3>
+        <span>This plan segment covers</span>
+
+        <div>&nbsp;</div>
+    </h3>
+    <table>
+        <tr>
+            <th>
+                <span wicket:id="phase-link" href="#" title="Phase details">Phase</span>
+            </th>
+            <td>
+                <select id="phase" wicket:id="phase-choices">
+                    <option>Responding</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Of <span wicket:id="event-link" href="#" title="Event details">event</span>
+            </th>
+            <td>
+                <input type="text" class="entity-name" id="event" wicket:id="event" value=""/>
+            </td>
+        </tr>
+        <tr>
+            <th>Rated</th>
+            <td>
+                <select id="event-level" wicket:id="event-level">
+                    <option>Any</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Occurring</th>
+            <td>
+                <span wicket:id="context">[event timings panel]</span>
+            </td>
+        </tr>
+    </table>
+    </span>
+</wicket:panel>
+</body>
+</html>

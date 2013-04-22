@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+        <span wicket:id="containmentContainer">
+            <input wicket:id="includeContained" type="checkbox"/> See issues of
+            <span wicket:id="containment">agents in this role</span>
+        </span>
+    &nbsp;
+        <span wicket:id="inSegmentContainer">
+            <input wicket:id="includeFromSegments" type="checkbox"/> See procedural issues
+        </span>
+    &nbsp;<input wicket:id="includeWaived" type="checkbox"/> Include waived issues
+</wicket:extend>
+</body>
+</html>

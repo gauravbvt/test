@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="dialog">
+        <h3>Decline survey &quot;<span wicket:id="surveyName">survey name</span>&quot;? </h3>
+        <label for="reason">Please tell us why (if you want)</label>
+        <textarea wicket:id="reason" id="reason" rows="3" cols="60">something</textarea>
+        <div>
+            <input wicket:id="doIt" type="button" value="Do it"/>
+            <input wicket:id="cancel" type="button" value="Cancel"/>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

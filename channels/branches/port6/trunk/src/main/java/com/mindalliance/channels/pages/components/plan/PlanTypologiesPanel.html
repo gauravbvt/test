@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    Show types of&nbsp;
+    <select wicket:id="typeKind">
+        <option>Organizations</option>
+    </select>
+
+    <p/>
+
+    <div class="typology" wicket:id="typology">
+        [typology diagram panel]
+    </div>
+    <div class="zoom">
+        <div class="filters">
+            Draw layout
+            <input wicket:id="dot" type="checkbox"> as a tree &nbsp
+            <input wicket:id="neato" type="checkbox"> as a web
+        </div>
+        <span wicket:id="fit">TBD</span>
+    </div>
+    <div wicket:id="indexContainer">
+        <h3 >
+            <span wicket:id="selectedType">Usages of something </span>
+            <span wicket:id="typeLink">[model entity link] </span>
+        </h3>
+        <span wicket:id="typeIndex">[type index panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

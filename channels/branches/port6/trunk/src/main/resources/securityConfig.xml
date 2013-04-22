@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sec="http://www.springframework.org/schema/security"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+
+       default-autowire="byName">
+
+    <!--
+
+        <bean name="account" class="com.mindalliance.playbook.dao.impl.AccountDaoImpl" factory-method="currentAccount"
+          scope="request" autowire="no">
+        <constructor-arg ref="accountDao"/>
+    </bean>
+
+    -->
+
+<!--
+    <bean name="user" class="com.mindalliance.channels.core.dao.user.ChannelsUser" factory-method="current" scope="session"
+          autowire="no"/>
+-->
+
+    <bean name="user" class="com.mindalliance.channels.core.dao.user.ChannelsUser" factory-method="current" scope="request"
+          autowire="no">
+        <constructor-arg ref="userDao"/>
+    </bean>
+
+
+    <bean name="plan" class="com.mindalliance.channels.core.model.Plan" factory-bean="user" factory-method="getPlan"
+          scope="request"/>
+
+    <bean id="userDao" class="com.mindalliance.channels.core.dao.user.ChannelsUserDaoImpl"/>
+
+    <sec:http pattern="/**/*.css" security="none"/>
+    <sec:http pattern="/**/*.js" security="none"/>
+    <sec:http pattern="/**/*.ico" security="none"/>
+    <sec:http pattern="/login.html" security="none"/>
+    <sec:http pattern="/newPasswordRequest.html" security="none"/>
+    <sec:http pattern="/static/**" security="none"/>
+    <sec:http pattern="/images/**" security="none"/>
+    <sec:http pattern="/resources/**" security="none"/>
+    <sec:http pattern="/doc/**" security="none"/>
+    <sec:http pattern="/api/**" security="none"/>
+    <sec:http pattern="/users/photos/**" security="none"/>
+
+    <sec:http pattern="/rest/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    <sec:http pattern="/uploads/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    <sec:http pattern="/soap/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    <sec:http pattern="/xml/**">
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+        <sec:http-basic/>
+    </sec:http>
+    
+    <sec:http auto-config='true' access-denied-page="/static/403.html" 
+              create-session="always"
+              disable-url-rewriting="false">
+
+        <sec:intercept-url pattern="/admin" access="ROLE_ADMIN"/>
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+
+        <sec:form-login login-page="/login.html" login-processing-url="/login.do" default-target-url="/"
+                        authentication-failure-url="/static/failed.html"/>
+        <sec:logout logout-url="/logout" logout-success-url="/"/>
+        <sec:session-management>
+            <sec:concurrency-control max-sessions="1"/>
+        </sec:session-management>
+        <sec:remember-me key="channels"/>
+
+    </sec:http>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="userDao">
+            <sec:password-encoder hash="sha" base64="true"/>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+
+    <sec:global-method-security secured-annotations="enabled"/>
+
+    <bean id="runAsManager" class="org.springframework.security.access.intercept.RunAsManagerImpl">
+        <property name="key" value="bla"/>
+    </bean>
+    <bean id="runAsAuthenticationProvider"
+          class="org.springframework.security.access.intercept.RunAsImplAuthenticationProvider">
+        <property name="key" value="bla"/>
+    </bean>
+
+    <bean id="securityInterceptor"
+          class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+        <property name="securityMetadataSource">
+            <bean class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource"/>
+        </property>
+        <property name="validateConfigAttributes" value="false"/>
+    </bean>
+
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- For enunciate -->
+    <alias name="springSecurityFilterChain" alias="securityFilter"/>
+</beans>

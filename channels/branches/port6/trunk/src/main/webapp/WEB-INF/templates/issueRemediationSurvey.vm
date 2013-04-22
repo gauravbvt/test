@@ -1,0 +1,103 @@
+<survey>
+    <page>
+        <question type="instruction">
+            <title>
+                <![CDATA[
+                    Sent to [%%GET_sgUID]
+                ]]>
+            </title>
+        </question>
+        <question type="instruction">
+            <title>
+                <![CDATA[
+                    <h1>
+                      <img width="57" hspace="10" height="65" align="middle" alt="Channels logo"
+                         src="https://app.sgizmo.com/users/56191/channels-logo.png"/>
+                      Channels Issue Resolution Survey
+                    </h1>
+                ]]>
+            </title>
+        </question>
+        <question type="instruction">
+            <title>
+                <![CDATA[
+                We need your help to resolve an issue with ${about}
+                #if (${segment})
+                    in segment &quot;<strong>${segment}</strong>&quot;
+                #end
+                of plan &quot;<strong>${plan}</strong>&quot;.
+                ]]>
+            </title>
+        </question>
+        <question type="instruction">
+            <title>
+                <![CDATA[
+                  Please respond ${deadline}.
+                ]]>
+            </title>
+        </question>
+        <question type="instruction">
+            <title>
+                <![CDATA[
+                  <h3>The issue</h3>
+                 ]]>
+           </title>
+        </question>
+        <question type="instruction">
+            <title>
+                <![CDATA[
+                  ${issue}
+                ]]>
+             </title>
+        </question>
+        <question type="instruction">
+            <title>
+               <![CDATA[
+                  <h3>What do you recommend?</h3>
+                 ]]>
+             </title>
+        </question>
+        <question type="radio" required="true" orientation="vert">
+            <title>Select one</title>
+            <options>
+                #foreach ( $option in ${options}  )
+                    <option><![CDATA[${option}]]></option>
+                #end
+                <option>Other</option>
+            </options>
+        </question>
+        <question type="essay" required="false">
+            <title>Please elaborate on your recommendation
+            </title>
+        </question>
+        <question type="essay" required="false">
+            <title>Further comments</title>
+        </question>
+        <question type="instruction">
+            <title>
+               <![CDATA[
+                <span style="font-size: smaller;">
+                      <span style="color: rgb(128, 128, 128);">This survey was requested by</span>
+                  </span>
+                  <span style="font-size: smaller;">
+                      <span style="color: rgb(128, 128, 128);">${issuer}</span>
+                  </span>
+                  <span style="font-size: smaller;">
+                      <span style="color: rgb(128, 128, 128);">&nbsp;
+                          <a href="mailto:${email}?subject=${survey}">
+                              <img border="0" width="16" hspace="3" height="16" align="baseline"
+                                   src="https://app.sgizmo.com/users/56191/mail.png" alt="email icon"/>
+                          </a>.
+                      </span>
+                  </span>
+                  ]]>
+           </title>
+            <options/>
+        </question>
+    </page>
+    <page>
+      <question type="instruction">
+        <title>Thank you for your help!</title>
+      </question>
+    </page>
+</survey>

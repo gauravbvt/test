@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+	<div class="social-controls">
+        <img wicket:id = "helpPresence" class="help-icon"/>
+		<a wicket:id="hideAll" href="#"><img src="images/hide_left.png" alt="Hide social panel"/></a>
+		<div class="text-controls">
+	    	<a wicket:id="hideShowLink" href="#"><span wicket:id="hideShow">Hide inactive users</span></a>
+		</div>
+	</div>
+    <div  class="social-list presence" wicket:id="presencesContainer">
+        <span wicket:id="presences">
+            <div wicket:id="presence">[presence panel]</div>
+        </span>
+    </div>
+</wicket:panel>
+</body>
+</html>

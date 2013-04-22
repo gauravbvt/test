@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table class="segment-edit-details">
+        <tr>
+            <th align="right"><label wicket:id="name-label">Name:</label></th>
+            <td><input width="40" wicket:id="name" type="text"/></td>
+        </tr>
+        <tr>
+            <th class="area" align="right" valign="top"><label wicket:id="description-label">Description:</label>
+            </th>
+            <td><textarea cols="40" rows="4" wicket:id="description">...</textarea></td>
+        </tr>
+        <tr>
+            <th align="right"><label>
+                <a wicket:id="tagsLink" href="#" title="Click to see all tags">Tags:</a>
+            </label></th>
+            <td><span wicket:id="tags">[Tags panel]</span></td>
+        </tr>
+    </table>
+    <span wicket:id="attachments">[attachments panel]</span>
+    <span wicket:id="issues">[issues panel]</span>
+</wicket:panel>
+</body>
+</html>

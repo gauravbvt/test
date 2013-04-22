@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="filters">
+        Show
+        <select wicket:id="statusChoice">
+            <option>All</option>
+            <option>Active</option>
+            <option>Inactive</option>
+        </select>
+        questionnaires about
+        <select wicket:id="aboutChoice">
+            <option>Anything</option>
+            <option>The plan</option>
+            <option>Events</option>
+            <option>Organizations</option>
+            <option>Roles</option>
+        </select>
+        <input wicket:id="remediation" type="checkbox"/> for issue remediation
+        <input wicket:id="usedOnly" type="checkbox"/> only if used in surveys
+    </div>
+    <div wicket:id="questionnaires">[Questionnaires table]</div>
+    <input class="add-new-questionnaire" wicket:id="newQuestionnaire" type="button" value="Add new"/>
+
+    <div class="questionnaire-cont" wicket:id="questionnaire">
+
+        <a wicket:id="deleteQuestionnaire" class="button">Delete</a>
+        <a wicket:id="activateQuestionnaire" class="button">Activate</a>
+        <a wicket:id="retireQuestionnaire" class="button">Deactivate</a>
+
+
+        <h4 class="questionnaire-label" wicket:id="questionnaireLabel">Questionnaire about event"</h4>
+        <span wicket:id="questionnaireManager">[Questionnaire manager panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

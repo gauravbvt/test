@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file defines external services that should be mocked in unit tests. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+
+       default-autowire="byName">
+
+    <!-- =========================== Bean Factory Modifiers -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties">
+            <value>
+                channels.home=file:target/channel-test-data
+                supportCommunity.default=
+            </value>
+        </property>
+    </bean>
+
+    <!-- =========================== External Services -->
+    <bean id="mailSender" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.springframework.mail.javamail.JavaMailSender"/>
+    </bean>
+
+    <bean id="geoService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.mindalliance.channels.engine.geo.DefaultGeoService"/>
+    </bean>
+
+    <bean id="surveyService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="com.mindalliance.channels.surveys.SurveyGizmoService"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="session">
+                    <bean class="org.springframework.context.support.SimpleThreadScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

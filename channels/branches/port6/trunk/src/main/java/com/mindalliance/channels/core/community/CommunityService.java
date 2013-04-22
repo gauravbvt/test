@@ -1,0 +1,175 @@
+package com.mindalliance.channels.core.community;
+
+import com.mindalliance.channels.core.community.participation.Agency;
+import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
+import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.participation.ParticipationManager;
+import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
+import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
+import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
+import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.engine.analysis.Analyst;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Community service.
+ * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: jf
+ * Date: 11/30/12
+ * Time: 8:56 AM
+ */
+public interface CommunityService {
+
+    UserParticipationService getUserParticipationService();
+
+    UserParticipationConfirmationService getUserParticipationConfirmationService();
+
+    OrganizationParticipationService getOrganizationParticipationService();
+
+    PlanService getPlanService();
+
+    void setPlanService( PlanService planService );
+
+    Analyst getAnalyst();
+
+    AbstractModelObjectDao getDao();
+
+    void setPlanCommunity( PlanCommunity planCommunity );
+
+    <T extends ModelObject> T find( Class<T> clazz, long id, Date dateOfRecord ) throws NotFoundException;
+
+    boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord );
+
+    boolean canHaveParentAgency( final String name, String parentName );
+
+    List<Agency> findAncestors( String agencyName );
+
+    boolean isCustodianOf( ChannelsUser user, Organization placeholder );
+
+    CommunityCommitments getAllCommitments( Boolean includeToSelf );
+
+    CommunityCommitments findAllCommitments( Flow flow, Boolean includeToSelf );
+
+    CommunityAssignments getAllAssignments();
+
+    CommunityCommitments findAllBypassCommitments( final Flow flow );
+
+    void clearCache();
+
+    void onDestroy();
+
+    PlanCommunity getPlanCommunity();
+
+    Plan getPlan();
+
+    ParticipationManager getParticipationManager();
+
+    ChannelsUserDao getUserDao();
+
+    ParticipationAnalyst getParticipationAnalyst();
+
+    Boolean isCommunityPlanner( ChannelsUser user );
+
+    List<ChannelsUser> getCommunityPlanners( );
+
+    <T extends ModelObject> List<T> list( Class<T> clazz );
+
+    <T extends ModelEntity> List<T> listActualEntities( Class<T> clazz, boolean mustBeReferenced );
+
+    <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name );
+
+    <T extends ModelObject> T find( Class<T> clazz, long id ) throws NotFoundException;
+
+    <T extends ModelEntity> T findOrCreate( Class<T> clazz, String name, long id );
+
+    <T extends ModelEntity> T findOrCreateType( Class<T> clazz, String name, long id );
+
+
+    void update( ModelObject mo );
+
+    /**
+     * Find an actual entity by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name );
+
+    /**
+     * Find an actual entity by given name. If none, create it for given domain,
+     * renaming it to avoid conflicts if needed.
+     * If id is not null, assign the entity the given id if created.
+     *
+     * @param clazz the kind of model object
+     * @param name  the name
+     * @param id    an id
+     * @param <T>   a subclass of model object
+     * @return the object or null if name is null or empty
+     */
+    <T extends ModelEntity> T safeFindOrCreate( Class<T> clazz, String name, Long id );
+
+    /**
+     * List all user issues about a given model object.
+     * @param modelObject a model object
+     * @return a list of issues.
+     */
+    List<Issue> listUserIssues( ModelObject modelObject );
+
+    /**
+     * Persist a model object at a given id.
+     * @param modelObject a model object
+     * @param id an id
+     */
+    void add( ModelObject modelObject, Long id );
+
+    /**
+     * Find an entity type by name, if it exists.
+     *
+     * @param entityClass a model entity class
+     * @param name        a string
+     * @param <T>         a subclass of model entity
+     * @return a model entity or null
+     */
+    <T extends ModelEntity> T findEntityType( Class<T> entityClass, String name );
+
+    /**
+     * Find an actual entity by name, if it exists.
+     *
+     * @param entityClass a model entity class
+     * @param name        a string
+     * @param <T>         a subclass of model entity
+     * @return a model entity or null
+     */
+    <T extends ModelEntity> T findActualEntity( Class<T> entityClass, String name );
+
+    /**
+     * Whether the community service is for a domain community.
+     * @return a boolean
+     */
+    boolean isForDomain();
+
+    /**
+     * Remove a persistent model object.
+     *
+     * @param object the object
+     */
+    void remove( ModelObject object );
+
+}

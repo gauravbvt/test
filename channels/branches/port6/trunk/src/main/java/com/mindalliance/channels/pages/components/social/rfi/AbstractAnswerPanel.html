@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="questionAndAnswer"> <!-- class="required" if answer is required -->
+        <div wicket:id="question" class="question">
+            <span class="index" wicket:id="index">1</span>.&nbsp;
+            <span wicket:id="text">What is the meaning of life?</span>
+            <a wicket:id="others" class="others">What others answered</a>
+        </div>
+        <wicket:child/>
+        <div class="comment" wicket:id="more">
+            <label >Comment or observation:</label>
+            <textarea wicket:id="comment" rows="4" cols="40">a comment </textarea>
+        </div>
+        <div class="privacy" wicket:id="privacyContainer">
+            <input wicket:id="shared" type="checkbox"/> Share my answer with others
+            <span wicket:id="anonymousContainer">
+                <input wicket:id="anonymous" type="checkbox"/> Anonymously
+            </span>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

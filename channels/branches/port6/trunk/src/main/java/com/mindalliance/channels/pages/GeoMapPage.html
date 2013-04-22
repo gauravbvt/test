@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/"
+        lang="en">
+<head>
+    <title wicket:id="title">[Title]</title>
+    <style type="text/css">
+		v\:* {
+			behavior:url(#default#VML);
+		}
+		body {
+			margin:10px 0 0 0;
+			padding:0;
+			text-align:center;
+			font-family:Arial, Helvetica, sans-serif;
+			color:#333333;
+			background:#F6F6F6;
+		}
+		body > div {
+			width:600px;
+			margin:0px auto;
+			text-align:left;
+			background:#D1D3D4;
+			border:1px solid #666666;
+		}
+		div.map {
+			width:600px;
+			height:400px;
+			border-bottom:1px solid #666666;
+		}
+		div.nothing-to-map {
+			width:600px;
+			height:200px;
+			padding:200px 0 0 0;
+			color:#666666;
+			font-weight:bold;
+			font-size:14px;
+			border-bottom:1px solid #666666;
+			text-align:center;
+			background:#E8E8E8;
+		} 
+		span.caption {
+			font-size:9px;
+			display:block;
+			text-align:center;
+			padding:5px 0;
+		}
+        .gmap_marker {
+            font-size: x-small;
+        }
+	</style>
+</head>
+
+<body>
+<div>
+	<div class="map" wicket:id="map">Map</div>
+	<div class="nothing-to-map" wicket:id="nothing">Nothing to map</div>
+	<span class="caption" wicket:id="caption">caption</span>
+</div>
+</body>
+</html>

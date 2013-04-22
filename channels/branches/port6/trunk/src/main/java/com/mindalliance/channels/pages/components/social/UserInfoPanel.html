@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+	<div class="userInfo" wicket:id="userInfo">
+		<div class="tabcontent-group">
+			<h3>
+                My identity
+                <img wicket:id = "helpIdentity" class="help-icon"/>
+            </h3>
+			<div class="tabcontent-content">
+	         <table>
+	             <tr>
+	             	<td>ID:</td>
+	             	<td><span wicket:id="userId">uid</span></td>
+	             </tr>
+	             <tr>
+	             	<td>Name:</td>
+	             	<td><input type="text" wicket:id="fullName"/></td>
+	             </tr>
+	             <tr>
+	             	<td>Email:</td>
+	             	<td><input type="text" wicket:id="email"/></td>
+	             </tr>
+                 <tr>
+                     <td>Photo:</td>
+                     <td>
+                         <img wicket:id="photo" src="#"  width="32" height="32" alt="user photo"/>
+                         <a wicket:id="removePhoto"> Change </a>
+                         <span wicket:id="uploadContainer">
+                             <label class="attach-ctl"> <input class="file" type="file" wicket:id="uploadPhoto" value="Browse"></label>
+                             <a wicket:id="upload" href="#">Upload</a>
+                         </span>
+                     </td>
+                 </tr>
+	         </table>
+	         <div class="buttons">
+	             <input wicket:id="apply1" type="button" value="Apply" />
+	             <input wicket:id="reset1" type="button" value="Reset"/>
+	         </div>
+	      </div>
+		</div>
+      <div wicket:id="userContact" class="tabcontent-group">
+         <h3>
+             My personal contact info
+             <img wicket:id = "helpContact" class="help-icon"/>
+
+         </h3>
+  			<div class="tabcontent-content">
+	         <span wicket:id="contactInfo">[channels list panel]</span>
+	      </div>
+      </div>
+      <div wicket:id="userPassword" class="tabcontent-group">
+         <h3>
+             My password
+             <img wicket:id = "helpPassword" class="help-icon"/>
+         </h3>
+			<div class="tabcontent-content">
+	         <table>
+	             <tr><td>Current Password:</td><td><input type="password" wicket:id="password"/></td></tr>
+	             <tr><td>New Password:</td><td><input type="text" wicket:id="newPassword"/></td></tr>
+	             <tr><td>Confirm Password:</td><td><input type="text" wicket:id="repeatNewPassword"/></td></tr>
+	         </table>
+	         <div wicket:id="errorsContainer">
+	             <ul>
+	                 <li wicket:id="errors"><span wicket:id="error">error</span></li>
+	             </ul>
+	         </div>
+	         <div class="buttons">
+	             <input wicket:id="apply2" type="button" value="Apply" />
+	             <input wicket:id="reset2" type="button" value="Reset"/>
+	         </div>
+	      </div>
+		</div>
+	</div>
+</wicket:panel>
+</body>
+</html>

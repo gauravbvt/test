@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+
+        default-autowire="byName">
+
+   <aop:aspectj-autoproxy/>
+    
+    <!--<bean id="loginAdvice" class="com.mindalliance.channels.core.instrumentation.LoginAdvice"/>-->
+ <!--   <bean id="janitor" class="com.mindalliance.channels.core.dao.Janitor"/>
+    
+    <task:scheduled-tasks >
+        <task:scheduled ref="janitor" method="run" cron="0 */5 9-17 * * MON-FRI"/>
+    </task:scheduled-tasks>    -->
+
+    <bean id="propset" class="com.mindalliance.channels.core.util.SystemPropertySetter">
+        <property name="property" value="webinf.path"/>
+        <property name="resource" value="/WEB-INF"/>
+    </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" depends-on="propset">
+        <property name="configLocation" value="/WEB-INF/ehcache.xml"/>
+    </bean>
+
+    <bean id="resultCache" class="com.mindalliance.channels.core.query.ResultCache">
+        <property name="cacheKey" value="results"/>
+    </bean>
+
+
+    <bean id="cacheSet" class="com.mindalliance.channels.core.query.CacheAdvice">
+        <property name="cache" ref="resultCache"/>
+    </bean>
+
+    <bean id="cacheClear" class="com.mindalliance.channels.core.query.CacheResetAdvice">
+        <property name="cache" ref="resultCache"/>
+    </bean>
+
+    <bean id="permCache" class="com.mindalliance.channels.core.query.ResultCache">
+        <property name="cacheKey" value="longTerm"/>
+    </bean>
+
+    <bean id="permSet" class="com.mindalliance.channels.core.query.CacheAdvice">
+        <property name="cache" ref="permCache"/>
+    </bean>
+    <bean id="permClear" class="com.mindalliance.channels.core.query.CacheResetAdvice">
+        <property name="cache" ref="permCache"/>
+    </bean>
+
+    <bean id="communityCache" class="com.mindalliance.channels.core.query.ResultCache">
+        <property name="cacheKey" value="community"/>
+    </bean>
+
+    <bean id="communitySet" class="com.mindalliance.channels.core.query.CacheAdvice">
+        <property name="cache" ref="communityCache"/>
+    </bean>
+
+    <bean id="communityClear" class="com.mindalliance.channels.core.query.CacheResetAdvice">
+        <property name="cache" ref="communityCache"/>
+    </bean>
+
+
+
+
+    <aop:config proxy-target-class="true">
+     <!--   <aop:advisor pointcut="execution( void org.springframework.security.web.authentication.AuthenticationSuccessHandler.onAuthenticationSuccess(*) )"
+                     advice-ref="loginAdvice"/>
+        <aop:advisor pointcut="execution( void org.springframework.security.web.authentication.AuthenticationSuccessHandler.onAuthenticationSuccess(*) )"
+                     advice-ref="loginAdvice"/>
+
+         Temporary caching refreshed when model is changed
+         -->
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.core.query.QueryService.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.query.Assignments com.mindalliance.channels.core.query.QueryService.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.query.Commitments com.mindalliance.channels.core.query.QueryService.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.model.Level com.mindalliance.channels.core.query.QueryService.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.core.query.QueryService.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(Integer com.mindalliance.channels.core.query.QueryService.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.Detective.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.engine.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.engine.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(Integer com.mindalliance.channels.engine.analysis.Analyst.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.graph.Diagram com.mindalliance.channels.graph.DiagramFactory.*(..))"
+                     advice-ref="cacheSet" order="1"/>
+
+        <!-- Community caching -->
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityAssignments com.mindalliance.channels.core.community.CommunityService.*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityCommitments com.mindalliance.channels.core.community.CommunityService.*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
+
+
+        <!-- Temporary cache clearing triggers -->
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandDone(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandUndone(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.commandRedone(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.started(..))" advice-ref="cacheClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.dao.PlanManager.clearCache(..))" advice-ref="cacheClear" order="1"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandDone(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandUndone(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.commandRedone(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.started(..))" advice-ref="communityClear" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.PlanCommunityManager.clearCache(..))" advice-ref="communityClear" order="1"/>
+
+
+        <!-- Permanent caching -->
+        <aop:advisor pointcut="execution(String com.mindalliance.channels.engine.geo.GeoService.*(..))"
+                     advice-ref="permSet" order="1"/>
+        <aop:advisor pointcut="execution(java.util.List com.mindalliance.channels.engine.geo.GeoService.find*(..))"
+                     advice-ref="permSet" order="1"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.engine.geo.GeoService.*(..))"
+                     advice-ref="permSet" order="1"/>
+        <aop:advisor pointcut="execution(Boolean com.mindalliance.channels.core.nlp.SemanticMatcher.matches(..))"
+                     advice-ref="permSet" order="1"/>
+        <aop:advisor pointcut="execution(com.mindalliance.channels.core.nlp.Proximity com.mindalliance.channels.core.nlp.SemanticMatcher.semanticProximity(..))"
+                     advice-ref="permSet" order="1"/>
+        <aop:advisor pointcut="execution(Double com.mindalliance.channels.core.nlp.SemanticMatcher.assessSimilarity(..))"
+                     advice-ref="permSet" order="1"/>
+        <aop:advisor pointcut="execution(net.didion.jwnl.data.IndexWord com.mindalliance.channels.core.nlp.SemanticMatcher.lookupBaseForm(..))"
+                     advice-ref="permSet" order="1"/>
+
+   </aop:config>
+</beans>

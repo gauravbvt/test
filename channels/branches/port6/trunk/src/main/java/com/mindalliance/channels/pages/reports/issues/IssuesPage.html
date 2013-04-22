@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Issues Report</title>
+	<link rel="stylesheet" href="css/reports/issues/issues-report.css" type="text/css" media="screen, print" />
+</head>
+<body>
+<wicket:extend>
+        <div class="title-desc">
+            <h1 class="subtitle">
+                Issues Summary Report
+            </h1>
+        </div>
+        <div id="summary">
+            <h2>Issues summary</h2>
+            <span wicket:id="issuesSummary">[issues summary panel]</span>
+        </div>
+        <div id="issuesMetrics">
+            <div class="page-break"></div>
+            <h2>Robustness issues</h2>
+            <span wicket:id="robustnessMetrics">[issues metrics panel]</span>
+            <div class="page-break"></div>
+            <h2>Completeness issues</h2>
+            <span wicket:id="completenessMetrics">[issues metrics panel]</span>
+            <div class="page-break"></div>
+            <h2>Validity issues</h2>
+            <span wicket:id="validityMetrics">[issues metrics panel]</span>
+        </div>
+  	    <div id="disclaimer">Channels automatically detects issues, based on a plan which is itself based on input from
+participating agencies.<br />Mind-Alliance Systems makes no warranty as to the completeness or accuracy of these issues.</div>
+</wicket:extend>
+
+</body>
+</html>

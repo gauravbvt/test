@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="guide">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="description" type="xs:string"/>
+                <xs:element ref="role" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="role">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element ref="section" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="section">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element ref="topic" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="topic">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element ref="item" maxOccurs="unbounded" minOccurs="1"/>
+                <xs:element ref="next" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="definition" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="document" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="item">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="description" type="xs:string"/>
+                <xs:element ref="script" maxOccurs="1" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="document">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="title" type="xs:string"/>
+                <xs:element name="url" type="xs:anyURI"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="script">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="action" type="xs:string"/>
+                <xs:element ref="change" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="change">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="updateTargetPath" type="xs:string" maxOccurs="1" minOccurs="0"/>
+                    <xs:choice>
+                    <xs:element name="subjectId" type="xs:long"/>
+                        <xs:element name="subjectPath" type="xs:string" maxOccurs="1" minOccurs="0"/>
+                </xs:choice>
+                <xs:element ref="type"/> 
+                <xs:element name="property" type="xs:string" maxOccurs="1" minOccurs="0"/>
+                <xs:element ref="qualifier" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="next">
+        <xs:complexType>
+            <xs:attribute name="section" type="xs:IDREF" use="required"/>
+            <xs:attribute name="topic" type="xs:IDREF" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="definition">
+        <xs:complexType>
+            <xs:attribute name="section" type="xs:IDREF" use="required"/>
+            <xs:attribute name="topic" type="xs:IDREF" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+
+    <xs:element name="type">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Expanded"/>
+                <xs:enumeration value="AspectViewed"/>
+                <xs:enumeration value="AspectReplaced"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <xs:element name="qualifier">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="value" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

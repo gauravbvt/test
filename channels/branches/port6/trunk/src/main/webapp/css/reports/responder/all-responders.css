@@ -1,0 +1,207 @@
+/**
+ * Channels Reponder Report - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+/* ----- Content - Note ----- */
+
+div.allParticipants-contents div#note {
+    background: url("../../../images/gains.png") no-repeat 5px 4px #FEF2B0;
+    border:1px solid #C5B351;
+    color: #000000;
+    font-size: 12px;
+    margin: 5px 0 15px 0;
+    padding: 5px 5px 5px 25px;
+}
+
+
+/* ----- Content - Table ----- */
+
+div.allParticipants-contents h3 {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    font-size: 13px;
+    margin: 0;
+    padding: 9px 10px;
+    text-transform: uppercase;
+}
+
+div.allParticipants-contents table {
+	border-collapse:collapse;
+	margin:0 0 20px 0;
+}
+
+div.allParticipants-contents table tr th {
+	padding:0 15px;
+}
+
+div.allParticipants-contents table tr td {
+	padding:7px 7px 7px 10px;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
+}
+
+div.allParticipants-contents table tr td.users,
+div.allParticipants-contents table tr td.agents {
+	border-right:none;
+}
+
+div.allParticipants-contents table tr td.remove,
+div.allParticipants-contents table tr td.assign {
+	border-left:none;
+}
+
+div.allParticipants-contents table tr td.remove a {
+    background: url('../../../images/signout-bg.png') repeat-x;
+    border: 1px solid #a7a9ac;
+    color: #727272;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin: 0;
+    text-transform: uppercase;
+    outline: none;
+	float:right;
+    display: block;
+}
+
+div.allParticipants-contents table tr td.remove a:hover {
+    color: #000000;
+	border:1px solid #000000;
+}
+
+div.allParticipants-contents a.responder,
+div.allParticipants-contents a.planner,
+div.allParticipants-contents a.responderList {
+	font-weight:bold;
+	border:none;
+}
+
+div.allParticipants-contents a.responder:hover,
+div.allParticipants-contents a.planner:hover,
+div.allParticipants-contents a.responderList:hover {
+	font-weight:bold;
+	border-bottom:1px dotted #666666;
+	color:#000000;
+}
+
+div.allParticipants-contents span.profile,
+div.allParticipants-contents span.many {
+	border-bottom:1px dotted #666666;
+}
+
+div.allParticipants-contents span.desc {
+	color: #666666;
+	font-size: 11px;
+	text-transform: none;
+}
+
+
+/* ----- Assign - Dropdown ----- */
+
+div.allParticipants-contents td.assign {
+    clear: both;
+    margin: 0;
+    padding: 0;
+    position: relative;
+	width:49px;
+}
+
+div.allParticipants-contents td.assign ul {
+    float: right;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    right: 50%;
+}
+
+div.allParticipants-contents td.assign ul li {
+    float: left;
+    left: 50%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 1px;
+}
+
+div.allParticipants-contents td.assign ul li a {
+    text-decoration: none;
+    background: url('../../../images/signout-bg.png') repeat-x scroll 0 0 transparent;
+    border: 1px solid #A7A9AC;
+    color: #727272;
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 0;
+    outline: medium none;
+    padding: 2px 4px;
+    text-transform: uppercase;
+}
+
+div.allParticipants-contents td.assign ul li a:hover {
+    color: #000000;
+	border:1px solid #000000;
+	background:#eeeeee;
+}
+
+div.allParticipants-contents td.assign ul li:hover a {
+    color: #000000;
+	border:1px solid #000000;
+	background:#eeeeee;
+}
+
+div.allParticipants-contents td.assign ul ul {
+    display: none;
+    float: left;
+    position: absolute;
+    top: 1.3em;
+    margin: 0 0 0 0;
+    width: 10em;
+    left: auto;
+    right: 0;
+	z-index:1000;
+}
+
+div.allParticipants-contents td.assign ul ul li {
+    clear: left;
+    left: auto;
+    margin: 0;
+    width: 100%;
+    float: right;
+    position: relative;
+    right: 0.8em;
+}
+
+div.allParticipants-contents td.assign ul ul li a,
+div.allParticipants-contents td.assign ul li:hover ul li a {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-bottom: none;
+    color: #444444;
+    float: left;
+    font-size: 0.8em;
+    font-weight: normal;
+    line-height: 1.4em;
+    width: 100%;
+}
+
+div.allParticipants-contents td.assign ul ul li:last-child a,
+div.allParticipants-contents td.assign ul li:hover ul li:last-child a {
+    border-bottom: 1px solid #000000;
+}
+
+div.allParticipants-contents td.assign ul ul li a:hover,
+div.allParticipants-contents td.assign ul li:hover ul li a:hover {
+    background: #999999;
+    color: #ffffff;
+    float: left;
+}
+
+div.allParticipants-contents td.assign ul li:hover ul {
+    display: block;
+}

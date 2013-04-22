@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+	<div class="social-controls">
+        <img wicket:id = "helpActivities" class="help-icon"/>
+    	<a wicket:id="hideAll" href="#"><img src="images/hide_left.png" alt="Hide social panel" title="Hide this panel"/></a>
+		<div class="text-controls">
+		    <a wicket:id="hideShowLink" href="#"><span wicket:id="hideShow">hide my activities</span></a>
+		</div>
+	</div>
+    <div wicket:id="executedCommandsContainer"  class="social-list commands">
+        <span wicket:id="executedCommands">
+            <div wicket:id="executedCommand">[command event panel]</div>
+        </span>
+		<div class="show-more-less">
+	        <a wicket:id="showMore" href="#">Show more</a>
+	        <a wicket:id="showFew" href="#">Show a few</a>
+		</div>
+    </div>
+    <div wicket:id="noCommands" class="no-commands"><span>No activity</span></div>
+</wicket:panel>
+</body>
+</html>

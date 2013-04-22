@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3>
+        <span>Classification systems</span>
+        <div>&nbsp;</div>
+    </h3>
+    <div wicket:id="classification-systems-container">
+        <table class="data-table">
+            <thead>
+                <tr class="headers">
+                    <td width="90%">Classification system</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </thead>
+            <tr wicket:id="classification-systems">
+                <td wicket:id="name">US Gov</td>
+                <td align="center">
+                    <a wicket:id="details" href="#" class="more">details</a>
+                </td>
+                <td align="center">
+                    <a wicket:id="delete" href="#">
+                        <img  border="0" src="images/delete.png" alt="delete"
+                              title="Delete this classification system"/>
+                    </a>
+                </td>
+            </tr>
+            <tr wicket:id="new-classification-system-container">
+                <td>
+                    Add <input wicket:id="new-classification-system" type="text" title="Name new classification system and press enter"/>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <span wicket:id="classification-system">[classification system panel]</span>    
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <span wicket:id="rolesContainer">
+        <h3 >
+            <span>Roles performed</span>
+            <span wicket:id="geomapLink">[geomap link panel]</span>
+
+            <div>&nbsp;</div>
+        </h3>
+        <div class="filters">
+            Index on
+            <select wicket:id="indexed">
+                <option>Role</option>
+            </select>
+            <span wicket:id="nameRanges">[name range panel]</span>
+        </div>
+        <div>
+            <span wicket:id="actorEmployments">[actor employments panel]</span>
+        </div>
+    </span>
+    <span wicket:id="assignmentsContainer">
+        <h3>
+            <span>Task assignments</span>
+
+            <div>&nbsp;</div>
+        </h3>
+        <div wicket:id="assignments">[assignments panel]</div>
+    </span>
+    <span wicket:id="commitmentsContainer">
+        <h3>
+            <span>Sharing commitments</span>
+
+            <div>&nbsp;</div>
+        </h3>
+        <span wicket:id="commitments">[commitments panel]</span>
+    </span>
+</wicket:panel>
+</body>
+</html>

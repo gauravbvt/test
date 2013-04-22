@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" xmlns:wicket="http://wicket.apache.org/">
+<head>
+    <title wicket:id="sg-title">Title</title>
+    <link rel="stylesheet" href="css/userpage.css" type="text/css"/>
+    <script type="text/javascript">
+        function channels_keypress( kc, t, target ) {
+            if ( kc == 13 ) {
+                if ( t == 'textarea' ) {
+                    return true;
+                }
+                // Patch autocomplete field bug (choices list not hidden)
+                if ( t == 'text' ) {
+                    var autocompleteList = $( ".wicket-aa-container" );
+                    if ( autocompleteList != null ) {
+                        autocompleteList.hide();
+                    }
+                }
+                target.focus();
+                target.blur();
+                return false;
+            } else {
+                // Capture backspace keypress when not in an input field
+                return ((kc != 8) || ( t == 'text' ) ||
+                        (t == 'textarea') || ( t == 'submit') || (t == 'password'))
+            }
+        }
+
+        if ( typeof window.event != 'undefined' ) // IE
+            document.onkeydown = function() { // IE
+                var t = event.srcElement.type;
+                var kc = event.keyCode;
+                return channels_keypress( kc, t, event.srcElement );
+            }
+        else
+            document.onkeypress = function( e ) { // FireFox/Others
+                var t = e.target.type;
+                var kc = e.keyCode;
+                return channels_keypress( kc, t, e.target );
+            }
+    </script>
+</head>
+
+<body>
+
+<form wicket:id="big-form" class="stretch" action="#">
+    <a wicket:id="quickHelpButton" id="quick-help-button" href="#" >&nbsp</a>
+    <span wicket:id="quickHelp">[help panel]</span>
+    <div id="container">
+        <div class="header">
+            <a wicket:id="homeLink" href="home">
+                <img class="logo" src="images/global-logo.png" width="140" height="51" alt="Channels" />
+            </a>
+            <div class="menu">
+                <div class="group first">
+                    <a class="logout" href="logout">Sign out</a>
+                   <!-- <a class="help" wicket:id="help-link" href="#">Help</a>-->
+                    <span wicket:id="feedback" class="feedback-container">[feedback panel]</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pathway-cont">
+            <div wicket:id="contextPath" class="pathway">[breadcrumbs panel </div>
+            <div class="icon-menu">
+                <div class="group">
+					<span wicket:id="spinner" id="spinner" class="spinner">
+						<img src="images/loading.gif">
+					</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="contents">
+            <div wicket:id="contentsContainer">
+                <wicket:child/>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="notifier" wicket:id="notifier">
+    <div id="basic-template">
+        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
+        <h1>#{title}</h1>
+        <p>#{text}</p>
+    </div>
+</div>
+
+</body>
+</html>

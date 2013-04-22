@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <h3>
+		<span>Goals for this plan segment</span>
+		<div>&nbsp;</div>
+	</h3>
+
+    <div class="goals" wicket:id=goalsDiv>
+        <table class="data-table">
+            <thead>
+                <tr class="headers">
+                    <td title="Mitigate a risk or capture an opportunity?">Objective</td>
+                    <td title="The category of risk or gain">Category</td>
+                    <td title="The severity of the risk or magnitude of the gain">Magnitude</td>
+                    <td width="100%"  title="The organization with the goal">Organization</td>
+                    <td wicket:id="atEnd" nowrap="nowrap" title="Whether the goal is automatically achieved when the segment ends">Achieved at end</td>
+                    <td/>
+                    <td/>
+                </tr>
+            </thead>
+            <tr wicket:id="goal">
+                <td>
+                    <select wicket:id="kind">
+                        <option>Mitigate risk of</option>
+                        <option>Achieve</option>
+                    </select>
+                </td>
+                <td>
+                    <select wicket:id="category">
+                        <option>Bodily harm</option>
+                    </select>
+                </td>
+                <td>
+                    <select wicket:id="level">
+                        <option>severe</option>
+                    </select>
+                </td>
+                <td>
+                    <span wicket:id="organization">[entity reference panel]</span>
+                </td>
+                <td align="center">
+                    <input wicket:id="endsWithSegment" type ="checkbox"/>
+                </td>
+                <td><a wicket:id="more-link" href="#" title="Show more" class="more">more</a></td>
+                <td>
+                    <a wicket:id="delete" href="#">
+                        <img style="border:0" src="images/delete.png" title="Delete" alt="Delete goal"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div wicket:id="moreDiv">
+        <h3>
+			<span>About <span wicket:id="goalLabel">[goal label]</span></span>
+			<div>&nbsp;</div>
+		</h3>
+        <fieldset>
+            <legend>Name</legend>
+            <input wicket:id="name" type="text"/>
+        </fieldset>
+		<fieldset>
+	        <legend>Description</legend>
+	        <textarea wicket:id="description" rows="2" cols="40">description</textarea>
+		</fieldset>
+        <h3>
+			<span>Tasks with goal</span>
+			<div>&nbsp;</div>
+		</h3>
+        <table wicket:id="tasks" class="data-table">[tasks table]</table>
+    </div>
+</wicket:panel>
+</body>
+</html>

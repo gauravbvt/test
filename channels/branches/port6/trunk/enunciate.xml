@@ -1,0 +1,26 @@
+<enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.8.xsd">
+    <api-classes>
+        <include pattern="com.mindalliance.channels.api.PlanCommunityEndPoint"/>
+        <include pattern="com.mindalliance.channels.api.PlanCommunityEndPointImpl"/>
+    </api-classes>
+    <webapp mergeWebXML="src/main/web.xml">
+        <globalServletFilter name="securityFilter" classname="org.springframework.web.filter.DelegatingFilterProxy"/>
+    </webapp>
+    <namespaces>
+        <namespace uri="http://mind-alliance.com/api/isp/v1/" id="isp"/>
+    </namespaces>
+    <modules>
+        <docs docsDir="api" title="Channels Web Services API"/>
+        <spring-app>
+            <!-- Order matters -->
+            <springImport uri="classpath:servicesConfig.xml"/>
+            <springImport uri="classpath:applicationContext.xml"/>
+            <springImport uri="classpath:persistenceConfig.xml"/>
+            <springImport uri="classpath:securityConfig.xml"/>
+        </spring-app>
+        <jersey>
+            <init-param name="com.sun.jersey.config.feature.XmlRootElementProcessing" value="true"/>
+        </jersey>
+    </modules>
+</enunciate>

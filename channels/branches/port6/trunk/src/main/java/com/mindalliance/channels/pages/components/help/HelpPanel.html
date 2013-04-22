@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+
+<body>
+<wicket:panel>
+    <div id="quick-help">
+        <div>
+            <a wicket:id="title" class="quick-help-title" href="#">
+                Help
+            </a>
+            <a wicket:id="glossary" class="quick-help-glossary">glossary</a>
+            <a wicket:id="back" class="quick-help-back">back</a>
+        </div>
+        <div wicket:id="content" class="quick-help-content">
+            <h1 wicket:id="topicName">What is a Community?</h1>
+
+            <div wicket:id="topicItems">
+                <div wicket:id="description">Description from wikimedia format</div>
+                <a wicket:id="actionLink" class="window"><span wicket:id="action"> Do it</span></a>
+            </div>
+            <div wicket:id="definitionsContainer" class="definitions">
+                <ul>
+                    <li wicket:id="definitions">
+                        <a wicket:id="definitionLink" href="#">
+                            <span wicket:id="definitionText">Name</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div wicket:id="doNextContainer" class="nextActivities">
+                Next:
+                <ul>
+                    <li wicket:id="doNexts">
+                        <a wicket:id="doNextLink" href="#">
+                            <span wicket:id="doNextText"> Scoping - Events</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a wicket:id="documentLink" class="quick-help-more" href="#"> More </a>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

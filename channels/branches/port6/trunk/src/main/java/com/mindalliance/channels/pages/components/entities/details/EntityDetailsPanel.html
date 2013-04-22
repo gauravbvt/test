@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="mo-details">
+        <table class="entity-details">
+            <tr>
+                <th>&nbsp;</th>
+                <td>
+                    <img wicket:id="image" alt="Image not found"/>
+                </td>
+            </tr>
+            <tr>
+                <th align="right"><label>Name:</label></th>
+                <td><input width="40" wicket:id="name" type="text"/></td>
+            </tr>
+            <tr>
+                <th class="area" align="right" valign="top"><label> <span wicket:id="descriptionLabel">Description</span>:</label></th>
+                <td><textarea cols="40" rows="2" wicket:id="description">...</textarea></td>
+            </tr>
+            <tr>
+                <th align="right"><label>
+                    <a wicket:id="tagsLink" href="#" title="Click to see all tags">Tags:</a>
+                </label></th>
+                <td><span wicket:id="tags">[Tags panel]</span></td>
+            </tr>
+            <tr>
+                <th align="right"><label>Categorization:</label></th>
+                <td><span wicket:id="types">[Types panel]</span></td>
+            </tr>
+             <wicket:child/>
+        </table>
+        <span wicket:id="attachments">[attachments panel]</span>
+       <span>
+            <h3>
+                <span wicket:id="indexTitle">References to</span>
+                <span wicket:id="indexedName">entity name</span>
+				<div>&nbsp;</div>
+            </h3>
+            <span wicket:id="referencesOrMatches">[references or matches panel]</span>
+        </span>
+        <span wicket:id="issues">[issues panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

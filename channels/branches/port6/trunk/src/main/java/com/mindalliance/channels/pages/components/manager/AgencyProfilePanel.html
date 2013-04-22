@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <table>
+        <tr>
+            <th>Name:</th>
+            <td>
+                <input wicket:id="name" type="text"/>
+                <span wicket:id="nameLabel">name</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>
+                <textarea wicket:id="description">Description</textarea>
+                <span wicket:id="descriptionLabel">name</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Mission:</th>
+            <td>
+                <textarea wicket:id="mission">Mission</textarea>
+                <span wicket:id="missionLabel">name</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Address:</th>
+            <td>
+                <textarea wicket:id="address">some address</textarea>
+                <span wicket:id="addressLabel">address</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Parent:</th>
+            <td>
+                <input wicket:id="parent" type="text"/>
+                <span wicket:id="parentLabel">name</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Contact info:</th>
+            <td>
+                <span wicket:id="orgContact">[Org contact info panel]</span>
+            </td>
+        </tr>
+    </table>
+    <ul class="errors" wicket:id="errorsContainer">
+        <li wicket:id="errors"><span wicket:id="error"> error </span></li>
+    </ul>
+    <input type="button" wicket:id="cancel" value="Cancel"/>
+    <input type="button" wicket:id="apply" value="Submit"/>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="filters">
+        Show only
+        <input wicket:id="urgent" type="checkbox"/>
+        urgent
+        <input wicket:id="unresolved" type="checkbox"/>
+        unresolved feedback about
+        <select wicket:id="topics">
+            <option>Protocols</option>
+            <option>Info needs</option>
+            <option>RFIs</option>
+            <option>Channels</option>
+        </select>
+        that
+        <input wicket:id="notRepliedTo" type="checkbox"/>
+        are not replied to, contain
+        <input wicket:id="containing" type="text" class="phrase"/>
+    </div>
+
+    <div wicket:id="feedbackTable">[feedbacks table]</div>
+    <div wicket:id="feedbackContainer">
+        <h3 wicket:id="resolved">Not resolved</h3>
+        <span wicket:id="discussion">[discussion panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

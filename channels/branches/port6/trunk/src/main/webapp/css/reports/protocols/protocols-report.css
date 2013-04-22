@@ -1,0 +1,664 @@
+/* ----- Protocols Styling ----- */
+
+div.protocols-contents {
+    padding: 10px;
+}
+
+div.plandetails-cont {
+    background: #f6f6f6;
+    clear: right;
+    float: right;
+    margin: 110px 0 0 10px;
+    position: relative;
+    width: 250px;
+    border-top: none;
+    padding: 10px;
+}
+
+div.protocols-contents a {
+    color: #333333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+div.protocols-contents h1 {
+    color: #333333;
+    font-family: Arial;
+    font-size: 36px;
+    font-weight: normal;
+    letter-spacing: -1px;
+    padding: 25px 0 0;
+}
+
+div.protocols-contents h1 span {
+    text-decoration: underline;
+}
+
+div.protocols-contents h2 {
+    border-bottom: 2px solid #666666;
+    color: #333333;
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: 0;
+    margin: 50px 0 40px;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+div.protocols-contents h3 {
+    color: #333333;
+    display: block;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 10px 0;
+}
+
+div.protocols-content div.communications-toc h3 {
+    padding: 30px 0;
+}
+
+div.protocols-contents h4 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+div.protocols-contents div.about h4,
+div.protocols-contents div.participation-protocols h4,
+div.protocols-contents div.documentation-top label {
+    background: none repeat scroll 0 0 #c3d9ff;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 150%;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #6b8abe;
+    border-top: 1px solid #6b8abe;
+    text-align: left;
+    color: #333333;
+}
+
+div.protocols-contents h4.taskName {
+    border-bottom: 5px solid #CCCCCC;
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 150%;
+    margin: 0 0 10px;
+    padding: 15px 0 10px;
+    text-transform: uppercase;
+}
+
+div.protocols-contents h5 {
+    color: #333333;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 7px 0 5px;
+    text-transform: capitalize;
+    line-height: 150%;
+}
+
+div.protocols-contents div.contact h5 {
+    padding: 5px 0 0;
+}
+
+div.protocols-contents h6 {
+    background: none repeat scroll 0 0 #E8E8E8;
+    color: #999999;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 2px 5px;
+    text-align: right;
+    display: none;
+}
+
+div.protocols-contents label {
+    color: #000000;
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0 0 5px 0;
+    text-transform: uppercase;
+}
+
+div.protocols-contents label.eois-cont {
+    color: #666666;
+}
+
+div.protocols-contents div.about,
+div.protocols-contents div.participation-protocols,
+div.protocols-contents div.documentation-top {
+    background: #E8E8E8;
+    border-left: 1px solid #6B8ABE;
+    border-right: 1px solid #6B8ABE;
+    display: block;
+    padding: 0;
+}
+
+div.protocols-contents div.documentation-top {
+    border-bottom: 1px solid #6B8ABE;
+}
+
+div.protocols-contents div.about table td {
+    vertical-align: top;
+}
+
+div.protocols-contents div.participation-protocols p {
+    display: block;
+    padding: 10px;
+    line-height: 150%;
+}
+
+/*
+div.protocols-contents span.communicatedContext {
+    font-weight: bold;
+}
+*/
+div.protocols-contents div.orgContact label,
+div.protocols-contents div.employeeContacts label {
+    display: block;
+    font-weight: bold;
+    padding: 10px 0 5px 0;
+    text-transform: capitalize;
+    text-decoration: underline;
+}
+
+div.protocols-contents div.employeeContacts label {
+    padding: 0;
+}
+
+div.protocols-contents div.name-employment {
+    border-bottom: 1px solid #CCCCCC;
+    margin: 0 0 5px;
+}
+
+div.protocols-contents h4 span.participationList span {
+    border-bottom: 2px solid #333333;
+}
+
+div.protocols-contents div.org-contacts {
+    float: left;
+    margin: 0 0 40px;
+}
+
+div.protocols-contents div.employeeContacts {
+    border-left: 5px solid #CCCCCC;
+    float: left;
+    margin: 0;
+    padding: 12px 15px 15px;
+    width: 711px;
+}
+
+div.protocols-contents div.orgContact {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #CCCCCC;
+    float: left;
+    padding: 12px 15px 15px;
+    width: 711px;
+}
+
+div.protocols-contents div.orgContact h3 {
+    padding: 5px 0 10px;
+    font-size: 16px;
+}
+
+div.protocols-contents div.directory-link {
+    float: right;
+    height: 37px;
+    width: 37px;
+    display: none;
+}
+
+div.protocols-contents div.work,
+div.protocols-contents div.availability,
+div.protocols-contents div.languages,
+div.protocols-contents div.clearances {
+    border-right: 1px solid #CCCCCC;
+    float: left;
+    font-size: 12px;
+    line-height: 175%;
+    margin: 10px 20px 0 0;
+    min-height: 70px;
+    padding: 0 10px 0 0;
+    width: 139px;
+}
+
+div.protocols-contents div.availability {
+    width: 170px;
+}
+
+div.protocols-contents div.clearances {
+    border-right: none;
+}
+
+/*
+div.protocols-contents div.documentation-top {
+	border-top: 1px solid #CCCCCC;
+	float: left;
+	font-size: 12px;
+	line-height: 175%;
+	margin: 15px 0 0;
+	padding: 10px 0 0;
+	width: 711px;
+}
+*/
+
+div.protocols-contents div.goals div.goal-labels,
+div.protocols-contents div.maxDelayContainer div,
+div.protocols-contents div.category div,
+div.protocols-contents div.instructions div,
+div.protocols-contents div.location div {
+	padding: 0 0 0 20px;
+}
+
+div.protocols-contents ul {
+    margin: 5px 0 5px 20px;
+    list-style: none;
+}
+
+div.protocols-contents ul li {
+    padding: 0 0 5px;
+}
+
+div.protocols-contents div.contacts-container ul li {
+    padding: 0 0 10px 0;
+}
+
+div.protocols-contents ul li ul li {
+    padding: 0;
+}
+
+div.protocols-contents ul li label {
+    padding: 5px 0px;
+}
+
+div.protocols-contents ul.askedYou,
+div.protocols-contents ul.notifiedYou,
+div.protocols-contents div.observations-toc ul,
+div.protocols-contents div.ongoing-toc ul {
+    list-style: none outside none;
+    margin: 0;
+}
+
+div.protocols-contents ul.askedYou li,
+div.protocols-contents ul.notifiedYou li,
+div.protocols-contents div.observations-toc ul li,
+div.protocols-contents div.ongoing-toc ul li {
+    margin: 5px 0 0 0;
+    line-height: 150%;
+}
+
+div.protocols-contents ul.askedYou li ul,
+div.protocols-contents ul.notifiedYou li ul {
+    list-style: none outside none;
+    border-top: 1px solid #333333;
+    margin: 10px 0 0;
+    padding: 5px 0 0;
+}
+
+div.protocols-contents div.observations-toc ul li ul {
+    border-top: 1px solid #333333;
+    margin: 10px 0 0;
+    padding: 5px 0 0;
+}
+
+div.protocols-contents ul.askedYou li ul li,
+div.protocols-contents ul.notifiedYou li ul li,
+div.protocols-contents div.observations-toc ul li ul li,
+div.protocols-contents div.ongoing-toc ul li {
+    border-bottom: 1px solid #CCCCCC;
+    line-height: 150%;
+    margin: 5px 0 10px 25px;
+    padding: 0 0 10px;
+    font-size: 13px;
+}
+
+div.protocols-contents span.task-name {
+    text-transform: uppercase;
+    color: #000000;
+}
+
+div.protocols-contents div.interlocutors {
+    padding: 0 0 10px;
+}
+
+div.protocols-contents div.interlocutors ul li,
+div.protocols-contents div.observations-toc ul li {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+div.protocols-contents div.interlocutors ul li ul li a,
+div.protocols-contents div.observations-toc ul li ul li a,
+div.protocols-contents div.ongoing-toc ul li a {
+    font-weight: normal;
+    color: #666666;
+}
+
+div.protocols-contents div.interlocutors a {
+    font-weight: bold;
+}
+
+div.protocols-contents div.interlocutors h4 {
+    border-top: 1px solid #e8e8e8;
+    padding: 15px 0 0;
+}
+
+div.protocols-contents div.ongoing-toc h3,
+div.protocols-contents div.observations-toc h3,
+div.protocols-contents div.communications-toc h3 {
+    background: none repeat scroll 0 0 #C3D9FF;
+    border-left: 5px solid #6B8ABE;
+    font-size: 16px;
+    margin: 30px 0 20px;
+    padding: 10px 0 10px 15px;
+}
+
+/*
+div.protocols-contents div.ongoing-toc h3 {
+    padding-top: 0;
+}
+*/
+
+div.protocols-contents div.triggered div.procedures,
+div.protocols-contents div.ongoingProcedures {
+    border-left: 5px solid #CCCCCC;
+    margin: 0 0 40px;
+    padding: 0 0 15px 25px;
+}
+
+div.protocols-contents div.triggered div.trigger {
+    background: none repeat scroll 0 0 #C3D9FF;
+    border-left: 5px solid #6B8ABE;
+    padding: 0 0 0 25px;
+}
+
+div.protocols-contents div.triggered div.trigger h3 {
+
+}
+
+div.protocols-contents div.triggered h5.notify {
+    background: none repeat scroll 0 0 #999999;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+    color: #FFFFFF;
+    font-size: 16px;
+    margin: 30px 0 10px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+
+div.protocols-contents div.triggered h5 span.information,
+div.protocols-contents div.triggered h5 span.situation,
+div.protocols-contents div.triggered h5 span.scenario {
+
+}
+
+div.protocols-contents span.impact {
+    background: none repeat scroll 0 0 #CCCCCC;
+    border-bottom: 1px solid #666666;
+    border-top: 1px solid #666666;
+    color: #333333;
+    display: block;
+    font-size: 11px;
+    padding: 5px 7px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+}
+
+div.protocols-contents div.contact {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #CCCCCC;
+    margin: 5px 0 20px;
+    padding: 10px 10px 13px;
+}
+
+div.protocols-contents div.contact label {
+    padding-top: 10px;
+}
+
+div.protocols-contents a.contact-link {
+    border-bottom: 1px dotted #000000;
+    font-weight: normal;
+}
+
+div.protocols-contents div.interlocutors a.contact-link {
+	border: none;
+}
+
+div.protocols-contents div.work-contact,
+div.protocols-contents div.personal-contact {
+    padding: 10px 0 0;
+}
+
+div.protocols-contents div.work-contact span.label,
+div.protocols-contents div.personal-contact span.label {
+    margin: 0 13px 0 0;
+    text-transform: uppercase;
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+div.protocols-contents span.addressesContainer {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+div.protocols-contents span.addresses {
+    border-right: 1px solid #999999;
+    margin: 0 13px 0 0;
+    padding: 0 10px 0 0;
+}
+
+div.protocols-contents span.addresses:last-child {
+    border-right: none;
+}
+
+div.protocols-contents span.addresses a {
+    font-weight: normal;
+}
+
+div.protocols-contents div.maxDelayContainer,
+div.protocols-contents div.onFailure,
+div.protocols-contents div.eoisContainer,
+div.protocols-contents div.allInstructions,
+div.protocols-contents div.bypassContactsContainer,
+div.protocols-contents div.instructions,
+div.protocols-contents div.category,
+div.protocols-contents div.location,
+div.protocols-contents div.goals,
+div.protocols-contents div.teammates,
+div.protocols-contents div.failureImpact,
+div.protocols-contents div.research-followup-task,
+div.protocols-contents div.contacts-container,
+div.protocols-contents div.media-container,
+div.protocols-contents div.documentation {
+    padding: 15px 0 10px;
+}
+
+div.protocols-contents div.eoisContainer table {
+    border-collapse: collapse;
+    margin: 10px 0 0;
+    width: 100%;
+}
+
+div.protocols-contents div.eoisContainer table tr th {
+    padding: 5px 0;
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+}
+
+div.protocols-contents div.eoisContainer table tr td {
+    border-bottom: 1px solid #DDDDDD;
+    padding: 5px 0;
+}
+
+div.protocols-contents div.eoisContainer table ul {
+    margin: 0;
+}
+
+div.protocols-contents div.research-followup-task a {
+    font-weight: normal;
+}
+
+div.protocols-contents div.bypassContactsContainer {
+    padding: 5px 0 0 5px;
+}
+
+div.protocols-contents div.bypassContactsContainer div.contact {
+    background: #dcdcdc;
+    margin: 20px 0 10px;
+}
+
+div.protocols-contents div.contactsContainer {
+    padding: 15px 0 0 0;
+}
+
+div.protocols-contents div.eois-contacts-cont {
+    font-size: 12px;
+    padding: 0 0 12px;	
+    text-transform: capitalize;
+}
+
+div.protocols-contents div.eoisContainer-direct,
+div.protocols-contents div.contactsContainer-direct {
+    font-size: 12px;
+    line-height: 150%;
+    margin-right: 20px;
+    padding: 0 0 12px;
+}
+
+div.protocols-contents div.contactsContainer-direct span.anyOf {
+    text-transform: capitalize;
+}
+
+div.protocols-contents div.contactsContainer-direct a.contact-link {
+
+}
+
+div.protocols-contents div.failureImpact-small {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-left: 5px solid #929498;
+    font-style: italic;
+    margin: 15px 0 10px;
+    padding: 10px;
+}
+
+div.protocols-contents div.failureImpact-small.extreme {
+    border-left: 5px solid #ff8c73;
+}
+
+div.protocols-contents div.failureImpact-small.major {
+    border-left: 5px solid #ffe27b;
+}
+
+div.protocols-contents div.failureImpact-small.minor {
+    border-left: 5px solid #7ac4f1;
+}
+
+div.protocols-contents div.failureImpact-small.severe {
+    border-left: 5px solid #ffb658;
+}
+
+div.protocols-contents div.failureImpact-small.none {
+    border-left: 5px solid #929498;
+}
+
+div.protocols-contents div.failureImpact-small span {
+    font-weight: bold;
+}
+
+div.documentation-top ul {
+    margin: 2px 0 2px 10px;
+    padding: 10px 0 0;
+}
+
+div.documentation-top ul li {
+    padding: 0 0 10px;
+}
+
+div.documentation-top label {
+    border: medium none;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 150%;
+    padding: 5px 0 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* added by JF */
+
+.eoi-question, .eoi-description {
+    font-style: italic;
+    font-size: smaller;
+}
+
+/* Checklist */
+
+
+.checklist ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.checklist .step {
+    margin-bottom: 6px;
+}
+
+.checklist .even-step {
+    background: #e8e8e8;
+}
+
+.checklist .step th {
+    vertical-align: top;
+    padding-top: 3px;
+    padding-right: 5px;
+    font-weight: bold;
+}
+
+.checklist .step .step-constraint {
+    height: 2em;
+}
+
+.checklist .step .optional {
+    background: transparent url('../../../images/checkbox_optional.png') no-repeat 0 -1px;
+}
+
+.checklist .step .required {
+    background: transparent url('../../../images/checkbox_required.png') no-repeat 0 -1px;
+}
+
+.checklist .step-act {
+    padding-left: 20px;
+}
+
+.checklist .more  {
+    float: right;
+}
+
+/* queries */
+
+div.protocols-content div.expected-queries h3 {
+    padding: 30px 0;
+}
+
+/* checklist flow */
+.checklist-flow-icon {
+    vertical-align: middle;
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.checklist-flow {
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+
+
+

@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+
+CONFIGURATION NOTES:
+
+  For new Channels server instances,, see comments prefaced with NOTE:
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd"
+       default-autowire="byName">
+
+    <context:property-placeholder location="file:${user.home}/channels.properties"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="com.mindalliance.channels"/>
+
+    <!-- ==================================================================== Hibernate persistence -->
+    <tx:annotation-driven order="200"/>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" depends-on="dbserver">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="${dataSource.url}"/>
+        <property name="username" value="${dataSource.user}"/>
+        <property name="password" value="${dataSource.password}"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.ddl}</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.search.lucene_version">LUCENE_35</prop>
+                <prop key="hibernate.search.default.directory_provider">filesystem</prop>
+                <prop key="hibernate.search.default.indexBase">data/lucene/</prop>
+            </props>
+        </property>
+
+        <property name="packagesToScan">
+            <list>
+                <value>com.mindalliance.channels.social.model</value>
+                <value>com.mindalliance.channels.core.dao.user</value>
+                <value>com.mindalliance.channels.core.community.participation</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="entityInterceptor" class="com.mindalliance.channels.core.orm.model.CustomInterceptor"/>
+
+    <bean id="dbserver" class="org.h2.tools.Server" factory-method="createTcpServer"
+          init-method="start" destroy-method="stop">
+        <constructor-arg value="-tcp,-tcpAllowOthers"/>
+    </bean>
+
+    <!-- ==================================================================-->
+
+    <!-- ============================================================ Scheduler -->
+
+    <task:executor id="taskExecutor" pool-size="5"/>
+
+    <task:scheduler id="scheduler" pool-size="10"/>
+
+    <task:annotation-driven executor="taskExecutor" scheduler="scheduler"/>
+
+    <!-- ====================================================================== -->
+
+
+    <!-- =========================== Main Components -->
+    <bean id="wicketApplication" class="com.mindalliance.channels.pages.Channels">
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+    <bean id="idGenerator" class="com.mindalliance.channels.core.dao.PerPlanIdGenerator"/>
+    <bean id="issueScanner" class="com.mindalliance.channels.engine.analysis.IssueScanner"/>
+
+    <bean id="planDefinitionManager" class="com.mindalliance.channels.core.dao.PlanDefinitionManager">
+        <constructor-arg value="${channels.home}${file.separator}data"/>
+        <constructor-arg value="${channels.home}${file.separator}plans.properties"/>
+        <property name="defaultProperties" value="/WEB-INF/plans.properties"/>
+        <property name="snapshotThreshold" value="10"/>
+    </bean>
+
+    <bean id="communityDefinitionManager" class="com.mindalliance.channels.core.community.CommunityDefinitionManager">
+        <constructor-arg value="${channels.home}${file.separator}communities"/>
+        <constructor-arg value="${channels.home}${file.separator}communities.properties"/>
+        <property name="snapshotThreshold" value="10"/>
+    </bean>
+
+
+    <bean id="userUploadService" class="com.mindalliance.channels.core.dao.user.UserUploadServiceImpl">
+        <property name="publicDirectory" value="${channels.home}${file.separator}public"/>
+        <property name="userPhotoUpload" value="users/photos"/>
+        <property name="userPhotoURL" value="photo"/>
+    </bean>
+
+    <bean id="attachmentManager" class="com.mindalliance.channels.core.attachments.FileBasedManager">
+        <property name="uploadPath" value="uploads/"/>
+        <property name="imageExtensions" value="png,jpeg,jpg,gif"/>
+        <property name="videoExtensions" value="avi,mov,mp4,mpg"/>
+        <property name="imageDomains">
+            <list>
+                <value>flickr.com</value>
+                <value>picasaweb.google.com</value>
+                <value>photobucket.com</value>
+                <value>smugmug.com</value>
+            </list>
+        </property>
+        <property name="videoDomains">
+            <list>
+                <value>youtube.com</value>
+                <value>vimeo.com</value>
+                <value>video.google.com</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="planCommunityManager" class="com.mindalliance.channels.core.community.PlanCommunityManagerImpl">
+        <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
+        <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
+        <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
+        <property name="defaultCommunityCalendarPrivateTicket" value="2eeb23a44773bca4cf51901c486a2275"/>
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+
+    <bean id="planManager" class="com.mindalliance.channels.core.dao.PlanManagerImpl" lazy-init="true">
+        <constructor-arg ref="planDefinitionManager"/>
+        <property name="defaultSupportCommunity" value="channels@mind-alliance.com"/>
+        <property name="defaultCommunityCalendarHost" value="https://www.google.com/calendar/embed"/>
+        <property name="defaultCommunityCalendar" value="channels.mindalliance@gmail.com"/>
+        <property name="defaultCommunityCalendarPrivateTicket" value="2eeb23a44773bca4cf51901c486a2275"/>
+        <property name="builtInMedia">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+                <ref bean="landline"/>
+                <ref bean="fax"/>
+                <ref bean="cell"/>
+                <ref bean="pager"/>
+                <ref bean="conferenceCall"/>
+                <!--
+                                <ref bean="web"/>
+                -->
+                <ref bean="email"/>
+                <ref bean="notificationSystem"/>
+                <ref bean="chat"/>
+                <ref bean="im"/>
+                <ref bean="radio"/>
+                <ref bean="twoWayRadio"/>
+                <ref bean="television"/>
+                <ref bean="courier"/>
+                <ref bean="mail"/>
+                <ref bean="faceToFace"/>
+                <ref bean="meeting"/>
+                <ref bean="paSystem"/>
+            </list>
+        </property>
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+
+    <bean id="userParticipationService" class="com.mindalliance.channels.core.community.participation.UserParticipationServiceImpl"/>
+    <bean id="userParticipationConfirmationService" class="com.mindalliance.channels.core.community.participation.UserParticipationConfirmationServiceImpl"/>
+    <bean id="registeredOrganizationService" class="com.mindalliance.channels.core.community.participation.RegisteredOrganizationServiceImpl"/>
+    <bean id="organizationParticipationService" class="com.mindalliance.channels.core.community.participation.OrganizationParticipationServiceImpl"/>
+    <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>
+    <bean id="surveysDao" class="com.mindalliance.channels.social.services.impl.SurveysDAOImpl"/>
+    <bean id="participationManager" class="com.mindalliance.channels.core.community.participation.ParticipationManagerImpl"/>
+    <bean id="communityPlannerService" class="com.mindalliance.channels.core.community.participation.CommunityPlannerServiceImpl"/>
+
+    <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
+        <property name="dotPath" value="/usr/bin"/>
+        <property name="algo" value="dot"/>
+        <property name="timeout" value="10000"/> <!-- 10 secs -->
+        <property name="maxAttempts" value="2"/>
+        <property name="tempDir" value="${channels.home}${file.separator}temp"/>
+    </bean>
+
+    <bean id="analyst" class="com.mindalliance.channels.engine.analysis.DefaultAnalyst" init-method="start"
+          destroy-method="stop"/>
+
+    <bean id="imagingService" class="com.mindalliance.channels.engine.imaging.DefaultImagingService">
+        <property name="iconDirectory" value="${channels.home}${file.separator}icons"/>
+        <property name="imageDirectory" value="WEB-INF/images"/>
+        <property name="iconPath" value="icons/"/>
+    </bean>
+
+    <bean id="importExportFactory" class="com.mindalliance.channels.core.export.xml.XmlStreamer">
+        <constructor-arg ref="idGenerator"/>
+        <property name="version" value="1.0"/>
+    </bean>
+
+    <bean id="semanticMatcher" class="com.mindalliance.channels.core.nlp.WordnetSemanticMatcher">
+        <property name="wordnetDict"
+                  value="WEB-INF${file.separator}data${file.separator}wordnet-2${file.separator}dict"/>
+        <property name="simIndex" value="WEB-INF${file.separator}data${file.separator}jwsl${file.separator}wn_index"/>
+    </bean>
+
+    <bean id="commanderFactory" class="com.mindalliance.channels.core.command.CommanderFactoryImpl">
+        <property name="timeout" value="300"/>  <!-- 300 secs -->
+     </bean>
+
+    <bean id="planServiceFactory" class="com.mindalliance.channels.core.query.PlanServiceFactoryImpl"
+          destroy-method="destroy">
+    </bean>
+
+    <bean id="communityServiceFactory" class="com.mindalliance.channels.core.community.CommunityServiceFactoryImpl"
+          destroy-method="destroy">
+    </bean>
+
+    <!-- Note: don't use planService directly... Use through the factory... Here for proper aspect initialization. -->
+    <bean id="planService" class="com.mindalliance.channels.core.query.PlanService" scope="prototype" autowire="no">
+        <constructor-arg ref="planManager"/>
+        <constructor-arg ref="semanticMatcher"/>
+        <constructor-arg ref="userDao"/>
+        <constructor-arg ref="attachmentManager"/>
+        <constructor-arg ref="surveysDao"/>
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+    
+    <bean id="communityService" class="com.mindalliance.channels.core.community.CommunityServiceImpl" scope="prototype" autowire="no">
+        <constructor-arg ref="analyst"/>
+        <constructor-arg ref="userParticipationService"/>
+        <constructor-arg ref="userParticipationConfirmationService"/>
+        <constructor-arg ref="organizationParticipationService"/>
+        <constructor-arg ref="planCommunityManager"/>
+        <constructor-arg ref="participationManager"/>
+        <constructor-arg ref="userDao"/>
+        <constructor-arg ref="communityPlannerService"/>
+    </bean>
+
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="resourceLoaderPath" value="/WEB-INF/templates"/>
+    </bean>
+
+    <bean id="detective" class="com.mindalliance.channels.engine.analysis.DefaultDetective">
+        <property name="issueDetectors">
+            <list value-type="java.util.ArrayList">
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FromUser"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSegmentRespondsToIncident"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentWithoutGoal"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.StartedOrTerminatedTaskIsUnnamed"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithoutRole"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithActorOrRoleButNoOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowWithoutChannel"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InvalidChannel"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptyChannelAddress"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnnamedFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowWithUndefinedSource"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowWithUndefinedTarget"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithInvalidTiming"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrphanedPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnconnectedConnector"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnconfirmedJob"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowToSelf"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.GeonameButNoLocation"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.PartWithRoleWithNoKnownActor"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentNeverEnds"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.TriggeredButNeverStartedDefinedTask"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NeverTriggeredSpecifiedTask"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AutoStartPartAlsoTriggered"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentEventNeverCaused"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentNeverStarts"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.CyclicTriggering"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSourceRedundancy"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PotentialDeadlock"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorNotInOneOrganization"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentWithSameGoal"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UselessPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnverifiedPostalCode"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceInheritsDifferentPostalCode"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceInheritsDifferentStreetAddress"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceContainedInSelf"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantPlace"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptyNeedOrCapability"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnsatisfiedNeed"/>
+              <!--  <bean class="com.mindalliance.channels.engine.analysis.detectors.CommitmentWithoutRequiredAgreement"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UntimelyDissemination"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UntimelyNecessarySharing"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnTargetPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InconsistentImpactOnSourcePart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SinglePointOfFailure"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoSegmentForEventPhase"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnplayedPart"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UselessActor"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InvalidEntityTyping"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowDeclassifies"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SharingWithoutCommitments"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InsufficientClearance"/>
+               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementWithoutCommitment"/>-->
+               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.AgreementEncompassedByOther"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.MediumWithoutMode"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.CommittmentWithoutRequiredUnicastChannel"/>--> <!-- TODO Apply to plan community -->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.FlowOverUndersecuredMedium"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.BroadcastOnlyChannels"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumDelegation"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlanLocaleIsRelative"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AlarmNotANotification"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithoutAssignments"/>
+                <!--<bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithNoAssignmentToCategoryOfTask"/>-->
+                <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationMissingExpectedCommitment"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.EmptySharingFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorWithoutContactInfo"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorIsTaskBottleneck"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskHasTooManyCommitments"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithTooManyInputs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.MeaninglessFlowRestriction"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SharingContradictsCapability"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantChannel"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantEOI"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ContradictoryPolicies"/>
+               <!-- <bean class="com.mindalliance.channels.engine.analysis.detectors.ConfirmedAgreementWithoutMOU"/>-->
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SingleAssignmentToImportantTask"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AvailabilityGapInTaskAssignments"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.TaskWithoutFailureProtocol"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.RedundantSegmentContext"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SegmentContextNeverCaused"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AmbiguousSharingFlow"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartTerminatedByManySends"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NeedWithNoTimeSensitiveEOI"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentWithoutSupervisorCommitsToOne"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentUnqualifiedForMedium"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AgentCanNotFulfillSharingResponsibilities"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.IncorrectMediumSynchronicity"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PartIsOngoingAndStartsWithSegment"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NoIntermediateToBypass"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.AssignedTaskLocationNotCommunicated"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.JobWithoutTitle"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceholderOrganizationWithoutCustodian"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationHasPlaceholderParent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistIsEmpty"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasCircularPrerequisites"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasContradictoryConditions"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistUnconfirmed"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistTerminatingStepNotTerminating"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.participation.ParticipationAnalystImpl">
+        <property name="issueDetectors">
+            <list value-type="java.util.ArrayList">
+                 <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.InvalidAgencyParent"/>
+                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.MissingUserParticipation"/>
+                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.MissingOrganizationParticipation"/>
+                <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.TooManyUsersParticipatingAsAgent"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- =========================== Prototypes -->
+    <bean id="diagramFactory" class="com.mindalliance.channels.graph.DefaultDiagramFactory" scope="prototype">
+        <property name="imageDirectory" value="WEB-INF${file.separator}images"/>
+    </bean>
+
+    <!-- =========================== Transmission Media -->
+    <bean id="phone" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-951"/>
+        <property name="name" value="Phone"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="landline" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-950"/>
+        <property name="name" value="Landline"/>
+        <property name="kind" value="Type"/>
+        <property name="types">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="fax" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-949"/>
+        <property name="name" value="Fax"/>
+        <property name="kind" value="Type"/>
+        <!--
+                <property name="types">
+                    <list value-type="java.util.ArrayList">
+                        <ref bean="phone"/>
+                    </list>
+                </property>
+        -->
+        <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
+    </bean>
+    <bean id="cell" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-948"/>
+        <property name="name" value="Cell"/>
+        <property name="kind" value="Type"/>
+        <property name="types">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="pager" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-947"/>
+        <property name="name" value="Pager"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value="(\d*\D*\d{3}\D*\d{3}\D*\d{4}(\s*\D+\s*\d+)?)|(\d{3})"/>
+        <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
+    </bean>
+    <bean id="conferenceCall" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-946"/>
+        <property name="name" value="Conference call"/>
+        <property name="addressPattern" value="\d*\D*\d{3}\D*\d{3}\D*\d{4}"/>
+        <property name="cast" value="Multicast"/>
+        <property name="delegatedToMedia">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="email" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-945"/>
+        <property name="name" value="Email"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value="[^@\s]+@[^@\s]+\.\w+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
+    </bean>
+    <!--
+        <bean id="web" class="com.mindalliance.channels.core.model.TransmissionMedium">
+            <property name="name" value="Web"/>
+            <property name="kind" value="Type"/>
+            <property name="addressPattern" value="(http|ftp|https):.*"/>
+            <property name="cast" value="Unicast"/>
+        </bean>
+    -->
+    <bean id="notificationSystem" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-944"/>
+        <property name="name" value="Notification system"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
+        <property name="delegatedToMedia">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+                <ref bean="email"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="im" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-943"/>
+        <property name="name" value="IM"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+    </bean>
+    <bean id="chat" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-942"/>
+        <property name="name" value="Online chat"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
+    </bean>
+    <bean id="radio" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-941"/>
+        <property name="name" value="Radio"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".*"/>
+        <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="twoWayRadio" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-940"/>
+        <property name="name" value="Two way radio"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".*"/>
+        <property name="cast" value="Multicast"/>
+    </bean>
+    <bean id="television" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-939"/>
+        <property name="name" value="Television"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".*"/>
+        <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="courier" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-938"/>
+        <property name="name" value="Courier"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
+    </bean>
+    <bean id="mail" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-937"/>
+        <property name="name" value="Mail"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="synchronous" value="false"/>
+    </bean>
+    <bean id="faceToFace" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-936"/>
+        <property name="name" value="Face to face"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".*"/>
+        <property name="cast" value="Unicast"/>
+        <property name="direct" value="true"/>
+    </bean>
+    <bean id="meeting" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-935"/>
+        <property name="name" value="Meeting"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Multicast"/>
+    </bean>
+    <bean id="paSystem" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-934"/>
+        <property name="name" value="PA System"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Broadcast"/>
+    </bean>
+    <bean id="home" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-933"/>
+        <property name="name" value="Home"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="types">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="work" class="com.mindalliance.channels.core.model.TransmissionMedium">
+        <property name="id" value="-932"/>
+        <property name="name" value="Work"/>
+        <property name="kind" value="Type"/>
+        <property name="addressPattern" value=".+"/>
+        <property name="cast" value="Unicast"/>
+        <property name="types">
+            <list value-type="java.util.ArrayList">
+                <ref bean="phone"/>
+            </list>
+        </property>
+
+    </bean>
+
+    <!-- REST API -->
+    <bean id="planCommunityEndPoint" class="com.mindalliance.channels.api.PlanCommunityEndPointImpl">
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+
+    <!-- Guide -->
+
+    <bean id="guideReader" class="com.mindalliance.channels.guide.GuideReaderImpl">
+        <property name="guidesDir" value="/WEB-INF/doc"/>
+        <property name="supportedClasses">
+            <list>
+                <value>com.mindalliance.channels.guide.Guide</value>
+                <value>com.mindalliance.channels.guide.UserRole</value>
+                <value>com.mindalliance.channels.guide.Section</value>
+                <value>com.mindalliance.channels.guide.Topic</value>
+                <value>com.mindalliance.channels.guide.TopicRef</value>
+            </list>
+        </property>
+        <property name="serverUrl" value="${server.url}"/>
+    </bean>
+
+    <bean id="xstreamMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"/>
+
+</beans>

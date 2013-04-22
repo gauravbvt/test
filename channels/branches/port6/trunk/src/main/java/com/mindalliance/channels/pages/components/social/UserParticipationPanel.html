@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="userInfo" wicket:id="userParticipation">
+        <div wicket:id="myPrivileges" class="tabcontent-group">
+            <h3>
+                My user privileges
+                <img wicket:id = "helpPrivileges" class="help-icon"/>
+            </h3>
+
+            <div class="tabcontent-content">
+                I am <span wicket:id="userRole">a planner</span>
+            </div>
+        </div>
+        <div wicket:id="openAndConfirmedParticipation" class="tabcontent-group">
+            <h3>
+                I participate as
+                <img wicket:id = "helpParticipateAs" class="help-icon"/>
+            </h3>
+            <div wicket:id="noParticipation" class="tabcontent-content">No one yet</div>
+            <div class="tabcontent-content">
+                <ul class="check-list">
+                    <li wicket:id="participations">
+                        <input wicket:id="accepted" type="checkbox" title="Select to accept, deselect to refuse"/>
+                        <span wicket:id="participation">the NJ Transit Chief of police</span>
+                        <span wicket:id="requester">(requested by John Doe)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div wicket:id="newParticipationContainer" class="tabcontent-group">
+            <h3>
+                <span wicket:id="newParticipationLabel">I (also) participate in</span>
+                <img wicket:id = "helpNewParticipation" class="help-icon"/>
+            </h3>
+            <div class="tabcontent-content" wicket:id="newParticipation">
+                <select wicket:id="agencies">
+                    <option>org</option>
+                </select>
+                <div wicket:id="asAgent">
+                    as <select wicket:id="agents">
+                    <option>agent</option>
+                </select>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="unconfirmedSupervisedParticipation" class="tabcontent-group">
+            <h3>
+                I await confirmation to be
+                <img wicket:id = "helpConfirmation" class="help-icon"/>
+            </h3>
+
+            <div class="tabcontent-content">
+                <ul class="check-list">
+                    <li wicket:id="participations">
+                        <input wicket:id="accepted" type="checkbox" title="Select to accept, deselect to refuse"/>
+                        <span wicket:id="participation">in MTS security agency as crisis commander</span>
+                        <span wicket:id="requester">(requested by John Doe)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

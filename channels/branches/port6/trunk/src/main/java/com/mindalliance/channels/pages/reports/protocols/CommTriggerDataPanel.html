@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Protocols Report</title>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print" />
+</head>
+<body>
+<wicket:panel>
+    <div>
+        <h3>
+            <span wicket:id="header">When  I am asked for</span>
+            <span wicket:id="intent">report</span>
+            <span class="information" wicket:id="information">some information</span>
+            <span wicket:id="communicatedContext">context</span>
+        </h3>
+        <div class="eois-contacts-cont">
+            <span class="eoisContainer-direct" wicket:id="eoisContainer">
+                With
+                <span wicket:id="eois">eoi, eoi</span>
+                <span>&nbsp;/&nbsp;</span>
+            </span>
+            <span class="contactsContainer-direct" wicket:id="contactsContainer">
+                <span class="anyOf" wicket:id="anyOf">By any of</span>
+                <span wicket:id="contacts">  <!-- repeated -->
+                    <span class="contact" wicket:id="contact">[contact link panel]</span><span wicket:id="sep">,</span>
+                </span>
+            </span>
+        </div>
+    </div>
+
+</wicket:panel>
+</body>
+</html>

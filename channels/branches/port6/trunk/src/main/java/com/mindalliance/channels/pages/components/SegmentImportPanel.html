@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+
+<body>
+<wicket:panel>
+    <div wicket:id="import" class="import-dialog">
+        <h2>Import plan segment</h2>
+        <table width="100%">
+            <tr>
+                <td align="center">
+                    <input class="file" type="file" wicket:id="import" name="sc-import" value="Upload">
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <input type="button" value="Cancel" wicket:id="cancel">
+                    <input type="button" value="Import" wicket:id="submit">
+                </td>
+            </tr>
+        </table>
+    </div>
+</wicket:panel>
+</body>
+</html>

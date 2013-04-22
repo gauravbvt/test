@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+
+<body>
+<wicket:panel>
+    <div class="attachment-panel" wicket:id="container" >
+        <div class="attachments" wicket:id="attachments-container">
+            <ul class="attach list">
+                <li wicket:id="attachments">
+                    <a wicket:id="attachment" href="#">attachment</a>
+                    <ul class="menu">
+                        <li>
+                            <a wicket:id="delete" href="#">X</a>
+                        </li>
+                        <li>
+                            <a wicket:id="copy" href="#">Copy</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+       <div wicket:id="addAttachment" class="attachment-panel-add-container">
+            <h2 class="attachment-panel-add">
+                <a wicket:id="showControls" href="#">
+                    Add Attachment
+                    <img wicket:id = "help" class="help-icon"/>
+                </a>
+            </h2>
+            <table wicket:id="controls" class="attach-controls">
+                <tr>
+                    <td class="label">Type</td>
+                    <td>
+                        <select wicket:id="type">
+                            <option>Reference</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Name</td>
+                    <td><input wicket:id="name" type="text"/></td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        <span wicket:id="fileLabel">File</span><a wicket:id="fileKind" href="#">File</a>&nbsp;/
+                        <span wicket:id="urlLabel">URL</span><a wicket:id="urlKind" href="#">URL</a>
+                    </td>
+                    <td>
+                        <input class="file" type="file" wicket:id="upload" value="Upload"/>
+                        <input type="text" wicket:id="url" value="url"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="button" value="Attach" wicket:id="submit"/>
+                    </td>
+                </tr>
+            </table>
+       	</div>
+    </div>
+</wicket:panel>
+</body>
+</html>

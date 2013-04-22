@@ -1,0 +1,16 @@
+ ----------------
+ Coding standards
+ ----------------
+
+Coding standards
+
+ This section describe the coding standards and checks for the project.
+
+ All of this section is subject to changes and suggestions, etc.
+ Its sole purpose is to enforce uniformity across code written by all developers.
+
+* Checkstyle
+
+ All code of the projects is validated using {{{http://checkstyle.sourceforge.net/}Checkstyle}}.
+ The {{{./checkstyle.html}style report}} is generated using this {{{./checkstyle.xml}configuration file}}.
+ It is a good idea to configure your IDE to validate your code automatically as you go along.

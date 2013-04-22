@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="filters">
+        Index on
+        <select wicket:id="indexed">
+            <option>Usernames</option>
+        </select>
+        <span wicket:id="ranges">[range panel]</span>
+        <input wicket:id="withAgentsOnly" type="checkbox"/>&nbsp;Only show users who are agents&nbsp;
+        <input wicket:id="withoutAgentsOnly" type="checkbox"/>&nbsp;Only show users who are not agents
+    </div>
+    <span wicket:id="participationsTable">[participations table]</span>
+    <p/>
+    <span wicket:id="participationDiv">
+       <h3>
+           <span wicket:id="participation">Contact info for John Doe (jd)</span>
+           <span wicket:id="asAgent"> as <span wicket:id="actorLink">actor</span></span>
+		   <div>&nbsp;</div>
+       </h3>
+        <table>
+            <tr>
+                <td>Participation-specific channels:</td>
+                <td><span wicket:id="agentChannels">Phone: (800)328-7448</span></td>
+            </tr>
+            <tr>
+                <td>User-specific channels:</td>
+                <td><span wicket:id="userChannels">Phone: (800)328-7448</span></td>
+            </tr>
+        </table>
+    </span>
+</wicket:panel>
+</body>
+</html>

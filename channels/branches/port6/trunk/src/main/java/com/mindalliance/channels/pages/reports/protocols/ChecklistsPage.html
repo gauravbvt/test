@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en"
+      lang="en">
+<head>
+    <title>Channels - Protocols Report</title>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report.css" type="text/css" media="screen, print"/>
+    <link rel="stylesheet" href="css/reports/protocols/protocols-report-print.css" type="text/css" media="print"/>
+</head>
+<body>
+<wicket:extend>
+
+    <div class="directory-link">
+        <a href="#directory">Your contacts directory</a>
+    </div>
+    <h1>
+        My checklists for <span wicket:id="communityName">Community name</span>
+    </h1>
+
+    <div class="plandetails-cont">
+        <div class="about" wicket:id="about">  <!--class="about"-->  <!-- class about hides this div -->
+            <h4>About</h4>
+            <table cellspacing="10">
+                <tr>
+                    <td width="40%">Version:</td>
+                    <td><span wicket:id="planVersion">12</span></td>
+                </tr>
+                <tr>
+                    <td>Last updated:</td>
+                    <td><span wicket:id="planDate">December 25, 2012</span></td>
+                </tr>
+                <tr>
+                    <td>Prepared for:</td>
+                    <td><span wicket:id="userOrAgentName">John Doe</span> on <span wicket:id="time">now</span></td>
+                </tr>
+            </table>
+        </div>
+        <div class="participation-protocols">
+            <h4>Participation</h4>
+
+            <p>I participate as
+                <span class="participationList" wicket:id="participationList"> Employment</span>
+            </p>
+        </div>
+        <div class="documentation-top" wicket:id="documentation">
+            [documentation panel]
+        </div>
+    </div>
+
+    <div wicket:id="finder">
+        <h2>What I'm expected to do</h2>
+        <!-- Table of content -->
+        <div class="ongoing-toc" wicket:id="ongoing-toc">
+            <h3>My ongoing tasks</h3>
+            <ul>
+                <li wicket:id="ongoingLinks"> <!-- repeated -->
+                    <span wicket:id="checklistLink">[a data link panel]</span>
+                </li>
+            </ul>
+        </div>
+        <div class="observations-toc" wicket:id="observations-toc">
+            <h3>Tasks I do when I notice certain things</h3>
+            <ul>
+                <li wicket:id="observations">  <!-- repeated -->
+                    <div class="toc-trigger">
+                        If I <span wicket:id="witness">witness</span> <span wicket:id="observation" class="info">an event phase in context</span>
+                    </div>
+                    <ul>
+                        <li wicket:id="checklistLinks"> <!-- repeated -->
+                            <span wicket:id="checklistLink">[a data link panel]</span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="communications-toc" wicket:id="communications-toc">
+            <h3>Tasks I do when I'm notified or asked for information</h3>
+
+            <div wicket:id="commSections">  <!-- repeated -->
+                <h6 wicket:id="letter">A</h6>
+
+                <div class="interlocutors" wicket:id="interlocutors">  <!-- repeated -->
+
+                    <ul class="askedYou" wicket:id="askedYou">
+                        <li class="tocRequests" wicket:id="tocRequests"> <!-- repeated -->
+                            <div class="toc-trigger">
+                                When <span wicket:id="contact">[contact link panel]</span>
+                                asks me for
+                                &quot;<span wicket:id="request" class="info">a request</span>&quot;
+                                <span wicket:id="communicatedContext">context</span>
+                            </div>
+                            <ul>
+                                <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                    <span wicket:id="checklistLink">a task name</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <ul class="notifiedYou" wicket:id="notifiedYou">
+                        <li class="tocNotifications" wicket:id="tocNotifications">  <!-- repeated -->
+                            <div class="toc-trigger">
+                                When <span wicket:id="contact">[contact link panel]</span>
+                                notifies me of
+                                &quot;<span wicket:id="notification" class="info">a notification</span>&quot;
+                                <span class="communicatedContext" wicket:id="communicatedContext">context</span>
+                            </div>
+                            <ul>
+                                <li class="checklistLinks" wicket:id="checklistLinks"> <!-- repeated -->
+                                    <span wicket:id="checklistLink">a task name</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="expected-queries" wicket:id="expectedQueries">
+        <h2>What I am expected to answer right away</h2>
+        <div class="procedures" wicket:id="queries">[queries panel]</div>
+    </div>
+
+    <div wicket:id="protocols">
+        <h2>My tasks</h2>
+
+        <div wicket:id="ongoing">
+            <div class="ongoingProcedures" wicket:id="ongoingProcedures"> <!-- repeated -->
+                <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+            </div>
+        </div>
+        <div wicket:id="onObservations">
+            <div class="triggered" wicket:id="triggered">  <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="onRequests">
+            <h3>My tasks when receiving notifications</h3>
+
+            <div class="triggered" wicket:id="triggered"> <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="onNotifications">
+            <div class="triggered" wicket:id="triggered"> <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="onFollowUps">
+            <div class="triggered" wicket:id="triggered"> <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+        <div wicket:id="onResearches">
+            <div class="triggered" wicket:id="triggered"> <!-- repeated -->
+                <div class="procedures-cont" wicket:id="checklists"> <!-- repeated -->
+                    <div class="trigger" wicket:id="trigger">[trigger panel]</div>
+                    <div class="procedures" wicket:id="checklist"> [checklist panel]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div wicket:id="directory">
+        <a name="directory"></a>
+
+        <h2>My contacts</h2>
+
+        <div class="org-contacts" wicket:id="agencyContacts"> <!-- repeated -->
+            <div class="orgContact" wicket:id="agencyContact">[org contact panel]</div>
+            <div class="employeeContacts" wicket:id="employeeContacts">  <!-- repeated -->
+                <div wicket:id="employeeContact"> [employees contact panel with contact link anchors]</div>
+            </div>
+        </div>
+    </div>
+
+</wicket:extend>
+</body>
+</html>

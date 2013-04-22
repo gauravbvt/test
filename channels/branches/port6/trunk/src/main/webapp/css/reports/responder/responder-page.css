@@ -1,0 +1,264 @@
+/**
+ * Channels Reponder Report - Styling
+ * Copyright (C) 2010 Mind-Alliance Systems. All Rights Reserved.
+ * Proprietary and Confidential.
+ * User: romit
+ * Date: Apr 26, 2011
+ * Time: 11:06:39 AM
+ */
+
+
+div.guidelines-infoNeeds-contents div.eoiCont {
+	padding:10px 0 0 0;
+}
+
+div.guidelines-infoNeeds-contents div#disclaimer {
+    border-top: 1px solid #CCCCCC;
+    color: #666666;
+    font-size: 11px;
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+    text-align: center;
+}
+
+
+/* ----- Typography ----- */
+
+div.guidelines-infoNeeds-contents p {
+	padding:5px 0 5px 10px;
+}
+
+div.guidelines-infoNeeds-contents ul {
+	padding:5px 0 5px 35px;
+}
+
+div.guidelines-infoNeeds-contents table ul {
+	padding:5px 0 5px 15px;
+}
+
+div.guidelines-infoNeeds-contents ul.toc {
+}
+
+div.guidelines-infoNeeds-contents ul.toc li {
+    position: relative;
+}
+
+div.guidelines-infoNeeds-contents ul.toc span.tocHead {
+    display: block;
+    width: 75%;
+}
+
+div.guidelines-infoNeeds-contents ul.toc a.tocLink {
+    position: absolute;
+    left: 75%;
+    top: 0;
+    padding-left: 5px;
+}
+
+div.guidelines-infoNeeds-contents li {
+    line-height: 150%;
+    padding: 0 0 4px;
+}
+
+div.guidelines-infoNeeds-contents h1.subtitle {
+	font-size: 28px;
+	padding: 30px 0 10px;
+	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	line-height: 150%;
+}
+
+div.guidelines-infoNeeds-contents h2.description {
+	font-size: 20px;
+	font-weight: normal;
+	line-height: 150%;
+	padding: 0 100px 40px;
+	text-align: center;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div.guidelines-infoNeeds-contents div#about h2,
+div.guidelines-infoNeeds-contents div.phase h2,
+div.guidelines-infoNeeds-contents div.task h2 {
+    background: #CCCCCC;
+    border-bottom: 2px solid #999999;
+    border-top: 2px solid #999999;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+    padding: 5px 5px 5px 10px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div.guidelines-infoNeeds-contents div.phase h2 a.anchor,
+div.guidelines-infoNeeds-contents div.task h2 a.anchor {
+	border:none;
+	color:#333333;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+div.guidelines-infoNeeds-contents div#about h3,
+div.guidelines-infoNeeds-contents div.toc h3,
+div.guidelines-infoNeeds-contents div.phase h3,
+div.guidelines-infoNeeds-contents div.task h3 {
+    border-bottom: 1px solid #999999;
+    font-size: 13px;
+    margin: 15px 5px 7px 5px;
+    padding: 4px 5px 4px 5px;
+    text-transform: uppercase;
+}
+
+div.guidelines-infoNeeds-contents span.flowName {
+	font-style: italic;
+}
+
+div.guidelines-infoNeeds-contents span.plan-name,
+div.guidelines-infoNeeds-contents span.source,
+div.guidelines-infoNeeds-contents span.title,
+div.guidelines-infoNeeds-contents span.duration,
+div.guidelines-infoNeeds-contents span.type,
+div.guidelines-infoNeeds-contents span.reqFlow {
+	font-weight:bold;
+}
+
+div.guidelines-infoNeeds-contents span.flowHead {
+    display: block;
+    margin-right: 80px;
+}
+
+/* ----- Tables ----- */
+
+div.guidelines-infoNeeds-contents table {
+	border-collapse:collapse;
+    margin: 10px 0;
+    width: 100%;
+	border-bottom:1px solid #999999;
+}
+
+div.guidelines-infoNeeds-contents table td,
+div.guidelines-infoNeeds-contents table th {
+	padding: 5px 4px 5px 8px;
+}
+
+div.guidelines-infoNeeds-contents table th {
+    white-space: nowrap;
+}
+
+div.guidelines-infoNeeds-contents table tbody tr {
+	border: 1px solid #999999;
+	background:#e8e8e8;
+}
+
+div.guidelines-infoNeeds-contents table tr.contactHeads,
+div.guidelines-infoNeeds-contents table tr.contact,
+div.guidelines-infoNeeds-contents table tr.eoiHeads,
+div.guidelines-infoNeeds-contents table tr.eoi {
+	font-size:11px;
+    background: #f6f6f6;
+	border-top: none;
+}
+
+div.guidelines-infoNeeds-contents table tr.contactHeads {
+	background: none repeat scroll 0 0 #E8E8E8;
+}
+
+div.guidelines-infoNeeds-contents table tr.contactHeads th,
+div.guidelines-infoNeeds-contents table tr.contact td,
+div.guidelines-infoNeeds-contents table tr.eoiHeads th,
+div.guidelines-infoNeeds-contents table tr.eoi td {
+	padding:5px 10px;
+    border: 1px solid #999999;
+}
+
+div.guidelines-infoNeeds-contents table tr.eoi td {
+	line-height:150%;
+}
+
+div.guidelines-infoNeeds-contents table tr.contactHeads th.first,
+div.guidelines-infoNeeds-contents table tr.contact td.first,
+div.guidelines-infoNeeds-contents table tr.eoiHeads th.first,
+div.guidelines-infoNeeds-contents table tr.eoi td.first {
+	padding:5px 10px;
+}
+
+div.guidelines-infoNeeds-contents table.eois {
+	background:#e8e8e8;
+	border:1px solid #999999;
+}
+
+div.guidelines-infoNeeds-contents table.eois tbody tr td {
+	background:#f6f6f6;
+	padding:5px 10px;
+	font-size:11px;
+}
+
+div.guidelines-infoNeeds-contents table.eois tbody tr td:first-child {
+	padding:5px 10px 5px 25px;
+}
+
+div.guidelines-infoNeeds-contents table.eois th,
+div.guidelines-infoNeeds-contents table.eois td {
+	border: 1px solid #999999;
+}
+
+div.guidelines-infoNeeds-contents table.eois.nested {
+	width:100%;
+    font-size: 11px;
+	margin:10px 0 10px 0;
+}
+
+div.guidelines-infoNeeds-contents table.eois.nested thead tr {
+	background:#E8E8E8;
+}
+
+div.guidelines-infoNeeds-contents table.eois.nested th {
+	padding: 5px 10px;
+}
+
+div.guidelines-infoNeeds-contents table.eois.nested tbody tr td:first-child {
+	padding:5px 10px 5px 10px;
+}
+
+div.guidelines-infoNeeds-contents table.taskHeader {
+	border:none;
+}
+
+div.guidelines-infoNeeds-contents table.taskHeader tr {
+    background: #F6F6F6;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+	border-bottom:none;
+}
+
+div.guidelines-infoNeeds-contents table.taskHeader p {
+	line-height: 150%;
+	padding: 0 5px 0 0;
+}
+
+div.guidelines-infoNeeds-contents table.taskHeader div.eoiCont {
+    border-top: none;
+    margin: 4px 0 0;
+    padding: 7px 0 0;
+}
+
+div.guidelines-infoNeeds-contents table.taskHeader div.eoiCont p {
+	padding:0 5px 0 0;
+}
+
+div.guidelines-infoNeeds-contents table tr.note {
+	background: #FAF0A8;
+	font-size: 11px;
+	font-style: italic;
+}
+
+div.guidelines-infoNeeds-contents table tr.note td {
+	color: #000000;
+	padding: 7px 10px 7px 20px;
+}
+
+div.guidelines-infoNeeds-contents table tr.contact ul {
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}

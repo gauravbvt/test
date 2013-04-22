@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="types" wicket:id=typesDiv>
+        <ul>
+             <li wicket:id="types">
+                <span wicket:id="typeContainer">
+                    <span wicket:id="universal">Any agent</span>
+                    <span wicket:id="typeLink">[type link]</span>
+                    <input class="new-type" wicket:id="newType" type="text" title = "Enter new type"/>
+                </span>
+                 <span>
+                     <a class="type-delete" wicket:id="delete" href="#">
+                         Delete
+                     </a>
+                 </span>
+            </li>
+        </ul>
+        <a class="window" wicket:id="typologies" href="#">View all types</a>
+    </div>
+</wicket:panel>
+</body>
+</html>
