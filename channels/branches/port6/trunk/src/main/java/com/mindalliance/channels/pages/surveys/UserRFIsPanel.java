@@ -337,7 +337,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeColumn( "Survey", "surveyLabel", EMPTY ) );
             columns.add( makeColumn( "Sent by", "sentBy", EMPTY ) );
@@ -350,7 +350,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
             // Provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable( "rfis",
                     columns,
-                    new SortableBeanProvider<RFIWrapper>( rfis,
+                    new SortableBeanProvider<RFIWrapper,String>( rfis,
                             "timeLeft" ),
                     MAX_ROWS ) );
 

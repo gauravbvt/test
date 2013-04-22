@@ -51,7 +51,7 @@ import java.util.List;
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
                     "Agent",
@@ -116,7 +116,7 @@ import java.util.List;
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
                     columns,
-                    new SortableBeanProvider<Commitment>(
+                    new SortableBeanProvider<Commitment,String>(
                             getFilteredCommitments(),
                             "committer.actor.normalizedName" ),
                     getPageSize() ) );

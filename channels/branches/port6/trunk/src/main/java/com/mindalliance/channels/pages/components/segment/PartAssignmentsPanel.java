@@ -194,7 +194,7 @@ public class PartAssignmentsPanel extends AbstractFloatingCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
                     "Agent",
@@ -224,7 +224,7 @@ public class PartAssignmentsPanel extends AbstractFloatingCommandablePanel {
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "assignments",
                     columns,
-                    new SortableBeanProvider<Assignment>(
+                    new SortableBeanProvider<Assignment,String>(
                             getFilteredAssignments(),
                             "employment.actor.normalizedName" ),
                     getPageSize() ) );

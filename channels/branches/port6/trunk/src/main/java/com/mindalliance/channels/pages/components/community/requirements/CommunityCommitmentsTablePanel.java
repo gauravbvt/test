@@ -50,7 +50,7 @@ public class CommunityCommitmentsTablePanel  extends AbstractFilterableTablePane
 
     @SuppressWarnings( "unchecked" )
     private void init() {
-        List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
         // columns
         columns.add( this.makeFilterableColumn(
                 "Agent",
@@ -110,7 +110,7 @@ public class CommunityCommitmentsTablePanel  extends AbstractFilterableTablePane
         addOrReplace( new AjaxFallbackDefaultDataTable(
                 "commitments",
                 columns,
-                new SortableBeanProvider<CommunityCommitment>(
+                new SortableBeanProvider<CommunityCommitment,String>(
                         getFilteredCommitments(),
                         "committer.agent.name" ),
                 getPageSize() ) );

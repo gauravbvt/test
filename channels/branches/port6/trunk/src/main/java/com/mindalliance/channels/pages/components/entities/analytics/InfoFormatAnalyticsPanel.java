@@ -160,7 +160,7 @@ public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements 
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeFilterableLinkColumn(
                     "Plan segment",
@@ -183,7 +183,7 @@ public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements 
             add( new AjaxFallbackDefaultDataTable(
                     "formatReferences",
                     columns,
-                    new SortableBeanProvider<FormatReference>(
+                    new SortableBeanProvider<FormatReference,String>(
                             formatReferencesModel.getObject(),
                             "segment.name" ),
                     getPageSize() ) );

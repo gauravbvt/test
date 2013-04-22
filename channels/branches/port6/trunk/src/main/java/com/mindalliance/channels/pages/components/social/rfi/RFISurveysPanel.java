@@ -552,7 +552,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeColumn( "Questionnaire", "questionnaire.name", EMPTY ) );
             columns.add( makeColumn( "About", "about", EMPTY ) );
@@ -565,7 +565,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfiSurveys",
                     columns,
-                    new SortableBeanProvider<RFISurveyWrapper>( rfiSurveysModel.getObject(),
+                    new SortableBeanProvider<RFISurveyWrapper,String>( rfiSurveysModel.getObject(),
                             "created" ),
                     MAX_ROWS ) );
 

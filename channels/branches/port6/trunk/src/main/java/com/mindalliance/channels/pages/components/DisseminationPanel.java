@@ -12,13 +12,11 @@ import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -175,27 +173,7 @@ public class DisseminationPanel extends AbstractFloatingCommandablePanel {
                 new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
         // TODO - Copy & Paste - abstract this out
-        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String script;
-                if ( !reducedToFit ) {
-                    String domIdentifier = DOM_IDENTIFIER;
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl(  )
-                            + "&width='+$('" + domIdentifier + "').width()+'"
-                            + "&height='+$('" + domIdentifier + "').height()";
-                } else {
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl(  )
-                            + "'";
-                }
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
+        sizingLabel.add( new DomElementSizeAjaxBehavior( DOM_IDENTIFIER, reducedToFit ) {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
@@ -507,7 +485,7 @@ public class DisseminationPanel extends AbstractFloatingCommandablePanel {
                     (SegmentObject) getModel().getObject(),
                     subject,
                     showTargets );
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeLinkColumn(
                     showTargets ? "Recipient" : "Source",
                     "assignment.actor",
@@ -530,7 +508,7 @@ public class DisseminationPanel extends AbstractFloatingCommandablePanel {
             add( new AjaxFallbackDefaultDataTable(
                     "disseminationTable",
                     columns,
-                    new SortableBeanProvider<DisseminationAssignment>( disseminations, "assignment.actor.normalizedName" ),
+                    new SortableBeanProvider<DisseminationAssignment,String>( disseminations, "assignment.actor.normalizedName" ),
                     getPageSize() ) );
         }
 

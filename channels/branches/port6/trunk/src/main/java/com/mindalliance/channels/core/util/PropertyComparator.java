@@ -35,7 +35,7 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
     @Override
     public int compare( T object, T other ) {
         int comp;
-        String sortProperty = sortParam.getProperty();
+        String sortProperty = (String)sortParam.getProperty();
         Comparable value = evaluatePropertyToComparable( object, sortProperty );
         Comparable otherValue = evaluatePropertyToComparable( other, sortProperty );
         if ( value == null && otherValue == null )

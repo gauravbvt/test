@@ -8,15 +8,14 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractFloatingCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
+import com.mindalliance.channels.pages.components.DomElementSizeAjaxBehavior;
 import com.mindalliance.channels.pages.components.diagrams.FailureImpactsDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -133,27 +132,7 @@ public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
                 "fit",
                 new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
-        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
-             @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                 super.onComponentTag( tag );
-                 String script;
-                 if ( !reducedToFit ) {
-                     String domIdentifier = DOM_IDENTIFIER;
-                     script = "wicketAjaxGet('"
-                             + getCallbackUrl( )
-                             + "&width='+$('" + domIdentifier + "').width()+'"
-                             + "&height='+$('" + domIdentifier + "').height()";
-                 } else {
-                     script = "wicketAjaxGet('"
-                             + getCallbackUrl( )
-                             + "'";
-                 }
-                 String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                         .replaceAll( "&amp;", "&" );
-                 tag.put( "onclick", onclick );
-            }
-
+        sizingLabel.add( new DomElementSizeAjaxBehavior( DOM_IDENTIFIER, reducedToFit ) {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
@@ -431,7 +410,7 @@ public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
                     failures.add( new PartFailure( part, goal ) );
                 }
             }
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeLinkColumn( "Necessary task", "part", "part.task", EMPTY ) );
             columns.add( makeLinkColumn( "Plan segment", "part.segment", "part.segment.name", EMPTY ) );
             columns.add( makeColumn( "Risk/opportunity", "goal.categoryLabel", "goal.categoryLabel", EMPTY ) );
@@ -441,7 +420,7 @@ public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
             add( new AjaxFallbackDefaultDataTable(
                     "failures",
                     columns,
-                    new SortableBeanProvider<PartFailure>( failures, "part.task" ),
+                    new SortableBeanProvider<PartFailure,String>( failures, "part.task" ),
                     getPageSize() ) );
         }
     }

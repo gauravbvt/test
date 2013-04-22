@@ -161,7 +161,7 @@ public class EventAnalyticsPanel extends AbstractUpdatablePanel  implements Filt
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeFilterableLinkColumn(
                     "Plan segment",
@@ -183,7 +183,7 @@ public class EventAnalyticsPanel extends AbstractUpdatablePanel  implements Filt
             add( new AjaxFallbackDefaultDataTable(
                     "eventReferences",
                     columns,
-                    new SortableBeanProvider<EventReference>(
+                    new SortableBeanProvider<EventReference,String>(
                             eventReferencesModel.getObject(),
                             "segment.name" ),
                     getPageSize() ) );

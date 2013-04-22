@@ -19,7 +19,7 @@ import java.util.List;
  * Date: Jan 21, 2009
  * Time: 1:06:07 PM
  */
-public class SortableBeanProvider<T extends Serializable> extends SortableDataProvider<T> {
+public class SortableBeanProvider<T extends Serializable, String> extends SortableDataProvider<T,String> {
     /**
      * List from which to provide
      */
@@ -34,19 +34,21 @@ public class SortableBeanProvider<T extends Serializable> extends SortableDataPr
      * {@inheritDoc}
      */
     @Override
-    public Iterator<T> iterator( int first, int count ) {
+    public Iterator<T> iterator( long first, long count ) {
         final SortParam sortParam = getSort();
         List<T> sortedList = new ArrayList<T>();
         sortedList.addAll( list );
         Collections.sort( sortedList, new PropertyComparator<T>( sortParam ) );
-        return sortedList.subList( first, first + count ).iterator();
+        int iFirst = Integer.parseInt(  Long.toString(first) );
+        int iCount = Integer.parseInt(  Long.toString(count) );
+        return sortedList.subList( iFirst, iFirst + iCount ).iterator();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public int size() {
+    public long size() {
         return list.size();
     }
 

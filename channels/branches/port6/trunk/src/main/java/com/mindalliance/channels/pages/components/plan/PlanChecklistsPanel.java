@@ -208,7 +208,7 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeLinkColumn( "Checklist for task", "part", "label", EMPTY ) );
             columns.add( makeFilterableLinkColumn(
@@ -232,7 +232,7 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "checklists",
                     columns,
-                    new SortableBeanProvider<PartWrapper>(
+                    new SortableBeanProvider<PartWrapper,String>(
                             getFilteredParts(),
                             "label" ),
                     getPageSize() ) );

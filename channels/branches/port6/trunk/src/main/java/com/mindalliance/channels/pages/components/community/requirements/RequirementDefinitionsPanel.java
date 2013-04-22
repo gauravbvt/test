@@ -371,7 +371,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeColumn( "Name", "name", EMPTY ) );
             columns.add( makeColumn(
                     "Agents",
@@ -405,7 +405,7 @@ public class RequirementDefinitionsPanel extends AbstractCommandablePanel implem
             List<RequirementWrapper> requirements = requirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
                     columns,
-                    new SortableBeanProvider<RequirementWrapper>( requirements, "name" ),
+                    new SortableBeanProvider<RequirementWrapper,String>( requirements, "name" ),
                     getPageSize() ) );
         }
     }

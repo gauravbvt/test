@@ -146,7 +146,7 @@ public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel implement
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
                     "Agent",
@@ -191,7 +191,7 @@ public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel implement
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "assignments",
                     columns,
-                    new SortableBeanProvider<Assignment>(
+                    new SortableBeanProvider<Assignment,String>(
                             getFilteredAssignments(),
                             "part.task" ),
                     getPageSize() ) );
@@ -237,7 +237,7 @@ public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel implement
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
                     "By agent",
@@ -285,7 +285,7 @@ public class OrganizationAnalyticsPanel extends AbstractUpdatablePanel implement
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
                     columns,
-                    new SortableBeanProvider<Commitment>(
+                    new SortableBeanProvider<Commitment,String>(
                             getFilteredCommitments(),
                             "sharing.source.task" ),
                     getPageSize() ) );

@@ -38,14 +38,14 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
 
     @SuppressWarnings( "unchecked" )
     private void init() {
-        List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
         columns.add( makeLinkColumn( "Task", "externalPart", "externalPart.title", EMPTY ) );
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( " in plan segment" ),
                 "externalPart.segment.name", "externalPart.segment.name" ) );
         columns.add( makeColumn( "produces info", "name", "@kind", "?", "description" ) );
         columns.add( makeLinkColumn( "consumed by task", "part", "part.title", EMPTY ) );
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "in plan segment" ),
                 "segment.name", "segment.name" ) );
         columns.add( makeGeomapLinkColumn(
@@ -57,7 +57,7 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
         add( new AjaxFallbackDefaultDataTable(
                 "flows",
                 columns,
-                new SortableBeanProvider<ExternalFlow>( externalFlows, "segment.name" ),
+                new SortableBeanProvider<ExternalFlow,String>( externalFlows, "segment.name" ),
                 getPageSize() ) );
 
     }

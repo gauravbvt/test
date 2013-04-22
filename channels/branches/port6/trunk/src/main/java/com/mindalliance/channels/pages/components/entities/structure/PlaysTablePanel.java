@@ -76,9 +76,9 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
 
     @SuppressWarnings( "unchecked" )
     private void init() {
-        final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
         // columns
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "Plan segment" ),
                 "part.segment.name", "part.segment.name" ) );                  // NON-NLS
         columns.add( makeLinkColumn( "Role", "part.role", "part.role.name", EMPTY ) );
@@ -96,10 +96,10 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
                 "flow.intent.label",
                 EMPTY
         ) );
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "Max delay" ),
                 "flow.maxDelay", "flow.maxDelay" ) );                                   // NON-NLS
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "Importance" ),
                 "requiredness", "requiredness" ) );                                 // NON-NLS
         // provider and table
@@ -107,7 +107,7 @@ public class PlaysTablePanel extends AbstractTablePanel<Play> {
         add( new AjaxFallbackDefaultDataTable(
                 "plays",
                 columns,
-                new SortableBeanProvider<Play>( plays, "part.segment.name" ),
+                new SortableBeanProvider<Play,String>( plays, "part.segment.name" ),
                 getPageSize() ) );
     }
 

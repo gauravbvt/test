@@ -269,7 +269,7 @@ public class PlaceAnalyticsPanel
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeLinkColumn(
                     "Name",
@@ -296,7 +296,7 @@ public class PlaceAnalyticsPanel
             add( new AjaxFallbackDefaultDataTable(
                     "places",
                     columns,
-                    new SortableBeanProvider<Place>(
+                    new SortableBeanProvider<Place,String>(
                             placesModel.getObject(),
                             "name" ),
                     getPageSize() ) );

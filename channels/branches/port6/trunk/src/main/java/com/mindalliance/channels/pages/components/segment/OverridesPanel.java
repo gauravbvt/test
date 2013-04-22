@@ -207,7 +207,7 @@ public class OverridesPanel  extends AbstractFloatingCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
              // columns
             columns.add( this.makeFilterableLinkColumn(
                     "Task",
@@ -249,7 +249,7 @@ public class OverridesPanel  extends AbstractFloatingCommandablePanel {
              addOrReplace( new AjaxFallbackDefaultDataTable(
                      "overrides",
                      columns,
-                     new SortableBeanProvider<Part>(
+                     new SortableBeanProvider<Part,String>(
                              getFilteredParts(),
                              "task" ),
                      getPageSize() ) );

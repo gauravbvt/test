@@ -7,9 +7,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -102,7 +104,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
     private Random random = new Random();
     private WebMarkupContainer resizer;
     private boolean minimized = false;
-    private AjaxFallbackLink minimizeLink;
+    private AjaxLink minimizeLink;
     private static final int MINIMIZED_TITLE_SIZE = 27;
     private static final int MINIMIZED_HEIGHT = 38;
     private WebMarkupContainer moveBar;
@@ -170,7 +172,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
     }
 
     private void addClose() {
-        AjaxFallbackLink<?> closeLink = new AjaxFallbackLink( "close" ) {
+        AjaxLink<?> closeLink = new AjaxLink( "close" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 close( target );
@@ -185,7 +187,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
     }
 
     private void addMinimize() {
-        minimizeLink = new AjaxFallbackLink( "minimize" ) {
+        minimizeLink = new AjaxLink( "minimize" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 minimizeNormalize( target );
@@ -246,9 +248,11 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
 
     public void renderHead( IHeaderResponse response ) {
         super.renderHead( response );
-        response.renderJavaScriptReference( JAVASCRIPT );
+        // response.renderJavaScriptReference( JAVASCRIPT );     // Wicket 1.5.*
+        response.render( JavaScriptHeaderItem.forReference( JAVASCRIPT ) );
         String script = "Floater.onOpen('" + getMarkupId() + "');";
-        response.renderOnDomReadyJavaScript( script );
+        response.render( OnDomReadyHeaderItem.forScript( script )); // Wicket 1.5.*
+        // response.renderOnDomReadyJavaScript( script );
     }
 
     public void setLayout() {

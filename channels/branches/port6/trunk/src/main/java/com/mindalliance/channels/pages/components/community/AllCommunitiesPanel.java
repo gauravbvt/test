@@ -242,7 +242,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeColumn( "Name", "name", null, EMPTY, "description" ) );
             columns.add( makeColumn( "Locale", "locale.name", null, EMPTY, "locale.description" ) );
@@ -260,7 +260,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "allCommunities",
                     columns,
-                    new SortableBeanProvider<CommunityWrapper>( communitiesModel.getObject(),
+                    new SortableBeanProvider<CommunityWrapper,String>( communitiesModel.getObject(),
                             "name" ),
                     MAX_ROWS ) );
         }

@@ -1,9 +1,12 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.attributes.CallbackParameter;
 import org.apache.wicket.markup.ComponentTag;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,8 +102,11 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
     private String makeCallback( String graphId, String vertexId, String edgeId, Map<String, String> extras ) {
         StringBuilder cb = new StringBuilder();
         cb.append("javascript:");
-        //cb.append("{alert('boo');");
-        String script = "wicketAjaxGet('"
+        CharSequence script;
+
+        script = getCallbackFunction( getCallbackParameters( graphId, vertexId, edgeId, extras ) );
+
+        /*String script = "wicketAjaxGet('"
                         + getCallbackUrl( )
                         + (graphId != null ? "&graph=" + graphId : "")
                         + (vertexId != null ? "&vertex=" + vertexId : "")
@@ -119,7 +125,33 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
                         + (domIdentifier == null ? "'" : "");
         CharSequence callbackScript = generateCallbackScript(script);
         cb.append(callbackScript);
-        return cb.toString().replaceAll("&amp;","&");
+        return cb.toString().replaceAll("&amp;","&");*/  // wicket 1.5.*
+        cb.append( script );
+        return cb.toString();
+    }
+
+    private CallbackParameter[] getCallbackParameters( String graphId,
+                                                       String vertexId,
+                                                       String edgeId,
+                                                       Map<String, String> extras ) {
+        List<CallbackParameter> params = new ArrayList<CallbackParameter>();
+        if ( graphId != null ) {
+            params.add( CallbackParameter.resolved( "graph","'" + graphId + "'"  ));
+        }
+        if ( vertexId != null ) {
+            params.add( CallbackParameter.resolved( "vertex","'" + vertexId + "'"  ));
+        }
+        if ( edgeId != null ) {
+            params.add( CallbackParameter.resolved( "edge","'" + edgeId + "'"  ));
+        }
+        for ( String extra : extras.keySet() ) {
+            params.add( CallbackParameter.resolved( extra,"'" + extras.get( extra ) + "'"  ));
+        }
+        if ( domIdentifier != null ) {
+            params.add( CallbackParameter.resolved( "width", "$('" + domIdentifier + "').width()"));
+            params.add( CallbackParameter.resolved( "height", "$('" + domIdentifier + "').height()"));
+        }
+       return (CallbackParameter[])params.toArray();
     }
 
 }

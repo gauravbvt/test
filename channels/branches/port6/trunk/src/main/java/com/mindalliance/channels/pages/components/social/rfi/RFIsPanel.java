@@ -616,7 +616,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeCheckBoxColumn(
                     "",
@@ -645,7 +645,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfiSurveys",
                     columns,
-                    new SortableBeanProvider<SurveyParticipation>( surveyParticipationsModel.getObject(),
+                    new SortableBeanProvider<SurveyParticipation,String>( surveyParticipationsModel.getObject(),
                             "created" ),
                     MAX_ROWS ) );
 

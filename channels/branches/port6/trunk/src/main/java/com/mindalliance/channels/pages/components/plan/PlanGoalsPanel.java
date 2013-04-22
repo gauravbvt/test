@@ -111,7 +111,7 @@ public class PlanGoalsPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeColumn( "Goal", "goalLabel", null, EMPTY, "goal.description" ));
             columns.add( makeFilterableLinkColumn(
@@ -145,7 +145,7 @@ public class PlanGoalsPanel extends AbstractUpdatablePanel {
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "goals",
                     columns,
-                    new SortableBeanProvider<GoalWrapper>(
+                    new SortableBeanProvider<GoalWrapper,String>(
                             getFilteredGoals(),
                             "goalLabel" ),
                     getPageSize() ) );

@@ -23,7 +23,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -322,7 +322,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
 
     private void addShowMoreCell( ListItem<GoalWrapper> item ) {
         final GoalWrapper wrapper = item.getModel().getObject();
-        AjaxFallbackLink<String> moreLink = new AjaxFallbackLink<String>(
+        AjaxLink<String> moreLink = new AjaxLink<String>(
                 "more-link",
                 new Model<String>( "more" ) ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -776,7 +776,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
             for ( Part part : getQueryService().findAchievers( segment, goal ) ) {
                 achievers.add( new Achiever( part, goal ) );
             }
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeColumn( "Purpose", "kind", EMPTY ) );
             columns.add( makeLinkColumn( "Task", "part", "part.task", EMPTY ) );
             columns.add( makeLinkColumn( "Segment", "part.segment", "part.segment.name", EMPTY ) );
@@ -786,7 +786,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
             add( new AjaxFallbackDefaultDataTable(
                     "achievers",
                     columns,
-                    new SortableBeanProvider<Achiever>( achievers, "part.task" ),
+                    new SortableBeanProvider<Achiever,String>( achievers, "part.task" ),
                     getPageSize() ) );
         }
     }

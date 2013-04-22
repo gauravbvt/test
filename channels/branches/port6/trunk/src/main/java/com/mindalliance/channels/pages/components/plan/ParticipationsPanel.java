@@ -597,7 +597,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeColumn(
                     "User",
@@ -663,7 +663,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "participations",
                     columns,
-                    new SortableBeanProvider<ParticipationWrapper>(
+                    new SortableBeanProvider<ParticipationWrapper,String>(
                             participationsModel.getObject(),
                             "username" ),
                     MAX_ROWS ) );

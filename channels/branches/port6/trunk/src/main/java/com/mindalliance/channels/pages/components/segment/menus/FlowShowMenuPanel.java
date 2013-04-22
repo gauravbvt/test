@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -68,7 +68,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                     new LinkMenuItem(
                             "menuItem",
                             new Model<String>( isCollapsed ? "Details" : "Hide details" ),
-                            new AjaxFallbackLink( "link" ) {
+                            new AjaxLink( "link" ) {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
                                     update(
@@ -84,7 +84,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                         new LinkMenuItem(
                                 "menuItem",
                                 new Model<String>( "Elements" ),
-                                new AjaxFallbackLink( "link" ) {
+                                new AjaxLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
                                         update(
@@ -98,7 +98,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                         new LinkMenuItem(
                                 "menuItem",
                                 new Model<String>( "Commitments" ),
-                                new AjaxFallbackLink( "link" ) {
+                                new AjaxLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
                                         update(
@@ -111,7 +111,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                         new LinkMenuItem(
                                 "menuItem",
                                 new Model<String>( "Failure" ),
-                                new AjaxFallbackLink( "link" ) {
+                                new AjaxLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
                                         update(
@@ -125,7 +125,7 @@ public class FlowShowMenuPanel extends MenuPanel {
                             new LinkMenuItem(
                                     "menuItem",
                                     new Model<String>( "Dissemination" ),
-                                    new AjaxFallbackLink( "link" ) {
+                                    new AjaxLink( "link" ) {
                                         @Override
                                         public void onClick( AjaxRequestTarget target ) {
                                             Change change = new Change(
@@ -137,7 +137,7 @@ public class FlowShowMenuPanel extends MenuPanel {
             }
 
             // Surveys
-            AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
+            AjaxLink surveysLink = new AjaxLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                     Change change = new Change( Change.Type.AspectViewed, getFlow(), "surveys" );

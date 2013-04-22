@@ -327,7 +327,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeFilterableLinkColumn(
                     "Agent",
@@ -357,7 +357,7 @@ public class PlanWhosWhoPanel extends AbstractCommandablePanel implements NameRa
             add( new AjaxFallbackDefaultDataTable(
                     "employments",
                     columns,
-                    new SortableBeanProvider<Employment>(
+                    new SortableBeanProvider<Employment,String>(
                             employmentModel.getObject(),
                             "actor.lastName" ),
                     getPageSize() ) );

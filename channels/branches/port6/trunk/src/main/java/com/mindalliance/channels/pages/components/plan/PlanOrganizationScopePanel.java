@@ -18,13 +18,12 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -213,7 +212,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel impleme
                 "View the profile of the organization",
                 "window" );
         organizationContainer.add( detailsLink );
-        Link expectationActionLink = new AjaxFallbackLink( "expectationActionLink" ) {
+        AjaxLink expectationActionLink = new AjaxLink( "expectationActionLink" ) {
             public void onClick( AjaxRequestTarget target ) {
                 changeExpectation();
                 addScopeIndex();

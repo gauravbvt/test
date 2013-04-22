@@ -782,7 +782,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
 
         @SuppressWarnings("unchecked")
         private void initTable() {
-            final List<IColumn<UserParticipationWrapper>> columns = new ArrayList<IColumn<UserParticipationWrapper>>();
+            final List<IColumn<UserParticipationWrapper,String>> columns = new ArrayList<IColumn<UserParticipationWrapper,String>>();
             columns.add( makeColumn( "User", "normalizedFullName", EMPTY ) );
             columns.add( makeColumn( "Email", "email", EMPTY ) );
             columns.add( makeColumn( "Is my", "relationshipsToUser", EMPTY ) );
@@ -804,10 +804,10 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                     "more",
                     UsersParticipationPanel.this ) );
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable<UserParticipationWrapper>(
+            addOrReplace( new AjaxFallbackDefaultDataTable<UserParticipationWrapper,String>(
                     "userParticipationTable",
                     columns,
-                    new SortableBeanProvider<UserParticipationWrapper>(
+                    new SortableBeanProvider<UserParticipationWrapper,String>(
                             getFilteredParticipations(),
                             "normalizedFullName" ),
                     getPageSize() ) );

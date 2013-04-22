@@ -362,7 +362,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeCheckBoxColumn(
                     "Confirmed",
@@ -417,7 +417,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "agreements",
                     columns,
-                    new SortableBeanProvider<AgreementWrapper>(
+                    new SortableBeanProvider<AgreementWrapper,String>(
                             getFilteredAgreements(),
                             "beneficiary.name" ),
                     getPageSize() ) );

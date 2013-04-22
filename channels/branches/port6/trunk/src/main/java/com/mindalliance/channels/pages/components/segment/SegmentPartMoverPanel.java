@@ -20,7 +20,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.basic.Label;
@@ -56,7 +56,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
     /**
      * Select all/none link.
      */
-    private AjaxFallbackLink<String> allOrNoneLink;
+    private AjaxLink<String> allOrNoneLink;
 
     /**
      * Where to move selected parts.
@@ -76,7 +76,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
     /**
      * Move button.
      */
-    private AjaxFallbackLink<String> moveButton;
+    private AjaxLink<String> moveButton;
 
     /**
      * Segment model.
@@ -137,7 +137,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
     }
 
     private void addSelectAllOrNone() {
-        allOrNoneLink = new AjaxFallbackLink<String>( "selectAllOrNone" ) {
+        allOrNoneLink = new AjaxLink<String>( "selectAllOrNone" ) {
             @Override
             @SuppressWarnings( "unchecked" )
             public void onClick( AjaxRequestTarget target ) {
@@ -176,7 +176,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
     }
 
     private void addMoveButton() {
-        moveButton = new AjaxFallbackLink<String>( "move", new Model<String>( "Move tasks" ) ) {
+        moveButton = new AjaxLink<String>( "move", new Model<String>( "Move tasks" ) ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = moveSelectedParts();
@@ -347,7 +347,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             if ( isLockedByUserIfNeeded( getSegment().getId() ) )
                 columns.add( makeCheckBoxColumn( "", "selected", "movable", SegmentPartMoverPanel.this ) );
@@ -371,7 +371,7 @@ public class SegmentPartMoverPanel extends AbstractUpdatablePanel {
             columns.add( makeColumn( "Goal", "goals", EMPTY ) );
             addOrReplace( new AjaxFallbackDefaultDataTable( "movableParts",
                                                             columns,
-                                                            new SortableBeanProvider<MovablePart>(
+                                                            new SortableBeanProvider<MovablePart,String>(
                                                                     getFilteredMovableParts(),
                                                                     "part.name" ),
                                                             getPageSize() ) );

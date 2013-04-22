@@ -363,7 +363,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeColumn( "Survey", "questionnaire.name", EMPTY ) );
             columns.add( makeColumn( "Status", "status", EMPTY ) );
@@ -374,7 +374,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "surveys",
                     columns,
-                    new SortableBeanProvider<SurveyWrapper>(
+                    new SortableBeanProvider<SurveyWrapper,String>(
                             surveys,
                             "questionnaire.name" ),
                     getPageSize() ) );

@@ -41,17 +41,17 @@ public class SegmentCausesPanel extends AbstractTablePanel<SegmentRelationship> 
 
     @SuppressWarnings( "unchecked" )
     private void init() {
-        final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
         columns.add( makeLinkColumn(
                 "Task",
                 "cause",
                 "cause.title",
                 EMPTY ) );
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "in plan segment" ),
                 "cause.segment.name",
                 "cause.segment.name" ) );
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "has effect" ),
                 "effect",
                 "effect" ) );
@@ -60,7 +60,7 @@ public class SegmentCausesPanel extends AbstractTablePanel<SegmentRelationship> 
                 "effected",
                 "effected.name",
                 EMPTY ) );
-        columns.add( new PropertyColumn<String>(
+        columns.add( new PropertyColumn<String,String>(
                 new Model<String>( "because" ),
                 "explanation",
                 "explanation" ) );
@@ -68,7 +68,7 @@ public class SegmentCausesPanel extends AbstractTablePanel<SegmentRelationship> 
         add( new AjaxFallbackDefaultDataTable(
                 "causes",
                 columns,
-                new SortableBeanProvider<Causation>( causations, "cause.name" ),
+                new SortableBeanProvider<Causation,String>( causations, "cause.name" ),
                 getPageSize() ) );
 
     }

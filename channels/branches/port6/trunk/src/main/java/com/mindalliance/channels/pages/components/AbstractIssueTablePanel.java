@@ -17,7 +17,7 @@ import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -191,7 +191,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?, String>> columns = new ArrayList<IColumn<?, String>>();
             // columns
             columns.add( makeColumn( "Kind", "detectorLabel", EMPTY ) );
             columns.add( makeFilterableLinkColumn( "About",
@@ -211,13 +211,13 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
             // provider and table
             add( new AjaxFallbackDefaultDataTable( "issues",
                     columns,
-                    new SortableBeanProvider<Issue>( issuesModel.getObject(), "kind" ),
+                    new SortableBeanProvider<Issue,String>( issuesModel.getObject(), "kind" ),
                     getPageSize() ) );
         }
 
 
-        private AbstractColumn<Issue> makeSurveyColumn( String name ) {
-            return new AbstractColumn<Issue>( new Model<String>( name ) ) {
+        private AbstractColumn<Issue,String> makeSurveyColumn( String name ) {
+            return new AbstractColumn<Issue, String>( new Model<String>( name ) ) {
                 @Override
                 public void populateItem( Item<ICellPopulator<Issue>> cellItem, String id, IModel<Issue> issueModel ) {
                     Issue issue = issueModel.getObject();
@@ -236,7 +236,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
 
         private SurveyLinkPanel( String id, boolean surveyed, final Issue issue ) {
             super( id );
-            AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
+            AjaxLink link = new AjaxLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                         RFISurvey survey = surveysDAO.getOrCreateRemediationSurvey(

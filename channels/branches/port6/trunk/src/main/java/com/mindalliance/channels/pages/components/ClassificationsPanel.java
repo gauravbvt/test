@@ -10,7 +10,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -186,7 +186,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
 
     private void addDelete( ListItem<ClassificationWrapper> item ) {
         final ClassificationWrapper wrapper = item.getModelObject();
-        AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
+        AjaxLink deleteLink = new AjaxLink( "delete" ) {
             public void onClick( AjaxRequestTarget target ) {
                 wrapper.delete();
                 addClassifications();

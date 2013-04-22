@@ -29,7 +29,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -121,7 +121,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * Do transfer button.
      */
-    private AjaxFallbackLink<String> doTransfer;
+    private AjaxLink<String> doTransfer;
 
 
     public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
@@ -235,7 +235,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         });
         jobTransferDiv.add( copyingCheckBox );
         // do transfer button
-        doTransfer = new AjaxFallbackLink<String>(
+        doTransfer = new AjaxLink<String>(
                 "doTransfer",
                 new PropertyModel<String>( this, "transferButtonLabel" ) ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -440,7 +440,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
     private void addShowFlowsCell( ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
-        AjaxFallbackLink<String> flowsLink = new AjaxFallbackLink<String>(
+        AjaxLink<String> flowsLink = new AjaxLink<String>(
                 "flows-link",
                 new Model<String>( "Show flows" ) ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -810,7 +810,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         private void init() {
             // link
-            AjaxFallbackLink link = new AjaxFallbackLink( "entity-link" ) {
+            AjaxLink link = new AjaxLink( "entity-link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     ModelEntity mo = (ModelEntity) ChannelsUtils.getProperty( jobWrapper, property, null );
                     if ( mo != null ) {
@@ -956,7 +956,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                         }
                     }
             );
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeCheckBoxColumn(
                     "Transfer",
@@ -997,7 +997,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "transferableJobs",
                     columns,
-                    new SortableBeanProvider<JobTransfer>(
+                    new SortableBeanProvider<JobTransfer,String>(
                             getFilteredTransfers(),
                             "actor.normalizedName" ),
                     getPageSize() ) );

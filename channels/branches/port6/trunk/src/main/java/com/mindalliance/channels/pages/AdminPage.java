@@ -17,7 +17,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -200,7 +200,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                             error( validatable, "NonUniqueUri" );
                     }
                 } );
-        newPlanUriField.add( new ValidationStyler() );
+        newPlanUriField.add( makeValidationStyler() );
         addTipTitle( newPlanUriField, "Example: com_company_plans_example" );
         add(
                 form.add(
@@ -287,7 +287,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                         }
                                     }
                                 } )
-                                .add( new ValidationStyler() ),
+                                .add( makeValidationStyler() ),
                         new Label( "thisPlan", getPlan().getUri() )
                 ) );
     }
@@ -456,7 +456,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                     }
                 }
                         .add( EmailAddressValidator.getInstance() )
-                        .add( new ValidationStyler() ),
+                        .add( makeValidationStyler() ),
 
                 new PasswordTextField( "password", new Model<String>( null ) ) {
                     private static final long serialVersionUID = 2037327143613490877L;
@@ -484,10 +484,23 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     //==================================================================
 
+    public Behavior makeValidationStyler() {
+        return new Behavior() {
+            @Override
+            public void onComponentTag( Component component, ComponentTag tag ) {
+                FormComponent<?> comp = (FormComponent<?>) component;
+                if ( !comp.isValid() )
+                    tag.put( "class", "error" );
+
+                super.onComponentTag( component, tag );
+            }
+        };
+    }
+
     /**
      * Utility styler for components with errors.
      */
-    public static class ValidationStyler extends AbstractBehavior {
+ /*   public static class ValidationStyler extends Behavior {
 
         private static final long serialVersionUID = -4547320874627670444L;
 
@@ -503,7 +516,7 @@ public class AdminPage extends AbstractChannelsWebPage {
             super.onComponentTag( component, tag );
         }
     }
-
+*/            // wicket 1.5.*
     //==================================================================
     enum Access {
         Admin, Planner, User, Disabled, LPlanner, LUser, LDisabled

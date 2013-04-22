@@ -201,7 +201,7 @@ public class EntityValueAnalysisPanel<T extends ModelEntity> extends AbstractUpd
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeFilterableLinkColumn(
                     "Value to task",
@@ -229,7 +229,7 @@ public class EntityValueAnalysisPanel<T extends ModelEntity> extends AbstractUpd
             add( new AjaxFallbackDefaultDataTable(
                     "valueAnalysisTable",
                     columns,
-                    new SortableBeanProvider<ValueAnalysis>(
+                    new SortableBeanProvider<ValueAnalysis,String>(
                             allValueAnalysis.getObject(),
                             "part.label" ),
                     getPageSize() ) );

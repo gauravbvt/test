@@ -25,7 +25,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -112,7 +112,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText   default text to show if all else fails
      * @return a column
      */
-    protected AbstractColumn<T> makeColumn( String name,
+    protected AbstractColumn<T, String> makeColumn( String name,
                                             final String labelProperty,
                                             final String defaultText ) {
         return makeColumn( name, labelProperty, null, defaultText );
@@ -127,7 +127,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText   default text to show if all else fails
      * @return a column
      */
-    protected AbstractColumn<T> makeColumn( String name,
+    protected AbstractColumn<T,String> makeColumn( String name,
                                             final String labelProperty,
                                             final String style,
                                             final String defaultText ) {
@@ -144,7 +144,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param titleProperty a property path to tooltip text
      * @return a column
      */
-    protected AbstractColumn<T> makeColumn( String name,
+    protected AbstractColumn<T,String> makeColumn( String name,
                                             final String labelProperty,
                                             final String style,
                                             final String defaultText,
@@ -163,13 +163,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param sortProperty  a property on which to sort the column
      * @return a column
      */
-    protected AbstractColumn<T> makeColumn( String name,
+    protected AbstractColumn<T,String> makeColumn( String name,
                                             final String labelProperty,
                                             final String style,
                                             final String defaultText,
                                             final String titleProperty,
                                             final String sortProperty ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -209,10 +209,10 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText      default text to show if all else fails
      * @return a column
      */
-    protected AbstractColumn<T> makeUserColumn( String name,
+    protected AbstractColumn<T,String> makeUserColumn( String name,
                                                 final String usernameProperty,
                                                 final String defaultText ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -227,13 +227,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeParticipationAnalystColumn( String name,
+    protected AbstractColumn<T,String> makeParticipationAnalystColumn( String name,
                                                   final String property,
                                                   final String labelMethodName,
                                                   final String defaultText,
                                                   final String titleMethodName,
                                                   final Object... extras ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -276,12 +276,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         }
     }
 
-    protected AbstractColumn<T> makeAnalystColumn( String name,
+    protected AbstractColumn<T,String> makeAnalystColumn( String name,
                                                                 final String property,
                                                                 final String methodName,
                                                                 final String defaultText,
                                                                 final Object... extras ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -328,7 +328,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText   default text to show if all else fails
      * @return a column
      */
-    protected AbstractColumn<T> makeLinkColumn( String name,
+    protected AbstractColumn<T,String> makeLinkColumn( String name,
                                                 final String moProperty,
                                                 final String labelProperty,
                                                 final String defaultText ) {
@@ -346,12 +346,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText   default text to show if all else fails
      * @return a column
      */
-    protected AbstractColumn<T> makeLinkColumn( String name,
+    protected AbstractColumn<T,String> makeLinkColumn( String name,
                                                 final String moProperty,
                                                 final String labelProperty,
                                                 final String style,
                                                 final String defaultText ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {              // NON-NLS
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {              // NON-NLS
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -489,13 +489,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         return value;
     }
 
-    protected AbstractColumn<T> makeFilterableLinkColumn( String name,
+    protected AbstractColumn<T,String> makeFilterableLinkColumn( String name,
                                                           final String moProperty,
                                                           final String labelProperty,
                                                           final String defaultText,
                                                           final Filterable filterable,
                                                           final boolean isMoRefString ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -512,12 +512,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeFilterableLinkColumn( String name,
+    protected AbstractColumn<T,String> makeFilterableLinkColumn( String name,
                                                           final String moProperty,
                                                           final String labelProperty,
                                                           final String defaultText,
                                                           final Filterable filterable ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -533,13 +533,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeFilterableColumn( String name,
+    protected AbstractColumn<T,String> makeFilterableColumn( String name,
                                                       final String identifiableProperty,
                                                       final String labelProperty,
                                                       final String defaultText,
                                                       final String titleProperty,
                                                       final Filterable filterable ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {
 
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -566,7 +566,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText   a string
      * @return an abstract column
      */
-    protected AbstractColumn<T> makeExternalLinkColumn(
+    protected AbstractColumn<T,String> makeExternalLinkColumn(
             String name,
             String urlProperty,
             String labelProperty,
@@ -583,13 +583,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param defaultText   a string
      * @return an abstract column
      */
-    protected AbstractColumn<T> makeExternalLinkColumn(
+    protected AbstractColumn<T,String> makeExternalLinkColumn(
             String name,
             final String urlProperty,
             final String labelProperty,
             final String defaultText ,
             final boolean newPage ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -613,12 +613,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
     }
 
 
-    protected AbstractColumn<T> makeTernaryCheckBoxColumn(
+    protected AbstractColumn<T,String> makeTernaryCheckBoxColumn(
             String name,
             final String stateProperty,
             final String[] allowedStates
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -632,13 +632,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeCheckBoxColumn(
+    protected AbstractColumn<T,String> makeCheckBoxColumn(
             String name,
             final String stateProperty,
             final boolean enabled,
             final Updatable updatable
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -653,13 +653,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeCheckBoxColumn(
+    protected AbstractColumn<T,String> makeCheckBoxColumn(
             String name,
             final String stateProperty,
             final String enabledProperty,
             final Updatable updatable
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -682,13 +682,13 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param label                a string
      * @return an abstract column
      */
-    protected AbstractColumn<T> makeExpandLinkColumn(
+    protected AbstractColumn<T,String> makeExpandLinkColumn(
             String name,
             final String identifiableProperty,
             final String label,
             final String... properties
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ), label ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), label ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -725,14 +725,14 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param labelProperty        a string
      * @return an abstract column
      */
-    protected AbstractColumn<T> makeFlexibleExpandLinkColumn(
+    protected AbstractColumn<T,String> makeFlexibleExpandLinkColumn(
             String name,
             final String identifiableProperty,
             final String labelProperty,
             final String defaultText,
             final String... properties
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ), labelProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), labelProperty ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -776,7 +776,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param updatable target of call
      * @return a column
      */
-    protected AbstractColumn<T> makeActionLinkColumn(
+    protected AbstractColumn<T,String> makeActionLinkColumn(
             String name,
             final String label,
             final String action,
@@ -795,7 +795,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param updatable target of call
      * @return a column
      */
-    protected AbstractColumn<T> makeActionLinkColumn(
+    protected AbstractColumn<T,String> makeActionLinkColumn(
             String name,
             final String label,
             final String action,
@@ -816,7 +816,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param cssClasses a string
      * @return a column
      */
-    protected AbstractColumn<T> makeActionLinkColumn(
+    protected AbstractColumn<T,String> makeActionLinkColumn(
             String name,
             final String label,
             final String action,
@@ -839,7 +839,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param cssClasses          a string
      * @return a column
      */
-    protected AbstractColumn<T> makeActionLinkColumn(
+    protected AbstractColumn<T,String> makeActionLinkColumn(
             String name,
             final String label,
             final String action,
@@ -848,7 +848,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String cssClasses,
             final Updatable updatable
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ), label ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), label ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       final IModel<T> model ) {
@@ -864,7 +864,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeEntityReferenceColumn(
+    protected AbstractColumn<T,String> makeEntityReferenceColumn(
             String name,
             final String entityProperty,
             final Class<? extends ModelEntity> entityClass,
@@ -872,7 +872,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String title,
             final Updatable updatable
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ), entityProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), entityProperty ) {
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
                                       IModel<T> model ) {
@@ -891,7 +891,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeEntityReferenceColumn(
+    protected AbstractColumn<T,String> makeEntityReferenceColumn(
             String name,
             final String entityProperty,
             final String choicesProperty,
@@ -900,7 +900,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String title,
             final Updatable updatable
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ), entityProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), entityProperty ) {
             @SuppressWarnings( "unchecked" )
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -921,7 +921,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
         };
     }
 
-    protected AbstractColumn<T> makeNameableReferenceColumn(
+    protected AbstractColumn<T,String> makeNameableReferenceColumn(
             String name,
             final String nameableProperty,
             final String choicesProperty,
@@ -930,7 +930,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             final String title,
             final Updatable updatable
     ) {
-        return new AbstractColumn<T>( new Model<String>( name ), nameableProperty ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ), nameableProperty ) {
             @SuppressWarnings( "unchecked" )
             public void populateItem( Item<ICellPopulator<T>> cellItem,
                                       String id,
@@ -961,12 +961,12 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
      * @param hintModel     tooltip model
      * @return a column
      */
-    protected IColumn<?> makeGeomapLinkColumn(
+    protected IColumn<?, String> makeGeomapLinkColumn(
             String name,
             final String titleProperty,
             final List<String> properties,
             final IModel<String> hintModel ) {
-        return new AbstractColumn<T>( new Model<String>( name ) ) {
+        return new AbstractColumn<T,String>( new Model<String>( name ) ) {
             public void populateItem(
                     Item<ICellPopulator<T>> cellItem,
                     String id,
@@ -1061,7 +1061,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final String cssClasses,
                 final Updatable updatable ) {
             super( id );
-            AjaxFallbackLink link;
+            AjaxLink link;
             if ( confirmationMessage != null ) {
                 link = new ConfirmedAjaxFallbackLink<String>( "link", confirmationMessage ) {
                     public void onClick( AjaxRequestTarget target ) {
@@ -1069,7 +1069,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     }
                 };
             } else {
-                link = new AjaxFallbackLink<String>( "link" ) {
+                link = new AjaxLink<String>( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, bean, action );
                     }

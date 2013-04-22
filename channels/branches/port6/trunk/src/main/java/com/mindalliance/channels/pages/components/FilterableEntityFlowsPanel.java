@@ -387,7 +387,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeFilterableLinkColumn( "In plan segment", "segment", "segment.name", EMPTY, filterable ) );
             columns.add( makeFilterableLinkColumn( "Role", "source.role", "source.role.name", EMPTY, filterable ) );
             columns.add( makeLinkColumn( "Doing", "source", "source.task", EMPTY ) );
@@ -411,7 +411,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             List<Flow> flows = flowsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "flows",
                                                    columns,
-                                                   new SortableBeanProvider<Flow>( flows, "segment.name" ),
+                                                   new SortableBeanProvider<Flow,String>( flows, "segment.name" ),
                                                    getPageSize() ) );
         }
     }
@@ -438,7 +438,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeFilterableLinkColumn( "In plan segment",
                                                    "flow.segment",
                                                    "flow.segment.name",
@@ -467,7 +467,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
             List<ActorFlow> actorFlows = flowsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "flows",
                                                    columns,
-                                                   new SortableBeanProvider<ActorFlow>( actorFlows,
+                                                   new SortableBeanProvider<ActorFlow,String>( actorFlows,
                                                                                         "flow.segment.name" ),
                                                    getPageSize() ) );
         }

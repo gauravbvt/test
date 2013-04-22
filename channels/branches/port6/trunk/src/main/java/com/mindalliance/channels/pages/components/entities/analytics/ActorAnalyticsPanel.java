@@ -413,7 +413,7 @@ public class ActorAnalyticsPanel
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeFilterableLinkColumn(
                     "Role",
@@ -437,7 +437,7 @@ public class ActorAnalyticsPanel
             add( new AjaxFallbackDefaultDataTable(
                     "employments",
                     columns,
-                    new SortableBeanProvider<Employment>(
+                    new SortableBeanProvider<Employment,String>(
                             employmentsModel.getObject(),
                             "actor.lastName" ),
                     getPageSize() ) );
@@ -476,7 +476,7 @@ public class ActorAnalyticsPanel
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
                     "Task",
@@ -515,7 +515,7 @@ public class ActorAnalyticsPanel
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "assignments",
                     columns,
-                    new SortableBeanProvider<Assignment>(
+                    new SortableBeanProvider<Assignment,String>(
                             getFilteredAssignments(),
                             "part.task" ),
                     getPageSize() ) );
@@ -561,7 +561,7 @@ public class ActorAnalyticsPanel
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
                     "From task",
@@ -603,7 +603,7 @@ public class ActorAnalyticsPanel
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
                     columns,
-                    new SortableBeanProvider<Commitment>(
+                    new SortableBeanProvider<Commitment,String>(
                             getFilteredCommitments(),
                             "sharing.source.task" ),
                     getPageSize() ) );
@@ -630,7 +630,7 @@ public class ActorAnalyticsPanel
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( this.makeColumn(
                     "Name",
@@ -644,7 +644,7 @@ public class ActorAnalyticsPanel
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "participants",
                     columns,
-                    new SortableBeanProvider<ChannelsUser>(
+                    new SortableBeanProvider<ChannelsUser,String>(
                             participants.getObject(),
                             "normalizedFullName" ),
                     getPageSize() ) );

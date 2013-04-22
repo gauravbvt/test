@@ -521,7 +521,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeColumn( "Questionnaire", "name", EMPTY ) );
             columns.add( makeColumn( "About", "about", EMPTY ) );
@@ -535,7 +535,7 @@ public class QuestionnairesPanel extends AbstractCommandablePanel implements Gui
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "questionnaires",
                     columns,
-                    new SortableBeanProvider<QuestionnaireWrapper>( questionnairesModel.getObject(),
+                    new SortableBeanProvider<QuestionnaireWrapper,String>( questionnairesModel.getObject(),
                             "createdOn" ),
                     MAX_ROWS ) );
 

@@ -15,13 +15,12 @@ import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.DomElementSizeAjaxBehavior;
 import com.mindalliance.channels.pages.components.diagrams.HierarchyDiagramPanel;
 import com.mindalliance.channels.pages.components.entities.EntityReferencesAndMatchesPanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -175,28 +174,8 @@ public class PlanTypologiesPanel extends AbstractCommandablePanel implements Gui
                 "fit",
                 new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
-        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String script;
-                if ( !reducedToFit ) {
-                    String domIdentifier = DOM_IDENTIFIER;
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl( )
-                            + "&width='+$('" + domIdentifier + "').width()+'"
-                            + "&height='+$('" + domIdentifier + "').height()";
-                } else {
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl( )
-                            + "'";
-                }
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
-            @Override
+        sizingLabel.add( new DomElementSizeAjaxBehavior( DOM_IDENTIFIER, reducedToFit ) {
+             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {

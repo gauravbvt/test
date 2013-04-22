@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -55,14 +55,14 @@ public class PartShowMenuPanel extends MenuPanel {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         // Show/hide details
         if ( isCollapsed( getPart() ) ) {
-            AjaxFallbackLink showLink = new AjaxFallbackLink( "link" ) {
+            AjaxLink showLink = new AjaxLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.Expanded, getPart() ) );
                 }
             };
             menuItems.add( new LinkMenuItem( "menuItem", new Model<String>( "Details" ), showLink ) );
         } else {
-            AjaxFallbackLink hideLink = new AjaxFallbackLink( "link" ) {
+            AjaxLink hideLink = new AjaxLink( "link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.Collapsed, getPart() ) );
                 }
@@ -71,7 +71,7 @@ public class PartShowMenuPanel extends MenuPanel {
         }
         // View checklist
 /*
-        AjaxFallbackLink checklistLink = new AjaxFallbackLink( "link" ) {
+        AjaxLink checklistLink = new AjaxLink( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, getPart() ) );
@@ -87,7 +87,7 @@ public class PartShowMenuPanel extends MenuPanel {
                 checklistLink ) );
 */
         // View part assignments
-        AjaxFallbackLink assignmentsLink = new AjaxFallbackLink( "link" ) {
+        AjaxLink assignmentsLink = new AjaxLink( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, getPart(), "assignments" ) );
@@ -100,7 +100,7 @@ public class PartShowMenuPanel extends MenuPanel {
         // View part overrides
         if ( getQueryService().isOverridden( getPart() )
                 || getQueryService().isOverriding( getPart() ) ) {
-            AjaxFallbackLink overridesLink = new AjaxFallbackLink( "link" ) {
+            AjaxLink overridesLink = new AjaxLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                     update( target, new Change( Change.Type.AspectViewed, getPart(), "overrides" ) );
@@ -112,7 +112,7 @@ public class PartShowMenuPanel extends MenuPanel {
                     overridesLink ) );
         }
         // View failure impacts
-        AjaxFallbackLink failureImpactsLink = new AjaxFallbackLink( "link" ) {
+        AjaxLink failureImpactsLink = new AjaxLink( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, getPart(), "failure" ) );
@@ -123,7 +123,7 @@ public class PartShowMenuPanel extends MenuPanel {
                 new Model<String>( "Failure impacts" ),
                 failureImpactsLink ) );
         // Dissemination
-        AjaxFallbackLink disseminationLink = new AjaxFallbackLink( "link" ) {
+        AjaxLink disseminationLink = new AjaxLink( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.AspectViewed, getPart(), "dissemination" );
@@ -136,7 +136,7 @@ public class PartShowMenuPanel extends MenuPanel {
                 new Model<String>( "Dissemination" ),
                 disseminationLink ) );
         // Surveys
-        AjaxFallbackLink surveysLink = new AjaxFallbackLink( "link" ) {
+        AjaxLink surveysLink = new AjaxLink( "link" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.AspectViewed, getPart(), "surveys" );

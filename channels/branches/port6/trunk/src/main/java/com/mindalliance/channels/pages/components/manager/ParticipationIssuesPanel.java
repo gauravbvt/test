@@ -104,7 +104,7 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            final List<IColumn<ParticipationIssue>> columns = new ArrayList<IColumn<ParticipationIssue>>();
+            final List<IColumn<ParticipationIssue,String>> columns = new ArrayList<IColumn<ParticipationIssue,String>>();
             columns.add(  makeColumn(
                     "Issue",
                     "kind",
@@ -127,10 +127,10 @@ public class ParticipationIssuesPanel extends AbstractUpdatablePanel {
                     ParticipationIssuesPanel.this ) );
 
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable<ParticipationIssue>(
+            addOrReplace( new AjaxFallbackDefaultDataTable<ParticipationIssue,String>(
                     "participationIssuesTable",
                     columns,
-                    new SortableBeanProvider<ParticipationIssue>(
+                    new SortableBeanProvider<ParticipationIssue,String>(
                             getFilteredParticipationIssues(),
                             "kind" ),
                     getPageSize() ) );

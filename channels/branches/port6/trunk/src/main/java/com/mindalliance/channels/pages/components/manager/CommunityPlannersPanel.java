@@ -275,7 +275,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            final List<IColumn<CommunityPlannerWrapper>> columns = new ArrayList<IColumn<CommunityPlannerWrapper>>();
+            final List<IColumn<CommunityPlannerWrapper,String>> columns = new ArrayList<IColumn<CommunityPlannerWrapper,String>>();
             columns.add( makeColumn( "Name", "normalizedFullName", EMPTY ) );
             columns.add( makeColumn( "Email", "email", EMPTY ) );
             columns.add( makeColumn( "Authorized by", "authorizedBy", EMPTY ) );
@@ -290,10 +290,10 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
                     CommunityPlannersPanel.this
             ) );
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable<CommunityPlannerWrapper>(
+            addOrReplace( new AjaxFallbackDefaultDataTable<CommunityPlannerWrapper,String>(
                     "communityPlannersTable",
                     columns,
-                    new SortableBeanProvider<CommunityPlannerWrapper>(
+                    new SortableBeanProvider<CommunityPlannerWrapper,String>(
                             wrappers.getObject(),
                             "normalizedFullName" ),
                     MAX_ROWS ) );

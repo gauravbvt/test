@@ -1,9 +1,7 @@
 package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramPanel;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -77,26 +75,8 @@ abstract public class AbstractResizableDiagramPanel extends AbstractUpdatablePan
                 "fit",
                 new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
-        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String script;
-                if ( !reducedToFit ) {
-                    String domIdentifier = DOM_IDENTIFIER;
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl(  )
-                            + "&width='+$('" + domIdentifier + "').width()+'"
-                            + "&height='+$('" + domIdentifier + "').height()";
-                } else {
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl(  )
-                            + "'";
-                }
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
+        sizingLabel.add(new DomElementSizeAjaxBehavior( DOM_IDENTIFIER, reducedToFit ) {
+            @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();
                 if ( !reducedToFit ) {

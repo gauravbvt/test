@@ -87,7 +87,7 @@ public class PhaseAnalyticsPanel extends AbstractUpdatablePanel implements Guida
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeLinkColumn(
                     "Plan segment",
@@ -103,7 +103,7 @@ public class PhaseAnalyticsPanel extends AbstractUpdatablePanel implements Guida
             add( new AjaxFallbackDefaultDataTable(
                     "phaseSegments",
                     columns,
-                    new SortableBeanProvider<Segment>(
+                    new SortableBeanProvider<Segment,String>(
                             segmentsModel.getObject(),
                             "name" ),
                     getPageSize() ) );

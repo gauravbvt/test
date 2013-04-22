@@ -461,7 +461,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
 
         @SuppressWarnings( "unchecked" )
         private void init() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             columns.add( makeColumn( "Requirement", "name", EMPTY ) );
             columns.add( makeColumn( "to share info", "informationAndEois", EMPTY ) );
             columns.add( makeColumn( "Tagged", "infoTagsAsString", EMPTY ) );
@@ -513,7 +513,7 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
             List<Requirement> requirements = appliedRequirementsModel.getObject();
             add( new AjaxFallbackDefaultDataTable( "requirements",
                     columns,
-                    new SortableBeanProvider<Requirement>( requirements, "name" ),
+                    new SortableBeanProvider<Requirement,String>( requirements, "name" ),
                     getPageSize() ) );
         }
     }

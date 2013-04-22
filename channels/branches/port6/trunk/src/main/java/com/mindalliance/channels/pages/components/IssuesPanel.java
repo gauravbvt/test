@@ -13,7 +13,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -58,7 +58,7 @@ public class IssuesPanel extends AbstractCommandablePanel {
     private void init() {
         add( new Label( "kind", new PropertyModel<String>( this, "kind" ) ) );
 
-        AjaxFallbackLink<?> newIssueLink = new AjaxFallbackLink( "new-issue" ) {
+        AjaxLink<?> newIssueLink = new AjaxLink( "new-issue" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new AddUserIssue( getUser().getUsername(), model.getObject() ) );

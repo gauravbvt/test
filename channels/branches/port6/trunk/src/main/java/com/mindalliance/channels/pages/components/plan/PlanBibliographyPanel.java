@@ -315,7 +315,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            final List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // columns
             columns.add( makeColumn(
                     "Type",
@@ -348,7 +348,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
             add( new AjaxFallbackDefaultDataTable(
                     "attachments",
                     columns,
-                    new SortableBeanProvider<AttachmentRelationship>(
+                    new SortableBeanProvider<AttachmentRelationship,String>(
                             attachmentRelsModel.getObject(),
                             "attachment.type.label" ),
                     getPageSize() ) );

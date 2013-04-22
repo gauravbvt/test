@@ -545,7 +545,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
 
         @SuppressWarnings( "unchecked" )
         private void initialize() {
-            List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+            List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
             // Columns
             columns.add( makeColumn( "Urgent", "urgentLabel", EMPTY ) );
             columns.add( makeColumn( "Type", "typeLabel", EMPTY ) );
@@ -560,7 +560,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "feedbacks",
                     columns,
-                    new SortableBeanProvider<FeedbackWrapper>( feedbacksModel.getObject(),
+                    new SortableBeanProvider<FeedbackWrapper,String>( feedbacksModel.getObject(),
                             "created" ),
                     MAX_FEEDBACK_ROWS ) );
         }

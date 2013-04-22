@@ -642,7 +642,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
         @SuppressWarnings("unchecked")
         private void initTable() {
-            final List<IColumn<AgencyParticipationWrapper>> columns = new ArrayList<IColumn<AgencyParticipationWrapper>>();
+            final List<IColumn<AgencyParticipationWrapper,String>> columns = new ArrayList<IColumn<AgencyParticipationWrapper,String>>();
             columns.add( makeFilterableColumn(
                     "Organization",
                     "agency",
@@ -674,10 +674,10 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                     "more",
                     OrganizationsParticipationPanel.this ) );
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable<AgencyParticipationWrapper>(
+            addOrReplace( new AjaxFallbackDefaultDataTable<AgencyParticipationWrapper,String>(
                     "organizationParticipationTable",
                     columns,
-                    new SortableBeanProvider<AgencyParticipationWrapper>(
+                    new SortableBeanProvider<AgencyParticipationWrapper,String>(
                             getFilteredOrganizationParticipations(),
                             "agencyName" ),
                     getPageSize() ) );

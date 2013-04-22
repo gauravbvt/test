@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages;
 
-import com.google.code.jqwicket.JQComponentOnBeforeRenderListenerFix;
+import com.google.code.jqwicket.JQComponentOnBeforeRenderListener;
 import com.google.code.jqwicket.JQContributionConfig;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
@@ -219,13 +219,11 @@ public class Channels extends WebApplication
                         .withJQueryUiJs( new JavaScriptResourceReference(Channels.class, "res/jquery-1.8.16-ui.min.js"  ) )
                         .withJQueryUiCss( new CssResourceReference( Channels.class, "res/jquery-1.8.16-ui.css" ) );
 
-        /*
         getComponentPreOnBeforeRenderListeners()
                 .add( new JQComponentOnBeforeRenderListener( jqContributionConfig ) );
-       */
 
-        getComponentPreOnBeforeRenderListeners()
-                .add( new JQComponentOnBeforeRenderListenerFix( jqContributionConfig ) );   // todo - remove temporary FIX when JQWicket issue #29 fixed
+       /* getComponentPreOnBeforeRenderListeners()
+                .add( new JQComponentOnBeforeRenderListenerFix( jqContributionConfig ) );   // todo - remove temporary FIX when JQWicket issue #29 fixed*/
 
         getComponentInstantiationListeners().add( getInjector() );
 

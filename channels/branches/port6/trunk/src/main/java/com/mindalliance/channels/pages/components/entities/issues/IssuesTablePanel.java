@@ -50,14 +50,14 @@ public class IssuesTablePanel extends AbstractTablePanel {
 
     @SuppressWarnings( "unchecked" )
     private void init() {
-        List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
+        List<IColumn<?,String>> columns = new ArrayList<IColumn<?,String>>();
 
         // columns
-        columns.add( new PropertyColumn<String>( new Model<String>( "Description" ), "description", "description" ) );
+        columns.add( new PropertyColumn<String,String>( new Model<String>( "Description" ), "description", "description" ) );
         columns.add( makeLinkColumn( "About", "about", "about.label", "(no name)" ) );
-        columns.add( new PropertyColumn<String>( new Model<String>( "Type" ), "type", "type" ) );
-        columns.add( new PropertyColumn<String>( new Model<String>( "Waived?" ), "waivedString", "waivedString" ) );
-        columns.add( new PropertyColumn<String>( new Model<String>( "Severity" ),
+        columns.add( new PropertyColumn<String,String>( new Model<String>( "Type" ), "type", "type" ) );
+        columns.add( new PropertyColumn<String,String>( new Model<String>( "Waived?" ), "waivedString", "waivedString" ) );
+        columns.add( new PropertyColumn<String,String>( new Model<String>( "Severity" ),
                                                  "severity.ordinal",
                                                  "severity.negativeLabel" ) );
         columns.add( makeColumn( "Remediation", "remediation", "remediation", EMPTY ) );
@@ -67,7 +67,7 @@ public class IssuesTablePanel extends AbstractTablePanel {
         List<Issue> issues = analyst.findAllIssuesFor( getQueryService(), resourceSpec, specific );
         add( new AjaxFallbackDefaultDataTable( "issues-table",
                                                columns,
-                                               new SortableBeanProvider<Issue>( issues, "about.name" ),
+                                               new SortableBeanProvider<Issue,String>( issues, "about.name" ),
                                                getPageSize() ) );
     }
 }
