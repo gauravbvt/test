@@ -11,7 +11,6 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -125,7 +124,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
                     new LinkMenuItem(
                             id,
                             new PropertyModel<String>( moWrapper, "title" ),
-                            new AjaxFallbackLink( "link" ) {
+                            new AjaxLink( "link" ) {
                                 @Override
                                 public void onClick( AjaxRequestTarget target ) {
                                     update(
@@ -148,7 +147,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 id,
                 new Model<String>( getCommander().getUndoTitle( getUser().getUsername() ) ),
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         if ( enabled )
@@ -172,7 +171,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 id,
                 new Model<String>( getCommander().getRedoTitle( getUser().getUsername() ) ),
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         if ( enabled ) update( target, getCommander().redo( getUser().getUsername() ) );
@@ -196,7 +195,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
         LinkMenuItem linkMenuItem = new LinkMenuItem(
                 id,
                 new Model<String>( "Send message" ),
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         if ( enabled ) update( target,
@@ -242,7 +241,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
                                     }
                                 }
                                 :
-                                new AjaxFallbackLink( "link" ) {
+                                new AjaxLink( "link" ) {
                                     @Override
                                     public void onClick( AjaxRequestTarget target ) {
                                         // do nothing
@@ -277,7 +276,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
         return new LinkMenuItem(
                 "menuItem",
                 new Model<String>( expanded ? expandedTitle : collapsedTitle ),
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         Change change = new Change(
@@ -295,7 +294,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
 
         return new LinkMenuItem( "menuItem",
                 new Model<String>( isExpanded( id ) ? expandedTitle : collapsedTitle ),
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         final boolean expanded = isExpanded( id );
@@ -310,7 +309,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
 
         return new LinkMenuItem( "menuItem",
                 new Model<String>( aspect ),
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         Change change = new Change( Change.Type.AspectViewed, id, aspect );

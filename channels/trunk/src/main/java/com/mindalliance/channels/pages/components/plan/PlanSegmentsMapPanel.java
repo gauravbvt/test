@@ -20,15 +20,14 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.analysis.graph.SegmentRelationship;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramAjaxBehavior;
 import com.mindalliance.channels.pages.components.diagrams.PlanMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import com.mindalliance.channels.pages.components.segment.ExternalFlowsPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
@@ -176,24 +175,7 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     private void addPlanSizing() {
         sizingLabel = new Label( "fit", new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
-        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String script;
-                if ( !reducedToFit ) {
-                    String domIdentifier = DOM_IDENTIFIER;
-                    script =
-                            "wicketAjaxGet('" + getCallbackUrl(  ) + "&width='+$('" + domIdentifier + "').width()+'"
-                            + "&height='+$('" + domIdentifier + "').height()";
-                } else {
-                    script = "wicketAjaxGet('" + getCallbackUrl(  ) + "'";
-                }
-                String onclick =
-                        ( "{" + generateCallbackScript( script ) + " return false;}" ).replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
+        sizingLabel.add( new AbstractDiagramAjaxBehavior( DOM_IDENTIFIER, reducedToFit ) {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();

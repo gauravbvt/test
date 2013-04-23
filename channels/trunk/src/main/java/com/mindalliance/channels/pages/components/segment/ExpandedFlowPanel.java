@@ -42,7 +42,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -330,7 +330,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         tagsContainer.setOutputMarkupId( true );
         makeVisible( tagsContainer, !isShowSimpleForm() );
         add( tagsContainer );
-        AjaxFallbackLink tagsLink = new AjaxFallbackLink( "tagsLink" ) {
+        AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS ) );
@@ -430,7 +430,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addEOIsEditLink() {
-        AjaxFallbackLink editEOIsLink = new AjaxFallbackLink( "editEOIs" ) {
+        AjaxLink editEOIsLink = new AjaxLink( "editEOIs" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.AspectViewed, getFlow(), EOIS ) );

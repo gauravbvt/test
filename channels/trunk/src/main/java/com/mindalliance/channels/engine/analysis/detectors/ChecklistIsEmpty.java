@@ -36,9 +36,11 @@ public class ChecklistIsEmpty extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         if ( checklist.isEmpty() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
-            issue.setDescription( "The checklist contains only implied communication steps." );
+            issue.setDescription( "The checklist is empty; it contains no step." );
             issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );
-            issue.setRemediation( "Add action steps\nor set conditions or prerequisites on steps." );
+            issue.setRemediation( "Add action steps" +
+                    "\nor add sent notifications or requests to the task" +
+                    "\nor have the task be triggered by a request (one step will be to answer the request)." );
             issues.add( issue );
         }
         return issues;
@@ -61,6 +63,6 @@ public class ChecklistIsEmpty extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Task has a default checklist";
+        return "Task has an empty checklist";
     }
 }

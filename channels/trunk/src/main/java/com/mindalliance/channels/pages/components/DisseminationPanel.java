@@ -9,16 +9,15 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramAjaxBehavior;
 import com.mindalliance.channels.pages.components.diagrams.DisseminationDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -175,27 +174,7 @@ public class DisseminationPanel extends AbstractFloatingCommandablePanel {
                 new Model<String>( reducedToFit ? "Full size" : "Reduce to fit" ) );
         sizingLabel.setOutputMarkupId( true );
         // TODO - Copy & Paste - abstract this out
-        sizingLabel.add( new AbstractDefaultAjaxBehavior() {
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String script;
-                if ( !reducedToFit ) {
-                    String domIdentifier = DOM_IDENTIFIER;
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl(  )
-                            + "&width='+$('" + domIdentifier + "').width()+'"
-                            + "&height='+$('" + domIdentifier + "').height()";
-                } else {
-                    script = "wicketAjaxGet('"
-                            + getCallbackUrl(  )
-                            + "'";
-                }
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
+        sizingLabel.add( new AbstractDiagramAjaxBehavior( DOM_IDENTIFIER, reducedToFit ) {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();

@@ -25,7 +25,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -108,7 +108,7 @@ public class FlowListPanel extends AbstractCommandablePanel {
         titleContainer.add( new Label( "title" ) );
         addShowMenu();
         addActionsMenu();
-        AjaxFallbackLink newLink = new AjaxFallbackLink( "new" ) {
+        AjaxLink newLink = new AjaxLink( "new" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 Part n = (Part) getNode();

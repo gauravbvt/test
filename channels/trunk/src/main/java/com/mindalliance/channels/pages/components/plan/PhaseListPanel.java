@@ -13,7 +13,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
@@ -74,7 +73,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
             choices = new ArrayList<String>();
         }
         // text field
-        TextField<String> nameField = new AutoCompleteTextField<String>(
+        AutoCompleteTextField<String> nameField = new AutoCompleteTextField<String>(
                 "name-input",
                 new PropertyModel<String>( wrapper, "name" ),
                 getAutoCompleteSettings() ) {
@@ -87,7 +86,8 @@ public class PhaseListPanel extends AbstractCommandablePanel {
 
             }
         };
-        nameField.setVisible( isLockedByUser( getPlan() ) && wrapper.isMarkedForCreation() );
+        nameField.setOutputMarkupId( true );
+        makeVisible( nameField, isLockedByUser( getPlan() ) && wrapper.isMarkedForCreation() );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makePhasesTable();

@@ -9,10 +9,9 @@ import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -74,7 +73,7 @@ public class PlanShowMenuPanel extends MenuPanel {
     private LinkMenuItem newLink( String title, final Plan plan, final String action ) {
         return newLink(
                 title,
-                new AjaxFallbackLink( "link" ) {
+                new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         update( target, new Change( Change.Type.Expanded, plan, action ) );
@@ -82,7 +81,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                 } );
     }
 
-    private static LinkMenuItem newLink( String title, Link<?> link ) {
+    private static LinkMenuItem newLink( String title, AjaxLink<?> link ) {
         return new LinkMenuItem(
                 "menuItem",
                 new Model<String>( title ),

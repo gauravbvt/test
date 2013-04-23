@@ -17,7 +17,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
@@ -81,7 +81,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                 Label nameLabel = new Label( "name", systemName );
                 item.add( nameLabel );
                 // details
-                AjaxFallbackLink details = new AjaxFallbackLink( "details" ) {
+                AjaxLink details = new AjaxLink( "details" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         addClassificationSystemPanel( systemName );
                         target.add( classificationSystemPanel );

@@ -14,7 +14,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -126,7 +126,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                                     new Model<String>( "font-weight: bold" ) ) );
                 }
                 item.add( nameLabel );
-                AjaxFallbackLink messageLink = new AjaxFallbackLink( "plannerMessageLink" ) {
+                AjaxLink messageLink = new AjaxLink( "plannerMessageLink" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         update( target, new Change( Change.Type.Communicated, vote.getUsername() ) );
                     }

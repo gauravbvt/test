@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -128,7 +127,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         Label nameLabel = new Label( "language", language );
         nameLabel.setVisible( !language.isEmpty() );
         item.add( nameLabel );
-        TextField<String> newLanguageField = new AutoCompleteTextField<String>(
+        AutoCompleteTextField<String> newLanguageField = new AutoCompleteTextField<String>(
                 "newLanguage",
                 new PropertyModel<String>( this, "language" ),
                 getAutoCompleteSettings() ) {
@@ -148,7 +147,8 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
                 update( target, new Change( Change.Type.Updated, getActor(), "languages" ) );
             }
         } );
-        newLanguageField.setVisible( language.isEmpty() && isLockedByUser( getActor() ) );
+        newLanguageField.setOutputMarkupId( true );
+        makeVisible( newLanguageField, language.isEmpty() && isLockedByUser( getActor() ) );
         item.add( newLanguageField );
     }
 

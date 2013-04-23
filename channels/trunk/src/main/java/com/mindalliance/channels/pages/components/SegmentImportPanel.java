@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.pages.PlanPage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -52,7 +52,7 @@ public class SegmentImportPanel extends AbstractCommandablePanel {
     }
 
     private void addCancel() {
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "cancel" ) {
+        AjaxLink closeLink = new AjaxLink( "cancel" ) {
             public void onClick( AjaxRequestTarget target ) {
                 close( target );
             }

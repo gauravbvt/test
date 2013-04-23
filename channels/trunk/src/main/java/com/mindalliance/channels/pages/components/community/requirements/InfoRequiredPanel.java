@@ -120,7 +120,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
         eoisContainer.add( eoisListView );
         // New eoi
         final List<String> choices = getQueryService().findAllEoiNames();
-        TextField<String> newEoiField = new AutoCompleteTextField<String>(
+        AutoCompleteTextField<String> newEoiField = new AutoCompleteTextField<String>(
                 "addEoi",
                 new PropertyModel<String>( this, "newEoiName"  ),
                 getAutoCompleteSettings() ) {
@@ -141,6 +141,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, requirement, "eois" ) );
             }
         } );
+        newEoiField.setOutputMarkupId( true );
         makeVisible( newEoiField, isLockedByUser( requirement ) );
         eoisContainer.add( newEoiField );
     }

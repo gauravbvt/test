@@ -37,7 +37,7 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             Object object,
             HierarchicalStreamWriter writer,
             MarshallingContext context ) {
-        Checklist checklist = (Checklist)object;
+        Checklist checklist = (Checklist) object;
         List<Step> effectiveSteps = checklist.listEffectiveSteps();
         List<Condition> effectiveConditions = checklist.listEffectiveConditions();
         for ( ActionStep actionStep : checklist.getActionSteps() ) {
@@ -46,10 +46,13 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.setValue( actionStep.getAction() );
             writer.endNode();
         }
-        for (LocalCondition localCondition : checklist.getLocalConditions()) {
-            writer.startNode( "localCondition" );
-            writer.setValue( localCondition.getState() );
-            writer.endNode();
+        for ( Condition condition : checklist.listEffectiveConditions() ) {
+            if ( condition.isLocalCondition() ) {
+                LocalCondition localCondition = (LocalCondition) condition;
+                writer.startNode( "localCondition" );
+                writer.setValue( localCondition.getState() );
+                writer.endNode();
+            }
         }
         for ( StepOrder stepOrder : checklist.listEffectiveStepOrders( effectiveSteps ) ) {
             writer.startNode( "stepOrder" );
@@ -61,7 +64,7 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.endNode();
             writer.endNode();
         }
-        for ( StepGuard stepGuard : checklist.listEffectiveStepGuards( effectiveSteps, effectiveConditions )) {
+        for ( StepGuard stepGuard : checklist.listEffectiveStepGuards( effectiveSteps, effectiveConditions ) ) {
             writer.startNode( "stepGuard" );
             writer.addAttribute( "positive", Boolean.toString( stepGuard.isPositive() ) );
             writer.startNode( "conditionRef" );
@@ -72,18 +75,18 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.endNode();
             writer.endNode();
         }
-       // confirmed
-            writer.startNode( "confirmed" );
-            writer.setValue( Boolean.toString( checklist.isConfirmed() ) );
-            writer.endNode();
+        // confirmed
+        writer.startNode( "confirmed" );
+        writer.setValue( Boolean.toString( checklist.isConfirmed() ) );
+        writer.endNode();
     }
 
     @Override
     public Object unmarshal(
             HierarchicalStreamReader reader,
             UnmarshallingContext context ) {
-        Checklist checklist = new Checklist(  );
-        while( reader.hasMoreChildren() ) {
+        Checklist checklist = new Checklist();
+        while ( reader.hasMoreChildren() ) {
             reader.moveDown();
             String nodeName = reader.getNodeName();
             if ( nodeName.equals( "actionStep" ) ) {
@@ -105,7 +108,7 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 stepOder.setStepRef( reader.getValue() );
                 reader.moveUp();
                 checklist.addStepOrder( stepOder );
-            }  else if ( nodeName.equals( "stepGuard" ) ) {
+            } else if ( nodeName.equals( "stepGuard" ) ) {
                 StepGuard stepGuard = new StepGuard();
                 boolean positive = Boolean.parseBoolean( reader.getAttribute( "positive" ) );
                 stepGuard.setPositive( positive );

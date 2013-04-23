@@ -6,7 +6,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -85,7 +85,7 @@ public class NameRangePanel extends Panel {
                 new PropertyModel<List<NameRange>>( this, "nameRanges" ) ) {
             protected void populateItem( ListItem<NameRange> item ) {
                 final NameRange range = item.getModelObject();
-                AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
+                AjaxLink link = new AjaxLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         rangeable.setNameRange( target, range );
                     }

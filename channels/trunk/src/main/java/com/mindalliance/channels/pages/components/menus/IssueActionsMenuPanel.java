@@ -14,7 +14,7 @@ import com.mindalliance.channels.core.command.commands.RemoveIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.UserIssue;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -70,7 +70,7 @@ public class IssueActionsMenuPanel extends MenuPanel {
             // Show/hide details
             menuItems.add( new LinkMenuItem( "menuItem",
                     new Model<String>( isCollapsed ? "Show details" : "Hide details" ),
-                    new AjaxFallbackLink( "link" ) {
+                    new AjaxLink( "link" ) {
                         @Override
                         public void onClick( AjaxRequestTarget target ) {
                             update( target,

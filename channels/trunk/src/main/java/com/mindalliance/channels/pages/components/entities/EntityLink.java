@@ -4,9 +4,8 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -40,7 +39,7 @@ public class EntityLink extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        Link link = new AjaxFallbackLink( "link" ) {
+        AjaxLink link = new AjaxLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, entity ) );
             }

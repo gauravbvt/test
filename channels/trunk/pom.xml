@@ -609,6 +609,15 @@
                         <phase>generate-resources</phase>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun</groupId>
+                        <artifactId>tools</artifactId>
+                        <version>${java.version}</version>
+                        <scope>system</scope>
+                        <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -671,7 +680,7 @@
                 </configuration>
             </plugin>
             <!-- Docbkx -->
-            <plugin>
+ <!--           <plugin>
                 <groupId>com.agilejava.docbkx</groupId>
                 <artifactId>docbkx-maven-plugin</artifactId>
                 <version>2.0.13</version>
@@ -686,18 +695,19 @@
                         </configuration>
                         <phase>generate-resources</phase>
                     </execution>
- <!--                   <execution>
-                        <id>pdf</id>
-                        <goals>
-                            <goal>generate-pdf</goal>
-                        </goals>
-                        <configuration>
-                            <ignoreImageScaling>false</ignoreImageScaling>
-                            <pageOrientation>landscape</pageOrientation>
-                        </configuration>
-                        <phase>pre-site</phase>
-                    </execution>
--->                </executions>
+                    &lt;!&ndash;                   <execution>
+                                           <id>pdf</id>
+                                           <goals>
+                                               <goal>generate-pdf</goal>
+                                           </goals>
+                                           <configuration>
+                                               <ignoreImageScaling>false</ignoreImageScaling>
+                                               <pageOrientation>landscape</pageOrientation>
+                                           </configuration>
+                                           <phase>pre-site</phase>
+                                       </execution>
+                   &ndash;&gt;
+                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.docbook</groupId>
@@ -716,11 +726,11 @@
                     <htmlStylesheet>../../css/doc.css</htmlStylesheet>
                 </configuration>
             </plugin>
-
-            <!--<plugin>
+-->
+      <!--      <plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
-                <version>1.1.1</version>
+               &lt;!&ndash; <version>1.1.1</version>&ndash;&gt;
                 <executions>
                     <execution>
                         <id>generate-rebel-xml</id>
@@ -813,12 +823,14 @@
                             <container>
                                 <containerId>tomcat6x</containerId>
                                 <zipUrlInstaller>
-                                    <url>http://mirror.nexcess.net/apache/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.zip</url>
+                                    <url>
+                                        http://mirror.nexcess.net/apache/tomcat/tomcat-6/v6.0.35/bin/apache-tomcat-6.0.35.zip
+                                    </url>
                                     <downloadDir>${project.build.directory}/downloads</downloadDir>
                                     <extractDir>${project.build.directory}/extracts</extractDir>
                                 </zipUrlInstaller>
                             </container>
-                            
+
                             <configuration>
                                 <properties>
                                     <cargo.jvmargs>
@@ -946,7 +958,7 @@
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
-        <wicket.version>1.5.7</wicket.version>
+        <wicket.version>1.5.10</wicket.version>
         <!--<jetty.version>6.1.4</jetty.version>-->
         <!--<slf4j.version>1.5.11</slf4j.version>-->
 

@@ -13,7 +13,7 @@ import com.mindalliance.channels.pages.components.ClassificationsPanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -53,7 +53,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     /**
      * Reset to null cast choice link.
      */
-    private AjaxFallbackLink castResetLink;
+    private AjaxLink castResetLink;
     /**
      * Address pattern field.
      */
@@ -167,7 +167,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     private void addCastReset() {
-        castResetLink = new AjaxFallbackLink( "resetChoice" ) {
+        castResetLink = new AjaxLink( "resetChoice" ) {
             public void onClick( AjaxRequestTarget target ) {
                 setCast( null );
                 addCastChoice();

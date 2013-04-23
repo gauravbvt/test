@@ -20,7 +20,7 @@ import org.apache.commons.collections.TransformerUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -56,11 +56,11 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
     /**
      * Unlinked classification link.
      */
-    AjaxFallbackLink unlinkedClassificationsLink;
+    AjaxLink unlinkedClassificationsLink;
     /**
      * Linked classification link.
      */
-    AjaxFallbackLink linkedClassificationsLink;
+    AjaxLink linkedClassificationsLink;
     private boolean canTransform;
 
     public EOIsEditPanel(
@@ -83,7 +83,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
     }
 
     private void addLinkToClassifications() {
-        AjaxFallbackLink classificationsLink = new AjaxFallbackLink( "classifications" ) {
+        AjaxLink classificationsLink = new AjaxLink( "classifications" ) {
             public void onClick( AjaxRequestTarget target ) {
                 update( target, new Change( Change.Type.Expanded, Channels.ALL_CLASSIFICATIONS ) );
             }
@@ -121,7 +121,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         transformationHeaderContainer.setOutputMarkupId( true );
         eoisContainer.addOrReplace( transformationHeaderContainer );
         // Auto populate eois
-        AjaxFallbackLink autoPopulateLink = new AjaxFallbackLink( "autoPopulate" ) {
+        AjaxLink autoPopulateLink = new AjaxLink( "autoPopulate" ) {
             public void onClick( AjaxRequestTarget target ) {
                 boolean changed = autoPopulate();
                 if ( changed ) {
@@ -136,7 +136,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         makeVisible( autoPopulateLink, !isReadOnly() && canBePopulated() );
         // Link classifications
         eoisContainer.addOrReplace( autoPopulateLink );
-        unlinkedClassificationsLink = new AjaxFallbackLink( "unlinkClassifications" ) {
+        unlinkedClassificationsLink = new AjaxLink( "unlinkClassifications" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = linkClassifications();
                 updateLinkingLinks( target );
@@ -151,7 +151,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         classificationsHeaderContainer.add( unlinkedClassificationsLink );
         // Unlink classifications
         eoisContainer.add( autoPopulateLink );
-        linkedClassificationsLink = new AjaxFallbackLink( "linkClassifications" ) {
+        linkedClassificationsLink = new AjaxLink( "linkClassifications" ) {
             public void onClick( AjaxRequestTarget target ) {
                 unlinkClassifications();
                 updateLinkingLinks( target );
@@ -361,7 +361,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
                 && !( (Flow) getEOIHolder() ).isNeed()
                 && !eoiWrapper.isMarkedForCreation() );
         item.addOrReplace( traceContainer );
-        AjaxFallbackLink traceLink = new AjaxFallbackLink( "trace" ) {
+        AjaxLink traceLink = new AjaxLink( "trace" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.AspectViewed, getEOIHolder(), "dissemination" );
                 change.addQualifier( "show", canTransform ? "targets" : "sources" );   // todo - isSend ? ... : ...

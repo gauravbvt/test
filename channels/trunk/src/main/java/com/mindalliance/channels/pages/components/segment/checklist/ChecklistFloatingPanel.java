@@ -84,6 +84,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
+        getPart().getChecklist().cleanUp();
         Change change = new Change( Change.Type.AspectClosed, getPart(), "checklist" );
         update( target, change );
     }

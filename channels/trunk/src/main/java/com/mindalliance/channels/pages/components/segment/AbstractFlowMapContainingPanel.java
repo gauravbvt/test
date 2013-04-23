@@ -4,13 +4,12 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.diagrams.AbstractDiagramAjaxBehavior;
 import com.mindalliance.channels.pages.components.diagrams.FlowMapDiagramPanel;
 import com.mindalliance.channels.pages.components.diagrams.Settings;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -248,20 +247,7 @@ public abstract class AbstractFlowMapContainingPanel extends AbstractCommandable
 
     private void addReduceToFitControl() {
         WebMarkupContainer reduceToFit = new WebMarkupContainer( "fit" );
-        reduceToFit.add( new AbstractDefaultAjaxBehavior() {
-            @Override
-            protected void onComponentTag( ComponentTag tag ) {
-                super.onComponentTag( tag );
-                String domIdentifier = getFlowMapDomId();
-                String script = "wicketAjaxGet('"
-                        + getCallbackUrl()
-                        + "&width='+$('" + domIdentifier + "').width()+'"
-                        + "&height='+$('" + domIdentifier + "').height()";
-                String onclick = ( "{" + generateCallbackScript( script ) + " return false;}" )
-                        .replaceAll( "&amp;", "&" );
-                tag.put( "onclick", onclick );
-            }
-
+        reduceToFit.add( new AbstractDiagramAjaxBehavior( getFlowMapDomId(), false ) {
             @Override
             protected void respond( AjaxRequestTarget target ) {
                 RequestCycle requestCycle = RequestCycle.get();

@@ -53,10 +53,7 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public boolean isEmpty() {
-        return actionSteps.isEmpty()
-                && localConditions.isEmpty()
-                && stepOrders.isEmpty()
-                && stepGuards.isEmpty();
+        return listEffectiveSteps().isEmpty();
     }
 
     public List<Step> listEffectiveSteps() {

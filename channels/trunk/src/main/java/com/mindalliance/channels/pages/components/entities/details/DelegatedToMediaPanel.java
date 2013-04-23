@@ -11,7 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -154,7 +154,7 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
 
     private void addItemDeleteMedium( ListItem<MediumWrapper> item ) {
         final MediumWrapper wrapper = item.getModelObject();
-        AjaxFallbackLink deleteLink = new AjaxFallbackLink(
+        AjaxLink deleteLink = new AjaxLink(
                 "delete" ) {
             public void onClick( AjaxRequestTarget target ) {
                 wrapper.deleteMedium();

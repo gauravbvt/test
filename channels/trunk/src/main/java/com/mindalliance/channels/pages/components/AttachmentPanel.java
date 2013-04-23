@@ -16,7 +16,6 @@ import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -364,7 +363,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
 
     private void addCopyImage( ListItem<Attachment> item ) {
         final Attachment attachment = item.getModelObject();
-        AjaxFallbackLink copyLink = new AjaxFallbackLink( "copy" ) {
+        AjaxLink copyLink = new AjaxLink( "copy" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = doCommand( new CopyAttachment( getUser().getUsername(), attachment ) );
                 change.setType( Change.Type.Copied );

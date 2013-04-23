@@ -17,7 +17,7 @@ import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -236,7 +236,7 @@ public abstract class AbstractIssueTablePanel extends AbstractUpdatablePanel imp
 
         private SurveyLinkPanel( String id, boolean surveyed, final Issue issue ) {
             super( id );
-            AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
+            AjaxLink link = new AjaxLink( "link" ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {
                         RFISurvey survey = surveysDAO.getOrCreateRemediationSurvey(

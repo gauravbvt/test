@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.components;
 
 import com.mindalliance.channels.core.command.Change;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 
@@ -34,7 +34,7 @@ public class MessagePanel extends AbstractCommandablePanel {
     }
 
     private void addClose() {
-        AjaxFallbackLink closeLink = new AjaxFallbackLink( "close" ) {
+        AjaxLink closeLink = new AjaxLink( "close" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.None );
                 change.setMessage( "" );

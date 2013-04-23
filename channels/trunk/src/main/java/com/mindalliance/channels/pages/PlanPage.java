@@ -81,7 +81,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -666,7 +665,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addRefreshNow() {
-        refreshNeededComponent = new AjaxFallbackLink( "refresh-needed" ) {
+        refreshNeededComponent = new AjaxLink( "refresh-needed" ) {
             public void onClick( AjaxRequestTarget target ) {
                 getCommander().clearTimeOut( getUser().getUsername() );
                 reacquireLocks();

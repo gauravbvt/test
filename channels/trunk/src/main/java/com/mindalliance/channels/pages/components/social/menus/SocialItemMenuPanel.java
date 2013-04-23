@@ -10,8 +10,7 @@ import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import com.mindalliance.channels.social.model.UserMessage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -83,7 +82,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         if ( userInfo != null ) {
             /*final Actor actor = findActor( userInfo );
             if ( actor != null && showProfile ) {
-                Link link = new AjaxFallbackLink( "link" ) {
+                Link link = new AjaxLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         update( target, new Change( Change.Type.Expanded, actor ) );
                     }
@@ -95,7 +94,7 @@ public class SocialItemMenuPanel extends MenuPanel {
             }
 */            final String participant = userInfo.getUsername();
             if ( participant != null && !participant.equals( currentUsername ) ) {
-                Link link = new AjaxFallbackLink( "link" ) {
+                AjaxLink link = new AjaxLink( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, participant, SocialPanel.SEND_MESSAGE );
                     }
@@ -110,7 +109,7 @@ public class SocialItemMenuPanel extends MenuPanel {
         if ( po != null && po instanceof UserMessage ) {
             UserMessage message = (UserMessage) po;
             if ( allowMessageDelete && message.getFromUsername().equals( currentUsername ) ) {
-                Link deleteLink = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
+                AjaxLink deleteLink = new ConfirmedAjaxFallbackLink( "link", "Delete this message? (\"Unsend\" it)" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, po, SocialPanel.DELETE_MESSAGE );
                     }
@@ -121,7 +120,7 @@ public class SocialItemMenuPanel extends MenuPanel {
                         deleteLink ) );
 
                 if ( getQueryService().findUserEmail( message.getFromUsername() ) != null ) {
-                    Link emailLink = new AjaxFallbackLink( "link" ) {
+                    AjaxLink emailLink = new AjaxLink( "link" ) {
                         public void onClick( AjaxRequestTarget target ) {
                             updatable.update( target, po, SocialPanel.EMAIL_MESSAGE );
                         }

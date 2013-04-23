@@ -37,7 +37,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
     private String editedStepRef;
     private TextField<String> actionStepText;
     private WebMarkupContainer stepsContainer;
-    private AjaxCheckBox confirmedCheckBox;
+    private WebMarkupContainer confirmationContainer;
 
     public ChecklistEditorPanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel );
@@ -84,7 +84,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
                 addStepPanels();
                 target.add( stepsContainer );
                 target.add( actionStepText );
-                update( target, new Change( Change.Type.Updated, getPart(), "checklist") );
+                update( target, new Change( Change.Type.Updated, getPart(), "checklist" ) );
             }
         } );
         addTipTitle( actionStepText, "Enter a new action step and press return" );
@@ -110,22 +110,28 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
     }
 
     public void setNewActionStep( String val ) {
-        String action = ChannelsUtils.cleanUpPhrase( val );
-        if ( !action.isEmpty() ) {
-            ActionStep actionStep = new ActionStep( action );
-            Command command = new UpdateSegmentObject( getUsername(),
-                    getPart(),
-                    "checklist.actionSteps",
-                    actionStep,
-                    UpdateObject.Action.Add );
-            command.makeUndoable( false );
-            doCommand( command );
-            editedStepRef = actionStep.getRef();
+        if ( val != null ) {
+            String action = ChannelsUtils.cleanUpPhrase( val );
+            if ( !action.isEmpty() ) {
+                ActionStep actionStep = new ActionStep( action );
+                Command command = new UpdateSegmentObject( getUsername(),
+                        getPart(),
+                        "checklist.actionSteps",
+                        actionStep,
+                        UpdateObject.Action.Add );
+                command.makeUndoable( false );
+                doCommand( command );
+                editedStepRef = actionStep.getRef();
+            }
         }
     }
 
     private void addConfirmation() {
-        confirmedCheckBox = new AjaxCheckBox(
+        confirmationContainer = new WebMarkupContainer( "confirmationContainer" );
+        confirmationContainer.setOutputMarkupId( true );
+        addOrReplace( confirmationContainer );
+        makeVisible( confirmationContainer, !getChecklist().listEffectiveSteps().isEmpty() );
+        AjaxCheckBox confirmedCheckBox = new AjaxCheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( this, "confirmed" )
         ) {
@@ -136,8 +142,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
                 update( target, change );
             }
         };
-        confirmedCheckBox.setOutputMarkupId( true );
-        addOrReplace( confirmedCheckBox );
+        confirmationContainer.add( confirmedCheckBox );
     }
 
     public boolean isConfirmed() {
@@ -176,7 +181,7 @@ public class ChecklistEditorPanel extends AbstractCommandablePanel {
             addStepPanels();
             target.add( stepsContainer );
             addConfirmation();
-            target.add( confirmedCheckBox );
+            target.add( confirmationContainer );
             if ( !change.isExpanded() && !change.isCollapsed() ) {
                 super.updateWith( target, change, updated );
             }

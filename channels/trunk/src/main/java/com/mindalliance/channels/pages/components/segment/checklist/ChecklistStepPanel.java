@@ -271,10 +271,10 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         ifsContainer.add( addIfContainer );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepGuard> getIfGuards() {
         return (List<StepGuard>) CollectionUtils.select(
-                getChecklist().getStepGuards(),
+                getChecklist().listEffectiveStepGuardsFor( step, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -342,10 +342,10 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         unlessesContainer.add( addUnlessContainer );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepGuard> getUnlessGuards() {
         return (List<StepGuard>) CollectionUtils.select(
-                getChecklist().getStepGuards(),
+                getChecklist().listEffectiveStepGuardsFor( step, false ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -436,7 +436,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addAfterContainer.add( prereqStepChoice );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Step> getPrerequisiteChoices() {
         List<Step> choices = getChecklist().listEffectiveSteps();
         choices.remove( step );

@@ -154,31 +154,33 @@ public class StepGuardPanel extends AbstractCommandablePanel {
     }
 
     public void setNewCondition( String val ) {
-        String state = ChannelsUtils.cleanUpPhrase( val );
-        if ( !val.isEmpty() ) {
-            LocalCondition localCondition = new LocalCondition( state );
-            Command addLocalCondition = new UpdateSegmentObject(
-                    getUsername(),
-                    part,
-                    "checklist.localConditions",
-                    localCondition,
-                    UpdateObject.Action.Add
-            );
-            addLocalCondition.makeUndoable( false );
-            doCommand( addLocalCondition );
+        if ( val != null ) {
+            String state = ChannelsUtils.cleanUpPhrase( val );
+            if ( !val.isEmpty() ) {
+                LocalCondition localCondition = new LocalCondition( state );
+                Command addLocalCondition = new UpdateSegmentObject(
+                        getUsername(),
+                        part,
+                        "checklist.localConditions",
+                        localCondition,
+                        UpdateObject.Action.Add
+                );
+                addLocalCondition.makeUndoable( false );
+                doCommand( addLocalCondition );
 
-            StepGuard stepGuard = new StepGuard( localCondition, step, positive );
-            Command addStepGuard = new UpdateSegmentObject(
-                    getUsername(),
-                    part,
-                    "checklist.stepGuards",
-                    stepGuard,
-                    UpdateObject.Action.Add
-            );
-            addStepGuard.makeUndoable( false );
-            doCommand( addStepGuard );
+                StepGuard stepGuard = new StepGuard( localCondition, step, positive );
+                Command addStepGuard = new UpdateSegmentObject(
+                        getUsername(),
+                        part,
+                        "checklist.stepGuards",
+                        stepGuard,
+                        UpdateObject.Action.Add
+                );
+                addStepGuard.makeUndoable( false );
+                doCommand( addStepGuard );
+            }
+            otherCondition = false;
         }
-        otherCondition = false;
     }
 
     private Checklist getChecklist() {

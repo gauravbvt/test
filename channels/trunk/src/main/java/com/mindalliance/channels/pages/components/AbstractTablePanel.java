@@ -25,7 +25,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -1061,7 +1060,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 final String cssClasses,
                 final Updatable updatable ) {
             super( id );
-            AjaxFallbackLink link;
+            AjaxLink link;
             if ( confirmationMessage != null ) {
                 link = new ConfirmedAjaxFallbackLink<String>( "link", confirmationMessage ) {
                     public void onClick( AjaxRequestTarget target ) {
@@ -1069,7 +1068,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                     }
                 };
             } else {
-                link = new AjaxFallbackLink<String>( "link" ) {
+                link = new AjaxLink<String>( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
                         updatable.update( target, bean, action );
                     }

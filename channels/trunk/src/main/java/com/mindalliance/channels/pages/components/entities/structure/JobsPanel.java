@@ -29,7 +29,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -38,7 +38,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -121,7 +120,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     /**
      * Do transfer button.
      */
-    private AjaxFallbackLink<String> doTransfer;
+    private AjaxLink<String> doTransfer;
 
 
     public JobsPanel( String id, IModel<Organization> model, Set<Long> expansions ) {
@@ -235,7 +234,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         });
         jobTransferDiv.add( copyingCheckBox );
         // do transfer button
-        doTransfer = new AjaxFallbackLink<String>(
+        doTransfer = new AjaxLink<String>(
                 "doTransfer",
                 new PropertyModel<String>( this, "transferButtonLabel" ) ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -409,7 +408,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
     private void addTitleCell( final ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
         final List<String> choices = getQueryService().findAllJobTitles();
-        TextField<String> titleField = new AutoCompleteTextField<String>(
+        AutoCompleteTextField<String> titleField = new AutoCompleteTextField<String>(
                 "title",
                 new PropertyModel<String>( jobWrapper, "title" ),
                 getAutoCompleteSettings() ) {
@@ -434,13 +433,14 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 }
             }
         } );
+        titleField.setOutputMarkupId( true );
         titleField.setEnabled( isLockedByUser( getOrganization() ) );
         item.add( titleField );
     }
 
     private void addShowFlowsCell( ListItem<JobWrapper> item ) {
         final JobWrapper jobWrapper = item.getModel().getObject();
-        AjaxFallbackLink<String> flowsLink = new AjaxFallbackLink<String>(
+        AjaxLink<String> flowsLink = new AjaxLink<String>(
                 "flows-link",
                 new Model<String>( "Show flows" ) ) {
             public void onClick( AjaxRequestTarget target ) {
@@ -810,7 +810,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
 
         private void init() {
             // link
-            AjaxFallbackLink link = new AjaxFallbackLink( "entity-link" ) {
+            AjaxLink link = new AjaxLink( "entity-link" ) {
                 public void onClick( AjaxRequestTarget target ) {
                     ModelEntity mo = (ModelEntity) ChannelsUtils.getProperty( jobWrapper, property, null );
                     if ( mo != null ) {
@@ -838,7 +838,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             ? ModelEntity.Kind.Type
                             : ModelEntity.Kind.Actual );
             // text field
-            TextField<String> entityField = new AutoCompleteTextField<String>(
+            AutoCompleteTextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",
                     new PropertyModel<String>( jobWrapper, property + "Name" ),
                     getAutoCompleteSettings() ) {
@@ -868,6 +868,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                     }
                 }
             } );
+            entityField.setOutputMarkupId( true );
             entityField.setEnabled( isLockedByUser( getOrganization() ) );
             add( entityField );
             makeVisible( entityField, jobWrapper.isMarkedForCreation() );

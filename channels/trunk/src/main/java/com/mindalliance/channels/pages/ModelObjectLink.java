@@ -7,7 +7,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -47,7 +47,7 @@ public class ModelObjectLink extends AbstractUpdatablePanel {
 
     private void init() {
         final ModelObject mo = moModel.getObject();
-        AjaxFallbackLink link = new AjaxFallbackLink( "link" ) {
+        AjaxLink link = new AjaxLink( "link" ) {
             public void onClick( AjaxRequestTarget target ) {
                 if ( mo != null ) {
                     if ( mo.isEntity() ) {

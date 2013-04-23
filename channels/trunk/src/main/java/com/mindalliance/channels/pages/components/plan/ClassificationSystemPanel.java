@@ -15,7 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
@@ -78,7 +78,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 Label nameLabel = new Label( "classification-name", classification.getName() );
                 item.add( nameLabel );
                 // move to top
-                AjaxFallbackLink moveLink = new AjaxFallbackLink( "move-to-top" ) {
+                AjaxLink moveLink = new AjaxLink( "move-to-top" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         moveToTop( classification );
@@ -90,7 +90,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 moveLink.setVisible( /*isLockedByUser( getPlan() ) &&*/ item.getIndex() != 0 );
                 item.add( moveLink );
                 // more
-                AjaxFallbackLink moreLink = new AjaxFallbackLink( "more" ) {
+                AjaxLink moreLink = new AjaxLink( "more" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         selectedClassification = classification;
@@ -101,7 +101,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 moreLink.setVisible( isReferenced( classification ) );
                 item.add( moreLink );
                 // delete
-                AjaxFallbackLink deleteLink = new AjaxFallbackLink( "delete" ) {
+                AjaxLink deleteLink = new AjaxLink( "delete" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         delete( classification );
