@@ -1,10 +1,10 @@
 api,http://192.168.4.127:8080/channels/rest/isp
 username,admin
 password,admin
-uri,mindalliance_com_channels_plans_railsec
-version,13
-name,Rail Security
+uri,mindalliance_com_channels_plans_acme
+version,1
+name,ACME Emergency Communication Plan
 release,development
-dateVersioned,Jul 7 2011 23:35 IST
+dateVersioned,Apr 25 2013 11:38 IST
 fullName,Administrator
 email,admin@gmail.com
