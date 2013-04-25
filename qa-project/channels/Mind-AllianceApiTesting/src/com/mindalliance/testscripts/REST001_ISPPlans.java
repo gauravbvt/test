@@ -65,8 +65,8 @@ public class REST001_ISPPlans extends TestCase{
 			planIdentifierResult=Configurations.parseResponse("planIdentifier","release",GlobalVariables.testData.get("release"));
 			Assert.assertEquals("Plan release is",true,planIdentifierResult);
 			// Verify Date Versioned
-			planIdentifierResult=Configurations.parseResponse("planIdentifier","dateVersioned",GlobalVariables.testData.get("dateVersioned"));
-			Assert.assertEquals("Date Versioned is",true,planIdentifierResult);			
+//			planIdentifierResult=Configurations.parseResponse("planIdentifier","dateVersioned",GlobalVariables.testData.get("dateVersioned"));
+//			Assert.assertEquals("Date Versioned is",true,planIdentifierResult);			
 			System.out.println(GlobalVariables.steps+") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 
@@ -79,8 +79,8 @@ public class REST001_ISPPlans extends TestCase{
 			planPlannerResult=Configurations.parseResponse("planner","fullName",GlobalVariables.testData.get("fullName"));	
 			Assert.assertEquals("Full Name is",planPlannerResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("fullName")));
 			// Verify Email only if the email id is present
-			planPlannerResult=Configurations.parseResponse("planner","email",GlobalVariables.testData.get("email"));
-			Assert.assertEquals("Email is",planPlannerResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("email")));
+//			planPlannerResult=Configurations.parseResponse("planner","email",GlobalVariables.testData.get("email"));
+//			Assert.assertEquals("Email is",planPlannerResult,GlobalVariables.responseString.contains(GlobalVariables.testData.get("email")));
 			System.out.println(GlobalVariables.steps +") Plan Summary Assertion Pass");
 			LogFunctions.logDescription(GlobalVariables.steps + ") Assertion Pass");
 						
