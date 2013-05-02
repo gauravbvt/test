@@ -359,6 +359,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         CommunityDefinition communityDefinition = communityDefinitionManager.create(
                 plan.getUri(),
                 plan.getVersion() );
+        planCommunities = null; // reset
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
         communityPlannerService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
