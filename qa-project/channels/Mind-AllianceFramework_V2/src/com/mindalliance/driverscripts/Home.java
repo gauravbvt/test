@@ -21,7 +21,7 @@ public class Home {
 		TestSuite suite = new TestSuite("Mind-Alliance API Testing Framework");	
 //		View
 		
-//		suite.addTestSuite(MAV0001_viewLoginPage.class);
+		suite.addTestSuite(MAV0001_viewLoginPage.class);
 //		suite.addTestSuite(MAV0002_viewHomePage.class);
 //		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
 //		suite.addTestSuite(MAV0004_viewAdminHome.class);
@@ -29,11 +29,11 @@ public class Home {
 //		suite.addTestSuite(MAV0006_redirectToPlanPage.class);
 //		suite.addTestSuite(MAV0008_hidePlannerInfo.class);
 //		suite.addTestSuite(MAV0009_viewAboutPlanWindow.class);
-////		suite.addTestSuite(MAV0010_viewAllEventForm.class);
-////		suite.addTestSuite(MAV0011_viewAllSecrecyclassificationsForm.class);
+//		suite.addTestSuite(MAV0010_viewAllEventForm.class);
+//		suite.addTestSuite(MAV0011_viewAllSecrecyclassificationsForm.class);
 //		suite.addTestSuite(MAV0012_viewAllOrganizationForm.class);
 //		suite.addTestSuite(MAV0016_viewAllWhoForm.class);
-		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
+//		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
 //		suite.addTestSuite(MAV0019_viewAllIndexForm.class);
 //		suite.addTestSuite(MAV0020_viewAllTagForm.class);
 //		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
