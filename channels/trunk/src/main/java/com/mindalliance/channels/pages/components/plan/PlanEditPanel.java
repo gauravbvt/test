@@ -99,7 +99,7 @@ public class PlanEditPanel extends AbstractFloatingMultiAspectPanel {
     protected Component makeAspectPanel( String aspect, Change change ) {
         if ( aspect.equals( DETAILS ) ) {
             return getPlanDetailsPanel();
-         }else {
+         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
         }

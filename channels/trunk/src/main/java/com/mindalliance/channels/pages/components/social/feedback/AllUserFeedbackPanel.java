@@ -9,12 +9,12 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.social.services.FeedbackService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -87,7 +87,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     private Map<String, ModelObject> filters = new HashMap<String, ModelObject>();
 
     private FeedbackTable feedbacksTable;
-    private Feedback selectedFeedback;
+    private String selectedFeedbackId;
     private WebMarkupContainer selectedFeedbackContainer;
     boolean urgentOnly;
     boolean unresolvedOnly;
@@ -136,7 +136,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     }
 
     public void select( Feedback feedback ) {
-        setSelectedFeedback( feedback.isUnknown() ? null : feedback );
+        setSelectedFeedbackId( feedback.isUnknown() ? null : feedback.getUid() );
     }
 
 
@@ -185,7 +185,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     }
 
     private void updateTableAndSelected( AjaxRequestTarget target ) {
-        selectedFeedback = null;
+        selectedFeedbackId = null;
         addSelectedFeedback();
         target.add( selectedFeedbackContainer );
         addFeedbackTable();
@@ -260,6 +260,12 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             sb.append( "." );
         }
         return StringUtils.capitalize( sb.toString() );
+    }
+
+    private Feedback getSelectedFeedback() {
+        return selectedFeedbackId != null
+                ? feedbackService.load( selectedFeedbackId )
+                : null;
     }
 
     private void addSelectedFeedback() {
@@ -359,12 +365,12 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         this.urgentOnly = urgentOnly;
     }
 
-    public Feedback getSelectedFeedback() {
-        return selectedFeedback;
+    public String getSelectedFeedbackId() {
+        return selectedFeedbackId;
     }
 
-    public void setSelectedFeedback( Feedback selectedFeedback ) {
-        this.selectedFeedback = selectedFeedback;
+    public void setSelectedFeedbackId( String selectedFeedbackId ) {
+        this.selectedFeedbackId = selectedFeedbackId;
     }
 
     @Override
@@ -386,10 +392,10 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     public void changed( Change change ) {
         if ( change.isForInstanceOf( FeedbackWrapper.class ) && change.isExpanded() ) {
             FeedbackWrapper fw = (FeedbackWrapper) change.getSubject( getCommunityService() );
-            if ( selectedFeedback != null && fw.getFeedback().equals( selectedFeedback ) ) {
-                setSelectedFeedback( null );
+            if ( selectedFeedbackId != null && fw.getFeedback().getUid().equals( selectedFeedbackId ) ) {
+                setSelectedFeedbackId( null );
             } else {
-                setSelectedFeedback( fw.getFeedback() );
+                setSelectedFeedbackId( fw.getFeedback().getUid() );
             }
         } else {
             super.changed( change );
@@ -410,8 +416,6 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             super.updateWith( target, change, updated );
         }
     }
-
-
 
     public class FeedbackWrapper implements Identifiable {
 
@@ -516,9 +520,11 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         }
 
         public String getExpandLabel() {
-            Feedback selected = getSelectedFeedback();
-            return selected != null && selected.equals( feedback ) ? "Close" : "Open";
+            String selected = getSelectedFeedbackId();
+            return selected != null && selected.equals( feedback.getUid() ) ? "Close" : "Open";
         }
+
+
 
     }
 

@@ -3,13 +3,12 @@ package com.mindalliance.channels.pages.surveys;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.rfi.SurveyAnswersPanel;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.services.RFIForwardService;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.apache.wicket.AttributeModifier;
@@ -50,9 +49,6 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private RFIService rfiService;
-
-    @SpringBean
-    private RFIForwardService rfiForwardService;
 
     WebMarkupContainer rfiContainer;
     private AjaxLink<String> declineButton;
@@ -120,12 +116,12 @@ public class RFIPanel extends AbstractUpdatablePanel {
     }
 
     private String getForwardedTo() {
-        String emails = StringUtils.join( rfiForwardService.findForwardedTo( getRFI() ), ", " );
+        String emails = StringUtils.join( rfiService.findForwardedTo( getRFI() ), ", " );
         return emails.isEmpty() ? "" : "Forwarded to " + emails;
     }
 
     private String getSentBy() {
-        String sentBy = getRFI().getRfiSurvey().getUsername();
+        String sentBy = getRFI().getRfiSurvey( getCommunityService() ).getUsername();
         return "A survey by planner "
                 + getUserFullName( sentBy );
     }
@@ -178,12 +174,12 @@ public class RFIPanel extends AbstractUpdatablePanel {
         if ( rfi.isDeclined() ) {
             sb.append( "Declined: " );
         }
-        sb.append( rfi.getRfiSurvey().getQuestionnaire().getName() );
+        sb.append( rfi.getRfiSurvey( getCommunityService() ).getName() );
         return sb.toString();
     }
 
     private void addForwarding() {
-        boolean canForward = getRFI().getRfiSurvey().isCanBeForwarded();
+        boolean canForward = getRFI().getRfiSurvey( getCommunityService() ).isCanBeForwarded();
         // button
         AjaxLink<String> forwardButton = new AjaxLink<String>( "forward" ) {
             @Override
@@ -287,7 +283,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
 
     private RFI getRFI() {
         RFI rfi = (RFI) getModel().getObject();
-        rfiService.refresh( rfi );
+        rfi = rfiService.load( rfi.getUid() );
         return rfi;
     }
 
@@ -314,7 +310,7 @@ public class RFIPanel extends AbstractUpdatablePanel {
         }
 
         private void addSurveyName() {
-            Label surveyNameLabel = new Label( "surveyName", rfi.getRfiSurvey().getQuestionnaire().getName() );
+            Label surveyNameLabel = new Label( "surveyName", rfi.getRfiSurvey( getCommunityService() ).getName() );
             add( surveyNameLabel );
         }
 
@@ -393,14 +389,14 @@ public class RFIPanel extends AbstractUpdatablePanel {
         }
 
         private void addAlreadyForwardedTo() {
-            String already = StringUtils.join( rfiForwardService.findForwardedTo( getRFI() ), ", " );
+            String already = StringUtils.join( rfiService.findForwardedTo( getRFI() ), ", " );
             Label alreadyForwardedTo = new Label( "alreadyForwardedTo", "Already forwarded to " + already );
             add( alreadyForwardedTo );
             alreadyForwardedTo.setVisible( !already.isEmpty() );
         }
 
         private void addSurveyName() {
-            Label surveyNameLabel = new Label( "surveyName", rfi.getRfiSurvey().getQuestionnaire().getName() );
+            Label surveyNameLabel = new Label( "surveyName", rfi.getRfiSurvey( getCommunityService() ).getName() );
             add( surveyNameLabel );
         }
 

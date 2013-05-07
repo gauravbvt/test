@@ -284,4 +284,5 @@ public interface SurveysDAO {
      * @return a string
      */
     String makeURL( CommunityService communityService, RFI rfi, ChannelsUser surveyedUser );
+
 }

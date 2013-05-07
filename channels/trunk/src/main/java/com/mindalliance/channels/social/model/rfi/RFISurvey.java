@@ -184,7 +184,7 @@ public class RFISurvey extends AbstractModelObjectReferencingPPO implements Mess
             CommunityService communityService ) {
         PlanService planService = communityService.getPlanService();
         if ( topic.equals( STATUS ) ) {
-            return getStatusContent( communityService, planService.getSurveysDAO() );
+            return getStatusContent( communityService, (SurveysDAO)planService.getSurveysDAO() );
         } else {
             throw new RuntimeException( "Unknown topic " + topic );
         }

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;

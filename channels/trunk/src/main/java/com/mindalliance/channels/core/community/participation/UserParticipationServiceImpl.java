@@ -533,7 +533,7 @@ public class UserParticipationServiceImpl
     public boolean isValid( UserParticipation userParticipation, CommunityService communityService ) {
         return userParticipation != null
                 && userParticipation.getParticipant() != null
-                && communityService.exists( Actor.class, userParticipation.getActorId(), userParticipation.getCreated() )
+                && communityService.getPlanService().exists( Actor.class, userParticipation.getActorId(), userParticipation.getCreated() )
                 && ( userParticipation.getOrganizationParticipation() == null
                 || organizationParticipationService.isValid( userParticipation.getOrganizationParticipation(), communityService ) );
     }

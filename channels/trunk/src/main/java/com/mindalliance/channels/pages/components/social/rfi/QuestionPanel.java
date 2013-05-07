@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
+import com.mindalliance.channels.db.services.surveys.RFIService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.services.AnswerSetService;
-import com.mindalliance.channels.social.services.QuestionService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -32,12 +32,12 @@ import java.util.List;
  * Time: 10:27 AM
  */
 public class QuestionPanel extends AbstractUpdatablePanel {
-
+    
     @SpringBean
-    private QuestionService questionService;
-
+    private QuestionnaireService questionnaireService;
+    
     @SpringBean
-    private AnswerSetService answerService;
+    private RFIService rfiService;
 
     private Component answerOptionsPanel;
     private WebMarkupContainer constraintsContainer;
@@ -265,8 +265,9 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         deleteIt = new AjaxLink<String>( "deleteIt" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                Question question = getQuestion();
                 deleteQuestion();
-                update( target, new Change( Change.Type.Updated, getQuestion(), "deleted" ) );
+                update( target, new Change( Change.Type.Updated, question, "deleted" ) );
             }
         };
         retirementContainer.add( deleteIt );
@@ -276,16 +277,16 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     private void deleteQuestion() {
         if ( canBeDeleted() ) {
             Question question = getQuestion();
-            questionService.delete( question );
+            questionnaireService.deleteQuestion( question );
         }
     }
 
     private boolean canBeDeleted() {
-        return !getQuestion().isActivated() && answerService.getAnswerCount( getQuestion() ) == 0;
+        return !getQuestion().isActivated() && rfiService.getAnswerCount( getQuestion() ) == 0;
     }
 
     private String getAnsweredLabel() {
-        int count = answerService.getAnswerCount( getQuestion() );
+        int count = rfiService.getAnswerCount( getQuestion() );
         return count > 0
                 ? "has been answered " + count + " times"
                 : "has not yet been answered";
@@ -299,7 +300,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
         if ( text != null && !text.isEmpty() ) {
             Question question = getQuestion();
             question.setText( text );
-            questionService.save( question );
+            questionnaireService.updateQuestion( question );
         }
     }
 
@@ -310,7 +311,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     public void setQuestionType( Question.Type type ) {
         Question question = getQuestion();
         question.setType( type );
-        questionService.save( question );
+        questionnaireService.updateQuestion( question );
     }
 
     public boolean isAnswerRequired() {
@@ -320,7 +321,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     public void setAnswerRequired( boolean required ) {
         Question question = getQuestion();
         question.setAnswerRequired( required );
-        questionService.save( question );
+        questionnaireService.updateQuestion( question );
     }
 
     public boolean isOpenEnded() {
@@ -330,7 +331,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     public void setOpenEnded( boolean openEnded ) {
         Question question = getQuestion();
         question.setOpenEnded( openEnded );
-        questionService.save( question );
+        questionnaireService.updateQuestion( question );
     }
 
     public boolean isMultipleAnswers() {
@@ -340,7 +341,7 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     public void setMultipleAnswers( boolean multiple ) {
         Question question = getQuestion();
         question.setMultipleAnswers( multiple );
-        questionService.save( question );
+        questionnaireService.updateQuestion( question );
     }
 
     public boolean isActivated() {
@@ -350,12 +351,12 @@ public class QuestionPanel extends AbstractUpdatablePanel {
     public void setActivated( boolean val ) {
         Question question = getQuestion();
         question.setActivated( val );
-        questionService.save( question );
+        questionnaireService.updateQuestion( question );
     }
 
     private Question getQuestion() {
-        return (Question) getModel().getObject();
+        // Todo - causes a lot a repetitive db accesses
+        return questionnaireService.refreshQuestion( (Question) getModel().getObject() );
     }
-
 
 }

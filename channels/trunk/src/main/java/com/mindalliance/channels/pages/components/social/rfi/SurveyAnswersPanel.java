@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.services.QuestionService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -30,16 +30,23 @@ import java.util.List;
  */
 public class SurveyAnswersPanel extends AbstractUpdatablePanel {
 
-    @SpringBean
-    private QuestionService questionService;
     @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
+    @SpringBean
+    private QuestionnaireService questionnaireService;
     private ListView<Question> answerSetListView;
     private WebMarkupContainer answerSetsContainer;
+    private boolean readOnly = false;
+
+
+    public SurveyAnswersPanel( String id, IModel<RFI> rfiModel, boolean readOnly ) {
+        super( id, rfiModel );
+        this.readOnly = readOnly;
+        init();
+    }
 
     public SurveyAnswersPanel( String id, IModel<RFI> rfiModel ) {
-        super( id, rfiModel );
-        init();
+        this( id, rfiModel, false );
     }
 
     private void init() {
@@ -84,7 +91,7 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
                 }
              }
         };
-        acceptLink.setVisible( getRFI().isPersisted() );
+        acceptLink.setVisible( !readOnly && getRFI().isPersisted() );
         answerSetsContainer.add( acceptLink );
         AjaxLink<String> cancelLink = new AjaxLink<String>( "cancel" ) {
             @Override
@@ -92,7 +99,7 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
                 update( target, new Change( Change.Type.Collapsed, getRFI() ) );
             }
         };
-        cancelLink.setVisible( getRFI().isPersisted() );
+        cancelLink.setVisible( !readOnly && getRFI().isPersisted() );
         answerSetsContainer.add( cancelLink );
 
     }
@@ -117,7 +124,7 @@ public class SurveyAnswersPanel extends AbstractUpdatablePanel {
     }
 
     private List<Question> getQuestions() {
-        return questionService.listQuestions( getRFI().getRfiSurvey().getQuestionnaire() );
+        return questionnaireService.listQuestions( getRFI().getRfiSurvey( getCommunityService() ).getQuestionnaireUid() );
     }
 
     private RFI getRFI() {

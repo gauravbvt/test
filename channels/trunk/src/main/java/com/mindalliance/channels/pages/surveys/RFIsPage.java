@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.surveys;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.services.surveys.RFIService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.services.RFIService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -45,7 +45,6 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
     }
 
 
-
     @Override
     protected String getHelpSectionId() {
         return "surveys-page";
@@ -58,12 +57,9 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
 
     private void processParameters( PageParameters parameters ) {
-        String rfiId = parameters.get( RFI_PARM ).toString();
-        if ( rfiId != null ) {
-            Long id = Long.parseLong( rfiId );
-            if ( id != null ) {
-                selectedRFI = rfiService.load( id );
-            }
+        String rfiUid = parameters.get( RFI_PARM ).toString();
+        if ( rfiUid != null ) {
+            selectedRFI = rfiService.load( rfiUid );
         }
     }
 

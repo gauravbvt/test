@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.db.data.messages.UserStatement;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.model.UserStatement;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;

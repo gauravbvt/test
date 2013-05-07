@@ -3,12 +3,13 @@ package com.mindalliance.channels.pages.components.social.rfi;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.data.surveys.Questionnaire;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.model.rfi.Questionnaire;
-import com.mindalliance.channels.social.services.QuestionService;
-import com.mindalliance.channels.social.services.QuestionnaireService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,9 +43,6 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
     @SpringBean
     private QuestionnaireService questionnaireService;
-
-    @SpringBean
-    private QuestionService questionService;
 
 
     private Question selectedQuestion;
@@ -176,11 +174,11 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
 
     private void moveUp( Question question ) {
-        questionService.moveUp( question );
+        questionnaireService.moveUp( question );
     }
 
     private void moveDown( Question question ) {
-        questionService.moveDown( question );
+        questionnaireService.moveDown( question );
     }
 
     private boolean isLastQuestion( Question question ) {
@@ -195,7 +193,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
     private List<Question> getQuestions() {
         if ( questions == null ) {
-            questions = questionService.listQuestions( getQuestionnaire() );
+            questions = questionnaireService.listQuestions( getQuestionnaire().getUid() );
         }
         return questions;
     }
@@ -228,9 +226,8 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
     }
 
     private Question addQuestion() {
-        Questionnaire questionnaire = getQuestionnaire();
-        questionnaireService.refresh( questionnaire );
-        return questionService.addNewQuestion( getUser(), questionnaire );
+        Questionnaire questionnaire = questionnaireService.load( getQuestionnaire().getUid() );
+        return questionnaireService.addNewQuestion( getUser(), questionnaire );
     }
 
     public String getQuestionnaireName() {
@@ -256,16 +253,26 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
 
     private Questionnaire getQuestionnaire() {
         Questionnaire questionnaire = (Questionnaire) getModel().getObject();
-        //     questionnaireService.refresh( questionnaire );
-        return questionnaire;
+        return questionnaireService.refresh( questionnaire );
     }
 
+    @SuppressWarnings( "unchecked" )
     private Question getQuestion() {
 /*
         if ( selectedQuestion != null )
             questionService.refresh( selectedQuestion );
 */
-        return selectedQuestion;
+        return selectedQuestion == null
+                ? null
+                : (Question) CollectionUtils.find(
+                getQuestionnaire().getQuestions(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Question) object ).getUid().equals( selectedQuestion.getUid() );
+                    }
+                }
+        );
     }
 
     @Override
@@ -276,11 +283,11 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
             modified( getQuestionnaire() );
         }
         if ( change.isUpdated() && change.isForInstanceOf( Question.class ) ) {
+            questions = null;
             addQuestionList();
             target.add( questionsContainer );
             if ( change.isForProperty( "deleted" ) ) {
                 selectedQuestion = null;
-                questions = null;
                 addQuestionList();
                 target.add( questionsContainer );
                 addQuestionPanel();

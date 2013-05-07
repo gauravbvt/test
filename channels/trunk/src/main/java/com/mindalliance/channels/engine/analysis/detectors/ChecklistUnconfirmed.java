@@ -34,7 +34,7 @@ public class ChecklistUnconfirmed extends AbstractIssueDetector {
         Part part = (Part) modelObject;
         Checklist checklist = part.getChecklist();
         List<Issue> issues = new ArrayList<Issue>();
-        if ( !checklist.isConfirmed() ) {
+        if ( !checklist.isEmpty() && !checklist.isConfirmed() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
             issue.setDescription( "The checklist is not confirmed." );
             issue.setSeverity( computeTaskFailureSeverity( queryService, part ) );

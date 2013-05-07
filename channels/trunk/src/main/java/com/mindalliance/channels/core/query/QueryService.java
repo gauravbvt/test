@@ -41,6 +41,7 @@ import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -1627,4 +1628,12 @@ public interface QueryService {
      */
     List<Organization> listFixedOrganizations();
 
+    /**
+     * Whether a  model object exists of a given kind that had a given id at a certain date.
+     * @param clazz a model object class
+     * @param id the model object id
+     * @param dateOfRecord the date the model object had that id
+     * @return a boolean
+     */
+    boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord );
 }

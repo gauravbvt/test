@@ -16,7 +16,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ import java.util.Set;
  * Date: 2/16/12
  * Time: 2:21 PM
  */
-@Repository
+/*@Repository*/
 public class RFIServiceImpl extends GenericSqlServiceImpl<RFI, Long> implements RFIService {
 
     public RFIServiceImpl() {

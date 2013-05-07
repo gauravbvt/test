@@ -14,7 +14,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,13 +25,13 @@ import java.util.List;
  * Date: 2/16/12
  * Time: 2:22 PM
  */
-@Repository
+/*@Repository*/
 public class QuestionnaireServiceImpl extends GenericSqlServiceImpl<Questionnaire, Long> implements QuestionnaireService {
 
     @Autowired
     private QuestionService questionService;
 
-    @Autowired
+    /*@Autowired*/
     private RFISurveyService rfiSurveyService;
 
     @Override

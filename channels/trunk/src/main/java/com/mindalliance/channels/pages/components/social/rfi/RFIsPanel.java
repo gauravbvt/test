@@ -13,17 +13,17 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.RFISurveyService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import com.mindalliance.channels.social.services.RFIForwardService;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.RFISurveyService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -38,6 +38,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -58,9 +59,8 @@ import java.util.Map;
  */
 public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
-    private static final String ALL = "everyone"; // in communities having adopted the plan
-    private static final String PARTICIPANTS_ONLY = "participants only";
-    private static final String NON_PARTICIPANTS_ONLY = "non-participants only";
+    private static final String ALL = "everyone";
+    private static final String ADOPTERS = "plan adopters only"; // in communities having adopted the plan
     private static final int MAX_ROWS = 10;
     private String deadline = null;
 
@@ -70,7 +70,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean( name="surveysDao" )
+    @SpringBean( name = "surveysDao" )
     private SurveysDAO surveysDAO;
 
     @SpringBean
@@ -88,14 +88,18 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     private Map<String, ModelObject> filters = new HashMap<String, ModelObject>();
 
     private List<String> allUsernames;
-    private List<String> allParticipantUsernames;
+    private List<String> allAdopterUsernames;
     private List<SurveyParticipation> surveyParticipations;
 
     private boolean hasDeadline = false;
     private String recipientDomain = ALL;
+    private boolean surveyedOnly = true;
+    private boolean notYetSurveyedOnly = false;
     private SurveyParticipationTable surveyParticipationTable;
     private WebMarkupContainer actionsContainer;
     private WebMarkupContainer deadlineContainer;
+    private AjaxCheckBox surveyedOnlyCheckBox;
+    private AjaxCheckBox notYetSurveyedOnlyCheckBox;
 
     public RFIsPanel( String id, IModel<RFISurvey> model ) {
         super( id, model );
@@ -111,13 +115,92 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private void init() {
         addRecipientsChoice();
+        addSurveyedFilters();
         addSurveyParticipationTable();
         addActions();
     }
 
+    private void addRecipientsChoice() {
+        DropDownChoice<String> recipientChoice = new DropDownChoice<String>(
+                "recipients",
+                new PropertyModel<String>( this, "recipientDomain" ),
+                getRecipientDomains()
+        );
+        recipientChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateSurveyParticipation( target );
+            }
+        } );
+        add( recipientChoice );
+    }
+
+    private void addSurveyedFilters() {
+        addSurveyedOnlyFilter();
+        addNotYetSurveyedOnlyFilter();
+    }
+
+    private void addSurveyedOnlyFilter() {
+        surveyedOnlyCheckBox = new AjaxCheckBox(
+                "surveyed",
+                new PropertyModel<Boolean>( this, "surveyedOnly" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateSurveyParticipation( target );
+                addNotYetSurveyedOnlyFilter();
+                target.add( notYetSurveyedOnlyCheckBox );
+            }
+        };
+        surveyedOnlyCheckBox.setOutputMarkupId( true );
+        addOrReplace( surveyedOnlyCheckBox );
+    }
+
+    private void addNotYetSurveyedOnlyFilter() {
+        notYetSurveyedOnlyCheckBox = new AjaxCheckBox(
+                "notYetSurveyed",
+                new PropertyModel<Boolean>( this, "notYetSurveyedOnly" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                updateSurveyParticipation( target );
+                addSurveyedOnlyFilter();
+                target.add( surveyedOnlyCheckBox );
+            }
+        };
+        notYetSurveyedOnlyCheckBox.setOutputMarkupId( true );
+        addOrReplace( notYetSurveyedOnlyCheckBox );
+    }
+
+    private void updateSurveyParticipation( AjaxRequestTarget target ) {
+        reset();
+        addSurveyParticipationTable();
+        target.add( surveyParticipationTable );
+        addActions();
+        target.add( actionsContainer );
+    }
+
+    public boolean isSurveyedOnly() {
+        return surveyedOnly;
+    }
+
+    public void setSurveyedOnly( boolean surveyedOnly ) {
+        this.surveyedOnly = surveyedOnly;
+        notYetSurveyedOnly = !surveyedOnly;
+    }
+
+    public boolean isNotYetSurveyedOnly() {
+        return notYetSurveyedOnly;
+    }
+
+    public void setNotYetSurveyedOnly( boolean notYetSurveyedOnly ) {
+        this.notYetSurveyedOnly = notYetSurveyedOnly;
+        surveyedOnly = !notYetSurveyedOnly;
+    }
+
     private void reset() {
         allUsernames = null;
-        allParticipantUsernames = null;
+        allAdopterUsernames = null;
         surveyParticipations = null;
     }
 
@@ -137,19 +220,21 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             RFISurvey rfiSurvey = getRFISurvey();
             List<String> usernames = isAllUsernames()
                     ? getAllUsernames()
-                    : isParticipating()
-                    ? getAllParticipantUsernames()
-                    : (List<String>) CollectionUtils.subtract( getAllUsernames(), getAllParticipantUsernames() );
+                    : getAllAdopterUsernames();
+            List<String> surveyedUsernames = getSurveyedUsernames();
             for ( String username : usernames ) {
-                RFI rfi = null;
-                if ( getAllParticipantUsernames().contains( username ) )
+                if ( !surveyedOnly && !notYetSurveyedOnly
+                        || surveyedOnly && surveyedUsernames.contains( username )
+                        || notYetSurveyedOnly && !surveyedUsernames.contains( username ) ) {
+                    RFI rfi = null;
                     rfi = rfiService.find( getCommunityService(), rfiSurvey, username );
-                SurveyParticipation surveyParticipation = new SurveyParticipation(
-                        userDao.getUserNamed( username ).getUserInfo(),
-                        rfi,
-                        rfiSurvey );
-                if ( !isFilteredOut( surveyParticipation ) ) {
-                    surveyParticipations.add( surveyParticipation );
+                    SurveyParticipation surveyParticipation = new SurveyParticipation(
+                            userDao.getUserNamed( username ).getUserInfo(),
+                            rfi,
+                            rfiSurvey );
+                    if ( !isFilteredOut( surveyParticipation ) ) {
+                        surveyParticipations.add( surveyParticipation );
+                    }
                 }
             }
         }
@@ -185,42 +270,18 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     }
 
 
-    private boolean isParticipating() {
-        return getRecipientDomain().equals( PARTICIPANTS_ONLY );
-    }
-
-    private boolean isNotParticipating() {
-        return getRecipientDomain().equals( NON_PARTICIPANTS_ONLY );
+    private boolean isAdopters() {
+        return getRecipientDomain().equals( ADOPTERS );
     }
 
     private boolean isAllUsernames() {
         return getRecipientDomain().equals( ALL );
     }
 
-    private void addRecipientsChoice() {
-        DropDownChoice<String> recipientChoice = new DropDownChoice<String>(
-                "recipients",
-                new PropertyModel<String>( this, "recipientDomain" ),
-                getRecipientDomains()
-        );
-        recipientChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                reset();
-                addSurveyParticipationTable();
-                target.add( surveyParticipationTable );
-                addActions();
-                target.add( actionsContainer );
-            }
-        } );
-        add( recipientChoice );
-    }
-
     private List<String> getRecipientDomains() {
         List<String> choices = new ArrayList<String>();
         choices.add( ALL );
-        choices.add( PARTICIPANTS_ONLY );
-        choices.add( NON_PARTICIPANTS_ONLY );
+        choices.add( ADOPTERS );
         return choices;
     }
 
@@ -234,16 +295,21 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private List<String> getAllUsernames() {
         if ( allUsernames == null ) {
-            allUsernames = planCommunityManager.listAllAdopters( getPlan() );
+            allUsernames = userDao.getUsernames();
         }
         return allUsernames;
     }
 
-    private List<String> getAllParticipantUsernames() {
-        if ( allParticipantUsernames == null ) {
-            allParticipantUsernames = rfiService.findParticipants( getCommunityService(), getRFISurvey() );
+    private List<String> getAllAdopterUsernames() {
+        if ( allAdopterUsernames == null ) {
+            allAdopterUsernames = planCommunityManager.listAllAdopters( getPlan() );
         }
-        return allParticipantUsernames;
+        return allAdopterUsernames;
+    }
+
+
+    private List<String> getSurveyedUsernames() {
+        return rfiService.findParticipants( getCommunityService(), getRFISurvey() );
     }
 
     private void addActions() {
@@ -326,7 +392,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                 "nag",
                 "Nag "
                         + naggableParticipations.size()
-                        + (naggableParticipations.size() > 1 ? " persons" : " person" )
+                        + ( naggableParticipations.size() > 1 ? " persons" : " person" )
                         + "?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
@@ -342,7 +408,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                 update( target, new Change( Change.Type.Updated, getRFISurvey(), "updated" ) );
             }
         };
-        nagLink.setEnabled( naggableParticipations.size() > 0 );
+        makeVisible( nagLink, naggableParticipations.size() > 0 );
         actionsContainer.add( nagLink );
     }
 
@@ -428,8 +494,29 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             if ( action.equals( "selected" ) ) {
                 addActions();
                 target.add( actionsContainer );
+            } else if ( action.equals( "viewRFI") ) {
+                RFI rfi = rfiService.refresh( ( (SurveyParticipation) object ).getRfi() );
+                if ( rfi != null ) {
+                    openRFIView( target, rfi );
+                }
             }
         }
+    }
+
+    private void openRFIView( AjaxRequestTarget target, RFI rfi ) {
+        SurveyAnswersPanel surveyAnswersPanel = new SurveyAnswersPanel(
+                getModalableParent().getModalContentId(),
+                new Model<RFI>( rfi ),
+                true );
+        String fullName = userDao.getFullName( rfi.getSurveyedUsername() );
+        getModalableParent().showDialog(
+                "Answers from " + fullName,
+                600,
+                800,
+                surveyAnswersPanel,
+                RFIsPanel.this,
+                target
+        );
     }
 
     public void changed( Change change ) {
@@ -531,7 +618,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
         @SuppressWarnings( "unchecked" )
         public String getForwardedBy() {
             List<String> fullNames = (List<String>) CollectionUtils.collect(
-                    rfiForwardService.findForwarderUsernames( rfi ),
+                    rfiService.findForwarderUsernames( rfi ),
                     new Transformer() {
                         @Override
                         public Object transform( Object input ) {
@@ -602,6 +689,13 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                     && surveysDAO.isOverdue( getCommunityService(), rfi );
 
         }
+
+        public String getExpandLabel() {
+            return rfi != null
+                    ? "View"
+                    : "";
+        }
+
     }
 
     public class SurveyParticipationTable extends AbstractTablePanel<SurveyParticipation> {
@@ -630,18 +724,21 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                     "organization.name",
                     EMPTY,
                     RFIsPanel.this ) );
+/*
             columns.add( makeFilterableLinkColumn(
                     "Role",
                     "role",
                     "role.name",
                     EMPTY,
                     RFIsPanel.this ) );
+*/
             columns.add( makeColumn( "Title", "title", EMPTY ) );
             columns.add( makeColumn( "Status", "status", EMPTY ) );
             columns.add( makeColumn( "Invited on", "invitedOn", EMPTY ) );
             columns.add( makeColumn( "Forwarded by", "forwardedBy", EMPTY ) );
             columns.add( makeColumn( "Deadline", "deadline", EMPTY ) );
             columns.add( makeColumn( "Nagged", "nagged", EMPTY ) );
+            columns.add( makeActionLinkColumn( "", "View", "viewRFI", "rfi", "more", RFIsPanel.this ) );
             // Provider and table
             add( new AjaxFallbackDefaultDataTable( "rfiSurveys",
                     columns,

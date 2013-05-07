@@ -2,11 +2,11 @@ package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;

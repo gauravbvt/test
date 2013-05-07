@@ -6,18 +6,19 @@ import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.surveys.Questionnaire;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.RFISurveyService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.Filterable;
 import com.mindalliance.channels.pages.components.guide.Guidable;
-import com.mindalliance.channels.social.model.rfi.Questionnaire;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.RFISurveyService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -54,12 +55,15 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     private static final String ANYTHING = "anything";
 
     @SpringBean
+    private QuestionnaireService questionnaireService;
+
+    @SpringBean
     private RFISurveyService rfiSurveyService;
 
     @SpringBean
     private RFIService rfiService;
 
-    @SpringBean( name="surveysDao" )
+    @SpringBean(name = "surveysDao")
     private SurveysDAO surveysDAO;
 
     private String about = null;
@@ -172,7 +176,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
             if ( !rfiSurvey.isObsolete( communityService ) ) {
                 if ( !onlyAnswered || getAnsweredCount( rfiSurvey ) > 0 )
                     if ( !isFilteredOut( rfiSurvey ) ) {
-                        rfiSurveyService.refresh( rfiSurvey );
+                        rfiSurvey = rfiSurveyService.load( rfiSurvey.getUid() );
                         wrappers.add( new RFISurveyWrapper( rfiSurvey ) );
                     }
             }
@@ -193,7 +197,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 rfiSurveyService.toggleActivation( selectedRFISurvey );
-                rfiSurveyService.refresh( selectedRFISurvey );
+                selectedRFISurvey = rfiSurveyService.load( selectedRFISurvey.getUid() );
                 addRFISurveyTable();
                 addRFISurvey();
                 target.add( rfiSurveyTable );
@@ -228,7 +232,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
                 openRFIPreview( target );
             }
         };
-        rfiSurveyContainer.add(  previewLink );
+        rfiSurveyContainer.add( previewLink );
         // rfi panel
         rfiSurveyContainer.add( selectedRFISurvey == null
                 ? new Label( "rfiSurvey", "" )
@@ -240,12 +244,13 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     }
 
     private void openRFIPreview( AjaxRequestTarget target ) {
-        RFI transientRFI = new RFI( );
+        RFI transientRFI = new RFI();
         transientRFI.setRfiSurvey( selectedRFISurvey );
         // open in dialog
         SurveyAnswersPanel surveyAnswersPanel = new SurveyAnswersPanel(
                 getModalableParent().getModalContentId(),
-                new Model<RFI> (transientRFI) );
+                new Model<RFI>( transientRFI ),
+                true ); // readOnly
         getModalableParent().showDialog(
                 "Survey preview",
                 600,
@@ -293,7 +298,8 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     }
 
     private void refreshSelected() {
-        if ( selectedRFISurvey != null ) rfiSurveyService.refresh( selectedRFISurvey );
+        if ( selectedRFISurvey != null )
+            selectedRFISurvey = rfiSurveyService.load( selectedRFISurvey.getUid() );
     }
 
 
@@ -366,14 +372,17 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
 
     @Override
     public void changed( Change change ) {
-        if ( change.isForInstanceOf( RFISurveyWrapper.class ) && change.isExpanded() ) {
+        if ( change.isForInstanceOf( RFISurveyWrapper.class ) ) {
             RFISurveyWrapper fw = (RFISurveyWrapper) change.getSubject( getCommunityService() );
+            if ( selectedRFISurvey != null ) rfiSurveyService.refresh( selectedRFISurvey );
             RFISurvey rfiSurvey = fw.getRfiSurvey();
-            if ( selectedRFISurvey != null && rfiSurvey.equals( selectedRFISurvey ) ) {
-                setSelectedRFISurvey( null );
-            } else {
-                if ( !isLockedByOtherUser( rfiSurvey ) )
-                    setSelectedRFISurvey( rfiSurvey );  // acquires lock
+            if ( change.isExpanded() ) {
+                if ( selectedRFISurvey != null && rfiSurvey.equals( selectedRFISurvey ) ) {
+                    setSelectedRFISurvey( null );
+                } else {
+                    if ( !isLockedByOtherUser( rfiSurvey ) )
+                        setSelectedRFISurvey( rfiSurveyService.refresh( rfiSurvey ) );  // acquires lock
+                }
             }
         } else {
             super.changed( change );
@@ -415,7 +424,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
     public class RFISurveyWrapper implements Identifiable {
 
         private RFISurvey rfiSurvey;
-        private Map<String,Integer> metrics;
+        private Map<String, Integer> metrics;
 
         private RFISurveyWrapper( RFISurvey rfiSurvey ) {
             this.rfiSurvey = rfiSurvey;
@@ -468,7 +477,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         public Questionnaire getQuestionnaire() {
-            return rfiSurvey.getQuestionnaire();
+            return questionnaireService.load( rfiSurvey.getQuestionnaireUid() );
         }
 
         public Segment getSegment() {
@@ -492,36 +501,34 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
         }
 
         public int getSentToCount() {
-            return rfiSurvey.getRfis().size();
+            return rfiService.select( getCommunityService(), rfiSurvey ).size();
         }
 
         public String getShortResponseMetrics() {
             if ( rfiSurvey != null ) {
-                Map<String,Integer> metrics = getResponseMetrics();
+                Map<String, Integer> metrics = getResponseMetrics();
                 Integer[] values = new Integer[3];
                 values[0] = metrics.get( "completed" );
                 values[1] = metrics.get( "declined" );
                 values[2] = metrics.get( "incomplete" );
                 return MessageFormat.format( "{0}c {1}d {2}i", values );
-            }
-            else
+            } else
                 return null;
         }
 
         public String getLongResponseMetrics() {
             if ( rfiSurvey != null ) {
-                Map<String,Integer> metrics = getResponseMetrics();
+                Map<String, Integer> metrics = getResponseMetrics();
                 Integer[] values = new Integer[3];
                 values[0] = metrics.get( "completed" );
                 values[1] = metrics.get( "declined" );
                 values[2] = metrics.get( "incomplete" );
                 return MessageFormat.format( "{0} completed, {1} declined and {2} incomplete", values );
-            }
-            else
+            } else
                 return null;
         }
 
-        private Map<String,Integer> getResponseMetrics() {
+        private Map<String, Integer> getResponseMetrics() {
             if ( metrics == null ) {
                 metrics = surveysDAO.findResponseMetrics( getCommunityService(), rfiSurvey );
             }
@@ -550,7 +557,7 @@ public class RFISurveysPanel extends AbstractCommandablePanel implements Filtera
             initialize();
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void initialize() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // Columns

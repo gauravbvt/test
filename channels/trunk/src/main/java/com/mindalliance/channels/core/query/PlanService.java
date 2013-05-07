@@ -11,7 +11,7 @@ import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
-import com.mindalliance.channels.social.services.SurveysDAO;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 
 /**
  * A query service targeted to a single plan.

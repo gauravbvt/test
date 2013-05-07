@@ -5,12 +5,9 @@ import com.mindalliance.channels.social.model.rfi.AnswerSet;
 import com.mindalliance.channels.social.model.rfi.Question;
 import com.mindalliance.channels.social.model.rfi.RFI;
 import com.mindalliance.channels.social.services.AnswerSetService;
-import com.mindalliance.channels.social.services.QuestionnaireService;
-import com.mindalliance.channels.social.services.RFISurveyService;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +24,6 @@ import java.util.List;
 @Repository
 public class AnswerSetServiceImpl extends GenericSqlServiceImpl<AnswerSet, Long> implements AnswerSetService {
 
-    @Autowired
-    private QuestionnaireService questionnaireService;
-
-    @Autowired
-    private RFISurveyService surveyService;
 
     @Override
     @Transactional( readOnly = true )

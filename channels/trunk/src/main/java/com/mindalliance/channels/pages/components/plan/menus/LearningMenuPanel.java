@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.components.plan.menus;
 
 import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.model.Segment;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;

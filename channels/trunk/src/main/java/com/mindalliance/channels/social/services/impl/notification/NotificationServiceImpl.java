@@ -15,17 +15,18 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.data.messages.UserMessage;
+import com.mindalliance.channels.db.data.messages.UserStatement;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.services.messages.FeedbackService;
+import com.mindalliance.channels.db.services.messages.MessageOutboxService;
+import com.mindalliance.channels.db.services.messages.UserMessageService;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.RFISurveyService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.engine.analysis.Analyst;
-import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.social.model.UserMessage;
-import com.mindalliance.channels.social.model.UserStatement;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.FeedbackService;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.RFISurveyService;
-import com.mindalliance.channels.social.services.SurveysDAO;
-import com.mindalliance.channels.social.services.UserMessageService;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -119,24 +120,29 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// USER MESSAGES ////
 
     @Override
-    @Scheduled(fixedDelay = 60000)     // every minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfUserMessages() {
         LOG.debug( "Sending out user messages" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
-            Iterator<UserMessage> messagesToSend = userMessageService.listMessagesToSend( planCommunity.getUri() );
-            while ( messagesToSend.hasNext() ) {
-                UserMessage messageToSend = messagesToSend.next();
-                List<String> successes = sendMessages(
-                        messageToSend,
-                        UserStatement.TEXT,
-                        EXCLUDE_INTERNAL_MESSAGES,
-                        communityService );
-                // success = at least one message went out. No retries. Todo: retry each messaging failure?
-                if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
-                    userMessageService.markSent( messageToSend );
-                }
+            sendPendingMessages( userMessageService, communityService );
+            sendPendingMessages( feedbackService, communityService );
+        }
+    }
+
+    private void sendPendingMessages( MessageOutboxService messageOutboxService, CommunityService communityService ) {
+        Iterator<UserMessage> messagesToSend = messageOutboxService.listMessagesToSend( communityService.getPlanCommunity().getUri() );
+        while ( messagesToSend.hasNext() ) {
+            UserMessage messageToSend = messagesToSend.next();
+            List<String> successes = sendMessages(
+                    messageToSend,
+                    UserStatement.TEXT,
+                    EXCLUDE_INTERNAL_MESSAGES,
+                    communityService );
+            // success = at least one message went out. No retries. Todo: retry each messaging failure?
+            if ( !successes.isEmpty() ) {   // todo: assumes all messages sent successfully or none are
+                messageOutboxService.markSent( messageToSend );
             }
         }
     }
@@ -144,7 +150,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// FEEDBACK ////
 
     @Override
-    @Scheduled(fixedDelay = 60000)     // every minute
+    @Scheduled( fixedDelay = 60000 )     // every minute
     @Transactional
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
@@ -168,7 +174,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
@@ -263,17 +269,19 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     @Override
-//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
                 CommunityService communityService = getCommunityService( planCommunity );
-                // to survey participants
-                sendIncompleteRFIReports( communityService );
-                // to planners
-                sendSurveyStatusReports( communityService );
+                if ( communityService.getPlan().isDevelopment() ) { // send once per plan - there's exactly one dev version per plan
+                    // to survey participants
+                    sendIncompleteRFIReports( communityService );
+                    // to planners
+                    sendSurveyStatusReports( communityService );
+                }
             }
         }
     }

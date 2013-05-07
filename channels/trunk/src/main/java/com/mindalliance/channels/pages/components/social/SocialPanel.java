@@ -2,9 +2,9 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.db.data.messages.UserMessage;
+import com.mindalliance.channels.db.services.messages.UserMessageService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.UserMessage;
-import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;

@@ -32,7 +32,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
@@ -52,7 +51,7 @@ import java.util.Set;
  * Date: 4/19/12
  * Time: 10:33 AM
  */
-@Service
+/*@Service*/
 public class SurveysDAOImpl implements SurveysDAO {
 
     /**
@@ -61,16 +60,16 @@ public class SurveysDAOImpl implements SurveysDAO {
     public static final Logger LOG = LoggerFactory.getLogger( SurveysDAOImpl.class );
 
 
-    @Autowired
+    /*@Autowired*/
     private RFISurveyService rfiSurveyService;
 
-    @Autowired
+    /*@Autowired*/
     private QuestionnaireService questionnaireService;
 
     @Autowired
     private QuestionService questionService;
 
-    @Autowired
+    /*@Autowired*/
     private RFIService rfiService;
 
     @Autowired

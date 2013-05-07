@@ -4,15 +4,15 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.surveys.Questionnaire;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.RFISurveyService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.entities.AbstractFilterableTablePanel;
 import com.mindalliance.channels.pages.components.social.rfi.AllSurveysPanel;
-import com.mindalliance.channels.social.model.rfi.Questionnaire;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
-import com.mindalliance.channels.social.services.QuestionnaireService;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.RFISurveyService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -102,9 +102,10 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
         List<SurveyWrapper> surveyWrappers = new ArrayList<SurveyWrapper>();
         Set<Questionnaire> questionnairesUsed = new HashSet<Questionnaire>();
         for ( RFISurvey survey : rfiSurveyService.select( getCommunityService(), getModelObject() ) ) {
-            if ( !survey.getQuestionnaire().isIssueRemediation() ) {
+            Questionnaire questionnaire = findQuestionnaire( survey );
+            if ( !questionnaire.isIssueRemediation() ) {
                 surveyWrappers.add( new SurveyWrapper( survey ) );
-                questionnairesUsed.add( survey.getQuestionnaire() );
+                questionnairesUsed.add( questionnaire );
             }
         }
         for ( Questionnaire questionnaire : questionnaireService.findApplicableQuestionnaires(
@@ -205,7 +206,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
                     change.setProperty( AllSurveysPanel.SURVEYS );
                 }
             } else if ( change.isForProperty( "view" ) ) {
-                RFISurvey survey = selectedSurvey.getRfiSurvey();
+                RFISurvey survey = rfiSurveyService.refresh( selectedSurvey.getRfiSurvey() );
                 assert survey != null;
                 change.setSubject( survey );
                 change.setId( RFISurvey.UNKNOWN.getId() );
@@ -222,6 +223,10 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
         super.updateWith( target, change, updated );
     }
 
+    private Questionnaire findQuestionnaire( RFISurvey rfiSurvey ) {
+       return questionnaireService.load( rfiSurvey.getQuestionnaireUid() );
+    }
+
     public class SurveyWrapper implements Identifiable {
 
         private Questionnaire questionnaire;
@@ -230,7 +235,7 @@ public class ModelObjectSurveysPanel extends AbstractFloatingCommandablePanel {
 
         private SurveyWrapper( RFISurvey rfiSurvey ) {
             this.rfiSurvey = rfiSurvey;
-            questionnaire = rfiSurvey.getQuestionnaire();
+            questionnaire = findQuestionnaire( rfiSurvey );
         }
 
         private SurveyWrapper( Questionnaire questionnaire ) {

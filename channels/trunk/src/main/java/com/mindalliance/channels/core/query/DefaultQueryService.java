@@ -55,7 +55,7 @@ import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.social.services.SurveysDAO;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -3417,5 +3418,15 @@ public abstract class DefaultQueryService implements QueryService {
         this.surveysDAO = surveysDAO;
     }
 
+    @Override
+    public boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord ) {
+        try {
+            return id != null && getDao().find( clazz, id, dateOfRecord ) != null;
+        } catch ( NotFoundException e ) {
+            LOG.warn( "Does not exist: " + clazz.getSimpleName() + " at " + id + " recorded on " + dateOfRecord );
+            return false;
+        }
+
+    }
 }
 

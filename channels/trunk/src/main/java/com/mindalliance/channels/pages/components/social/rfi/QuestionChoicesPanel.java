@@ -2,9 +2,9 @@ package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.services.QuestionService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -31,10 +31,10 @@ import java.util.List;
  */
 public class QuestionChoicesPanel extends AbstractUpdatablePanel {
 
-    private static final int MAX_LENGTH = 30;
-
     @SpringBean
-    private QuestionService questionService;
+    private QuestionnaireService questionnaireService;
+
+    private static final int MAX_LENGTH = 30;
 
     private List<String> answerChoices;
 
@@ -133,17 +133,17 @@ public class QuestionChoicesPanel extends AbstractUpdatablePanel {
     }
 
     private void moveUp( String choice ) {
-        questionService.moveUpAnswerChoice( getQuestion(), choice );
+        questionnaireService.moveUpAnswerChoice( getQuestion(), choice );
         answerChoices = null;
     }
 
     private void moveDown( String choice ) {
-        questionService.moveDownAnswerChoice( getQuestion(), choice );
+        questionnaireService.moveDownAnswerChoice( getQuestion(), choice );
         answerChoices = null;
     }
 
     private void delete( String choice ) {
-        questionService.deleteAnswerChoice( getQuestion(), choice );
+        questionnaireService.deleteAnswerChoice( getQuestion(), choice );
         answerChoices = null;
     }
 
@@ -169,12 +169,12 @@ public class QuestionChoicesPanel extends AbstractUpdatablePanel {
 
     public void setNewChoice( String choice ) {
         if ( choice != null && !choice.isEmpty() ) {
-            questionService.addAnswerChoice( getQuestion(), choice );
+            questionnaireService.addAnswerChoice( getQuestion(), choice );
             answerChoices = null;
         }
     }
 
     private Question getQuestion() {
-        return (Question) getModel().getObject();
+        return questionnaireService.refreshQuestion( (Question) getModel().getObject() );
     }
 }

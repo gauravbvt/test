@@ -48,7 +48,7 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
             Messageable messageable,
             String topic,
             CommunityService communityService ) {
-        List<String> successes = new ArrayList<String>(  );
+        List<String> successes = new ArrayList<String>();
         List<ChannelsUserInfo> toUsers = getToUsers( messageable, topic, communityService );
         ChannelsUserInfo fromUser = getFromUser( messageable, topic );
         String subject = StringUtils.abbreviate(
@@ -88,7 +88,7 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
                         plan.getPlannerSupportCommunity( getDefaultSupportCommunity() ),
                         subject,
                         content,
-                        false);
+                        false );
                 reported = reported || success;
             }
         }
@@ -101,8 +101,11 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
             String subject,
             String content,
             boolean ccSelf ) {
-        boolean success = false;
-        if ( !fromAddress.equals( toAddress ) && ChannelsUtils.isValidEmailAddress( toAddress ) ) {
+        if ( fromAddress.equals( toAddress ) ) {
+            LOG.warn( "Not sending email about " + subject + " from " + fromAddress + " to self" );
+        }
+        boolean done = !ChannelsUtils.isValidEmailAddress( toAddress ) || fromAddress.equals( toAddress );
+        if ( !done ) { // todo - Bad semantics: Sending to self or to invalid address is considered "already done".
             try {
                 SimpleMailMessage email = new SimpleMailMessage();
                 email.setTo( toAddress );
@@ -118,13 +121,13 @@ public class EmailMessagingServiceImpl extends AbstractMessageServiceImpl implem
                 LOG.info( "Emailing " + subject + " to " + toAddress + " from " + fromAddress );
                 mailSender.send( email );
 
-                success = true;
+                done = true;
             } catch ( Exception e ) {
                 LOG.warn( "Failed to email " + subject + " to " + toAddress, e );
 
             }
         }
-        return success;
+        return done;
     }
 
     private String getDefaultFromAddress( Plan plan ) {

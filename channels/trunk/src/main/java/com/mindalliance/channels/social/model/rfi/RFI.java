@@ -365,7 +365,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
             String topic,
             Format format,
             CommunityService communityService ) {
-        SurveysDAO surveysDAO = communityService.getPlanService().getSurveysDAO();
+        SurveysDAO surveysDAO = (SurveysDAO) communityService.getPlanService().getSurveysDAO();
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagContent( format, communityService, surveysDAO );
         else if ( topic.equals( TODO ) )
@@ -385,7 +385,7 @@ public class RFI extends AbstractPersistentChannelsObject implements Messageable
         if ( topic.equals( NAG ) || topic.equals( DEADLINE ) )
             return getNagSubject( format, communityService );
         else if ( topic.equals( NEW ) )
-            return getNewRFISubject( format, planService, planService.getSurveysDAO() );
+            return getNewRFISubject( format, planService, (SurveysDAO)planService.getSurveysDAO() );
         else
             throw new RuntimeException( "Unknown topic " + topic );
     }

@@ -70,6 +70,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -153,6 +154,8 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      */
     private Updatable updateTarget;
     private ModalWindow dialogWindow;
+
+    protected static String[] CONTEXT_PARAMS = {COMMUNITY_PARM, PLAN_PARM, VERSION_PARM};
 
 
     //-------------------------------
@@ -534,7 +537,19 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         } catch ( UnsupportedEncodingException e ) {
             LOG.error( "Failed to url-encode", e );
         }
+        // Add non-context params from URL
+        List<String> contextParamNames = getContextParamNames();
+        PageParameters pageParameters = getPageParameters();
+        for ( String paramName : pageParameters.getNamedKeys() ) {
+            if ( !contextParamNames.contains( paramName ) ) {
+                result.set( paramName, pageParameters.get( paramName ) );
+            }
+        }
         return result;
+    }
+
+    protected List<String> getContextParamNames() {
+        return Arrays.asList( CONTEXT_PARAMS );
     }
 
     /**
@@ -706,8 +721,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             if ( isInCommunityContext() ) {
                 addFromCommunityParameters( params, getCommunityInContext() );
             }
-        }
-        else if ( isCommunityContext() ) {
+        } else if ( isCommunityContext() ) {
             params = makeCommunityParameters();
         }
         Class<? extends Page> pageClass = isPlanContext()
@@ -720,7 +734,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     @Override
     public List<PagePathItem> getOtherContextsPagePathItems() {
-        List<PagePathItem> pagePathItems = new ArrayList<PagePathItem>(  );
+        List<PagePathItem> pagePathItems = new ArrayList<PagePathItem>();
         List<? extends ModelObjectContext> modelObjectContexts =
                 isPlanContext()
                         ? getOtherPlans()
@@ -732,7 +746,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             Class<? extends Page> pageClass;
             String pageName;
             if ( isPlanContext() ) {
-                Plan plan = (Plan)modelObjectContext;
+                Plan plan = (Plan) modelObjectContext;
                 params = makePlanParameters( plan );
                 if ( isInCommunityContext() ) {
                     addFromCommunityParameters( params, getCommunityInContext() );
@@ -740,9 +754,8 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                 pageClass = PlansPage.class;
                 pageName = plan.getVersionedName();
                 pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
-            }
-            else if ( isCommunityContext() ) {
-                PlanCommunity planCommunity = (PlanCommunity)modelObjectContext;
+            } else if ( isCommunityContext() ) {
+                PlanCommunity planCommunity = (PlanCommunity) modelObjectContext;
                 params = makeCommunityParameters( planCommunity );
                 pageClass = CommunityPage.class;
                 pageName = planCommunity.getName();
@@ -975,7 +988,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         setPlan( plan );
     }
 
-   private Plan getPlanFromParameters(
+    private Plan getPlanFromParameters(
             PlanManager planManager,
             final ChannelsUser user,
             PageParameters parameters ) {
@@ -1037,12 +1050,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                 plans = planManager.getPlans();
             }
             LOG.warn( "PANIC: selecting first plan where user is authorized as planner" );
-            plan = (Plan)CollectionUtils.find(
+            plan = (Plan) CollectionUtils.find(
                     plans,
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            Plan p = (Plan)object;
+                            Plan p = (Plan) object;
                             return ( p.isProduction() && !isDomainPage() ) || user.isPlanner( p.getUri() );
                         }
                     }

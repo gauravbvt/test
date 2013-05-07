@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.model.rfi.RFI;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.data.surveys.RFI;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.model.Model;

@@ -27,6 +27,8 @@ import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -72,8 +74,6 @@ import com.mindalliance.channels.pages.components.segment.checklist.ChecklistFlo
 import com.mindalliance.channels.pages.components.social.rfi.AllSurveysPanel;
 import com.mindalliance.channels.pages.components.support.FlowLegendPanel;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;

@@ -314,7 +314,7 @@ background: none repeat scroll 0 0 #F6F6F6;
 
 div.feedback-urgency {
 	padding:5px 0 5px 0;
-	display: none;
+	/*display: none;*/
 }
 
 div.feedback-form-cont textarea {

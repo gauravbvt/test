@@ -12,7 +12,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.List;
  * Date: 2/14/12
  * Time: 10:42 AM
  */
-@Repository
+/*@Repository*/
 public class FeedbackServiceImpl extends GenericSqlServiceImpl<Feedback, Long> implements FeedbackService {
 
     @Override

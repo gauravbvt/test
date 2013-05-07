@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social;
 
+import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.model.UserMessage;
 import org.apache.wicket.model.IModel;
 
 /**

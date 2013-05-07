@@ -7,12 +7,12 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.services.RFIForwardService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
@@ -43,7 +43,7 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
     private SurveysDAO surveysDAO;
 
     @SpringBean
-    private RFIForwardService rfiForwardService;
+    private RFIService rfiService;
 
     private List<RFI> doneRFIs;
     private List<RFI> todoRFIs;
@@ -268,12 +268,12 @@ public class UserRFIsPanel extends AbstractUpdatablePanel {
         }
 
         public String getForwardedTo() {
-            List<String> forwardedTo = rfiForwardService.findForwardedTo( rfi );
+            List<String> forwardedTo = rfiService.findForwardedTo( rfi );
             return ChannelsUtils.listToString( new ArrayList<String>( forwardedTo ), ", " );
         }
 
         public int getForwardedToCount() {
-            return rfiForwardService.findForwardedTo( rfi ).size();
+            return rfiService.findForwardedTo( rfi ).size();
         }
 
         public String getExpandLabel() {

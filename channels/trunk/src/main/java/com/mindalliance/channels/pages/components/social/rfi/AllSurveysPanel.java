@@ -2,10 +2,10 @@ package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.GeoLocatable;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.pages.Releaseable;
 import com.mindalliance.channels.pages.components.AbstractFloatingMultiAspectPanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
-import com.mindalliance.channels.social.model.rfi.RFISurvey;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;

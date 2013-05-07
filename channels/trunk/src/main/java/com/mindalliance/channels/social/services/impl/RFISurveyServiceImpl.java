@@ -14,7 +14,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.List;
  * Date: 3/7/12
  * Time: 11:18 AM
  */
-@Repository
+/*@Repository*/
 public class RFISurveyServiceImpl extends GenericSqlServiceImpl<RFISurvey, Long> implements RFISurveyService {
 
     public RFISurveyServiceImpl() {

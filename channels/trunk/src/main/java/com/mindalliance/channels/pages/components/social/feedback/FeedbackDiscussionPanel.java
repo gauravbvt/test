@@ -2,13 +2,13 @@ package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.data.messages.UserMessage;
+import com.mindalliance.channels.db.services.messages.FeedbackService;
+import com.mindalliance.channels.db.services.messages.UserMessageService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.FeedbackStatementPanel;
 import com.mindalliance.channels.pages.components.social.UserMessagePanel;
-import com.mindalliance.channels.social.model.Feedback;
-import com.mindalliance.channels.social.model.UserMessage;
-import com.mindalliance.channels.social.services.FeedbackService;
-import com.mindalliance.channels.social.services.UserMessageService;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -44,8 +44,6 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     @SpringBean
     private UserMessageService userMessageService;
 
-    private Feedback feedback;
-
     private static final int MAX_REPLIES_ROWS = 10;
     private String reply;
     private TextArea<String> replyTextArea;
@@ -75,8 +73,6 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         this.showProfile = showProfile;
         this.canResolve = canResolve;
         this.personalOnly = personalOnly;
-        feedback = feedbackModel.getObject();
-        feedbackService.refresh( feedback );
         init();
     }
 
@@ -100,7 +96,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                 feedbackService.toggleResolved( getFeedback() );
                 addResolve();
                 target.add( resolvedContainer );
-                update( target, new Change( Change.Type.Updated, feedback ) );
+                update( target, new Change( Change.Type.Updated, getFeedback() ) );
             }
         };
         resolvedButton.add( new AttributeModifier( "value", new Model<String>( resolvedValue) ) );
@@ -113,7 +109,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     private void addFeedbackPanel() {
         add( new FeedbackStatementPanel(
                 "feedback",
-                new Model<Feedback>( feedback ),
+                new PropertyModel<Feedback>( this, "feedback" ),
                 1,
                 showProfile,
                 this
@@ -183,7 +179,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
         repliesContainer = new WebMarkupContainer( "replies" );
         repliesContainer.setOutputMarkupId( true );
         addOrReplace( repliesContainer );
-        List<UserMessage> replies = feedback.getReplies();
+        List<UserMessage> replies = getFeedback().getReplies();
         Collections.sort( replies , new Comparator<UserMessage>() {
             @Override
             public int compare( UserMessage m1, UserMessage m2 ) {
@@ -206,12 +202,13 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
                 ) );
             }
         };
-        if ( personalOnly ) userMessageService.markFeedbackRepliesRead( feedback );
+        if ( personalOnly ) feedbackService.markFeedbackRepliesRead( getFeedback() );
         repliesContainer.add( userMessagesListView );
     }
 
     private void replyToFeedback( boolean emailIt ) {
         if ( reply != null && !reply.trim().isEmpty() ) {
+            Feedback feedback = getFeedback();
             UserMessage message = new UserMessage( getUsername(), reply, getPlanCommunity() );
             message.setToUsername( feedback.getUsername() );
             message.setText( reply );
@@ -229,7 +226,9 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
     }
 
     public Feedback getFeedback() {
-        return (Feedback) getModel().getObject();
+        // Always get an up-to-date copy from the db
+        Feedback feedback = (Feedback) getModel().getObject();
+        return feedbackService.load( feedback.getUid() );
     }
 
 }

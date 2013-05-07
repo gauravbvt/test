@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -35,7 +34,7 @@ import java.util.Map;
  * Time: 3:51 PM
  */
 
-@Repository
+/*@Repository*/
 public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, Long> implements UserMessageService {
 
     /**
@@ -62,8 +61,8 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
     @Override
     @Transactional
     public void deleteMessage( UserMessage message ) {
-            delete( message );
-            changed( message.getPlanUri() );
+        delete( message );
+        changed( message.getPlanUri() );
     }
 
     @Override
@@ -141,7 +140,7 @@ public class UserMessageServiceImpl extends GenericSqlServiceImpl<UserMessage, L
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "feedback", feedback ) );
-        for (UserMessage replyMessage : (List<UserMessage>)criteria.list()) {
+        for ( UserMessage replyMessage : (List<UserMessage>) criteria.list() ) {
             replyMessage.setRead( true );
             save( replyMessage );
         }

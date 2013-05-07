@@ -1,16 +1,15 @@
 package com.mindalliance.channels.pages.components.social.rfi;
 
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.surveys.Answer;
+import com.mindalliance.channels.db.data.surveys.AnswerSet;
+import com.mindalliance.channels.db.data.surveys.Question;
+import com.mindalliance.channels.db.data.surveys.RFI;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.services.surveys.QuestionnaireService;
+import com.mindalliance.channels.db.services.surveys.RFIService;
+import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
-import com.mindalliance.channels.social.model.rfi.Answer;
-import com.mindalliance.channels.social.model.rfi.AnswerSet;
-import com.mindalliance.channels.social.model.rfi.Question;
-import com.mindalliance.channels.social.model.rfi.RFI;
-import com.mindalliance.channels.social.services.AnswerService;
-import com.mindalliance.channels.social.services.AnswerSetService;
-import com.mindalliance.channels.social.services.QuestionService;
-import com.mindalliance.channels.social.services.RFIService;
-import com.mindalliance.channels.social.services.SurveysDAO;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -45,13 +44,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     private RFIService rfiService;
 
     @SpringBean
-    private QuestionService questionService;
-
-    @SpringBean
-    private AnswerSetService answerSetService;
-
-    @SpringBean
-    private AnswerService answerService;
+    private QuestionnaireService questionnaireService;
 
     @SpringBean( name="surveysDao" )
     private SurveysDAO surveysDAO;
@@ -82,9 +75,11 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     private void processOtherResults() {
+        RFI rfi = getRFI();
+        RFISurvey rfiSurvey = rfi.getRfiSurvey( getCommunityService() );
         results = surveysDAO.processAnswers(
                 getCommunityService(),
-                getRFI().getRfiSurvey(),
+                rfiSurvey,
                 getQuestion(),
                 SHARED_ONLY,
                 getUsername() );
@@ -223,11 +218,12 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     }
 
     protected Question getQuestion() {
-        return questionModel.getObject();
+        return questionnaireService.refreshQuestion( questionModel.getObject() );
     }
 
     protected RFI getRFI() {
-        return rfiModel.getObject();
+        RFI rfi = rfiService.refresh( rfiModel.getObject() );
+        return rfi == null ? rfiModel.getObject() : rfi;  // rfi may be transient if previewing
     }
 
     protected int getQuestionIndex() {
@@ -237,20 +233,20 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
     protected String getQuestionText() {
         Map<String, Object> extraContext = new HashMap<String, Object>();
         extraContext.put( "user", getUserFullName( getUsername() ) );
-        extraContext.put( "planner", getUserFullName( getRFI().getRfiSurvey().getUsername() ) );
+        extraContext.put( "planner", getUserFullName( getRFI().getRfiSurvey( getCommunityService() ).getUsername() ) );
         return ChannelsUtils.convertTemplate(
                 getQuestion().getText(),
-                getRFI().getRfiSurvey().getAbout( getCommunityService() ),
+                getRFI().getRfiSurvey( getCommunityService() ).getAbout( getCommunityService() ),
                 extraContext );
     }
 
     protected AnswerSet getAnswerSet() {
         RFI rfi = getRFI();
         if ( getQuestion().isAnswerable() && answerSet == null && rfi.isPersisted() ) {
-            answerSet = answerSetService.findAnswerSet( rfi, getQuestion() );
+            answerSet = rfiService.findAnswerSet( rfi, getQuestion() );
         }
         if ( answerSet == null ) {
-            answerSet = new AnswerSet( getPlanCommunity(), getUser(), getRFI(), getQuestion() );
+            answerSet = new AnswerSet( getPlanCommunity(), getUser() );
         }
         return answerSet;
     }
@@ -273,7 +269,7 @@ abstract public class AbstractAnswerPanel extends AbstractUpdatablePanel {
 
     public void saveChanges() {
         if ( isChanged() ) {
-            getSurveysDAO().saveAnswerSet( getAnswerSet() );
+            rfiService.saveAnswerSet( getAnswerSet(), getRFI(), getQuestion() );
         }
     }
 
