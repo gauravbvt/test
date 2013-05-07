@@ -1,9 +1,0 @@
-TestCaseId,VerificationStepNo,Description,Result,ScriptException,ErrorReport
-MAV0001_viewLoginPage,1,Browser initialized,Pass,,
-MAV0001_viewLoginPage,2,URL Entered,Pass,,
-MAV0001_viewLoginPage,3,Quited browser,Pass,,
-TestCaseId,VerificationStepNo,Description,Result,ScriptException,ErrorReport
-MAV0002_viewHomePage,1,Browser initialized,Pass,,
-MAV0002_viewHomePage,2,URL Entered,Pass,,
-MAV0002_viewHomePage,3,Login successful,Pass,,
-MAV0002_viewHomePage,4,Logout successful,Pass,,
