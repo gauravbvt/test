@@ -72,8 +72,6 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
             Collections.synchronizedMap(
                     new HashMap<CommunityDefinition, CommunityDao>() );
 
-    private List<PlanCommunity> planCommunities;
-
     /**
      * Name of the default support community.
      */
@@ -112,10 +110,6 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
 
     public PlanCommunityManagerImpl() {
-    }
-
-    private void resetPlanCommunities() {
-        planCommunities = null;
     }
 
     public String getServerUrl() {
@@ -214,22 +208,20 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     }
 
     public synchronized List<PlanCommunity> getPlanCommunities() {
-        if ( planCommunities == null ) {
-            planCommunities = new ArrayList<PlanCommunity>();
-            for ( CommunityDefinition definition : communityDefinitionManager ) {
-                String uri = definition.getUri();
-                CommunityDao dao = getDao( uri );
-                if ( dao != null ) {
-                    planCommunities.add( dao.getPlanCommunity() );
-                    initialize( dao.getPlanCommunity() );
-                }
+        List<PlanCommunity> planCommunities = new ArrayList<PlanCommunity>();
+        for ( CommunityDefinition definition : communityDefinitionManager ) {
+            String uri = definition.getUri();
+            CommunityDao dao = getDao( uri );
+            if ( dao != null ) {
+                planCommunities.add( dao.getPlanCommunity() );
+                initialize( dao.getPlanCommunity() );
             }
-            for ( Plan plan : planManager.getPlans() ) {
-                planCommunities.add( getDomainPlanCommunity( plan ) );
-            }
-            Collections.sort( planCommunities );
-            planCommunities = Collections.unmodifiableList( planCommunities );
         }
+        for ( Plan plan : planManager.getPlans() ) {
+            planCommunities.add( getDomainPlanCommunity( plan ) );
+        }
+        Collections.sort( planCommunities );
+        planCommunities = Collections.unmodifiableList( planCommunities );
         return planCommunities;
     }
 
@@ -340,8 +332,9 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     /**
      * Takes snapshot of community with a given plan version.
      * Doesn't change the plan community's version (change effective only on reload)
+     *
      * @param planCommunity a plan community
-     * @param version a version
+     * @param version       a version
      */
     private void saveWithVersion( PlanCommunity planCommunity, int version ) {
         try {
@@ -359,7 +352,6 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         CommunityDefinition communityDefinition = communityDefinitionManager.create(
                 plan.getUri(),
                 plan.getVersion() );
-        planCommunities = null; // reset
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
         communityPlannerService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
@@ -428,7 +420,6 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         CommunityDefinition oldDefinition = communityDefinitionManager.updateToPlanVersion( planCommunity, version );
         // continues here if community definition update successful
         // force a reload
-        resetPlanCommunities();
         daoIndex.remove( oldDefinition );
         communityServiceFactory.removeService( planCommunity );
         commanderFactory.reset( planCommunity );

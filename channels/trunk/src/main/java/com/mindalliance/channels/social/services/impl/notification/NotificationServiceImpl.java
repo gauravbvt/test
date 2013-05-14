@@ -174,7 +174,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+//    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
@@ -269,10 +269,10 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+//    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnSurveys() {
-        LOG.debug( "Sending out reports of new feedback" );
+        LOG.debug( "Sending out reports of incomplete surveys and surveys status" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
                 CommunityService communityService = getCommunityService( planCommunity );
@@ -334,7 +334,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnParticipationConfirmation() {
         // todo
@@ -367,7 +367,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-//    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled( fixedDelay = 86400000 )   // each day
     @Transactional
     public void reportOnParticipationRequests() {
         //Todo

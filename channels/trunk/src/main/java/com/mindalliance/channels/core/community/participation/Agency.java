@@ -47,6 +47,11 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         fixedOrganization = Organization.UNKNOWN;
     }
 
+    public Agency( String name ) {
+        this();
+        this.name = name;
+    }
+
     public Agency( Organization fixedOrganization ) {
         assert fixedOrganization.isActual();
         this.fixedOrganization = fixedOrganization;

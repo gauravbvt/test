@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="orgParticipationManager">
+        <div class="placeholders">
+            <div class="placeholders-filtering">
+                Show
+                <select wicket:id="phFilter">
+                    <option>All</option>
+                    <option>Empty</option>
+                    <option>Non-empty</option>
+                </select>
+                placeholders
+            </div>
+            <table wicket:id="placeholderListContainer">
+                <tr wicket:id="placeholders"> <!-- repeated -->
+                    <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
+                    <td><span wicket:id="placeholder">placeholder name</span></td>
+                    <td><span wicket:id="metrics">1 participation (max is 4)</span></td>
+                </tr>
+            </table>
+        </div>
+        <div wicket:id="participation">
+            <div class="assignedOrgs">
+                <div class="assignedOrgs-title">
+                    Organizations participating as <span wicket:id="placeholderName">the placeholder</span><br/>
+                </div>
+                <table>
+                    <tr wicket:id="agencies"> <!-- repeated -->
+                        <td><input wicket:id="participating" type="checkbox"/></td>
+                        <td><span wicket:id="agency">agency name</span></td>
+                        <td><a wicket:id="profile" class="more">Profile</a></td>
+                        <td><a wicket:id="remove" class="more">Remove</a></td>
+                    </tr>
+                </table>
+            </div>
+            <div wicket:id="registering" class="add-new-org">
+                <label>Add new organization participating as <span wicket:id="phName">ph name</span> :</label>
+                <input wicket:id="newAgencyName" type="text"/>
+                <input wicket:id="registerIt" type="button" value="Add"/>
+            </div>
+        </div>
+        <div wicket:id="summary" class="partman-note">No organization participates as "placeholder"</div>
+        <input wicket:id="cancel" type="button" value="Cancel"/>
+        <input wicket:id="submit" type="button" value="Submit"/>
+    </div>
+    <div wicket:id="profileDialog">
+    </div>
+</wicket:panel>
+</body>
+</html>

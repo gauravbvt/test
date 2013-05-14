@@ -29,7 +29,7 @@ CONFIGURATION NOTES:
 
     <mongo:mongo id="mongo"/>
 
-    <mongo:db-factory id="mongoDbFactory" dbname="channels"/>
+    <mongo:db-factory id="mongoDbFactory" host="${mongodb.host}" port="${mongodb.port}" dbname="channels"/>
 
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="mongoDbFactory" />

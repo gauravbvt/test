@@ -2767,4 +2767,99 @@ div.manage-plan a.button {
 
 
 
+div.placeholders,
+div.assignedOrgs {
+	padding: 15px 0;
+}
 
+div.placeholders-filtering,
+div.assignedOrgs-title {
+	padding: 12px;
+	font-size: 12px;
+	text-transform: uppercase;
+	background: #ccc;
+	border: 1px solid gray;
+	border-bottom: none;
+}
+
+div.placeholders-filtering select {
+	font-size: 12px;
+	text-transform: uppercase;
+	
+}
+
+div.placeholders table,
+div.assignedOrgs table {
+	margin:0;
+	padding: 0;
+	width:100%;
+	border: 1px solid gray;
+	background: #e8e8e8;
+	border-collapse: collapse;
+}
+
+div.placeholders table td,
+div.assignedOrgs table td {
+	padding: 10px;
+	border-bottom: 1px solid gray;
+}
+
+div.placeholders table tr td:first-child,
+div.assignedOrgs table tr td:first-child {
+	width: 15px;
+	padding: 10px 0 10px 10px;
+}
+
+div.placeholders table tr td:last-child {
+	text-align: right;
+	color: #666;
+	font-size: 10px;
+}
+
+div.assignedOrgs table td a.more {
+	float: right;
+}
+
+div.add-new-org {
+	padding:15px;
+	border: 1px solid gray;
+	background: #e8e8e8;
+	border-collapse: collapse;
+	float: left;
+	width: 734px;
+}
+
+div.add-new-org input[type=text] {
+	clear: both;
+	float: right;
+	margin: 0 0 5px 0;
+	padding: 3px;
+	width: 250px;
+}
+
+
+div.add-new-org input[type=button] {
+	float: right;
+	clear: both;
+	margin-top: 5px;
+}
+
+div.partman-note {
+	background:#f9da73;
+	padding: 10px;
+	width: 744px;
+	border: 1px solid gray;
+	float: left;
+	font-size: 11px;
+	font-style: italic;
+	margin: 15px 0;
+}
+
+/*
+div.assignedOrgs-title {
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+	text-transform: uppercase;
+	padding: 0 0 15px 0;
+}*/

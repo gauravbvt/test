@@ -364,10 +364,10 @@ public class AdminPage extends AbstractChannelsWebPage {
             userList.removeAll();
         }
 
-        if ( newPlanUri != null ) {
+        if ( newPlanUri != null && newPlanClient != null ) {
             try {
                 String newPlanName =
-                        newPlanClient != null && !newPlanClient.isEmpty()
+                       !newPlanClient.isEmpty()
                                 ? ( newPlanClient + ( newPlanClient.endsWith( "s" ) ? "'" : "'s" ) + " New Plan" )
                                 : "New Plan";
                 planDefinitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );

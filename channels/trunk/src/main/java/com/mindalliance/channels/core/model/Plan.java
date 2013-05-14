@@ -357,7 +357,7 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     }
 
     public String getClient() {
-        return client;
+        return client == null ? "UNKNOWN" : client;
     }
 
     public void setClient( String client ) {
