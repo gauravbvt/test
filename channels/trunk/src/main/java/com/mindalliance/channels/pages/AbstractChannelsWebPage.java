@@ -39,6 +39,7 @@ import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
+import com.mindalliance.channels.pages.components.help.GalleryPanel;
 import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
@@ -100,6 +101,11 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static final String FROM_COMMUNITY = "from_community";
 
+    public static final int GALLERY_WIDTH = 1000;
+
+    public static final int GALLERY_HEIGHT = 500;
+
+
     /**
      * Logger.
      */
@@ -154,6 +160,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      */
     private Updatable updateTarget;
     private ModalWindow dialogWindow;
+    private ModalWindow galleryWindow;
 
     protected static String[] CONTEXT_PARAMS = {COMMUNITY_PARM, PLAN_PARM, VERSION_PARM};
 
@@ -1228,6 +1235,56 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public void hideDialog( AjaxRequestTarget target ) {
         dialogWindow.close( target );
     }
+
+    // Gallery
+
+    public void addGalleryModalWindow( String id, String cookieName, MarkupContainer container ) {
+        galleryWindow = new ModalWindow( id ) {
+            @Override
+            protected ResourceReference newCssResource() {
+                return null;
+            }
+        };
+        galleryWindow.setOutputMarkupId( true );
+        galleryWindow.setResizable( true );
+        galleryWindow.setContent(
+                new Label(
+                        galleryWindow.getContentId(),
+                        "" ) );
+        galleryWindow.setTitle( "" );
+        galleryWindow.setCookieName( cookieName );
+        galleryWindow.setCloseButtonCallback(
+                new ModalWindow.CloseButtonCallback() {
+                    public boolean onCloseButtonClicked( AjaxRequestTarget target ) {
+                        return true;
+                    }
+                } );
+        galleryWindow.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
+            public void onClose( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.Collapsed, Channels.GALLERY_ID );
+                changed( change );
+            }
+        } );
+        galleryWindow.setHeightUnit( "px" );
+        galleryWindow.setInitialHeight( 0 );
+        galleryWindow.setInitialWidth( 0 );
+        container.addOrReplace( galleryWindow );
+    }
+
+    public void showGallery( AjaxRequestTarget target ) {
+        galleryWindow.setTitle( "Channels Gallery" );
+        galleryWindow.setInitialHeight( GALLERY_HEIGHT );
+        galleryWindow.setInitialWidth( GALLERY_WIDTH );
+        galleryWindow.setContent( new GalleryPanel( galleryWindow.getContentId() ) );
+        galleryWindow.show( target );
+    }
+
+    public void hideGallery( AjaxRequestTarget target ) {
+        galleryWindow.close( target );
+    }
+
+   /// END gallery
+
 
     @Override
     public String getModalContentId() {

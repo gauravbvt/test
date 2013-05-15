@@ -3902,3 +3902,8 @@ ul.attach li.controls {
     padding: 5px 5px 10px 10px;
     text-align: right;
 }
+
+/* Gallery */
+#fancybox-wrap {
+    z-index: 100000;
+}

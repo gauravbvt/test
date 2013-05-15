@@ -501,6 +501,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         add( body );
         addNotifier( body );
         addModalDialog( "dialog", null, body );
+        addGalleryModalWindow( "gallery", null, body );
         addForm( body );
     }
 
@@ -531,7 +532,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         quickHelpLink = new AjaxLink<String>( "quickHelpButton" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                helpPanel.selectTopicInSection( "plan-editor", "about-plan-editor" , target );
+                helpPanel.selectTopicInSection( "plan-editor", "about-plan-editor", target );
                 toggleQuickHelp( target );
             }
         };
@@ -554,8 +555,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private void showHelp( Change change, AjaxRequestTarget target ) {
         showingQuickHelp = true;
         updateQuickHelpVisibility( target );
-        sectionId = (String)change.getQualifier( "sectionId" );
-        topicId = (String)change.getQualifier( "topicId" );
+        sectionId = (String) change.getQualifier( "sectionId" );
+        topicId = (String) change.getQualifier( "topicId" );
         helpPanel.selectTopicInSection( sectionId, topicId, target );
     }
 
@@ -570,7 +571,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private Map<String, Object> getHelpContext() {
-        Map<String,Object> context = new HashMap<String,Object>();
+        Map<String, Object> context = new HashMap<String, Object>();
         context.put( "page", this );
         return context;
     }
@@ -648,7 +649,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     }
 
     private void addAllSegmentsButton() {
-        allSegmentsButton = new AjaxLink<String>( "allSegmentsButton") {
+        allSegmentsButton = new AjaxLink<String>( "allSegmentsButton" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 boolean isExpanded = getExpansions().contains( Channels.ALL_SEGMENTS );
@@ -661,7 +662,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         };
         allSegmentsButton.setOutputMarkupId( true );
         addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this plan" );
-        form.addOrReplace(  allSegmentsButton );
+        form.addOrReplace( allSegmentsButton );
     }
 
     private void addRefreshNow() {
@@ -2232,6 +2233,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
             refreshAllMenus( target );
             if ( change.isForInstanceOf( Plan.class ) && change.isSelected() ) {  // Not caused anymore
                 redirectToPlan();
+            } else if ( change.getId() == Channels.GALLERY_ID ) {
+                if ( change.isExpanded() )
+                    showGallery( target );
+                else if ( change.isCollapsed() )
+                    hideGallery( target );
             } else if ( change.isCollapsed() && change.getId() == Channels.GUIDE_ID ) {
                 toggleQuickHelp( target );
             } else if ( change.isGuide() ) {
@@ -2612,7 +2618,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( identifiable != null
                 && identifiable instanceof Part
                 && change.isAspect( "checklist-flow" ) ) {
-            addChecklistFlowPanel( change.isAspectClosed() ? null : (Part)identifiable );
+            addChecklistFlowPanel( change.isAspectClosed() ? null : (Part) identifiable );
             target.add( checklistFlowPanel );
         } else if ( checklistFlowPanel instanceof ChecklistFlowFloatingPanel ) {
             ( (ChecklistFlowFloatingPanel) checklistFlowPanel ).refresh( target, change, updated );

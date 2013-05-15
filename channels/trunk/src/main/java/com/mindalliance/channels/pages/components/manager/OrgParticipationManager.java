@@ -72,6 +72,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
     private List<Agency> addedParticipation = new ArrayList<Agency>();
     private List<Agency> removedParticipation = new ArrayList<Agency>();
     private Set<Agency> registeredAgencies = new HashSet<Agency>();
+    private Set<Agency> unregisteredAgencies = new HashSet<Agency>();
     private ChannelsModalWindow profileDialog;
     private WebMarkupContainer registeringContainer;
     private String newAgencyName;
@@ -151,9 +152,13 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 item.add( new Label( "placeholder", placeholder.getName() ) );
                 // metrics
                 int count = getParticipatingAgencies( placeholder ).size();
+                String metrics = "("
+                        + count
+                        + (count > 1 ? " organizations" : "organization")
+                        + ")";
                 item.add( new Label(
                         "metrics",
-                        "(" + count + ")" ) );
+                        metrics ) );
             }
         };
         placeholderList.setOutputMarkupId( true );
@@ -199,6 +204,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         if ( selectedPlaceholder != null && selectedPlaceholder.equals( placeholder ) ) {
             agencies.addAll( addedParticipation );
             agencies.removeAll( removedParticipation );
+            agencies.removeAll( unregisteredAgencies );
         }
         return new ArrayList<Agency>( agencies );
     }
@@ -226,7 +232,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 // participating?
                 AjaxCheckBox participatingAsCheckBox = new AjaxCheckBox(
                         "participating",
-                        new Model<Boolean>( getParticipatingAgencies( selectedPlaceholder ).contains(agency) )
+                        new Model<Boolean>( getParticipatingAgencies( selectedPlaceholder ).contains( agency ) )
                 ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
@@ -261,7 +267,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                         update( target, Change.message(
-                                success ? "Removed " + agency.getName()
+                                success ? agency.getName() + " will be removed on submit"
                                         : "Failed to remove "
                                         + agency.getName()
                         ) );
@@ -285,13 +291,8 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         boolean success = false;
         if ( agency != null ) {
             if ( canBeRemoved( agency ) ) {
-                RegisteredOrganization registeredOrganization = agency.getRegisteredOrganization();
-                if ( registeredOrganization != null ) {
-                    success = registeredOrganizationService.removeIfUnused(
-                            getUser(),
-                            agency.getName(),
-                            getCommunityService() );
-                }
+                unregisteredAgencies.add( agency );
+                success = true;
             }
         }
         return success;
@@ -453,6 +454,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         .append( selectedPlaceholder.getName() )
                         .append( "." );
             } else {
+                // existing participation
                 int size = alreadyAssigned.size();
                 for ( int i = 1; i <= alreadyAssigned.size(); i++ ) {
                     sb.append( alreadyAssigned.get( i - 1 ).getName() );
@@ -469,17 +471,28 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 sb.append( " " )
                         .append( selectedPlaceholder.getName() )
                         .append( "." );
-                if ( !addedParticipation.isEmpty() ) {
+                // new participation
+                List<Agency> added = new ArrayList<Agency>( addedParticipation );
+                added.addAll( registeredAgencies );
+                added.removeAll( removedParticipation );
+                if ( !added.isEmpty() ) {
                     sb.append( " " );
-                    size = addedParticipation.size();
-                    for ( int i = 1; i <= addedParticipation.size(); i++ ) {
-                        sb.append( addedParticipation.get( i - 1 ).getName() );
+                    size = added.size();
+                    for ( int i = 1; i <= added.size(); i++ ) {
+                        sb.append( added.get( i - 1 ).getName() );
                         if ( i == size - 2 )
                             sb.append( " and " );
                         else if ( i < size - 2 )
                             sb.append( ", " );
                     }
-                    sb.append( " will be added." );
+                    if ( !added.isEmpty() ) {
+                        sb.append( " will also participate." );
+                    } else {
+                        sb.append( "will participate as ")
+                                .append( selectedPlaceholder.getName() )
+                                .append( "." );
+                    }
+
                 }
 
                 if ( !removedParticipation.isEmpty() ) {
@@ -492,7 +505,23 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         else if ( i < size - 2 )
                             sb.append( ", " );
                     }
-                    sb.append( " will be removed from participation." );
+                    sb.append( "will no longer participate as ")
+                            .append( selectedPlaceholder.getName() )
+                            .append( ".");
+                }
+
+                List<Agency> unregistered = new ArrayList<Agency>( unregisteredAgencies );
+                if ( !unregistered.isEmpty() ) {
+                    sb.append( " " );
+                    size = unregistered.size();
+                    for ( int i = 1; i <= unregistered.size(); i++ ) {
+                        sb.append( unregistered.get( i - 1 ).getName() );
+                        if ( i == size - 2 )
+                            sb.append( " and " );
+                        else if ( i < size - 2 )
+                            sb.append( ", " );
+                    }
+                    sb.append( " will be removed from the community altogether." );
                 }
             }
             return sb.toString();
@@ -514,6 +543,12 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 target.add( placeholderListContainer );
                 target.add( participationContainer );
                 target.add( summaryLabel );
+                if ( selectedPlaceholder != null ) {
+                    update( target, Change.message(
+                            "Changes to participation as "
+                                    + selectedPlaceholder
+                                    + " are cancelled" ) );
+                }
             }
         };
         add( cancelLink );
@@ -531,6 +566,12 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 target.add( participationContainer );
                 target.add( participationContainer );
                 target.add( summaryLabel );
+                if ( selectedPlaceholder != null ) {
+                    update( target, Change.message(
+                            "Changes to participation as "
+                                    + selectedPlaceholder
+                                    + " were submitted" ) );
+                }
             }
         };
         add( submitLink );
@@ -538,6 +579,9 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
 
     private void executePendingParticipationChanges() {
         CommunityService communityService = getCommunityService();
+        for ( Agency agency : unregisteredAgencies ) {
+            registeredOrganizationService.removeIfUnused( getUser(), agency.getName(), communityService );
+        }
         for ( Agency agency : registeredAgencies ) {
             registeredOrganizationService.findOrAdd( getUser(), agency.getName(), communityService );
         }
@@ -580,6 +624,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         addedParticipation = new ArrayList<Agency>();
         removedParticipation = new ArrayList<Agency>();
         registeredAgencies = new HashSet<Agency>();
+        unregisteredAgencies = new HashSet<Agency>();
     }
 
     private void addAgencyProfile( Agency agency ) {
@@ -624,6 +669,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 agencies.add( agency );
             }
             List<Agency> sortedAgencies = new ArrayList<Agency>( agencies );
+            sortedAgencies.removeAll( unregisteredAgencies );
             Collections.sort( sortedAgencies, new Comparator<Agency>() {
                 @Override
                 public int compare( Agency a1, Agency a2 ) {
