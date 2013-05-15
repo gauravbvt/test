@@ -8,19 +8,20 @@
 
 <body>
 <wicket:panel>
-    <div class="gallery">
-        <h1>Channels Gallery</h1>
-        <p wicket:id="groups"> <!--repeated -->
-            <div wicket:id="groupName">Group name</div>
-            <span wicket:id="visualizations">
-                <a wicket:id="visualization"
-                   href="viz/something_b.jpg"
-                   title="A title">
-                    <img wicket:id="thumbnail" alt="something" src="viz/something_s.jpg"/>
-                </a>
-            </span><!-- repeated -->
-        </p>
-    </div>
+    <span class="gallery">
+        <div>
+            <p wicket:id="groups"> <!--repeated -->
+                <span class="group-name" wicket:id="groupName">Group name</span>
+                <span wicket:id="visualizations">
+                    <a wicket:id="visualization"
+                       href="viz/something_b.jpg"
+                       title="A title">
+                        <img wicket:id="thumbnail" alt="something" src="viz/something_s.jpg"/>
+                    </a>
+                </span><!-- repeated -->
+            </p>
+        </div>
+    </span>
 </wicket:panel>
 </body>
 </html>

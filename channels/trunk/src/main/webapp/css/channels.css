@@ -3904,6 +3904,48 @@ ul.attach li.controls {
 }
 
 /* Gallery */
-#fancybox-wrap {
-    z-index: 100000;
+.gallery .group-name {
+    display: block;
+    font-size: large;
+    margin-top: 20px;
 }
+
+.gallery div {
+    margin: 20px auto 0 auto;
+    padding: 0 30px 30px 30px;
+    border: solid 1px #cbcbcb;
+    background: #fafafa;
+    -moz-box-shadow: 0px 0px 10px #cbcbcb;
+    -webkit-box-shadow: 0px 0px 10px #cbcbcb;
+}
+
+
+.gallery hr {
+    border: none;
+    height: 1px; line-height: 1px;
+    background: #E5E5E5;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.gallery p {
+    margin: 0;
+    padding: 7px 0;
+}
+
+.gallery a {
+    outline: none;
+}
+
+.gallery a img {
+    border: 1px solid #BBB;
+    padding: 2px;
+    margin: 10px 20px 10px 0;
+    vertical-align: top;
+}
+
+.gallery a img.last {
+    margin-right: 0;
+}
+
+

@@ -37,17 +37,17 @@ public class GalleryPanel extends AbstractUpdatablePanel {
     static {
         groups = new ArrayList<Group>();
         groups.add( new Group( "Planning visualizations" )
-                .add( "segmentMap", "All segments in a collaboration plan and how they are related" )
-                .add( "flowMap", "The tasks definitions in a segment of a plan and how they are connected by information flows" )
-                .add( "checklistFlow", "The process flow for the execution of a task, as prescribed by its checklist" )
+                .add( "segmentMap", "All segments making up a collaboration plan and how they are related" )
+                .add( "flowMap", "The tasks in the segment of a plan and how they are connected by information flows" )
+                .add( "checklistFlow", "The process flow for the execution of a task, as defined by its checklist" )
                 .add( "checklistMap", "How assigned tasks are inter-connected by information flows with other assigned tasks" )
-                .add( "taxonomy", "How concepts (roles, organization types etc.) used in the definition of a plan form taxonomies" )
+                .add( "taxonomy", "How a plan's vocabulary (roles, organization types etc.) form taxonomies" )
         );
         groups.add( new Group( "Analytical visualizations" )
-                .add( "failureImpact", "Cascading failure analysis from hypothetically failing task or information flow down to jeopardized risk mitigation or opportunity captures" )
-                .add( "dissemination", "Analysis of the dissemination of essential elements of information to a task or from a task" )
-                .add( "network", "Information sharing commitment networks between organizations, roles or agents" )
-                .add( "requirements", "Community information sharing requirements satisfaction analysis" )
+                .add( "failureImpact", "The cascade of failures from a hypothetically failing task or information flow" )
+                .add( "dissemination", "Planned dissemination of essential elements of information to a task or from a task" )
+                .add( "network", "Information sharing commitments connecting organizations, roles or agents" )
+                .add( "requirements", "How collaboration requirements are satisfied by organizations in a community" )
         );
     }
 
