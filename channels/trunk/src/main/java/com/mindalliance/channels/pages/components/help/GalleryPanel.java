@@ -10,9 +10,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.request.resource.CssResourceReference;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Channels gallery panel.
@@ -32,52 +33,66 @@ public class GalleryPanel extends AbstractUpdatablePanel {
             GalleryPanel.class, "res/gallery.css" );
 
 
-    private static List<Group> groups;
+    private static Map<String,List<GalleryGroup>> GROUPS;
 
+    // todo - get gallery content from XML file
     static {
-        groups = new ArrayList<Group>();
-        groups.add( new Group( "Planning visualizations" )
+        GROUPS = new HashMap<String, List<GalleryGroup>>();
+        // Visualizations for planners
+        List<GalleryGroup> planner_groups = new ArrayList<GalleryGroup>();
+        planner_groups.add( new GalleryGroup( "Planning visualizations" )
                 .add( "segmentMap", "Segment map", "All segments making up a collaboration plan and how they are related" )
                 .add( "flowMap", "Info flow map", "The tasks in the segment of a plan and how they are connected by information flows" )
                 .add( "checklistFlow", "Checklist process flow", "The process flow for the execution of a task, as defined by its checklist" )
                 .add( "checklistMap", "Checklist flow map", "How assigned tasks are inter-connected by information flows with other assigned tasks" )
                 .add( "taxonomy", "Taxonomy", "How a plan's vocabulary (roles, organization types etc.) form taxonomies" )
         );
-        groups.add( new Group( "Analytical visualizations" )
+        planner_groups.add( new GalleryGroup( "Analytical visualizations" )
                 .add( "failureImpact", "Failure impacts", "The cascade of failures from a hypothetically failing task or information flow" )
                 .add( "dissemination", "Info dissemination", "Planned dissemination of essential elements of information to a task or from a task" )
                 .add( "network", "Collaboration network", "Information sharing commitments connecting organizations, roles or agents" )
-                .add( "requirements", "Collaboration requirements", "How collaboration requirements are satisfied by organizations in a community" )
+                // .add( "requirements", "Collaboration requirements", "How collaboration requirements are satisfied by organizations in a community" )
+
         );
+        GROUPS.put( "planner", planner_groups );
+        // Visualizations for others
+        // TBD
     }
 
-    public GalleryPanel( String id ) {
+    static List<GalleryGroup> getGalleryGroups( String name ) {
+        return GROUPS.get( name );
+    }
+
+    private List<GalleryGroup> galleryGroups;
+
+    public GalleryPanel( String id, String name ) {
         super( id );
+        this.galleryGroups = GROUPS.get( name );
         init();
     }
 
     private void init() {
-        addVisualizations();
+        addGalleryGroups();
     }
 
-    private void addVisualizations() {
-        ListView<Group> groupListView = new ListView<Group>(
+    private void addGalleryGroups() {
+        ListView<GalleryGroup> groupListView = new ListView<GalleryGroup>(
                 "groups",
-                groups
+                galleryGroups
         ) {
             @Override
-            protected void populateItem( ListItem<Group> item ) {
-                Group group = item.getModelObject();
-                item.add( new Label( "groupName", group.getName() ) );
-                ListView<Visualization> visualizationListView = new ListView<Visualization>(
-                        "visualizations",
-                        group.getVisualizations()
+            protected void populateItem( ListItem<GalleryGroup> item ) {
+                GalleryGroup galleryGroup = item.getModelObject();
+                item.add( new Label( "groupName", galleryGroup.getName() ) );
+                ListView<GalleryItem> visualizationListView = new ListView<GalleryItem>(
+                        "groupItems",
+                        galleryGroup.getGalleryItems()
                 ) {
                     @Override
-                    protected void populateItem( ListItem<Visualization> item ) {
-                        Visualization viz = item.getModelObject();
+                    protected void populateItem( ListItem<GalleryItem> item ) {
+                        GalleryItem viz = item.getModelObject();
                         FancyBoxWebMarkupContainer box = new FancyBoxWebMarkupContainer(
-                                "visualization",
+                                "groupItem",
                                 new FancyBoxOptions().overlayShow( false )
                                         .transitionIn( "elastic" )
                                         .transitionOut( "elastic" )
@@ -100,52 +115,4 @@ public class GalleryPanel extends AbstractUpdatablePanel {
         add( groupListView );
     }
 
-    private static class Group implements Serializable {
-
-        private String name;
-        private List<Visualization> visualizations;
-
-        private Group( String name ) {
-            this.name = name;
-            visualizations = new ArrayList<Visualization>();
-        }
-
-        private String getName() {
-            return name;
-        }
-
-        private List<Visualization> getVisualizations() {
-            return visualizations;
-        }
-
-        private Group add( String image, String caption, String title ) {
-            visualizations.add( new Visualization( image, caption, title ) );
-            return this;
-        }
-    }
-
-    private static class Visualization implements Serializable {
-
-        private String title;
-        private String image;
-        private String caption;
-
-        private Visualization( String image, String caption, String title ) {
-            this.image = image;
-            this.caption = caption;
-            this.title = title;
-        }
-
-        private String getImage() {
-            return image;
-        }
-
-        private String getTitle() {
-            return title;
-        }
-
-        private String getCaption() {
-            return caption;
-        }
-    }
 }

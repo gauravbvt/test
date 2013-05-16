@@ -305,6 +305,23 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
                 } );
     }
 
+    protected LinkMenuItem collapsible( final long id,
+                                        String expandedTitle, String collapsedTitle, final String property ) {
+
+        return new LinkMenuItem( "menuItem",
+                new Model<String>( isExpanded( id ) ? expandedTitle : collapsedTitle ),
+                new AjaxLink( "link" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        final boolean expanded = isExpanded( id );
+                        Change change = new Change( expanded ? Change.Type.Collapsed : Change.Type.Expanded,
+                                id );
+                        change.setProperty( property );
+                        update( target, change );
+                    }
+                } );
+    }
+
     protected LinkMenuItem showAspect( final long id, final String aspect ) {
 
         return new LinkMenuItem( "menuItem",

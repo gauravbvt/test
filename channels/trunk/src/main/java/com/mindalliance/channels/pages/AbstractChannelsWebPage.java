@@ -101,9 +101,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static final String FROM_COMMUNITY = "from_community";
 
-    public static final int GALLERY_WIDTH = 1100;
+    public static final int GALLERY_WIDTH = 775;
 
-    public static final int GALLERY_HEIGHT = 500;
+    public static final int GALLERY_HEIGHT = 475;
 
 
     /**
@@ -1271,11 +1271,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         container.addOrReplace( galleryWindow );
     }
 
-    public void showGallery( AjaxRequestTarget target ) {
+    public void showGallery( String name, AjaxRequestTarget target ) {
         galleryWindow.setTitle( "Channels Gallery" );
         galleryWindow.setInitialHeight( GALLERY_HEIGHT );
+        galleryWindow.setMinimalHeight( GALLERY_HEIGHT );
         galleryWindow.setInitialWidth( GALLERY_WIDTH );
-        galleryWindow.setContent( new GalleryPanel( galleryWindow.getContentId() ) );
+        galleryWindow.setContent( new GalleryPanel( galleryWindow.getContentId(), name ) );
         galleryWindow.show( target );
     }
 

@@ -2235,7 +2235,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 redirectToPlan();
             } else if ( change.getId() == Channels.GALLERY_ID ) {
                 if ( change.isExpanded() )
-                    showGallery( target );
+                    showGallery( change.getProperty(), target );
                 else if ( change.isCollapsed() )
                     hideGallery( target );
             } else if ( change.isCollapsed() && change.getId() == Channels.GUIDE_ID ) {

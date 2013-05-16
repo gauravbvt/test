@@ -3908,6 +3908,7 @@ ul.attach li.controls {
     display: block;
     font-size: large;
     margin-top: 20px;
+    margin-left: 10px;
 }
 
 .gallery .content {
@@ -3942,6 +3943,14 @@ ul.attach li.controls {
     padding: 2px;
     margin: 10px 10px 10px 10px;
     vertical-align: top;
+}
+
+.gallery a img:hover {
+    margin: 8px 8px 8px 8px;
+    border: solid 3px #cbcbcb;
+    background: #fafafa;
+    -moz-box-shadow: 0px 0px 10px #cbcbcb;
+    -webkit-box-shadow: 0px 0px 10px #cbcbcb;
 }
 
 .gallery a img.last {

@@ -2765,11 +2765,20 @@ div.manage-plan a.button {
     margin-top: 3px;
 }
 
+div.placeholders {
+	margin: 15px 0;
+	width: 375px;
+	float: left;
+	border: 1px solid gray;
 
+}
 
-div.placeholders,
 div.assignedOrgs {
-	padding: 15px 0;
+	margin: 15px 0;
+	width: 375px;
+	float: right;
+	border: 1px solid gray;
+
 }
 
 div.placeholders-filtering,
@@ -2778,8 +2787,9 @@ div.assignedOrgs-title {
 	font-size: 12px;
 	text-transform: uppercase;
 	background: #ccc;
-	border: 1px solid gray;
 	border-bottom: none;
+	height: 25px;
+	border-bottom: 1px solid gray;
 }
 
 div.placeholders-filtering select {
@@ -2788,12 +2798,22 @@ div.placeholders-filtering select {
 	
 }
 
+div.placeholders div.placeholder-table-cont,
+div.assignedOrgs div.assignedOrgs-table-cont {
+	height: 250px;
+	min-height: 250px;
+	display:block;
+	float: left;
+	width: 375px;
+	overflow-x: hidden;
+}
+
 div.placeholders table,
 div.assignedOrgs table {
 	margin:0;
 	padding: 0;
 	width:100%;
-	border: 1px solid gray;
+	border:none;
 	background: #e8e8e8;
 	border-collapse: collapse;
 }
@@ -2801,8 +2821,15 @@ div.assignedOrgs table {
 div.placeholders table td,
 div.assignedOrgs table td {
 	padding: 10px;
-	border-bottom: 1px solid gray;
+	border-top: 1px solid gray;
+	height: 25px;
 }
+
+div.placeholders table tr:first-child td,
+div.assignedOrgs table tr:first-child td {
+	border-top: none;
+}
+
 
 div.placeholders table tr td:first-child,
 div.assignedOrgs table tr td:first-child {

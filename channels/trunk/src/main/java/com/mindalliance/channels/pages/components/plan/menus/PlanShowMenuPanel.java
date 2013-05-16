@@ -63,7 +63,7 @@ public class PlanShowMenuPanel extends MenuPanel {
                             collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
                             collapsible( plan, "Hide about plan", "About plan" ),
                             collapsible( getSegment(), "Hide about plan segment", "About plan segment" ),
-                            collapsible( Channels.GALLERY_ID, "Gallery", "Gallery" ) ) );
+                            collapsible( Channels.GALLERY_ID, "Gallery", "Gallery", "planner" ) ) );
             return menuItems;
         }
     }

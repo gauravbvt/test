@@ -18,27 +18,31 @@
                 </select>
                 placeholders
             </div>
-            <table wicket:id="placeholderListContainer">
-                <tr wicket:id="placeholders"> <!-- repeated -->
-                    <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
-                    <td><span wicket:id="placeholder">placeholder name</span></td>
-                    <td><span wicket:id="metrics">1 participation (max is 4)</span></td>
-                </tr>
-            </table>
+            <div class="placeholder-table-cont">
+                <table wicket:id="placeholderListContainer">
+                    <tr wicket:id="placeholders"> <!-- repeated -->
+                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
+                        <td><span wicket:id="placeholder">placeholder name</span></td>
+                        <td><span wicket:id="metrics">1 participation (max is 4)</span></td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <div wicket:id="participation">
             <div class="assignedOrgs">
                 <div class="assignedOrgs-title">
                     Organizations participating as <span wicket:id="placeholderName">the placeholder</span><br/>
                 </div>
-                <table>
-                    <tr wicket:id="agencies"> <!-- repeated -->
-                        <td><input wicket:id="participating" type="checkbox"/></td>
-                        <td><span wicket:id="agency">agency name</span></td>
-                        <td><a wicket:id="profile" class="more">Profile</a></td>
-                        <td><a wicket:id="remove" class="more">Remove</a></td>
-                    </tr>
-                </table>
+                <div class="assignedOrgs-table-cont">
+                    <table>
+                        <tr wicket:id="agencies"> <!-- repeated -->
+                            <td><input wicket:id="participating" type="checkbox"/></td>
+                            <td><span wicket:id="agency">agency name</span></td>
+                            <td><a wicket:id="profile" class="more">Profile</a></td>
+                            <td><a wicket:id="remove" class="more">Remove</a></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div wicket:id="registering" class="add-new-org">
                 <label>Add new organization participating as <span wicket:id="phName">ph name</span> :</label>
