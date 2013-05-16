@@ -9,16 +9,17 @@
 <body>
 <wicket:panel>
     <span class="gallery">
-        <div>
+        <div class="content">
             <p wicket:id="groups"> <!--repeated -->
                 <span class="group-name" wicket:id="groupName">Group name</span>
-                <span wicket:id="visualizations">
+                <div class="thumbnail" wicket:id="visualizations">
                     <a wicket:id="visualization"
                        href="viz/something_b.jpg"
                        title="A title">
                         <img wicket:id="thumbnail" alt="something" src="viz/something_s.jpg"/>
+                        <div class="caption" wicket:id="caption"> Caption</div>
                     </a>
-                </span><!-- repeated -->
+                </div><!-- repeated -->
             </p>
         </div>
     </span>

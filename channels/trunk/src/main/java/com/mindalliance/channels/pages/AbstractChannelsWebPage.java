@@ -101,7 +101,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static final String FROM_COMMUNITY = "from_community";
 
-    public static final int GALLERY_WIDTH = 1000;
+    public static final int GALLERY_WIDTH = 1100;
 
     public static final int GALLERY_HEIGHT = 500;
 

@@ -3910,7 +3910,7 @@ ul.attach li.controls {
     margin-top: 20px;
 }
 
-.gallery div {
+.gallery .content {
     margin: 20px auto 0 auto;
     padding: 0 30px 30px 30px;
     border: solid 1px #cbcbcb;
@@ -3919,13 +3919,13 @@ ul.attach li.controls {
     -webkit-box-shadow: 0px 0px 10px #cbcbcb;
 }
 
+.gallery .thumbnail {
+    display: inline-block;
+}
 
-.gallery hr {
-    border: none;
-    height: 1px; line-height: 1px;
-    background: #E5E5E5;
-    margin-bottom: 20px;
-    padding: 0;
+.gallery .caption {
+    text-align: center;
+    color: rgb(58, 57, 57);
 }
 
 .gallery p {
@@ -3940,7 +3940,7 @@ ul.attach li.controls {
 .gallery a img {
     border: 1px solid #BBB;
     padding: 2px;
-    margin: 10px 20px 10px 0;
+    margin: 10px 10px 10px 10px;
     vertical-align: top;
 }
 

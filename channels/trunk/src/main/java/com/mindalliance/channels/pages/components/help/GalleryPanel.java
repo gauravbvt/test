@@ -37,17 +37,17 @@ public class GalleryPanel extends AbstractUpdatablePanel {
     static {
         groups = new ArrayList<Group>();
         groups.add( new Group( "Planning visualizations" )
-                .add( "segmentMap", "All segments making up a collaboration plan and how they are related" )
-                .add( "flowMap", "The tasks in the segment of a plan and how they are connected by information flows" )
-                .add( "checklistFlow", "The process flow for the execution of a task, as defined by its checklist" )
-                .add( "checklistMap", "How assigned tasks are inter-connected by information flows with other assigned tasks" )
-                .add( "taxonomy", "How a plan's vocabulary (roles, organization types etc.) form taxonomies" )
+                .add( "segmentMap", "Segment map", "All segments making up a collaboration plan and how they are related" )
+                .add( "flowMap", "Info flow map", "The tasks in the segment of a plan and how they are connected by information flows" )
+                .add( "checklistFlow", "Checklist process flow", "The process flow for the execution of a task, as defined by its checklist" )
+                .add( "checklistMap", "Checklist flow map", "How assigned tasks are inter-connected by information flows with other assigned tasks" )
+                .add( "taxonomy", "Taxonomy", "How a plan's vocabulary (roles, organization types etc.) form taxonomies" )
         );
         groups.add( new Group( "Analytical visualizations" )
-                .add( "failureImpact", "The cascade of failures from a hypothetically failing task or information flow" )
-                .add( "dissemination", "Planned dissemination of essential elements of information to a task or from a task" )
-                .add( "network", "Information sharing commitments connecting organizations, roles or agents" )
-                .add( "requirements", "How collaboration requirements are satisfied by organizations in a community" )
+                .add( "failureImpact", "Failure impacts", "The cascade of failures from a hypothetically failing task or information flow" )
+                .add( "dissemination", "Info dissemination", "Planned dissemination of essential elements of information to a task or from a task" )
+                .add( "network", "Collaboration network", "Information sharing commitments connecting organizations, roles or agents" )
+                .add( "requirements", "Collaboration requirements", "How collaboration requirements are satisfied by organizations in a community" )
         );
     }
 
@@ -90,6 +90,7 @@ public class GalleryPanel extends AbstractUpdatablePanel {
                         img.add( new AttributeModifier( "src", VIZ_PATH + viz.getImage() + THUMBNAIL_SUFFIX ) );
                         img.add( new AttributeModifier( "alt", viz.getImage() ) );
                         box.add( img );
+                        box.add( new Label( "caption", viz.getCaption() ) );
                         item.add( box );
                     }
                 };
@@ -117,8 +118,8 @@ public class GalleryPanel extends AbstractUpdatablePanel {
             return visualizations;
         }
 
-        private Group add( String image, String title ) {
-            visualizations.add( new Visualization( image, title ) );
+        private Group add( String image, String caption, String title ) {
+            visualizations.add( new Visualization( image, caption, title ) );
             return this;
         }
     }
@@ -127,9 +128,11 @@ public class GalleryPanel extends AbstractUpdatablePanel {
 
         private String title;
         private String image;
+        private String caption;
 
-        private Visualization( String image, String title ) {
+        private Visualization( String image, String caption, String title ) {
             this.image = image;
+            this.caption = caption;
             this.title = title;
         }
 
@@ -141,5 +144,8 @@ public class GalleryPanel extends AbstractUpdatablePanel {
             return title;
         }
 
+        private String getCaption() {
+            return caption;
+        }
     }
 }
