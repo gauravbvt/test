@@ -120,10 +120,13 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         if ( getPlanCommunity() != null && canTimeOut() )
             getCommander().keepAlive( getUser().getUsername(), REFRESH_DELAY );
         addPageTitle();
-        addForm();
+        WebMarkupContainer body = new WebMarkupContainer( "body" );
+        add( body );
+        addGalleryModalWindow( "gallery", null, body );
+        addForm( body );
         addHomeLink();
         addSpinner();
-        addNotifier();
+        addNotifier( body );
         addLoggedIn();
         // addHelp();
         addFeedback();
@@ -162,7 +165,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     }
 
 
-    private void addForm() {
+    private void addForm(  WebMarkupContainer body ) {
         form = new IndicatorAwareForm( "big-form" ) {
             @Override
             protected void onSubmit() {
@@ -192,7 +195,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         } );
         form.setMultiPart( true );
         addQuickHelp();
-        add( form );
+        body.add( form );
     }
 
     private void addQuickHelp() {
@@ -269,10 +272,10 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         form.addOrReplace( spinner );
     }
 
-    private void addNotifier() {
+    private void addNotifier( WebMarkupContainer body ) {
         notifier = new NotifierWebMarkupContainer( "notifier" );
         makeVisible( notifier, false );
-        add( notifier );
+        body.add( notifier );
     }
 
     protected NotifierWebMarkupContainer getNotifier() {

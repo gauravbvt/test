@@ -9,6 +9,7 @@ import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -66,8 +67,19 @@ public class HomePage extends AbstractChannelsBasicPage {
 
     @Override
     protected void addContent() {
+        addGalleryLink();
         addGotoLinks( getUser() );
         addSocial();
+    }
+
+    private void addGalleryLink() {
+        AjaxLink<String> galleryLink = new AjaxLink<String>( "galleryLink") {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                showGallery( "planner", target );
+            }
+        };
+        getContainer().add( galleryLink );
     }
 
     @Override
