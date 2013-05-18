@@ -7,9 +7,9 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="orgParticipationManager">
-        <div class="placeholders">
-            <div class="placeholders-filtering">
+    <div class="participationManager">
+        <div class="participation-left">
+            <div class="participation-filtering">
                 Show
                 <select wicket:id="phFilter">
                     <option>All</option>
@@ -18,7 +18,7 @@
                 </select>
                 placeholders
             </div>
-            <div class="placeholder-table-cont">
+            <div class="participation-table-cont">
                 <table wicket:id="placeholderListContainer">
                     <tr wicket:id="placeholders"> <!-- repeated -->
                         <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
@@ -29,11 +29,11 @@
             </div>
         </div>
         <div wicket:id="participation">
-            <div class="assignedOrgs">
-                <div class="assignedOrgs-title">
+            <div class="participation-right">
+                <div class="participation-title">
                     Organizations participating as <span wicket:id="placeholderName">the placeholder</span><br/>
                 </div>
-                <div class="assignedOrgs-table-cont">
+                <div class="participation-table-cont">
                     <table>
                         <tr wicket:id="agencies"> <!-- repeated -->
                             <td><input wicket:id="participating" type="checkbox"/></td>

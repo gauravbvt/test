@@ -131,7 +131,7 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoModelsDescription() {
-        return "The domain collaboration plans your are developing or maintaining"; // todo show metrics
+        return "The domain collaboration plans you are developing or maintaining"; // todo show metrics
     }
 
     private String getGotoCommunitiesDescription() {

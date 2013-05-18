@@ -7,57 +7,61 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="userParticipationManager">
-        <div class="organizations">
-            <div>
+    <div class="participationManager">
+        <div wicket:id="agenciesContainer" class="participation-left">
+            <div class="participation-filtering">
                 Organizations<br/>
-                <input wicket:id="withUnassignedAgents" type="checkbox"/> with unassigned agents
+                <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> with unassigned agents
             </div>
-            <table>
-                <tr wicket:id="organizations"> <!-- repeated -->
-                    <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
-                    <td><span wicket:id="organization">org name</span></td>
-                    <td><span wicket:id="metrics">2 assigned (max is 4)</span></td>
-                </tr>
-            </table>
-        </div>
-        <div class="agents">
-            <div>
-                Agents in <span wicket:id="orgName">org name</span><br/>
-                <input wicket:id="unassignedAgents" type="checkbox"/> that are unassigned
+            <div class="participation-table-cont">
+                <table wicket:id="agenciesListContainer">
+                    <tr wicket:id="agencies"> <!-- repeated -->
+                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
+                        <td><span wicket:id="agencyName">org name</span></td>
+                        <td><span wicket:id="metrics">2 assigned (max is 4)</span></td>
+                    </tr>
+                </table>
             </div>
-            <table>
-                <tr wicket:id="placeholders"> <!-- repeated -->
-                    <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
-                    <td><span wicket:id="agent">agent name</span></td>
-                    <td><span wicket:id="metrics">1 participant (no max)</span></td>
-                </tr>
-            </table>
         </div>
-        <div class="participants">
-            <div>
+        <div wicket:id="agentsContainer" class="participation-left">
+            <div class="participation-filtering">
+                Agents in <span wicket:id="agencyName">org name</span><br/>
+                <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> that are unassigned
+            </div>
+            <div class="participation-table-cont">
+                <table wicket:id="agentsListContainer">
+                    <tr wicket:id="agents"> <!-- repeated -->
+                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
+                        <td><span wicket:id="agentName">agent name</span></td>
+                        <td><span wicket:id="metrics">1 participant (no max)</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div wicket:id="participantsContainer" class="participation-right">
+            <div class="participation-title">
                 Users participating as<br/>
                 <span wicket:id="agentName">the agent</span>
             </div>
-            <table>
-                <tr wicket:id="participants"> <!-- repeated -->
-                    <td><input wicket:id="participating" type="checkbox"/></td>
-                    <td><span wicket:id="participant">user full name</span></td>
-                    <td><span wicket:id="accepted">Yes</span></td>
-                    <td><span wicket:id="confirmed">No</span></td>
-                </tr>
-                <tr wicket:id="userAssigning">
-                    <td colspan="4">
-                        Assign user<input wicket:id="user" type="text"/>
-                    </td>
-                </tr>
-            </table>
+            <div class="participation-table-cont">
+                <table>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Accepted</th>
+                        <th>Confirmed</th>
+                    </tr>
+                    <tr wicket:id="participants"> <!-- repeated -->
+                        <td><input wicket:id="participating" type="checkbox"/></td>
+                        <td><span wicket:id="userName">user full name</span></td>
+                        <td><span wicket:id="accepted">Yes</span></td>
+                        <td><span wicket:id="confirmed">No</span></td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div wicket:id="meaning">No user participates as "agent" in "organization"</div>
+        <div wicket:id="summary" class="partman-note">No user participates as "agent" in "organization"</div>
         <input wicket:id="cancel" type="button" value="Cancel"/>
         <input wicket:id="submit" type="button" value="Submit"/>
-    </div>
-    <div wicket:id="profileDialog">
     </div>
 </wicket:panel>
 </body>

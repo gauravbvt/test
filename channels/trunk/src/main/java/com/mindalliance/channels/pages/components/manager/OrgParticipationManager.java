@@ -154,7 +154,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 int count = getParticipatingAgencies( placeholder ).size();
                 String metrics = "("
                         + count
-                        + (count > 1 ? " organizations" : "organization")
+                        + (count > 1 ? " organizations" : " organization")
                         + ")";
                 item.add( new Label(
                         "metrics",
@@ -236,7 +236,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
-                        toggleParticipationAs( agency, selectedPlaceholder );
+                        toggleParticipationAs( agency );
                         addPlaceholderList();
                         target.add( placeholderListContainer );
                         addSummary();
@@ -309,7 +309,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 getCommunityService() ).isEmpty();
     }
 
-    private void toggleParticipationAs( Agency agency, Organization placeholder ) {
+    private void toggleParticipationAs( Agency agency ) {
         // delay until submit
         if ( addedParticipation.contains( agency ) ) {
             addedParticipation.remove( agency );
@@ -480,12 +480,12 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                     size = added.size();
                     for ( int i = 1; i <= added.size(); i++ ) {
                         sb.append( added.get( i - 1 ).getName() );
-                        if ( i == size - 2 )
+                        if ( i == size - 1 )
                             sb.append( " and " );
-                        else if ( i < size - 2 )
+                        else if ( i < size - 1 )
                             sb.append( ", " );
                     }
-                    if ( !added.isEmpty() ) {
+                    if ( !alreadyAssigned.isEmpty() ) {
                         sb.append( " will also participate." );
                     } else {
                         sb.append( "will participate as ")

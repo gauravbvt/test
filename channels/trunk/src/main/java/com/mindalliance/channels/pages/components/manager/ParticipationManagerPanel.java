@@ -67,7 +67,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
         } );
         tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
             public Panel getPanel( String id ) {
-                return new UsersParticipationPanel( id, getModel() );
+                return new UserParticipationManager( id );
             }
         } );
         tabs.add( new AbstractTab( new PropertyModel<String>( this, "toConfirmTitle" ) ) {
