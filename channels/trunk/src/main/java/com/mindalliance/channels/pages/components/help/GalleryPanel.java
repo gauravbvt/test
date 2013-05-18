@@ -38,21 +38,22 @@ public class GalleryPanel extends AbstractUpdatablePanel {
     // todo - get gallery content from XML file
     static {
         GROUPS = new HashMap<String, List<GalleryGroup>>();
-        // Visualizations for planners
+        // Visualizations in Channels Planner
         List<GalleryGroup> planner_groups = new ArrayList<GalleryGroup>();
-        planner_groups.add( new GalleryGroup( "Planning visualizations" )
-                .add( "segmentMap", "Segment map", "All segments making up a collaboration plan and how they are related" )
-                .add( "flowMap", "Info flow map", "The tasks in the segment of a plan and how they are connected by information flows" )
-                .add( "checklistFlow", "Checklist process flow", "The process flow for the execution of a task, as defined by its checklist" )
-                .add( "checklistMap", "Checklist flow map", "How assigned tasks are inter-connected by information flows with other assigned tasks" )
-                .add( "taxonomy", "Taxonomy", "How a plan's vocabulary (roles, organization types etc.) form taxonomies" )
+        planner_groups.add( new GalleryGroup( "Domain collaboration plans" )
+                .add( "segmentMap", "Segment map", "The segment map shows all segments (a segment is a plan module dealing with one scenario) that compose a collaboration plan. The segment map shows how segments are inter-connected." )
+                .add( "flowMap", "Info flow map", "The information flow map shows how tasks in the segment of a plan are connected by information flows, and how they relate to events and goals (risk to be mitigated and gains to be made)." )
+                .add( "checklistFlow", "Checklist process flow", "The process flow for the execution of a task, as defined by its checklist." )
+                .add( "checklistMap", "Checklist flow map", "A checklist flow map displays tasks assigned to an agent or organization that's being focused on, and it shows how these assigned tasks are connected via information sharing commitments with tasks assigned to others." )
+                .add( "taxonomy", "Taxonomy", "Concepts used in the definition of a plan (roles, organization types etc.) form taxonomies that can be viewed" )
+                .add( "failureImpact", "Failure impacts", "The failure impact diagram shows how the failure of a particular task or information flow can cause a cascading failures of dependent tasks, ultimately jeopardizing the planned achievement of goals." )
+                .add( "dissemination", "Info dissemination", "The info dissemination diagram shows how essential elements of information are propagated from a task or to a task. Untimely propagation is highlighted." )
+                .add( "network", "Collaboration network", "A collaboration network summarizes how organizations, roles or agents would, according to a plan, be inter-connected by info sharing commitments." )
+                .add( "issuesReport", "Issues report", "The issues report summarizes, categorizes and prioritizes all the issues in a plan that were detected by Channels or reported by planners.")
         );
-        planner_groups.add( new GalleryGroup( "Analytical visualizations" )
-                .add( "failureImpact", "Failure impacts", "The cascade of failures from a hypothetically failing task or information flow" )
-                .add( "dissemination", "Info dissemination", "Planned dissemination of essential elements of information to a task or from a task" )
-                .add( "network", "Collaboration network", "Information sharing commitments connecting organizations, roles or agents" )
-                // .add( "requirements", "Collaboration requirements", "How collaboration requirements are satisfied by organizations in a community" )
-
+        planner_groups.add( new GalleryGroup( "Plan communities" )
+                .add( "requirements", "Collaboration requirements", "Plan communities can define how their member organizations ought to share information. The collaboration requirements diagrams shows to what extent collaboration requirements are satisfied between the pairs of organizations to which they apply." )
+                .add( "checklistsReport", "Checklists", "Each participant in a plan community can access his/her checklists. Each checklist describes what triggers a task assignable to the participant, the steps, including the sharing of information, by which the task is to be carried out, and the contact information of all involved with this task. The checklists are generated from the plan based on the participant's current roles and responsibilities as well as the participation of others with whom the participant has information sharing commitments.")
         );
         GROUPS.put( "planner", planner_groups );
         // Visualizations for others

@@ -68,3 +68,9 @@
 .gallery a img.last {
     margin-right: 0;
 }
+
+#fancybox-title-inside {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: justify;
+}
