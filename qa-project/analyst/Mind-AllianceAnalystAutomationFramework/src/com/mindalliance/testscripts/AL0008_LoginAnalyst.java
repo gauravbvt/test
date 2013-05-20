@@ -24,6 +24,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.LoginPage;
 
 import junit.framework.TestCase;
@@ -107,6 +108,11 @@ public class AL0008_LoginAnalyst extends TestCase{
 		LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
 	    Reporting reporting= new Reporting();
 	    reporting.generateAutomationReport();
+	    
+	    stepNo++;
+		description="Signout Successful";
+		HeaderController headerController=new HeaderController();
+		headerController.signOut();
 	 }
 	
 	/*
