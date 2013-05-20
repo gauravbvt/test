@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Elements>
+<Element>
+		<GivenName>UserName</GivenName>
+		<Xpath>//*[@id="dijit_form_TextBox_0"]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>dijitReset dijitInputInner</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>PassWord</GivenName>
+		<Xpath>//*[@id="dijit_form_TextBox_1"]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>dijitReset dijitInputInner</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>submitButton</GivenName>
+		<Xpath>//*[@id="login_loginButton"]</Xpath>
+ 		<Id>login_loginButton</Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>wmbutton Login-loginButton</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>HomePageTitle</GivenName>
+		<Xpath>//*[@id="wizard_logo"]/a/img</Xpath>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+	</Element>
+	
+	</Elements>

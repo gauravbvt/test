@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Configuration>
+ <Credentials>
+  <URL>http://192.168.31.5:8094/Analyst/login.html</URL>
+  <UserName>scott</UserName>
+  <PassWord>demo</PassWord>
+  <Browser>Mozilla Firefox</Browser>
+ </Credentials>
+ <TimeOutForFindingElementSeconds>20</TimeOutForFindingElementSeconds>
+ <TimeOutForFindingElementSecondsForClick>60</TimeOutForFindingElementSecondsForClick>
+</Configuration>
