@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.manager;
 
+import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
@@ -17,10 +18,12 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
@@ -68,6 +71,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     private Set<ChannelsUser> removedParticipants;
     private WebMarkupContainer agenciesListContainer;
     private WebMarkupContainer agentsListContainer;
+    private String participantsFilter;
 
     public UserParticipationManager( String id ) {
         super( id );
@@ -374,38 +378,86 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         participantsContainer.setOutputMarkupId( true );
         addOrReplace( participantsContainer );
         participantsContainer.add( new Label( "agentName", selectedAgent == null ? "" : selectedAgent.getName() ) );
+        addParticipantsFilter();
         addParticipantsList();
         makeVisible( participantsContainer, selectedAgent != null );
+    }
+
+    private void addParticipantsFilter() {
+        participantsFilter = null;
+        TextField<String> userNameFilter = new TextField<String>(
+                "userNameFilter",
+                new PropertyModel<String>( this, "participantsFilter" )
+        );
+        userNameFilter.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addParticipantsList();
+                target.add( participantsContainer );
+            }
+        } );
+        participantsContainer.add( userNameFilter );
+    }
+
+    public String getParticipantsFilter() {
+        return participantsFilter;
+    }
+
+    public void setParticipantsFilter( String participantsFilter ) {
+        this.participantsFilter = participantsFilter;
     }
 
     private void addParticipantsList() {
         final List<ChannelsUser> participants = getRegisteredParticipants( selectedAgent );
         ListView<ChannelsUser> participantsListView = new ListView<ChannelsUser>(
                 "participants",
-                getUsers()
+                getFilteredUsers()
         ) {
             @Override
             protected void populateItem( ListItem<ChannelsUser> item ) {
-                final ChannelsUser user = item.getModelObject();
+                final ChannelsUser participant = item.getModelObject();
+                boolean participating = participants.contains( participant );
                 // participating
                 AjaxCheckBox participatingCheckBox = new AjaxCheckBox(
                         "participating",
-                        new Model<Boolean>( participants.contains( user ) )
+                        new Model<Boolean>( participating )
                 ) {
                     @Override
                     protected void onUpdate( AjaxRequestTarget target ) {
-                        toggleParticipationsAs( user );
+                        toggleParticipationsAs( participant );
                         addSummary();
                         target.add( summaryLabel );
                     }
                 };
+                boolean participationAvailable = selectedAgent != null &&
+                        ( participating ||
+                        participationManager.isParticipationAvailable(
+                                selectedAgent,
+                                participant,
+                                getCommunityService() ) );
+                boolean userHasAuthority = selectedAgent != null &&
+                        ( getCommunityService().isCommunityPlanner( getUser() )
+                            || participationManager.hasAuthorityOverParticipation(
+                                getCommunityService(),
+                                getUser(),
+                                participant.getUserInfo(),
+                                selectedAgent ) );
+                // UserParticipation userParticipation = userParticipationService.getParticipation( user,  )
+                participatingCheckBox.setEnabled( participationAvailable && userHasAuthority );
                 item.add( participatingCheckBox );
                 // user name
-                item.add( new Label( "userName", user.getNormalizedFullName() ) );
+                Label userNameLabel = new Label( "userName", participant.getNormalizedFullName() );
+                String tooltip = "";
+                if ( selectedAgent != null && !participationAvailable )
+                    tooltip += "Participation as " + selectedAgent.getName() + " is not available to this user. ";
+                if ( selectedAgent != null && !userHasAuthority )
+                    tooltip += "You are not authorized to assign this user as " + selectedAgent.getName();
+                if ( !tooltip.isEmpty() ) addTipTitle( userNameLabel, tooltip );
+                item.add( userNameLabel );
                 // accepted
-                item.add( new Label( "accepted", isAcceptedParticipation( user ) ? "Yes" : "No" ) );
+                item.add( new Label( "accepted", isAcceptedParticipation( participant ) ? "Yes" : "No" ) );
                 // confirmed
-                item.add( new Label( "confirmed", isConfirmedParticipation( user ) ? "Yes" : "No" ) );
+                item.add( new Label( "confirmed", isConfirmedParticipation( participant ) ? "Yes" : "No" ) );
             }
         };
         participantsListView.setOutputMarkupId( true );
@@ -442,7 +494,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
 
     }
 
-    private List<ChannelsUser> getUsers() {
+    private List<ChannelsUser> getFilteredUsers() {
         List<ChannelsUser> participants = getRegisteredAndPendingParticipants();
         Collections.sort( participants, new Comparator<ChannelsUser>() {
             @Override
@@ -451,10 +503,14 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             }
         } );
         List<ChannelsUser> allUsers = new ArrayList<ChannelsUser>();
-        allUsers.addAll( participants );
+        for ( ChannelsUser participant : participants ) {
+            if ( !isFilteredOut( participant ) ) {
+                allUsers.add( participant );
+            }
+        }
         List<ChannelsUser> nonParticipants = new ArrayList<ChannelsUser>();
         for ( ChannelsUser user : userDao.getUsers() ) {
-            if ( !participants.contains( user ) )
+            if ( !participants.contains( user ) && !isFilteredOut( user ) )
                 nonParticipants.add( user );
         }
         Collections.sort( nonParticipants, new Comparator<ChannelsUser>() {
@@ -465,6 +521,12 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         } );
         allUsers.addAll( nonParticipants );
         return allUsers;
+    }
+
+    private boolean isFilteredOut( ChannelsUser user ) {
+        return participantsFilter != null
+                && !participantsFilter.isEmpty()
+                && !Matcher.matches( user.getNormalizedFullName(), participantsFilter );
     }
 
     private void addSummary() {

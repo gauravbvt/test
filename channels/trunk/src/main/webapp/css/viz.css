@@ -74,3 +74,19 @@
     margin-right: 10px;
     text-align: justify;
 }
+
+a#viz-button {
+    background: url("../images/viz-button.png") no-repeat scroll 14px 14px #5b9aa9;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: 73px;
+    width: 48px;
+    height: 48px;
+    z-index: 10000;
+}
+
+a#viz-button:hover {
+    background: url("../images/viz-button.png") no-repeat scroll 14px 14px #a4c1c5;
+    border: 0;
+}

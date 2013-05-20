@@ -47,12 +47,12 @@
                 <table>
                     <tr>
                         <th>&nbsp;</th>
-                        <th>&nbsp;</th>
+                        <td>Named: <input wicket:id="userNameFilter" type="text"/> </td>
                         <th>Accepted</th>
                         <th>Confirmed</th>
                     </tr>
                     <tr wicket:id="participants"> <!-- repeated -->
-                        <td><input wicket:id="participating" type="checkbox"/></td>
+                        <td><input wicket:id="participating" type="checkbox" width="20"/></td>
                         <td><span wicket:id="userName">user full name</span></td>
                         <td><span wicket:id="accepted">Yes</span></td>
                         <td><span wicket:id="confirmed">No</span></td>

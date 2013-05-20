@@ -9,7 +9,6 @@ import com.mindalliance.channels.social.model.Feedback;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -67,19 +66,8 @@ public class HomePage extends AbstractChannelsBasicPage {
 
     @Override
     protected void addContent() {
-        addGalleryLink();
         addGotoLinks( getUser() );
         addSocial();
-    }
-
-    private void addGalleryLink() {
-        AjaxLink<String> galleryLink = new AjaxLink<String>( "galleryLink") {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                showGallery( "planner", target );
-            }
-        };
-        getContainer().add( galleryLink );
     }
 
     @Override
@@ -103,7 +91,7 @@ public class HomePage extends AbstractChannelsBasicPage {
         BookmarkablePageLink<? extends WebPage> gotoCommunitiesLink =
                 newTargetedLink( "gotoCommunities", CommunitiesPage.class );
         addTipTitle( gotoCommunitiesLink, new Model<String>( getGotoCommunitiesDescription() ) );
-         // Models link
+        // Models link
         BookmarkablePageLink gotoModelsLink = newTargetedLink( "gotoModels", PlansPage.class );
         addTipTitle( gotoModelsLink,
                 new Model<String>( getGotoModelsDescription() )
@@ -123,7 +111,7 @@ public class HomePage extends AbstractChannelsBasicPage {
                         .setVisible( user.isAdmin() )
                         .setOutputMarkupId( true ),
 
-                 // Goto model
+                // Goto model
                 new WebMarkupContainer( "models" )
                         .add( gotoModelsLink )
                         .setVisible( isAPlanner() )
@@ -137,7 +125,7 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     private void addSocial() {
-        String[] tabsShown = { SocialPanel.USER};
+        String[] tabsShown = {SocialPanel.USER};
         socialPanel = new SocialPanel( "social", false, tabsShown, false );
         getContainer().add( socialPanel );
     }
@@ -156,7 +144,7 @@ public class HomePage extends AbstractChannelsBasicPage {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return getUser().isPlanner( ((Plan)object).getUri() );
+                        return getUser().isPlanner( ( (Plan) object ).getUri() );
                     }
                 }
         );

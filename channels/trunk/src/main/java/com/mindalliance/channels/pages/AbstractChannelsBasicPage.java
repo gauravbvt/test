@@ -195,12 +195,23 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
         } );
         form.setMultiPart( true );
         addQuickHelp();
+        addVizGalleryButton();
         body.add( form );
     }
 
     private void addQuickHelp() {
         addQuickHelpButton();
         addQuickHelpPanel();
+    }
+
+    private void addVizGalleryButton() {
+        AjaxLink<String> vizGalleryLink = new AjaxLink<String>( "vizGalleryButton" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                showGallery( "planner", target );
+            }
+        };
+        form.add(  vizGalleryLink );
     }
 
     private void addQuickHelpButton() {

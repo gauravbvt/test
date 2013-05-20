@@ -423,15 +423,28 @@ public class ParticipationManagerImpl implements ParticipationManager {
             final CommunityService communityService,
             ChannelsUser user,
             UserParticipation userParticipation ) {
-        ChannelsUserInfo otherUserInfo = userParticipation.getParticipant();
+        return hasAuthorityOverParticipation(
+                communityService,
+                user,
+                userParticipation.getParticipant(),
+                userParticipation.getAgent( communityService )
+        );
+    }
+
+    @Override
+    public boolean hasAuthorityOverParticipation(
+            final CommunityService communityService,
+            ChannelsUser user,
+            ChannelsUserInfo participantInfo,
+            Agent participationAgent ) {
         // A user can unilaterally terminate his/her own participation.
-        if ( user.getUserInfo().equals( otherUserInfo ) ) return true;
+        if ( user.getUserInfo().equals( participantInfo ) ) return true;
         // else, does the user participate as one of the agents supervising the participation agent?
         final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs( user, communityService );
-        final Agent particpationAgent = userParticipation.getAgent( communityService );
-        List<Agent> supervisorAgents = findAllSupervisorsOf( particpationAgent, communityService );
+        List<Agent> supervisorAgents = findAllSupervisorsOf( participationAgent, communityService );
         return !CollectionUtils.intersection( userAgents, supervisorAgents ).isEmpty();
     }
+
 
     @Override
     public Plan getPlan( String communityUri, int planVersion ) {

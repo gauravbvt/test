@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.community.participation;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
@@ -191,7 +192,7 @@ public interface ParticipationManager {
      * Whether user has authority over a participation.
      *
      * @param communityService  a community service
-     * @param user              a user
+     * @param user              a user whose authority is queried
      * @param userParticipation a plan participation
      * @return a boolean
      */
@@ -199,6 +200,20 @@ public interface ParticipationManager {
             CommunityService communityService,
             ChannelsUser user,
             UserParticipation userParticipation );
+
+    /**
+     * Whether user has authority over a participation.
+     * @param communityService  a community service
+     * @param user a user whose authority is queried
+     * @param participantInfo a participant's user info
+     * @param participationAgent the agent the participant participates as or would
+     * @return
+     */
+    boolean hasAuthorityOverParticipation(
+            final CommunityService communityService,
+            ChannelsUser user,
+            ChannelsUserInfo participantInfo,
+            Agent participationAgent );
 
     Plan getPlan( String communityUri, int planVersion );
 
