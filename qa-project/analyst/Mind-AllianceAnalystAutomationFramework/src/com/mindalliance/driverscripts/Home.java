@@ -17,10 +17,8 @@ public class Home {
 	public static Test suite() throws UIAutomationException{	  
 		GlobalVariables.configuration= Configuration.getConfigurationObject();
 		new ElementController();
-		TestSuite suite = new TestSuite("Mind-Alliance Automation Framework");	
-		
-//		suite.addTestSuite(MAV0001_viewLoginPage.class);
-				return suite;
+		TestSuite suite = new TestSuite("Mind-Alliance Analyst Automation Framework");	
+		return suite;
 	}
 }
 
