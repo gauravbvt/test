@@ -46,5 +46,9 @@ public class LoginPage {
 		return UIActions.getText(fileName, "LoginPageTitle", GlobalVariables.configuration.getAttrSearchList(), "Login Page Title");
 	}
 	
+	public String getLoginErrorMessage() throws UIAutomationException{
+		return UIActions.getText(fileName, "LoginErrorMessage", GlobalVariables.configuration.getAttrSearchList(), "Login Error Message");
+	}
+	
 	
 }
