@@ -106,7 +106,7 @@ public class DataController {
 		try {
 			// Create Report Directory
 			reportDirectoryName="UIAutomationReport";
-			reportSrcDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\Mind-AllianceTestCaseSheet.ods";
+			reportSrcDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\Mind-AllianceAnalystTestCaseSheet.ods";
 			reportDstDirectoryPath=GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\"+reportDirectoryName;
 			File Dir = new File(reportDstDirectoryPath);
 			if (!Dir.exists())
