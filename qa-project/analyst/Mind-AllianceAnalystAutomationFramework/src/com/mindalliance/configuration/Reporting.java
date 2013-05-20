@@ -159,9 +159,9 @@ public class Reporting extends TakeScreenshot {
 			do {
 				cnt++;
 				if(cnt==1)
-					 file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet.ods");
+					 file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceAnalystTestCaseSheet.ods");
 				else 
-					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceTestCaseSheet_V2.ods");
+					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceAnalystTestCaseSheet_V2.ods");
 				Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
 			
 				// Update View, Plan & Command Sheets
@@ -171,7 +171,7 @@ public class Reporting extends TakeScreenshot {
 					// Call readCsvFile
 					String sResult = readCsvFile(testName);
 				
-					if(testName.contains("MAV")) { 
+					if(testName.contains("Analyst_Login")) { 
 						sheet = sheet.getSpreadSheet().getSheet(1);
 						// No Of Test Cases Passed & Failed of Views
 						if(sResult.equals(passed))
@@ -231,9 +231,9 @@ public class Reporting extends TakeScreenshot {
 				sheet.getCellAt("I10").setValue(noOfCommandTestCasesFailed);
 
 				if(cnt==1)
-						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet.ods");
+						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceAnalystTestCaseSheet.ods");
 				else
-						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet_V2.ods");
+						outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceAnalystTestCaseSheet_V2.ods");
 				sheet.getSpreadSheet().saveAs(outputFile);
 				
 				// Set Pass/Fail Count to 0.
@@ -247,7 +247,7 @@ public class Reporting extends TakeScreenshot {
 			}while(cnt!=2);
 		}
 		catch(IOException ie) {
-			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceTestCaseSheet.ods"+"'");
+			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceAnalystTestCaseSheet.ods"+"'");
 		}
 	}
 	
@@ -356,7 +356,7 @@ public class Reporting extends TakeScreenshot {
 		try {
 			File currentDir=new File(".");
 			String path= currentDir.getCanonicalPath().toString() + "\\TestCases\\";
-			File file=new File(path+"Mind-AllianceTestCaseSheet.ods");
+			File file=new File(path+"Mind-AllianceAnalystTestCaseSheet.ods");
 			
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet = SpreadSheet.createFromFile(file).getSheet(sheetNumber);
