@@ -2,4 +2,6 @@
 <elements>
 <analystURL>http://192.168.31.5:8094/Analyst/login.html#</analystURL>
 <title>Login</title>
+<userName>scott</userName>
+<password>demo</password>
 </elements>
