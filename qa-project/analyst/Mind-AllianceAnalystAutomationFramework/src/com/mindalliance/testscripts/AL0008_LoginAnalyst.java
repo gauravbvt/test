@@ -8,8 +8,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,10 +24,13 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.LoginPage;
 
-public class AL0001_Login extends TestCase{
+import junit.framework.TestCase;
+
+public class AL0008_LoginAnalyst extends TestCase{
 	public Hashtable<String, String> testData;
-	public String testCaseId="AL0001_Login";
+	public String testCaseId="AL0008_LoginAnalyst";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -78,7 +79,7 @@ public class AL0001_Login extends TestCase{
 	}
 	
 	/**
-	 * This method verify that login page is displayed after entering the URL of Analyst
+	 * This method verify that login page is displayed after entering the URL of Analyst and user can be logged in to Analyst
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
@@ -93,9 +94,17 @@ public class AL0001_Login extends TestCase{
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
 	    
-	    
+		// Enter URL	
+		stepNo++;
+		description="Login to Analyst Successful";
+		LoginPage loginpage= new LoginPage();
+		loginpage.Login(testData.get("UserName"),testData.get("Password"));
+		// Write log
+		LogFunctions.writeLogs(description);
+		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
+		LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
 	    Reporting reporting= new Reporting();
 	    reporting.generateAutomationReport();
 	 }
@@ -112,7 +121,7 @@ public class AL0001_Login extends TestCase{
 	}
 	
 	/**
-     * Loads Test Data for AL0001_Login.
+     * Loads Test Data for AL0008_LoginAnalyst.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -127,24 +136,28 @@ public class AL0001_Login extends TestCase{
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File AL0001_Login=new File(path + "AL0001_Login.xml");
+			File AL0008_LoginAnalyst=new File(path + "AL0008_LoginAnalyst.xml");
 			
-			Document docAL0001_Login=db.parse(AL0001_Login);
-			Element eleAL0001_Login=docAL0001_Login.getDocumentElement();
+			Document docAL0008_LoginAnalyst=db.parse(AL0008_LoginAnalyst);
+			Element eleAL0008_LoginAnalyst=docAL0008_LoginAnalyst.getDocumentElement();
 	              
-	        Element oXmlEleAL0001_Login = (Element) eleAL0001_Login;
+	        Element oXmlEleAL0008_LoginAnalyst = (Element) eleAL0008_LoginAnalyst;
 	       	
-	        this.testData.put("AnalystURL",oXmlEleAL0001_Login.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Title",oXmlEleAL0001_Login.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AnalystURL",oXmlEleAL0008_LoginAnalyst.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Title",oXmlEleAL0008_LoginAnalyst.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("UserName",oXmlEleAL0008_LoginAnalyst.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Password",oXmlEleAL0008_LoginAnalyst.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+	        
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File AL0001_Login.xml not found.");
+			throw new UIAutomationException("File AL0008_LoginAnalyst.xml not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File AL0001_Login.xml not found.");
+			throw new UIAutomationException("File AL0008_LoginAnalyst.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File AL0001_Login.xml can not be parsed.");
+			throw new UIAutomationException("File AL0008_LoginAnalyst.xml can not be parsed.");
 		}
 	}
+	
 }
