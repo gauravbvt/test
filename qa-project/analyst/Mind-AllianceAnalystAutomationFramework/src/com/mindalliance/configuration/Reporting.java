@@ -159,9 +159,9 @@ public class Reporting extends TakeScreenshot {
 			do {
 				cnt++;
 				if(cnt==1)
-					 file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceAnalystTestCaseSheet.ods");
+					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceAnalystTestCaseSheet.ods");
 				else 
-					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceAnalystTestCaseSheet_V2.ods");
+					file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceAnalystTestCaseSheet.ods");
 				Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
 			
 				// Update View, Plan & Command Sheets
@@ -171,7 +171,7 @@ public class Reporting extends TakeScreenshot {
 					// Call readCsvFile
 					String sResult = readCsvFile(testName);
 				
-					if(testName.contains("Analyst_Login")) { 
+					if(testName.contains("AL")) { 
 						sheet = sheet.getSpreadSheet().getSheet(1);
 						// No Of Test Cases Passed & Failed of Views
 						if(sResult.equals(passed))
