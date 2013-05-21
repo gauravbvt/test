@@ -30,12 +30,21 @@
 	</Element>
 	
 	<Element>
-		<GivenName>HomePageTitle</GivenName>
-		<Xpath>//*[@id="wizard_logo"]/a/img</Xpath>
+		<GivenName>LoginPageTitle</GivenName>
+		<Xpath>//*[@id="login_wmTitle"]/div</Xpath>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
-    	<ClassName></ClassName>
+    	<ClassName>wmSizeNode</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>LoginErrorMessage</GivenName>
+		<Xpath>//*[@id="login_loginErrorMsg"]/div</Xpath>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>wmSizeNode</ClassName>
 	</Element>
 	
 	</Elements>
