@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Elements>
+   <Element>
+ 		<GivenName>LogOut</GivenName>
+ 		<Xpath>//*[@id="wizard_logoutButton"]/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Sign Out</LinkText>
+    	<ClassName></ClassName>
+    </Element>
+    
+    <Element>
+		<GivenName>LoginPageTitle</GivenName>
+		<Xpath>//*[@id="login_wmTitle"]/div</Xpath>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>wmSizeNode</ClassName>
+	</Element>
+</Elements>

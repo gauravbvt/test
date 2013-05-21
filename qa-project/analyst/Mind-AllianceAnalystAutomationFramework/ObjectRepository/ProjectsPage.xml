@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Elements>
+
+<Element>
+<GivenName>AddProjectButton</GivenName>
+		<Xpath>//*[@id="wizard_projectNewButton"]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>wmbutton wizard-projectNewButton iconButton</ClassName>
+</Element>
+
+<Element>
+		<GivenName>ProjectName</GivenName>
+		<Xpath>//*[@id="dijit_form_ValidationTextBox_0"]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>dijitReset dijitInputInner</ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Description</GivenName>
+		<Xpath>//*[@id="dijit_form_SimpleTextarea_0"]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>dijitTextBox dijitTextArea dijitTextBoxHover dijitTextAreaHover dijitHover</ClassName>
+	</Element>
+	
+<Element>
+		<GivenName>saveButton</GivenName>
+		<Xpath>//*[@id="wizard_projectSaveButton"]/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>
+    	</ClassName>
+	</Element>
+		
+
+</Elements>
