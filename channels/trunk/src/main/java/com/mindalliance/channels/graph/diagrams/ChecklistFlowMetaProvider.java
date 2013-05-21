@@ -176,7 +176,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 Flow sharing = confStep.getSharingToConfirm();
                 sb.append( "CONFIRM RECEIPT of ")
                         .append( sharing.isNotification()
-                                ? "notification of "
+                                ? sharing.getIntent() != null
+                                    ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
+                                    : "notification of "
                                 : "request for "
                         )
                         .append( sharing.getName() )

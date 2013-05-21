@@ -26,8 +26,16 @@ public class ReceiptConfirmationStep extends Step {
     @Override
     public String getLabel() {
         return "(Required) Confirm receipt of "
-                + (sharing.isNotification() ? "notification of" : "request for")
-        + " \"" + sharing.getName() + "\"";
+                + sharingLabel();
+    }
+
+    private String sharingLabel() {
+        return (sharing.isNotification()
+                ? sharing.getIntent() != null
+                    ? sharing.getIntent().getLabel().toLowerCase()
+                    : "notification of"
+                : "request for")
+                + " \"" + sharing.getName() + "\"";
     }
 
     @Override
@@ -57,9 +65,7 @@ public class ReceiptConfirmationStep extends Step {
 
     @Override
     public String getPrerequisiteLabel() {
-        return "Confirmed receipt of "
-                + (sharing.isNotification() ? "notification of" : "query for")
-                + " \"" + sharing.getName() + "\"";
+        return "Confirmed receipt of " + sharingLabel();
     }
 
     @Override
