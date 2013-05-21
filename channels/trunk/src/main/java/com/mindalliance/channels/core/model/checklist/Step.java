@@ -15,6 +15,8 @@ public abstract class Step  extends AbstractChecklistElement {
 
     public abstract boolean isCommunicationStep();
 
+    public abstract boolean isReceiptConfirmation();
+
     public abstract boolean isSubTaskStep();
 
     public abstract String getLabel();

@@ -47,6 +47,11 @@ public class CommunicationStep extends Step {
     }
 
     @Override
+    public boolean isReceiptConfirmation() {
+        return false;
+    }
+
+    @Override
     public boolean isSubTaskStep() {
         return false;
     }

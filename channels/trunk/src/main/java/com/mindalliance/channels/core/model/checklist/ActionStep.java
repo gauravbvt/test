@@ -57,6 +57,11 @@ public class ActionStep extends Step implements Mappable {
     }
 
     @Override
+    public boolean isReceiptConfirmation() {
+        return false;
+    }
+
+    @Override
     public boolean isSubTaskStep() {
         return false;
     }

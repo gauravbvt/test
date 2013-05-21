@@ -3837,6 +3837,11 @@ ul.attach li.controls {
     padding-left: 20px;
 }
 
+.checklist .step .receipt-confirmation-step {
+    background: transparent url('../images/step_receipt_confirmation.png') no-repeat 0 -2px;
+    padding-left: 20px;
+}
+
 .checklist .step .terminating-notification-step {
     background: transparent url('../images/step_terminating_notification.png') no-repeat 0 -2px;
     padding-left: 20px;

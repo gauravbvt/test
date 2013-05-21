@@ -140,6 +140,8 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                         : " request-step";
             }
             sb.append( stepClass );
+        } else if ( step.isReceiptConfirmation() ) {
+            sb.append( " receipt-confirmation-step" );
         } else if ( step.isSubTaskStep() ) {
             SubTaskStep subTaskStep = (SubTaskStep) step;
             String stepClass = "";

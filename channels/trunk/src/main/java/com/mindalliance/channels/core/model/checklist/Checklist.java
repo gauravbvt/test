@@ -60,6 +60,7 @@ public class Checklist implements Serializable, Mappable {
         List<Step> effectiveSteps = new ArrayList<Step>();
         effectiveSteps.addAll( getActionSteps() );
         effectiveSteps.addAll( listCommunicationSteps() );
+        effectiveSteps.addAll( listReceiptConfirmationSteps() );
         effectiveSteps.addAll( listSubTaskSteps() );
         for ( Step step : effectiveSteps ) {
             step.setId( effectiveSteps.indexOf( step ) );
@@ -237,6 +238,25 @@ public class Checklist implements Serializable, Mappable {
             }
         }
         return communicationSteps;
+    }
+
+    private List<ReceiptConfirmationStep> listReceiptConfirmationSteps() {
+        List<ReceiptConfirmationStep> receiptConfirmationSteps = new ArrayList<ReceiptConfirmationStep>(  );
+        for ( Flow sharing : part.getAllSharingReceives() ) {
+            if ( sharing.isNotification()
+                    && sharing.isTriggeringToTarget()
+                    && sharing.isReceiptConfirmationRequested() ) {
+                receiptConfirmationSteps.add( new ReceiptConfirmationStep( sharing ) );
+            }
+        }
+        for ( Flow sharing : part.getAllSharingSends() ) {
+            if ( sharing.isAskedFor()
+                    && sharing.isTriggeringToSource()
+                    && sharing.isReceiptConfirmationRequested() ) {
+                receiptConfirmationSteps.add( new ReceiptConfirmationStep( sharing ) );
+            }
+        }
+        return receiptConfirmationSteps;
     }
 
     private List<SubTaskStep> listSubTaskSteps() {

@@ -100,6 +100,11 @@ public class SubTaskStep extends Step {
     }
 
     @Override
+    public boolean isReceiptConfirmation() {
+        return false;
+    }
+
+    @Override
     public boolean isSubTaskStep() {
         return true;
     }

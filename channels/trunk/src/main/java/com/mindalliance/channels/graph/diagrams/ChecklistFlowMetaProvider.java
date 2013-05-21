@@ -1,6 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
@@ -11,6 +12,7 @@ import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.EventTimingCondition;
 import com.mindalliance.channels.core.model.checklist.GoalCondition;
 import com.mindalliance.channels.core.model.checklist.LocalCondition;
+import com.mindalliance.channels.core.model.checklist.ReceiptConfirmationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 import com.mindalliance.channels.core.query.PlanService;
@@ -59,6 +61,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     private static final String ACTION_ICON = "step_action";
     private static final String NOTIFICATION_ICON = "step_notification";
     private static final String REQUEST_ICON = "step_request";
+    private static final String RECEIPT_CONFIRMATION_ICON = "step_receipt_confirmation";
     private static final String RESEARCH_ICON = "step_research";
     private static final String FOLLOW_UP_ICON = "step_follow_up";
 
@@ -168,7 +171,20 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                 ? ( (Part) commStep.getSharing().getTarget() ).resourceSpec().getName()
                                 : ( (Part) commStep.getSharing().getSource() ).resourceSpec().getName() );
 
-            } else {
+            } else if ( step.isReceiptConfirmation() ) {
+                ReceiptConfirmationStep confStep = (ReceiptConfirmationStep)step;
+                Flow sharing = confStep.getSharingToConfirm();
+                sb.append( "CONFIRM RECEIPT of ")
+                        .append( sharing.isNotification()
+                                ? "notification of "
+                                : "request for "
+                        )
+                        .append( sharing.getName() )
+                        .append( " from " )
+                        .append( sharing.isNotification()
+                                ? ( (Part) sharing.getSource() ).resourceSpec().getName()
+                                : ( (Part) sharing.getTarget() ).resourceSpec().getName() );
+            } else  {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
                 sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP with " )
                         .append( subTaskStep.getSharing().getName() )
@@ -272,6 +288,8 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                     iconName = ( (CommunicationStep) step ).isNotification()
                             ? NOTIFICATION_ICON
                             : REQUEST_ICON;
+                } else if ( step.isReceiptConfirmation() ) {
+                    iconName = RECEIPT_CONFIRMATION_ICON;
                 } else {
                     iconName = ( (SubTaskStep) step ).isResearch()
                             ? RESEARCH_ICON

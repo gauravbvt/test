@@ -340,7 +340,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 .append( count )
                 .append( count > 1 ? " participants" : " participant" );
         if ( actor.getMaxParticipation() > 0 ) {
-            sb.append( " -" )
+            sb.append( " - " )
                     .append( actor.getMaxParticipation() )
                     .append( " max" );
         }
