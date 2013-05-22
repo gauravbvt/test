@@ -31,9 +31,20 @@
     	<ClassName>dijitTextBox dijitTextArea dijitTextBoxHover dijitTextAreaHover dijitHover</ClassName>
 	</Element>
 	
-<Element>
+   <Element>
 		<GivenName>saveButton</GivenName>
 		<Xpath>//*[@id="wizard_projectSaveButton"]/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>
+    	</ClassName>
+	</Element>
+		
+		 <Element>
+		<GivenName>documentsButton</GivenName>
+		<Xpath>//*[@id="wizard_button7"]/span</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
