@@ -44,5 +44,11 @@ public void clickSaveButton() throws UIAutomationException{
 	elementController.requireElementSmart(fileName,"saveButton",GlobalVariables.configuration.getAttrSearchList(), "Save button");
 	UIActions.click(fileName,"saveButton",GlobalVariables.configuration.getAttrSearchList(), "Save button");
 	}	
+
+public void clickDocumentsButton() throws UIAutomationException{
+	
+	elementController.requireElementSmart(fileName,"documentsButton",GlobalVariables.configuration.getAttrSearchList(), "Documents button");
+	UIActions.click(fileName,"documentsButton",GlobalVariables.configuration.getAttrSearchList(), "Documents button");
+	}	
 	
 	}
