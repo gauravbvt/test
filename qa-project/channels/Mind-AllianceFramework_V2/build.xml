@@ -8,15 +8,29 @@
   	<property name="classes.dir" value="bin"/>  
   	<property name="junit.out.dir.xml"  value="target2"/>  
   	<property name="junit.out.dir.html" value="target2"/>  
-  
+	<property name ="report.dir" value="ReportsJacoco"/>
+	<property name="result.dir" location="./target"/>
+	<property name="result.classes.dir" location="${result.dir}/classes"/>
+	<property name="result.report.dir" location="${result.dir}/site/jacoco"/>
+	<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
+	<property name="src1.dir" value="./srcjacoco"/>  
+	<property name="lib1.dir" value="libjococo"/>  
+	<property name="bin1" value="targetjacoco"/>  
+	<property name="classes2.dir" value="binjacoco"/>  
+	
+	
 	<echo>Cleaning classes dir...</echo>  
   	<target name="clean" description="Delete Earlier Classes">  
     	<delete dir="${target.dir}" quiet="yes"/>  
+  	 	<delete dir="${classes2.dir}" quiet="yes"/>
   	</target>  
   
 	<echo>Make Required Directories...</echo>  
   	<target name="makedir" depends="clean" description="Create Required Directories">  
    		<mkdir dir="${classes.dir}"/>  
+		<mkdir dir="${result.classes.dir}"/>  	
+  		<mkdir dir="${result.dir}/xml"/>
+  		<mkdir dir="${result.dir}/html"/> 
   	</target>  
   
 	<echo>Compile</echo>  
@@ -28,6 +42,16 @@
     		</classpath>  
    		</javac>  
 	</target>
+	
+	<echo>Compile</echo>  
+	  	<target name="compile2" depends="makedir" description="Compile java code.">  
+	   		<javac debug="true" destdir="${classes.dir}">  
+	    		<src path="${src1.dir}"/>  
+	    		<classpath>  
+	     			<fileset dir="${lib1.dir}" includes="**/*.jar"/>  
+	    		</classpath>  
+	   		</javac>  
+		</target>
 	
     <path id="classpath.test">  
 		<path path="${java.class.path}"/>  
