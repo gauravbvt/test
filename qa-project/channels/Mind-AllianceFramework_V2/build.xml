@@ -99,9 +99,29 @@
 						<formatter type="xml" />
 					</test>
 		    	</junit>			
-			</jacoco:coverage>
-			
+			</jacoco:coverage>	
 	   </target>
 		
-
+	<target name="report" depends="testsuite">
+			<!-- Step 3. Create coverage report -->
+		<jacoco:report>
+				<!-- This task needs the collected execution data and ... -->
+				<executiondata>
+					<file file="${result.exec.file}"/>
+				</executiondata>
+				<!-- the class files and optional source files ... -->
+				<structure name="JaCoCo Ant Example">
+				<classfiles>
+				<fileset dir="${result.classes.dir}"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+				<fileset dir="${src.dir}"/>
+				</sourcefiles>
+				</structure>
+				<!-- to produce reports in different formats. -->
+				<html destdir="${result.report.dir}"/>
+				<csv destfile="${result.report.dir}/report.csv"/>
+				<xml destfile="${result.report.dir}/report.xml"/>
+				</jacoco:report>
+		</target>
 </project>
