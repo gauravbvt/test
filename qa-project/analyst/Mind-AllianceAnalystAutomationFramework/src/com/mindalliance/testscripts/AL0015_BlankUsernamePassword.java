@@ -98,7 +98,7 @@ public class AL0015_BlankUsernamePassword extends TestCase{
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	    
-		// Enter URL	
+		// Enter Username & Password
 		stepNo++;
 		description="Login to Analyst using Invalid Username & password";
 		LoginPage loginpage= new LoginPage();

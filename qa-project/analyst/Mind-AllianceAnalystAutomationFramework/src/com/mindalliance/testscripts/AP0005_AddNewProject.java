@@ -99,7 +99,7 @@ public class AP0005_AddNewProject extends TestCase{
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	    
-		// Enter URL	
+		// Enter Username and password
 		stepNo++;
 		description="Login to Analyst Successful";
 		LoginPage loginpage= new LoginPage();
