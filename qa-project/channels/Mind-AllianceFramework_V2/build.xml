@@ -2,12 +2,21 @@
 <project name="Mind-Alliance Framework" default="testsuite">  
 	
 	<property name="project.name" value="Mind-Alliance Framework"/>  
- 	<property name="src.dir" value="src"/>  
-  	<property name="lib.dir" value="lib"/>  
-  	<property name="bin" value="target"/>  
-  	<property name="classes.dir" value="bin"/>  
-  	<property name="junit.out.dir.xml"  value="target"/>  
-  	<property name="junit.out.dir.html" value="target"/>  
+		<property name ="report.dir" value="Reports"/>
+		<property name="result.dir" location="./target"/>
+		<property name="result.classes.dir" location="${result.dir}/classes"/>
+		<property name="result.report.dir" location="${result.dir}/site/jacoco"/>
+		<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
+	 	<property name="src.dir" value="./src"/>  
+	  	<property name="lib.dir" value="lib"/>  
+	  	<property name="bin" value="target"/>  
+	  	<property name="classes.dir" value="bin"/>  
+	  	<property name="junit.out.dir.xml"  value="target"/>  
+	  	<property name="junit.out.dir.html" value="target"/> 
+		
+		<!-- Step 1: Import JaCoCo Ant tasks -->
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="${lib.dir}/lib/jacocoant.jar"/></taskdef>
   
 	<echo>Cleaning classes dir...</echo>  
   	<target name="clean" description="Delete Earlier Classes">  
@@ -56,4 +65,25 @@
 	   	    <report format="frames" todir="Reports"/>
    		</junitreport>
    </target>
+	
+	<echo>Running JUnit Test Suite...</echo>  
+		<target name="testsuite1" depends="compile" description="Running Test Suite">  
+			<delete dir="${junit.out.dir.xml}"/>  
+	 		<mkdir  dir="${junit.out.dir.xml}"/>  
+			<junit printsummary="yes" haltonfailure="no" fork="yes" maxmemory="512m">  
+				<classpath refid="classpath.test"/>  
+				<sysproperty key="ant.home" value="${ant.home}"/>  
+				<formatter type="xml"/>  
+				<batchtest fork="yes" todir="${junit.out.dir.xml}">  
+					<fileset dir="${classes.dir}" 
+							includes="	**/Home.class" />  
+				</batchtest>  
+	    	</junit> 	
+	   		<junitreport todir="Reports">
+	   	  		<fileset dir="target">
+		  			<include name="TEST-*.xml"/>
+				</fileset>
+		   	    <report format="frames" todir="Reports"/>
+	   		</junitreport>
+	   </target>
 </project>  
