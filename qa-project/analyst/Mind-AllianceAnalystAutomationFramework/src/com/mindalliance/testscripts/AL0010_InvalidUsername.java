@@ -62,9 +62,11 @@ public class AL0010_InvalidUsername extends TestCase {
 			
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
+			
 			// Creates Browser instance
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();
+			
 			// Write log		
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
@@ -72,6 +74,7 @@ public class AL0010_InvalidUsername extends TestCase {
 		catch(UIAutomationException ue){
 			stepNo++;
 			Assert.fail("Unable to initialize the driver"+ue.getErrorMessage());
+			
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
 			LogFunctions.writeResults(testCaseId, stepNo,exception,failed, ue.getErrorMessage(), blank);
