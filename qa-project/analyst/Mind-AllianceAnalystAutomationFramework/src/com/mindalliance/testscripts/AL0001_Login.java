@@ -90,6 +90,7 @@ public class AL0001_Login extends TestCase{
 		description="URL Entered";
 		BrowserController browserController=new BrowserController();
 		browserController.enterURL(testData.get("AnalystURL"),testData.get("Title"));
+		
 		// Write log
 		LogFunctions.writeLogs(description);
 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
