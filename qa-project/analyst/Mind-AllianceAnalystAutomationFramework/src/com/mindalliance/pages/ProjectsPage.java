@@ -19,13 +19,13 @@ public class ProjectsPage {
 	 * @throws UIAutomationException 
 	*/
 	
-public void clickAddProjectButton() throws UIAutomationException{
+    public void clickAddProjectButton() throws UIAutomationException{
 		
 	elementController.requireElementSmart(fileName,"AddProjectButton",GlobalVariables.configuration.getAttrSearchList(), "Add Project button");
 	UIActions.click(fileName,"AddProjectButton",GlobalVariables.configuration.getAttrSearchList(), "Add Project button");
 	}	
 	
-// Enter Project name and description
+    // Enter Project name and description
 	public void EnterProjectNameDescription(String projectName,String description) throws UIAutomationException{
 	
 		// Enter Project name
@@ -35,17 +35,19 @@ public void clickAddProjectButton() throws UIAutomationException{
 		// Enter description
 		elementController.requireElementSmart(fileName,"Description",GlobalVariables.configuration.getAttrSearchList(),"Textfield Description");
 		UIActions.enterValueInTextBox(description,fileName,"Description",GlobalVariables.configuration.getAttrSearchList(),"Textfield Description");
-						
-
+		
 	}
 
-public void clickSaveButton() throws UIAutomationException{
+    //'clickSaveButton' method for clicking the Save button
+	public void clickSaveButton() throws UIAutomationException{
 		
 	elementController.requireElementSmart(fileName,"saveButton",GlobalVariables.configuration.getAttrSearchList(), "Save button");
 	UIActions.click(fileName,"saveButton",GlobalVariables.configuration.getAttrSearchList(), "Save button");
 	}	
 
-public void clickDocumentsButton() throws UIAutomationException{
+    
+	//'clickDocumentsButton' method for clicking the Documents button
+	public void clickDocumentsButton() throws UIAutomationException{
 	
 	elementController.requireElementSmart(fileName,"documentsButton",GlobalVariables.configuration.getAttrSearchList(), "Documents button");
 	UIActions.click(fileName,"documentsButton",GlobalVariables.configuration.getAttrSearchList(), "Documents button");
