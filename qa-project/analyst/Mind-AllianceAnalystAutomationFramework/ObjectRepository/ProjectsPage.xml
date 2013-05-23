@@ -42,7 +42,7 @@
     	</ClassName>
 	</Element>
 		
-		 <Element>
+	<Element>
 		<GivenName>documentsButton</GivenName>
 		<Xpath>//*[@id="wizard_button7"]/span</Xpath>
  		<Name></Name>
@@ -53,5 +53,27 @@
     	</ClassName>
 	</Element>
 		
+	<Element>
+		<GivenName>cancelButton</GivenName>
+		<Xpath>//*[@id="wizard_button17"]/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>
+    	</ClassName>
+	</Element>
+			
+				
+	<Element>
+		<GivenName>DocumentsPageMessage</GivenName>
+		<Xpath>//*[@id="wizard_html5"]/div/div</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName>note</ClassName>
+	</Element>
+			
 
 </Elements>
