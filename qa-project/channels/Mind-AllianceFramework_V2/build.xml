@@ -102,7 +102,7 @@
 			</jacoco:coverage>	
 	   </target>
 		
-	<target name="report" depends="testsuite">
+	<target name="report" depends="testsuite2">
 			<!-- Step 3. Create coverage report -->
 		<jacoco:report>
 				<!-- This task needs the collected execution data and ... -->
