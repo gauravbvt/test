@@ -4,30 +4,19 @@
 	<property name="project.name" value="Mind-Alliance Framework"/>  
  	<property name="src.dir" value="src"/>  
   	<property name="lib.dir" value="lib"/>  
-  	<property name="bin" value="target"/>  
+  	<property name="bin" value="target2"/>  
   	<property name="classes.dir" value="bin"/>  
-  	<property name="junit.out.dir.xml"  value="target"/>  
-  	<property name="junit.out.dir.html" value="target"/>  
-	<property name ="report.dir" value="Reports"/>
-	<property name="result.dir" location="./target"/>	
-	<property name="result2.dir" location="./target2"/>	
-	<property name="result.classes.dir" location="${result.dir}/classes"/>
-	<property name="result.report.dir" location="${result.dir}/site/jacoco"/>	
-	<property name="result.exec.file" location="${result.dir}/jacoco.exec"/>
-	
+  	<property name="junit.out.dir.xml"  value="target2"/>  
+  	<property name="junit.out.dir.html" value="target2"/>  
+  
 	<echo>Cleaning classes dir...</echo>  
   	<target name="clean" description="Delete Earlier Classes">  
-    	<delete dir="${target.dir}" quiet="yes"/> 
-  		<delete dir="${classes.dir}" quiet="yes"/>
-  		<delete dir="${target2.dir}" quiet="yes"/>
+    	<delete dir="${target.dir}" quiet="yes"/>  
   	</target>  
   
 	<echo>Make Required Directories...</echo>  
   	<target name="makedir" depends="clean" description="Create Required Directories">  
    		<mkdir dir="${classes.dir}"/>  
-  		<mkdir dir="${result.classes.dir}"/>  	
-  		<mkdir dir="${result.dir}/xml"/>
-  		<mkdir dir="${result.dir}/html"/> 
   	</target>  
   
 	<echo>Compile</echo>  
@@ -60,7 +49,7 @@
 						includes="	**/Home.class" />  
 			</batchtest>  
     	</junit> 	
-   		<junitreport todir="Reports">
+   		<junitreport todir="Reports2">
    	  		<fileset dir="target">
 	  			<include name="TEST-*.xml"/>
 			</fileset>
