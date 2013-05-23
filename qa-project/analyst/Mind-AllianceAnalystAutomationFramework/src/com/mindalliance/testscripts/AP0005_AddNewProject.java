@@ -31,7 +31,6 @@ import com.mindalliance.pages.ProjectsPage;
 
 import junit.framework.TestCase;
 
-
 public class AP0005_AddNewProject extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="AP0005_AddNewProject";
@@ -125,8 +124,6 @@ public class AP0005_AddNewProject extends TestCase{
 	    //Click Save button
 	    ProjectsPage project2=new ProjectsPage();
 	    project2.clickSaveButton();
-	    
-	    
 	    
 	    stepNo++;
 		description="Signout Successful";
