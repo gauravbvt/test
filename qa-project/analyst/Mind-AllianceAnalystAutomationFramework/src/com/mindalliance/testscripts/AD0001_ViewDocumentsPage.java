@@ -114,11 +114,15 @@ public class AD0001_ViewDocumentsPage extends TestCase {
 	    ProjectsPage project2=new ProjectsPage();
 	    project2.clickDocumentsButton();
 	    
+	    ProjectsPage project3= new ProjectsPage();
+		Assert.assertEquals("Manage the list of global documents referred to by flows and issues.",project3.getDocumentsPageMessage());
+	    
 	    //Click Sign-out button
 	    stepNo++;
 		description="Signout Successful";
 		HeaderController headerController=new HeaderController();
 		headerController.signOut();
+		
 	 }
 	
 	/*
