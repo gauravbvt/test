@@ -81,7 +81,8 @@ public class AL0015_BlankUsernamePassword extends TestCase{
 	}
 	
 	/**
-	 * This method verify that login page is displayed after entering the URL of Analyst and user can be logged in to Analyst
+	 * This method verify that login page is not displayed after entering the blank username and password
+	 *  of Analyst and user can be logged in to Analyst
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

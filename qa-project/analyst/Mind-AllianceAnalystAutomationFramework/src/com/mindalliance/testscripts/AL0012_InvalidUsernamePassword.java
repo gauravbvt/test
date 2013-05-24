@@ -80,7 +80,8 @@ public class AL0012_InvalidUsernamePassword extends TestCase {
 	}
 	
 	/**
-	 * This method verify that login page is displayed after entering the URL of Analyst and user can be logged in to Analyst
+	 * This method verify that login page is not displayed after entering the invalid username of Analyst and user cannot be  
+	 * logged in to Analyst
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */

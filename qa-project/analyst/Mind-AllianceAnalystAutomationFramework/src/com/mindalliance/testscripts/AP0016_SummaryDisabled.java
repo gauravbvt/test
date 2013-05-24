@@ -31,9 +31,9 @@ import com.mindalliance.pages.ProjectsPage;
 
 import junit.framework.TestCase;
 
-public class AP0012_CancelProject extends TestCase {
+public class AP0016_SummaryDisabled extends TestCase{
 	public Hashtable<String, String> testData;
-	public String testCaseId="AP0012_CancelProject";
+	public String testCaseId="AP0016_SummaryDisabled";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -81,7 +81,7 @@ public class AP0012_CancelProject extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that new project creation can be cancelled
+	 * This method verify that summary button is disabled
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
@@ -103,24 +103,27 @@ public class AP0012_CancelProject extends TestCase {
 		description="Login to Analyst Successful";
 		LoginPage loginpage= new LoginPage();
 		loginpage.Login(testData.get("UserName"),testData.get("Password"));
-		
+		// Write log
+		LogFunctions.writeLogs(description);
+		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
+		LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
+	    Reporting reporting= new Reporting();
+	    reporting.generateAutomationReport();
 	    
 	    //Click Add new project button
 	    ProjectsPage project=new ProjectsPage();
 	    project.clickAddProjectButton();
 	    
-	   //Click Cancel button
 	    ProjectsPage project1=new ProjectsPage();
-	    project1.clickCancelButton();
+	    project1.summaryButtonEnabled();
 	    
-	    // Write log
-	    LogFunctions.writeLogs(description);
-	    LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
-	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
-	    Reporting reporting= new Reporting();
-	    reporting.generateAutomationReport();
+	   // ProjectsPage project2=new ProjectsPage();
 	    
+	    
+	    
+	    
+	    //Sign out
 	    stepNo++;
 		description="Signout Successful";
 		HeaderController headerController=new HeaderController();
@@ -139,7 +142,7 @@ public class AP0012_CancelProject extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for AP0012_CancelProject.
+     * Loads Test Data for AP0016_SummaryDisabled.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -154,28 +157,29 @@ public class AP0012_CancelProject extends TestCase {
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File AP0012_CancelProject=new File(path + "AP0012_CancelProject.xml");
+			File AP0016_SummaryDisabled=new File(path + "AP0016_SummaryDisabled.xml");
 			
-			Document docAP0012_CancelProject=db.parse(AP0012_CancelProject);
-			Element eleAP0012_CancelProject=docAP0012_CancelProject.getDocumentElement();
+			Document docAP0016_SummaryDisabled=db.parse(AP0016_SummaryDisabled);
+			Element eleAP0016_SummaryDisabled=docAP0016_SummaryDisabled.getDocumentElement();
 	              
-	        Element oXmlEleAP0012_CancelProject = (Element) eleAP0012_CancelProject;
+	        Element oXmlEleAP0016_SummaryDisabled = (Element) eleAP0016_SummaryDisabled;
 	       	
-	        this.testData.put("AnalystURL",oXmlEleAP0012_CancelProject.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Title",oXmlEleAP0012_CancelProject.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UserName",oXmlEleAP0012_CancelProject.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Password",oXmlEleAP0012_CancelProject.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
-	       
+	        this.testData.put("AnalystURL",oXmlEleAP0016_SummaryDisabled.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Title",oXmlEleAP0016_SummaryDisabled.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("UserName",oXmlEleAP0016_SummaryDisabled.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Password",oXmlEleAP0016_SummaryDisabled.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+	        
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File AP0012_CancelProject.xml not found.");
+			throw new UIAutomationException("File AP0016_SummaryDisabled.xml not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File AP0012_CancelProject.xml not found.");
+			throw new UIAutomationException("File AP0016_SummaryDisabled.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File AP0012_CancelProject.xml can not be parsed.");
+			throw new UIAutomationException("File AP0016_SummaryDisabled.xml can not be parsed.");
 		}
 	}
+	
 	
 }

@@ -31,9 +31,10 @@ import com.mindalliance.pages.ProjectsPage;
 
 import junit.framework.TestCase;
 
-public class AP0012_CancelProject extends TestCase {
+
+public class AP0008_InvalidProjectName extends TestCase {
 	public Hashtable<String, String> testData;
-	public String testCaseId="AP0012_CancelProject";
+	public String testCaseId="AP0008_InvalidProjectName";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -81,7 +82,7 @@ public class AP0012_CancelProject extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that new project creation can be cancelled
+	 * This method verify that new project is entered with invalid name
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
@@ -103,23 +104,27 @@ public class AP0012_CancelProject extends TestCase {
 		description="Login to Analyst Successful";
 		LoginPage loginpage= new LoginPage();
 		loginpage.Login(testData.get("UserName"),testData.get("Password"));
-		
+		// Write log
+		LogFunctions.writeLogs(description);
+		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
+		LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
+	    Reporting reporting= new Reporting();
+	    reporting.generateAutomationReport();
 	    
 	    //Click Add new project button
 	    ProjectsPage project=new ProjectsPage();
 	    project.clickAddProjectButton();
 	    
-	   //Click Cancel button
+	    //Enter project name and description
+	    stepNo++;
+	    description="Add new project";
 	    ProjectsPage project1=new ProjectsPage();
-	    project1.clickCancelButton();
+	    project1.EnterProjectNameDescription(testData.get("ProjectName"),testData.get("Description"));
 	    
-	    // Write log
-	    LogFunctions.writeLogs(description);
-	    LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
-	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
-	    Reporting reporting= new Reporting();
-	    reporting.generateAutomationReport();
+	    //Click Save button
+	    ProjectsPage project2=new ProjectsPage();
+	    project2.clickSaveButton();
 	    
 	    stepNo++;
 		description="Signout Successful";
@@ -139,7 +144,7 @@ public class AP0012_CancelProject extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for AP0012_CancelProject.
+     * Loads Test Data for AP0008_InvalidProjectName.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -154,28 +159,30 @@ public class AP0012_CancelProject extends TestCase {
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File AP0012_CancelProject=new File(path + "AP0012_CancelProject.xml");
+			File AP0008_InvalidProjectName=new File(path + "AP0008_InvalidProjectName.xml");
 			
-			Document docAP0012_CancelProject=db.parse(AP0012_CancelProject);
-			Element eleAP0012_CancelProject=docAP0012_CancelProject.getDocumentElement();
+			Document docAP0008_InvalidProjectName=db.parse(AP0008_InvalidProjectName);
+			Element eleAP0008_InvalidProjectName=docAP0008_InvalidProjectName.getDocumentElement();
 	              
-	        Element oXmlEleAP0012_CancelProject = (Element) eleAP0012_CancelProject;
+	        Element oXmlEleAP0008_InvalidProjectName = (Element) eleAP0008_InvalidProjectName;
 	       	
-	        this.testData.put("AnalystURL",oXmlEleAP0012_CancelProject.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Title",oXmlEleAP0012_CancelProject.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UserName",oXmlEleAP0012_CancelProject.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Password",oXmlEleAP0012_CancelProject.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
-	       
+	        this.testData.put("AnalystURL",oXmlEleAP0008_InvalidProjectName.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Title",oXmlEleAP0008_InvalidProjectName.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("UserName",oXmlEleAP0008_InvalidProjectName.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Password",oXmlEleAP0008_InvalidProjectName.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("ProjectName",oXmlEleAP0008_InvalidProjectName.getElementsByTagName("projectName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Description",oXmlEleAP0008_InvalidProjectName.getElementsByTagName("description").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File AP0012_CancelProject.xml not found.");
+			throw new UIAutomationException("File AP0008_InvalidProjectName.xml not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File AP0012_CancelProject.xml not found.");
+			throw new UIAutomationException("File AP0008_InvalidProjectName.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File AP0012_CancelProject.xml can not be parsed.");
+			throw new UIAutomationException("File AP0008_InvalidProjectName.xml can not be parsed.");
 		}
 	}
+	
 	
 }

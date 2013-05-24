@@ -31,9 +31,10 @@ import com.mindalliance.pages.ProjectsPage;
 
 import junit.framework.TestCase;
 
-public class AP0012_CancelProject extends TestCase {
+
+public class AP0021_ClickCalendarIcon extends TestCase{
 	public Hashtable<String, String> testData;
-	public String testCaseId="AP0012_CancelProject";
+	public String testCaseId="AP0021_ClickCalendarIcon";
 	public String description=null;
 	public int stepNo=1;
 	public String passed="Pass";
@@ -81,7 +82,7 @@ public class AP0012_CancelProject extends TestCase {
 		}
 	}
 	/**
-	 * This method verify that new project creation can be cancelled
+	 * This method verify that summary button is disabled
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
@@ -103,24 +104,26 @@ public class AP0012_CancelProject extends TestCase {
 		description="Login to Analyst Successful";
 		LoginPage loginpage= new LoginPage();
 		loginpage.Login(testData.get("UserName"),testData.get("Password"));
-		
+		// Write log
+		LogFunctions.writeLogs(description);
+		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+
+		LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
+	    Reporting reporting= new Reporting();
+	    reporting.generateAutomationReport();
 	    
 	    //Click Add new project button
 	    ProjectsPage project=new ProjectsPage();
 	    project.clickAddProjectButton();
 	    
-	   //Click Cancel button
 	    ProjectsPage project1=new ProjectsPage();
-	    project1.clickCancelButton();
+	    project1.clickCalendarIcon();
+	 
 	    
-	    // Write log
-	    LogFunctions.writeLogs(description);
-	    LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-
-	    LogFunctions.writeLogs("Testcase: " + testCaseId + " execution completed");
-	    Reporting reporting= new Reporting();
-	    reporting.generateAutomationReport();
 	    
+	    
+	    
+	    //Sign out
 	    stepNo++;
 		description="Signout Successful";
 		HeaderController headerController=new HeaderController();
@@ -139,7 +142,7 @@ public class AP0012_CancelProject extends TestCase {
 	}
 	
 	/**
-     * Loads Test Data for AP0012_CancelProject.
+     * Loads Test Data for AP0021_ClickCalendarIcon.
      * @throws UIAutomationException
      */
 	public void loadTestData() throws UIAutomationException
@@ -154,27 +157,27 @@ public class AP0012_CancelProject extends TestCase {
 			String path= currentDir.getCanonicalPath().toString() + "\\TestData\\";
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-			File AP0012_CancelProject=new File(path + "AP0012_CancelProject.xml");
+			File AP0021_ClickCalendarIcon=new File(path + "AP0021_ClickCalendarIcon.xml");
 			
-			Document docAP0012_CancelProject=db.parse(AP0012_CancelProject);
-			Element eleAP0012_CancelProject=docAP0012_CancelProject.getDocumentElement();
+			Document docAP0021_ClickCalendarIcon=db.parse(AP0021_ClickCalendarIcon);
+			Element eleAP0021_ClickCalendarIcon=docAP0021_ClickCalendarIcon.getDocumentElement();
 	              
-	        Element oXmlEleAP0012_CancelProject = (Element) eleAP0012_CancelProject;
+	        Element oXmlEleAP0021_ClickCalendarIcon = (Element) eleAP0021_ClickCalendarIcon;
 	       	
-	        this.testData.put("AnalystURL",oXmlEleAP0012_CancelProject.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Title",oXmlEleAP0012_CancelProject.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("UserName",oXmlEleAP0012_CancelProject.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("Password",oXmlEleAP0012_CancelProject.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
-	       
+	        this.testData.put("AnalystURL",oXmlEleAP0021_ClickCalendarIcon.getElementsByTagName("analystURL").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Title",oXmlEleAP0021_ClickCalendarIcon.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("UserName",oXmlEleAP0021_ClickCalendarIcon.getElementsByTagName("userName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Password",oXmlEleAP0021_ClickCalendarIcon.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+	        
 		}
 		catch(SAXException se){
-			throw new UIAutomationException("File AP0012_CancelProject.xml not found.");
+			throw new UIAutomationException("File AP0021_ClickCalendarIcon.xml not found.");
 		}
 		catch (IOException ie) {
-			throw new UIAutomationException("File AP0012_CancelProject.xml not found.");
+			throw new UIAutomationException("File AP0021_ClickCalendarIcon.xml not found.");
 		}
 		catch (ParserConfigurationException pe) {
-			throw new UIAutomationException("File AP0012_CancelProject.xml can not be parsed.");
+			throw new UIAutomationException("File AP0021_ClickCalendarIcon.xml can not be parsed.");
 		}
 	}
 	
