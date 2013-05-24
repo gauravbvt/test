@@ -53,4 +53,26 @@ public class ProjectsPage {
 	UIActions.click(fileName,"documentsButton",GlobalVariables.configuration.getAttrSearchList(), "Documents button");
 	}	
 	
+	//'clickCancelButton method to cancel adding new project
+	public void clickCancelButton() throws UIAutomationException{
+		
+	elementController.requireElementSmart(fileName,"cancelButton",GlobalVariables.configuration.getAttrSearchList(), "Cancel button");
+	UIActions.click(fileName,"cancelButton",GlobalVariables.configuration.getAttrSearchList(), "Cancel button");
+		}	
+	
+	public String getDocumentsPageMessage() throws UIAutomationException{
+		return UIActions.getText(fileName, "DocumentsPageMessage", GlobalVariables.configuration.getAttrSearchList(), "Documents Page Message");
+	}
+	
+	//'summaryButtonEnabled' method checks whether the summary button is enabled
+	public void summaryButtonEnabled() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"summaryButton",GlobalVariables.configuration.getAttrSearchList(), "Summary button");
+		UIActions.checkEnable(fileName, "summaryButton", GlobalVariables.configuration.getAttrSearchList(), "Summary button");
+		
+	}
+	//'clickCalendarIcon' method clicks the Calendar icon
+	public void clickCalendarIcon() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "CalendarIcon",GlobalVariables.configuration.getAttrSearchList(), "Calendar icon");
+		UIActions.click(fileName, "CalendarIcon", GlobalVariables.configuration.getAttrSearchList(), "Calendar icon");
+		}
 	}
