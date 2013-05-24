@@ -19,7 +19,7 @@ public class BrowserController{
 				
 	/**
 	 * Initialize the browser by passing parameter (browser)
-	 * @param  browser		Mozilla Firefox / Chrome / Internet Explorer
+	 * @param  browser	Mozilla Firefox / Chrome / Internet Explorer
 	 * @throws UIAutomationException 
 	*/
 	@SuppressWarnings("deprecation")
@@ -27,13 +27,14 @@ public class BrowserController{
 		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
 		try{
 			switch (browser) {
+			
 			case "Mozilla Firefox":
 				driver = new FirefoxDriver(DesiredCapabilities.firefox());
 		      	GlobalVariables.configuration.setWebDriver(driver);
-		    	
 		    	//Maximize the Browser
 		    	GlobalVariables.configuration.getWebDriver().manage().window().maximize();
 				break;
+				
 			case "Internet Explorer":
 				driver=null;
 	            DesiredCapabilities.internetExplorer().setJavascriptEnabled(true);       
@@ -42,6 +43,7 @@ public class BrowserController{
 	            driver = new InternetExplorerDriver(DesiredCapabilities.internetExplorer());
 	            GlobalVariables.configuration.setWebDriver(driver);
 				break;
+				
 			case "Chrome":
 			   driver=null;
 	 	       String chromeDriverPath = GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString()+File.separator+"lib"+File.separator+"chromedriver.exe";
@@ -70,6 +72,7 @@ public class BrowserController{
      * @param title
      * @throws UIAutomationException
      */
+	
 	public void enterURL(String URL,String title) throws UIAutomationException{
 		GlobalVariables.configuration.getWebDriver().get(URL);
     	
