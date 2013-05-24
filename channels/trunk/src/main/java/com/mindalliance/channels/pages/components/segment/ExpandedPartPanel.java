@@ -11,6 +11,7 @@ import com.mindalliance.channels.core.command.commands.UpdateSegmentObject;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -69,6 +70,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private static final String TASK_PROPERTY = "task";                     // NON-NLS
 
     /**
+     * The function property.
+     */
+    private static final String FUNCTION_PROPERTY = "function";                   // NON-NLS
+    /**
      * The actor property.
      */
     private static final String ACTOR_PROPERTY = "actor";                   // NON-NLS
@@ -94,7 +99,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
     private static final String INITIATED_EVENT_PROPERTY = "initiatedEvent";             // NON-NLS
 
     private static String[] EntityProps = {
-            ACTOR_PROPERTY, ROLE_PROPERTY, JURISDICTION_PROPERTY, ORG_PROPERTY,
+            ACTOR_PROPERTY, FUNCTION_PROPERTY, ROLE_PROPERTY, JURISDICTION_PROPERTY, ORG_PROPERTY,
             INITIATED_EVENT_PROPERTY
     };
 
@@ -417,6 +422,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     private void addEntityFields() {
         entityFields = new ArrayList<EntityReferencePanel<? extends ModelEntity>>();
+        addFunctionField();
         addActorField();
         addRoleField();
         addOrganizationField();
@@ -436,6 +442,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
 
     public List<String> getAllRoleNames() {
         return getQueryService().findAllEntityNames( Role.class );
+    }
+
+    public List<String> getAllFunctionNames() {
+        return getQueryService().findAllEntityNames( Function.class );
     }
 
     public List<String> getAllOrganizationNames() {
@@ -481,6 +491,16 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         partDescription.setEnabled( lockedByUser );
         boolean partHasIssues = getAnalyst().hasIssues( getQueryService(), part, false );
         makeVisible( partIssuesPanel, partHasIssues );
+    }
+
+    private void addFunctionField() {
+        EntityReferencePanel<Function> field = new EntityReferencePanel<Function>( FUNCTION_PROPERTY,
+                new PropertyModel<Part>( this, "part" ),
+                getAllFunctionNames(),
+                FUNCTION_PROPERTY,
+                Function.class );
+        addOrReplace( field );
+        entityFields.add( field );
     }
 
     private void addActorField() {

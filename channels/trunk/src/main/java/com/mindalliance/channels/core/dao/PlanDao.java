@@ -9,6 +9,7 @@ import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InternalFlow;
@@ -214,6 +215,8 @@ public class PlanDao extends AbstractModelObjectDao {
             InfoProduct.UNKNOWN.makeImmutable();
             InfoFormat.UNKNOWN = findOrCreateType( InfoFormat.class, InfoFormat.UnknownName, null );
             InfoFormat.UNKNOWN.makeImmutable();
+            Function.UNKNOWN = findOrCreateType( Function.class, Function.UnknownName, null );
+            Function.UNKNOWN.makeImmutable();
             if ( Requirement.UNKNOWN == null ) {  // todo - COMMUNITY - remove
                 Requirement.UNKNOWN = findOrCreateModelObject( Requirement.class, Requirement.UnknownName, null );
             }

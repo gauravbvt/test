@@ -41,13 +41,15 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     private String newClassificationName;
     private Classification selectedClassification;
     private String classificationSystem;
+    private boolean canBeEdited;
     private WebMarkupContainer classificationsContainer;
     private WebMarkupContainer indexContainer;
     private TextField<String> newClassificationField;
 
-    public ClassificationSystemPanel( String id, String classificationSystem ) {
+    public ClassificationSystemPanel( String id, String classificationSystem, boolean canBeEdited ) {
         super( id );
         this.classificationSystem = classificationSystem;
+        this.canBeEdited = canBeEdited;
         init();
     }
 
@@ -87,7 +89,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                         update( target, new Change( Change.Type.Updated, getPlan(), "classifications" ) );
                     }
                 };
-                moveLink.setVisible( /*isLockedByUser( getPlan() ) &&*/ item.getIndex() != 0 );
+                moveLink.setVisible( canBeEdited && item.getIndex() != 0 );
                 item.add( moveLink );
                 // more
                 AjaxLink moreLink = new AjaxLink( "more" ) {
@@ -116,8 +118,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                     }
                 };
                 deleteLink.setVisible(
-                        /*isLockedByUser( getPlan() )
-                                && */!isReferenced( classification ) );
+                        canBeEdited && !isReferenced( classification ) );
                 item.add( deleteLink );
                 // css
                 int count = getClassifications().size();
@@ -152,17 +153,18 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
     }
 
     public void delete( Classification classification ) {
-        doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
-                "classifications",
-                classification,
-                UpdateObject.Action.Remove ) );
+        if ( canBeEdited )
+            doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
+                    "classifications",
+                    classification,
+                    UpdateObject.Action.Remove ) );
     }
 
 
     private void addNewClassification() {
         WebMarkupContainer newClassificationContainer = new WebMarkupContainer( "new-classification-container" );
         String cssClasses = "last "
-                + ( ( getPlan().classificationsFor( classificationSystem).size() ) % 2 == 0 ? "even" : "odd" );
+                + ( ( getPlan().classificationsFor( classificationSystem ).size() ) % 2 == 0 ? "even" : "odd" );
         newClassificationContainer.add( new AttributeModifier(
                 "class",
                 new Model<String>( cssClasses ) ) );
@@ -187,25 +189,26 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
                 }
             }
         } );
+        makeVisible( newClassificationField, canBeEdited );
         newClassificationContainer.add( newClassificationField );
     }
 
     private boolean isNewClassificationNamed() {
         return newClassificationName != null
-             && !newClassificationName.isEmpty()
-             && !CollectionUtils.exists( getPlan().classificationsFor( classificationSystem ),
-                                         new Predicate() {
-                                             @Override
-                                             public boolean evaluate( Object object ) {
-                                                 return Matcher.same( ( (Classification) object ).getName(),
-                                                                      newClassificationName );
-                                             }
-                                         } );
+                && !newClassificationName.isEmpty()
+                && !CollectionUtils.exists( getPlan().classificationsFor( classificationSystem ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return Matcher.same( ( (Classification) object ).getName(),
+                                newClassificationName );
+                    }
+                } );
     }
 
     private Classification addClassification() {
         Classification classification = null;
-        if ( isNewClassificationNamed() ) {
+        if ( canBeEdited && isNewClassificationNamed() ) {
             classification = new Classification();
             classification.setName( newClassificationName );
             classification.setSystem( classificationSystem );
@@ -270,7 +273,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
         }
 
         @Override
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         protected List<Actor> findIndexedActors() {
             return (List<Actor>) CollectionUtils.select(
                     getQueryService().listActualEntities( Actor.class, isMustBeReferenced() ),
@@ -287,7 +290,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
          * {@inheritDoc}
          */
         @Override
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         protected List<Flow> findIndexedFlows() {
             return (List<Flow>) CollectionUtils.select(
                     getQueryService().findAllFlows(),

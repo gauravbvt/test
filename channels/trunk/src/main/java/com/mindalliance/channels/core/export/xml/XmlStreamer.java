@@ -31,6 +31,7 @@ import com.mindalliance.channels.core.model.EventPhase;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.ExternalFlow;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
@@ -230,6 +231,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.registerConverter( new TransmissionMediumConverter( this ) );
             stream.registerConverter( new InfoProductConverter( this ) );
             stream.registerConverter( new InfoFormatConverter( this ) );
+            stream.registerConverter( new FunctionConverter( this ) );
             stream.registerConverter( new TransformationConverter( this ) );
             stream.registerConverter( new EventPhaseConverter( this ) );
             stream.registerConverter( new EventTimingConverter( this ) );
@@ -272,6 +274,7 @@ public class XmlStreamer implements ImportExportFactory {
             stream.alias( "requirement", Requirement.class );
             stream.alias( "assignedLocation", AssignedLocation.class );
             stream.alias( "infoproduct", InfoProduct.class );
+            stream.alias( "function", Function.class );
             stream.alias( "format", InfoFormat.class );
         }
 

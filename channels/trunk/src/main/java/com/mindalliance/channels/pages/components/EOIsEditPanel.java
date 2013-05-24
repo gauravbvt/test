@@ -7,7 +7,9 @@ import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.model.EOIsHolder;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Subject;
@@ -428,6 +430,10 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             if ( getEOIHolder().isSharing() && !added )
                 added = addGuessedFromCapability( newEois );
             if ( source.isPart() && !added )
+                added = addGuessedFromFunctionAcquired( (Part) source, newEois );
+            if ( target.isPart() && !added )
+                added = addGuessedFromFunctionNeeded( (Part) target, newEois );
+            if ( source.isPart() && !added )
                 added = addGuessedFromOtherSends( (Part) source, newEois );
             if ( target.isPart() && !added )
                 added = addGuessedFromOtherReceives( (Part) target, newEois );
@@ -438,6 +444,64 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
     }
 
     @SuppressWarnings( "unchecked" )
+    private boolean addGuessedFromFunctionAcquired( Part part, List<ElementOfInformation> newEois ) {
+        if ( getEOIHolder().isFlow() ) {
+            Flow flow = (Flow) getEOIHolder();
+            int size = newEois.size();
+            List<String> contents = (List<String>) CollectionUtils.collect(
+                    flow.getEffectiveEois(),
+                    TransformerUtils.invokerTransformer( "getContent" ) );
+            contents.addAll( (List<String>) CollectionUtils.collect(
+                    newEois,
+                    TransformerUtils.invokerTransformer( "getContent" ) ) );
+            Function function = part.getFunction();
+            if ( function != null ) {
+                Information info = function.findAcquiredInfoNamed( flow.getName() );
+                if ( info != null )
+                    for ( ElementOfInformation acquiredEoi : info.getEois() ) {
+                        if ( !Matcher.contains( contents, acquiredEoi.getContent() ) ) {
+                            // Use the first one as-is. Will improve later. Maybe.
+                            newEois.add( new ElementOfInformation( acquiredEoi ) );
+                            contents.add( acquiredEoi.getContent() );
+                        }
+                    }
+            }
+            return size < newEois.size();
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private boolean addGuessedFromFunctionNeeded( Part part, List<ElementOfInformation> newEois ) {
+        if ( getEOIHolder().isFlow() ) {
+            Flow flow = (Flow) getEOIHolder();
+            int size = newEois.size();
+            List<String> contents = (List<String>) CollectionUtils.collect(
+                    flow.getEffectiveEois(),
+                    TransformerUtils.invokerTransformer( "getContent" ) );
+            contents.addAll( (List<String>) CollectionUtils.collect(
+                    newEois,
+                    TransformerUtils.invokerTransformer( "getContent" ) ) );
+            Function function = part.getFunction();
+            if ( function != null ) {
+                Information info = function.findNeededInfoNamed( flow.getName() );
+                if ( info != null )
+                    for ( ElementOfInformation neededEoi : info.getEois() ) {
+                        if ( !Matcher.contains( contents, neededEoi.getContent() ) ) {
+                            // Use the first one as-is. Will improve later. Maybe.
+                            newEois.add( new ElementOfInformation( neededEoi ) );
+                            contents.add( neededEoi.getContent() );
+                        }
+                    }
+            }
+            return size < newEois.size();
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private boolean addGuessedFromCapability( List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -484,7 +548,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         return capability;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean addGuessedFromNeed( List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -533,7 +597,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         return need;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean addGuessedFromOtherReceives( Part target, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -563,7 +627,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean addGuessedFromOtherSends( Part source, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -593,7 +657,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean addGuessedSentFromReceives( Part source, List<ElementOfInformation> newEois ) {
         if ( getEOIHolder().isFlow() ) {
             Flow flow = (Flow) getEOIHolder();
@@ -830,8 +894,8 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         public boolean isModifiable() {
             return isMarkedForCreation() ||
                     index < getEOIHolder().getEffectiveEois().size()  // still aiming at right target
-                    && getEOIHolder().getEffectiveEois().get( index ).equals( eoi )
-                    && getEOIHolder().isLocalAndEffective( eoi ); // and which can be modified
+                            && getEOIHolder().getEffectiveEois().get( index ).equals( eoi )
+                            && getEOIHolder().isLocalAndEffective( eoi ); // and which can be modified
         }
     }
 

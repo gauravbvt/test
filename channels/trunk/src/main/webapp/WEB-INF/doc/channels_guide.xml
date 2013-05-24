@@ -329,6 +329,7 @@ Our thanks and admiration to all who contributed to these libraires.
                 <definition section="concepts" topic="survey"/>
                 <definition section="concepts" topic="tag"/>
                 <definition section="concepts" topic="checklist"/>
+                <definition section="concepts" topic="function"/>
             </topic>
             <topic id="plan">
                 <name>Collaboration plan</name>
@@ -695,6 +696,27 @@ The conditions on executing steps can be the goals achieved and events triggered
                     </description>
                 </item>
             </topic>
+            <topic id="function">
+                <name>Function</name>
+                <item>
+                    <description>A function specifies the goals to be achieved, the information needed and the information to be acquired by any task implemeting the function.
+                    
+Functions are "entities" and so can be categorized by other functions. Functions are always entity "types".
+
+A task may or may not implement a function. If it does, it is expected to conform to the specifications of the function. Issues are raised if the task does not.
+                    </description>
+                    <script>
+                        <action>Open a function profile</action>
+                        <change>
+                            <subjectPath>guide.anyFunction</subjectPath>
+                            <type>Expanded</type>
+                            <property>details</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="entity"/>
+                <next section="concepts" topic="task"/>
+            </topic>
         </section>
         <section id="plans-page">
             <name>Domain plan page</name>
@@ -840,6 +862,7 @@ You can switch to another plan - or another version of this plan - by mousing ov
 * Paste attachment - Add the copied attachment, if any, to this task
 * Paste flow - Add copied info need or capability to this task 
 * New issue - Report a new issue about this task
+* Implement function - Add goals, information needs and capabilities to implement the task's function
 * Duplicate task - Add new task as a copy of this one
 * Satisfy info needs - Create all possible flows that satify this task's info needs, based on existing info capabilities
 * Disintermediate - Disconnect this task from all flows where it acts as an intermediary</description>
@@ -1168,6 +1191,7 @@ The newly created task is intially empty and presented as ''someone doing someth
                 <item>
                     <description>Define a task by
 * naming it
+* identifying the function it implements
 * identifying where it is to be executed
 * profiling who is to be assigned to it
 * what goals it directly achieves
@@ -1183,6 +1207,7 @@ Note that as little and as much as wanted can be put into a task's definition.
                     </script>
                 </item>
                 <next section="concepts" topic="task"/>
+                <next section="concepts" topic="function"/>
                 <next section="info-sharing" topic="add-need"/>
                 <next section="info-sharing" topic="add-capability"/>
                 <next section="info-sharing" topic="connect-with-flow"/>
@@ -1652,6 +1677,35 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <next section="concepts" topic="info-format"/>
+            </topic>
+            <topic id="profiling-function">
+                <name>Profiling a function</name>
+                <item>
+                    <description>Define a function that tasks can implement.
+                    
+A function can be:
+* named
+* described
+* categorized by other (more generic) functions
+
+A function defines the kinds of goals, if any, a task implementing it is expected to achieve, as well as the information needs and information capabilities that such a task is expected to have in order to conform to the function.
+
+When a function is categorized by other functions, it adds to the goalsm information needs and capabilitites these functions define.
+                    </description>
+                </item>
+                <item>
+                    <description>Functions can be found by name in the plan's index.</description>
+                    <script>
+                        <action>Open the index</action>
+                        <change>
+                            <subjectId>-13</subjectId>
+                            <type>AspectViewed</type>
+                            <property>Index</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="function"/>
+                
             </topic>
         </section>
         <section id="analyzing">

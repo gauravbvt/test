@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div wicket:id="eoisContainer">
+        <div wicket:id="eoisList" class="eois-list">
+            <input wicket:id="included" type="checkbox"/>
+            Element: <input wicket:id="name" type="text" class="content"/>
+            Question it answers: <input wicket:id="question" type="text" class="question"/>
+        </div>
+        <!-- repeated -->
+        <input wicket:id="newEoi" type="text" class="new-content"/>
+    </div>
+</wicket:panel>
+</body>
+</html>

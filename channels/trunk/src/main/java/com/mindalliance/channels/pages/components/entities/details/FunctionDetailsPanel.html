@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:extend>
+    <tr>
+        <th align="right">Goals:</th>
+        <td>
+            <div wicket:id="objectivesContainer">
+                    <div wicket:id="objectives"> <!-- repeated -->
+                        <input wicket:id="included" type="checkbox"/>
+                        <span wicket:id="objectiveLabel">objective</span>
+                    </div>
+
+                <select wicket:id="riskOrGain">
+                    <option>Risk</option>
+                    <option>Gain</option>
+                </select>
+                <select wicket:id="goalCategory">
+                    <option>a goal category</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+    <tr wicket:id="infoNeededContainer">
+        <th align="right">Information needed:</th>
+        <td>
+            <span wicket:id="infoNeeded" class="info-spec">[information list panel]</span>
+        </td>
+    </tr>
+    <tr wicket:id="infoAcquiredContainer">
+        <th align="right">Information to be shared:</th>
+        <td>
+            <span wicket:id="infoAcquired" class="info-spec">[information list panel]</span>
+        </td>
+    </tr>
+</wicket:extend>
+</body>
+</html>

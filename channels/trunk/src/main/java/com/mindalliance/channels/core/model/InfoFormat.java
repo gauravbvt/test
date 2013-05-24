@@ -36,4 +36,7 @@ public class InfoFormat extends ModelEntity {
         return "format";
     }
 
+    public static String classLabel() {
+        return "formats";
+    }
 }

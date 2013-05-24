@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
@@ -213,6 +214,14 @@ public class EntityReferencesAndMatchesPanel extends AbstractUpdatablePanel {
                     : new ArrayList<InfoFormat>();
         }
 
+        /**
+         * {@inheritDoc}
+         */
+        protected List<Function> findIndexedFunctions() {
+            return isShowReferences()
+                    ? getQueryService().findAllReferencing( getEntity(), Function.class )
+                    : new ArrayList<Function>();
+        }
 
         /**
          * {@inheritDoc}

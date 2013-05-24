@@ -44,6 +44,8 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      */
     private String task = DEFAULT_TASK;
 
+    private Function function;
+
     private ResourceSpec spec = new ResourceSpec();
 
     /**
@@ -153,6 +155,14 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
 
     public void setTask( String task ) {
         this.task = task == null || task.length() == 0 ? DEFAULT_TASK : task;
+    }
+
+    public Function getFunction() {
+        return function;
+    }
+
+    public void setFunction( Function function ) {
+        this.function = function;
     }
 
     public Checklist getChecklist() {
@@ -703,8 +713,11 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     @Override
     public boolean references( final ModelObject mo ) {
         return ModelObject.areIdentical( getActor(), mo ) || ModelObject.areIdentical( getRole(), mo )
-                || ModelObject.areIdentical( getJurisdiction(), mo ) || ModelObject.areIdentical( getOrganization(), mo )
-                || ModelObject.areIdentical( location.getNamedPlace(), mo ) || ModelObject.areIdentical( initiatedEvent, mo )
+                || ModelObject.areIdentical( getJurisdiction(), mo )
+                || ModelObject.areIdentical( getOrganization(), mo )
+                || ModelObject.areIdentical( location.getNamedPlace(), mo )
+                || ModelObject.areIdentical( initiatedEvent, mo )
+                || ModelObject.areIdentical( function, mo )
                 || CollectionUtils.exists( goals, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {

@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -454,6 +455,7 @@ public class DefaultImagingService implements ImagingService, InitializingBean {
                         : modelObject instanceof TransmissionMedium ? "medium"
                         : modelObject instanceof InfoFormat ? "info_format"
                         : modelObject instanceof InfoProduct ? "info_product"
+                        : modelObject instanceof Function ? "function"
                         : "unknown" );
     }
 

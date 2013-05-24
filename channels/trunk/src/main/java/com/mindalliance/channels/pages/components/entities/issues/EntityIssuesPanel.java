@@ -8,6 +8,7 @@ package com.mindalliance.channels.pages.components.entities.issues;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Issue;
@@ -185,6 +186,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
             return "";
         } else if ( entity instanceof InfoFormat ) {
             return "";
+        } else if ( entity instanceof Function ) {
+            return "";
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }
@@ -216,6 +219,8 @@ public class EntityIssuesPanel extends AbstractIssueTablePanel implements Guidab
             return new ArrayList<InfoProduct>();
         } else if ( entity instanceof InfoFormat ) {
             return new ArrayList<InfoFormat>();
+        } else if ( entity instanceof Function ) {
+            return new ArrayList<Function>();
         } else {
             throw new IllegalStateException( "Can't display issue table for " + entity.getClass().getSimpleName() );
         }

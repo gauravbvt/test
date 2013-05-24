@@ -8,7 +8,7 @@
 <body>
 <wicket:panel>
     <div class="participationManager">
-        <div wicket:id="agenciesContainer" class="participation-left">
+        <div wicket:id="agenciesContainer" class="participation">
             <div class="participation-filtering">
                 Organizations<br/>
                 <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> with unassigned agents
@@ -23,7 +23,7 @@
                 </table>
             </div>
         </div>
-        <div wicket:id="agentsContainer" class="participation-left">
+        <div wicket:id="agentsContainer" class="participation">
             <div class="participation-filtering">
                 Agents in <span wicket:id="agencyName">org name</span><br/>
                 <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> that are unassigned
@@ -38,7 +38,7 @@
                 </table>
             </div>
         </div>
-        <div wicket:id="participantsContainer" class="participation-right">
+        <div wicket:id="participantsContainer" class="participation">
             <div class="participation-title">
                 Users participating as<br/>
                 <span wicket:id="agentName">the agent</span>

@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Modelable;
@@ -39,8 +40,8 @@ public class PlanIndexPanel extends AbstractIndexPanel implements Guidable {
      * Indexing choices.
      */
     private static final String[] indexingChoices =
-            {ALL, ACTORS, EOIS, EVENTS, FLOWS, INFO_FORMATS, INFO_PRODUCTS, MEDIA, PHASES,
-                    PLACES, ORGANIZATIONS, ROLES, REQUIREMENTS, SEGMENTS, TASKS};
+            {ALL, ACTORS, EOIS, EVENTS, FUNCTIONS, FLOWS, INFO_FORMATS, INFO_PRODUCTS, MEDIA, PHASES,
+                    PLACES, ORGANIZATIONS, ROLES, SEGMENTS, TASKS};
 
 
     public PlanIndexPanel( String id,  Set<Long> expansions ) {
@@ -121,6 +122,11 @@ public class PlanIndexPanel extends AbstractIndexPanel implements Guidable {
     @Override
     protected List<InfoFormat> findIndexedInfoFormats() {
         return getQueryService().listKnownEntities( InfoFormat.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
+    }
+
+    @Override
+    protected List<Function> findIndexedFunctions() {
+        return getQueryService().listKnownEntities( Function.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE );
     }
 
     /**

@@ -67,10 +67,9 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUser( Identifiable identifiable ) {
-        return noLockRequired( identifiable )
-        || contextAllowsEditing( identifiable )
-                  && !isImmutable( identifiable ) && getLockManager().isLockedByUser( getUser().getUsername(),
-                                                                                      identifiable.getId() );
+        return !isImmutable( identifiable ) && contextAllowsEditing( identifiable ) &&
+                ( noLockRequired( identifiable )
+                        || getLockManager().isLockedByUser( getUser().getUsername(), identifiable.getId() ) );
     }
 
     /**
@@ -80,8 +79,13 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUser( long id ) {
-        return  contextAllowsEditing( id ) &&
-                 getLockManager().isLockedByUser( getUser().getUsername(), id );
+        return !isImmutable( id ) && contextAllowsEditing( id ) &&
+                ( noLockRequired( id )
+                        || getLockManager().isLockedByUser( getUser().getUsername(), id ) );
+    }
+
+    private boolean noLockRequired( long id ) {
+        return !getPlanCommunity().isDomainCommunity() || getPlan().getId() == id;
     }
 
 
@@ -96,7 +100,7 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * @return a boolean
      */
     protected boolean isLockedByUserIfNeeded( Identifiable identifiable ) {
-        return  contextAllowsEditing( identifiable )
+        return contextAllowsEditing( identifiable )
                 && ( isImmutable( identifiable ) || isLockedByUser( identifiable ) );
     }
 
@@ -111,9 +115,9 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     }
 
     protected boolean contextAllowsEditing( Identifiable identifiable ) {
-       return !getPlanCommunity().isDomainCommunity()
-               || identifiable.isModifiableInProduction()
-               || getPlan().isDevelopment();
+        return !getPlanCommunity().isDomainCommunity()
+                || identifiable.isModifiableInProduction()
+                || getPlan().isDevelopment();
     }
 
     /**
@@ -129,6 +133,16 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
     private boolean isImmutable( Identifiable identifiable ) {
         return identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isImmutable();
     }
+
+    private boolean isImmutable( long id ) {
+        try {
+            ModelObject mo = getQueryService().find( ModelObject.class, id );
+            return mo.isImmutable();
+        } catch ( NotFoundException e ) {
+            return false;
+        }
+    }
+
 
     /**
      * Get name of lock owner.
@@ -154,32 +168,32 @@ public class AbstractCommandablePanel extends AbstractUpdatablePanel {
      * Safely find or create a model entity via a command.
      *
      * @param clazz a model entity class
-     * @param name a name
+     * @param name  a name
      * @return a model entity
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected <T extends ModelEntity> T doSafeFindOrCreateActual( Class<T> clazz, String name ) {
         String safeName = ChannelsUtils.cleanUpName( name );
         return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
-                                                     clazz,
-                                                     safeName,
-                                                     ModelEntity.Kind.Actual ) ).getSubject( getCommunityService() );
+                clazz,
+                safeName,
+                ModelEntity.Kind.Actual ) ).getSubject( getCommunityService() );
     }
 
     /**
      * Safely find or create a model entity type via a command.
      *
      * @param clazz a model entity class
-     * @param name a name
+     * @param name  a name
      * @return a model entity
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected <T extends ModelEntity> T doSafeFindOrCreateType( Class<T> clazz, String name ) {
         String safeName = ChannelsUtils.cleanUpName( name );
         return (T) doCommand( new CreateEntityIfNew( getUser().getUsername(),
-                                                     clazz,
-                                                     safeName,
-                                                     ModelEntity.Kind.Type ) ).getSubject( getCommunityService() );
+                clazz,
+                safeName,
+                ModelEntity.Kind.Type ) ).getSubject( getCommunityService() );
     }
 
     /**

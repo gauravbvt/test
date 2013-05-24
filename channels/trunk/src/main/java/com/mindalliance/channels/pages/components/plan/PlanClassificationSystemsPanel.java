@@ -46,6 +46,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
     private String newClassificationSystemName;
     private String selectedClassificationSystem;
     private Component classificationSystemPanel;
+    private boolean canBeEdited;
     /**
      * New system name field.
      */
@@ -63,6 +64,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
+        canBeEdited = getPlan().isDevelopment() && isLockedByUser( Channels.ALL_CLASSIFICATIONS );
         classificationSystemsContainer = new WebMarkupContainer( "classification-systems-container" );
         classificationSystemsContainer.setOutputMarkupId( true );
         addOrReplace( classificationSystemsContainer );
@@ -110,8 +112,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                     }
                 };
                 deleteLink.setVisible(
-                        /*isLockedByUser( getPlan() )
-                                && */!isReferenced( systemName ) );
+                        canBeEdited && !isReferenced( systemName ) );
                 item.add( deleteLink );
 
                 int count = getClassificationSystems().size();
@@ -164,7 +165,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
             }
         } );
         newSystemContainer.add( classificationSystemField );
-        newSystemContainer.setVisible( isLockedByUser( Channels.ALL_CLASSIFICATIONS ) );
+        newSystemContainer.setVisible( canBeEdited );
     }
 
     private void addClassificationSystemPanel( String classificationSystemName ) {
@@ -175,7 +176,8 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
         } else {
             classificationSystemPanel = new ClassificationSystemPanel(
                     "classification-system",
-                    classificationSystemName );
+                    classificationSystemName,
+                    canBeEdited );
         }
         makeVisible( classificationSystemPanel, classificationSystemName != null );
         addOrReplace( classificationSystemPanel );

@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.plan;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Organization;
@@ -119,6 +120,11 @@ public class TagIndexPanel extends AbstractIndexPanel {
     @Override
     protected List<InfoFormat> findIndexedInfoFormats() {
         return selectTagged( getQueryService().listKnownEntities( InfoFormat.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
+    }
+
+    @Override
+    protected List<Function> findIndexedFunctions() {
+        return selectTagged( getQueryService().listKnownEntities( Function.class, isMustBeReferenced(), EXCLUDE_IMMUTABLE ) );
     }
 
     @Override

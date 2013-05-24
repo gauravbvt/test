@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <span wicket:id="infoContainer">
+            <div wicket:id="infoList">
+                <div>
+                    <input wicket:id="included" type="checkbox"/>
+                    <input wicket:id="name" type="text" class="info-name"/>
+                    <a wicket:id="showHideEois" href="#" class="more">
+                        <span wicket:id="moreOrLess">More</span>
+                    </a><br/>
+                    <span wicket:id="eoisLabel" class="eois-summary">with eoi, eoi and eoi</span>
+                </div>
+                <div wicket:id="eois" class="info-eois">
+                    [EOIs panel]
+                </div>
+            </div> <!-- repeated -->
+        <input wicket:id="newInfo" type="text" class="new-info"/>
+    </span>
+</wicket:panel>
+</body>
+</html>

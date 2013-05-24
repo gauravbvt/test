@@ -359,7 +359,8 @@ public abstract class ModelObject
                 || equals( TransmissionMedium.UNKNOWN )
                 || equals( Requirement.UNKNOWN )
                 || equals( InfoProduct.UNKNOWN )
-                || equals( InfoFormat.UNKNOWN );
+                || equals( InfoFormat.UNKNOWN )
+                || equals( Function.UNKNOWN );
     }
 
     /**
@@ -454,7 +455,7 @@ public abstract class ModelObject
                 Plan.class, PlanCommunity.class,  // added
                 Actor.class, Event.class, Organization.class, Phase.class, Place.class, Phase.class,
                 Role.class, Segment.class, Part.class, Flow.class, TransmissionMedium.class,
-                Requirement.class, InfoFormat.class, InfoProduct.class
+                Requirement.class, InfoFormat.class, InfoProduct.class, Function.class
         };
         return Arrays.asList( classes );
     }

@@ -2035,6 +2035,9 @@ public abstract class DefaultQueryService implements QueryService {
                         Iterator<Flow> receives = part.receives();
                         while ( receives.hasNext() ) segmentObjects.add( receives.next() );
                     }
+                    if ( ModelObject.areIdentical( part.getFunction(), entity ) ) {
+                        segmentObjects.add( part );
+                    }
                 }
             }
             return new ArrayList<ModelObject>( segmentObjects );

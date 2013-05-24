@@ -58,7 +58,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
         super( id );
         this.classifiableProperty = classifiableProperty;
         this.classifiedModel = classifiedModel;
-        editEnabled = enabled;
+        editEnabled = enabled && isLockedByUser( getPlan() );
         init();
     }
 

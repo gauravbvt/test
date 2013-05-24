@@ -10,6 +10,9 @@ import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Classification;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Function;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
@@ -261,6 +264,12 @@ public class PlanConverter extends AbstractChannelsConverter {
                 context.convertAnother( plan, Phase.class );
             } else if ( nodeName.equals( "medium" ) ) {
                 context.convertAnother( plan, TransmissionMedium.class );
+            } else if ( nodeName.equals( "infoproduct" ) ) {
+                context.convertAnother( plan, InfoProduct.class );
+            } else if ( nodeName.equals( "format" ) ) {
+                context.convertAnother( plan, InfoFormat.class );
+            } else if ( nodeName.equals( "function" ) ) {
+                context.convertAnother( plan, Function.class );
             } else if ( nodeName.equals( "incident" ) ) {
                 String eventId = reader.getAttribute( "id" );
                 Event event = findOrCreateType( Event.class, reader.getValue(), eventId );

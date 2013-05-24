@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
@@ -126,6 +127,10 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      * Indexing choice.
      */
     protected static final String INFO_FORMATS = "Info formats";
+    /**
+     * Indexing choice.
+     */
+    protected static final String FUNCTIONS = "Functions";
     /**
      * Maximum number of rows shown in table at a time.
      */
@@ -469,6 +474,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             taggables = findIndexedInfoProducts();
         } else if ( indexedOn.equals( INFO_FORMATS ) ) {
             taggables = findIndexedInfoFormats();
+        } else if ( indexedOn.equals( FUNCTIONS ) ) {
+            taggables = findIndexedFunctions();
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -525,6 +532,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
             names = indexNamesFor( findIndexedInfoProducts() );
         } else if ( indexedOn.equals( INFO_FORMATS ) ) {
             names = indexNamesFor( findIndexedInfoFormats() );
+        }  else if ( indexedOn.equals( FUNCTIONS ) ) {
+            names = indexNamesFor( findIndexedFunctions() );
         } else {
             throw new IllegalStateException( "Can't index on " + indexedOn );
         }
@@ -558,6 +567,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         names.addAll( indexNamesFor( findIndexedRequirements() ) );
         names.addAll( indexNamesFor( findIndexedInfoProducts() ) );
         names.addAll( indexNamesFor( findIndexedInfoFormats() ) );
+        names.addAll( indexNamesFor( findIndexedFunctions() ) );
         return new ArrayList<String>( names );
     }
 
@@ -577,6 +587,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         taggables.addAll( findIndexedRequirements() );
         taggables.addAll( findIndexedInfoProducts() );
         taggables.addAll( findIndexedInfoFormats() );
+        taggables.addAll( findIndexedFunctions() );
         return taggables;
     }
 
@@ -706,6 +717,8 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                 indices = indicesFor( findIndexedInfoProducts() );
             } else if ( indexedOn.equals( INFO_FORMATS ) ) {
                 indices = indicesFor( findIndexedInfoFormats() );
+            }  else if ( indexedOn.equals( FUNCTIONS ) ) {
+                indices = indicesFor( findIndexedFunctions() );
             } else {
                 throw new IllegalStateException( "Can't index on " + indexedOn );
             }
@@ -730,6 +743,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         indexEntries.addAll( indicesFor( findIndexedRequirements() ) );
         indexEntries.addAll( indicesFor( findIndexedInfoProducts() ) );
         indexEntries.addAll( indicesFor( findIndexedInfoFormats() ) );
+        indexEntries.addAll( indicesFor( findIndexedFunctions() ) );
         return indexEntries;
     }
 
@@ -1123,6 +1137,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
         if ( !findIndexedRequirements().isEmpty() ) choices.add( REQUIREMENTS );
         if ( !findIndexedInfoProducts().isEmpty() ) choices.add( INFO_PRODUCTS );
         if ( !findIndexedInfoFormats().isEmpty() ) choices.add( INFO_FORMATS );
+        if ( !findIndexedFunctions().isEmpty() ) choices.add( FUNCTIONS );
         return choices;
     }
 
@@ -1250,6 +1265,15 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
      */
     protected List<InfoFormat> findIndexedInfoFormats() {
         return new ArrayList<InfoFormat>();
+    }
+
+    /**
+     * Find all functions to index.
+     *
+     * @return a list of functions
+     */
+    protected List<Function> findIndexedFunctions() {
+        return new ArrayList<Function>();
     }
 
     /**

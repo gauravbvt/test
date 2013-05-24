@@ -3,6 +3,7 @@ package com.mindalliance.channels.pages.components.entities;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.InfoFormat;
@@ -28,6 +29,7 @@ import com.mindalliance.channels.pages.components.entities.analytics.RoleAnalyti
 import com.mindalliance.channels.pages.components.entities.details.ActorDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.EntityDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.EventDetailsPanel;
+import com.mindalliance.channels.pages.components.entities.details.FunctionDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.InfoFormatDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.InfoProductDetailsPanel;
 import com.mindalliance.channels.pages.components.entities.details.MediumDetailsPanel;
@@ -220,6 +222,11 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
                     "aspect",
                     new PropertyModel<ModelEntity>( this, "object" ),
                     getExpansions() );
+        } else if ( getObject() instanceof Function ) {
+            return new FunctionDetailsPanel(
+                    "aspect",
+                    new PropertyModel<ModelEntity>( this, "object" ),
+                    getExpansions() );
         } else {
             return new EntityDetailsPanel(
                     "aspect",
@@ -312,7 +319,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
                     getExpansions(),
                     PREFIX_DOM_IDENTIFIER );
         } else {
-            return new Label( "aspect", "Under construction" );
+            return new Label( "aspect", "Not available" );
         }
     }
 
@@ -342,7 +349,10 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
 
     private boolean entityHasAnalytics() {
         ModelEntity entity = (ModelEntity) getObject();
-        return !( entity.isType() && ( entity instanceof Actor | entity instanceof Organization ) );
+        return !(
+                entity.isType()
+                && ( entity instanceof Actor || entity instanceof Organization || entity instanceof Function )
+        );
     }
 
     private boolean isEntityNetworkable() {

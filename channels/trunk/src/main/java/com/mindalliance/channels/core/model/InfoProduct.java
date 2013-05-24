@@ -266,4 +266,8 @@ public class InfoProduct extends ModelEntity implements EOIsHolder {
     public boolean isLocalEoi( ElementOfInformation eoi ) {
         return eois.contains( eoi );
     }
+
+    public static String classLabel() {
+        return "Information products";
+    }
 }

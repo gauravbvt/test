@@ -49,7 +49,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     private final static String AT_MOST_ONE = "At most one";
     private final static String ANY_NUMBER = "Any number of";
     private final static String NO_MORE_THAN = "No more than";
-    private final static String[] CARD_OPTIONS = { AT_MOST_ONE, ANY_NUMBER, NO_MORE_THAN };
+    private final static String[] CARD_OPTIONS = {AT_MOST_ONE, ANY_NUMBER, NO_MORE_THAN};
 
 
     /**
@@ -81,7 +81,6 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
 
-
     /**
      * {@inheritDoc}
      */
@@ -111,7 +110,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         languagesContainer.setOutputMarkupId( true );
         ListView<String> languageList = new ListView<String>(
                 "languages",
-                new PropertyModel<List<String>>(this, "languages") ) {
+                new PropertyModel<List<String>>( this, "languages" ) ) {
             /** {@inheritDoc} */
             protected void populateItem( ListItem<String> item ) {
                 addLanguageNameCell( item, choices );
@@ -267,9 +266,9 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
                 : NO_MORE_THAN;
         DropDownChoice<String> cardinalityChoice = new DropDownChoice<String>(
                 "cardinalityChoice",
-                new PropertyModel<String>( this, "cardinalityChoice"),
-                Arrays.asList(CARD_OPTIONS) );
-        cardinalityChoice.add(  new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                new PropertyModel<String>( this, "cardinalityChoice" ),
+                Arrays.asList( CARD_OPTIONS ) );
+        cardinalityChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( cardinalityField, getCardinalityChoice().equals( NO_MORE_THAN ) );
@@ -278,6 +277,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
                 target.add( participantLabel );
             }
         } );
+        cardinalityChoice.setEnabled( isLockedByUser( getActor() ) );
         participationContainer.add( cardinalityChoice );
     }
 
@@ -303,7 +303,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         participantLabel = new Label(
                 "participantLabel",
                 isSingularParticipation() ? "participant" : "participants" );
-        participantLabel.setOutputMarkupId( true ) ;
+        participantLabel.setOutputMarkupId( true );
         participationContainer.addOrReplace( participantLabel );
     }
 
@@ -367,7 +367,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
 
-     /**
+    /**
      * Run command to change actor system property.
      *
      * @param isSystem a boolean
@@ -410,7 +410,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     public String getCardinalityChoice() {
-       return cardinalityChoice;
+        return cardinalityChoice;
     }
 
     public void setCardinalityChoice( String val ) {
@@ -426,7 +426,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
     }
 
     public int getMaxParticipation() {
-        int val =  getActor().getMaxParticipation();
+        int val = getActor().getMaxParticipation();
         return val < 1 ? 0 : val;
     }
 
@@ -481,4 +481,4 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         return (Actor) getEntity();
     }
 
- }
+}

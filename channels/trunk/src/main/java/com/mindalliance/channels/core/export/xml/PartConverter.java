@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.AssignedLocation;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Organization;
@@ -65,6 +66,13 @@ public class PartConverter extends AbstractChannelsConverter {
         if ( part.getTask() != null ) {
             writer.startNode( "task" );
             writer.setValue( part.getTask() );
+            writer.endNode();
+        }
+        if ( part.getFunction() != null ) {
+            writer.startNode( "function" );
+            writer.addAttribute( "id", Long.toString( part.getFunction().getId() ) );
+            writer.addAttribute( "kind", "Type" );
+            writer.setValue( part.getFunction().getName() );
             writer.endNode();
         }
         if ( part.getRole() != null ) {
@@ -187,7 +195,15 @@ public class PartConverter extends AbstractChannelsConverter {
                 importAttachments( part, reader );
             } else if ( nodeName.equals( "task" ) ) {
                 part.setTask( reader.getValue() );
-            } else if ( nodeName.equals( "role" ) ) {
+            } else if ( nodeName.equals( "function" ) ) {
+                String idString = reader.getAttribute( "id" );
+                part.setFunction( getEntity(
+                        Function.class,
+                        reader.getValue(),
+                        Long.parseLong( idString ),
+                        ModelEntity.Kind.Type,
+                        context ) );
+            }  else if ( nodeName.equals( "role" ) ) {
                 String idString = reader.getAttribute( "id" );
                 part.setRole( getEntity(
                         Role.class,
@@ -195,7 +211,7 @@ public class PartConverter extends AbstractChannelsConverter {
                         Long.parseLong( idString ),
                         ModelEntity.Kind.Type,
                         context ) );
-            } else if ( nodeName.equals( "actor" ) ) {
+            }else if ( nodeName.equals( "actor" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
                 part.setActor( getEntity(

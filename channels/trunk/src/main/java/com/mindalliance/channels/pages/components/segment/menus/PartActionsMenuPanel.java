@@ -5,12 +5,14 @@ import com.mindalliance.channels.core.command.commands.AddUserIssue;
 import com.mindalliance.channels.core.command.commands.CopyPart;
 import com.mindalliance.channels.core.command.commands.Disintermediate;
 import com.mindalliance.channels.core.command.commands.DuplicatePart;
+import com.mindalliance.channels.core.command.commands.ImplementFunction;
 import com.mindalliance.channels.core.command.commands.PasteAttachment;
 import com.mindalliance.channels.core.command.commands.PasteFlow;
 import com.mindalliance.channels.core.command.commands.RemovePart;
 import com.mindalliance.channels.core.command.commands.SatisfyAllNeeds;
 import com.mindalliance.channels.core.command.commands.SetPartFromCopy;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
@@ -57,6 +59,8 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
             public void onExecuted( AjaxRequestTarget target, Change change ) {
                 Part part = getPart();
                 update( target, change );
+                if ( part.getFunction() != null )
+                    getCommander().cleanup( Function.class, part.getFunction().getName() );
                 if ( part.getActor() != null )
                     getCommander().cleanup( Actor.class, part.getActor().getName() );
                 if ( part.getRole() != null )
@@ -91,6 +95,11 @@ public class PartActionsMenuPanel extends ActionMenuPanel {
                 }
             } );
             commandWrappers.add( new CommandWrapper( new DuplicatePart( getUser().getUsername(), getPart() ) ) {
+                public void onExecuted( AjaxRequestTarget target, Change change ) {
+                    update( target, change );
+                }
+            } );
+            commandWrappers.add( new CommandWrapper( new ImplementFunction( getUser().getUsername(), getPart() ) ) {
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }

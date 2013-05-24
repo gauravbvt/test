@@ -65,6 +65,10 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
      */
     private static final InfoFormat ANY_INFO_FORMAT_TYPE;
     /**
+     * Universal function.
+     */
+    private static final Function ANY_FUNCTION_TYPE;
+    /**
      * All universal types.
      */
     private static final List<ModelEntity> UNIVERSAL_TYPES;
@@ -130,6 +134,11 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         ANY_INFO_FORMAT_TYPE.setType();
         UNIVERSAL_TYPES.add( ANY_INFO_FORMAT_TYPE );
 
+        ANY_FUNCTION_TYPE = new Function( "any function" );
+        ANY_FUNCTION_TYPE.setId( 10000000L - 19 );
+        ANY_FUNCTION_TYPE.setType();
+        UNIVERSAL_TYPES.add( ANY_FUNCTION_TYPE );
+
     }
 
     protected ModelEntity() {
@@ -148,6 +157,9 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         classLabels.add( Role.classLabel() );
         classLabels.add( Phase.classLabel() );
         classLabels.add( TransmissionMedium.classLabel() );
+        classLabels.add( InfoProduct.classLabel() );
+        classLabels.add( InfoFormat.classLabel() );
+        classLabels.add( Function.classLabel() );
         return classLabels;
     }
 
@@ -168,6 +180,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 Event.class.isAssignableFrom( entityClass )
                         || Role.class.isAssignableFrom( entityClass )
                         || TransmissionMedium.class.isAssignableFrom( entityClass )
+                        || Function.class.isAssignableFrom( entityClass )
                 // || Phase.class.isAssignableFrom( entityClass )
         );
     }
@@ -301,7 +314,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 || equals( ANY_PHASE_TYPE )
                 || equals( ANY_MEDIUM_TYPE )
                 || equals( ANY_INFO_PRODUCT_TYPE )
-                || equals( ANY_INFO_FORMAT_TYPE );
+                || equals( ANY_INFO_FORMAT_TYPE )
+                || equals( ANY_FUNCTION_TYPE );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -324,6 +338,8 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
             return (T) ANY_INFO_PRODUCT_TYPE;
         } else if ( entityClass == InfoFormat.class ) {
             return (T) ANY_INFO_FORMAT_TYPE;
+        } else if ( entityClass == Function.class ) {
+            return (T) ANY_FUNCTION_TYPE;
         } else {
             throw new RuntimeException( "No known universal type for " + entityClass.getSimpleName() );
         }

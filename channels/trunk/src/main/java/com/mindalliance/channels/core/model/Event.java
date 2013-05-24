@@ -21,11 +21,6 @@ public class Event extends ModelEntity implements GeoLocatable {
     public static String UnknownName = "(unknown)";
 
     /**
-     * The official lower-cased version of this event's name.
-     */
-    private String lowerCasedName;
-
-    /**
      * Where the event is considered to occur. Null means that its scope is universal.
      */
     private Place scope;
@@ -99,6 +94,7 @@ public class Event extends ModelEntity implements GeoLocatable {
                && ModelEntity.implies( event.getScope(), scope, locale );
     }
 
+    @Override
     public boolean isUndefined() {
         return super.isUndefined()
                 && scope == null;

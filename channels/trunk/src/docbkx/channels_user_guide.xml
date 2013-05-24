@@ -10904,6 +10904,57 @@
                 
                 <entry><para>No</para></entry>
               </row>
+
+              <row>
+                <entry><para>The function is empty</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Define a goal to be achieved</para>
+                  </listitem>
+                  <listitem>
+                    <para>or define an information need</para>
+                  </listitem>
+                  <listitem>
+                    <para> or define information to be shared</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>No</para></entry>
+              </row>
+ 
+              <row>
+                <entry><para>The function is missing elements of information</para></entry>
+                
+                <entry><para>Low</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Add one or more elements to empty information needs</para>
+                  </listitem>
+                  <listitem>
+                    <para>or add one or more elements to empty information to be shared.</para>
+                  </listitem>
+                </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
+              
+              <row>
+                <entry><para>The task does not fully implement its function</para></entry>
+                
+                <entry><para>High</para></entry>
+                
+                <entry><itemizedlist>
+                  <listitem>
+                    <para>Have the task achieve all goals set by the function, and implement all information needs and capabilities also set by the function.</para>
+                  </listitem>
+                 </itemizedlist></entry>
+                
+                <entry><para>Yes</para></entry>
+              </row>
               
               
             </tbody>

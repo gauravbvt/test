@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
@@ -36,6 +37,15 @@ public class AddCapability extends AbstractCommand {
         set( "part", part.getId() );
         set( "segment", part.getSegment().getId() );
     }
+
+    public AddCapability( String userName, Part part, Information information ) {
+        this( userName );
+        addConflicting( part );
+        set( "part", part.getId() );
+        set( "segment", part.getSegment().getId() );
+        set( "information", information.getState() );
+    }
+
 
     @Override
     public String getName() {
@@ -64,7 +74,12 @@ public class AddCapability extends AbstractCommand {
             Map<String, Object> flowAttributes = (Map<String, Object>) get( "attributes" );
             if ( flowAttributes != null )
                 flow.initFromMap( flowAttributes, communityService );
-
+            Map<String,Object> infoState = (Map<String, Object>) get( "information" );
+            if ( flowAttributes == null && infoState != null ) {
+                Information info = Information.fromState( infoState );
+                flow.setName( info.getName() );
+                flow.setEois( info.getEois() );
+            }
             set( "flow", flow.getId() );
             set( "connector", flow.getTarget().getId() );
             return new Change( Change.Type.Added, flow );

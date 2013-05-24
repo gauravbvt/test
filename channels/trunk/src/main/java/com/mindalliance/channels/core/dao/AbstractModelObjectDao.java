@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.InvalidEntityKindException;
@@ -576,7 +577,7 @@ public abstract class AbstractModelObjectDao {
         Set<? extends ModelObject> referencers = getReferencingObjects();
         Class<?>[] classes = {
                 TransmissionMedium.class, Actor.class, Role.class, Place.class, Organization.class, Event.class,
-                Phase.class, InfoProduct.class, InfoFormat.class
+                Phase.class, InfoProduct.class, InfoFormat.class, Function.class
         };
 
         Iterator<? extends ModelEntity>[] iterators = new Iterator[classes.length];
@@ -778,6 +779,8 @@ public abstract class AbstractModelObjectDao {
             return (T) InfoProduct.UNKNOWN;
         else if ( clazz.isAssignableFrom( InfoFormat.class ) && InfoFormat.UNKNOWN.getId() == id )
             return (T) InfoFormat.UNKNOWN;
+        else if ( clazz.isAssignableFrom( Function.class ) && Function.UNKNOWN.getId() == id )
+            return (T) Function.UNKNOWN;
         else
             throw new NotFoundException();
     }
@@ -808,6 +811,9 @@ public abstract class AbstractModelObjectDao {
         else if ( clazz.isAssignableFrom( InfoProduct.class )
                 && ModelEntity.getUniversalTypeFor( InfoProduct.class ).getId() == id )
             return (T) ModelEntity.getUniversalTypeFor( InfoProduct.class );
+        else if ( clazz.isAssignableFrom( Function.class )
+                && ModelEntity.getUniversalTypeFor( Function.class ).getId() == id )
+            return (T) ModelEntity.getUniversalTypeFor( Function.class );
         else {
             LOG.debug( "Universal " + clazz.getName() + " " + id + " not found" );
             throw new NotFoundException();
