@@ -198,8 +198,7 @@ public class Function extends ModelEntity {
                     @Override
                     public boolean evaluate( Object object ) {
                         Information info = (Information) object;
-                        return !info.implementedEvenPartiallyBy( part.getNeeds() )
-                                && !info.implementedEvenPartiallyBy( part.getAllSharingReceives() );
+                        return !info.implementedEvenPartiallyBy( part.getNeeds() );
                     }
                 }
         );
@@ -213,8 +212,7 @@ public class Function extends ModelEntity {
                     @Override
                     public boolean evaluate( Object object ) {
                         Information info = (Information) object;
-                        return !info.implementedEvenPartiallyBy( part.getCapabilities() )
-                                && !info.implementedEvenPartiallyBy( part.getAllSharingSends() );
+                        return !info.implementedEvenPartiallyBy( part.getCapabilities() );
                     }
                 }
         );

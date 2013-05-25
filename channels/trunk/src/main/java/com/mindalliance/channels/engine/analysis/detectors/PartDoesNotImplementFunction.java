@@ -91,42 +91,42 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
 
     private String makeInfoNeedRemediation( Part part, Information infoNeeded ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "Add to task \"" )
+        sb.append( "Make sure task \"" )
                 .append( part.getTask() )
-                .append( "\" an info need named \"" )
+                .append( "\" has an info need named \"" )
                 .append( infoNeeded.getName() )
                 .append( "\" with elements " )
                 .append( ChannelsUtils.listToString( infoNeeded.getEoiNames(), ",'", " and " ) )
-                .append( "\nor add a \"receive\" flow named \"" )
+                .append( "\nor a \"receive\" flow named \"" )
                 .append( infoNeeded.getName() )
-                .append( "\" with the elements above." );
+                .append( "\" with these elements." );
         return sb.toString();
     }
 
     private String makeInfoAcquiredRemediation( Part part, Information infoNeeded ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "Add to task \"" )
+        sb.append( "make sure task \"" )
                 .append( part.getTask() )
-                .append( "\" an info capability named \"" )
+                .append( "\" has an info capability named \"" )
                 .append( infoNeeded.getName() )
                 .append( "\" with elements " )
                 .append( ChannelsUtils.listToString( infoNeeded.getEoiNames(), ",'", " and " ) )
-                .append( "\nor add a \"send\" flow named \"" )
+                .append( "\nor a \"send\" flow named \"" )
                 .append( infoNeeded.getName() )
-                .append( "\" with the elements above." );
+                .append( "\" with these elements." );
         return sb.toString();
     }
 
     private boolean neededInfoImplementedBy( final Information info, Part part ) {
         // No EOI in info needed per function does not have a counterpart in an info need or sharing receive in the part.
-        return info.implementedBy( part.getNeeds() ) ||
-                info.implementedBy( part.getAllSharingReceives() );
+        return info.implementedFullyBy( part.getNeeds() ) ||
+                info.implementedFullyBy( part.getAllSharingReceives() );
     }
 
     private boolean acquiredInfoImplementedBy( final Information info, Part part ) {
         // No EOI in info acquired per function does not have a counterpart in an info capability or sharing send in the part.
-        return info.implementedBy( part.getCapabilities() ) ||
-                info.implementedBy( part.getAllSharingSends() );
+        return info.implementedFullyBy( part.getCapabilities() ) ||
+                info.implementedFullyBy( part.getAllSharingSends() );
     }
 
     private String makeRemediation( Part part, Objective objective ) {

@@ -64,7 +64,7 @@ public class Information implements Serializable {
         );
     }
 
-    public boolean implementedBy( List<Flow> flows ) {
+    public boolean implementedFullyBy( List<Flow> flows ) {
         return CollectionUtils.exists(
                 flows,
                 new Predicate() {
