@@ -68,8 +68,8 @@ public class FollowUpData  extends AbstractProcedureElementData {
     }
 
     @XmlElement
-    public InformationData getInformation() {
-        return new InformationData( getSharing() );
+    public SharedInformationData getInformation() {
+        return new SharedInformationData( getSharing() );
     }
 
     @XmlElement

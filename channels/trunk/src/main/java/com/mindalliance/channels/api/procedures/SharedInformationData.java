@@ -21,17 +21,17 @@ import java.util.List;
  * Time: 1:59 PM
  */
 @XmlType( propOrder = {"name", "EOIs", "infoProductId", "infoProduct"} )
-public class InformationData  implements Serializable {
+public class SharedInformationData implements Serializable {
 
     private Flow sharing;
     private List<ElementOfInformationData> eois;
     private InfoProduct infoProduct;
 
-    public InformationData() {
+    public SharedInformationData() {
         // required
     }
 
-    public InformationData( Flow sharing ) {
+    public SharedInformationData( Flow sharing ) {
         this.sharing = sharing;
         this.infoProduct = sharing.getInfoProduct();
     }

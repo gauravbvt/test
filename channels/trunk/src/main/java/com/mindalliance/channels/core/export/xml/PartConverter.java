@@ -172,7 +172,7 @@ public class PartConverter extends AbstractChannelsConverter {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         Segment segment = (Segment) context.get( "segment" );
         Map<Long, Long> idMap = getIdMap( context );
@@ -203,7 +203,7 @@ public class PartConverter extends AbstractChannelsConverter {
                         Long.parseLong( idString ),
                         ModelEntity.Kind.Type,
                         context ) );
-            }  else if ( nodeName.equals( "role" ) ) {
+            } else if ( nodeName.equals( "role" ) ) {
                 String idString = reader.getAttribute( "id" );
                 part.setRole( getEntity(
                         Role.class,
@@ -211,7 +211,7 @@ public class PartConverter extends AbstractChannelsConverter {
                         Long.parseLong( idString ),
                         ModelEntity.Kind.Type,
                         context ) );
-            }else if ( nodeName.equals( "actor" ) ) {
+            } else if ( nodeName.equals( "actor" ) ) {
                 String idString = reader.getAttribute( "id" );
                 ModelEntity.Kind kind = kind( reader.getAttribute( "kind" ) );
                 part.setActor( getEntity(
@@ -288,7 +288,7 @@ public class PartConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "prohibited" ) ) {
                 part.setProhibited( reader.getValue().equals( "true" ) );
             } else if ( nodeName.equals( "checklist" ) ) {
-                Checklist checklist = (Checklist)context.convertAnother( part, Checklist.class );
+                Checklist checklist = (Checklist) context.convertAnother( part, Checklist.class );
                 checklist.setPart( part );
                 part.setChecklist( checklist );
             } else {

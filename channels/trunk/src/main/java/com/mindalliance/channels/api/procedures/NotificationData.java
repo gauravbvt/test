@@ -148,8 +148,8 @@ public class NotificationData extends AbstractFlowData {
 
     @Override
     @XmlElement
-    public InformationData getInformation() {
-        return new InformationData( getNotification() );
+    public SharedInformationData getInformation() {
+        return new SharedInformationData( getNotification() );
     }
 
     @Override

@@ -45,7 +45,7 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
         if ( function != null ) {
             // objectives
             for ( Objective objective : function.getEffectiveObjectives() ) {
-                if ( !objective.implementedBy( part ) ) {
+                if ( !objective.implementedBy( part, queryService ) ) {
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                     issue.setDescription( "Task \""
                             + part.getTask()
@@ -89,31 +89,51 @@ public class PartDoesNotImplementFunction extends AbstractIssueDetector {
         return issues;
     }
 
-    private String makeInfoNeedRemediation( Part part, Information infoNeeded ) {
+    private String makeInfoNeedRemediation( Part part, Information info ) {
         StringBuilder sb = new StringBuilder();
         sb.append( "Make sure task \"" )
                 .append( part.getTask() )
                 .append( "\" has an info need named \"" )
-                .append( infoNeeded.getName() )
-                .append( "\" with elements " )
-                .append( ChannelsUtils.listToString( infoNeeded.getEoiNames(), ",'", " and " ) )
-                .append( "\nor a \"receive\" flow named \"" )
-                .append( infoNeeded.getName() )
-                .append( "\" with these elements." );
+                .append( info.getName() );
+        if ( info.getInfoProduct() != null ) {
+            sb.append(" specified by info product \"")
+                    .append( info.getInfoProduct().getName() )
+                    .append( "\"");
+            if ( !info.getEois().isEmpty() ) {
+                sb.append( " and ");
+            }
+        }
+        if ( !info.getEois().isEmpty() ) {
+        sb.append( "\" with elements " )
+                .append( ChannelsUtils.listToString( info.getLocalEoiNames(), ",'", " and " ) )
+                .append( "\nor an equivalent \"receive\" flow named \"" )
+                .append( info.getName() );
+        }
+        sb.append(".");
         return sb.toString();
     }
 
-    private String makeInfoAcquiredRemediation( Part part, Information infoNeeded ) {
+    private String makeInfoAcquiredRemediation( Part part, Information info ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "make sure task \"" )
+        sb.append( "Make sure task \"" )
                 .append( part.getTask() )
                 .append( "\" has an info capability named \"" )
-                .append( infoNeeded.getName() )
-                .append( "\" with elements " )
-                .append( ChannelsUtils.listToString( infoNeeded.getEoiNames(), ",'", " and " ) )
-                .append( "\nor a \"send\" flow named \"" )
-                .append( infoNeeded.getName() )
-                .append( "\" with these elements." );
+                .append( info.getName() );
+        if ( info.getInfoProduct() != null ) {
+            sb.append(" specified by info product \"")
+                    .append( info.getInfoProduct().getName() )
+                    .append( "\"");
+            if ( !info.getEois().isEmpty() ) {
+                sb.append( " and ");
+            }
+        }
+        if ( !info.getEois().isEmpty() ) {
+            sb.append( "\" with elements " )
+                    .append( ChannelsUtils.listToString( info.getLocalEoiNames(), ",'", " and " ) )
+                    .append( "\nor an equivalent \"send\" flow named \"" )
+                    .append( info.getName() );
+        }
+        sb.append(".");
         return sb.toString();
     }
 

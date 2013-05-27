@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -171,20 +172,20 @@ public class Function extends ModelEntity {
         return objectives.isEmpty() && infoAcquired.isEmpty() && infoNeeded.isEmpty();
     }
 
-    public boolean implementedBy( Part part ) {
-        return allObjectivesNotImplementedBy( part ).isEmpty()
+    public boolean implementedBy( Part part, QueryService queryService ) {
+        return allObjectivesNotImplementedBy( part, queryService ).isEmpty()
                 && allInfoNeedsNotImplementedBy( part ).isEmpty()
                 && allInfoAcquiredNotImplementedBy( part ).isEmpty();
     }
 
     @SuppressWarnings( "unchecked" )
-    public List<Objective> allObjectivesNotImplementedBy( final Part part ) {
+    public List<Objective> allObjectivesNotImplementedBy( final Part part, final QueryService queryService ) {
         return (List<Objective>) CollectionUtils.select(
                 getEffectiveObjectives(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !( (Objective) object ).implementedBy( part );
+                        return !( (Objective) object ).implementedBy( part, queryService );
                     }
                 }
         );
@@ -192,7 +193,7 @@ public class Function extends ModelEntity {
 
     @SuppressWarnings( "unchecked" )
     public List<Information> allInfoNeedsNotImplementedBy( final Part part ) {
-        return (List<Information>)CollectionUtils.select(
+        return (List<Information>) CollectionUtils.select(
                 getEffectiveInfoNeeded(),
                 new Predicate() {
                     @Override
@@ -206,7 +207,7 @@ public class Function extends ModelEntity {
 
     @SuppressWarnings( "unchecked" )
     public List<Information> allInfoAcquiredNotImplementedBy( final Part part ) {
-        return (List<Information>)CollectionUtils.select(
+        return (List<Information>) CollectionUtils.select(
                 getEffectiveInfoAcquired(),
                 new Predicate() {
                     @Override
@@ -219,24 +220,46 @@ public class Function extends ModelEntity {
     }
 
     public Information findNeededInfoNamed( final String name ) {
-        return (Information)CollectionUtils.find(
+        return (Information) CollectionUtils.find(
                 getEffectiveInfoNeeded(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         return Matcher.same( ( (Information) object ).getName(), name );
                     }
-                });
+                } );
     }
 
     public Information findAcquiredInfoNamed( final String name ) {
-        return (Information)CollectionUtils.find(
+        return (Information) CollectionUtils.find(
                 getEffectiveInfoAcquired(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         return Matcher.same( ( (Information) object ).getName(), name );
                     }
-                });
+                } );
+    }
+
+    @Override
+    public boolean references( final ModelObject mo ) {
+        return super.references( mo )
+                || CollectionUtils.exists(
+                getInfoNeeded(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ModelObject.areIdentical( ( (Information) object ).getInfoProduct(), mo );
+                    }
+                }
+        ) || CollectionUtils.exists(
+                getInfoAcquired(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ModelObject.areIdentical( ( (Information) object ).getInfoProduct(), mo );
+                    }
+                }
+        );
     }
 }

@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.ElementOfInformationData;
-import com.mindalliance.channels.api.procedures.InformationData;
+import com.mindalliance.channels.api.procedures.SharedInformationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -50,7 +50,7 @@ public class AbstractSelfTriggerPanel extends AbstractTriggerDataPanel {
         eoisContainer.add( eoisListView );
     }
 
-    protected InformationData getInformationData() {
+    protected SharedInformationData getInformationData() {
         return getTriggerData().isOnFollowingUp()
                 ? getTriggerData().getOnFollowUp().getInformation()
                 : getTriggerData().getOnResearch().getInformation();

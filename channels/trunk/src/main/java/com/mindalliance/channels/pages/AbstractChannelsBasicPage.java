@@ -211,6 +211,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
                 showGallery( "planner", target );
             }
         };
+        addTipTitle( vizGalleryLink, "Opens the Channels gallery" );
         form.add(  vizGalleryLink );
     }
 
@@ -223,6 +224,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
             }
         };
         quickHelpLink.setOutputMarkupId( true );
+        addTipTitle( quickHelpLink, "Opens online help" );
         form.add(  quickHelpLink );
     }
 

@@ -537,6 +537,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         };
         quickHelpLink.setOutputMarkupId( true );
+        addTipTitle( quickHelpLink, "Opens online help" );
         form.add( quickHelpLink );
     }
 
@@ -573,7 +574,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Map<String, Object> getHelpContext() {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put( "page", this );
-        // todo - guide.*
         return context;
     }
 

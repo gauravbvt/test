@@ -2,7 +2,7 @@ package com.mindalliance.channels.pages.reports.protocols;
 
 import com.mindalliance.channels.api.ElementOfInformationData;
 import com.mindalliance.channels.api.directory.ContactData;
-import com.mindalliance.channels.api.procedures.InformationData;
+import com.mindalliance.channels.api.procedures.SharedInformationData;
 import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -122,7 +122,7 @@ public class CommTriggerDataPanel extends AbstractTriggerDataPanel {
                 : getTriggerData().getOnNotification().getIntentText();
     }
 
-    private InformationData getInformationData() {
+    private SharedInformationData getInformationData() {
         return getTriggerData().isOnRequestFromOther()
                 ? getTriggerData().getOnRequest().getInformation()
                 : getTriggerData().getOnNotification().getInformation();

@@ -458,7 +458,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             if ( function != null ) {
                 Information info = function.findAcquiredInfoNamed( flow.getName() );
                 if ( info != null )
-                    for ( ElementOfInformation acquiredEoi : info.getEois() ) {
+                    for ( ElementOfInformation acquiredEoi : info.getEffectiveEois() ) {
                         if ( !Matcher.contains( contents, acquiredEoi.getContent() ) ) {
                             // Use the first one as-is. Will improve later. Maybe.
                             newEois.add( new ElementOfInformation( acquiredEoi ) );
@@ -487,7 +487,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             if ( function != null ) {
                 Information info = function.findNeededInfoNamed( flow.getName() );
                 if ( info != null )
-                    for ( ElementOfInformation neededEoi : info.getEois() ) {
+                    for ( ElementOfInformation neededEoi : info.getEffectiveEois() ) {
                         if ( !Matcher.contains( contents, neededEoi.getContent() ) ) {
                             // Use the first one as-is. Will improve later. Maybe.
                             newEois.add( new ElementOfInformation( neededEoi ) );

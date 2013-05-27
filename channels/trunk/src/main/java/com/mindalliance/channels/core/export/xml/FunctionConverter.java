@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.export.xml;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Objective;
@@ -50,6 +51,13 @@ public class FunctionConverter extends EntityConverter {
             writer.startNode( "name" );
             writer.setValue( infoNeeded.getName() );
             writer.endNode();
+            if ( infoNeeded.getInfoProduct() != null ) {
+                writer.startNode( "infoProduct" );
+                writer.addAttribute( "id", Long.toString( infoNeeded.getInfoProduct().getId() ) );
+                writer.addAttribute( "kind", "Type" );
+                writer.setValue( infoNeeded.getInfoProduct().getName() );
+                writer.endNode();
+            }
             for ( ElementOfInformation eoi : infoNeeded.getEois() ) {
                 writer.startNode( "eoi" );
                 context.convertAnother( eoi );
@@ -63,6 +71,13 @@ public class FunctionConverter extends EntityConverter {
             writer.startNode( "name" );
             writer.setValue( infoAcquired.getName() );
             writer.endNode();
+            if ( infoAcquired.getInfoProduct() != null ) {
+                writer.startNode( "infoproduct" );
+                writer.addAttribute( "id", Long.toString( infoAcquired.getInfoProduct().getId() ) );
+                writer.addAttribute( "kind", "Type" );
+                writer.setValue( infoAcquired.getInfoProduct().getName() );
+                writer.endNode();
+            }
             for ( ElementOfInformation eoi : infoAcquired.getEois() ) {
                 writer.startNode( "eoi" );
                 context.convertAnother( eoi );
@@ -92,6 +107,14 @@ public class FunctionConverter extends EntityConverter {
                 nodeName = reader.getNodeName();
                 if ( nodeName.equals( "name" ) ) {
                     info.setName( reader.getValue() );
+                } else if ( nodeName.equals( "infoproduct" ) ) {
+                    String idString = reader.getAttribute( "id" );
+                    info.setInfoProduct( getEntity(
+                            InfoProduct.class,
+                            reader.getValue(),
+                            Long.parseLong( idString ),
+                            ModelEntity.Kind.Type,
+                            context ) );
                 } else if ( nodeName.equals( "eoi" ) ) {
                     info.addEoi(
                             (ElementOfInformation) context.convertAnother(
@@ -109,6 +132,14 @@ public class FunctionConverter extends EntityConverter {
                 nodeName = reader.getNodeName();
                 if ( nodeName.equals( "name" ) ) {
                     info.setName( reader.getValue() );
+                } else if ( nodeName.equals( "infoproduct" ) ) {
+                    String idString = reader.getAttribute( "id" );
+                    info.setInfoProduct( getEntity(
+                            InfoProduct.class,
+                            reader.getValue(),
+                            Long.parseLong( idString ),
+                            ModelEntity.Kind.Type,
+                            context ) );
                 } else if ( nodeName.equals( "eoi" ) ) {
                     info.addEoi(
                             (ElementOfInformation) context.convertAnother(

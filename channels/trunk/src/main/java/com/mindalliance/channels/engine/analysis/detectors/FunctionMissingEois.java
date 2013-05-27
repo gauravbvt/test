@@ -34,7 +34,7 @@ public class FunctionMissingEois extends AbstractIssueDetector {
         Function function = (Function)modelObject;
         List<Issue> issues = new ArrayList<Issue>(  );
         for ( Information info : function.getEffectiveInfoNeeded() ) {
-            if ( info.getEois().isEmpty() ) {
+            if ( info.getEffectiveEois().isEmpty() ) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, function );
                 issue.setDescription( "Function \""
                         + function.getName()
@@ -49,7 +49,7 @@ public class FunctionMissingEois extends AbstractIssueDetector {
             }
         }
         for ( Information info : function.getEffectiveInfoAcquired() ) {
-            if ( info.getEois().isEmpty() ) {
+            if ( info.getEffectiveEois().isEmpty() ) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, function );
                 issue.setDescription( "Function \""
                         + function.getName()

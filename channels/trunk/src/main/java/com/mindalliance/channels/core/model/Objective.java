@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -74,9 +75,9 @@ public class Objective implements Serializable {
         return toString();
     }
 
-    public boolean implementedBy( Part part ) {
+    public boolean implementedBy( Part part, QueryService queryService  ) {
         return CollectionUtils.exists(
-                part.getGoalsAchieved(),
+                queryService.findAllGoalsImpactedByFailure( part ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

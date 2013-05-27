@@ -90,8 +90,8 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
         return getSharing().isReceiptConfirmationRequested();
     }
 
-    public InformationData getInformation() {
-        return new InformationData( getSharing() );
+    public SharedInformationData getInformation() {
+        return new SharedInformationData( getSharing() );
     }
 
     public String getIntent() {

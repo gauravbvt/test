@@ -1,8 +1,22 @@
 package com.mindalliance.channels.pages.components.help;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.InfoFormat;
+import com.mindalliance.channels.core.model.InfoProduct;
+import com.mindalliance.channels.core.model.ModelObject;
+import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Phase;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Role;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.data.surveys.RFISurvey;
 import com.mindalliance.channels.guide.ChangeQualifier;
 import com.mindalliance.channels.guide.Guide;
 import com.mindalliance.channels.guide.GuideReader;
@@ -17,6 +31,7 @@ import com.mindalliance.channels.guide.UserRole;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import com.mindalliance.channels.pages.components.guide.HelpScriptable;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import info.bliki.wiki.model.WikiModel;
 import org.apache.commons.collections.CollectionUtils;
@@ -30,11 +45,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Stack;
 
 /**
@@ -44,7 +62,13 @@ import java.util.Stack;
  * Date: 3/11/13
  * Time: 2:26 PM
  */
-public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
+public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, HelpScriptable {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( HelpPanel.class );
+
 
     @SpringBean
     private GuideReader guideReader;
@@ -347,10 +371,23 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
     }
 
     private Identifiable getSubject( ScriptChange scriptChange ) {
+        String subjectPath = scriptChange.getSubjectPath();
+        Object bean;
+        if ( subjectPath.startsWith( HelpScriptable.GUIDE + "." ) ) {
+            subjectPath = subjectPath.substring( HelpScriptable.GUIDE.length() + 1 );
+            bean = (HelpScriptable)this;
+        } else {
+            bean = guide.getContext();
+        }
+        try {
         return (Identifiable) ChannelsUtils.getProperty(
-                guide.getContext(),
-                scriptChange.getSubjectPath(),
+                bean,
+                subjectPath,
                 null );
+        } catch (Exception e) {
+            LOG.warn( "Help subject not found: " + scriptChange.getSubjectPath() );
+            return null;
+        }
     }
 
     private Label getDescriptionLabel( TopicItem topicItem ) {
@@ -431,5 +468,92 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel {
                                 ? section.getTopics().get( 0 ).getId()
                                 : topicId )
                 : null;
+    }
+
+    // HelpScriptable - Script support
+
+    private <T extends ModelObject> T chooseOne( List<T> choices ) {
+        if ( choices.size() > 0 )
+            return choices.get( new Random().nextInt( choices.size() ) );
+        else
+            return null;
+    }
+
+    public Flow getAnyFlow() {
+        return chooseOne( getQueryService().list( Flow.class ) );
+    }
+
+    @Override
+    public Actor getAnyActualAgent() {
+       return chooseOne( getQueryService().listActualEntities( Actor.class ) );
+    }
+
+    @Override
+    public Event getAnyEvent() {
+        return chooseOne( getQueryService().list( Event.class ) );
+    }
+
+    @Override
+    public Phase getAnyPhase() {
+        return chooseOne( getQueryService().list( Phase.class ) );
+    }
+
+    @Override
+    public Organization getAnyActualOrganization() {
+        return chooseOne( getQueryService().listActualEntities( Organization.class ) );
+    }
+
+    @Override
+    public Role getAnyRole() {
+        return chooseOne( getQueryService().list( Role.class ) );
+    }
+
+    @Override
+    public Place getAnyActualPlace() {
+        return chooseOne( getQueryService().listActualEntities( Place.class ) );
+    }
+
+    @Override
+    public TransmissionMedium getAnyMedium() {
+        return chooseOne( getQueryService().list( TransmissionMedium.class ) );
+    }
+
+    @Override
+    public InfoProduct getAnyInfoProduct() {
+        return chooseOne( getQueryService().list( InfoProduct.class ) );
+    }
+
+    @Override
+    public InfoFormat getAnyInfoFormat() {
+        return chooseOne( getQueryService().list( InfoFormat.class ) );
+    }
+
+    @Override
+    public Function getAnyFunction() {
+        return chooseOne( getQueryService().list( Function.class ) );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Flow getAnySharingFlow() {
+        return chooseOne( (List<Flow>)CollectionUtils.select(
+                getQueryService().list( Flow.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Flow)object).isSharing();
+                    }
+                }
+        ) );
+    }
+
+    @Override
+    public RFISurvey getUnknownRFISurvey() {
+        return RFISurvey.UNKNOWN;
+    }
+
+    @Override
+    public Feedback getUnknownFeedback() {
+        return Feedback.UNKNOWN;
     }
 }

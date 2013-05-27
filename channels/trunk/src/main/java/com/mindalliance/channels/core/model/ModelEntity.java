@@ -411,6 +411,10 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 || entity != null && entity.narrowsOrEquals( other, locale );
     }
 
+    public boolean narrowsOrEquals( ModelEntity other ) {
+        return narrowsOrEquals( other, Place.UNKNOWN );
+    }
+
     /**
      * Whether an entity is the same as the other,
      * or has all the types (transitively) of the other, type entity.

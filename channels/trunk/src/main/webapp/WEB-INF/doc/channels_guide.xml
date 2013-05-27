@@ -1690,7 +1690,11 @@ A function can be:
 
 A function defines the kinds of goals, if any, a task implementing it is expected to achieve, as well as the information needs and information capabilities that such a task is expected to have in order to conform to the function.
 
-When a function is categorized by other functions, it adds to the goalsm information needs and capabilitites these functions define.
+The goals specified by a function are goal categories plus whether they are risks to be mitigated or gaines to be made.
+
+The information needs and capabilities specified by the function are named, optionally point to an information product, and define function-specific elements of information.
+
+When a function is categorized by other functions, it adds to the goals, information needs and capabilitites that the categorizing functions define.
                     </description>
                 </item>
                 <item>

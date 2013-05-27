@@ -157,6 +157,10 @@ public class PartShowMenuPanel extends MenuPanel {
         List<ModelObjectWrapper> modelObjects = new ArrayList<ModelObjectWrapper>();
         Part part = getPart();
         QueryService queryService = getQueryService();
+        if ( part.getFunction() != null )
+            modelObjects.add( new ModelObjectWrapper(
+                    "Function",
+                    part.getFunction() ) );
         if ( getKnownActor( part, queryService ) != null )
             modelObjects.add( new ModelObjectWrapper( "Agent", getKnownActor( part, queryService ) ) );
         if ( part.getRole() != null )

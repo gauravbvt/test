@@ -48,7 +48,7 @@ public class ImplementFunction extends AbstractCommand {
             return super.canDo( commander ) &&
                     part != null
                     && part.getFunction() != null
-                    && !part.getFunction().implementedBy( part );
+                    && !part.getFunction().implementedBy( part, commander.getQueryService() );
         } catch ( CommandException e ) {
             return false;
         }
@@ -66,7 +66,7 @@ public class ImplementFunction extends AbstractCommand {
             if ( multi == null ) {
                 multi = new MultiCommand( getUserName(), "implement function - extra" );
                 // add goals
-                for ( Objective objective : function.allObjectivesNotImplementedBy( part ) ) {
+                for ( Objective objective : function.allObjectivesNotImplementedBy( part, commander.getQueryService() ) ) {
                     Goal goal = objective.findMatchingGoal( segment );
                     if ( goal != null ) {
                         multi.addCommand( new UpdateSegmentObject(

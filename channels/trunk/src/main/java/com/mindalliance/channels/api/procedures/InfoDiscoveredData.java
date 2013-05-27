@@ -54,8 +54,8 @@ public class InfoDiscoveredData  implements Serializable {
     }
 
     @XmlElement
-    public InformationData getInformation() {
-        return new InformationData( notificationToSelf );
+    public SharedInformationData getInformation() {
+        return new SharedInformationData( notificationToSelf );
     }
 
     @XmlElement

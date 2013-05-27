@@ -14,6 +14,7 @@ import com.mindalliance.channels.core.command.CommandException;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Flow;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Part;
@@ -75,9 +76,14 @@ public class AddNeed extends AbstractCommand {
             if ( flowAttributes != null )
                 flow.initFromMap( flowAttributes, communityService );
             Map<String,Object> infoState = (Map<String, Object>) get( "information" );
-            if ( flowAttributes == null && infoState != null ) {
-                Information info = Information.fromState( infoState );
+            if ( infoState != null ) {
+                Information info = Information.fromState( infoState, queryService );
                 flow.setName( info.getName() );
+                InfoProduct infoProduct = info.getInfoProduct();
+                if ( infoProduct != null ) {
+                    flow.setInfoProduct( info.getInfoProduct() );
+                    flow.setStandardized( true );
+                }
                 flow.setEois( info.getEois() );
             }
             describeTarget( flow );

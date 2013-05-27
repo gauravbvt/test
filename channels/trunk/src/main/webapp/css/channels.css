@@ -3911,7 +3911,7 @@ ul.attach li.controls {
 
 /* Function details */
 .entity-details .info-spec .info-name {
-    width: 80%;
+    width: 60%;
 }
 
 .entity-details .info-spec .new-info {
@@ -3933,13 +3933,13 @@ ul.attach li.controls {
     background: none repeat scroll 0 0 #E8E8E8;
 }
 
-.entity-details .info-spec .info-eois .question input[type='text'] {
+.entity-details .info-spec .info-eois input[type='text'].question {
     margin-bottom: 10px;
     margin-right: 10px;
     width: 30%;
 }
 
-.entity-details .info-spec .info-eois .content input[type='text'] {
+.entity-details .info-spec .info-eois input[type='text'].content {
     margin-bottom: 10px;
     margin-right: 10px;
     width: 35%;
@@ -3947,9 +3947,9 @@ ul.attach li.controls {
 
 
 
-.entity-details .info-spec .info-eois .new-content input[type='text'] {
+.entity-details .info-spec .info-eois input[type='text'].new-content {
     margin-left: 60px;
-    width: 30%;
+    width: 35;
 }
 
 

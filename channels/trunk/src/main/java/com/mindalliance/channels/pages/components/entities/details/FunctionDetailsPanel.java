@@ -3,15 +3,19 @@ package com.mindalliance.channels.pages.components.entities.details;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
+import com.mindalliance.channels.core.command.MultiCommand;
+import com.mindalliance.channels.core.command.commands.CreateEntityIfNew;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.model.ElementOfInformation;
 import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.ModelEntity;
 import com.mindalliance.channels.core.model.Objective;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.guide.Guidable;
@@ -24,6 +28,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
@@ -284,7 +289,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
             addNewInformation();
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         private void addInformationList() {
             ListView<Information> infoList = new ListView<Information>(
                     "infoList",
@@ -324,10 +329,36 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                             update( target, change );
                         }
                     } );
-                    infoNameField.setEnabled( isLockedByUser( getFunction() ) );
+                    infoNameField.setEnabled( isLockedByUser( getFunction() ) && info.getInfoProduct() == null );
+                    if ( info.getInfoProduct() != null ) {
+                        addTipTitle( infoNameField, "Access the info product profile to change its name" );
+                    }
                     item.add( infoNameField );
+                    // as info product
+                    final CheckBox isInfoProductCheckBox = new CheckBox(
+                            "infoProduct",
+                            new Model<Boolean>( info.getInfoProduct() != null )
+                    );
+                    isInfoProductCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+                        @Override
+                        protected void onUpdate( AjaxRequestTarget target ) {
+                            toggleInfoProduct( info, isInfoProductCheckBox.getConvertedInput() );
+                            addInformationList();
+                            target.add( infoContainer );
+                            Change change = new Change( Change.Type.Updated, getFunction() );
+                            change.setProperty( property );
+                            update( target, change );
+                        }
+                    } );
+                    item.add( isInfoProductCheckBox );
+                    // info product link
+                    ModelObjectLink infoProductLink = new ModelObjectLink(
+                            "profile",
+                            new Model<InfoProduct>( info.getInfoProduct() ),
+                            new Model<String>( "info product" ) );
+                    item.add( infoProductLink );
                     // add eois summary
-                    List<String> eoiNames = info.getEoiNames();
+                    List<String> eoiNames = info.getEffectiveEoiNames();
                     String eoisString = eoiNames.size() == 0
                             ? "(none)"
                             : ChannelsUtils.listToString( eoiNames, ", ", " and " );
@@ -376,8 +407,47 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
             infoContainer.addOrReplace( infoList );
         }
 
+        private void toggleInfoProduct( Information info, Boolean isInfoProduct ) {
+            int index = getInformationList().indexOf( info );
+            if ( index >= 0 ) {
+                if ( isInfoProduct ) {
+                    if ( !info.getName().trim().isEmpty() ) {
+                        MultiCommand multi = new MultiCommand( getUsername(), "Set info's info product" );
+                        Change change = new Change( Change.Type.Updated, getFunction() );
+                        change.setProperty( property );
+                        multi.setChange( change );
+                        multi.addCommand( new CreateEntityIfNew(
+                                getUsername(),
+                                InfoProduct.class,
+                                info.getName(),
+                                ModelEntity.Kind.Type ) );
+                        multi.addCommand( new UpdatePlanObject(
+                                getUsername(),
+                                getFunction(),
+                                property + "[" + index + "].infoProduct",
+                                getQueryService().findOrCreateType( InfoProduct.class, info.getName() ),
+                                UpdateObject.Action.Set
+                        ) );
+                        doCommand( multi );
+                    }
+                } else {
+                    doCommand(
+                            new UpdatePlanObject(
+                                    getUsername(),
+                                    getFunction(),
+                                    property + "[" + index + "].infoProduct",
+                                    null,
+                                    UpdateObject.Action.Set
+                            ) );
+                }
+            }
+        }
+
         private void updateNameOfInfo( Information info, String newName ) {
-            if ( newName != null && !newName.isEmpty() && !isRedundantInfo( newName ) ) {
+            if ( newName != null
+                    && !newName.isEmpty()
+                    && !isRedundantInfo( newName )
+                    && info.getInfoProduct() == null ) {
                 int index = getInformationList().indexOf( info );
                 if ( index >= 0 ) {
                     Command command = new UpdatePlanObject(
@@ -461,7 +531,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
             }
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         private List<Information> getInformationList() {
             return (List<Information>) ChannelsUtils.getProperty(
                     getFunction(),
@@ -494,7 +564,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         private void addEoisList() {
             ListView<ElementOfInformation> eoisList = new ListView<ElementOfInformation>(
                     "eoisList",
-                    info.getEois()
+                    info.getEffectiveEois()
             ) {
                 @Override
                 protected void populateItem( ListItem<ElementOfInformation> item ) {
@@ -512,12 +582,16 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                             update( target, change );
                         }
                     };
-                    includedCheckBox.setEnabled( isLockedByUser( getFunction() ) );
+                    boolean local = info.isLocalEoi( eoi );
+                    includedCheckBox.setEnabled( local && isLockedByUser( getFunction() ) );
                     item.add( includedCheckBox );
                     // name
                     final TextField<String> eoiNameField = new TextField<String>(
                             "name",
-                            new Model<String>( eoi.getContent() )
+                            new Model<String>( local
+                                    ? eoi.getContent()
+                                    : ( eoi.getContent() + " (from " + info.getInfoProduct().getName() + ")" )
+                            )
                     );
                     eoiNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
                         @Override
@@ -527,7 +601,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                             target.add( eoisContainer );
                         }
                     } );
-                    eoiNameField.setEnabled( isLockedByUser( getFunction() ) );
+                    eoiNameField.setEnabled( local && isLockedByUser( getFunction() ) );
                     item.add( eoiNameField );
                     // question
                     final TextField<String> eoiQuestionField = new TextField<String>(
@@ -542,7 +616,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                             target.add( eoisContainer );
                         }
                     } );
-                    eoiQuestionField.setEnabled( isLockedByUser( getFunction() ) );
+                    eoiQuestionField.setEnabled( local && isLockedByUser( getFunction() ) );
                     item.add( eoiQuestionField );
                 }
             };
@@ -551,7 +625,10 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         }
 
         private void updateNameOfEoi( Information info, ElementOfInformation eoi, String value ) {
-            if ( value != null && !value.isEmpty() && !isRedundantEoi( value ) ) {
+            if ( value != null
+                    && !value.isEmpty()
+                    && !isRedundantEoi( value )
+                    && info.isLocalEoi( eoi ) ) {
                 int infoIndex = getInformationList().indexOf( info );
                 int eoiIndex = info.getEois().indexOf( eoi );
                 if ( infoIndex >= 0 && eoiIndex >= 0 ) {
@@ -568,17 +645,19 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
         }
 
         private void updateQuestionOfEoi( Information info, ElementOfInformation eoi, String value ) {
-            int infoIndex = getInformationList().indexOf( info );
-            int eoiIndex = info.getEois().indexOf( eoi );
-            if ( infoIndex >= 0 && eoiIndex >= 0 ) {
-                Command command = new UpdatePlanObject(
-                        getUsername(),
-                        getFunction(),
-                        property + "[" + infoIndex + "].eois[" + eoiIndex + "].description",
-                        value,
-                        UpdateObject.Action.Set
-                );
-                doCommand( command );
+            if ( info.isLocalEoi( eoi ) ) {
+                int infoIndex = getInformationList().indexOf( info );
+                int eoiIndex = info.getEois().indexOf( eoi );
+                if ( infoIndex >= 0 && eoiIndex >= 0 ) {
+                    Command command = new UpdatePlanObject(
+                            getUsername(),
+                            getFunction(),
+                            property + "[" + infoIndex + "].eois[" + eoiIndex + "].description",
+                            value,
+                            UpdateObject.Action.Set
+                    );
+                    doCommand( command );
+                }
             }
         }
 
@@ -609,7 +688,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
 
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         private List<Information> getInformationList() {
             return (List<Information>) ChannelsUtils.getProperty(
                     getFunction(),
