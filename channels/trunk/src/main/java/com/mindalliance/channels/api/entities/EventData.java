@@ -20,7 +20,7 @@ import java.util.Set;
  * Date: 11/30/11
  * Time: 10:36 AM
  */
-@XmlType( propOrder = {"id", "name", "categories", "incident", "selfTerminating", "locationId", "plannedPhases", "documentation"} )
+@XmlType( propOrder = {"id", "name", "description", "categories", "incident", "selfTerminating", "locationId", "plannedPhases", "documentation"} )
 public class EventData extends ModelEntityData {
 
     public EventData() {
@@ -40,6 +40,12 @@ public class EventData extends ModelEntityData {
     @XmlElement
     public String getName() {
         return super.getName();
+    }
+
+    @Override
+    @XmlElement
+    public String getDescription() {
+        return super.getDescription();
     }
 
     @XmlElement

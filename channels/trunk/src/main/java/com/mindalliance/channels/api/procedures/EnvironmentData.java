@@ -2,6 +2,7 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.api.entities.EventData;
+import com.mindalliance.channels.api.entities.FunctionData;
 import com.mindalliance.channels.api.entities.InfoFormatData;
 import com.mindalliance.channels.api.entities.InfoProductData;
 import com.mindalliance.channels.api.entities.MediumData;
@@ -12,6 +13,7 @@ import com.mindalliance.channels.api.entities.RoleData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.Function;
 import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -42,7 +44,7 @@ import java.util.Set;
  * Time: 3:43 PM
  */
 @XmlType(propOrder = {"events", "phases", "organizations", "actors", "roles", "places", "media",
-        "infoProducts", "formats"})
+        "infoProducts", "formats", "functions"})
 public class EnvironmentData implements Serializable {
 
     /**
@@ -59,6 +61,7 @@ public class EnvironmentData implements Serializable {
     private List<MediumData> media;
     private List<InfoProductData> infoProducts;
     private List<InfoFormatData> infoFormats;
+    private List<FunctionData> functions;
     private ProtocolsData protocols;
 
     public EnvironmentData() {
@@ -81,6 +84,7 @@ public class EnvironmentData implements Serializable {
             initMedia( serverUrl, communityService );
             initInfoProducts( serverUrl, communityService );
             initInfoFormats( serverUrl, communityService );
+            initFunctions( serverUrl, communityService );
         } catch ( NotFoundException e ) {
             throw new RuntimeException( e );
         }
@@ -147,6 +151,28 @@ public class EnvironmentData implements Serializable {
             }
         }
     }
+
+    private void initFunctions( String serverUrl, CommunityService communityService ) throws NotFoundException {
+        PlanService planService = communityService.getPlanService();
+        functions = new ArrayList<FunctionData>();
+        Set<Long> added = new HashSet<Long>();
+        for ( Long id : allFunctionIds() ) {
+            try {
+                Function function = planService.find( Function.class, id );
+                functions.add( new FunctionData( serverUrl, function, communityService ) );
+                added.add( id );
+                for ( ModelEntity category : function.getAllTypes() ) {
+                    if ( !added.contains( category.getId() ) ) {
+                        functions.add( new FunctionData( serverUrl, (Function) category, communityService ) );
+                        added.add( category.getId() );
+                    }
+                }
+            } catch ( NotFoundException e ) {
+                LOG.warn( "Function not found at " + id );
+            }
+        }
+    }
+
 
     private void initInfoFormats( String serverUrl, CommunityService communityService ) throws NotFoundException {
         PlanService planService = communityService.getPlanService();
@@ -310,6 +336,10 @@ public class EnvironmentData implements Serializable {
         return infoFormats;
     }
 
+    @XmlElement(name = "function")
+    public List<FunctionData> getFunctions() throws NotFoundException {
+        return functions;
+    }
 
     private Set<Long> allEventIds() {
         Set<Long> allIds = new HashSet<Long>();
@@ -365,5 +395,9 @@ public class EnvironmentData implements Serializable {
         return allIds;
     }
 
-
+    private Set<Long> allFunctionIds() {
+        Set<Long> allIds = new HashSet<Long>();
+        allIds.addAll( protocols.allFunctionIds() );
+        return allIds;
+    }
 }

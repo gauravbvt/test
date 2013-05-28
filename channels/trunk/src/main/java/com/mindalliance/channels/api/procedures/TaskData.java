@@ -1,6 +1,7 @@
 package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.api.entities.FunctionData;
 import com.mindalliance.channels.api.entities.PlaceData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
@@ -30,10 +31,11 @@ import java.util.Set;
  * Date: 12/6/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"id", "name", "category", "communicatedLocation", "location", "instructions",
-        "teamContacts", "goals", "failureImpact", "documentation"} )
+@XmlType(propOrder = {"id", "name", "category", "communicatedLocation", "location", "function", "instructions",
+        "teamContacts", "goals", "failureImpact", "documentation"})
 public class TaskData extends AbstractProcedureElementData {
 
+    private FunctionData functionData;
     private String failureImpact;
     private List<CommunityAssignment> otherAssignments;
     private List<ContactData> teamContacts;
@@ -51,7 +53,8 @@ public class TaskData extends AbstractProcedureElementData {
             CommunityAssignment assignment,
             CommunityService communityService,
             ChannelsUser user ) {
-        super( communityService, assignment,  user );
+        super( communityService, assignment, user );
+        initFunction( serverUrl, communityService );
         initData( communityService.getPlanService() );
         initLocation( serverUrl, communityService );
         initDocumentation( serverUrl );
@@ -61,7 +64,7 @@ public class TaskData extends AbstractProcedureElementData {
 
 
     public TaskData( String serverUrl, CommunityService communityService, Part part, ChannelsUser user ) {
-        super( communityService, null,  user );
+        super( communityService, null, user );
         this.part = part;
         initData( communityService.getPlanService() );
     }
@@ -71,17 +74,22 @@ public class TaskData extends AbstractProcedureElementData {
         failureImpact = StringEscapeUtils.escapeXml( failureLevel.getNegativeLabel() );
     }
 
+    private void initFunction( String serverUrl, CommunityService communityService ) {
+        if ( getPart().getFunction() != null )
+            functionData = new FunctionData( serverUrl, getPart().getFunction(), communityService );
+    }
+
     private void initTeamContacts( String serverUrl, CommunityService communityService ) {
         teamContacts = new ArrayList<ContactData>();
         if ( getAssignment() != null )
-        for ( CommunityEmployment employment : getTeamEmployments() ) {
-            teamContacts.addAll( ContactData.findContactsFromEmploymentAndCommitment(
-                    serverUrl,
-                    employment,
-                    null,
-                    communityService,
-                    ChannelsUser.current().getUserInfo() ) );
-        }
+            for ( CommunityEmployment employment : getTeamEmployments() ) {
+                teamContacts.addAll( ContactData.findContactsFromEmploymentAndCommitment(
+                        serverUrl,
+                        employment,
+                        null,
+                        communityService,
+                        ChannelsUser.current().getUserInfo() ) );
+            }
     }
 
     private void initOtherAssignments( CommunityService communityService ) {
@@ -97,7 +105,7 @@ public class TaskData extends AbstractProcedureElementData {
     }
 
     private void initLocation( String serverUrl, CommunityService communityService ) {
-        if ( getAssignment() != null ){
+        if ( getAssignment() != null ) {
             Place location = getAssignment().getLocation( communityService );
             placeData = location != null
                     ? new PlaceData( serverUrl, location, communityService )
@@ -137,11 +145,14 @@ public class TaskData extends AbstractProcedureElementData {
         }
     }
 
-
+    @XmlElement
+    public FunctionData getFunction() {
+        return functionData;
+    }
 
     @XmlElement
     public PlaceData getLocation() {
-       return placeData;
+        return placeData;
     }
 
     @XmlElement
@@ -152,13 +163,13 @@ public class TaskData extends AbstractProcedureElementData {
                 : StringEscapeUtils.escapeXml( instructions );
     }
 
-    @XmlElement( name = "teamMate" )
+    @XmlElement(name = "teamMate")
     public List<ContactData> getTeamContacts() {
         return teamContacts;
     }
 
 
-    @XmlElement( name = "goal" )
+    @XmlElement(name = "goal")
     public List<GoalData> getGoals() {
         List<GoalData> goals = new ArrayList<GoalData>();
         for ( Goal goal : getPart().getGoals() ) {
@@ -185,7 +196,7 @@ public class TaskData extends AbstractProcedureElementData {
         return part != null ? part : getAssignment().getPart();
     }
 
-    @WebMethod( exclude = true )
+    @WebMethod(exclude = true)
     public List<CommunityEmployment> getTeamEmployments() {
         List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
         for ( CommunityAssignment assignment : otherTeamAssignments() ) {
@@ -194,12 +205,12 @@ public class TaskData extends AbstractProcedureElementData {
         return employments;
     }
 
-    @WebMethod( exclude = true )
+    @WebMethod(exclude = true)
     public Long getEventId() {
         return getPart().getSegment().getEvent().getId();
     }
 
-    @WebMethod( exclude = true )
+    @WebMethod(exclude = true)
     public Long getPhaseId() {
         return getPart().getSegment().getPhase().getId();
     }
@@ -226,17 +237,31 @@ public class TaskData extends AbstractProcedureElementData {
         return getPart().hashCode();
     }
 
-    @WebMethod( exclude = true )
+    @WebMethod(exclude = true)
     public Part part() {
         return getPart();
     }
 
 
     public Set<Long> allPlaceIds() {
-        Set<Long> ids = new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>();
         if ( getLocation() != null ) {
             ids.add( getLocation().getId() );
         }
+        return ids;
+    }
+
+    public Set<Long> allFunctionIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( getPart().getFunction() != null )
+            ids.add( getPart().getFunction().getId() );
+        return ids;
+    }
+
+    public Set<Long> allInfoProductIds() {
+        Set<Long> ids = new HashSet<Long>();
+        if ( functionData != null )
+            ids.addAll( functionData.allInfoProductIds() );
         return ids;
     }
 }

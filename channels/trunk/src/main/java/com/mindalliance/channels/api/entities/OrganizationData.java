@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 9:15 AM
  */
-@XmlType( propOrder = {"id", "name", "categories", "kind", "parentId", "fullAddress", "mission", "participating", "documentation"} )
+@XmlType( propOrder = {"id", "name", "description", "categories", "kind", "parentId", "fullAddress", "mission", "participating", "documentation"} )
 public class OrganizationData extends ModelEntityData {
 
     private boolean participating;
@@ -54,6 +54,12 @@ public class OrganizationData extends ModelEntityData {
     @XmlElement
     public String getName() {
         return super.getName();
+    }
+
+    @Override
+    @XmlElement
+    public String getDescription() {
+        return super.getDescription();
     }
 
     @Override

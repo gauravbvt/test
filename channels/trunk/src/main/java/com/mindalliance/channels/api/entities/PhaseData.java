@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 11/30/11
  * Time: 1:55 PM
  */
-@XmlType( propOrder = {"id", "name", "timing", "documentation"} )
+@XmlType( propOrder = {"id", "name", "description", "timing", "documentation"} )
 public class PhaseData extends ModelObjectData {
 
     public PhaseData() {
@@ -37,6 +37,12 @@ public class PhaseData extends ModelObjectData {
     @XmlElement
     public String getName() {
         return super.getName();
+    }
+
+    @Override
+    @XmlElement
+    public String getDescription() {
+        return super.getDescription();
     }
 
     @XmlElement

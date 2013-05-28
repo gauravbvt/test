@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 12/8/11
  * Time: 2:29 PM
  */
-@XmlType( propOrder = {"name", "id", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"} )
+@XmlType( propOrder = {"name", "id", "description", "categories", "mode", "synchronous", "security", "reach", "qualification", "delegatesTo", "documentation"} )
 public class MediumData extends ModelEntityData {
 
     private ActorData actorData;
@@ -58,6 +58,12 @@ public class MediumData extends ModelEntityData {
     @XmlElement
     public String getName() {
         return super.getName();
+    }
+
+    @Override
+    @XmlElement
+    public String getDescription() {
+        return super.getDescription();
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 12/1/11
  * Time: 10:45 AM
  */
-@XmlType( propOrder = {"id", "name", "categories", "documentation"} )
+@XmlType( propOrder = {"id", "name", "description", "categories", "documentation"} )
 public class RoleData extends ModelEntityData {
 
     public RoleData() {
@@ -37,6 +37,12 @@ public class RoleData extends ModelEntityData {
     @XmlElement
     public String getName() {
         return super.getName();
+    }
+
+    @Override
+    @XmlElement
+    public String getDescription() {
+        return super.getDescription();
     }
 
     @Override

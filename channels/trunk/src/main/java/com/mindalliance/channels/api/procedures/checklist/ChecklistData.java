@@ -311,6 +311,12 @@ public class ChecklistData implements Serializable {
         return ids;
     }
 
+    public Set<Long> allFunctionIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.addAll( getTask().allFunctionIds() );
+        return ids;
+    }
+
     public Set<Long> allInfoProductIds() {
         Set<Long> ids = new HashSet<Long>();
         for ( TriggerData trigger : getTriggers() ) {
@@ -319,6 +325,7 @@ public class ChecklistData implements Serializable {
         for ( ChecklistStepData step : getSteps() ) {
             ids.addAll( step.allInfoProductIds() );
         }
+        ids.addAll( getTask().allInfoProductIds() );
         return ids;
     }
 

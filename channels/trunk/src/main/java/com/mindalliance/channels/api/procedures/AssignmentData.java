@@ -137,6 +137,19 @@ public class AssignmentData extends AbstractProcedureElementData {
         return ids;
     }
 
+    public Set<Long> allFunctionIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.addAll( getTask().allFunctionIds() );
+        return ids;
+    }
+
+    public Set<Long> allInfoProductIds() {
+        Set<Long> ids = new HashSet<Long>();
+        ids.addAll( getTask().allInfoProductIds() );
+        return ids;
+    }
+
+
     private List<Flow> asSortedFlows( Set<Flow> flows ) {
         List<Flow> sortedFlows = new ArrayList<Flow>( flows );
         Collections.sort( sortedFlows, new Comparator<Flow>() {

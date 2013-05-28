@@ -338,4 +338,12 @@ public class ProtocolsData implements Serializable {
         }
         return ids;
     }
+
+    public Set<Long> allFunctionIds() {
+        Set<Long> ids = new HashSet<Long>(  );
+        for ( ChecklistData checklistData : getChecklists() ) {
+            ids.addAll( checklistData.allFunctionIds() );
+        }
+        return ids;
+    }
 }
