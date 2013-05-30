@@ -211,6 +211,11 @@ public abstract class DefaultQueryService implements QueryService {
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )
                             || hasSupervisor( committer.getActor(), beneficiary.getActor(), committerOrg );
 
+                case Supervised:
+                    return ModelObject.isNullOrUnknown( committer.getActor() )
+                            || ModelObject.isNullOrUnknown( beneficiary.getActor() )
+                            || hasSupervisor( beneficiary.getActor(), committer.getActor(), beneficiaryOrg );
+
                 case Self:
                     return ModelObject.isNullOrUnknown( committer.getActor() )
                             || ModelObject.isNullOrUnknown( beneficiary.getActor() )

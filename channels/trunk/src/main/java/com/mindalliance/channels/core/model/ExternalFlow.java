@@ -177,6 +177,12 @@ public class ExternalFlow extends Flow {
             flow.setName( name );
     }
 
+    @Override
+    public Intent getIntent() {
+        Flow flow = getConnectorFlow();
+        return flow == null ? super.getIntent() : flow.getIntent();
+    }
+
     /**
      * {@inheritDoc}
      */

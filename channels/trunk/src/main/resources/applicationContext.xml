@@ -361,6 +361,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FunctionIsEmpty"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FunctionMissingEois"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartDoesNotImplementFunction"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.CommandWithoutAuthority"/>
             </list>
         </property>
     </bean>

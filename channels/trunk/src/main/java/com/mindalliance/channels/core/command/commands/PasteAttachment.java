@@ -59,7 +59,7 @@ public class PasteAttachment extends AbstractCommand {
         return copy.get( "url" ) != null && copy.get( "type" ) != null;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Map<String, Object> getCopy( Commander commander ) {
         return commander.isReplaying() ? (Map<String, Object>) get( "copy" ) : commander.getCopy( getUserName() );
     }
@@ -71,6 +71,9 @@ public class PasteAttachment extends AbstractCommand {
         if ( !commander.isReplaying() )
             set( "copy", copy );
         Attachment attachment = getAttachmentFromCopy( copy );
+        if ( attachment == null ) {
+            throw new CommandException( "Can't find copied attachment" );
+        }
         String attachablePath = (String) get( "attachablePath" );
         Attachable attachable = (Attachable) ChannelsUtils.getProperty( mo, attachablePath, null );
         if ( attachable == null )
@@ -82,10 +85,16 @@ public class PasteAttachment extends AbstractCommand {
     }
 
     private static Attachment getAttachmentFromCopy( Map<String, Object> copy ) {
-        return new AttachmentImpl(
-                (String) copy.get( "url" ),
-                Type.valueOf( (String) copy.get( "type" ) ),
-                (String) copy.get( "name" ) );
+        String url = (String) copy.get( "url" );
+        String typeName = (String) copy.get( "type" );
+        String name = (String) copy.get( "name" );
+        if ( url == null || typeName == null )
+            return null;
+        else
+            return new AttachmentImpl(
+                    url,
+                    Type.valueOf( typeName ),
+                    name );
     }
 
     @Override
@@ -94,7 +103,7 @@ public class PasteAttachment extends AbstractCommand {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
         ModelObject mo = commander.resolve( ModelObject.class, (Long) get( "attachee" ) );
         Attachment attachment = getAttachmentFromCopy( (Map<String, Object>) get( "copy" ) );

@@ -516,6 +516,9 @@ public class CommunityServiceImpl implements CommunityService {
                 case Supervisor:
                     return hasSupervisor( committer.getAgent(), beneficiary.getAgent(), committerAgency );
 
+                case Supervised: // beneficiary has committer as supervisor
+                    return hasSupervisor( beneficiary.getAgent(), committer.getAgent(), beneficiaryAgency );
+
                 case Self:
                     return committer.getAgent().equals( beneficiary.getAgent() );
 

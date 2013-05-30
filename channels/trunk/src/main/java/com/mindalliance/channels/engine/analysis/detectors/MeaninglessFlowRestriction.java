@@ -75,7 +75,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                         "\nor change the source and/or target specification to use types of places or none at all." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
-            }  else if ( restriction == Flow.Restriction.Supervisor
+            }  else if ( ( restriction == Flow.Restriction.Supervisor || restriction == Flow.Restriction.Supervised)
                     && sourceActor != null
                     && targetActor != null
                     && sourceActor.isActual()
