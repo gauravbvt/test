@@ -494,7 +494,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         Set<ModelEntity> allTypes = new HashSet<ModelEntity>();
         if ( !visited.contains( this ) ) {
             allTypes.addAll( getTypes() );
-            allTypes.addAll( safeAllImplicitTypes( visited ) );
+            allTypes.addAll( safeAllImplicitTypes( new HashSet<ModelEntity>() ) );
             visited.add( this );
             for ( ModelEntity type : getTypes() ) {
                 allTypes.addAll( type.safeAllTypes( visited ) );
