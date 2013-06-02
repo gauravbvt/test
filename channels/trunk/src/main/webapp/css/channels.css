@@ -1065,6 +1065,20 @@ div.flow-details ul li {
 
 */
 
+.flow-restrictions a {
+    float: right;
+}
+
+.flow-restrictions div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.flow-restrictions .delete {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
 span.if-task-fails,
 span.prohibited {
     padding: 0 0 0 5px;

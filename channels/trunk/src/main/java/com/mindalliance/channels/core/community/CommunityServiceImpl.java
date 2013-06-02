@@ -348,7 +348,7 @@ public class CommunityServiceImpl implements CommunityService {
                     Agent committerAgent = committer.getAgent();
                     for ( CommunityAssignment beneficiary : beneficiaries ) {
                         if ( ( includeToSelf || !committerAgent.equals( beneficiary.getAgent() ) )
-                                && allowsCommitment( committer, beneficiary, flow.getRestriction() ) ) {
+                                && allowsCommitment( committer, beneficiary, flow.getRestrictions() ) ) {
                             commitments.add( new CommunityCommitment( committer, beneficiary, flow ) );
                         }
                     }
@@ -369,7 +369,7 @@ public class CommunityServiceImpl implements CommunityService {
                 Agent committerAgent = committer.getAgent();
                 for ( CommunityAssignment beneficiary : beneficiaries ) {
                     if ( ( includeToSelf || !committerAgent.equals( beneficiary.getAgent() ) )
-                            && allowsCommitment( committer, beneficiary, flow.getRestriction() ) ) {
+                            && allowsCommitment( committer, beneficiary, flow.getRestrictions() ) ) {
                         commitments.add( new CommunityCommitment( committer, beneficiary, flow ) );
                     }
                 }
@@ -470,6 +470,21 @@ public class CommunityServiceImpl implements CommunityService {
         // Do nothing
     }
 
+    // None of the restrictions does not allow the commitment.
+    private boolean allowsCommitment( final CommunityAssignment committer,
+                                      final CommunityAssignment beneficiary,
+                                      final List<Flow.Restriction> restrictions ) {
+        return !CollectionUtils.exists(
+                restrictions,
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return !allowsCommitment( committer, beneficiary, (Flow.Restriction)object );
+                    }
+                }
+        );
+    }
+
     private boolean allowsCommitment( CommunityAssignment committer,
                                       CommunityAssignment beneficiary,
                                       Flow.Restriction restriction ) {
@@ -499,14 +514,6 @@ public class CommunityServiceImpl implements CommunityService {
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
                             || committerLocation.narrowsOrEquals( beneficiaryLocation, getCommunityLocale() )
                             || beneficiaryLocation.narrowsOrEquals( committerLocation, getCommunityLocale() );
-
-                case SameOrganizationAndLocation:
-                    return committerAgency.equals( beneficiaryAgency )
-                            && ( ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || committerLocation.narrowsOrEquals( beneficiaryLocation, getCommunityLocale() )
-                            || beneficiaryLocation.narrowsOrEquals( committerLocation, getCommunityLocale() ) );
-
                 case DifferentLocations:
                     return ModelObject.isNullOrUnknown( committerLocation )
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )

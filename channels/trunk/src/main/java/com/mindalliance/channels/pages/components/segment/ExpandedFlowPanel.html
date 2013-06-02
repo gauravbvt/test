@@ -79,12 +79,17 @@
 
             <tr wicket:id="others">[other node selector]</tr>
 
-            <tr wicket:id="restrictionContainer">
+            <tr wicket:id="restrictionContainer" class="flow-restrictions">
                 <th>&nbsp;</th>
-                <td><input wicket:id="restricted" type="checkbox"/>&nbsp;but only if
-                    <select wicket:id="restriction">
-                        <option>in the same organization</option>
-                    </select>
+                <td>
+                    <input wicket:id="restricted" type="checkbox"/>&nbsp;but only if
+                    <span wicket:id="restrictionsSummary">in the same organization and in different locations</span>
+                    <div wicket:id="restrictions">
+                        [restrictions panel]
+                    </div>
+                    <a wicket:id="editRestrictions" href="#" class="more">
+                        <span wicket:id="editOrClose">Edit</span>
+                    </a>
                 </td>
             </tr>
 

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,7 +81,7 @@ public class InternalFlow extends Flow {
         if ( !target.isConnector() ) setSignificanceToTarget( flow.getSignificanceToTarget() );
         setAll( flow.isAll() );
         setIntent( flow.getIntent() );
-        setRestriction( flow.getRestriction() );
+        setRestrictions( new ArrayList<Restriction>( flow.getRestrictions() ) );
         setEois( flow.copyEois() );
     }
 

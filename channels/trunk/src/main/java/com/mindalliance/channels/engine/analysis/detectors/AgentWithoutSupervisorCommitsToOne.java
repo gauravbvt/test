@@ -13,8 +13,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -33,8 +33,8 @@ public class AgentWithoutSupervisorCommitsToOne extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        Flow.Restriction restriction = flow.getRestriction();
-        if ( restriction != null && flow.isSharing() && restriction.equals( Flow.Restriction.Supervisor ) ) {
+        List<Flow.Restriction> restrictions = flow.getRestrictions();
+        if ( restrictions.contains( Flow.Restriction.Supervisor ) ) {
             Part source = (Part) flow.getSource();
             List<Assignment> assignments = queryService.findAllAssignments( source, false );
             for ( Assignment assignment : assignments ) {

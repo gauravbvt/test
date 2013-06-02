@@ -75,10 +75,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Unspecified intent.
      */
     private static String NO_INTENT = "Unspecified";
-    /**
-     * Unspecified restriction.
-     */
-    private static String NO_RESTRICTION = "Unspecified";
 
     /**
      * True if this flow is marked for deletion.
@@ -172,7 +168,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     /**
      * Restriction choice.
      */
-    private DropDownChoice<String> restrictionChoice;
+    private Component restrictionsPanel;
+    /**
+     * Editing restriction link.
+     */
+    private AjaxLink<String> editingRestrictionsLink;
+
+    private boolean editingRestrictions = false;
     /**
      * If task fails checkbox container.
      */
@@ -206,10 +208,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * Receipt confirmation requested.
      */
     private CheckBox receiptConfirmationRequestedCheckBox;
-    /**
-     * Flow is to be restricted.
-     */
-    private boolean restricted;
 
     /**
      * Show simple vs advanced form.
@@ -229,9 +227,13 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     public static final String EOIS = "eois";
     /**
-     * Restriction fields container.
+     * Restrictions fields container.
      */
-    private WebMarkupContainer restrictionContainer;
+    private WebMarkupContainer restrictionsContainer;
+    /**
+     * Flow is to be restricted.
+     */
+    private boolean restricted;
     /**
      * The containing plan page.
      */
@@ -376,37 +378,77 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     }
 
     private void addRestrictionFields() {
-        restrictionContainer = new WebMarkupContainer( "restrictionContainer" );
-        restrictionContainer.setOutputMarkupId( true );
-        makeVisible( restrictionContainer, !isShowSimpleForm() );
-        addOrReplace( restrictionContainer );
+        restrictionsContainer = new WebMarkupContainer( "restrictionContainer" );
+        restrictionsContainer.setOutputMarkupId( true );
+        // makeVisible( restrictionsContainer, !isShowSimpleForm() );
+        addOrReplace( restrictionsContainer );
+        addRestrictedCheckBox();
+        addRestrictionsSummary();
+        addEditRestrictionsLink();
+        addRestrictionsPanel();
+    }
+
+    private void addRestrictedCheckBox() {
         restrictedCheckBox = new CheckBox(
                 "restricted",
                 new PropertyModel<Boolean>( this, "restricted" ) );
         restrictedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                restrictionChoice.setEnabled( isRestricted() );
-                target.add( restrictionChoice );
+                addRestrictionsSummary();
+                addEditRestrictionsLink();
+                addRestrictionsPanel();
+                target.add( restrictionsContainer );
                 if ( !isRestricted() ) {
-                    update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
+                    update( target, new Change( Change.Type.Updated, getFlow(), "restrictions" ) );
                 }
             }
         } );
-        restrictionContainer.add( restrictedCheckBox );
-        restrictionChoice = new DropDownChoice<String>(
-                "restriction",
-                new PropertyModel<String>( this, "restrictionLabel" ),
-                getAllRestrictionLabels()
-        );
-        restrictionChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        restrictedCheckBox.setEnabled( isLockedByUser( getFlow() ) );
+        restrictionsContainer.add( restrictedCheckBox );
+    }
+
+    private void addRestrictionsSummary() {
+        String summary = !getFlow().getRestrictions().isEmpty()
+                ? getFlow().getRestrictionString( isSend() )
+                : "(No restriction)";
+        Label restrictionsSummaryLabel = new Label( "restrictionsSummary", summary );
+        restrictionsSummaryLabel.setOutputMarkupId( true );
+        makeVisible( restrictionsSummaryLabel, isRestricted() && !editingRestrictions );
+        restrictionsContainer.addOrReplace( restrictionsSummaryLabel );
+    }
+
+    private void addEditRestrictionsLink() {
+        editingRestrictionsLink = new AjaxLink<String>(
+                "editRestrictions"
+        ) {
             @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Updated, getFlow(), "restriction" ) );
+            public void onClick( AjaxRequestTarget target ) {
+                editingRestrictions = !editingRestrictions;
+                addRestrictionsSummary();
+                addEditOrCloseLabel();
+                addRestrictionsPanel();
+                target.add( restrictionsContainer );
             }
-        } );
-        restrictionChoice.setEnabled( isLockedByUser( getFlow() ) && isRestricted() );
-        restrictionContainer.add( restrictionChoice );
+        };
+        makeVisible( editingRestrictionsLink, isRestricted() && isLockedByUser( getFlow() ) );
+        addEditOrCloseLabel();
+        restrictionsContainer.addOrReplace( editingRestrictionsLink );
+    }
+
+    private void addEditOrCloseLabel() {
+        Label editOrCloseLabel = new Label( "editOrClose", editingRestrictions ? "Done" : "Change" );
+        editOrCloseLabel.setOutputMarkupId( true );
+        editingRestrictionsLink.addOrReplace( editOrCloseLabel );
+    }
+
+    private void addRestrictionsPanel() {
+        restrictionsPanel = editingRestrictions
+                ? new RestrictionsPanel( "restrictions", new PropertyModel<Flow>( this, "flow" ), isSend() )
+                : new Label( "restrictions", "" );
+        restrictionsPanel.setOutputMarkupId( true );
+        makeVisible( restrictionsPanel, isRestricted() && editingRestrictions );
+        restrictionsContainer.addOrReplace( restrictionsPanel );
     }
 
     private List<String> getAllIntentLabels() {
@@ -415,14 +457,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         labels.addAll( Flow.Intent.getAllLabels() );
         return labels;
     }
-
-    private List<String> getAllRestrictionLabels() {
-        List<String> labels = new ArrayList<String>();
-        labels.add( NO_RESTRICTION );
-        labels.addAll( Flow.Restriction.getAllLabels( isSend() ) );
-        return labels;
-    }
-
 
     private void addEOIs() {
         addEOIsEditLink();
@@ -528,6 +562,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         target.add( flowDescription );
         makeVisible( issuesPanel, getAnalyst().hasIssues( getQueryService(), getFlow(), false ) );
         target.add( issuesPanel );
+        addRestrictionsSummary();
+        target.add( restrictionsContainer );
     }
 
     private boolean canSetIfTaskFails() {
@@ -576,7 +612,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         Flow f = getFlow();
         standardizedCheckbox.setOutputMarkupId( true );
         standardizedCheckbox.setEnabled( !f.getName().isEmpty()
-                && isLockedByUser(f)
+                && isLockedByUser( f )
                 && f.canSetNameAndElements() );
         addOrReplace( standardizedCheckbox );
     }
@@ -605,14 +641,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
 
-            } );
+        } );
 
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onkeyup" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addOtherChoice();
                 target.add( otherChoice );
-            } } );
+            }
+        } );
 
         addIssuesAnnotation( nameField, getFlow(), nameField.getId() );
         add( nameField );
@@ -958,8 +995,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         target.add( tagsContainer );
         makeVisible( classificationContainer, !showSimpleForm );
         target.add( classificationContainer );
-        makeVisible( restrictionContainer, !showSimpleForm );
-        target.add( restrictionContainer );
+        makeVisible( restrictionsContainer, !showSimpleForm );
+        target.add( restrictionsContainer );
         makeVisible( referencesEventPhaseContainer, !showSimpleForm );
         target.add( referencesEventPhaseContainer );
         makeVisible( canBypassIntermediateContainer, !showSimpleForm
@@ -1577,7 +1614,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * @return a boolean
      */
     public boolean isRestricted() {
-        return restricted || getFlow().getRestriction() != null;
+        return restricted || !getFlow().getRestrictions().isEmpty();
     }
 
     /**
@@ -1587,33 +1624,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      */
     public void setRestricted( boolean val ) {
         this.restricted = val;
-        if ( !val && getFlow().getRestriction() != null ) {
-            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "restriction", null ) );
-        }
-    }
-
-
-    /**
-     * Get label for flow's restriction.
-     *
-     * @return a string
-     */
-    public String getRestrictionLabel() {
-        Flow.Restriction restriction = getFlow().getRestriction();
-        return restriction == null ? NO_RESTRICTION : restriction.getLabel( isSend() );
-    }
-
-    /**
-     * Set the flow's restriction given the restriction's label.
-     *
-     * @param label a string
-     */
-    public void setRestrictionLabel( String label ) {
-        if ( label != null ) {
-            Flow.Restriction restriction = label.equals( NO_RESTRICTION )
-                    ? null
-                    : Flow.Restriction.valueOfLabel( label, isSend() );
-            doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "restriction", restriction ) );
+        if ( !val && !getFlow().getRestrictions().isEmpty() ) {
+            doCommand(
+                    new UpdateSegmentObject( getUser().getUsername(),
+                            getFlow(),
+                            "restrictions",
+                            new ArrayList<Flow.Restriction>() ) );
         }
     }
 

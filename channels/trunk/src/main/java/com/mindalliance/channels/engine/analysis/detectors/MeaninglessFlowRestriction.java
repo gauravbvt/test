@@ -33,8 +33,8 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Flow flow = (Flow) modelObject;
-        Flow.Restriction restriction = flow.getRestriction();
-        if ( restriction != null && flow.isSharing() ) {
+        List<Flow.Restriction> restrictions = flow.getRestrictions();
+        if ( !restrictions.isEmpty() && flow.isSharing() ) {
             Part source = (Part) flow.getSource();
             Part target = (Part) flow.getTarget();
             Organization sourceOrg = source.getOrganization();
@@ -43,11 +43,10 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
             Place targetLoc = target.getKnownLocation();
             Actor sourceActor = source.getActor();
             Actor targetActor = target.getActor();
-            if ( ( restriction == Flow.Restriction.SameOrganization ||
-                    restriction == Flow.Restriction.SameTopOrganization ||
-                    restriction == Flow.Restriction.SameOrganizationAndLocation ||
-                    restriction == Flow.Restriction.DifferentOrganizations ||
-                    restriction == Flow.Restriction.DifferentTopOrganizations )
+            if ( ( restrictions.contains( Flow.Restriction.SameOrganization ) ||
+                    restrictions.contains( Flow.Restriction.SameTopOrganization ) ||
+                    restrictions.contains(  Flow.Restriction.DifferentOrganizations ) ||
+                    restrictions.contains(  Flow.Restriction.DifferentTopOrganizations ) )
                     && sourceOrg != null
                     && targetOrg != null
                     && sourceOrg.isActual()
@@ -60,9 +59,8 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                         "\nor change the source and/or target specification to use types of organizations or none at all." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
-            } else if ( ( restriction == Flow.Restriction.SameLocation ||
-                    restriction == Flow.Restriction.DifferentLocations
-                || restriction == Flow.Restriction.SameOrganizationAndLocation )
+            } else if ( ( restrictions.contains(  Flow.Restriction.SameLocation ) ||
+                    restrictions.contains( Flow.Restriction.DifferentLocations )  )
                     && sourceLoc != null
                     && targetLoc != null
                     && sourceLoc.isActual()
@@ -75,7 +73,7 @@ public class MeaninglessFlowRestriction extends AbstractIssueDetector {
                         "\nor change the source and/or target specification to use types of places or none at all." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
-            }  else if ( ( restriction == Flow.Restriction.Supervisor || restriction == Flow.Restriction.Supervised)
+            }  else if ( ( restrictions .contains(  Flow.Restriction.Supervisor ) || restrictions.contains(  Flow.Restriction.Supervised) )
                     && sourceActor != null
                     && targetActor != null
                     && sourceActor.isActual()

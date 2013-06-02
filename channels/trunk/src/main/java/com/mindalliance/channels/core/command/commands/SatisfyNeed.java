@@ -16,7 +16,6 @@ import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Delay;
 import com.mindalliance.channels.core.model.Flow;
-import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Segment;
@@ -123,7 +122,10 @@ public class SatisfyNeed extends AbstractCommand {
                                                 queryService.getPlanLocale() ) );
         newFlow.setMaxDelay( Delay.min( capability.getMaxDelay(), need.getMaxDelay() ) );
         newFlow.setIntent( capability.getIntent() != null ? capability.getIntent() : need.getIntent() );
-        newFlow.setRestriction( Restriction.resolve( need.getRestriction(), capability.getRestriction() ) );
+        newFlow.setRestrictions( !capability.getRestrictions().isEmpty()
+                ? capability.getRestrictions()
+                : need.getRestrictions()
+        );
         newFlow.setIfTaskFails( capability.isIfTaskFails() );
     }
 

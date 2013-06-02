@@ -4,10 +4,12 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections.Transformer;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -67,9 +69,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private Intent intent;
     /**
-     * Restriction on implied sharing commitments.
+     * Restriction on implied sharing commitments. // todo - OBSOLETE
      */
     private Restriction restriction;
+
+    /**
+     * restrictions on implied sharing commitments.
+     */
+    private List<Restriction> restrictions = new ArrayList<Restriction>();
     /**
      * Flow applies only if task fails. (Send only)
      */
@@ -484,7 +491,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         String message = getName();
         if ( message == null || message.trim().isEmpty() )
             message = "something";
-        StringBuilder sb = new StringBuilder( );
+        StringBuilder sb = new StringBuilder();
         String intentLabel = getIntent() == null
                 ? "information"
                 : getIntent().getLabel().toLowerCase();
@@ -499,13 +506,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                         .append( getShortName( getTarget(), false ) );
 
             } else {
-           sb.append( prerequisite ? "Asking for " : "Ask for " )
-                   .append( intentLabel )
-                   .append( " \"" )
-                   .append( message )
-                   .append( "\"" )
-                   .append( " from " )
-                   .append( getShortName( getSource(), false ) );
+                sb.append( prerequisite ? "Asking for " : "Ask for " )
+                        .append( intentLabel )
+                        .append( " \"" )
+                        .append( message )
+                        .append( "\"" )
+                        .append( " from " )
+                        .append( getShortName( getSource(), false ) );
             }
         } else {
             sb.append( prerequisite ? "Sending " : "Send " )
@@ -660,12 +667,44 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.intent = intent;
     }
 
-    public Restriction getRestriction() {
-        return restriction;
+    public List<Restriction> getRestrictions() {
+        return restrictions;
     }
 
-    public void setRestriction( Restriction restriction ) {
-        this.restriction = restriction;
+    public void setRestrictions( List<Restriction> restrictions ) {
+        this.restrictions = restrictions;
+    }
+
+    public void addRestriction( Restriction restriction ) {
+        if ( !restrictions.contains( restriction )
+                && !contradictsRestrictions( restriction )
+                && !isImplied( restriction ) ) {
+            restrictions.add( restriction );
+        }
+    }
+
+    private boolean isImplied( final Restriction restriction ) {
+        return !restrictions.isEmpty()  &&
+                CollectionUtils.exists(
+                        restrictions,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return Restriction.implies( (Restriction) object, restriction ); // first narrows the second
+                            }
+                        } );
+    }
+
+    private boolean contradictsRestrictions( final Restriction restriction ) {
+        return !restrictions.isEmpty() &&
+                CollectionUtils.exists(
+                        restrictions,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ( (Restriction) object ).contradicts( restriction );
+                            }
+                        } );
     }
 
     public boolean isIfTaskFails() {
@@ -1266,11 +1305,24 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public String getRestrictionString( boolean isSend ) {
-        if ( getRestriction() == null ) {
+        if ( getRestrictions().isEmpty() ) {
             return "";
         } else {
-            return " if " + getRestriction().getLabel( isSend );
+            return ChannelsUtils.listToString( getRestrictionLabels( isSend ), ", ", " and " );
         }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<String> getRestrictionLabels( final boolean isSend ) {
+        return (List<String>) CollectionUtils.collect(
+                getRestrictions(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (Restriction) input ).getLabel( isSend );
+                    }
+                }
+        );
     }
 
     /**
@@ -1339,9 +1391,27 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      * @return a boolean
      */
     public boolean matchesInfoOf( Flow other, Place locale ) {
-        return Restriction.implies( getRestriction(), other.getRestriction() )
-                && Matcher.same( getName(), other.getName() )
-                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale );
+        return Matcher.same( getName(), other.getName() )
+                && getSegment().impliesEventPhaseAndContextOf( other.getSegment(), locale )
+                && restrictionsImply( getRestrictions(), other.getRestrictions() );
+    }
+
+    private boolean restrictionsImply( List<Restriction> restrictions, List<Restriction> otherRestrictions ) {
+        if ( restrictions.isEmpty() ) return true;
+        if ( otherRestrictions.isEmpty() ) return false;
+        boolean implied = true;
+        for ( final Restriction restriction : restrictions ) {
+            implied = implied && CollectionUtils.exists(
+                    otherRestrictions,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return Restriction.implies( restriction, (Restriction) object );
+                        }
+                    }
+            );
+        }
+        return implied;
     }
 
     /**
@@ -1377,7 +1447,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     public boolean isToSelf() {
-        return restriction != null && restriction == Restriction.Self;
+        return restrictions.contains( Restriction.Self );
     }
 
     public boolean isTimeSensitive() {
@@ -1491,7 +1561,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "significanceToTarget", getSignificanceToTarget() );
         state.put( "significanceToSource", getSignificanceToSource() );
         state.put( "intent", getIntent() );
-        state.put( "restriction", getRestriction() );
+        state.put( "restrictions", new ArrayList<Restriction> ( getRestrictions() ) );
         state.put( "prohibited", isProhibited() );
         state.put( "ifTaskFails", isIfTaskFails() );
         state.put( "referencesEventPhase", isReferencesEventPhase() );
@@ -1527,8 +1597,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setIntent( (Intent) state.get( "intent" ) );
         if ( state.containsKey( "prohibited" ) )
             setProhibited( (Boolean) state.get( "prohibited" ) );
-        if ( state.containsKey( "restriction" ) )
-            setRestriction( (Restriction) state.get( "restriction" ) );
+        if ( state.containsKey( "restrictions" ) )
+            setRestrictions( (List<Restriction>) state.get( "restrictions" ) );
         if ( state.containsKey( "ifTaskFails" ) )
             setIfTaskFails( (Boolean) state.get( "ifTaskFails" ) );
         if ( state.containsKey( "referencesEventPhase" ) )
@@ -1741,9 +1811,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     /**
-     * Restriction on implied sharing commitments.
+     * Restriction on implied sharing commitments set only by the source of the information.
      */
-    public enum Restriction {   // todo make Restriction a class with instances set by a combination (and, or, xor, not) of primitive restrictions.
+    public enum Restriction {
 
         SameTopOrganization,
         SameOrganization,
@@ -1754,8 +1824,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         Supervisor,
         Supervised,
         Self,
-        Other,
-        SameOrganizationAndLocation;
+        Other;
 
         public String toString() {
             switch ( this ) {
@@ -1779,8 +1848,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     return "self";
                 case Other:
                     return "someone else";
-                case SameOrganizationAndLocation:
-                    return "the same organization and location";
                 default:
                     return name();
             }
@@ -1791,8 +1858,15 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         public String getLabel( boolean isSend ) {
-            if ( this == Supervisor || this== Supervised || this == Self || this == Other ) {
-                return ( isSend ? "to " : "from " ) + toString();
+            if ( this == Supervisor || this == Supervised || this == Self || this == Other ) {
+                StringBuilder sb = new StringBuilder(  );
+                sb.append ( isSend ? "to " : "from " );
+                if ( this == Supervisor )
+                    sb.append( isSend ? Supervisor.toString() : Supervised.toString() );
+                else if ( this == Supervised )
+                    sb.append( isSend ? Supervised.toString() : Supervisor.toString() );
+                else sb.append( this.toString());
+                return sb.toString();
             } else {
                 return "in " + toString();
             }
@@ -1828,12 +1902,6 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             if ( restriction == Self || other == Self ) return Self;
             if ( other == SameTopOrganization && restriction == SameOrganization )
                 return SameOrganization;
-            if ( other == SameOrganizationAndLocation && restriction == SameOrganization )
-                return SameOrganizationAndLocation;
-            if ( other == SameOrganizationAndLocation && restriction == SameLocation )
-                return SameOrganizationAndLocation;
-            if ( other == SameOrganizationAndLocation && restriction == SameTopOrganization )
-                return SameOrganizationAndLocation;
             if ( restriction == DifferentTopOrganizations && other == DifferentOrganizations )
                 return DifferentOrganizations;
             if ( other == DifferentTopOrganizations && restriction == DifferentOrganizations )
@@ -1842,27 +1910,155 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         /**
+         * Add to primary restrictions the secondary restrictions that neither contradict nor imply a primary.
+         *
+         * @param primaryRestrictions   primary restrictions
+         * @param secondaryRestrictions secondary restrictions
+         * @return a list of restrictions
+         */
+        public static List<Restriction> resolve( List<Restriction> primaryRestrictions,
+                                                 List<Restriction> secondaryRestrictions ) {
+            Set<Restriction> resolved = new HashSet<Restriction>( primaryRestrictions );
+            for ( final Restriction secondary : secondaryRestrictions ) {
+                if ( primaryRestrictions.isEmpty() || !CollectionUtils.exists(
+                        primaryRestrictions,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Restriction primary = (Restriction) object;
+                                return secondary.contradicts( primary )
+                                        || Restriction.implies( secondary, primary );
+                            }
+                        }
+                ) ) {
+                    resolved.add( secondary );
+                }
+            }
+            return new ArrayList<Restriction>( resolved );
+        }
+
+        /**
          * Does a restriction imply another (null means no restriction)?
-         * I.e. is the other more general?
+         * I.e. does the restriction narrow the other?
          *
          * @param restriction a restriction or null
          * @param other       a restriction or null
          * @return a boolean
          */
         public static boolean implies( Restriction restriction, Restriction other ) {
-            return restriction == null
-                    || other == null  // no restriction
-                    || restriction.equals( other )
-                    || restriction == SameOrganization && other == SameTopOrganization
-                    || restriction == SameOrganizationAndLocation && other == SameOrganization
-                    || restriction == SameOrganizationAndLocation && other == SameLocation
-                    || restriction == SameOrganizationAndLocation && other == SameTopOrganization;
+            return restriction == null && other == null
+                    || SameOrganization == restriction && SameTopOrganization == other;
         }
 
 
         public static boolean same( Restriction restriction, Restriction other ) {
             return restriction == null && other == null
                     || restriction != null && other != null && restriction.equals( other );
+        }
+
+        public boolean contradicts( Restriction restriction ) {
+            switch ( this ) {
+                case SameTopOrganization:
+                    return restriction == DifferentTopOrganizations;
+                case SameOrganization:
+                    return restriction == DifferentOrganizations || restriction == DifferentTopOrganizations;
+                case SameLocation:
+                    return restriction == DifferentLocations;
+                case DifferentOrganizations:
+                    return restriction == SameOrganization;
+                case DifferentTopOrganizations:
+                    return restriction == SameOrganization || restriction == SameTopOrganization;
+                case DifferentLocations:
+                    return restriction == SameLocation;
+                case Supervisor:
+                    return restriction == Self || restriction == Supervised;
+                case Supervised:
+                    return restriction == Self || restriction == Supervisor;
+                case Self:
+                    return restriction == Other || restriction == Supervised || restriction == Supervisor
+                            || restriction == DifferentLocations || restriction == DifferentOrganizations
+                            || restriction == DifferentTopOrganizations;
+                case Other:
+                    return restriction == Self;
+                default:
+                    return false;
+
+            }
+        }
+
+        public static boolean compatible( List<Restriction> restrictions, final List<Restriction> otherRestrictions ) {
+            return restrictions.isEmpty() ||
+                    otherRestrictions.isEmpty() ||
+                    !CollectionUtils.exists(
+                            restrictions,
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    final Restriction restriction = (Restriction) object;
+                                    return CollectionUtils.exists(
+                                            otherRestrictions,
+                                            new Predicate() {
+                                                @Override
+                                                public boolean evaluate( Object object ) {
+                                                    return ( (Restriction) object ).contradicts( restriction );
+                                                }
+                                            }
+                                    );
+                                }
+                            }
+                    );
+        }
+
+        public Restriction inverse() {
+            switch( this ) {
+                case Supervisor: return Supervised;
+                case Supervised: return Supervisor;
+                default: return this;
+            }
+        }
+
+        // All need restrictions are implied by capability restrictions and none are contradicted.
+        public static boolean satisfy( final List<Restriction> capabilityRestrictions, List<Restriction> needRestrictions ) {
+            boolean noCapabilityRestrictionIncompatible = !CollectionUtils.exists(
+                    needRestrictions,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            final Restriction needRestriction = (Restriction)object;
+                            return CollectionUtils.exists(
+                                  capabilityRestrictions,
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            Restriction capabilityRestriction = (Restriction)object;
+                                            return capabilityRestriction.contradicts( needRestriction );
+                                        }
+                                    }
+                            );
+                        }
+                    }
+            );
+            if ( !noCapabilityRestrictionIncompatible ) return false;
+            boolean allNeedRestrictionsImplied = !CollectionUtils.exists(
+                    needRestrictions,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            final Restriction needRestriction = (Restriction)object;
+                            return !CollectionUtils.exists(
+                                    capabilityRestrictions,
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            Restriction capabilityRestriction = (Restriction)object;
+                                            return Restriction.implies( capabilityRestriction, needRestriction );
+                                        }
+                                    }
+                            );
+                        }
+                    }
+            );
+            return allNeedRestrictionsImplied;
         }
     }
 

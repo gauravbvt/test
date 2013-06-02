@@ -148,10 +148,31 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public boolean allowsCommitment(
-            Assignment committer, Assignment beneficiary, Place locale, Flow flow ) {
+    public boolean allowsCommitment( final Assignment committer,
+                                     final Assignment beneficiary,
+                                     final Place locale,
+                                     Flow flow ) {
+        List<Restriction> restrictions = flow.getRestrictions();
+        if ( restrictions.isEmpty() ) {
+            return true;
+        } else {
+            return !CollectionUtils.exists(
+                    restrictions,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return !allowsCommitment( committer, beneficiary, locale, (Flow.Restriction) object );
+                        }
+                    }
+            );
+        }
+    }
 
-        Restriction restriction = flow.getRestriction();
+    private boolean allowsCommitment( Assignment committer,
+                                      Assignment beneficiary,
+                                      Place locale,
+                                      Restriction restriction ) {
+
         if ( restriction != null ) {
             Organization committerOrg = committer.getOrganization();
             Organization beneficiaryOrg = beneficiary.getOrganization();
@@ -188,17 +209,6 @@ public abstract class DefaultQueryService implements QueryService {
                             || ModelObject.isNullOrUnknown( beneficiaryLocation )
                             || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
                             || beneficiaryLocation.narrowsOrEquals( committerLocation, locale );
-
-                case SameOrganizationAndLocation:
-                    return ( ModelObject.isNullOrUnknown( committerLocation )
-                            || ModelObject.isNullOrUnknown( beneficiaryLocation )
-                            || committerLocation.narrowsOrEquals( beneficiaryLocation, locale )
-                            || beneficiaryLocation.narrowsOrEquals( committerLocation, locale ) )
-                            &&
-                            ( ModelObject.isNullOrUnknown( committerOrg )
-                                    || ModelObject.isNullOrUnknown( beneficiaryOrg )
-                                    || committerOrg.narrowsOrEquals( beneficiaryOrg, locale )
-                                    || beneficiaryOrg.narrowsOrEquals( committerOrg, locale ) );
 
                 case DifferentLocations:
                     return ModelObject.isNullOrUnknown( committerLocation )
@@ -488,7 +498,7 @@ public abstract class DefaultQueryService implements QueryService {
             Class<T> entityClass,
             final T entityType ) {
         final Place locale = getPlanLocale();
-        return getDao().findAllActualEntitiesMatching( entityClass,entityType, locale );
+        return getDao().findAllActualEntitiesMatching( entityClass, entityType, locale );
     }
 
     @Override
@@ -569,7 +579,6 @@ public abstract class DefaultQueryService implements QueryService {
     public <T extends ModelEntity> T safeFindOrCreateType( Class<T> clazz, String name, Long id ) {
         return getDao().safeFindOrCreateType( clazz, name, id );
     }
-
 
 
 //////////////////////////////////////////////////////////////////////
@@ -2018,9 +2027,35 @@ public abstract class DefaultQueryService implements QueryService {
 
     private boolean satisfiesNeed( Flow send, Flow need ) {
         return Matcher.same( send.getName(), need.getName() )
-                &&
-                ( need.getEffectiveEois().isEmpty()
-                        || hasCommonEOIs( send, need ) );
+                && Restriction.satisfy( send.getRestrictions(), need.getRestrictions() )
+                && isEOIsCoveredBy( need.getEffectiveEois(), send.getEffectiveEois() );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private static boolean isEOIsCoveredBy( List<ElementOfInformation> coveredEois, final List<ElementOfInformation> coveringEois ) {
+        if ( coveredEois.isEmpty() ) {
+            return true;
+        } else {
+            List<ElementOfInformation> uncoveredEOIs =
+                    (List<ElementOfInformation>) CollectionUtils.select(
+                            coveredEois,
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object obj ) {
+                                    final String coveredEOI = ( (ElementOfInformation) obj ).getContent();
+                                    return !CollectionUtils.exists(
+                                            coveringEois,
+                                            new Predicate() {
+                                                @Override
+                                                public boolean evaluate( Object object ) {
+                                                    String coveringEOI = ( (ElementOfInformation) object ).getContent();
+                                                    return Matcher.same( coveredEOI, coveringEOI );
+                                                }
+                                            } );
+                                }
+                            } );
+            return !uncoveredEOIs.isEmpty();
+        }
     }
 
     @Override
@@ -2100,12 +2135,41 @@ public abstract class DefaultQueryService implements QueryService {
             Flow in = incoming.next();
             if ( in.isSharing()
                     && Matcher.same( in.getName(), info )
-                    // in's restriction is same or more specific so it satisfies need's restriction
-                    && Flow.Restriction.implies( in.getRestriction(), need.getRestriction() ) ) {
+                    && isEOIsCoveredBy( need.getEffectiveEois(), in.getEffectiveEois() )
+                    // in's restrictions match the need's restrictions
+                    && capabilityRestrictionsMatchNeedRestrictions( in.getRestrictions(), need.getRestrictions() ) ) {
                 sharings.add( in );
             }
         }
         return sharings;
+    }
+
+    private static boolean capabilityRestrictionsMatchNeedRestrictions( final List<Restriction> capabilityRestrictions,
+                                                                        List<Restriction> needRestrictions ) {
+        if ( capabilityRestrictions.isEmpty() && needRestrictions.isEmpty() ) {
+            return true;
+        } else if ( capabilityRestrictions.size() != needRestrictions.size() ) { // ASSUMPTION: no redundancy in either list
+            return false;
+        } else {
+            return !CollectionUtils.exists(
+                    needRestrictions,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            final Restriction inverseNeedRestriction = ( (Restriction) object ).inverse();
+                            return !CollectionUtils.exists(
+                                    capabilityRestrictions,
+                                    new Predicate() {
+                                        @Override
+                                        public boolean evaluate( Object object ) {
+                                            return Restriction.implies( ( (Restriction) object ), inverseNeedRestriction );
+                                        }
+                                    }
+                            );
+                        }
+                    }
+            );
+        }
     }
 
     @Override
@@ -3243,7 +3307,7 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<T>( result );
     }
 
-     @Override
+    @Override
     public void onDestroy() {
         // Do nothing
     }
@@ -3337,24 +3401,24 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public List<Organization> listPlaceholderOrganizations() {
-        return (List<Organization>)CollectionUtils.select(
+        return (List<Organization>) CollectionUtils.select(
                 listActualEntities( Organization.class, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Organization)object).isPlaceHolder();
+                        return ( (Organization) object ).isPlaceHolder();
                     }
                 }
         );
     }
 
     public List<Organization> listFixedOrganizations() {
-        return (List<Organization>)CollectionUtils.select(
+        return (List<Organization>) CollectionUtils.select(
                 listActualEntities( Organization.class, true ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !((Organization)object).isPlaceHolder();
+                        return !( (Organization) object ).isPlaceHolder();
                     }
                 }
         );

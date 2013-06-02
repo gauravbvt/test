@@ -12,9 +12,9 @@ import com.mindalliance.channels.core.model.Flow.Restriction;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Assignments assignments = queryService.getAssignments( false );
         List<Commitment> commitments = queryService.findAllCommitments( flow, false, assignments );
-        if ( flow.getRestriction() != Restriction.Self && commitments.isEmpty() ) {
+        if ( !flow.getRestrictions().contains( Restriction.Self ) && commitments.isEmpty() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, flow );
             Part source = (Part) flow.getSource();
             Part target = (Part) flow.getTarget();

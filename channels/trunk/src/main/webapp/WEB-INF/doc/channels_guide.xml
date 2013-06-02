@@ -681,8 +681,9 @@ One use of tags is to specify information in collaboration requirements.</descri
 A step can be either
 
 * some stated activity (other than communicating)
-* an information request, 
-* a notification or some other stated action
+* an information request to make,
+* a notification to send,
+* sending confirmation of information received,
 * a self-assigned research sub-task
 * a self-assigned follow up sub-task
 
@@ -699,11 +700,11 @@ The conditions on executing steps can be the goals achieved and events triggered
             <topic id="function">
                 <name>Function</name>
                 <item>
-                    <description>A function specifies the goals to be achieved, the information needed and the information to be acquired by any task implemeting the function.
+                    <description>A function specifies the goals to be achieved, the information needed and the information to be acquired by any task implementing the function.
                     
-Functions are "entities" and so can be categorized by other functions. Functions are always entity "types".
+Functions are "entities" and so they can be categorized by other functions. Functions are always entity "types"; there is no such thing as an "actual" function.
 
-A task may or may not implement a function. If it does, it is expected to conform to the specifications of the function. Issues are raised if the task does not.
+A task may or may not declare that it implements a function. If it does, it is expected to conform to the specifications of the function. Issues are raised if the task does not fully do so.
                     </description>
                     <script>
                         <action>Open a function profile</action>
@@ -1245,6 +1246,7 @@ Note that as little and as much as wanted can be put into a task's definition.
 * requiring the information to be compliant with a named information product
 * listing its elements
 * indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
+* setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets
 * the communication channels to use, each including transmission medium and, optionally, a required format
 * timeliness constraints
 * and more

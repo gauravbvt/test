@@ -124,9 +124,8 @@ public class FlowMapMetaProvider extends AbstractFlowMetaProvider<Node, Flow> {
                     flowName += "?";
                 if ( flow.isProhibited() )
                     flowName += " -PROHIBITED-";
-                Flow.Restriction restriction = flow.getRestriction();
-                if ( restriction != null )
-                    flowName += " (" + restriction.getLabel() + ")";
+                if ( !flow.getRestrictions().isEmpty() )
+                    flowName += " (if " + flow.getRestrictionString( true ) + ")";
                 String label = AbstractMetaProvider.separate( flowName, LINE_WRAP_SIZE ).replaceAll( "\\|", "\\\\n" );
                 return sanitize( label );
             }

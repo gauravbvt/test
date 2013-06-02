@@ -119,9 +119,9 @@ public class FlowConverter extends AbstractChannelsConverter {
             writer.setValue( flow.getIntent().name() );
             writer.endNode();
         }
-        if ( flow.getRestriction() != null ) {
+        for ( Flow.Restriction restriction : flow.getRestrictions() ) {
             writer.startNode( "restriction" );
-            writer.setValue( flow.getRestriction().name() );
+            writer.setValue( restriction.name() );
             writer.endNode();
         }
         if ( flow.isIfTaskFails() ) {
@@ -212,12 +212,15 @@ public class FlowConverter extends AbstractChannelsConverter {
             Flow innerFlow = connector.getInnerFlow();
             writer.startNode( "flow" );
             writer.addAttribute( "name", innerFlow.getName() );
-            if ( innerFlow.getRestriction() != null )
-                writer.addAttribute( "restriction", innerFlow.getRestriction().name() );
             if ( flow.isCanBypassIntermediate() )
                 writer.addAttribute( "canBypassIntermediate", Boolean.toString( flow.isCanBypassIntermediate() ) );
             if ( flow.isReceiptConfirmationRequested() )
                 writer.addAttribute( "receiptConfirmationRequested", Boolean.toString( flow.isReceiptConfirmationRequested() ) );
+            for ( Flow.Restriction restriction : innerFlow.getRestrictions() ) {
+                writer.startNode( "restriction" );
+                writer.setValue( restriction.name() );
+                writer.endNode();
+            }
             writer.endNode();
             Part part = (Part) ( connector.isSource()
                     ? innerFlow.getTarget()
@@ -292,7 +295,12 @@ public class FlowConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "intent" ) ) {
                 flow.setIntent( Flow.Intent.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "restriction" ) ) {
-                flow.setRestriction( Flow.Restriction.valueOf( reader.getValue() ) );
+                String restrictionName = reader.getValue();
+                if ( restrictionName.equals( "SameOrganizationAndLocation")) { // OBSOLETE
+                    flow.addRestriction( Flow.Restriction.SameOrganization );
+                    flow.addRestriction( Flow.Restriction.SameLocation );
+                }
+                flow.addRestriction( Flow.Restriction.valueOf( restrictionName ) );
             } else if ( nodeName.equals( "ifTaskFails" ) ) {
                 flow.setIfTaskFails( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "prohibited" ) ) {
@@ -303,10 +311,10 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setCanBypassIntermediate( Boolean.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "receiptConfirmationRequested" ) ) {
                 flow.setReceiptConfirmationRequested( Boolean.valueOf( reader.getValue() ) );
-            }  else if ( nodeName.equals( "standardized" ) ) {
+            } else if ( nodeName.equals( "standardized" ) ) {
                 flow.setStandardized( Boolean.valueOf( reader.getValue() ) );
                 if ( flow.isStandardized() ) {
-                    flow.setProductInfoFromName( getPlanDao()  );
+                    flow.setProductInfoFromName( getPlanDao() );
                 }
             } else {
                 LOG.debug( "Unknown element " + nodeName );
@@ -388,7 +396,7 @@ public class FlowConverter extends AbstractChannelsConverter {
         String task = null;
         String taskDescription = "";
         String partId = null;
-        String restriction = null;
+        List<String> restrictions = new ArrayList<String>();
         boolean receiptConfirmationRequested = false;
         boolean canBypassIntermediate = false;
         while ( reader.hasMoreChildren() ) {
@@ -402,9 +410,18 @@ public class FlowConverter extends AbstractChannelsConverter {
                 String name = reader.getAttribute( "name" ).trim();
                 if ( nodeName.equals( "flow" ) ) {
                     flowName = name;
-                    restriction = reader.getAttribute( "restriction" );
                     canBypassIntermediate = Boolean.valueOf( reader.getAttribute( "canBypassIntermediate" ) );
                     receiptConfirmationRequested = Boolean.valueOf( reader.getAttribute( "receiptConfirmationRequested" ) );
+                    if ( reader.getAttribute( "restriction" ) != null ) // TODO - OBSOLETE
+                        restrictions.add( reader.getAttribute( "restriction" ) );
+                    while ( reader.hasMoreChildren() ) {
+                        reader.moveDown();
+                        String subNodeName = reader.getNodeName();
+                        if ( subNodeName.equals( "restriction" ) ) {
+                            restrictions.add( reader.getValue() );
+                        }
+                        reader.moveUp();
+                    }
                 } else if ( nodeName.equals( "part-role" ) ) {
                     roleName = name;
                 } else if ( nodeName.equals( "part-task" ) ) {
@@ -430,8 +447,9 @@ public class FlowConverter extends AbstractChannelsConverter {
                 roleName,
                 organizationName ) );
         conSpec.setExternalFlowId( flowId );
-        if ( restriction != null )
-            conSpec.setRestriction( restriction );
+        for ( String restriction : restrictions ) {
+            conSpec.addRestriction( restriction );
+        }
         conSpec.setReceiptConfirmationRequested( receiptConfirmationRequested );
         conSpec.setCanBypassIntermediate( canBypassIntermediate );
         addConnectionSpec( connector, conSpec );

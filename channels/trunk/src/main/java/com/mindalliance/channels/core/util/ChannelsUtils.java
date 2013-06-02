@@ -127,9 +127,9 @@ public final class ChannelsUtils {
             merged.put( "intent", null );
         }
         // Make restriction null (unknown) if there is a conflict.
-        merged.put( "restriction", Flow.Restriction.resolve(
-                (Flow.Restriction) attributes.get( "restriction" ),
-                (Flow.Restriction) others.get( "restriction" ) ) );
+        merged.put( "restrictions", Flow.Restriction.resolve(
+                (Flow.Restriction) attributes.get( "restrictions" ),
+                (Flow.Restriction) others.get( "restrictions" ) ) );
         // Merge is task failure flow
         merged.put(
                 "ifTaskFails",

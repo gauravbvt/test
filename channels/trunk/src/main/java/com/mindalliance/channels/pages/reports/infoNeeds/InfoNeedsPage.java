@@ -125,7 +125,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
         intermediates.add( new PagePathItem(
                 AllInfoNeedsPage.class,
                 getParameters(),
-                "All info needs") );
+                "All info needs" ) );
         return intermediates;
     }
 
@@ -216,7 +216,7 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 WebMarkupContainer statusContainer = new WebMarkupContainer( "status" );
                 statusContainer.add(
                         new AttributeModifier( "src",
-                        new PropertyModel<String>( eoiNeed, "icon" ) ) );
+                                new PropertyModel<String>( eoiNeed, "icon" ) ) );
                 addTipTitle( statusContainer, new Model<String>( eoiNeed.getStatusString() ) );
                 item.add( statusContainer );
                 item.add( new Label( "eoi.name", eoiNeed.getContentString() ) );
@@ -429,7 +429,9 @@ public class InfoNeedsPage extends AbstractParticipantPage {
             Flow combinedNeed = findCombinedNeed( needsForEoi );
             if ( combinedNeed != null ) {
                 eoiNeed.addRequiredEoiSource( new EoiSource( null,
-                        combinedNeed.getRestriction(),
+                        combinedNeed.getRestrictions().isEmpty()
+                                ? null
+                                : combinedNeed.getRestrictions().get( 0 ), // Whole class is obsolete anyway
                         combinedNeed.getMaxDelay(),
                         !combinedNeed.isAskedFor(),
                         combinedNeed.isRequired(),
@@ -459,7 +461,9 @@ public class InfoNeedsPage extends AbstractParticipantPage {
                 ResourceSpec resourceSpec = ( (Part) incoming.getSource() ).resourceSpec();
                 Actor actor = resourceSpec.getActor();
                 if ( actor == null || actor.isType() ) {
-                    Flow.Restriction restriction = incoming.getRestriction();
+                    Flow.Restriction restriction = incoming.getRestrictions().isEmpty() // The whole class is obsolete anyway
+                            ? null
+                            : incoming.getRestrictions().get( 0 );
                     Delay maxDelay = incoming.getMaxDelay();
                     boolean notified = !incoming.isAskedFor();
                     requiredEoiSources.add( new EoiSource( resourceSpec,

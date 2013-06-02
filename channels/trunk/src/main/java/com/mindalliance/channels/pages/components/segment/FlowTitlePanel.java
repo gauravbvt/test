@@ -44,7 +44,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     private void addConceptual() {
         WebMarkupContainer conceptualImage = new WebMarkupContainer( "conceptual" );
         List<String> causes = getAnalyst().findConceptualCauses( getQueryService(), flow );
-        conceptualImage.setVisible( !causes.isEmpty()  );
+        conceptualImage.setVisible( !causes.isEmpty() );
         if ( !causes.isEmpty() ) {
             addTipTitle(
                     conceptualImage,
@@ -95,7 +95,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
                         Flow.getJurisdictionString( part ),
-                        flow.getRestrictionString( isSend ) );
+                        ("if " + flow.getRestrictionString( isSend ) ) );
             }
         } else {
             // receive
@@ -118,7 +118,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
-                            flow.getRestrictionString( isSend ) );
+                            ( "if " + flow.getRestrictionString( isSend ) ) );
                 } else
                     return "Notified of";
             }
@@ -144,17 +144,17 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() )
-                return flow.getRestrictionString( isSend );
+                return "if " + flow.getRestrictionString( isSend );
 
             else {
                 Part part = (Part) source;
                 return flow.isAskedFor() ?
-                       "" :
-                       MessageFormat.format( " by {0}{1}{2}{3}",
-                                             flow.getShortName( part, false ),
-                                             Flow.getOrganizationString( part ),
-                                             Flow.getJurisdictionString( part ),
-                                             flow.getRestrictionString( isSend ) );
+                        "" :
+                        MessageFormat.format( " by {0}{1}{2}{3}",
+                                flow.getShortName( part, false ),
+                                Flow.getOrganizationString( part ),
+                                Flow.getJurisdictionString( part ),
+                                ( "if " + flow.getRestrictionString( isSend ) ) );
             }
         }
 
@@ -190,4 +190,4 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
         addOrReplace( overridesImage );
     }
 
- }
+}

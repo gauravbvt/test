@@ -97,10 +97,9 @@ public class DisseminationMetaProvider extends AbstractFlowMetaProvider<Node, Di
                 if ( edge.getFlow().isProhibited() ) {
                     sb.append( " -PROHIBITED-" );
                 }
-                Flow.Restriction restriction = flow.getRestriction();
-                if ( restriction != null ) {
-                    sb.append( " (" );
-                    sb.append( restriction.getLabel() );
+                if ( !flow.getRestrictions().isEmpty() ) {
+                    sb.append( " (if " );
+                    sb.append( flow.getRestrictionString( true ) );
                     sb.append( ")" );
                 }
                 Transformation.Type xformType = edge.getTransformationType();

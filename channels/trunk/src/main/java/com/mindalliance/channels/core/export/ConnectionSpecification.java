@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.export;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Specification of a connection.
@@ -37,7 +39,7 @@ public class ConnectionSpecification implements Serializable {
     /**
      * The name of the restriction.
      */
-    private String restriction;
+    private List<String> restrictions = new ArrayList<String>(  );
     /**
      * Whether confirmation of receipt is requested.
      */
@@ -90,12 +92,16 @@ public class ConnectionSpecification implements Serializable {
         this.externalFlowId = externalFlowId;
     }
 
-    public String getRestriction() {
-        return restriction;
+    public List<String> getRestrictions() {
+        return restrictions;
     }
 
-    public void setRestriction( String restriction ) {
-        this.restriction = restriction;
+    public void setRestrictions( List<String> restrictions ) {
+        this.restrictions = restrictions;
+    }
+
+    public void addRestriction( String name ) {
+        restrictions.add( name );
     }
 
     public boolean isReceiptConfirmationRequested() {

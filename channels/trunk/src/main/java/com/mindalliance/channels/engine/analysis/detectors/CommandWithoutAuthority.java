@@ -74,22 +74,20 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
     }
 
     private boolean isAcrossOrganizationalLine( Flow sharing ) {
-        Flow.Restriction restriction = sharing.getRestriction();
-        if ( restriction != null ) {
-            if ( restriction == Flow.Restriction.DifferentOrganizations ) {
+        List<Flow.Restriction> restrictions = sharing.getRestrictions();
+            if ( restrictions.contains( Flow.Restriction.DifferentOrganizations ) ) {
                 return true;
-            } else if ( restriction == Flow.Restriction.SameOrganization ) {
+            } else if ( restrictions.contains( Flow.Restriction.SameOrganization ) ) {
                 return false;
             }
-        }
         Organization sourceOrg = ( (Part) sharing.getSource() ).getOrganization();
         Organization targetOrg = ( (Part) sharing.getTarget() ).getOrganization();
         return ( sourceOrg != null && targetOrg != null && !sourceOrg.equals( targetOrg ) );
     }
 
     private boolean couldCrossOrganizationalLine( Flow sharing ) {
-        Flow.Restriction restriction = sharing.getRestriction();
-        if ( restriction != null && restriction == Flow.Restriction.SameOrganization ) {
+        List<Flow.Restriction> restrictions = sharing.getRestrictions();
+        if ( restrictions.contains( Flow.Restriction.SameOrganization  ) ) {
             return false;
         }
         Organization sourceOrg = ( (Part) sharing.getSource() ).getOrganization();
@@ -105,8 +103,7 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
     }
 
     private boolean fromSupervisor( Flow sharing ) {
-        Flow.Restriction restriction = sharing.getRestriction();
-        return restriction != null && restriction == Flow.Restriction.Supervised;
+        return sharing.getRestrictions().contains( Flow.Restriction.Supervised );
     }
 
     @Override

@@ -6,6 +6,7 @@
 
 package com.mindalliance.channels.core.export.xml;
 
+import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.AbstractCommand;
@@ -441,9 +442,9 @@ public class XmlStreamer implements ImportExportFactory {
                         : getPlanDao().connect( part, externalConnector, innerName, null ) );
             }
             copy( localInnerFlow, externalFlow );
-            String restriction = conSpec.getRestriction();
-            if ( restriction != null ) {
-                externalFlow.setRestriction( Flow.Restriction.valueOf( restriction ) );
+            List<String> restrictions = conSpec.getRestrictions();
+            for ( String restriction : restrictions ) {
+                externalFlow.addRestriction( Flow.Restriction.valueOf( restriction ) );
             }
             externalFlow.setReceiptConfirmationRequested( conSpec.isReceiptConfirmationRequested() );
             externalFlow.setCanBypassIntermediate( conSpec.isCanBypassIntermediate() );
@@ -451,19 +452,19 @@ public class XmlStreamer implements ImportExportFactory {
         }
 
         private void copy( Flow inner, ExternalFlow external ) {
-            external.setChannels( inner.getChannels() );
+            external.setChannels( new ArrayList<Channel> ( inner.getChannels() ) );
             external.setMaxDelay( inner.getMaxDelay() );
             external.setSignificanceToSource( inner.getSignificanceToSource() );
             external.setSignificanceToTarget( inner.getSignificanceToTarget() );
             external.setAll( inner.isAll() );
             // external.setAskedFor( inner.isAskedFor() );
             // external.setEois( inner.copyEois() );
-            external.setWaivedIssueDetections( inner.getWaivedIssueDetections() );
-            external.setAttachments( inner.getAttachments() );
+            external.setWaivedIssueDetections( new ArrayList<String>( inner.getWaivedIssueDetections() ) );
+            external.setAttachments( new ArrayList<Attachment>( inner.getAttachments() ) );
             external.setIntent( inner.getIntent() );
             external.setReferencesEventPhase( inner.isReferencesEventPhase() );
             external.setIfTaskFails( inner.isIfTaskFails() );
-            external.setRestriction( inner.getRestriction() );
+            external.setRestrictions( new ArrayList<Flow.Restriction>( inner.getRestrictions() ) );
             external.setCanBypassIntermediate( inner.isCanBypassIntermediate() );
             external.setReceiptConfirmationRequested( inner.isReceiptConfirmationRequested() );
         }
