@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class OrphanedPart extends AbstractIssueDetector {
     public List<Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         List<Issue> issues = new ArrayList<Issue>();
         Part part = (Part) modelObject;
-        if ( !part.receives().hasNext() && !part.sends().hasNext() ) {
+        if ( part.getAllSharingReceives().isEmpty() && part.getAllSharingSends().isEmpty() ) {
             DetectedIssue issue = makeIssue( queryService, DetectedIssue.COMPLETENESS, part );
             issue.setDescription( "Does not produce nor need information." );
             issue.setRemediation( "Add information received\nor add information sent." );

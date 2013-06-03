@@ -1947,7 +1947,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
          */
         public static boolean implies( Restriction restriction, Restriction other ) {
             return restriction == null && other == null
-                    || SameOrganization == restriction && SameTopOrganization == other;
+                    || restriction == other
+                    || SameOrganization == restriction && SameTopOrganization == other
+                    || DifferentTopOrganizations == restriction && DifferentOrganizations == other;
         }
 
 

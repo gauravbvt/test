@@ -2054,7 +2054,7 @@ public abstract class DefaultQueryService implements QueryService {
                                             } );
                                 }
                             } );
-            return !uncoveredEOIs.isEmpty();
+            return uncoveredEOIs.isEmpty();
         }
     }
 
@@ -2130,9 +2130,7 @@ public abstract class DefaultQueryService implements QueryService {
     private static List<Flow> findSharingFlowsMatchingNeed( Part part, Flow need ) {
         List<Flow> sharings = new ArrayList<Flow>();
         String info = need.getName();
-        Iterator<Flow> incoming = part.receives();
-        while ( incoming.hasNext() ) {
-            Flow in = incoming.next();
+        for ( Flow in : part.getAllSharingReceives() ) {
             if ( in.isSharing()
                     && Matcher.same( in.getName(), info )
                     && isEOIsCoveredBy( need.getEffectiveEois(), in.getEffectiveEois() )

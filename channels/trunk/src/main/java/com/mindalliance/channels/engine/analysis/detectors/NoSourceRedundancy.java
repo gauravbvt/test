@@ -1,14 +1,14 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 
@@ -64,7 +64,7 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         final Part part = (Part) modelObject;
         // Find all critical sourced receives of a part
-        Iterator<Flow> criticalReceives = new FilterIterator( part.receives(),
+        Iterator<Flow> criticalReceives = new FilterIterator( part.getAllSharingReceives().iterator(),
                 new Predicate() {
                     public boolean evaluate( Object obj ) {
                         Flow receive = (Flow) obj;
