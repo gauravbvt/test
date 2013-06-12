@@ -31,7 +31,7 @@ import java.util.List;
  * Date: 4/30/13
  * Time: 11:51 AM
  */
-@Document( collection = "surveys" )
+@Document(collection = "surveys")
 public class RFI extends AbstractChannelsDocument implements Messageable {
 
     public static final String DEADLINE = "deadline";
@@ -91,7 +91,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     }
 
     public RFI( RFI rfi ) {
-        super( rfi.getCommunityUri(), rfi.getPlanUri(), rfi.getPlanVersion(), rfi.getUsername()  );
+        super( rfi.getCommunityUri(), rfi.getPlanUri(), rfi.getPlanVersion(), rfi.getUsername() );
         setQuestionnaireUid( rfi.getQuestionnaireUid() );
         setName( rfi.getName() );
         setDeadline( rfi.getDeadline() );
@@ -135,7 +135,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     }
 
     public void setTitle( String title ) {
-        this.title =  title;
+        this.title = title;
     }
 
     public Long getOrganizationId() {
@@ -177,7 +177,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     }
 
     public void setReasonDeclined( String reasonDeclined ) {
-        this.reasonDeclined =  reasonDeclined;
+        this.reasonDeclined = reasonDeclined;
     }
 
     public Date getDeadline() {
@@ -255,9 +255,9 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return (( AnswerSet )object).getQuestionUid().equals( answerSet.getQuestionUid() );
+                        return ( (AnswerSet) object ).getQuestionUid().equals( answerSet.getQuestionUid() );
                     }
-                });
+                } );
         if ( old != null ) {
             answerSets.remove( old );
         }
@@ -392,7 +392,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     @Override
     public List<String> getToUserNames( String topic, CommunityService communityService ) {
         List<String> usernames = new ArrayList<String>();
-        usernames.add(  getToUsername(  topic  ) );
+        usernames.add( getToUsername( topic ) );
         return usernames;
     }
 
@@ -525,29 +525,29 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
     private String getNewRFIContent( Format format, CommunityService communityService, SurveysDAO surveysDAO ) {
         // ignore format
         Plan plan = communityService.getPlan();
-        ChannelsUser surveyedUser = communityService.getUserDao().getUserNamed( getSurveyedUsername() );
         StringBuilder sb = new StringBuilder();
-        sb.append( plan.getClient() );
-        sb.append( " invites you to participate in a survey about the \"" )
-                .append( plan.getName() )
-                .append( "\" collaboration plan.\n\n" );
-        if ( !plan.getDescription().isEmpty() ) {
-            sb.append( "About the plan: " )
-                    .append( plan.getDescription() )
-                    .append( "\n" );
-        }
-        if ( communityService.getPlanCommunity().getLocale( communityService ) != null ) {
-            sb.append( "Targeted location: " )
-                    .append( communityService.getPlanCommunity().getLocale( communityService ).getName() )
-                    .append( "\n" );
-        }
-        sb.append( "\n" );
-        sb.append( getRFILabel( communityService ) ).append( "\n" );
-        sb.append( "can be accessed here: " )
-                .append( surveysDAO.makeURL( communityService, this, surveyedUser ) )
-                .append( "\n\n" );
-        // New account login instructions
+        ChannelsUser surveyedUser = communityService.getUserDao().getUserNamed( getSurveyedUsername() );
         if ( surveyedUser != null ) {
+            sb.append( plan.getClient() );
+            sb.append( " invites you to participate in a survey about the \"" )
+                    .append( plan.getName() )
+                    .append( "\" collaboration plan.\n\n" );
+            if ( !plan.getDescription().isEmpty() ) {
+                sb.append( "About the plan: " )
+                        .append( plan.getDescription() )
+                        .append( "\n" );
+            }
+            if ( communityService.getPlanCommunity().getLocale( communityService ) != null ) {
+                sb.append( "Targeted location: " )
+                        .append( communityService.getPlanCommunity().getLocale( communityService ).getName() )
+                        .append( "\n" );
+            }
+            sb.append( "\n" );
+            sb.append( getRFILabel( communityService ) ).append( "\n" );
+            sb.append( "can be accessed here: " )
+                    .append( surveysDAO.makeURL( communityService, this, surveyedUser ) )
+                    .append( "\n\n" );
+            // New account login instructions
             sb.append( "To login, use your email address as user name" )
                     .append( surveyedUser.getEmail() );
             String newPassword = surveyedUser.getUserInfo().getGeneratedPassword();
@@ -558,28 +558,28 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
             } else {
                 sb.append( "." );
             }
-        }
-        // forwarding
-        List<RFIForward> rfiForwards = surveysDAO.getForwardingsOf( this );
-        if ( !rfiForwards.isEmpty() ) {
-            sb.append( "This survey was forwarded to you by:" );
-            for ( RFIForward rfiForward : rfiForwards ) {
-                ChannelsUserInfo forwarder = surveysDAO.getForwarder( rfiForward );
-                if ( forwarder != null ) {
-                    sb.append("\n")
-                            .append( forwarder.getFullName() )
-                            .append( " at " )
-                            .append( forwarder.getEmail() );
-                }
-                if ( !rfiForward.getMessage().isEmpty() ) {
-                    sb.append( "\nwith this message: \"" )
-                            .append( rfiForward.getMessage() )
-                            .append( "\"\n" );
+            // forwarding
+            List<RFIForward> rfiForwards = surveysDAO.getForwardingsOf( this );
+            if ( !rfiForwards.isEmpty() ) {
+                sb.append( "This survey was forwarded to you by:" );
+                for ( RFIForward rfiForward : rfiForwards ) {
+                    ChannelsUserInfo forwarder = surveysDAO.getForwarder( rfiForward );
+                    if ( forwarder != null ) {
+                        sb.append( "\n" )
+                                .append( forwarder.getFullName() )
+                                .append( " at " )
+                                .append( forwarder.getEmail() );
+                    }
+                    if ( !rfiForward.getMessage().isEmpty() ) {
+                        sb.append( "\nwith this message: \"" )
+                                .append( rfiForward.getMessage() )
+                                .append( "\"\n" );
+                    }
                 }
             }
+            sb.append( "\nThank you!\n" );
+            sb.append( plan.getClient() );
         }
-        sb.append( "\nThank you!\n" );
-        sb.append( plan.getClient() );
         return sb.toString();
     }
 

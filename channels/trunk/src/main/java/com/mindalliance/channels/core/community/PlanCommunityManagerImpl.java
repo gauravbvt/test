@@ -380,6 +380,8 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     @Override
     public PlanCommunity findPlanCommunity( Plan plan, ChannelsUser user ) {
+        assert plan != null;
+        assert user != null;
         for ( PlanCommunity planCommunity : getPlanCommunities() ) {
             if ( !planCommunity.isDomainCommunity()
                     && planCommunity.getPlanUri().equals( plan.getUri() ) ) {
