@@ -1,0 +1,13 @@
+#Test information standard
+
+# Resource
+cap:resource
+	name - The name of the resource
+	contact info - Contact information
+	availability - The resource's availability
+
+# Event
+cap:event
+	type - The type of event
+	severity - 
+	location - Where the event takes place
