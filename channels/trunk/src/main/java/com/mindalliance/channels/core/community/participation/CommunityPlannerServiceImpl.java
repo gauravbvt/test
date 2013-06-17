@@ -114,7 +114,8 @@ public class CommunityPlannerServiceImpl
     @Override
     @Transactional
     public void addFounder( ChannelsUser founder, PlanCommunity planCommunity ) {
-        assert listPlanners( planCommunity ).isEmpty(); // Make sure founder is first planner
+        List<CommunityPlanner> planners = listPlanners( planCommunity );
+        assert planners.isEmpty(); // Make sure founder is first planner
         CommunityPlanner communityPlanner = new CommunityPlanner( founder.getUsername(), founder, planCommunity );
         communityPlanner.setUserNotified( true );
         save( communityPlanner );

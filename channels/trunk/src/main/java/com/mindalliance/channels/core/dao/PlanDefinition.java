@@ -387,7 +387,7 @@ public class PlanDefinition extends Observable {
         public synchronized void setLastId( long id ) throws IOException {
             File idFile = getLastIdFile();
             idFile.delete();
-
+            LOG.debug( "Creating plan lastID file at " + idFile.getAbsolutePath() );
             PrintWriter out = new PrintWriter( new FileOutputStream( idFile ) );
             try {
                 out.print( id );

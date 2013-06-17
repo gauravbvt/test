@@ -212,7 +212,7 @@ public class CommunityDefinition extends Observable {
     public synchronized void setLastId( long id ) throws IOException {
         File idFile = getLastIdFile();
         idFile.delete();
-
+        LOG.debug( "Creating community lastID file at " + idFile.getAbsolutePath() );
         PrintWriter out = new PrintWriter( new FileOutputStream( idFile ) );
         try {
             out.print( id );
