@@ -180,7 +180,7 @@ public class CommunityDefinition extends Observable {
      * @return a file
      */
     private File getLastIdFile() {
-        return new File( LAST_ID_FILE );
+        return new File( communityDirectory, LAST_ID_FILE );
     }
 
     /**
