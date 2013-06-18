@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
+import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
-import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.markup.html.WebPage;
 
 

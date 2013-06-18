@@ -1,12 +1,12 @@
 package com.mindalliance.channels.pages.surveys;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.surveys.RFI;
 import com.mindalliance.channels.db.services.surveys.RFIService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;

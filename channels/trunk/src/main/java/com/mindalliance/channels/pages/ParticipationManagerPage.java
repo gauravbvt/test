@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.components.manager.ParticipationManagerPanel;
-import com.mindalliance.channels.social.model.Feedback;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;

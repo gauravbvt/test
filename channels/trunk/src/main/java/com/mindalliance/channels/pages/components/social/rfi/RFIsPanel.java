@@ -23,7 +23,6 @@ import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.Filterable;
-import com.mindalliance.channels.social.services.RFIForwardService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -72,9 +71,6 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     @SpringBean( name = "surveysDao" )
     private SurveysDAO surveysDAO;
-
-    @SpringBean
-    private RFIForwardService rfiForwardService;
 
     @SpringBean
     private ChannelsUserDao userDao;
