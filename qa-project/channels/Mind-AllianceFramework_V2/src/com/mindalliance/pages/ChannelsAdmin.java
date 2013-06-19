@@ -138,5 +138,22 @@ public class ChannelsAdmin {
 		}
 	}
 	
+	public void setPasswords(String userName) throws UIAutomationException{
+		int countUsers = 1;
+		String firstXPath=dataController.getPageDataElements(fileName, "First XPath", "Xpath");
+		String secondXPath=dataController.getPageDataElements(fileName, "Second XPath", "Xpath");
+		elementController.requireElementSmart(fileName,"Table Of Users",GlobalVariables.configuration.getAttrSearchList(), "Table Of Users");
 	
+		List<WebElement> trs = GlobalVariables.configuration.getWebElement().findElements(By.tagName("tr"));
+		List<WebElement> tds;
+		for(WebElement tr: trs){
+			tds = tr.findElements(By.tagName("td"));
+			for(WebElement td: tds){				
+				if(td.getText().contains(userName)){
+					GlobalVariables.configuration.getWebDriver().findElement(By.xpath(firstXPath+ (countUsers) + secondXPath)).click();
+				}
+			}
+			countUsers++;
+	}
+	}
 }

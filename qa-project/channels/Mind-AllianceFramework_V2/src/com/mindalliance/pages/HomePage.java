@@ -16,6 +16,20 @@ public class HomePage {
 	String fileName = "HomePage.xml";
 	ElementController elementController= new ElementController();
 	DataController dataController=new DataController();
+	
+	/**
+	 * Testing
+	 */
+	public void clickDomainPlans() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Collaboration Plan",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan link");
+		UIActions.click(fileName,"Collaboration Plan",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan link");
+				
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	
 	/**
 	 * 'clickCollaborationPlanLink' method clicks on 'Collaboration Plan' Link
 	 * @throws UIAutomationException 
@@ -27,8 +41,6 @@ public class HomePage {
 		// Assertion : Check Title of Page
     	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
-		
-		
 	}
 	
 	/**
