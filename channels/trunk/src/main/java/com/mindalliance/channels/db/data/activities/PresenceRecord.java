@@ -1,19 +1,19 @@
-package com.mindalliance.channels.social.model;
+package com.mindalliance.channels.db.data.activities;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-
-import javax.persistence.Entity;
+import com.mindalliance.channels.db.data.AbstractChannelsDocument;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * A user presence record.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 2/2/12
- * Time: 3:10 PM
+ * Date: 6/18/13
+ * Time: 5:07 PM
  */
-@Entity
-public class PresenceRecord extends AbstractPersistentChannelsObject {
+@Document( collection = "activities" )
+public class PresenceRecord extends AbstractChannelsDocument {
 
     public PresenceRecord( Type type, String username, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
@@ -54,4 +54,5 @@ public class PresenceRecord extends AbstractPersistentChannelsObject {
     public void setType( Type type ) {
         this.type = type;
     }
+
 }

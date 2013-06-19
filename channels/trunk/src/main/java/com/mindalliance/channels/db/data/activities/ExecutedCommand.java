@@ -1,31 +1,26 @@
-package com.mindalliance.channels.social.model;
+package com.mindalliance.channels.db.data.activities;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
-import org.apache.commons.lang.StringUtils;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import com.mindalliance.channels.db.data.AbstractChannelsDocument;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 2/2/12
- * Time: 2:20 PM
+ * Date: 6/18/13
+ * Time: 5:08 PM
  */
-@Entity
-public class ExecutedCommand extends AbstractPersistentChannelsObject {
+@Document( collection = "activities" )
+public class ExecutedCommand extends AbstractChannelsDocument {
 
     private String commandName;
     private String commandUndoes;
-    @Column(length=1000)
     private String changeProperty;
-    @Column(length=4000)
     private String commandTargetDescription;
     private boolean update;
     private Long changeId;
@@ -43,7 +38,10 @@ public class ExecutedCommand extends AbstractPersistentChannelsObject {
     public ExecutedCommand() {}
 
     public ExecutedCommand( Type type, Command command, Change change, PlanCommunity planCommunity ) {
-        super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), command.getUserName() );
+        super( planCommunity.getUri(),
+                planCommunity.getPlanUri(),
+                planCommunity.getPlanVersion(),
+                command.getUserName() );
         this.type = type;
         commandName = command.getName();
         if ( type == Type.Undone )  commandUndoes = command.getUndoes();
@@ -100,11 +98,11 @@ public class ExecutedCommand extends AbstractPersistentChannelsObject {
     }
 
     public void setChangeProperty( String changeProperty ) {
-        this.changeProperty = StringUtils.abbreviate( changeProperty, 1000 );
+        this.changeProperty = changeProperty;
     }
 
     public void setCommandTargetDescription( String commandTargetDescription ) {
-        this.commandTargetDescription = StringUtils.abbreviate( commandTargetDescription, 4000 );
+        this.commandTargetDescription = commandTargetDescription;
     }
 
     public void setUpdate( boolean update ) {
@@ -145,7 +143,7 @@ public class ExecutedCommand extends AbstractPersistentChannelsObject {
         sb.append( super.toString() );
         return sb.toString();
     }
-    
+
     public String toString() {
         return execution;
     }

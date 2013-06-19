@@ -1,21 +1,21 @@
-package com.mindalliance.channels.social.services;
+package com.mindalliance.channels.db.services.activities;
 
 import com.mindalliance.channels.core.command.CommandListener;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.orm.service.GenericSqlService;
-import com.mindalliance.channels.social.model.ExecutedCommand;
+import com.mindalliance.channels.db.data.activities.ExecutedCommand;
+import com.mindalliance.channels.db.services.DataService;
 
 import java.util.Date;
 import java.util.Iterator;
 
 /**
- * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 2/2/12
- * Time: 3:39 PM
+ * Date: 6/18/13
+ * Time: 5:27 PM
  */
-public interface ExecutedCommandService extends CommandListener, GenericSqlService<ExecutedCommand, Long> {
+public interface ExecutedCommandService extends CommandListener, DataService<ExecutedCommand> {
 
     /**
      * Get an iterator on the command events recorded for a plan community.
@@ -32,4 +32,5 @@ public interface ExecutedCommandService extends CommandListener, GenericSqlServi
      * @return a date
      */
     Date getWhenLastChanged( String planCommunityUri );
+
 }

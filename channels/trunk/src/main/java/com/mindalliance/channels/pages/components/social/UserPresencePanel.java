@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.db.data.activities.PresenceRecord;
 import com.mindalliance.channels.pages.Updatable;
-import com.mindalliance.channels.social.model.PresenceRecord;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;

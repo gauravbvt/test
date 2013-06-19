@@ -1,18 +1,18 @@
-package com.mindalliance.channels.social.services;
+package com.mindalliance.channels.db.services.activities;
 
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.db.data.activities.PresenceRecord;
+import com.mindalliance.channels.db.services.DataService;
 import com.mindalliance.channels.social.PresenceListener;
-import com.mindalliance.channels.social.model.PresenceRecord;
 
 /**
- * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
+ * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
- * Date: 2/2/12
- * Time: 3:40 PM
+ * Date: 6/18/13
+ * Time: 5:26 PM
  */
-public interface PresenceRecordService extends GenericSqlService<PresenceRecord, Long>, PresenceListener {
+public interface PresenceRecordService extends DataService<PresenceRecord>, PresenceListener {
 
     /**
      * Find latest presence change for a user in a plan (entering or leaving).
@@ -35,4 +35,5 @@ public interface PresenceRecordService extends GenericSqlService<PresenceRecord,
     void recordAbsence( String username, PlanCommunity planCommunity );
 
     void recordPresence( String username, PlanCommunity planCommunity );
+
 }
