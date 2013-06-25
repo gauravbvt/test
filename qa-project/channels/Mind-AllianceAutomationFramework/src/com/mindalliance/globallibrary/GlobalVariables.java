@@ -63,7 +63,7 @@ public class GlobalVariables {
 	public static String sErrorLogFile;
 	public static String sStartDateTime;
 	public static String sEndDateTime;
-	public static String sBrowser = "Mozilla Firefox";
+	public static String sBrowser = "Internet Explorer";
 	public static String sStrCheck=null;
 	public static boolean sunday=true;
 	public static boolean monday=true;
