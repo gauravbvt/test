@@ -167,7 +167,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         PlanCommunity planCommunity = communityService.getPlanCommunity();
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String uri = plan.getUri();
-        boolean planner = user.isPlanner( uri );
+        boolean planner = user.isPlannerOrAdmin( uri );
         boolean communityLeader = communityService.isCommunityPlanner( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
@@ -309,7 +309,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoProtocolsDescription( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() )
+        return user.isPlannerOrAdmin( plan.getUri() )
                 ? "Set how users participate in the plan and view their collaboration protocols."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
@@ -343,7 +343,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
 
     private String getGotoInfoNeedsDescription( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() )
+        return user.isPlannerOrAdmin( plan.getUri() )
                 ? "View the information needs of any participant or agent in this plan."
                 : "View my information needs and their status in this plan.";
     }
@@ -404,7 +404,7 @@ public class UserPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
+        return user.isPlannerOrAdmin( plan.getUri() ) && getPlan().isDevelopment()
                 ? "Build or modify the collaboration plan.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
                 : "View the collaboration plan.\n" +

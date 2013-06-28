@@ -277,12 +277,17 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         );
     }
 
-    public boolean isPlanner( String uri ) {
+    public boolean isPlannerOrAdmin( String uri ) {
         return isAdmin() || hasPlannerAccess( uri );
     }
 
+    public boolean isCommunityPlanner( String communityUri ) {
+        return hasPlannerAccess( communityUri );
+    }
+
+
     public boolean isParticipant( String uri ) {
-        return isAdmin() || isPlanner( uri ) || hasParticipantAccess( uri );
+        return isAdmin() || isPlannerOrAdmin( uri ) || hasParticipantAccess( uri );
     }
 
     public void makeDisabled( boolean val ) {
@@ -297,7 +302,6 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
     public void makeAdmin( boolean val ) {
         if ( !isDisabled() ) {
             if ( val ) {
-                clearAccess();
                 addUserAccess( new UserAccess( UserAccess.UserRole.Admin ) );
             } else {
                 removeUserAccess( new UserAccess( UserAccess.UserRole.Admin ) );
@@ -306,7 +310,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
     }
 
     public void makePlannerOf( String contextUri ) {
-        if ( !isDisabled() && !isPlanner( contextUri ) ) {
+        if ( !isDisabled() && !hasPlannerAccess( contextUri ) ) {
             UserAccess plannerAccess = new UserAccess( contextUri, UserAccess.UserRole.Planner );
             removeUserAccess( new UserAccess( contextUri, UserAccess.UserRole.Participant ) );
             addUserAccess( plannerAccess );
@@ -315,7 +319,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
     }
 
     public void makeParticipantOf( String contextUri ) {
-        if ( !isDisabled() && !isAdmin() ) {
+        if ( !isDisabled() ) {
             boolean demoted = removeUserAccess( new UserAccess( contextUri, UserAccess.UserRole.Planner ) );
             UserAccess participantAccess = new UserAccess( contextUri, UserAccess.UserRole.Participant );
             addUserAccess( new UserAccess( contextUri, UserAccess.UserRole.Participant ) );
@@ -465,5 +469,6 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         assert userRole == UserAccess.UserRole.Admin || userRole == UserAccess.UserRole.Disabled;
         addUserAccess( new UserAccess( userRole ) );
     }
+
 }
 

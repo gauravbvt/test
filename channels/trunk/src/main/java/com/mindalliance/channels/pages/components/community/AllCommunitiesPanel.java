@@ -152,7 +152,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
     }
 
     private boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
-        return planCommunityManager.isCommunityPlanner( user, planCommunity );
+        return user.isCommunityPlanner( planCommunity.getUri() );
     }
 
     public class CommunityWrapper implements Identifiable, Comparable<CommunityWrapper> {

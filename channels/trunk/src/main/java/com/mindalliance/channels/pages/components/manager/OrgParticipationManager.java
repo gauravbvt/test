@@ -564,7 +564,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 addPlaceHolders();
                 addAgencyParticipation(  );
                 addSummary();
-                target.add( participationContainer );
+                target.add( placeholderListContainer );
                 target.add( participationContainer );
                 target.add( summaryLabel );
                 if ( selectedPlaceholder != null ) {

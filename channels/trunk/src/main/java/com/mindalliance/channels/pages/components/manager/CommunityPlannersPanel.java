@@ -70,7 +70,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
     private void addPlannerAuthorization() {
         authorizationContainer = new WebMarkupContainer( "authorizingContainer" );
-        authorizationContainer.setVisible( getCommunityService().isCommunityPlanner( getUser() ) );
+        authorizationContainer.setVisible( getUser().isPlannerOrAdmin( getPlanCommunityUri() ) );
         authorizationContainer.setOutputMarkupId( true );
         addOrReplace( authorizationContainer );
         addUserField();
@@ -117,7 +117,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 if ( authorizedUser != null ) {
                     Change change;
-                    UserRecord planner = userRecordService.authorizePlanner(
+                    UserRecord planner = userRecordService.authorizeCommunityPlanner(
                             getUsername(),
                             authorizedUser,
                             getCommunityService() );
@@ -190,7 +190,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
     public List<CommunityPlannerWrapper> getCommunityPlannerWrappers() {
         List<CommunityPlannerWrapper> wrappers = new ArrayList<CommunityPlannerWrapper>();
-        for ( ChannelsUser communityPlanner : userRecordService.getPlanners( getCommunityService().getPlanCommunity().getUri() ) ) {
+        for ( ChannelsUser communityPlanner : userRecordService.getCommunityPlanners( getCommunityService().getPlanCommunity().getUri() ) ) {
             wrappers.add( new CommunityPlannerWrapper( communityPlanner.getUserRecord() ) );
         }
         return wrappers;
@@ -245,13 +245,13 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
         public boolean resign() {
             ChannelsUser planner = getPlannerUser();
-            return userRecordService.resignAsPlanner( getUsername(), planner, getCommunityService() );
+            return userRecordService.resignAsCommunityPlanner( getUsername(), planner, getCommunityService() );
         }
 
         public UserRecord getCommunityPlannerIfCanResign() {
             ChannelsUser planner = getPlannerUser();
             if ( ( getUser().isAdmin() || ( planner != null && planner.equals( getUser() ) ) )
-                    && userRecordService.getPlanners( getCommunityService().getPlanCommunity().getUri() ).size() > 1 )
+                    && userRecordService.getCommunityPlanners( getCommunityService().getPlanCommunity().getUri() ).size() > 1 )
                 return communityPlanner;
             else
                 return null;

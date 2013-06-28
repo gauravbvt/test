@@ -144,7 +144,7 @@ public class HomePage extends AbstractChannelsBasicPage {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return getUser().isPlanner( ( (Plan) object ).getUri() );
+                        return getUser().isPlannerOrAdmin( ( (Plan) object ).getUri() );
                     }
                 }
         );

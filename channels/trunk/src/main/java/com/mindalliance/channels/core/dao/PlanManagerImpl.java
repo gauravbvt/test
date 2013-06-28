@@ -311,7 +311,7 @@ public class PlanManagerImpl implements PlanManager {
                         // User was connected to an old production plan
                         user.setPlan( findProductionPlan( uri ) );
 
-                    } else if ( plan.isProduction() && user.isPlanner( uri ) )
+                    } else if ( plan.isProduction() && user.isPlannerOrAdmin( uri ) )
                         // Plan was put in production
                         user.setPlan( findDevelopmentPlan( uri ) );
                 }
@@ -466,7 +466,7 @@ public class PlanManagerImpl implements PlanManager {
     public boolean revalidateProducers( Plan plan ) {
         List<String> producers = plan.getProducers();
         for ( ChannelsUser user : userRecordService.getAllEnabledUsers() )
-            if ( user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() ) )
+            if ( user.isPlannerOrAdmin( plan.getUri() ) && !producers.contains( user.getUsername() ) )
                 return false;
 // TODO reenable production voting
 //        productize( plan );
@@ -499,7 +499,7 @@ public class PlanManagerImpl implements PlanManager {
         List<Plan> result = new ArrayList<Plan>( planList.size() );
 
         for ( Plan p : planList )
-            if ( user.isPlanner( p.getUri() ) )
+            if ( user.isPlannerOrAdmin( p.getUri() ) )
                 result.add( p );
 
         return result;
@@ -521,7 +521,7 @@ public class PlanManagerImpl implements PlanManager {
     public Plan getDefaultPlan( ChannelsUser user ) {
         for ( PlanDefinition planDefinition : planDefinitionManager ) {
             String uri = planDefinition.getUri();
-            if ( user.isPlanner( uri ) )
+            if ( user.isPlannerOrAdmin( uri ) )
                 return getDao( uri, true ).getPlan();
         }
 

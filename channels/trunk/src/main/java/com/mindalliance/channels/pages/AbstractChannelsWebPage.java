@@ -415,7 +415,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             ChannelsUser user,
             boolean samePage ) {
         List<UserParticipation> userParticipations = getUserParticipations( planCommunity, user );
-        boolean planner = user.isPlanner( planCommunity.getPlanUri() );
+        boolean planner = user.isPlannerOrAdmin( planCommunity.getPlanUri() );
         BookmarkablePageLink<? extends WebPage> guidelinesLink;
         if ( planner || userParticipations.size() != 1 ) {
             guidelinesLink = newTargetedLink(
@@ -568,7 +568,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         List<Plan> result = new ArrayList<Plan>();
         for ( Plan p : planManager.getReadablePlans( user ) ) {
             String uri = p.getUri();
-            if ( user.isPlanner( uri ) )
+            if ( user.isPlannerOrAdmin( uri ) )
                 result.add( p );
             else if ( user.isParticipant( uri ) ) {
                 if ( p.isProduction() )
@@ -638,7 +638,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public boolean isPlanner() {
-        return user.isPlanner( getPlan().getUri() );
+        return user.isPlannerOrAdmin( getPlan().getUri() );
     }
 
     @Override
@@ -1035,14 +1035,14 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         for ( Iterator<Plan> it = plans.iterator(); it.hasNext() && plan == null; ) {
             Plan p = it.next();
             if ( planVersion == 0 ) {  // unspecified version
-                if ( p.isDevelopment() && user.isPlanner( planUri ) ) {
+                if ( p.isDevelopment() && user.isPlannerOrAdmin( planUri ) ) {
                     plan = p;
-                } else if ( p.isProduction() && !user.isPlanner( planUri ) ) {
+                } else if ( p.isProduction() && !user.isPlannerOrAdmin( planUri ) ) {
                     plan = p;
                 }
             } else {
                 if ( planVersion == p.getVersion() ) {
-                    if ( p.isProduction() || ( p.isDevelopment() && user.isPlanner( p.getUri() ) ) )
+                    if ( p.isProduction() || ( p.isDevelopment() && user.isPlannerOrAdmin( p.getUri() ) ) )
                         plan = p;
                 }
             }
@@ -1063,7 +1063,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                         @Override
                         public boolean evaluate( Object object ) {
                             Plan p = (Plan) object;
-                            return ( p.isProduction() && !isDomainPage() ) || user.isPlanner( p.getUri() );
+                            return ( p.isProduction() && !isDomainPage() ) || user.isPlannerOrAdmin( p.getUri() );
                         }
                     }
             );

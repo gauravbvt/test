@@ -157,7 +157,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
     private void addGotoLinks( CommunityService communityService, ChannelsUser user ) {
         Plan plan = communityService.getPlan();
         String uri = plan.getUri();
-        boolean planner = user.isPlanner( uri );
+        boolean planner = user.isPlannerOrAdmin( uri );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
@@ -319,7 +319,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
+        return user.isPlannerOrAdmin( plan.getUri() ) && getPlan().isDevelopment()
                 ? "Build or modify the domain collaboration plan.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
                 : "View the collaboration plan.\n" +

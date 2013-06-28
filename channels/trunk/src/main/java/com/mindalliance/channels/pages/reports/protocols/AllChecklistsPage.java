@@ -57,7 +57,7 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
 
     protected void initComponents( QueryService service, final CommunityService communityService ) {
-        boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
+        boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
         getContainer().add(
                 new WebMarkupContainer( "note" ).setVisible( isPlanner ),
                 new WebMarkupContainer( "activeDiv" ).add(

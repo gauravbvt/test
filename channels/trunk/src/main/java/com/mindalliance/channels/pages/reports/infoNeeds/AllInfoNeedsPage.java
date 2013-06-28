@@ -47,7 +47,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
 
 
     protected void initComponents( QueryService service, final CommunityService communityService ) {
-        boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
+        boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
         getContainer().add(
             new Label( "planName", communityService.getPlan().toString() ),
             new WebMarkupContainer( "note" ).setVisible( isPlanner ),

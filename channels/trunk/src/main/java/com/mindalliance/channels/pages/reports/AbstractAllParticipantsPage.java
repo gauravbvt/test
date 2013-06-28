@@ -85,7 +85,7 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     protected void addContent(  ) {
         CommunityService communityService = getCommunityService();
         QueryService queryService = getQueryService();
-        boolean isPlanner = getUser().isPlanner( communityService.getPlan().getUri() );
+        boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
         participations = isPlanner
                             ? userParticipationService.getAllActiveParticipations( communityService )
                             : userParticipationService.getActiveUserParticipations( getUser(), communityService );

@@ -216,12 +216,12 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Boolean isCommunityPlanner( ChannelsUser user ) {
-        return user.isAdmin() || userRecordService.isPlanner( user, this );
+        return user.isCommunityPlanner(  getPlanCommunity().getUri() );
     }
 
     @Override
     public List<ChannelsUser> getCommunityPlanners() {
-        return userRecordService.getPlanners( getPlanCommunity().getUri() );
+        return userRecordService.getCommunityPlanners( getPlanCommunity().getUri() );
     }
 
     @Override
@@ -393,7 +393,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public boolean isCustodianOf( ChannelsUser user, Organization placeholder ) {
         if ( !placeholder.isPlaceHolder() ) return false;
-        if ( user.isPlanner( getPlan().getUri() ) ) return true;
+        if ( user.isPlannerOrAdmin( getPlan().getUri() ) ) return true;
         Actor custodian = placeholder.getCustodian();
         return custodian != null
                 && getUserParticipationService().isUserParticipatingAs( user, new Agent( custodian ), this );

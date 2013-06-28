@@ -81,6 +81,13 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
     List<ChannelsUser> getPlanners( String uri );
 
     /**
+     * Get all users who are explicitly planners for a community given its uri.
+     * @param communityUri a community uri
+     * @return a list of Channels users
+     */
+    List<ChannelsUser> getCommunityPlanners( String communityUri );
+
+    /**
      * Get all user names (email addresses) for a given plan.
      *
      * @param uri the plan uri
@@ -213,15 +220,6 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
     //////
 
     /**
-     * Whether a user was authorized as community planner.
-     *
-     * @param user             a Channels user
-     * @param communityService a community service
-     * @return a boolean
-     */
-    boolean isPlanner( ChannelsUser user, CommunityService communityService );
-
-    /**
      * Authorize a user as planner in a community.
      * Can return null if promotion is not allowed.
      *
@@ -230,7 +228,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param communityService a community service
      * @return a community planner's user record
      */
-    UserRecord authorizePlanner( String username, ChannelsUser planner, CommunityService communityService );
+    UserRecord authorizeCommunityPlanner( String username, ChannelsUser planner, CommunityService communityService );
 
     /**
      * Remove planner status from user in a community.
@@ -240,7 +238,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param communityService a community service
      * @return whether resignation was effective
      */
-    boolean resignAsPlanner( String username, ChannelsUser planner, CommunityService communityService );
+    boolean resignAsCommunityPlanner( String username, ChannelsUser planner, CommunityService communityService );
 
     /**
      * Add a first planner to a plan community.
@@ -250,4 +248,4 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      */
     void addFounder( ChannelsUser founder, PlanCommunity planCommunity );
 
-}
+ }

@@ -369,7 +369,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                         userParticipationService.getAllParticipations( communityService ) ) {
                     adopters.add( userParticipation.getParticipant( communityService ).getUsername() );
                 }
-                for ( ChannelsUser communityPlanner : userRecordService.getPlanners( communityService.getPlanCommunity().getUri() ) ) {
+                for ( ChannelsUser communityPlanner : userRecordService.getCommunityPlanners( communityService.getPlanCommunity().getUri() ) ) {
                     adopters.add( communityPlanner.getUsername() );
                 }
             }
@@ -387,12 +387,12 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 if ( !userParticipationService.getUserParticipations( user, communityService ).isEmpty() )
                     return planCommunity;
-                if ( userRecordService.isPlanner( user, communityService ) )
+                if ( user.isCommunityPlanner( planCommunity.getUri() ) )
                     return planCommunity;
             }
         }
         PlanCommunity planCommunity = getDomainPlanCommunity( plan );
-        if ( user.isPlanner( plan.getUri() ) ) {
+        if ( user.isPlannerOrAdmin( plan.getUri() ) ) {
             return planCommunity;
         }
         return null;
@@ -406,11 +406,6 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     @Override
     public void addListener( CommunityListener aCommunityListener ) {
         listeners.addListener( aCommunityListener );
-    }
-
-    @Override
-    public boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
-        return userRecordService.isPlanner( user, communityServiceFactory.getService( planCommunity ) );
     }
 
     @Override

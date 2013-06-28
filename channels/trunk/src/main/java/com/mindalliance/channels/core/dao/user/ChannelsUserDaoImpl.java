@@ -161,7 +161,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         Collection<ChannelsUser> userList = getUsers();
         List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );
         for ( ChannelsUser user : userList )
-            if ( user.isPlanner( uri ) )
+            if ( user.isPlannerOrAdmin( uri ) )
                 result.add( user );
 
         return result;

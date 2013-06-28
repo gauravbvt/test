@@ -159,7 +159,7 @@ public class ChannelsUser implements UserDetails {
         if ( userRecord.isAdmin() )
             result.add( new GrantedAuthorityImpl( UserRecord.ROLE_ADMIN ) );
         String uri = plan == null ? null : plan.getUri();
-        if ( userRecord.isPlanner( uri ) )
+        if ( userRecord.isPlannerOrAdmin( uri ) )
             result.add( new GrantedAuthorityImpl( UserRecord.ROLE_PLANNER ) );
         if ( userRecord.isParticipant( uri ) )
             result.add( new GrantedAuthorityImpl( UserRecord.ROLE_USER ) );
@@ -258,9 +258,20 @@ public class ChannelsUser implements UserDetails {
      * @param uri a plan uri
      * @return a boolean
      */
-    public boolean isPlanner( String uri ) {
-        return userRecord.isPlanner( uri );
+    public boolean isPlannerOrAdmin( String uri ) {
+        return userRecord.isPlannerOrAdmin( uri );
     }
+
+    /**
+     * Test if this user is a community planner..
+     *
+     * @param communityUri a plan uri
+     * @return a boolean
+     */
+    public boolean isCommunityPlanner( String communityUri ) {
+        return userRecord.isCommunityPlanner( communityUri );
+    }
+
 
     @Override
     public String toString() {
@@ -356,7 +367,7 @@ public class ChannelsUser implements UserDetails {
      */
     public String getRole( String planUri ) {
         return userRecord.isAdmin() ? ADMIN
-                : userRecord.isPlanner( planUri ) ? PLANNER
+                : userRecord.isPlannerOrAdmin( planUri ) ? PLANNER
                 : userRecord.isParticipant( planUri ) ? PARTICIPANT
                 : UNAUTHORIZED;
     }
@@ -369,7 +380,7 @@ public class ChannelsUser implements UserDetails {
     public String getRole( ) {
         String planUri = getPlanUri();
         return userRecord.isAdmin() ? ADMIN
-                : userRecord.isPlanner( planUri ) ? PLANNER
+                : userRecord.isPlannerOrAdmin( planUri ) ? PLANNER
                 : userRecord.isParticipant( planUri ) ? PARTICIPANT
                 : UNAUTHORIZED;
     }
@@ -422,5 +433,6 @@ public class ChannelsUser implements UserDetails {
                 ? plan.getUri()
                 : planCommunityUri;
     }
+
 }
 

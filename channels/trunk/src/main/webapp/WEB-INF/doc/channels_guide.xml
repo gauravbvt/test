@@ -2263,4 +2263,35 @@ For example, at the bottom of in the profile of a role is an index of all other 
             </topic>
         </section>
     </role>
+    <role id="admin">
+        <name>For Channels administrators</name>
+        <section id="settings-page">
+            <name>Channels settings page</name>
+            <topic id="about-settings-page">
+                <name>Channels settings</name>
+                <item>
+                    <description>As an administrator, you manage plans and users for a Channels server.
+
+Plan management consists of:
+
+* Creating a new plan with a unique resource identifier (URI)
+* Deleting a plan - permitted only if not yet adopted by a community
+* Putting the current development version of a plan into production
+* Naming the owner of the plan
+* Changing the default email addresses at which participant or planner feedback is sent
+
+User management consists of:
+
+* Adding a new user with a unique username - be aware that users can not be deleted, only disabled
+* Giving a user a full name, email address and password - the user can later modify all of these
+* Making the user as an admin
+* Disabling the user - this can be later reversed
+* Giving the user planner vs guest (view-only) status for specific plans.
+
+Make sure to press the Apply button for changes to take effect.
+                    </description>
+                </item>
+            </topic>
+        </section>
+    </role>
 </guide>

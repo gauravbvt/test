@@ -747,7 +747,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             if ( userParticipation != null ) {
                 ChannelsUser user = getUser();
                 CommunityService communityService = getCommunityService();
-                return user.isPlanner( getPlan().getUri() ) ||
+                return user.isPlannerOrAdmin( getPlan().getUri() ) ||
                         communityService.getParticipationManager()
                                 .hasAuthorityOverParticipation( communityService, user, userParticipation );
             } else {

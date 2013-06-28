@@ -74,7 +74,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
             ResourceSpec profile =  getProfile( service, parameters );
             Plan plan = service.getPlan();
             String override = parameters.get( "user" ).toString( null);
-            AggregatedContact contact = getUser().isPlanner( plan.getUri() )
+            AggregatedContact contact = getUser().isPlannerOrAdmin( plan.getUri() )
             ? new AggregatedContact( service, profile.getActor(), override )
             : new AggregatedContact( service, profile.getActor(), getUser().getUsername() );
             contact.resolveChannels( service );

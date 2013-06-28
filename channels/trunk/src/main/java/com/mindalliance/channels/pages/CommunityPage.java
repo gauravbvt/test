@@ -277,7 +277,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         PlanCommunity planCommunity = communityService.getPlanCommunity();
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String planUri = plan.getUri();
-        boolean planner = user.isPlanner( planUri );
+        boolean planner = user.isPlannerOrAdmin( planUri );
         boolean communityLeader = communityService.isCommunityPlanner( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
@@ -377,7 +377,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoProtocolsDescription( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() )
+        return user.isPlannerOrAdmin( plan.getUri() )
                 ? "Set how users participate in the plan and view their collaboration checklists."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
     }
@@ -466,7 +466,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
-        return user.isPlanner( plan.getUri() ) && getPlan().isDevelopment()
+        return user.isPlannerOrAdmin( plan.getUri() ) && getPlan().isDevelopment()
                 ? "Build or modify the " + plan.getName() + " plan.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
                 : "View the " + plan.getName() + " plan.\n" +

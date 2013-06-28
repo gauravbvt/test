@@ -110,7 +110,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         for ( Plan plan : planManager.getPlans() ) {
             String uri = plan.getUri();
             if ( !user.getRole( uri ).equals( ChannelsUser.UNAUTHORIZED )
-                    && ( user.isPlanner( uri ) || plan.isProduction() ) ) {
+                    && ( user.isPlannerOrAdmin( uri ) || plan.isProduction() ) ) {
                 user.setPlan( plan );
                 result.add( new PlanSummaryData(
                         serverUrl,
@@ -615,7 +615,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         Plan plan = communityService.getPlan();
         if ( user == null
                 || plan == null
-                || ( plan.isDevelopment() && !user.isPlanner( uri ) )
+                || ( plan.isDevelopment() && !user.isPlannerOrAdmin( uri ) )
                 || ( plan.isProduction() && !user.isParticipant( uri ) ) )
             throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
         user.setCommunityService( communityService );

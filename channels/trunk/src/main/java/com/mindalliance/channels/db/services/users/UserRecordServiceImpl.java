@@ -225,9 +225,19 @@ public class UserRecordServiceImpl
         Collection<ChannelsUser> userList = getAllEnabledUsers();
         List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );
         for ( ChannelsUser user : userList )
-            if ( user.isPlanner( uri ) )
+            if ( user.isPlannerOrAdmin( uri ) )
                 result.add( user );
 
+        return result;
+    }
+
+    @Override
+    public List<ChannelsUser> getCommunityPlanners( String communityUri ) {
+        Collection<ChannelsUser> userList = getAllEnabledUsers();
+        List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );
+        for ( ChannelsUser user : userList )
+            if ( user.isCommunityPlanner( communityUri ) )
+                result.add( user );
         return result;
     }
 
@@ -398,18 +408,14 @@ public class UserRecordServiceImpl
     //////////////
 
     @Override
-    public boolean isPlanner( ChannelsUser user, CommunityService communityService ) {
-        return isPlanner( user.getUsername(), communityService.getPlanCommunity().getUri() );
-    }
-
-    @Override
-    public UserRecord authorizePlanner( String username,
-                                        ChannelsUser authorizedUser,
-                                        CommunityService communityService ) {
+    public UserRecord authorizeCommunityPlanner( String username,
+                                                 ChannelsUser authorizedUser,
+                                                 CommunityService communityService ) {
         ChannelsUser authorizingUser = getUserWithIdentity( username );
+        String uri = communityService.getPlanCommunity().getUri();
         if ( authorizingUser != null && authorizedUser != null
-                && isPlanner( authorizingUser, communityService )
-                && !isPlanner( authorizedUser, communityService ) ) {
+                && authorizingUser.isPlannerOrAdmin( uri ) //allows admins to authorize community planners
+                && !authorizedUser.isCommunityPlanner( uri ) ) {
             UserRecord userRecord = authorizedUser.getUserRecord();
             userRecord.makePlannerOf( communityService.getPlanCommunity().getUri() );
             save( userRecord );
@@ -422,12 +428,14 @@ public class UserRecordServiceImpl
 
 
     @Override
-    public boolean resignAsPlanner( String username, ChannelsUser planner, CommunityService communityService ) {
+    public boolean resignAsCommunityPlanner( String username, ChannelsUser planner, CommunityService communityService ) {
         ChannelsUser user = getUserWithIdentity( username );
         String uri = communityService.getPlanCommunity().getUri();
-        if ( ( user != null && ( user.isPlanner( uri ) )
-                && getPlanners( uri ).size() > 1 ) ) {
-            UserRecord userRecord = user.getUserRecord();
+        if ( ( user != null
+                && ( user.isPlannerOrAdmin( uri ) )
+                && getCommunityPlanners( uri ).size() > 1 )
+                && planner.isCommunityPlanner(  uri ) ) {
+            UserRecord userRecord = planner.getUserRecord();
             userRecord.makeParticipantOf( uri );
             save( userRecord );
             communityService.clearCache();
@@ -438,7 +446,7 @@ public class UserRecordServiceImpl
 
     @Override
     public void addFounder( ChannelsUser founder, PlanCommunity planCommunity ) {
-        List<ChannelsUser> planners = getPlanners( planCommunity.getUri() );
+        List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
         assert planners.isEmpty(); // Make sure founder is first planner
         UserRecord userRecord = founder.getUserRecord();
         userRecord.makePlannerOf( planCommunity.getUri() );

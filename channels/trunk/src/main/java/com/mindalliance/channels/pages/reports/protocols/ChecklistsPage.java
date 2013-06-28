@@ -188,7 +188,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
-                if ( protocolsUser.isPlanner( communityService.getPlan().getUri() ) ) {
+                if ( protocolsUser.isPlannerOrAdmin( communityService.getPlan().getUri() ) ) {
                     protocolsData = planCommunityEndPoint.getUserProtocols(
                             planCommunity.getUri(),
                             username );

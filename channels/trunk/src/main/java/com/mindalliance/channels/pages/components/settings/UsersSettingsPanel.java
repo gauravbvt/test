@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -230,5 +231,13 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
 
     public void setSearchString( String searchString ) {
         this.searchString = searchString;
+    }
+
+    @Override
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updated ) {
+        if ( change.isRefreshNeeded() ) {
+            addUsersList();
+            target.add( usernamesContainer );
+        }
     }
 }

@@ -35,9 +35,10 @@ import java.util.List;
 public class UserRecordPanel extends AbstractUpdatablePanel {
 
     private static final String NOT_AUTHORIZED = "Not authorized";
+    private static final String GUEST = "Guest"; // == plan participant
     private UserRecord userRecord;
     private UserRecord userRecordUpdate;
-    private WebMarkupContainer userRecordContainer;
+    private WebMarkupContainer userIdentityContainer;
     private WebMarkupContainer privilegesContainer;
     private Plan selectedPlan;
 
@@ -47,6 +48,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     @SpringBean
     private PlanManager planManager;
     private WebMarkupContainer planPrivilegesContainer;
+    private WebMarkupContainer userRecordContainer;
 
     public UserRecordPanel( String id, UserRecord userRecord ) {
         super( id );
@@ -56,18 +58,25 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     }
 
     private void init() {
-        userRecordContainer = new WebMarkupContainer( "userRecordContainer" );
-        userRecordContainer.setOutputMarkupId( true );
-        addOrReplace( userRecordContainer );
-        addUserRecordFields();
+        addUserRecord();
         addResetAndApply();
     }
 
-    private void addUserRecordFields() {
+    private void addUserRecord() {
+        userRecordContainer = new WebMarkupContainer( "userRecordContainer"  );
+        userRecordContainer.setOutputMarkupId( true );
+        addOrReplace( userRecordContainer );
+        addUserIdentityFields();
+        addPrivileges();
+    }
+
+    private void addUserIdentityFields() {
+        userIdentityContainer = new WebMarkupContainer( "userIdentityContainer" );
+        userIdentityContainer.setOutputMarkupId( true );
+        userRecordContainer.addOrReplace( userIdentityContainer );
         addFullName();
         addEmail();
         addPassword();
-        addPrivileges();
     }
 
     private void addFullName() {
@@ -81,7 +90,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             }
         } );
         fullNameField.setOutputMarkupId( true );
-        userRecordContainer.addOrReplace( fullNameField );
+        userIdentityContainer.addOrReplace( fullNameField );
     }
 
     private void addEmail() {
@@ -95,7 +104,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 // do nothing
             }
         } );
-        userRecordContainer.addOrReplace( emailField );
+        userIdentityContainer.addOrReplace( emailField );
     }
 
     private void addPassword() {
@@ -109,7 +118,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 // do nothing
             }
         } );
-        userRecordContainer.addOrReplace( passwordField );
+        userIdentityContainer.addOrReplace( passwordField );
     }
 
     private void addPrivileges() {
@@ -118,7 +127,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         addUsernameLabels();
         addGlobalAccess();
         addPlanPrivileges();
-        addOrReplace( privilegesContainer );
+        userRecordContainer.addOrReplace( privilegesContainer );
     }
 
     private void addUsernameLabels() {
@@ -209,7 +218,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
 
     private List<String> getUserRoleChoices() {
         List<String> roleChoices = new ArrayList<String>();
-        roleChoices.add( UserAccess.UserRole.Participant.name() );
+        roleChoices.add( GUEST );
         roleChoices.add( UserAccess.UserRole.Planner.name() );
         roleChoices.add( NOT_AUTHORIZED );
         return roleChoices;
@@ -220,6 +229,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         UserAccess userAccess = userRecordUpdate.getUserAccessForContext( selectedPlan.getUri() );
         return userAccess == null
                 ? NOT_AUTHORIZED
+                : userAccess.getUserRole() == UserAccess.UserRole.Participant
+                ? GUEST
                 : userAccess.getUserRole().name();
     }
 
@@ -228,6 +239,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             UserAccess.UserRole userRole;
             if ( val.equals( NOT_AUTHORIZED ) )
                 userRole = null;
+            else if ( val.equals( GUEST ) )
+                userRole = UserAccess.UserRole.Participant;
             else
                 userRole = UserAccess.UserRole.valueOf( val );
             if ( selectedPlan != null ) {
@@ -245,9 +258,9 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetUserRecord();
-                addUserRecordFields();
+                addUserRecord();
                 target.add( userRecordContainer );
-            }
+             }
         };
         add( resetLink );
         // apply
@@ -256,9 +269,11 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 userRecordService.updateUserRecord( userRecord, userRecordUpdate );
                 resetUserRecord();
-                addUserRecordFields();
+                addUserRecord();
                 target.add( userRecordContainer );
-                update( target, Change.message("Settings changed for " + userRecord.getUsername() ) );
+                Change change = new Change( Change.Type.NeedsRefresh );
+                change.setMessage( "Settings changed for " + userRecord.getUsername() );
+                update( target, change );
             }
         };
         add( applyLink );
@@ -340,6 +355,10 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             if ( val != null ) {
                  if ( val.equals( NOT_AUTHORIZED ) )
                     userRecordUpdate.clearAccess( plan.getUri() );
+                else if ( val.equals( GUEST ) ) {
+                    UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.Participant );
+                    userRecordUpdate.addUserAccess( userAccess );
+                }
                 else {
                     UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.valueOf( val ) );
                      userRecordUpdate.addUserAccess( userAccess );

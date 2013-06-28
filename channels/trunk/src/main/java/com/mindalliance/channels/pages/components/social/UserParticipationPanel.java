@@ -255,7 +255,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         else {
             PlanCommunity planCommunity = getPlanCommunity();
             if ( planCommunity.isDomainCommunity() ) { // context is a plan
-                userRole = user.isPlanner( getPlan().getUri() )
+                userRole = user.isPlannerOrAdmin( getPlan().getUri() )
                         ? "model planner"
                         : "model viewer";
             } else { // context is a plan community
