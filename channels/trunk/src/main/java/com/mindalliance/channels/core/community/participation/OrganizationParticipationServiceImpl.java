@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Organization;
@@ -9,7 +10,6 @@ import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -30,10 +30,10 @@ public class OrganizationParticipationServiceImpl
         extends GenericSqlServiceImpl<OrganizationParticipation, Long>
         implements OrganizationParticipationService {
 
-    @Autowired
+//    @Autowired
     private RegisteredOrganizationService registeredOrganizationService;
 
-    @Autowired
+//    @Autowired
     private UserParticipationService userParticipationService;
 
     public OrganizationParticipationServiceImpl() {
@@ -45,7 +45,7 @@ public class OrganizationParticipationServiceImpl
         Set<Agency> agencies = new HashSet<Agency>();
         for ( OrganizationParticipation orgParticipation : getAllOrganizationParticipations( communityService ) ) {
             if ( isValid( orgParticipation, communityService ) ) {
-                Agency agency = new Agency( orgParticipation, communityService );
+                Agency agency = new Agency( /*orgParticipation, communityService*/ );
                 agencies.add( agency );
             }
         }
@@ -84,7 +84,7 @@ public class OrganizationParticipationServiceImpl
             List<Agency> agencies = new ArrayList<Agency>();
             for ( OrganizationParticipation orgParticipation
                     : validate( (List<OrganizationParticipation>) criteria.list(), communityService ) ) {
-                agencies.add( new Agency( orgParticipation, communityService ) );
+                agencies.add( new Agency( /*orgParticipation, communityService*/ ) );
             }
             return agencies;
         } else {

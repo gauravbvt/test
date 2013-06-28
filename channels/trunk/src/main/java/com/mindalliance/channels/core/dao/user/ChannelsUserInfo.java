@@ -1,10 +1,9 @@
 package com.mindalliance.channels.core.dao.user;
 
-import com.mindalliance.channels.core.community.participation.CommunityPlanner;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
@@ -106,9 +105,6 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
     @Transient
     private List<UserParticipation> userParticipations;
 
-    @OneToMany ( mappedBy = "userInfo", cascade = CascadeType.ALL )
-    @Transient
-    private List<CommunityPlanner> communityPlanners;
 
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
     @Transient
@@ -299,13 +295,6 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
         this.contactInfoList = contactInfoList;
     }
 
-    public List<CommunityPlanner> getCommunityPlanners() {
-        return communityPlanners;
-    }
-
-    public void setCommunityPlanners( List<CommunityPlanner> communityPlanners ) {
-        this.communityPlanners = communityPlanners;
-    }
 
     /**
      * Test if this user is a user of all plans.
@@ -451,7 +440,6 @@ public class ChannelsUserInfo extends AbstractPersistentChannelsObject {
      * @param role     either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
      * @param uri      the plan's uri or null for all
      * @param planList available plans
-     * @see com.mindalliance.channels.core.dao.PlanManagerImpl#setAuthorities
      */
     public void setAuthorities( String role, String uri, List<Plan> planList ) {
         if ( uri == null || ROLE_ADMIN.equals( role ) )

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.imaging;
 
 import com.mindalliance.channels.core.AttachmentManager;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Function;

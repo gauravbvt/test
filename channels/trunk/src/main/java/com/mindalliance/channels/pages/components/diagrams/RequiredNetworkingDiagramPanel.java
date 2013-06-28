@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.diagrams;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.participation.Agency;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Phase;
@@ -90,7 +90,7 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
     protected String makeDiagramUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append( "required.png?agency=" );
-        sb.append( selectedAgency == null ? "NONE" : selectedAgency.getId() );
+        sb.append( selectedAgency == null ? "NONE" : selectedAgency.getUid() );
         sb.append("&connection=");
         sb.append( selectedRequirementRel == null ? "NONE" : selectedRequirementRel.getRelationshipId() );
         if ( getTiming() != null ) {
@@ -154,9 +154,8 @@ public class RequiredNetworkingDiagramPanel extends AbstractDiagramPanel {
             Map<String, String> extras,
             AjaxRequestTarget target ) {
         try {
-            Long agencyId = Long.parseLong( vertexId );
              Agency agency = getCommunityService().getParticipationManager().findAgencyById(
-                     agencyId,
+                     vertexId,
                      getCommunityService() );
              if ( !agency.equals( selectedAgency ) ) {
                  String js = scroll( domIdentifier, scrollTop, scrollLeft );

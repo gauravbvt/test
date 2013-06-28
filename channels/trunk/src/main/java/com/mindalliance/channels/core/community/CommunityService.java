@@ -1,16 +1,9 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -19,6 +12,10 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 
 import java.util.Date;
@@ -78,7 +75,7 @@ public interface CommunityService {
 
     ParticipationManager getParticipationManager();
 
-    ChannelsUserDao getUserDao();
+    UserRecordService getUserRecordService();
 
     ParticipationAnalyst getParticipationAnalyst();
 

@@ -4,28 +4,27 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.CommunityPlanner;
-import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.data.messages.UserStatement;
 import com.mindalliance.channels.db.data.surveys.RFI;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.data.users.UserAccess;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.messages.MessageOutboxService;
 import com.mindalliance.channels.db.services.messages.UserMessageService;
 import com.mindalliance.channels.db.services.surveys.RFIService;
 import com.mindalliance.channels.db.services.surveys.RFISurveyService;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +76,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     private FeedbackService feedbackService;
 
     @Autowired
-    private ChannelsUserDao userDao;
+    private UserRecordService userDao;
 
     @Autowired
     private PlanManager planManager;
@@ -104,7 +102,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     @Autowired
     private CommunityServiceFactory communityServiceFactory;
     @Autowired
-    private CommunityPlannerService communityPlannerService;
+    private UserRecordService userRecordService;
 
     private List<MessagingService> messagingServices;
 
@@ -121,7 +119,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Transactional
+ //   @Transactional
     public void notifyOfUserMessages() {
         LOG.debug( "Sending out user messages" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -151,7 +149,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Transactional
+ //   @Transactional
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -175,7 +173,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
-    @Transactional
+ //   @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -210,7 +208,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Transactional
+ //   @Transactional
     public void notifyOfSurveys() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
@@ -270,7 +268,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
-    @Transactional
+ //   @Transactional
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of incomplete surveys and surveys status" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -288,21 +286,24 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Transactional
-    public void notifyOnCommunityPlannerAuthorization() {
+//    @Transactional
+    public void notifyOnUserAccessChange() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
-            for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( communityService ) ) {
-                if ( !communityPlanner.isUserNotified() ) {
+            String uri = communityService.getPlanCommunity().getUri();
+            for ( ChannelsUser user : userRecordService.getUsers( uri ) ) {
+                UserRecord userRecord = user.getUserRecord();
+                List<UserAccess> toNotifyAbout = new ArrayList<UserAccess>( userRecord.getAccessChangesToNotify( uri ) );
+                if ( !toNotifyAbout.isEmpty() ) {
                     List<String> successes = sendMessages(
-                            communityPlanner,
-                            CommunityPlanner.AUTHORIZED_AS_PLANNER,
+                            user.getUserRecord(),
+                            UserRecord.ACCESS_PRIVILEGES_CHANGED,
                             false,
                             communityService
                     );
                     if ( !successes.isEmpty() ) {
-                        communityPlanner.setUserNotified( true );
-                        communityPlannerService.save( communityPlanner );
+                        userRecord.resetAccessChangeToNotify( uri );
+                        userRecordService.save( userRecord );
                     }
                 }
             }
@@ -311,7 +312,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Transactional
+//    @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
@@ -335,14 +336,14 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day
-    @Transactional
+//    @Transactional
     public void reportOnParticipationConfirmation() {
         // todo
     }
 
     @Override
     @Scheduled( fixedDelay = 60000 )     // every minute
-    @Transactional
+//    @Transactional
     public void notifyOfParticipationRequest() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
@@ -368,7 +369,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day
-    @Transactional
+//    @Transactional
     public void reportOnParticipationRequests() {
         //Todo
     }
@@ -410,7 +411,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
             rfis.add( incompleteRFI );
         }
         for ( String surveyedUsername : userRFIs.keySet() ) {
-            ChannelsUser user = userDao.getUserNamed( surveyedUsername );
+            ChannelsUser user = userDao.getUserWithIdentity( surveyedUsername );
             if ( user != null ) {
                 List<RFI> rfis = userRFIs.get( surveyedUsername );
                 Collections.sort(
@@ -422,7 +423,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
                             }
                         } );
                 sendReport(
-                        user.getUserInfo(),
+                        user.getUserRecord(),
                         rfis,
                         RFI.TODO,
                         communityService
@@ -458,17 +459,17 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     private boolean sendReport(
-            ChannelsUserInfo recipient,
+            UserRecord recipient,
             List<? extends Messageable> messageables,
             String topic,
             CommunityService communityService ) {
-        List<ChannelsUserInfo> recipients = new ArrayList<ChannelsUserInfo>();
+        List<UserRecord> recipients = new ArrayList<UserRecord>();
         recipients.add( recipient );
         return sendReport( recipients, messageables, topic, communityService );
     }
 
     private boolean sendReport(
-            List<ChannelsUserInfo> recipients,
+            List<UserRecord> recipients,
             List<? extends Messageable> messageables,
             String topic,
             CommunityService communityService ) {
@@ -484,10 +485,10 @@ public class NotificationServiceImpl implements NotificationService, Initializin
         return reported;
     }
 
-    private List<ChannelsUserInfo> getPlanners( Plan plan ) {
-        List<ChannelsUserInfo> planners = new ArrayList<ChannelsUserInfo>();
+    private List<UserRecord> getPlanners( Plan plan ) {
+        List<UserRecord> planners = new ArrayList<UserRecord>();
         for ( ChannelsUser user : userDao.getPlanners( plan.getUri() ) ) {
-            planners.add( user.getUserInfo() );
+            planners.add( user.getUserRecord() );
         }
         return planners;
     }

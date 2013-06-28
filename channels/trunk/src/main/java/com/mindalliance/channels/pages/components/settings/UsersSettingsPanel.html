@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="manage-users">
+        <div>
+            <label>New user</label>
+            <input type="text" wicket:id="newUsername" style="width:50%">
+            <a class="button" wicket:id="addUser">Add</a>
+        </div>
+        <div wicket:id="selectUserContainer" class="usernames" style="float: left;">
+            <h3>Usernames</h3>
+            <div>
+                <input wicket:id="search" type="text" style="width:75%"/>
+                <img wicket:id="applySearch" src="images/search.png" alt="Search users"/>
+                <table wicket:id="usernamesContainer">
+                    <tr wicket:id="usernames"> <!-- repeated -->
+                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
+                        <td><span wicket:id="username">username</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+       <span wicket:id="userRecord">[user record panel]</span>
+    </div>
+</wicket:panel>
+</body>
+</html>

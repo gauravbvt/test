@@ -4,10 +4,6 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
-import com.mindalliance.channels.core.community.participation.CommunityPlanner;
-import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.Exporter;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.Journal;
@@ -18,6 +14,9 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
@@ -63,7 +62,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
     private UserParticipationService userParticipationService;
 
     @Autowired
-    private CommunityPlannerService communityPlannerService;
+    private UserRecordService userRecordService;
 
     /**
      * All the plans, indexed by version uri (uri:version).
@@ -353,7 +352,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                 plan.getUri(),
                 plan.getVersion() );
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
-        communityPlannerService.addFounder( founder, planCommunity );
+        userRecordService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
         planCommunity.setDateCreated( new Date() );
         return planCommunity;
@@ -368,10 +367,10 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 for ( UserParticipation userParticipation :
                         userParticipationService.getAllParticipations( communityService ) ) {
-                    adopters.add( userParticipation.getParticipant().getUsername() );
+                    adopters.add( userParticipation.getParticipant( communityService ).getUsername() );
                 }
-                for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( communityService ) ) {
-                    adopters.add( communityPlanner.getUserInfo().getUsername() );
+                for ( ChannelsUser communityPlanner : userRecordService.getPlanners( communityService.getPlanCommunity().getUri() ) ) {
+                    adopters.add( communityPlanner.getUsername() );
                 }
             }
         }
@@ -388,7 +387,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 if ( !userParticipationService.getUserParticipations( user, communityService ).isEmpty() )
                     return planCommunity;
-                if ( communityPlannerService.isPlanner( user, communityService ) )
+                if ( userRecordService.isPlanner( user, communityService ) )
                     return planCommunity;
             }
         }
@@ -411,7 +410,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     @Override
     public boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
-        return communityPlannerService.isPlanner( user, communityServiceFactory.getService( planCommunity ) );
+        return userRecordService.isPlanner( user, communityServiceFactory.getService( planCommunity ) );
     }
 
     @Override

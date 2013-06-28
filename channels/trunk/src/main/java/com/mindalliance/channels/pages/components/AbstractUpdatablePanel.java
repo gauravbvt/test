@@ -16,11 +16,8 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -30,6 +27,9 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
@@ -91,7 +91,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
     private UserParticipationService userParticipationService;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private PlanServiceFactory planServiceFactory;
@@ -635,7 +635,7 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         if ( userName == null ) {
             return "?";
         } else {
-            ChannelsUser aUser = userDao.getUserNamed( userName );
+            ChannelsUser aUser = userInfoService.getUserWithIdentity( userName );
             return aUser == null ? userName : aUser.getFullName();
         }
     }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -12,7 +13,6 @@ import com.mindalliance.channels.social.services.notification.Messageable;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -29,7 +29,7 @@ import java.util.List;
  * Date: 3/12/12
  * Time: 2:24 PM
  */
-@Entity
+// @Entity
 public class UserParticipation extends AbstractPersistentChannelsObject implements Messageable {
 
     public static final String VALIDATION_REQUESTED = "validation requested";
@@ -64,7 +64,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
 
     public UserParticipation( String username, ChannelsUser participatingUser, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
-        this.participant = participatingUser.getUserInfo();
+      //  this.participant = participatingUser.getUserInfo();
     }
 
     public UserParticipation( String username,
@@ -73,7 +73,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
                               PlanCommunity planCommunity ) {
         this( username, participatingUser, planCommunity );
         this.actorId = agent.getActorId();
-        organizationParticipation = agent.getOrganizationParticipation();
+       // organizationParticipation = agent.getOrganizationParticipation();
     }
 
     public UserParticipation( UserParticipation participation ) {
@@ -113,7 +113,7 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
         if ( organizationParticipation == null ) {
             return new Agent( actor );
         } else {
-            return new Agent( actor, organizationParticipation, communityService );
+            return new Agent( actor/*, organizationParticipation, communityService*/ );
         }
     }
 
@@ -231,8 +231,9 @@ public class UserParticipation extends AbstractPersistentChannelsObject implemen
     @Override
     public List<String> getToUserNames( String topic, CommunityService communityService ) {
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
-            return communityService.getUserParticipationService()
-                .listSupervisorsToNotify( this, communityService );
+            return null;
+           /* return communityService.getUserParticipationService()
+                .listSupervisorsToNotify( this, communityService );*/
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             List<String> usernames = new ArrayList<String>();
             usernames.add( participant.getUsername() );

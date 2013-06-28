@@ -3,13 +3,13 @@ package com.mindalliance.channels.pages.components.social;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.data.messages.UserStatement;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.messages.UserMessageService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -56,7 +56,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private UserMessageService userMessageService;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     private static final int A_FEW = 5;
     private static final int MORE = 5;
@@ -84,8 +84,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_PLANNERS = new ChannelsUser( new ChannelsUserInfo( ChannelsUserInfo.PLANNERS, "bla,Anonymous,bla" ) );
-        ALL_USERS = new ChannelsUser( new ChannelsUserInfo( ChannelsUserInfo.USERS, "bla,Anonymous,bla" ) );
+        ALL_PLANNERS = new ChannelsUser( new UserRecord( "_channels_" , UserRecord.PLANNERS ) );
+        ALL_USERS = new ChannelsUser( new UserRecord( "_channels_", UserRecord.USERS ) );
     }
 
     public UserMessageListPanel( String id, Updatable updatable, boolean collapsible, boolean showProfile ) {
@@ -282,7 +282,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
 
     private List<ChannelsUser> getCandidateRecipients() {
         List<ChannelsUser> recipients = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userDao.getPlanners( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userInfoService.getPlanners( getPlan().getUri() ) ) {
             if ( !user.getUsername().equals( getUser().getUsername() ) ) {
                 recipients.add( user );
             }
@@ -435,7 +435,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public void newMessage( String username, ModelObject about, AjaxRequestTarget target ) {
-        setNewMessageRecipient( userDao.getUserNamed( username ) );
+        setNewMessageRecipient( userInfoService.getUserWithIdentity( username ) );
         setNewMessageAbout( about );
         addNewMessage();
         refresh( target, new Change( Change.Type.Communicated ) );

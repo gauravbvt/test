@@ -1,7 +1,7 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
 import com.mindalliance.channels.core.model.Identifiable;

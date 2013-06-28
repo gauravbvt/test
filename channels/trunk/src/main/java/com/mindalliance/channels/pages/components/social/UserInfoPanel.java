@@ -2,14 +2,13 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -61,10 +60,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
 
     @SpringBean
-    private ChannelsUserDao userDao;
-
-    @SpringBean
-    private UserContactInfoService userContactInfoService;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private ImagingService imagingService;
@@ -123,7 +119,8 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     private void resetTemp() {
         ChannelsUser user = getUser();
-        ChannelsUserInfo tempUserInfo = new ChannelsUserInfo(
+        UserRecord tempUserInfo = new UserRecord(
+                user.getUsername(),
                 user.getUsername(),
                 user.getFullName(),
                 user.getEmail()
@@ -141,7 +138,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private void addIdentity() {
-        userInfoContainer.add( new Label( "userId", new Model<String>( getUser().getUserInfo().getUsername() ) ) );
+        userInfoContainer.add( new Label( "userId", new Model<String>( getUser().getUserRecord().getUsername() ) ) );
         addFullNameField();
         addEmailField();
         addPhotoFields();
@@ -292,7 +289,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                 new ChannelListPanel(
                         "contactInfo",
                         new Model<Channelable>( new UserChannels(
-                                getUser().getUserInfo()
+                                getUser().getUserRecord()
                         ) ),
                         false,     // don't allow adding new media
                         true ) );  // restrict to immutable media
@@ -459,11 +456,10 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     private boolean save() throws IOException {
         if ( passwordOk && !newPassword.isEmpty() && isValidNewPassword() ) {
-            temp.getUserInfo().setPassword( newPassword );
+            temp.getUserRecord().setPassword( newPassword );
         }
         if ( canSave() ) {
-            userDao.updateIdentity( getUser().getUserInfo(), temp.getUserInfo() );
-            return true;
+            return userInfoService.updateUserRecord( getUser().getUserRecord(), temp.getUserRecord() );
         } else {
             return false;
         }
@@ -480,7 +476,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     public void setFullName( String val ) {
-        temp.getUserInfo().setFullName( val == null ? "" : val );
+        temp.getUserRecord().setFullName( val == null ? "" : val );
     }
 
 
@@ -489,7 +485,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     public void setEmail( String val ) {
-        temp.getUserInfo().setEmail( val == null ? "" : val );
+        temp.getUserRecord().setEmail( val == null ? "" : val );
     }
 
     public String getPassword() {
@@ -497,7 +493,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     public void setPassword( String val ) {
-        passwordHash = val == null ? "" : ChannelsUserInfo.digestPassword( val.trim() );
+        passwordHash = val == null ? "" : UserRecord.digestPassword( val.trim() );
         passwordOk = isValidPassword();
         newPassword = "";
         repeatNewPassword = "";
@@ -530,15 +526,15 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     public class UserChannels implements Channelable {
 
 
-        private ChannelsUserInfo userInfo;
+        private UserRecord userInfo;
 
-        public UserChannels( ChannelsUserInfo userInfo ) {
+        public UserChannels( UserRecord userInfo ) {
             this.userInfo = userInfo;
         }
 
         @Override
         public List<Channel> getEffectiveChannels() {
-            return userContactInfoService.findChannels( getUserInfo(), getCommunityService() );
+            return userInfoService.findChannels( getUserInfo(), getCommunityService() );
         }
 
         @Override
@@ -548,17 +544,17 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
         @Override
         public void addChannel( Channel channel ) {
-            userContactInfoService.addChannel( getUserInfo().getUsername(), getUserInfo(), channel );
+            userInfoService.addChannel( getUserInfo().getUsername(), getUserInfo(), channel );
         }
 
         @Override
         public void removeChannel( Channel channel ) {
-            userContactInfoService.removeChannel( getUserInfo(), channel );
+            userInfoService.removeChannel( getUserInfo(), channel );
         }
 
         @Override
         public void setAddress( Channel channel, String address ) {
-            userContactInfoService.setAddress( getUserInfo(), channel, address );
+            userInfoService.setAddress( getUserInfo(), channel, address );
         }
 
         @Override
@@ -654,7 +650,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             return getUserInfo().getFullName();
         }
 
-        private ChannelsUserInfo getUserInfo() {
+        private UserRecord getUserInfo() {
             return userInfo;
         }
     }

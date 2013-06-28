@@ -1,7 +1,7 @@
 package com.mindalliance.channels.social.services.impl.notification;
 
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.social.services.notification.ChannelsMessagingService;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class ChannelsMessagingServiceImpl extends AbstractMessageServiceImpl imp
 
     @Override
     public boolean sendReport(
-            List<ChannelsUserInfo> recipients,
+            List<UserRecord> recipients,
             List<? extends Messageable> messageables,
             String topic,
             CommunityService communityService ) {

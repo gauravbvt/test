@@ -2,17 +2,17 @@ package com.mindalliance.channels.api.directory;
 
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -40,7 +40,7 @@ public class ContactData implements Serializable {
 
     private CommunityEmployment employment;
     private CommunityCommitment commitment; // can be null if not in the context of a notification or request
-    private ChannelsUserInfo userInfo;
+    private UserRecord userInfo;
     private boolean includeSupervisor;
     private List<ChannelData> workChannels;
     private List<ContactData> supervisorContacts;
@@ -58,7 +58,7 @@ public class ContactData implements Serializable {
     public ContactData(
             String serverUrl,
             CommunityEmployment employment,
-            ChannelsUserInfo userInfo,
+            UserRecord userInfo,
             boolean includeSupervisor,
             CommunityService communityService ) {
         this.employment = employment;
@@ -71,7 +71,7 @@ public class ContactData implements Serializable {
                         String serverUrl,
                         CommunityEmployment employment,
                         CommunityCommitment commitment,
-                        ChannelsUserInfo userInfo,
+                        UserRecord userInfo,
                         boolean includeSupervisor,
                         CommunityService communityService ) {
         this.employment = employment;
@@ -117,7 +117,7 @@ public class ContactData implements Serializable {
                 contactList.add( new ContactData(
                         serverUrl,
                         employment,
-                        otherParticipation.getParticipant(),
+                        otherParticipation.getParticipant( communityService ),
                         true,
                         communityService ) );
             }
@@ -140,7 +140,7 @@ public class ContactData implements Serializable {
             CommunityEmployment employment,
             CommunityCommitment commitment,
             CommunityService communityService,
-            ChannelsUserInfo userInfo ) {
+            UserRecord userInfo ) {
         List<ContactData> contactList = new ArrayList<ContactData>();
         Agent agent = employment.getAgent();
         if ( agent.isAnonymousParticipation() ) {
@@ -170,7 +170,7 @@ public class ContactData implements Serializable {
                         serverUrl,
                         employment,
                         commitment,
-                        otherParticipation.getParticipant(),
+                        otherParticipation.getParticipant( communityService ),
                         true,
                         communityService ) );
             }
@@ -206,7 +206,7 @@ public class ContactData implements Serializable {
         personalChannels = new ArrayList<ChannelData>();
         if ( userInfo != null ) {
             for ( Channel channel : communityService.getPlanService()
-                    .getUserContactInfoService().findChannels( userInfo, communityService ) ) {
+                    .getUserInfoService().findChannels( userInfo, communityService ) ) {
                 personalChannels.add( new ChannelData(
                         channel.getMedium().getId(),
                         channel.getAddress(),
@@ -270,7 +270,7 @@ public class ContactData implements Serializable {
                         supervisorContacts.add( new ContactData(
                                 serverUrl,
                                 supervisorEmployment,
-                                participation.getParticipant(),
+                                participation.getParticipant( communityService ),
                                 false,
                                 communityService ) );
                     }
@@ -337,7 +337,7 @@ public class ContactData implements Serializable {
     static private List<UserParticipation> getOtherParticipations(
             Agent agent,
             CommunityService communityService,
-            ChannelsUserInfo userInfo ) {
+            UserRecord userInfo ) {
         UserParticipationService userParticipationService = communityService.getUserParticipationService();
         String username = userInfo == null ? null : userInfo.getUsername();
         List<UserParticipation> otherParticipations = new ArrayList<UserParticipation>();
@@ -360,7 +360,7 @@ public class ContactData implements Serializable {
         sb.append( "_" );
         sb.append( contactedEmployment().getRole().getId() );
         sb.append( "_" );
-        sb.append( contactedEmployment().getEmployer().getId() );
+        sb.append( contactedEmployment().getEmployer().getUid() );
         return sb.toString();
     }
 

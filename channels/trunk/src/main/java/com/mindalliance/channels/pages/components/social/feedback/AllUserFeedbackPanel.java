@@ -4,13 +4,13 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -79,7 +79,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
     FeedbackService feedbackService;
 
     @SpringBean
-    ChannelsUserDao userDao;
+    UserRecordService userInfoService;
 
     /**
      * Filters mapped by property.
@@ -242,7 +242,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
             if ( sb.length() != 0 ) sb.append( " " );
             sb.append( feedback.getTypeLabel() );
             sb.append( " from " );
-            ChannelsUser user = userDao.getUserNamed( feedback.getUsername() );
+            ChannelsUser user = userInfoService.getUserWithIdentity( feedback.getUsername() );
             sb.append( user == null ? feedback.getUsername() : user.getFullName() );
             sb.append( " about " );
             sb.append( feedback.getTopic().toLowerCase() );
@@ -516,7 +516,7 @@ public class AllUserFeedbackPanel extends AbstractUpdatablePanel implements Filt
         }
 
         public String getFullName() {
-            return feedback.getUserFullName( userDao );
+            return feedback.getUserFullName( userInfoService );
         }
 
         public String getExpandLabel() {

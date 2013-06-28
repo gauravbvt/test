@@ -19,7 +19,7 @@ public interface NotificationService {
 
     void reportOnSurveys();
 
-    void notifyOnCommunityPlannerAuthorization();
+    void notifyOnUserAccessChange();
 
     void notifyOfParticipationConfirmation();
 

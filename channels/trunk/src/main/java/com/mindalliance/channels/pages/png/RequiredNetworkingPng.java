@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.png;
 
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Phase;
@@ -57,7 +57,7 @@ public class RequiredNetworkingPng extends DiagramPng {
         }
         if ( parameters.getNamedKeys().contains( "agency" )
                 && !parameters.get( "agency" ).toString().equals( "NONE" ) ) {
-            Long agencyId = parameters.get( "agency" ).toLong();
+            String agencyId = parameters.get( "agency" ).toString();
             try {
                 selectedAgency = communityService.getParticipationManager().findAgencyById( agencyId, communityService );
             } catch ( NotFoundException e ) {

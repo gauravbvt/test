@@ -1,10 +1,10 @@
 package com.mindalliance.channels.pages.components.community.requirements;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -356,13 +356,13 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
         try {
             ParticipationManager participationManager = getCommunityService().getParticipationManager();
             Requirement appliedReq = requirement.transientCopy();
-            if ( qualifiers.containsKey( "committerAgency.id" ) ) {
-                Long id = (Long) qualifiers.get( "committerAgency.id" );
+            if ( qualifiers.containsKey( "committerAgency.uid" ) ) {
+                String id = (String) qualifiers.get( "committerAgency.uid" );
                 Agency committerOrg = participationManager.findAgencyById( id, getCommunityService() );
                 appliedReq.setCommitterAgency( committerOrg );
             }
-            if ( qualifiers.containsKey( "beneficiaryAgency.id" ) ) {
-                Long id = (Long) qualifiers.get( "beneficiaryAgency.id" );
+            if ( qualifiers.containsKey( "beneficiaryAgency.uid" ) ) {
+                String id = (String) qualifiers.get( "beneficiaryAgency.uid" );
                 Agency beneficiaryOrg = participationManager.findAgencyById( id, getCommunityService() );
                 appliedReq.setBeneficiaryAgency( beneficiaryOrg );
             }
@@ -506,8 +506,8 @@ public class RequirementsAnalysisPanel extends AbstractUpdatablePanel implements
                     "",
                     "",
                     "view",
-                    "committerAgency.id",
-                    "beneficiaryAgency.id",
+                    "committerAgency.uid",
+                    "beneficiaryAgency.uid",
                     "beneficiarySpec.timing",
                     "beneficiarySpec.event" ) );
             List<Requirement> requirements = appliedRequirementsModel.getObject();

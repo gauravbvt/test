@@ -8,10 +8,10 @@ package com.mindalliance.channels.core.query;
 
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 
 /**
  * A query service targeted to a single plan.
@@ -25,7 +25,7 @@ public class PlanService extends DefaultQueryService {
     public PlanService() {
     }
 
-    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, ChannelsUserDao userDao,
+    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, UserRecordService userDao,
                         AttachmentManager attachmentManager, SurveysDAO surveysDao,
                         Plan plan ) {
 
@@ -37,7 +37,7 @@ public class PlanService extends DefaultQueryService {
         this.plan = plan;
     }
 
-    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, ChannelsUserDao userDao,
+    public PlanService( PlanManager planManager, SemanticMatcher semanticMatcher, UserRecordService userDao,
                         AttachmentManager attachmentManager, SurveysDAO surveysDao ) {
 
         super( planManager,

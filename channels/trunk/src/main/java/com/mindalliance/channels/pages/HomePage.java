@@ -98,7 +98,7 @@ public class HomePage extends AbstractChannelsBasicPage {
         );
 
         // Settings
-        BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", "", AdminPage.class, null, getPlan() );
+        BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", SettingsPage.class );
         addTipTitle(
                 gotoAdminLink,
                 "Configure Channels, add users, change access privileges, and create, configure, release, or delete collaboration plans" );

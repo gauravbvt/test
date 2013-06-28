@@ -1,10 +1,8 @@
-package com.mindalliance.channels.core.community.participation;
+package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Job;
@@ -12,6 +10,13 @@ import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,7 +150,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         }
         // Registered agents
         for ( Agency agency : organizationParticipationService.listParticipatingAgencies( communityService ) ) {
-            if ( agency.isRegisteredByCommunity() )
+            if ( agency.isRegisteredByCommunity( communityService ) )
                 agents.addAll( agency.getAgents( communityService ) );
         }
         return new ArrayList<Agent>( agents );
@@ -426,7 +431,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         return hasAuthorityOverParticipation(
                 communityService,
                 user,
-                userParticipation.getParticipant(),
+                userParticipation.getParticipant( communityService ),
                 userParticipation.getAgent( communityService )
         );
     }
@@ -435,10 +440,10 @@ public class ParticipationManagerImpl implements ParticipationManager {
     public boolean hasAuthorityOverParticipation(
             final CommunityService communityService,
             ChannelsUser user,
-            ChannelsUserInfo participantInfo,
+            UserRecord participantInfo,
             Agent participationAgent ) {
         // A user can unilaterally terminate his/her own participation.
-        if ( user.getUserInfo().equals( participantInfo ) ) return true;
+        if ( user.getUserRecord().equals( participantInfo ) ) return true;
         // else, does the user participate as one of the agents supervising the participation agent?
         final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs( user, communityService );
         List<Agent> supervisorAgents = findAllSupervisorsOf( participationAgent, communityService );
@@ -522,18 +527,34 @@ public class ParticipationManagerImpl implements ParticipationManager {
     }
 
     @Override
-    public Agency findAgencyById( long id, CommunityService communityService ) throws NotFoundException {
+    public Agency findAgencyById( String id, CommunityService communityService ) throws NotFoundException {
         Agency agency = null;
-        if ( id < Long.MAX_VALUE / 2 ) {
-            Organization org = communityService.getPlanService().find( Organization.class, id ); // todo - COMMUNITY - id could have shifted since recorded
+        try {
+            long longId = Long.parseLong( id );
+            Organization org = communityService.getPlanService().find( Organization.class, longId ); // todo - COMMUNITY - id could have shifted since recorded
             agency = new Agency( org );
-        } else {
-            OrganizationParticipation orgParticipation = organizationParticipationService.load( id - ( Long.MAX_VALUE / 2 ) );
+        } catch ( NumberFormatException e ) {
+            OrganizationParticipation orgParticipation = organizationParticipationService.load( id );
             if ( orgParticipation != null ) {
                 agency = new Agency( orgParticipation, communityService );
             }
         }
         if ( agency == null ) throw new NotFoundException();
         return agency;
+    }
+
+    @Override
+    public OrganizationParticipation getOrganizationParticipation( String uid ) {
+        return organizationParticipationService.load( uid );
+    }
+
+    @Override
+    public RegisteredOrganization getRegisteredOrganization( String uid ) {
+        return registeredOrganizationService.load( uid );
+    }
+
+    @Override
+    public UserParticipation getUserParticipation( String uid ) {
+        return userParticipationService.load( uid );
     }
 }

@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.reports.infoNeeds;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -67,9 +67,9 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                         parameters.set( VERSION_PARM, getPlanVersion() );
                         Actor actor = p.getAgent(getCommunityService()).getActor();
                         parameters.set( "agent", actor.getId() );
-                        String participantUsername = p.getParticipant().getUsername();
+                        String participantUsername = p.getParticipant( getCommunityService() ).getUsername();
                         parameters.set( "user", participantUsername );
-                        ChannelsUser participatingUser = getUserDao().getUserNamed( participantUsername );
+                        ChannelsUser participatingUser = getUserInfoService().getUserWithIdentity( participantUsername );
                         item.add(
                                 new Label( "participantName", participatingUser.getFullName() )
                                         .setRenderBodyOnly( true ),

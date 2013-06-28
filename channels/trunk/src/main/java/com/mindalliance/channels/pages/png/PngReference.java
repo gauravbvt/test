@@ -3,7 +3,7 @@ package com.mindalliance.channels.pages.png;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -17,21 +17,21 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class PngReference extends ResourceReference {
 
     private Class<? extends ChannelsDynamicImageResource> dynamicPngClass;
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
     private PlanManager planManager;
     private CommunityServiceFactory communityServiceFactory;
     private PlanCommunityManager planCommunityManager;
 
     public PngReference(
             Class<? extends ChannelsDynamicImageResource> dynamicPngClass,
-            ChannelsUserDao userDao,
+            UserRecordService userInfoService,
             PlanManager planManager,
             CommunityServiceFactory communityServiceFactory,
             PlanCommunityManager planCommunityManager
             ) {
         super( dynamicPngClass, dynamicPngClass.getSimpleName()  );
         this.dynamicPngClass = dynamicPngClass;
-        this.userDao = userDao;
+        this.userInfoService = userInfoService;
         this.planManager = planManager;
         this.communityServiceFactory = communityServiceFactory;
         this.planCommunityManager = planCommunityManager;
@@ -43,7 +43,7 @@ public class PngReference extends ResourceReference {
         try {
             ChannelsDynamicImageResource channelsDynamicImageResource = dynamicPngClass.newInstance();
             channelsDynamicImageResource.setPlanManager( planManager );
-            channelsDynamicImageResource.setUserDao( userDao );
+            channelsDynamicImageResource.setUserInfoService( userInfoService );
             channelsDynamicImageResource.setCommunityServiceFactory( communityServiceFactory );
             channelsDynamicImageResource.setPlanCommunityManager( planCommunityManager );
             return channelsDynamicImageResource;

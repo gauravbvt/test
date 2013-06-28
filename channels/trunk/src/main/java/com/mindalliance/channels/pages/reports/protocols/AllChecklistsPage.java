@@ -3,11 +3,11 @@
 
 package com.mindalliance.channels.pages.reports.protocols;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.pages.reports.AbstractAllParticipantsPage;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -72,8 +72,8 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
                             protected void populateItem( ListItem<UserParticipation> item ) {
                                 UserParticipation p = item.getModelObject();
                                 Agent agent = p.getAgent( getCommunityService() );
-                                String participatingUsername = p.getParticipant().getUsername();
-                                ChannelsUser participatingUser = getUserDao().getUserNamed( participatingUsername );
+                                String participatingUsername = p.getParticipant( getCommunityService() ).getUsername();
+                                ChannelsUser participatingUser = getUserInfoService().getUserWithIdentity( participatingUsername );
                                 item.add(
                                         new BookmarkablePageLink<ChecklistsPage>(
                                                 "participant", ChecklistsPage.class, makeUserParameters( participatingUsername ) )
@@ -138,7 +138,7 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
         parameters.set( USER, username );
         parameters.set( AGENT, agent.getId() );
         if ( agent.getOrganizationParticipation() != null )
-            parameters.set( ORG, agent.getOrganizationParticipation().getId() );
+            parameters.set( ORG, agent.getOrganizationParticipation().getUid() );
         return parameters;
     }
 

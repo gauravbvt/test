@@ -1,18 +1,20 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -33,13 +35,13 @@ public class UserParticipationServiceImpl
         extends GenericSqlServiceImpl<UserParticipation, Long>
         implements UserParticipationService {
 
-    @Autowired
+//    @Autowired
     private UserParticipationConfirmationService userParticipationConfirmationService;
 
-    @Autowired
+//    @Autowired
     private ParticipationManager participationManager;
 
-    @Autowired
+//    @Autowired
     private OrganizationParticipationService organizationParticipationService;
 
     public UserParticipationServiceImpl() {
@@ -100,7 +102,7 @@ public class UserParticipationServiceImpl
         Criteria criteria = session.createCriteria( getPersistentClass() );
         if ( communityService != null )  // null means wild card
             criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
-        criteria.add( Restrictions.eq( "participant", user.getUserInfo() ) );
+        criteria.add( Restrictions.eq( "participant", user.getUserRecord() ) );
         criteria.addOrder( Order.desc( "created" ) );
         return communityService == null
                 ? (List<UserParticipation>) criteria.list()
@@ -164,7 +166,7 @@ public class UserParticipationServiceImpl
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
         criteria.add( Restrictions.eq( "communityUri", communityService.getPlanCommunity().getUri() ) );
-        criteria.add( Restrictions.eq( "participant", user.getUserInfo() ) );
+        criteria.add( Restrictions.eq( "participant", user.getUserRecord() ) );
         criteria.add( Restrictions.eq( "actorId", agent.getActorId() ) );
         if ( agent.getOrganizationParticipation() == null )
             criteria.add( Restrictions.isNull( "organizationParticipation" ) );
@@ -278,7 +280,7 @@ public class UserParticipationServiceImpl
         if ( agent == null ) return false;
         final List<Agency> employers = participationManager.findAllEmployersOfAgent( agent, communityService );
         return CollectionUtils.exists(
-                getUserParticipations( new ChannelsUser( userParticipation.getParticipant() ), communityService ),  // assuming, perhaps wrongly, they are all valid to avoid infinite loops from isValid(...)
+                getUserParticipations( new ChannelsUser( /*userParticipation.getParticipant()*/ ), communityService ),  // assuming, perhaps wrongly, they are all valid to avoid infinite loops from isValid(...)
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -364,7 +366,7 @@ public class UserParticipationServiceImpl
                 List<String> usernamesNotified = userParticipation.usersNotifiedToValidate();
                 for ( Agent supervisor : participationManager.findAllSupervisorsOf( agent, communityService ) ) {
                     if ( !userParticipationConfirmationService.isConfirmedBy( userParticipation, supervisor ) ) {
-                        for ( ChannelsUserInfo supervisorUser : findUsersParticipatingAs( supervisor, communityService ) ) {
+                        for ( UserRecord supervisorUser : findUsersParticipatingAs( supervisor, communityService ) ) {
                             String supervisorUsername = supervisorUser.getUsername();
                             if ( !usernamesNotified.contains( supervisorUsername ) ) {
                                 usernames.add( supervisorUsername );
@@ -380,7 +382,7 @@ public class UserParticipationServiceImpl
     @Override
     @Transactional( readOnly = true )
     @SuppressWarnings( "unchecked" )
-    public List<ChannelsUserInfo> findUsersParticipatingAs( Agent agent, CommunityService communityService ) {
+    public List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService ) {
         PlanCommunity planCommunity = communityService.getPlanCommunity();
         Session session = getSession();
         Criteria criteria = session.createCriteria( getPersistentClass() );
@@ -391,13 +393,13 @@ public class UserParticipationServiceImpl
         else
             criteria.add( Restrictions.eq( "organizationParticipation", agent.getOrganizationParticipation() ) );
         List<UserParticipation> participations = validate( (List<UserParticipation>) criteria.list(), communityService );
-        Set<ChannelsUserInfo> userInfos = new HashSet<ChannelsUserInfo>();
+        Set<UserRecord> userInfos = new HashSet<UserRecord>();
         for ( UserParticipation participation : participations ) {
             if ( isActive( participation, communityService ) ) {
-                userInfos.add( participation.getParticipant() );
+               // userInfos.add( participation.getParticipant() );
             }
         }
-        return new ArrayList<ChannelsUserInfo>( userInfos );
+        return new ArrayList<UserRecord>( userInfos );
     }
 
     @Override
@@ -498,8 +500,8 @@ public class UserParticipationServiceImpl
     public List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
             ChannelsUser user,
             final CommunityService communityService ) {
-        final List<UserParticipationConfirmation> allConfirmations =
-                communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
+        final List<UserParticipationConfirmation> allConfirmations = new ArrayList<UserParticipationConfirmation>(  );
+             //   communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
         final List<Agent> userAgents = listAgentsUserParticipatesAs(
                 user,
                 communityService );

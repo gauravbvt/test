@@ -2,10 +2,10 @@ package com.mindalliance.channels.api.community;
 
 import com.mindalliance.channels.api.plan.UserData;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -37,12 +37,12 @@ public class UserParticipationData implements Serializable {
         UserParticipationService userParticipationService = communityService.getUserParticipationService();
         UserParticipationConfirmationService userParticipationConfirmationService
                 = communityService.getUserParticipationConfirmationService();
-        ChannelsUser participatingUser = new ChannelsUser( userParticipation.getParticipant() );
+        ChannelsUser participatingUser = new ChannelsUser( userParticipation.getParticipant( communityService ) );
         participant = new UserData( participatingUser, communityService );
         confirmed = userParticipationConfirmationService.isConfirmedByAllSupervisors( userParticipation, communityService );
         active = userParticipationService.isActive( userParticipation, communityService );
         agent = new AgentData( serverUrl, userParticipation.getAgent( communityService ), communityService );
-        ChannelsUser assignedByUser = communityService.getUserDao().getUserNamed( userParticipation.getUsername() );
+        ChannelsUser assignedByUser = communityService.getUserRecordService().getUserWithIdentity( userParticipation.getUsername() );
         if ( assignedByUser != null ) {
             assignedBy = new UserData( assignedByUser, communityService );
         }

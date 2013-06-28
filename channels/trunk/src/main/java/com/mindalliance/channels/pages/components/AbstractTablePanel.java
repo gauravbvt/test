@@ -3,9 +3,8 @@ package com.mindalliance.channels.pages.components;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.GeoLocatable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -13,6 +12,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.FilterableModelObjectLink;
 import com.mindalliance.channels.pages.ModelObjectLink;
@@ -64,7 +64,7 @@ import java.util.Set;
 public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     /**
      * Class logger.
@@ -219,7 +219,7 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
                 T bean = model.getObject();
                 String defaultTextValue = findStringValue( bean, defaultText );
                 String username = (String) ChannelsUtils.getProperty( bean, usernameProperty, null );
-                ChannelsUser user = username == null ? null : userDao.getUserNamed( username );
+                ChannelsUser user = username == null ? null : userInfoService.getUserWithIdentity( username );
                 String labelText = ( user == null ) ? ( defaultTextValue == null ? "" : defaultTextValue ) : user.getFullName();
                 cellItem.add( new Label( id, new Model<String>( labelText ) ) );
             }

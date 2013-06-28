@@ -3,7 +3,6 @@ package com.mindalliance.channels.core.dao;
 import com.mindalliance.channels.core.Attachable;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Connector;
 import com.mindalliance.channels.core.model.Event;
@@ -26,6 +25,7 @@ import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.SegmentObject;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class PlanDao extends AbstractModelObjectDao {
     /**
      * The user service.
      */
-    private ChannelsUserDao userDao;
+    private UserRecordService userRecordService;
 
     /**
      * The plan version.
@@ -375,8 +375,8 @@ public class PlanDao extends AbstractModelObjectDao {
     }
 
 
-    public ChannelsUserDao getUserDetailsService() {
-        return userDao;
+    public UserRecordService getUserDetailsService() {
+        return userRecordService;
     }
 
     @Override
@@ -503,8 +503,8 @@ public class PlanDao extends AbstractModelObjectDao {
         // do nothing
     }
 
-    public void setUserDetailsService( ChannelsUserDao userDao ) {
-        this.userDao = userDao;
+    public void setUserDetailsService( UserRecordService userDao ) {
+        this.userRecordService = userDao;
     }
 
 

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.dao.user;
 
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +32,7 @@ public class UserUploadServiceImpl implements UserUploadService {
     private ImagingService imagingService;
 
     @Autowired
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     /**
      * The logger.
@@ -124,7 +125,7 @@ public class UserUploadServiceImpl implements UserUploadService {
         LOG.info( "Cleaning up uploaded photos" );
         int count = 0;
         Set<String> allPhotos = new HashSet<String>(  );
-        for ( ChannelsUser user : userDao.getUsers() ) {
+        for ( ChannelsUser user : userInfoService.getAllEnabledUsers() ) {
             String photo = user.getPhoto();
             if ( photo != null )
                 allPhotos.add( photo );

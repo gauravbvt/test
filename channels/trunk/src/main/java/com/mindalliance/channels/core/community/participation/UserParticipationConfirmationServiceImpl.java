@@ -1,6 +1,8 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.orm.service.impl.GenericSqlServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -9,9 +11,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,13 +29,13 @@ public class UserParticipationConfirmationServiceImpl
         extends GenericSqlServiceImpl<UserParticipationConfirmation, Long>
         implements UserParticipationConfirmationService {
 
-    @Autowired
+//    @Autowired
     private UserParticipationService userParticipationService;
 
-    @Autowired
+//    @Autowired
     private ParticipationManager participationManager;
 
-    @Autowired
+//    @Autowired
     private OrganizationParticipationService organizationParticipationService;
 
     public UserParticipationConfirmationServiceImpl() {
@@ -198,8 +200,8 @@ public class UserParticipationConfirmationServiceImpl
     public List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
             ChannelsUser user,
             final CommunityService communityService ) {
-        final List<UserParticipationConfirmation> allConfirmations =
-                communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
+        final List<UserParticipationConfirmation> allConfirmations = new ArrayList<UserParticipationConfirmation>(  );
+            //    communityService.getUserParticipationConfirmationService().getParticipationConfirmations( communityService );
         final List<Agent> userAgents = userParticipationService.listAgentsUserParticipatesAs(
                 user,
                 communityService );

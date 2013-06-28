@@ -2,6 +2,8 @@ package com.mindalliance.channels.core.dao.user;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,7 +41,7 @@ public class ChannelsUser implements UserDetails {
     /**
      * Persistent information from database.
      */
-    private ChannelsUserInfo userInfo;
+    private UserRecord userRecord;
 
     /**
      * True if user is anonymous.
@@ -62,17 +64,17 @@ public class ChannelsUser implements UserDetails {
     //----------------------------------------
     public ChannelsUser() {
         anonymous = true;
-        userInfo = new ChannelsUserInfo( ANONYMOUS_USERNAME, "bla,Anonymous,bla" );
+        userRecord = new UserRecord( ANONYMOUS_USERNAME, ANONYMOUS_USERNAME );
     }
 
 
-    public ChannelsUser( ChannelsUserInfo userInfo ) {
-        this.userInfo = userInfo;
+    public ChannelsUser( UserRecord userRecord ) {
+        this.userRecord = userRecord;
         anonymous = false;
     }
 
-    public ChannelsUser( ChannelsUserInfo userInfo, CommunityService communityService ) {
-        this( userInfo );
+    public ChannelsUser( UserRecord userRecord, CommunityService communityService ) {
+        this( userRecord );
         planCommunityUri = communityService.getPlanCommunity().getUri();
         plan = communityService.getPlan();
     }
@@ -110,40 +112,40 @@ public class ChannelsUser implements UserDetails {
         return anonymous;
     }
 
-    public ChannelsUserInfo getUserInfo() {
-        return userInfo;
+    public UserRecord getUserRecord() {
+        return userRecord;
     }
 
     //    @Secured( "ROLE_ADMIN" )
-    public void setUserInfo( ChannelsUserInfo userInfo ) {
-        this.userInfo = userInfo;
+    public void setUserRecord( UserRecord userRecord ) {
+        this.userRecord = userRecord;
     }
 
     @Override
     public String getUsername() {
-        return userInfo.getUsername();
+        return userRecord.getUsername();
     }
 
     public String getEmail() {
-        return userInfo.getEmail();
+        return userRecord.getEmail();
     }
 
     public String getFullName() {
-        return userInfo.getFullName();
+        return userRecord.getFullName();
     }
 
     @Override
     public String getPassword() {
-        return userInfo.getPassword();
+        return userRecord.getPassword();
     }
 
     @Override
     public boolean isEnabled() {
-        return userInfo.isEnabled();
+        return userRecord.isEnabled();
     }
 
     public boolean isAdmin() {
-        return userInfo.isAdmin();
+        return userRecord.isAdmin();
     }
 
     /**
@@ -154,13 +156,13 @@ public class ChannelsUser implements UserDetails {
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> result = new ArrayList<GrantedAuthority>();
-        if ( userInfo.isAdmin() )
-            result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_ADMIN ) );
+        if ( userRecord.isAdmin() )
+            result.add( new GrantedAuthorityImpl( UserRecord.ROLE_ADMIN ) );
         String uri = plan == null ? null : plan.getUri();
-        if ( userInfo.isAPlanner( uri ) )
-            result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_PLANNER ) );
-        if ( userInfo.isAUser( uri ) )
-            result.add( new GrantedAuthorityImpl( ChannelsUserInfo.ROLE_USER ) );
+        if ( userRecord.isPlanner( uri ) )
+            result.add( new GrantedAuthorityImpl( UserRecord.ROLE_PLANNER ) );
+        if ( userRecord.isParticipant( uri ) )
+            result.add( new GrantedAuthorityImpl( UserRecord.ROLE_USER ) );
 
         return Collections.unmodifiableList( result );
     }
@@ -205,13 +207,13 @@ public class ChannelsUser implements UserDetails {
      * @return a user called "Anonymous", if not authenticated.
      */
     // TODO minimize uses of direct calls to User.current(...). Use DI...
-    public static ChannelsUser current( ChannelsUserDao userDao ) {
+    public static ChannelsUser current( UserRecordService userDao ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ( authentication != null ) {
             Object obj = authentication.getPrincipal();
             if ( obj instanceof ChannelsUser ) {
                 ChannelsUser user = (ChannelsUser) obj;
-                userDao.refresh( user.getUserInfo() );
+                userDao.refresh( user.getUserRecord() );
                 return user;
             }
         }
@@ -247,7 +249,7 @@ public class ChannelsUser implements UserDetails {
      * @return a boolean
      */
     public boolean isParticipant( String uri ) {
-        return userInfo.isUser( uri );
+        return userRecord.isParticipant( uri );
     }
 
     /**
@@ -257,7 +259,7 @@ public class ChannelsUser implements UserDetails {
      * @return a boolean
      */
     public boolean isPlanner( String uri ) {
-        return userInfo.isPlanner( uri );
+        return userRecord.isPlanner( uri );
     }
 
     @Override
@@ -353,9 +355,9 @@ public class ChannelsUser implements UserDetails {
      * @return a String
      */
     public String getRole( String planUri ) {
-        return userInfo.isAdmin() ? ADMIN
-                : userInfo.isPlanner( planUri ) ? PLANNER
-                : userInfo.isUser( planUri ) ? PARTICIPANT
+        return userRecord.isAdmin() ? ADMIN
+                : userRecord.isPlanner( planUri ) ? PLANNER
+                : userRecord.isParticipant( planUri ) ? PARTICIPANT
                 : UNAUTHORIZED;
     }
 
@@ -366,9 +368,9 @@ public class ChannelsUser implements UserDetails {
      */
     public String getRole( ) {
         String planUri = getPlanUri();
-        return userInfo.isAdmin() ? ADMIN
-                : userInfo.isPlanner( planUri ) ? PLANNER
-                : userInfo.isUser( planUri ) ? PARTICIPANT
+        return userRecord.isAdmin() ? ADMIN
+                : userRecord.isPlanner( planUri ) ? PLANNER
+                : userRecord.isParticipant( planUri ) ? PARTICIPANT
                 : UNAUTHORIZED;
     }
 
@@ -404,11 +406,11 @@ public class ChannelsUser implements UserDetails {
     }
 
     public String getPhoto() {
-        return userInfo.getPhoto();
+        return userRecord.getPhoto();
     }
 
     public void setPhoto( String s ) {
-        userInfo.setPhoto( s );
+        userRecord.setPhoto( s );
     }
 
     public static String contextUri() {

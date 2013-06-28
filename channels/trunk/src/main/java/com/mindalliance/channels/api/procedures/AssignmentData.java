@@ -2,8 +2,8 @@ package com.mindalliance.channels.api.procedures;
 
 import com.mindalliance.channels.api.community.AgentData;
 import com.mindalliance.channels.api.directory.ContactData;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;

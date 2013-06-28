@@ -155,7 +155,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
         }
         if ( spec.getOrgParticipationId() != null ) {
             writer.startNode( "orgParticipation" );
-            writer.addAttribute( "id", Long.toString( spec.getOrgParticipationId() ) );
+            writer.addAttribute( "id",  spec.getOrgParticipationId() );
             writer.endNode();
         }
         if ( spec.getJurisdiction() != null ) {
@@ -261,7 +261,7 @@ public class RequirementConverter extends AbstractChannelsConverter {
                         context ) );
             } else if ( nodeName.equals( "orgParticipation" ) ) {
                 String idString = reader.getAttribute( "id" );
-                agentSpec.setOrgParticipationId( Long.parseLong( idString ) );
+                agentSpec.setOrgParticipationId( idString  );
             } else if ( nodeName.equals( "fixedOrg" ) ) {
                 String idString = reader.getAttribute( "id" );
                 agentSpec.setFixedOrgId( Long.parseLong( idString ) );

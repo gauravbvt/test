@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -191,8 +191,8 @@ public class Feedback extends UserStatement {
         this.repliesRead = repliesRead;
     }
 
-    public String getUserFullName( ChannelsUserDao userDao ) {
-        ChannelsUser user = userDao.getUserNamed( getUsername() );
+    public String getUserFullName( UserRecordService userInfoService ) {
+        ChannelsUser user = userInfoService.getUserWithIdentity( getUsername() );
         if ( user != null ) {
             String fullName = user.getFullName();
             return ( fullName == null || fullName.isEmpty() ) ? getUsername() : fullName;
@@ -206,7 +206,7 @@ public class Feedback extends UserStatement {
 
     @Override
     public String getToUsername( String topic ) {
-        return ChannelsUserInfo.PLANNERS;
+        return UserRecord.PLANNERS;
     }
 
     @Override
@@ -215,7 +215,7 @@ public class Feedback extends UserStatement {
         return "Plan: " + getPlanUri()
                 + ":"
                 + getPlanVersion()
-                + "\nUser: " + communityService.getUserDao().getFullName( getUsername() )
+                + "\nUser: " + communityService.getUserRecordService().getFullName( getUsername() )
                 + "\n"
                 + new SimpleDateFormat( DATE_FORMAT_STRING ).format( getCreated() )
                 + aboutString()

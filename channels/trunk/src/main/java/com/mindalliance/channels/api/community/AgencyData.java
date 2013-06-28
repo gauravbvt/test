@@ -3,8 +3,8 @@ package com.mindalliance.channels.api.community;
 import com.mindalliance.channels.api.entities.EmploymentData;
 import com.mindalliance.channels.api.procedures.ChannelData;
 import com.mindalliance.channels.api.procedures.DocumentationData;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
@@ -35,6 +35,7 @@ public class AgencyData implements Serializable {
     private Long planOrganizationId;
     private AgencyData parentData;
     private DocumentationData documentationData;
+    private boolean registeredByCommunity;
 
     public AgencyData() {
         // required
@@ -42,6 +43,7 @@ public class AgencyData implements Serializable {
 
     public AgencyData( String serverUrl, Agency agency, CommunityService communityService ) {
         this.agency = agency;
+        registeredByCommunity = agency.isRegisteredByCommunity( communityService );
         initPlanOrganization( serverUrl, communityService );
         initChannels( serverUrl, communityService );
         initParent( serverUrl, communityService );
@@ -89,7 +91,7 @@ public class AgencyData implements Serializable {
 
     @XmlElement
     public boolean getRegisteredByCommunity() {
-        return agency.isRegisteredByCommunity();
+        return registeredByCommunity;
     }
 
     @XmlElement

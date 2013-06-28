@@ -7,9 +7,9 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -54,7 +54,7 @@ public class RequestData extends AbstractFlowData {
         initData(
                 serverUrl,
                 communityService,
-                user == null ? null : user.getUserInfo() );
+                user == null ? null : user.getUserRecord() );
     }
 
     @Override
@@ -65,7 +65,7 @@ public class RequestData extends AbstractFlowData {
     protected void initData(
             String serverUrl,
             CommunityService communityService,
-            ChannelsUserInfo userInfo  ) {
+            UserRecord userInfo  ) {
         initCommitments( communityService );
         initContactEmployments( serverUrl, communityService, userInfo );
         initConsumingTask( serverUrl, communityService );
@@ -103,7 +103,7 @@ public class RequestData extends AbstractFlowData {
     private void initContactEmployments(
             String serverUrl,
             CommunityService communityService,
-            ChannelsUserInfo userInfo ) {
+            UserRecord userInfo ) {
         Set<CommunityEmployment> contactedEmployments = new HashSet<CommunityEmployment>();
         Set<ContactData> contactDataSet = new HashSet<ContactData>(  );
         for ( CommunityCommitment commitment : commitments ) {

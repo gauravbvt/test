@@ -4,8 +4,6 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
@@ -16,6 +14,8 @@ import com.mindalliance.channels.db.data.surveys.Questionnaire;
 import com.mindalliance.channels.db.data.surveys.RFI;
 import com.mindalliance.channels.db.data.surveys.RFIForward;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
 import org.apache.commons.collections.CollectionUtils;
@@ -63,7 +63,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     private RFIService rfiService;
 
     @Autowired
-    private ChannelsUserDao userDao;
+    private UserRecordService userDao;
 
     @Autowired
     private PlanCommunityManager planCommunityManager;
@@ -595,10 +595,10 @@ public class SurveysDAOImpl implements SurveysDAO {
                 actualForwards.add( email );
                 alreadyForwardedTo.add( email );
                 // Create new user if needed. Remember generated password.
-                ChannelsUserInfo forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
+                UserRecord forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
                 if ( forwardedToUser != null ) {
                     RFI newRFI = new RFI( rfi );
-                    newRFI.setSurveyedUsername( userDao.getUserNamed( email ).getUsername() );
+                    newRFI.setSurveyedUsername( userDao.getUserWithIdentity( email ).getUsername() );
                     rfiService.save( newRFI );
                     rfiService.saveRFIForward( forward );
                 }
@@ -608,17 +608,17 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    public ChannelsUserInfo getForwarder( RFIForward rfiForward ) {
-        ChannelsUser user = userDao.getUserNamed( rfiForward.getUsername() );
+    public UserRecord getForwarder( RFIForward rfiForward ) {
+        ChannelsUser user = userDao.getUserWithIdentity( rfiForward.getUsername() );
         return user != null
-                ? user.getUserInfo()
+                ? user.getUserRecord()
                 : null;
     }
 
     @Override
     public List<RFIForward> getForwardingsOf( RFI rfi ) {
         String surveyedUsername = rfi.getSurveyedUsername();
-        ChannelsUser surveyedUser = userDao.getUserNamed( surveyedUsername );
+        ChannelsUser surveyedUser = userDao.getUserWithIdentity( surveyedUsername );
         if ( surveyedUser != null ) {
             RFISurvey rfiSurvey = rfiSurveyService.load( rfi.getRfiSurveyUid() );
             return rfiService.findForwardsTo( surveyedUser.getEmail(), rfiSurvey );
@@ -649,7 +649,7 @@ public class SurveysDAOImpl implements SurveysDAO {
         List<String> emails = new ArrayList<String>();
         List<RFI> rfis = rfiService.select( communityService, rfiSurvey );
         for ( RFI rfi : rfis ) {
-            ChannelsUser user = userDao.getUserNamed( rfi.getSurveyedUsername() );
+            ChannelsUser user = userDao.getUserWithIdentity( rfi.getSurveyedUsername() );
             if ( user != null ) emails.add( user.getEmail() );
         }
         return emails;

@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <div class="user" style="float: right; width: 70%;">
+        <div>
+            <table wicket:id="userRecordContainer" >
+                <tr>
+                    <td class="label">Full name:</td>
+                    <td><input wicket:id="fullName" type="text"/> </td>
+                </tr>
+                <tr>
+                    <td class="label">Email:</td>
+                    <td><input wicket:id="email" type="text"/> </td>
+                </tr>
+                <tr>
+                    <td class="label">Password:</td>
+                    <td><input wicket:id="password" type="text"/> </td>
+                </tr>
+            </table>
+            <h3>Access</h3>
+            <div wicket:id="privilegesContainer">
+                <span wicket:id="username">username</span>
+                <input wicket:id="isDisabled" type="checkbox"/> is disabled
+                <input wicket:id="isAdmin" type="checkbox"/> is admin
+                <table wicket:id="planPrivilegesContainer">
+                    <tr wicket:id="planPrivileges">
+                        <td><span wicket:id="planName">plan name</span> </td>
+                        <td>
+                            <select wicket:id="userRole">
+                                <option>Planner</option>
+                                <option>Guest</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <a wicket:id="reset" class="button" href="#">Reset</a>
+        <a wicket:id="apply" class="button" href="#">Apply</a>
+    </div>
+</wicket:panel>
+</body>
+</html>

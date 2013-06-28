@@ -123,7 +123,7 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
                 employment,
                 commitment,
                 communityService,
-                getUser() == null ? null : getUser().getUserInfo()
+                getUser() == null ? null : getUser().getUserRecord()
         );
 
     }

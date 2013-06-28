@@ -7,8 +7,8 @@ import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.Channels;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -36,7 +36,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     private static final Logger LOG = LoggerFactory.getLogger( ChannelsDynamicImageResource.class );
 
 
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
     private PlanManager planManager;
     private CommunityServiceFactory communityServiceFactory;
     private PlanCommunityManager planCommunityManager;
@@ -57,12 +57,12 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
         this.planManager = planManager;
     }
 
-    public ChannelsUserDao getUserDao() {
-        return userDao;
+    public UserRecordService getUserInfoService() {
+        return userInfoService;
     }
 
-    public void setUserDao( ChannelsUserDao userDao ) {
-        this.userDao = userDao;
+    public void setUserInfoService( UserRecordService userInfoService ) {
+        this.userInfoService = userInfoService;
     }
 
     public CommunityServiceFactory getCommunityServiceFactory() {
@@ -91,7 +91,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     }
 
     private PlanCommunity getPlanCommunity() {
-        ChannelsUser user = ChannelsUser.current( getUserDao() );
+        ChannelsUser user = ChannelsUser.current( getUserInfoService() );
         if ( user.getPlan() != null ) {
             return planCommunityManager.getDomainPlanCommunity( user.getPlan() );
         } else {
@@ -104,7 +104,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     }
 
     public PlanCommunity getPlanCommunity( PageParameters parameters ) {
-        ChannelsUser user = ChannelsUser.current( getUserDao() );
+        ChannelsUser user = ChannelsUser.current( getUserInfoService() );
         if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COMMUNITY_PARM ) ) {
             try {
                 String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COMMUNITY_PARM ).toString(), "UTF-8" );

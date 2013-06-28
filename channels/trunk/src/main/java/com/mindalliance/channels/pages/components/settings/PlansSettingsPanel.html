@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:wicket="http://wicket.apache.org/"
+        xml:lang="en"
+        lang="en">
+<body>
+<wicket:panel>
+    <label>New plan with uri:</label>
+    <input type="text" wicket:id="newPlanUri"/>
+    <a class="button" wicket:id="addPlan">Add</a>
+    <div class="manage-plan" wicket:id="settingsContainer">
+        <h2>Manage Plans
+            <select wicket:id="plan-sel" name="plan">
+                <option>Some plan</option>
+            </select>
+        </h2>
+        <table wicket:id="planProperties" width="100%" border="0" cellspacing="0" cellpadding="0">
+             <tr>
+                <td class="label">Plan URI:</td>
+                <td>
+                    <span wicket:id="planUri">uri</span>
+                    <a class="button" wicket:id="deletePlan">Delete Plan</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Development version:</td>
+                <td>
+                    <span wicket:id="devVersion">3</span>
+                     <a class="button" wicket:id="productize">Productize</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Communities based on plan:</td>
+                <td>
+                    <span wicket:id="communitiesCount">0</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Plan owner:</td>
+                <td>
+                    <input type="text" wicket:id="planOwner"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Send planner feedback to:</td>
+                <td>
+                    <input type="text" wicket:id="plannerSupportEmail"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Send participant feedback to:</td>
+                <td>
+                    <input type="text" wicket:id="participantSupportEmail"/>
+                </td>
+            </tr>
+        </table>
+        <a class="button" wicket:id="reset">Reset</a>
+        <a class="button" wicket:id="apply">Apply</a>
+    </div>
+</wicket:panel>
+</body>
+</html>

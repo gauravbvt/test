@@ -1,6 +1,5 @@
-package com.mindalliance.channels.core.community.participation;
+package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.model.Event;

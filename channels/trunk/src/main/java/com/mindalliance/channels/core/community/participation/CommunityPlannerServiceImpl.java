@@ -35,7 +35,8 @@ public class CommunityPlannerServiceImpl
     @Override
     @Transactional(readOnly = true)
     public boolean isPlanner( ChannelsUser user, CommunityService communityService ) {
-        return findCommunityPlanner( user.getUserInfo(), communityService ) != null;
+      //  return findCommunityPlanner( user.getUserInfo(), communityService ) != null;
+        return false;
     }
 
     @Override
@@ -60,7 +61,8 @@ public class CommunityPlannerServiceImpl
         ChannelsUser user = userDao.getUserNamed( username );
         if ( ( user != null && ( user.isAdmin() || user.equals( planner ) ) )
                 && listPlanners( communityService ).size() > 1 ) {
-            CommunityPlanner communityPlanner = findCommunityPlanner( planner.getUserInfo(), communityService );
+            CommunityPlanner communityPlanner = null;
+                    // findCommunityPlanner( planner.getUserInfo(), communityService );
             if ( communityPlanner != null ) {
                 delete( communityPlanner );
                 communityService.clearCache();
@@ -97,14 +99,16 @@ public class CommunityPlannerServiceImpl
     @Override
     @Transactional(readOnly = true)
     public boolean wasNotified( ChannelsUser planner, CommunityService communityService ) {
-        CommunityPlanner communityPlanner = findCommunityPlanner( planner.getUserInfo(), communityService );
+        CommunityPlanner communityPlanner = null;
+                // findCommunityPlanner( planner.getUserInfo(), communityService );
         return communityPlanner != null && communityPlanner.isUserNotified();
     }
 
     @Override
     @Transactional
     public void setNotified( ChannelsUser planner, CommunityService communityService ) {
-        CommunityPlanner communityPlanner = findCommunityPlanner( planner.getUserInfo(), communityService );
+        CommunityPlanner communityPlanner = null;
+             //   findCommunityPlanner( planner.getUserInfo(), communityService );
         if ( communityPlanner != null ) {
             communityPlanner.setUserNotified( true );
             save( communityPlanner );

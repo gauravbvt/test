@@ -9,7 +9,6 @@ package com.mindalliance.channels.engine.analysis;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanListener;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
@@ -18,6 +17,8 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.data.users.UserAccess;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -262,7 +263,8 @@ public class IssueScanner implements Scanner, PlanListener {
         }
 
         private ChannelsUser setupUser() {
-            ChannelsUser principal = new ChannelsUser( new ChannelsUserInfo( "daemon", "*,Issue Scanner,*,ROLE_ADMIN" ) );
+            ChannelsUser principal = new ChannelsUser(
+                    new UserRecord( "_channels_", "daemon", "Issue Scanner", "", UserAccess.UserRole.Admin ) );
             principal.setPlan( plan );
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add( new GrantedAuthorityImpl( "ROLE_ADMIN" ) );

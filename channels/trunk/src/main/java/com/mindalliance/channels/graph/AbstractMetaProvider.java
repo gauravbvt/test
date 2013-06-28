@@ -31,6 +31,10 @@ public abstract class AbstractMetaProvider<V,E> implements MetaProvider<V,E> {
      */
     protected static final String VERTEX_URL_FORMAT = "?graph={0,number,0}&vertex={1,number,0}";
     /**
+     * Message format as URL template with {1} = graph id and {2} = vertex id.
+     */
+    protected static final String AGENCY_VERTEX_URL_FORMAT = "?graph={0,number,0}&vertex={1}";
+    /**
      * Message format as URL template with {1} = graph id and {2} = edge id.
      */
     protected static final String EDGE_URL_FORMAT = "?graph={0,number,0}&edge={1,number,0}";

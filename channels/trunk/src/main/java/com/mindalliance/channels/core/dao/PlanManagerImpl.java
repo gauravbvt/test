@@ -11,15 +11,15 @@ import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.dao.PlanDefinition.Version;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,10 +44,14 @@ public class PlanManagerImpl implements PlanManager {
      */
     private static final Logger LOG = LoggerFactory.getLogger( PlanManagerImpl.class );
 
-    /** Manager for plan manager event listeners. */
+    /**
+     * Manager for plan manager event listeners.
+     */
     private final Listeners listeners = new Listeners();
 
-    /** Plan persistence manager. */
+    /**
+     * Plan persistence manager.
+     */
     private final PlanDefinitionManager planDefinitionManager;
     /**
      * All the plans, indexed by version uri (uri:version).
@@ -68,7 +72,8 @@ public class PlanManagerImpl implements PlanManager {
      */
     private List<TransmissionMedium> builtInMedia = new ArrayList<TransmissionMedium>();
 
-    private ChannelsUserDao userDao;
+    @Autowired
+    private UserRecordService userRecordService;
 
     private ImportExportFactory importExportFactory;
     /**
@@ -111,12 +116,12 @@ public class PlanManagerImpl implements PlanManager {
         listeners.removeListener( listener );
     }
 
-    public ChannelsUserDao getUserDao() {
-        return userDao;
+    public UserRecordService getUserRecordService() {
+        return userRecordService;
     }
 
-    public void setUserDao( ChannelsUserDao userDao ) {
-        this.userDao = userDao;
+    public void setUserRecordService( UserRecordService userRecordService ) {
+        this.userRecordService = userRecordService;
     }
 
     public ImportExportFactory getImportExportFactory() {
@@ -182,7 +187,7 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    public PlanDao getDao( Plan plan )  {
+    public PlanDao getDao( Plan plan ) {
         return getDao( plan.getUri(), plan.isDevelopment() );
     }
 
@@ -224,7 +229,7 @@ public class PlanManagerImpl implements PlanManager {
     private PlanDao createDao( Version version ) {
         try {
             PlanDao dao = new PlanDao( version );
-            dao.setUserDetailsService( userDao );
+            dao.setUserDetailsService( userRecordService );
             dao.setIdGenerator( planDefinitionManager.getIdGenerator() );
             dao.resetPlan();
             dao.defineImmutableEntities();
@@ -266,6 +271,19 @@ public class PlanManagerImpl implements PlanManager {
         return Collections.unmodifiableList( result );
     }
 
+    @Override
+    public Plan getDevelopmentPlan( String planUri ) {
+        return (Plan)CollectionUtils.find(
+                getPlansWithUri( planUri ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Plan)object).isDevelopment();
+                    }
+                }
+        );
+    }
+
 
     @Override
     public void save( Plan plan ) {
@@ -282,8 +300,8 @@ public class PlanManagerImpl implements PlanManager {
     public synchronized void assignPlans() {
 
         // Assign default plan to users
-        if ( userDao != null )
-            for ( ChannelsUser user : userDao.getUsers() ) {
+        if ( userRecordService != null )
+            for ( ChannelsUser user : userRecordService.getAllEnabledUsers() ) {
                 Plan plan = user.getPlan();
                 if ( plan == null )
                     user.setPlan( getDefaultPlan( user ) );
@@ -302,7 +320,7 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Plan> getPlansWithUri( final String uri ) {
         return (List<Plan>) CollectionUtils.select( getPlans(), new Predicate() {
             public boolean evaluate( Object object ) {
@@ -351,13 +369,13 @@ public class PlanManagerImpl implements PlanManager {
     public void delete( Plan plan ) {
         String uri = plan.getUri();
 
-        for ( ChannelsUser user : userDao.getUsers() )
-            user.getUserInfo().clearAuthority( uri );
+        for ( ChannelsUser user : userRecordService.getAllEnabledUsers() )
+            user.getUserRecord().clearAccess( uri );
 
         assignPlans();
 
         synchronized ( daoIndex ) {
-            Set<Entry<Version,PlanDao>> entries =
+            Set<Entry<Version, PlanDao>> entries =
                     new HashSet<Entry<Version, PlanDao>>( daoIndex.entrySet() );
             for ( Entry<Version, PlanDao> entry : entries ) {
                 Version version = entry.getKey();
@@ -447,7 +465,7 @@ public class PlanManagerImpl implements PlanManager {
     @Override
     public boolean revalidateProducers( Plan plan ) {
         List<String> producers = plan.getProducers();
-        for ( ChannelsUser user : userDao.getUsers() )
+        for ( ChannelsUser user : userRecordService.getAllEnabledUsers() )
             if ( user.isPlanner( plan.getUri() ) && !producers.contains( user.getUsername() ) )
                 return false;
 // TODO reenable production voting
@@ -457,7 +475,7 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public synchronized void setResyncRequired( String uri ) {
-        outOfSyncUsers.put( uri, userDao.getUsernames() );
+        outOfSyncUsers.put( uri, userRecordService.getUsernames() );
     }
 
     @Override
@@ -519,15 +537,6 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    @Secured( "ROLE_ADMIN" )
-    public void setAuthorities( ChannelsUser user, String role, String uri ) {
-        synchronized ( user ) {
-            user.getUserInfo().setAuthorities( role, uri, getPlans() );
-            user.setPlan( uri != null ? getDefaultPlan( user ) : null );
-        }
-    }
-
-    @Override
     public File getVersionDirectory( Plan plan ) {
         Version version = getVersion( plan );
         return version.getVersionDirectory();
@@ -535,9 +544,9 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public List<String> getPlanUris() {
-        List<String> uris = new ArrayList<String>(  );
-        for ( Plan plan : getPlans() ) {
-            uris.add(  plan.getUri() );
+        List<String> uris = new ArrayList<String>();
+        for ( Plan plan : getDevelopmentPlans() ) {
+            uris.add( plan.getUri() );
         }
         return uris;
     }
@@ -548,14 +557,28 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Plan> getProductionPlans() {
-        return (List<Plan>)CollectionUtils.select(
+        return (List<Plan>) CollectionUtils.select(
                 getPlans(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Plan)object).isProduction();
+                        return ( (Plan) object ).isProduction();
+                    }
+                }
+        );
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<Plan> getDevelopmentPlans() {
+        return (List<Plan>) CollectionUtils.select(
+                getPlans(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Plan) object ).isDevelopment();
                     }
                 }
         );
@@ -593,8 +616,8 @@ public class PlanManagerImpl implements PlanManager {
     /**
      * Callback after a command was executed.
      *
-     * @param plan         the plan
-     * @param command      the command
+     * @param plan    the plan
+     * @param command the command
      */
     private void onAfterCommand( Plan plan, JournalCommand command ) {
         if ( command != null && command.isMemorable() )
@@ -623,7 +646,9 @@ public class PlanManagerImpl implements PlanManager {
      */
     private static final class Listeners {
 
-        /** Whoever cares about plan manager events. */
+        /**
+         * Whoever cares about plan manager events.
+         */
         private final List<PlanListener> planListeners =
                 Collections.synchronizedList( new ArrayList<PlanListener>() );
 

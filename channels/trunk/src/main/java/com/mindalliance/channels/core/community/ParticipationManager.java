@@ -1,12 +1,14 @@
-package com.mindalliance.channels.core.community.participation;
+package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.users.UserRecord;
 
 import java.util.List;
 
@@ -203,16 +205,17 @@ public interface ParticipationManager {
 
     /**
      * Whether user has authority over a participation.
-     * @param communityService  a community service
-     * @param user a user whose authority is queried
-     * @param participantInfo a participant's user info
+     *
+     * @param communityService   a community service
+     * @param user               a user whose authority is queried
+     * @param participantInfo    a participant's user info
      * @param participationAgent the agent the participant participates as or would
      * @return
      */
     boolean hasAuthorityOverParticipation(
             final CommunityService communityService,
             ChannelsUser user,
-            ChannelsUserInfo participantInfo,
+            UserRecord participantInfo,
             Agent participationAgent );
 
     Plan getPlan( String communityUri, int planVersion );
@@ -256,11 +259,34 @@ public interface ParticipationManager {
     /**
      * Finds agency by id.
      *
-     * @param agencyId         a long - positive if fixed, negative if participation as placeholder
+     * @param agencyId         a string - parse-able to long if fixed, else the uid of an organization participation as placeholder
      * @param communityService a community service
      * @return an agency
      * @throws NotFoundException if not found
      */
-    Agency findAgencyById( long agencyId, CommunityService communityService ) throws NotFoundException;
+    Agency findAgencyById( String agencyId, CommunityService communityService ) throws NotFoundException;
 
+    /**
+     * Get registered parent organization.
+     *
+     * @param uid        a db key
+     * @return a registered organization
+     */
+    RegisteredOrganization getRegisteredOrganization( String uid );
+
+    /**
+     * Get organization participation given db key.
+     *
+     * @param uid a db key
+     * @return an organziation participation
+     */
+    OrganizationParticipation getOrganizationParticipation( String uid );
+
+    /**
+     * Get user participation given db key.
+     *
+     * @param uid a db key
+     * @return a user participation
+     */
+    UserParticipation getUserParticipation( String uid );
 }

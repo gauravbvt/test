@@ -11,8 +11,6 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -56,6 +54,7 @@ import com.mindalliance.channels.core.nlp.Proximity;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
@@ -107,7 +106,7 @@ public abstract class DefaultQueryService implements QueryService {
     /**
      * File user details service.
      */
-    private ChannelsUserDao userDao;
+    private UserRecordService userDao;
 
     /**
      * SurveysDAO
@@ -126,7 +125,7 @@ public abstract class DefaultQueryService implements QueryService {
             PlanManager planManager,
             AttachmentManager attachmentManager,
             SemanticMatcher semanticMatcher,
-            ChannelsUserDao userDao,
+            UserRecordService userDao,
             SurveysDAO surveysDao
     ) {
         this.planManager = planManager;
@@ -2858,7 +2857,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserEmail( String userName ) {
-        ChannelsUser user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserWithIdentity( userName );
         if ( user != null ) {
             return user.getEmail();
         } else {
@@ -2869,7 +2868,7 @@ public abstract class DefaultQueryService implements QueryService {
     @Override
     public String findUserFullName( String userName ) {
         if ( userName == null || userName.isEmpty() ) return null;
-        ChannelsUser user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserWithIdentity( userName );
         if ( user != null ) {
             return user.getFullName();
         } else {
@@ -2879,7 +2878,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserNormalizedFullName( String userName ) {
-        ChannelsUser user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserWithIdentity( userName );
         if ( user != null ) {
             return user.getNormalizedFullName( false );
         } else {
@@ -2889,7 +2888,7 @@ public abstract class DefaultQueryService implements QueryService {
 
     @Override
     public String findUserRole( String userName ) {
-        ChannelsUser user = userDao.getUserNamed( userName );
+        ChannelsUser user = userDao.getUserWithIdentity( userName );
         if ( user != null ) {
             return user.getRole( user.getPlanUri() );
         } else {
@@ -3350,12 +3349,6 @@ public abstract class DefaultQueryService implements QueryService {
         } );
     }
 
-
-    @Override
-    public UserContactInfoService getUserContactInfoService() {
-        return userDao.getUserContactInfoService();
-    }
-
     @Override
     public List<Actor> findAllSupervisorsOf( Actor actor ) {
         Set<Actor> supervisors = new HashSet<Actor>();
@@ -3472,11 +3465,11 @@ public abstract class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public ChannelsUserDao getUserDao() {
+    public UserRecordService getUserInfoService() {
         return userDao;
     }
 
-    public void setUserDao( ChannelsUserDao userDao ) {
+    public void setUserDao( UserRecordService userDao ) {
         this.userDao = userDao;
     }
 
@@ -3498,5 +3491,6 @@ public abstract class DefaultQueryService implements QueryService {
         }
 
     }
+
 }
 

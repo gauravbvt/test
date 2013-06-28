@@ -2,11 +2,11 @@ package com.mindalliance.channels.db.data.surveys;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.db.data.AbstractModelObjectReferencingDocument;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -165,7 +165,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
 
     private String getToUsername( String topic ) {
         return topic.equals( STATUS )
-                ? ChannelsUserInfo.PLANNERS
+                ? UserRecord.PLANNERS
                 : null;
     }
 
@@ -201,7 +201,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
                 .append( "Launched on " )
                 .append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( getCreated() ) )
                 .append( " by " )
-                .append( communityService.getUserDao().getFullName( getUsername() ) )
+                .append( communityService.getUserRecordService().getFullName( getUsername() ) )
                 .append( ".\n\n" );
         List<RFI> completedRFIs = surveysDAO.findAllCompletedRFIs( communityService, this );
         List<RFI> incompleteRFIs = surveysDAO.findAllIncompleteRFIs( communityService, this );
@@ -223,7 +223,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
         sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFI rfi : rfisList ) {
             sb.append( "\t" )
-                    .append( communityService.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
+                    .append( communityService.getUserRecordService().getFullName( rfi.getSurveyedUsername() ) )
                     .append( "\n" );
         }
     }
@@ -238,7 +238,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
         sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFI rfi : rfisList ) {
             sb.append( "\t" );
-            sb.append( communityService.getUserDao().getFullName( rfi.getSurveyedUsername() ) ).append( "(" );
+            sb.append( communityService.getUserRecordService().getFullName( rfi.getSurveyedUsername() ) ).append( "(" );
             int percent = surveysDAO.getPercentCompletion( rfi );
             sb.append( percent ).append( "%" );
             Date dueDate = rfi.getDeadline();
@@ -257,7 +257,7 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
         sb.append( rfisList.size() ).append( " " ).append( title ).append( ":\n" );
         for ( RFI rfi : rfisList ) {
             sb.append( "\t" )
-                    .append( communityService.getUserDao().getFullName( rfi.getSurveyedUsername() ) )
+                    .append( communityService.getUserRecordService().getFullName( rfi.getSurveyedUsername() ) )
                     .append( " (" )
                     .append( rfi.getReasonDeclined().isEmpty() ? "No reason given." : rfi.getReasonDeclined() )
                     .append( ")\n" );
@@ -273,9 +273,9 @@ public class RFISurvey extends AbstractModelObjectReferencingDocument implements
         for ( RFIForward forward : forwards ) {
             sb.append( "\t" )
                     .append( "from " )
-                    .append( communityService.getUserDao().getFullName( forward.getUsername() ) )
+                    .append( communityService.getUserRecordService().getFullName( forward.getUsername() ) )
                     .append( " to " )
-                    .append( communityService.getUserDao().getFullName( forward.getForwardToEmail() ) )
+                    .append( communityService.getUserRecordService().getFullName( forward.getForwardToEmail() ) )
                     .append( "\n" );
         }
     }

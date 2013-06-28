@@ -10,29 +10,28 @@ import com.mindalliance.channels.api.plan.PlanSummariesData;
 import com.mindalliance.channels.api.plan.PlanSummaryData;
 import com.mindalliance.channels.api.procedures.AllProtocolsData;
 import com.mindalliance.channels.api.procedures.ProtocolsData;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
@@ -76,15 +75,13 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Autowired
     private PlanManager planManager;
     @Autowired
-    private ChannelsUserDao userDao;
+    private UserRecordService userRecordService;
     @Autowired
     private Analyst analyst;
     @Autowired
     private UserParticipationService userParticipationService;
     @Autowired
     private EmailMessagingService emailMessagingService;
-    @Autowired
-    private UserContactInfoService userContactInfoService;
     @Autowired
     private PlanCommunityManager planCommunityManager;
     @Autowired
@@ -108,7 +105,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     public PlanSummariesData getPlans() {
         LOG.info( "Getting summaries for all visible communities" );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
         for ( Plan plan : planManager.getPlans() ) {
             String uri = plan.getUri();
@@ -126,7 +123,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public PlanSummaryData getPlan( String uri, String version ) {
         LOG.info( "Getting summary for community " + uri + " and plan version " + version );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -147,7 +144,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     public PlanReleaseData getPlanRelease( String uri ) {
         LOG.info( "Getting release info for community " + uri );
         try {
-            ChannelsUser user = ChannelsUser.current( userDao );
+            ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             CommunityService communityService = getCommunityService( planCommunity );
             return new PlanReleaseData( communityService );
@@ -169,7 +166,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     public PlanSummariesData getProductionPlans() {
         LOG.info( "Getting summaries for all user-visible communities" );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         List<PlanSummaryData> result = new ArrayList<PlanSummaryData>();
         for ( Plan plan : planManager.getPlans() ) {
             String uri = plan.getUri();
@@ -195,7 +192,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
      */
     public PlanScopeData getPlanScope( String uri, String version ) {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
             return new PlanScopeData(
@@ -213,7 +210,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public IssuesData getIssues( String uri, String version ) {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorize( user, uri, version );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -233,7 +230,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             String feedback,
             String urgent ) {
         LOG.info( "Receiving feedback for protocols from community " + uri );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             feedbackService.sendFeedback(
@@ -255,11 +252,11 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public void invite( String uri, String email, String message ) {
         LOG.info( "Inviting user to participate in community " + uri );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             CommunityService communityService = getCommunityService( planCommunity );
-            ChannelsUserInfo invitedUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
+            UserRecord invitedUser = userRecordService.getOrMakeUserFromEmail( email, communityService.getPlanService() );
             message = message + makeInvitation( invitedUser, communityService );
             emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
 
@@ -279,7 +276,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public CommunitySummariesData getAllCommunities() {
         LOG.info( "Getting all community summaries" );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             List<CommunitySummaryData> summaries = new ArrayList<CommunitySummaryData>();
             for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -303,7 +300,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public CommunitySummaryData getCommunity( String communityUri ) {
         LOG.info( "Getting community summary for " + communityUri );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
             if ( !planCommunity.isDomainCommunity() ) {
@@ -334,13 +331,13 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     @Override
     public AllProtocolsData getAllProtocols( String communityUri ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         LOG.info( "Getting all user protocols for all participants in community " + communityUri );
         try {
             PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             AllProtocolsData allProtocolsData = new AllProtocolsData();
-            for ( ChannelsUser channelsUser : userDao.getUsers( communityUri ) ) {
+            for ( ChannelsUser channelsUser : userRecordService.getUsers( communityUri ) ) {
                 channelsUser.setCommunityService( communityService );
                 List<UserParticipation> participationList = userParticipationService.getActiveUserParticipations(
                         channelsUser,
@@ -367,7 +364,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     public ProtocolsData getMyProtocols( String communityUri ) {
         LOG.info( "Getting user protocols for community " + communityUri );
         try {
-            ChannelsUser user = ChannelsUser.current( userDao );
+            ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
@@ -393,7 +390,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                                            String username ) {
         LOG.info( "Getting user protocols for community " + communityUri );
         try {
-            ChannelsUser user = ChannelsUser.current( userDao );
+            ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
@@ -418,7 +415,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     public ProtocolsData getAgentProtocols( String communityUri,
                                             String agentId,
                                             String orgParticipationId ) {
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         LOG.info( "Getting protocols of agent " + agentId
                 + " for organization participation" + orgParticipationId
                 + " in community " + communityUri );
@@ -427,7 +424,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             CommunityService communityService = getCommunityService( planCommunity );
             Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) );
             OrganizationParticipation organizationParticipation =
-                    organizationParticipationService.load( Long.parseLong( orgParticipationId ) );
+                    organizationParticipationService.load( orgParticipationId );
             if ( organizationParticipation == null ) throw new NotFoundException();
             return new ProtocolsData(
                     serverUrl,
@@ -465,7 +462,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     public DirectoryData getMyDirectory( String communityUri ) {
         LOG.info( "Getting user directory for production version of plan " + communityUri );
         try {
-            ChannelsUser user = ChannelsUser.current( userDao );
+            ChannelsUser user = ChannelsUser.current( userRecordService );
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
@@ -489,15 +486,15 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public void addContactInfo( String communityUri, String mediumId, String address ) {
         LOG.info( "Adding user contact info " );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
             if ( !medium.isAddressValid( address ) ) throw new Exception( "Invalid address" );
-            userContactInfoService.addChannel(
+            userRecordService.addChannel(
                     user.getUsername(),
-                    user.getUserInfo(),
+                    user.getUserRecord(),
                     new Channel( medium, address ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
@@ -511,12 +508,12 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public void removeContactInfo( String communityUri, String mediumId, String address ) {
         LOG.info( "Removing user contact info " );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
-            userContactInfoService.removeChannel( user.getUserInfo(), new Channel( medium, address ) );
+            userRecordService.removeChannel( user.getUserRecord(), new Channel( medium, address ) );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -529,7 +526,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public void acceptParticipation( String communityUri, String agentId ) {
         LOG.info( "Adding user participation in community " + communityUri );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -556,7 +553,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public void refuseParticipation( String communityUri, String agentId ) {
         LOG.info( "Refusing user participation in community " + communityUri );
-        ChannelsUser user = ChannelsUser.current( userDao );
+        ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
@@ -625,7 +622,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         return planCommunity;
     }
 
-    private String makeInvitation( ChannelsUserInfo invitedUser, CommunityService communityService ) {
+    private String makeInvitation( UserRecord invitedUser, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
         PlanCommunity planCommunity = communityService.getPlanCommunity();
         Plan plan = communityService.getPlan();

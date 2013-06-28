@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
@@ -11,7 +12,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -29,10 +29,10 @@ public class RegisteredOrganizationServiceImpl
         extends GenericSqlServiceImpl<RegisteredOrganization, Long>
         implements RegisteredOrganizationService {
 
-    @Autowired
+ //   @Autowired
     OrganizationParticipationService organizationParticipationService;
 
-    @Autowired
+//    @Autowired
     OrganizationContactInfoService organizationContactInfoService;
 
     public RegisteredOrganizationServiceImpl() {

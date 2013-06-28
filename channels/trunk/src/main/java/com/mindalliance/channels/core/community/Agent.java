@@ -1,11 +1,11 @@
-package com.mindalliance.channels.core.community.participation;
+package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 
 /**
  * What a user participates as.
@@ -177,5 +177,11 @@ public class Agent implements Nameable, Identifiable {
 
     public boolean isAnyNumberOfParticipants() {
         return actor != null && actor.isAnyNumberOfParticipants();
+    }
+
+    public String getOrganizationParticipationUid() {
+        return organizationParticipation != null
+                ? organizationParticipation.getUid()
+                : null;
     }
 }

@@ -2,8 +2,8 @@ package com.mindalliance.channels.api.community;
 
 import com.mindalliance.channels.api.plan.UserData;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -32,10 +32,10 @@ public class AgencyParticipationData implements Serializable {
     public AgencyParticipationData( String serverUrl,
                                     OrganizationParticipation orgParticipation,
                                     CommunityService communityService ) {
-        agencyName = orgParticipation.getRegisteredOrganization().getName( communityService );
+        agencyName = orgParticipation.getRegisteredOrganization( communityService ).getName( communityService );
         placeholderId = orgParticipation.getPlaceholderOrgId();
         startedOn = orgParticipation.getCreated();
-        ChannelsUser custodianUser =  communityService.getUserDao().getUserNamed( orgParticipation.getUsername() );
+        ChannelsUser custodianUser =  communityService.getUserRecordService().getUserWithIdentity( orgParticipation.getUsername() );
         if ( custodianUser != null )
             custodian = new UserData(  custodianUser, communityService );
     }

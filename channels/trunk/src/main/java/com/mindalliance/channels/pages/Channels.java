@@ -8,9 +8,9 @@ import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.geo.GeoService;
 import com.mindalliance.channels.engine.imaging.ImagingService;
@@ -134,7 +134,7 @@ public class Channels extends WebApplication
 
     private AttachmentManager attachmentManager;
     
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     private CommunityServiceFactory communityServiceFactory;
 
@@ -237,7 +237,7 @@ public class Channels extends WebApplication
         mountPage( "protocols", ChecklistsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );
         mountPage( "plan", PlanPage.class );
-        mountPage( "admin", AdminPage.class );
+        mountPage( "admin", SettingsPage.class );
         mountPage( "nosops.html", NoAccessPage.class );
         mountPage( "login.html", LoginPage.class );
         mountPage( "newPasswordRequest.html", NewPasswordPage.class );
@@ -257,84 +257,84 @@ public class Channels extends WebApplication
 
         mountResource( "users/photos/${name}", new PngReference(
                 UserPhotoPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
                 ) );
         mountResource( "icons/${name}", new PngReference(
                 IconPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "segment.png", new PngReference(
                 FlowMapPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "plan.png", new PngReference(
                 PlanMapPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "network.png", new PngReference(
                 EntityNetworkPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "entities.png", new PngReference(
                 EntitiesNetworkPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "hierarchy.png", new PngReference(
                 HierarchyPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "essential.png", new PngReference(
                 FailureImpactsPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "dissemination.png", new PngReference(
                 DisseminationPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "checklist.png", new PngReference(
                 ChecklistPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "procedures.png", new PngReference(
                 ProceduresPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "required.png", new PngReference(
                 RequiredNetworkingPng.class,
-                getUserDao(),
+                getUserInfoService(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
@@ -461,12 +461,12 @@ public class Channels extends WebApplication
         this.attachmentManager = attachmentManager;
     }
 
-    public void setUserDao( ChannelsUserDao userDao ) {
-        this.userDao = userDao;
+    public void setUserInfoService( UserRecordService userInfoService ) {
+        this.userInfoService = userInfoService;
     }
 
-    public ChannelsUserDao getUserDao() {
-        return userDao;
+    public UserRecordService getUserInfoService() {
+        return userInfoService;
     }
 
     public PlanCommunityManager getPlanCommunityManager() {

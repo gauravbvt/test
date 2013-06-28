@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
@@ -20,7 +19,7 @@ import javax.persistence.ManyToOne;
  * Date: 12/3/12
  * Time: 2:51 PM
  */
-@Entity
+// @Entity
 public class OrganizationContactInfo extends AbstractPersistentChannelsObject {
 
     @ManyToOne

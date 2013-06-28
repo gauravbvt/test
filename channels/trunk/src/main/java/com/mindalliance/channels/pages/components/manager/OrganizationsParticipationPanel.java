@@ -2,19 +2,19 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
-import com.mindalliance.channels.core.community.participation.RegisteredOrganizationService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * // todo - OBSOLETE - REMOVE
  * Organizations participation panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -251,8 +252,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     private boolean isFilteredOut( Agency agency ) {
-        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity();
-        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity();
+        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity( getCommunityService() );
+        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity( getCommunityService() );
     }
 
     private void addRegistering() {
@@ -456,7 +457,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     public void update( AjaxRequestTarget target, Object object, String action ) {
         if ( object instanceof AgencyParticipationWrapper ) {
             AgencyParticipationWrapper wrapper = (AgencyParticipationWrapper) object;
-            if ( action.equals( "remove" ) ) {
+             if ( action.equals( "remove" ) ) {
                 String orgParticipationString = wrapper.toString();
                 boolean success = wrapper.remove();
                 resetOrganizationParticipationWrappers();
@@ -511,7 +512,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
             this.organizationParticipation = organizationParticipation;
             agency = new Agency( organizationParticipation, communityService );
             placeholder = organizationParticipation.getPlaceholderOrganization( communityService );
-            registrar = communityService.getUserDao().getUserNamed( organizationParticipation.getUsername() );
+            registrar = communityService.getUserRecordService().getUserWithIdentity( organizationParticipation.getUsername() );
             registrationDate = organizationParticipation.getCreated();
         }
 
@@ -534,7 +535,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         public String getStatus() {
             if ( agency == null ) {
                 return null;
-            } else if ( agency.isRegisteredByCommunity() ) {
+            } else if ( agency.isRegisteredByCommunity( getCommunityService() ) ) {
                 return "Community";
             } else {
                 if ( agency.getFixedOrganization().isPlaceHolder() )
@@ -545,7 +546,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         }
 
         private boolean isNonParticipatingCommunityRegistered() {
-            return agency != null && organizationParticipation == null && agency.isRegisteredByCommunity();
+            return agency != null && organizationParticipation == null
+                    && agency.isRegisteredByCommunity( getCommunityService() );
         }
 
         public String getDefaultParticipateAsText() {
@@ -596,7 +598,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
             boolean success = false;
             if ( agency != null ) {
                 if ( organizationParticipation != null && getPlaceholder() != null && canBeRemoved() ) {
-                    RegisteredOrganization registeredOrganization = organizationParticipation.getRegisteredOrganization();
+                    RegisteredOrganization registeredOrganization
+                            = organizationParticipation.getRegisteredOrganization( getCommunityService() );
                     success = organizationParticipationService.unassignOrganizationAs(
                             getUser(),
                             registeredOrganization,

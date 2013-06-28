@@ -1,16 +1,16 @@
 package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -546,7 +546,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     userParticipationService.refuse( participation, communityService );
                 } else {
                     userParticipationService.deleteParticipation(
-                            new ChannelsUser( participation.getParticipant(), communityService ),
+                            new ChannelsUser( participation.getParticipant( getCommunityService() ), communityService ),
                             participation.getAgent( communityService ),
                             communityService );
                 }
@@ -566,7 +566,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         }
 
         public String getRequesterFullName() {
-            ChannelsUser requestingUser = getQueryService().getUserDao().getUserNamed( participation.getUsername() );
+            ChannelsUser requestingUser = getQueryService().getUserInfoService().getUserWithIdentity( participation.getUsername() );
             return requestingUser == null
                     ? "?"
                     : requestingUser.getFullName();

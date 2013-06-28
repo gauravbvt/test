@@ -51,7 +51,7 @@ public class PlanSummaryData implements Serializable {
 
     private void initPlanners( CommunityService communityService ) {
         planners = new ArrayList<UserData>();
-        for ( ChannelsUser planner : communityService.getUserDao().getPlanners( getPlan().getUri() ) ) {
+        for ( ChannelsUser planner : communityService.getUserRecordService().getPlanners( getPlan().getUri() ) ) {
             planners.add( new UserData( planner, communityService ) );
         }
 

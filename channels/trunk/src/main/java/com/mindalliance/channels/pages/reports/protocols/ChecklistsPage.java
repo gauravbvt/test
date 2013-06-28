@@ -13,19 +13,19 @@ import com.mindalliance.channels.api.procedures.SituationData;
 import com.mindalliance.channels.api.procedures.TriggerData;
 import com.mindalliance.channels.api.procedures.checklist.ChecklistData;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.PagePathItem;
 import com.mindalliance.channels.pages.Updatable;
@@ -65,7 +65,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private ProtocolsFinder finder;
     private String username;
     private Long agentId;
-    private Long organizationParticipationId;
+    private String organizationParticipationId;
     private Agent agent;
     private ChannelsUser protocolsUser;
 
@@ -94,7 +94,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         result.set( AbstractAllParticipantsPage.COMMUNITY_PARM, communityUri );
         result.set( AbstractAllParticipantsPage.AGENT, agent.getId() );
         if ( agent.getOrganizationParticipation() != null )
-            result.set( AbstractAllParticipantsPage.ORG, agent.getOrganizationParticipation().getId() );
+            result.set( AbstractAllParticipantsPage.ORG, agent.getOrganizationParticipation().getUid() );
         return result;
     }
 
@@ -131,7 +131,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.AGENT ) )
                 agentId = parameters.get( AbstractAllParticipantsPage.AGENT ).toLong( -1 );
             if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.ORG ) )
-                organizationParticipationId = parameters.get( AbstractAllParticipantsPage.ORG ).toLong( -1 );
+                organizationParticipationId = parameters.get( AbstractAllParticipantsPage.ORG ).toString();
             if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.USER ) )
                 username = parameters.get( AbstractAllParticipantsPage.USER ).toString();
             initData();
@@ -179,12 +179,12 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 protocolsData = planCommunityEndPoint.getAgentProtocols(
                         planCommunity.getUri(),
                         Long.toString( agentId ),
-                        Long.toString( organizationParticipationId ) );
+                         organizationParticipationId );
             } else {
                 throw new Exception( "Failed to retrieve protocols" );
             }
         } else {
-            protocolsUser = username == null ? null : getUserDao().getUserNamed( username );
+            protocolsUser = username == null ? null : getUserInfoService().getUserWithIdentity( username );
             if ( protocolsUser == null )
                 throw new Exception( "Failed to retrieve protocols" );
             else {
@@ -236,7 +236,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     private String getParticipantName() {
         if ( username != null )
-            return getUserDao().getFullName( username );
+            return getUserInfoService().getFullName( username );
         else if ( agent != null )
             return agent.getName();
         else

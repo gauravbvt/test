@@ -1,13 +1,14 @@
 package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
-import com.mindalliance.channels.core.community.participation.RegisteredOrganizationService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
+import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -140,7 +141,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         selectPlaceholder( placeholder );
                         addPlaceholderList();
                         target.add( placeholderListContainer );
-                        addAgencyParticipation();
+                        addAgencyParticipation( );
                         target.add( participationContainer );
                         addSummary();
                         target.add( summaryLabel );
@@ -209,7 +210,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         return new ArrayList<Agency>( agencies );
     }
 
-    private void addAgencyParticipation() {
+    private void addAgencyParticipation(  ) {
         participationContainer = new WebMarkupContainer( "participation" );
         participationContainer.setOutputMarkupId( true );
         addOrReplace( participationContainer );
@@ -217,11 +218,11 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         participationContainer.add( new Label(
                 "placeholderName",
                 selectedPlaceholder == null ? "" : selectedPlaceholder.getName() ) );
-        addOrganizationParticipationList();
+        addOrganizationParticipationList( );
         addRegisterNewAgency();
     }
 
-    private void addOrganizationParticipationList() {
+    private void addOrganizationParticipationList(  ) {
         ListView<Agency> participatingAgencyList = new ListView<Agency>(
                 "agencies",
                 new PropertyModel<List<Agency>>( this, "agencies" )
@@ -262,7 +263,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         boolean success = removeAgency( agency );
-                        addAgencyParticipation();
+                        addAgencyParticipation(  );
                         target.add( participationContainer );
                         addSummary();
                         target.add( summaryLabel );
@@ -302,7 +303,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         if ( selectedPlaceholder != null && addedParticipation.contains( agency ) ) {
             return true;
         }
-        RegisteredOrganization registeredOrganization = agency.getRegistration();
+        RegisteredOrganization registeredOrganization = agency.getRegistration( getCommunityService() );
         return registeredOrganization != null
                 && !organizationParticipationService.findAllParticipationBy(
                 registeredOrganization,
@@ -384,7 +385,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                     String newName = getNewAgencyName();
                     newAgencyName = null;
                     addRegisterNewAgency();
-                    addAgencyParticipation();
+                    addAgencyParticipation(  );
                     target.add( participationContainer );
                     update( target, Change.message(
                             "Added "
@@ -529,7 +530,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
 
     }
 
-    private void addCancelAndSubmitButtons() {
+    private void addCancelAndSubmitButtons( ) {
         // cancel
         AjaxLink<String> cancelLink = new AjaxLink<String>(
                 "cancel"
@@ -538,7 +539,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 resetPendingParticipationChanges();
                 addPlaceHolders();
-                addAgencyParticipation();
+                addAgencyParticipation(  );
                 addSummary();
                 target.add( placeholderListContainer );
                 target.add( participationContainer );
@@ -561,7 +562,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 executePendingParticipationChanges();
                 resetPendingParticipationChanges();
                 addPlaceHolders();
-                addAgencyParticipation();
+                addAgencyParticipation(  );
                 addSummary();
                 target.add( participationContainer );
                 target.add( participationContainer );
@@ -686,5 +687,27 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             return new ArrayList<Agency>();
         }
     }
+
+    public void changed( Change change ) {
+        if ( change.isCollapsed() && change.isForInstanceOf( Agency.class ) ) {
+            // do nothing
+        } else {
+            super.changed( change );
+        }
+    }
+
+
+    public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
+        if ( change.isCollapsed() && change.isForInstanceOf( Agency.class ) ) {
+            profileDialog.close( target );
+            profileDialog = null;  // serialization problem otherwise
+            addOrganizationParticipationList( );
+            addSummary();
+            target.add( participationContainer );
+            target.add( summaryLabel );
+        }
+        super.updateWith( target, change, updatables );
+    }
+
 
 }

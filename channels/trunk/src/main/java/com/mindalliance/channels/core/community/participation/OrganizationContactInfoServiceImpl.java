@@ -10,7 +10,6 @@ import org.apache.commons.collections.Predicate;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class OrganizationContactInfoServiceImpl
         extends GenericSqlServiceImpl<OrganizationContactInfo, Long>
         implements OrganizationContactInfoService {
 
-    @Autowired
+//    @Autowired
     private RegisteredOrganizationService registeredOrganizationService;
 
     public OrganizationContactInfoServiceImpl() {

@@ -1,14 +1,5 @@
 package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.CommunityPlanner;
-import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipationService;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignments;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
@@ -16,7 +7,6 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 import com.mindalliance.channels.core.dao.AbstractModelObjectDao;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.Flow;
@@ -32,11 +22,16 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,38 +52,25 @@ public class CommunityServiceImpl implements CommunityService {
      */
     private static final Logger LOG = LoggerFactory.getLogger( CommunityServiceImpl.class );
 
+    @Autowired
+    private UserParticipationService userParticipationService;
+    @Autowired
+    private UserParticipationConfirmationService userParticipationConfirmationService;
+    @Autowired
+    private OrganizationParticipationService organizationParticipationService;
+    @Autowired
+    private Analyst analyst;
+    @Autowired
+    private PlanCommunityManager planCommunityManager;
+    @Autowired
+    private ParticipationManager participationManager;
+    @Autowired
+    private UserRecordService userRecordService;
 
     private PlanCommunity planCommunity;
     private PlanService planService;
-    private Analyst analyst;
-    private UserParticipationService userParticipationService;
-    private UserParticipationConfirmationService userParticipationConfirmationService;
-    private OrganizationParticipationService organizationParticipationService;
-    private PlanCommunityManager planCommunityManager;
-    private ParticipationManager participationManager;
-    private ChannelsUserDao userDao;
-    private CommunityPlannerService communityPlannerService;
 
     public CommunityServiceImpl() {}
-
-    public CommunityServiceImpl(
-            Analyst analyst,
-            UserParticipationService userParticipationService,
-            UserParticipationConfirmationService userParticipationConfirmationService,
-            OrganizationParticipationService organizationParticipationService,
-            PlanCommunityManager planCommunityManager,
-            ParticipationManager participationManager,
-            ChannelsUserDao userDao,
-            CommunityPlannerService communityPlannerService ) {
-        this.analyst = analyst;
-        this.userParticipationService = userParticipationService;
-        this.userParticipationConfirmationService = userParticipationConfirmationService;
-        this.organizationParticipationService = organizationParticipationService;
-        this.planCommunityManager = planCommunityManager;
-        this.participationManager = participationManager;
-        this.userDao = userDao;
-        this.communityPlannerService = communityPlannerService;
-    }
 
     @Override
     public PlanCommunity getPlanCommunity() {
@@ -135,8 +117,8 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public ChannelsUserDao getUserDao() {
-        return userDao;
+    public UserRecordService getUserRecordService() {
+        return userRecordService;
     }
 
     private void setParticipationManager( ParticipationManager participationManager ) {
@@ -234,16 +216,12 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Boolean isCommunityPlanner( ChannelsUser user ) {
-        return user.isAdmin() || communityPlannerService.isPlanner( user, this );
+        return user.isAdmin() || userRecordService.isPlanner( user, this );
     }
 
     @Override
     public List<ChannelsUser> getCommunityPlanners() {
-        List<ChannelsUser> users = new ArrayList<ChannelsUser>(  );
-        for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( this ) ) {
-            users.add( new ChannelsUser( communityPlanner.getUserInfo() ) );
-        }
-        return users;
+        return userRecordService.getPlanners( getPlanCommunity().getUri() );
     }
 
     @Override

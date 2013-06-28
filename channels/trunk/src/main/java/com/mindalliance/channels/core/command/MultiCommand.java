@@ -169,6 +169,10 @@ public class MultiCommand extends AbstractCommand {
         this.name = name;
     }
 
+    public boolean isEmpty() {
+        return commands.isEmpty();
+    }
+
     //===============================
 
     /**

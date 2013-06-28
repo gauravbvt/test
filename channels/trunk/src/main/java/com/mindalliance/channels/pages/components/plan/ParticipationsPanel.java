@@ -1,20 +1,19 @@
 package com.mindalliance.channels.pages.components.plan;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
-import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.ModelObjectLink;
 import com.mindalliance.channels.pages.Updatable;
@@ -62,7 +61,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private ParticipationManager participationManager;
 
     @SpringBean
-    private UserContactInfoService userContactInfoService;
+    private UserRecordService userInfoService;
 
     private static final int MAX_ROWS = 10;
     private static String USERNAMES = "Users";
@@ -247,7 +246,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private List<ParticipationWrapper> getAllParticipationWrappers() {
         List<ParticipationWrapper> participationWrappers = new ArrayList<ParticipationWrapper>();
         CommunityService communityService = getCommunityService();
-        ChannelsUserDao userDao = communityService.getUserDao();
+        UserRecordService userDao = communityService.getUserRecordService();
         UserParticipationService userParticipationService = communityService.getUserParticipationService();
         for ( ChannelsUser channelsUser : userDao.getUsers( getPlan().getUri() ) ) {
             List<UserParticipation> participations = userParticipationService.getUserParticipations(
@@ -385,7 +384,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
     private void addUserChannels() {
         ParticipationWrapper pw = getParticipation();
         String channelsString = pw != null
-                ? Channel.toString( userContactInfoService.findChannels(
+                ? Channel.toString( userInfoService.findChannels(
                 pw.getParticipatingUserInfo(),
                 getCommunityService() ) )
                 : "None";
@@ -427,7 +426,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                                     getPlan() ) );*/
                 } else if ( action.equals( "participation" ) ) {
                     ChannelsUser participatingUser
-                            = getCommunityService().getUserDao().getUserNamed( wrapper.getUsername() );
+                            = getCommunityService().getUserRecordService().getUserWithIdentity( wrapper.getUsername() );
                     if ( participatingUser != null ) {
                         selectedParticipation = null;
                         addedParticipationWrapper = new ParticipationWrapper(
@@ -523,7 +522,7 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
 
         public void setAgent( Agent agent ) {
             CommunityService communityService = getCommunityService();
-            ChannelsUserDao userDao = communityService.getUserDao();
+            UserRecordService userDao = communityService.getUserRecordService();
             UserParticipationService userParticipationService = communityService.getUserParticipationService();
             if ( participation != null ) {
                 userParticipationService.removeParticipation( getUser().getUsername(), participation, communityService );
@@ -532,13 +531,13 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
                 if ( getUser().getUsername().equals( username ) ) {
                     participation = userParticipationService.addAcceptedParticipation(
                             getUser().getUsername(),
-                            userDao.getUserNamed( username ),
+                            userDao.getUserWithIdentity( username ),
                             agent,
                             communityService );
                 } else {
                     participation = userParticipationService.addParticipation(
                             getUser().getUsername(),
-                            userDao.getUserNamed( username ),
+                            userDao.getUserWithIdentity( username ),
                             agent,
                             communityService );
                 }
@@ -573,13 +572,13 @@ public class ParticipationsPanel extends AbstractCommandablePanel implements Nam
             return orderedDomain;
         }
 
-        public ChannelsUserInfo getParticipatingUserInfo() {
+        public UserRecord getParticipatingUserInfo() {
             ChannelsUser participatingUser = getParticipatingUser();
-            return participatingUser == null ? null : participatingUser.getUserInfo();
+            return participatingUser == null ? null : participatingUser.getUserRecord();
         }
 
         private ChannelsUser getParticipatingUser() {
-            return getCommunityService().getUserDao().getUserNamed( username );
+            return getCommunityService().getUserRecordService().getUserWithIdentity( username );
         }
     }
 

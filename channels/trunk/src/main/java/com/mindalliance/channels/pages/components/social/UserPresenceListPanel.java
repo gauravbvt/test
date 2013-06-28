@@ -2,9 +2,9 @@ package com.mindalliance.channels.pages.components.social;
 
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.activities.PresenceRecordService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Updatable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -32,7 +32,7 @@ import java.util.List;
 public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    ChannelsUserDao userDao;
+    UserRecordService userInfoService;
 
     @SpringBean
     private PresenceRecordService presenceRecordService;
@@ -101,7 +101,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
                 ChannelsUser planner = item.getModelObject();
                 UserPresencePanel presencePanel = new UserPresencePanel(
                         "presence",
-                        new Model<ChannelsUserInfo>( planner.getUserInfo() ),
+                        new Model<UserRecord>( planner.getUserRecord() ),
                         item.getIndex(),
                         showProfile,
                         updatable );
@@ -113,7 +113,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     public List<ChannelsUser> getUsersPresent() {
         List<ChannelsUser> usersPresent = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userDao.getPlanners( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userInfoService.getPlanners( getPlan().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
                 usersPresent.add( user );
             }

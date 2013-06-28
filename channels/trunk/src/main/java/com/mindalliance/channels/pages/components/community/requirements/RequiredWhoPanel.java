@@ -4,9 +4,9 @@ import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.MultiCommand;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Requirement;
@@ -317,7 +317,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                             getUsername(),
                             requirement,
                             getAgentSpecPath( "orgParticipationId" ),
-                            agency.getOrganizationParticipation().getId()
+                            agency.getOrganizationParticipation().getUid()
                     ) );
                 }
             }

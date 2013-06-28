@@ -3,12 +3,12 @@ package com.mindalliance.channels.db.data.surveys;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.AbstractChannelsDocument;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.social.services.notification.Messageable;
@@ -492,7 +492,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
                 .append( percentComplete )
                 .append( "% complete.\n\n" );
         sb.append( "Your participation was requested by " )
-                .append( communityService.getUserDao().getFullName( getUsername() ) )
+                .append( communityService.getUserRecordService().getFullName( getUsername() ) )
                 .append( ".\n\n" );
         int requiredQuestionsCount = surveysDAO.getRequiredQuestionCount( this );
         int optionalQuestionsCount = surveysDAO.getOptionalQuestionCount( this );
@@ -526,7 +526,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
         // ignore format
         Plan plan = communityService.getPlan();
         StringBuilder sb = new StringBuilder();
-        ChannelsUser surveyedUser = communityService.getUserDao().getUserNamed( getSurveyedUsername() );
+        ChannelsUser surveyedUser = communityService.getUserRecordService().getUserWithIdentity( getSurveyedUsername() );
         if ( surveyedUser != null ) {
             sb.append( plan.getClient() );
             sb.append( " invites you to participate in a survey about the \"" )
@@ -550,7 +550,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
             // New account login instructions
             sb.append( "To login, use your email address as user name" )
                     .append( surveyedUser.getEmail() );
-            String newPassword = surveyedUser.getUserInfo().getGeneratedPassword();
+            String newPassword = surveyedUser.getUserRecord().getGeneratedPassword();
             if ( newPassword != null ) {
                 sb.append( " and enter password " )
                         .append( newPassword )
@@ -563,7 +563,7 @@ public class RFI extends AbstractChannelsDocument implements Messageable {
             if ( !rfiForwards.isEmpty() ) {
                 sb.append( "This survey was forwarded to you by:" );
                 for ( RFIForward rfiForward : rfiForwards ) {
-                    ChannelsUserInfo forwarder = surveysDAO.getForwarder( rfiForward );
+                    UserRecord forwarder = surveysDAO.getForwarder( rfiForward );
                     if ( forwarder != null ) {
                         sb.append( "\n" )
                                 .append( forwarder.getFullName() )

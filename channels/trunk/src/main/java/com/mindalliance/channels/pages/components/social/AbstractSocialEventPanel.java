@@ -1,19 +1,19 @@
 package com.mindalliance.channels.pages.components.social;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.dao.user.UserUploadService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.activities.PresenceRecord;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.activities.PresenceRecordService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.menus.SocialItemMenuPanel;
@@ -47,7 +47,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private UserUploadService userUploadService;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
     
     @SpringBean
     private UserParticipationService userParticipationService;
@@ -135,7 +135,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     private void addMoreMenu( WebMarkupContainer socialItemContainer ) {
         SocialItemMenuPanel menu = new SocialItemMenuPanel(
                 "menu",
-                new PropertyModel<ChannelsUserInfo>( this, "userInfo" ),
+                new PropertyModel<UserRecord>( this, "userInfo" ),
                 getUsername(),
                 poModel,
                 showProfile,
@@ -185,9 +185,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             String poUserName = getPersistentPlanObjectUsername(  );
             if ( poUserName == null ) {
                 return "?";
-            } else if ( poUserName.equals( ChannelsUserInfo.PLANNERS ) ) {
+            } else if ( poUserName.equals( UserRecord.PLANNERS ) ) {
                 return "All planners";
-            } else if ( poUserName.equals( ChannelsUserInfo.USERS ) ) {
+            } else if ( poUserName.equals( UserRecord.USERS ) ) {
                 return "Everyone";
             } else {
                 String name = getQueryService().findUserFullName( poUserName );
@@ -254,9 +254,9 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
         return src == null ? "images/actor.user.png" : src;
     }
 
-    public ChannelsUserInfo getUserInfo() {
-        ChannelsUser user = userDao.getUserNamed( getPersistentPlanObject().getUsername() );
-        return user == null ? null : user.getUserInfo();
+    public UserRecord getUserInfo() {
+        ChannelsUser user = userInfoService.getUserWithIdentity( getPersistentPlanObject().getUsername() );
+        return user == null ? null : user.getUserRecord();
     }
 
     public PresenceRecordService getPresenceRecordService() {
@@ -300,7 +300,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
     }
 
     protected ChannelsUser getSocialEventUser() {
-        return userDao.getUserNamed( getPersistentPlanObjectUsername() );
+        return userInfoService.getUserWithIdentity( getPersistentPlanObjectUsername() );
     }
 
 }

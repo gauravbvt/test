@@ -55,7 +55,8 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         if ( getUserNamed( username ) != null )
             throw new DuplicateKeyException();
         else
-            return new ChannelsUser( createUserInfo( username, "", username, email ) );
+            return null;
+          //  return new ChannelsUser( createUserInfo( username, "", username, email ) );
     }
 
     @Override
@@ -89,8 +90,8 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
                             ChannelsUser user,
                             PlanManager planManager ) {
         // Delete user contact info
-        userContactInfoService.removeAllChannels( user.getUserInfo() );
-        delete( user.getUserInfo() );
+       // userContactInfoService.removeAllChannels( user.getUserInfo() );
+        //delete( user.getUserInfo() );
     }
 
     @Override
@@ -111,12 +112,14 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
                 adminUserInfo.setPassword( ChannelsUser.DEFAULT_ADMIN_PASSWORD );
                 adminUserInfo.setGlobalAccess( ChannelsUserInfo.ROLE_ADMIN );
                 save( adminUserInfo );
-                return new ChannelsUser( adminUserInfo );
+                return null;
+                // return new ChannelsUser( adminUserInfo );
             } else {
                 return null;
             }
         } else {
-            return new ChannelsUser( userInfos.get( 0 ) );
+            return null;
+           // return new ChannelsUser( userInfos.get( 0 ) );
         }
     }
 
@@ -147,7 +150,7 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
             }
         } );
         for ( ChannelsUserInfo userInfo : userInfos ) {
-            result.add( new ChannelsUser( userInfo ) );
+           // result.add( new ChannelsUser( userInfo ) );
         }
         return result;
     }
@@ -189,14 +192,14 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
         ChannelsUserInfo userInfo = null;
         ChannelsUser userFromEmail = getUserNamed( email );
         if ( userFromEmail != null ) {
-            userInfo = userFromEmail.getUserInfo();
+          //  userInfo = userFromEmail.getUserInfo();
         } else {
             if ( !ChannelsUtils.isValidEmailAddress( email ) ) return null;
             String newUsername = makeNewUsernameFromEmail( email );
             String password = makeNewPassword();
             try {
                 ChannelsUser newUser = createUser( newUsername, email );
-                userInfo = newUser.getUserInfo();
+             //   userInfo = newUser.getUserInfo();
                 userInfo.setPassword( password );
                 userInfo.setGeneratedPassword( password );
             } catch ( DuplicateKeyException e ) {
@@ -308,8 +311,8 @@ public class ChannelsUserDaoImpl extends GenericSqlServiceImpl<ChannelsUserInfo,
                 + user.getEmail() );
         try {
             mailSender.send( email );
-            user.getUserInfo().setPassword( newPassword );
-            save( user.getUserInfo() );
+            user.getUserRecord().setPassword( newPassword );
+          //  save( user.getUserInfo() );
             success = true;
         } catch ( Exception exc ) {
             LOG.warn( fromAddress

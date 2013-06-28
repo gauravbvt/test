@@ -2,19 +2,20 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.NameRangePanel;
 import com.mindalliance.channels.pages.components.NameRangeable;
@@ -45,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * // todo - REMOVE - OBSOLETE
  * Users participation panel in participation manager.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -187,7 +189,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     }
 
     public List<String> getIndexedNames() {
-        ChannelsUserDao userDao = getCommunityService().getUserDao();
+        UserRecordService userDao = getCommunityService().getUserRecordService();
         List<String> normalizedUserNames = new ArrayList<String>();
         for ( ChannelsUser user : userDao.getUsers( getCommunityService().getPlanCommunity().getUri() ) ) {
             normalizedUserNames.add( user.getNormalizedFullName() );
@@ -204,7 +206,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
 
     public void resetUserParticipationWrappers() {
         CommunityService communityService = getCommunityService();
-        ChannelsUserDao userDao = getCommunityService().getUserDao();
+        UserRecordService userDao = getCommunityService().getUserRecordService();
         UserParticipationService userParticipationService = communityService.getUserParticipationService();
         userParticipationWrappers = new ArrayList<UserParticipationWrapper>();
         for ( ChannelsUser user : userDao.getUsers( communityService.getPlanCommunity().getUri() ) ) {
@@ -341,7 +343,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
     private List<String> getUserFullNamesAndEmails() {
         CommunityService communityService = getCommunityService();
         List<String> fullNamesAndEmails = new ArrayList<String>();
-        for ( ChannelsUser user : communityService.getUserDao().getUsers() ) {
+        for ( ChannelsUser user : communityService.getUserRecordService().getAllEnabledUsers() ) {
             fullNamesAndEmails.add( user.getFullName() + " (" + user.getEmail() + ")" );
         }
         Collections.sort( fullNamesAndEmails );
@@ -536,11 +538,11 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                         ? val.substring( openParIndex + 1 )
                         : val.substring( openParIndex + 1, closedParIndex ) ).trim();
             }
-            ChannelsUserDao userDao = getCommunityService().getUserDao();
+            UserRecordService userDao = getCommunityService().getUserRecordService();
             if ( email != null )
-                assignmentUser = userDao.getUserNamed( email );
+                assignmentUser = userDao.getUserWithIdentity( email );
             if ( assignmentUser == null ) {
-                assignmentUser = userDao.getUserNamed( identifier );
+                assignmentUser = userDao.getUserWithIdentity( identifier );
             }
             if ( assignmentUser == null ) {
                 List<ChannelsUser> users = userDao.findAllUsersWithFullName( identifier, getCommunityService().getPlanCommunity().getUri() );
@@ -667,22 +669,27 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             if ( userParticipation != null ) {
                 CommunityService communityService = getCommunityService();
                 ChannelsUser user = getUser();
-                ChannelsUser otherUser = new ChannelsUser( userParticipation.getParticipant(), communityService );
-                if ( user.equals( otherUser ) ) {
-                    rels.add( "self" );
+                UserRecord participantInfo = userParticipation.getParticipant( communityService );
+                if ( participantInfo == null ) {
+                    return null;
                 } else {
-                    ParticipationManager participationManager = communityService.getParticipationManager();
-                    if ( participationManager.areCollaborators( communityService, user, otherUser ) ) {
-                        rels.add( "collaborator" );
-                    }
-                    if ( participationManager.isSupervisorOf( communityService, otherUser, user ) ) {
-                        rels.add( "supervisor" );
-                    }
-                    if ( participationManager.isSupervisedBy( communityService, otherUser, user ) ) {
-                        rels.add( "direct report" );
-                    }
-                    if ( participationManager.areColleagues( communityService, otherUser, user ) ) {
-                        rels.add( "colleague" );
+                    ChannelsUser otherUser = new ChannelsUser( participantInfo, communityService );
+                    if ( user.equals( otherUser ) ) {
+                        rels.add( "self" );
+                    } else {
+                        ParticipationManager participationManager = communityService.getParticipationManager();
+                        if ( participationManager.areCollaborators( communityService, user, otherUser ) ) {
+                            rels.add( "collaborator" );
+                        }
+                        if ( participationManager.isSupervisorOf( communityService, otherUser, user ) ) {
+                            rels.add( "supervisor" );
+                        }
+                        if ( participationManager.isSupervisedBy( communityService, otherUser, user ) ) {
+                            rels.add( "direct report" );
+                        }
+                        if ( participationManager.areColleagues( communityService, otherUser, user ) ) {
+                            rels.add( "colleague" );
+                        }
                     }
                 }
             }
@@ -729,7 +736,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
             if ( userParticipation != null && isUserInCharge() ) {
                 CommunityService communityService = getCommunityService();
                 return communityService.getUserParticipationService().deleteParticipation(
-                        new ChannelsUser( userParticipation.getParticipant(), communityService ),
+                        new ChannelsUser( userParticipation.getParticipant( communityService ), communityService ),
                         userParticipation.getAgent( communityService ),
                         communityService );
             }

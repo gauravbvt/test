@@ -1,9 +1,10 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.orm.service.GenericSqlService;
+import com.mindalliance.channels.db.data.users.UserRecord;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public interface UserParticipationService extends GenericSqlService<UserParticip
 
     List<String> listSupervisorsToNotify( UserParticipation userParticipation, CommunityService communityService );
 
-    List<ChannelsUserInfo> findUsersParticipatingAs( Agent agent, CommunityService communityService );
+    List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService );
 
     boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 

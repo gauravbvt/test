@@ -7,7 +7,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 import com.mindalliance.channels.social.services.notification.Messageable;
 
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
  * Date: 2/19/13
  * Time: 10:05 AM
  */
-@Entity
+// @Entity
 public class CommunityPlanner extends AbstractPersistentChannelsObject implements Messageable {
 
     public static final String AUTHORIZED_AS_PLANNER = "authorized as community planner";
@@ -39,7 +38,7 @@ public class CommunityPlanner extends AbstractPersistentChannelsObject implement
             PlanCommunity planCommunity
     ) {
         super( planCommunity, username );
-        userInfo = communityPlanner.getUserInfo();
+       // userInfo = communityPlanner.getUserInfo();
     }
 
     public ChannelsUserInfo getUserInfo() {

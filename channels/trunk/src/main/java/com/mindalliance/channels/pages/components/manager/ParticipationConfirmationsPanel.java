@@ -1,15 +1,15 @@
 package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.data.communities.UserParticipationConfirmation;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -70,7 +70,7 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
                     }
                 };
                 item.add( confirmedCheckBox );
-                ChannelsUserInfo participatingUser = confirmationWrapper.getParticipatingUser();
+                UserRecord participatingUser = confirmationWrapper.getParticipatingUser();
                 item.add( new Label( "user", participatingUser.getFullName() ) );
                 item.add( new Label( "email", participatingUser.getEmail() ) );
                 Agent participationAgent = confirmationWrapper.getAgent( getCommunityService() );
@@ -139,31 +139,34 @@ public class ParticipationConfirmationsPanel extends AbstractUpdatablePanel {
             UserParticipationConfirmationService userParticipationConfirmationService =
                     communityService.getUserParticipationConfirmationService();
             for ( Agent supervisor : communityService.getUserParticipationService().listSupervisorsUserParticipatesAs(
-                    participationConfirmation.getUserParticipation(),
+                    participationConfirmation.getUserParticipation( communityService ),
                     getUser(),
                     communityService
             ) ) {
                 if ( confirmed ) {
                     userParticipationConfirmationService.addParticipationConfirmation(
-                            participationConfirmation.getUserParticipation(),
+                            participationConfirmation.getUserParticipation( communityService ),
                             supervisor,
                             getUser(),
                             communityService );
                 } else {
                     userParticipationConfirmationService.removeParticipationConfirmation(
-                            participationConfirmation.getUserParticipation(),
+                            participationConfirmation.getUserParticipation( communityService ),
                             supervisor,
                             communityService );
                 }
             }
         }
 
-        public ChannelsUserInfo getParticipatingUser() {
-            return participationConfirmation.getUserParticipation().getParticipant();
+        public UserRecord getParticipatingUser() {
+            CommunityService communityService = getCommunityService();
+            UserParticipation userParticipation = participationConfirmation.getUserParticipation(communityService);
+            return userParticipation != null ? userParticipation.getParticipant( communityService ) : null;
         }
 
         public Agent getAgent( CommunityService communityService ) {
-            return participationConfirmation.getUserParticipation().getAgent( communityService );
+            UserParticipation userParticipation = participationConfirmation.getUserParticipation(communityService);
+            return userParticipation != null ? userParticipation.getAgent( communityService ) : null;
         }
     }
 

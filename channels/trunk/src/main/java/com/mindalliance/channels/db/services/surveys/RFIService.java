@@ -2,7 +2,6 @@ package com.mindalliance.channels.db.services.surveys;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.db.data.surveys.AnswerSet;
@@ -11,6 +10,7 @@ import com.mindalliance.channels.db.data.surveys.Questionnaire;
 import com.mindalliance.channels.db.data.surveys.RFI;
 import com.mindalliance.channels.db.data.surveys.RFIForward;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.DataService;
 
 import java.util.Date;
@@ -59,7 +59,7 @@ public interface RFIService extends DataService<RFI> {
             CommunityService communityService,
             String username,
             RFISurvey rfiSurvey,
-            ChannelsUserInfo userInfo,
+            UserRecord userInfo,
             Organization organization,
             String title,
             Role role,
@@ -77,7 +77,7 @@ public interface RFIService extends DataService<RFI> {
             CommunityService communityService,
             String username,
             RFISurvey rfiSurvey,
-            ChannelsUserInfo userInfo );
+            UserRecord userInfo );
 
     /**
      * Find matching RFI RFI.

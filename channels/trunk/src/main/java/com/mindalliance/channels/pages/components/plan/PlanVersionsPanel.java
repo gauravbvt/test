@@ -5,9 +5,9 @@ import com.mindalliance.channels.core.command.Command;
 import com.mindalliance.channels.core.command.commands.AddProducer;
 import com.mindalliance.channels.core.command.commands.RemoveProducer;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
@@ -54,7 +54,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     private SimpleDateFormat dateFormat;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     public PlanVersionsPanel(
             String id,
@@ -160,7 +160,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
 
     public List<Vote> getVotes() {
         List<Vote> votes = new ArrayList<Vote>();
-        for ( ChannelsUser planner : userDao.getPlanners( getPlan().getUri() ) )
+        for ( ChannelsUser planner : userInfoService.getPlanners( getPlan().getUri() ) )
             votes.add( new Vote( planner ) );
 
         return votes;

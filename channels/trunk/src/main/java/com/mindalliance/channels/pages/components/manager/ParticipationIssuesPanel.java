@@ -1,6 +1,6 @@
 package com.mindalliance.channels.pages.components.manager;
 
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;

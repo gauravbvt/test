@@ -2,16 +2,16 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.ParticipationManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationConfirmationService;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -54,7 +54,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     private UserParticipationService userParticipationService;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private UserParticipationConfirmationService userParticipationConfirmationService;
@@ -76,15 +76,19 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     public UserParticipationManager( String id ) {
         super( id );
         init();
-    }
+     }
 
     private void init() {
         resetSelectionsAndChanges();
+        addParticipation();
+        addCancelAndSubmitButtons();
+    }
+
+    private void addParticipation() {
         addAgencies();
         addAgents();
         addParticipants();
         addSummary();
-        addCancelAndSubmitButtons();
     }
 
     private void resetSelectionsAndChanges() {
@@ -340,7 +344,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 .append( count )
                 .append( count > 1 ? " participants" : " participant" );
         if ( actor.getMaxParticipation() > 0 ) {
-            sb.append( " - " )
+            sb.append( ", " )
                     .append( actor.getMaxParticipation() )
                     .append( " max" );
         }
@@ -357,11 +361,12 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
     private List<ChannelsUser> getRegisteredParticipants( Agent agent ) {
+        CommunityService communityService = getCommunityService();
         List<ChannelsUser> participants = new ArrayList<ChannelsUser>();
         if ( agent != null ) {
             for ( UserParticipation userParticipation
-                    : userParticipationService.getParticipationsAsAgent( agent, getCommunityService() ) ) {
-                participants.add( new ChannelsUser( userParticipation.getParticipant() ) );
+                    : userParticipationService.getParticipationsAsAgent( agent, communityService) )  {
+                participants.add( new ChannelsUser( userParticipation.getParticipant( communityService) ) );
             }
             Collections.sort( participants, new Comparator<ChannelsUser>() {
                 @Override
@@ -440,7 +445,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                             || participationManager.hasAuthorityOverParticipation(
                                 getCommunityService(),
                                 getUser(),
-                                participant.getUserInfo(),
+                                participant.getUserRecord(),
                                 selectedAgent ) );
                 // UserParticipation userParticipation = userParticipationService.getParticipation( user,  )
                 participatingCheckBox.setEnabled( participationAvailable && userHasAuthority );
@@ -509,7 +514,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             }
         }
         List<ChannelsUser> nonParticipants = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userDao.getUsers() ) {
+        for ( ChannelsUser user : userInfoService.getAllEnabledUsers() ) {
             if ( !participants.contains( user ) && !isFilteredOut( user ) )
                 nonParticipants.add( user );
         }
@@ -614,10 +619,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetPendingParticipationChanges();
-                addAgenciesList();
-                addAgentsList();
-                addParticipantsList();
-                addSummary();
+                addParticipation();
                 target.add( agenciesContainer );
                 target.add( agentsContainer );
                 target.add( participantsContainer );
@@ -630,7 +632,8 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 }
             }
         };
-        add( cancelLink );
+        cancelLink.setOutputMarkupId( true );
+        addOrReplace( cancelLink );
         // submit
         AjaxLink<String> submitLink = new AjaxLink<String>(
                 "submit"
@@ -639,10 +642,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 executePendingParticipationChanges();
                 resetPendingParticipationChanges();
-                addAgenciesList();
-                addAgentsList();
-                addParticipantsList();
-                addSummary();
+                addParticipation();
                 target.add( agenciesListContainer );
                 target.add( agentsListContainer );
                 target.add( participantsContainer );
@@ -655,7 +655,8 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 }
             }
         };
-        add( submitLink );
+        submitLink.setOutputMarkupId( true );
+        addOrReplace( submitLink );
     }
 
     private void executePendingParticipationChanges() {

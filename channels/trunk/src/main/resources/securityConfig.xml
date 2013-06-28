@@ -30,7 +30,7 @@
     <bean name="plan" class="com.mindalliance.channels.core.model.Plan" factory-bean="user" factory-method="getPlan"
           scope="request"/>
 
-    <bean id="userDao" class="com.mindalliance.channels.core.dao.user.ChannelsUserDaoImpl"/>
+    <bean id="userDao" class="com.mindalliance.channels.db.services.users.UserRecordServiceImpl"/>
 
     <sec:http pattern="/**/*.css" security="none"/>
     <sec:http pattern="/**/*.js" security="none"/>

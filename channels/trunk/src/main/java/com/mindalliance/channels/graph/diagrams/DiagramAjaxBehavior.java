@@ -36,11 +36,11 @@ public abstract class DiagramAjaxBehavior extends AbstractDefaultAjaxBehavior {
     /**
      * Pattern for vertex parameter in url.
      */
-    private static Pattern VERTEX = Pattern.compile( "graph=(\\d+)&amp;vertex=(\\d+).*" );
+    private static Pattern VERTEX = Pattern.compile( "graph=(\\d+)&amp;vertex=([a-zA-Z0-9_]+).*" );
     /**
      * Pattern for edge parameter in url.
      */
-    private static Pattern EDGE = Pattern.compile( "graph=(\\d+)&amp;edge=([\\d,]+).*" );
+    private static Pattern EDGE = Pattern.compile( "graph=(\\d+)&amp;edge=([a-zA-Z0-9_,]+).*" );
 
     private static Pattern EXTRA = Pattern.compile( "&amp;(_\\w+)=(\\w+)");
 

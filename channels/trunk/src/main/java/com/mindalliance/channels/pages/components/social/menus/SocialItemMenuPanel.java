@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.core.command.CommandException;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
 import com.mindalliance.channels.db.data.messages.UserMessage;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
@@ -32,28 +32,28 @@ public class SocialItemMenuPanel extends MenuPanel {
     private boolean showProfile;
     private boolean allowMessageDelete = true;
     private Updatable updatable;
-    private IModel<ChannelsUserInfo> userInfoIModelModel;
+    private IModel<UserRecord> userInfoIModel;
 
     public SocialItemMenuPanel(
             String id,
-            IModel<ChannelsUserInfo> userInfoIModelModel,
+            IModel<UserRecord> userInfoIModel,
             String username,
             IModel<? extends PersistentPlanObject> poModel,
             boolean showProfile,
             Updatable updatable ) {
-        this(id, userInfoIModelModel, username, poModel, showProfile, true, updatable );
+        this(id, userInfoIModel, username, poModel, showProfile, true, updatable );
     }
 
     public SocialItemMenuPanel(
             String id,
-            IModel<ChannelsUserInfo> userInfoIModelModel,
+            IModel<UserRecord> userInfoIModel,
             String username,
             IModel<? extends PersistentPlanObject> poModel,
             boolean showProfile,
             boolean allowMessageDelete,
             Updatable updatable ) {
-        super( id, "more", userInfoIModelModel );
-        this.userInfoIModelModel = userInfoIModelModel;
+        super( id, "more", userInfoIModel );
+        this.userInfoIModel = userInfoIModel;
         this.username = username;
         this.poModel = poModel;
         this.showProfile = showProfile;
@@ -77,7 +77,7 @@ public class SocialItemMenuPanel extends MenuPanel {
 
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
-        ChannelsUserInfo userInfo = getUserInfo();
+        UserRecord userInfo = getUserInfo();
         final String currentUsername = getUser().getUsername();
         if ( userInfo != null ) {
             /*final Actor actor = findActor( userInfo );
@@ -140,8 +140,8 @@ public class SocialItemMenuPanel extends MenuPanel {
         return poModel == null ? null : poModel.getObject();
     }
 
-    private ChannelsUserInfo getUserInfo() {
-        return userInfoIModelModel.getObject();
+    private UserRecord getUserInfo() {
+        return userInfoIModel.getObject();
     }
 
 }

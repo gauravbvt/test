@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
@@ -130,17 +130,17 @@ public class NewPasswordPage extends WebPage {
         if ( getUsername().isEmpty() && getEmail().isEmpty() ) {
             setOutcome( MISSING_USERNAME_OR_EMAIL );
         } else {
-            ChannelsUserDao userDao = queryService.getUserDao();
+            UserRecordService userDao = queryService.getUserInfoService();
             ChannelsUser user = null;
             boolean unrecognizedUsername = false;
             boolean unrecognizedEmailAddress = false;
             if ( !getUsername().isEmpty() ) {
-                user = userDao.getUserNamed( getUsername() );
+                user = userDao.getUserWithIdentity( getUsername() );
                 unrecognizedUsername = user == null;
             }
             if ( !getEmail().isEmpty() ) {
                 user = (ChannelsUser) CollectionUtils.find(
-                        userDao.getUsers(),
+                        userDao.getAllEnabledUsers(),
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {

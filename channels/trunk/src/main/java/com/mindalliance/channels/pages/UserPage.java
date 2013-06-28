@@ -9,13 +9,13 @@ package com.mindalliance.channels.pages;
 import com.mindalliance.channels.core.Attachment;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.community.PlanCommunity;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.messages.UserMessageService;
 import com.mindalliance.channels.db.services.surveys.RFIService;
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class UserPage extends AbstractChannelsBasicPage {
 
-    // todo - COMMUNITY - obsolete
+    // todo - remove - obsolete
 
     /**
      * Class logger.
@@ -211,7 +211,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         );
 
         // Settings
-        BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", "", AdminPage.class, null, plan );
+        BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", "", SettingsPage.class, null, plan );
         addTipTitle(
                 gotoAdminLink,
                 "Configure Channels, add users, change access privileges, and create, configure, release, or delete plans" );

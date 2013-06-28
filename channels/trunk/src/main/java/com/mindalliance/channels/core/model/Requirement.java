@@ -1,15 +1,15 @@
 package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.community.Agency;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.OrganizationParticipation;
 import com.mindalliance.channels.core.community.protocols.CommunityAssignment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -995,7 +995,7 @@ public class Requirement extends ModelObject implements Countable {
 
         private boolean initialized = false;
         private Actor actor;
-        private Long orgParticipationId;  // of agent or if, no actor, of agency
+        private String orgParticipationId;  // of agent or if, no actor, of agency
         private Long fixedOrgId; // of agency, if agency not already specified by agent
         private Place jurisdiction;
         private Organization placeholder; // meaningful only if fixedOrgId or orgParticipationId not set
@@ -1041,7 +1041,7 @@ public class Requirement extends ModelObject implements Countable {
         private void processAgent( Agent agent ) {
             actor = agent.getActor();
             if ( agent.isFromOrganizationParticipation() ) {
-                orgParticipationId = agent.getOrganizationParticipation().getId();
+                orgParticipationId = agent.getOrganizationParticipation().getUid();
             }
         }
 
@@ -1049,7 +1049,7 @@ public class Requirement extends ModelObject implements Countable {
             if ( agency.isFixedOrganization() ) {
                 fixedOrgId = agency.getFixedOrganization().getId();
             } else if ( orgParticipationId == null && agency.isParticipatingAsPlaceholder() ) {
-                orgParticipationId = agency.getOrganizationParticipation().getId();
+                orgParticipationId = agency.getOrganizationParticipation().getUid();
             }
         }
 
@@ -1125,7 +1125,7 @@ public class Requirement extends ModelObject implements Countable {
             if ( agency.isFixedOrganization() && fixedOrgId == null && orgParticipationId == null ) {
                 setFixedOrgId( agency.getFixedOrganization().getId() );
             } else if ( orgParticipationId == null ) {
-                setOrgParticipationId( agency.getOrganizationParticipation().getId() );
+                setOrgParticipationId( agency.getOrganizationParticipation().getUid() );
             }
         }
 
@@ -1138,7 +1138,7 @@ public class Requirement extends ModelObject implements Countable {
             if ( actor == null ) {
                 actor = agent.getActor();
                 if ( agent.isFromOrganizationParticipation() && orgParticipationId == null )
-                    setOrgParticipationId( agent.getOrganizationParticipation().getId() );
+                    setOrgParticipationId( agent.getOrganizationParticipation().getUid() );
             }
         }
 
@@ -1183,11 +1183,11 @@ public class Requirement extends ModelObject implements Countable {
             initialized = false;
         }
 
-        public Long getOrgParticipationId() {
+        public String getOrgParticipationId() {
             return orgParticipationId;
         }
 
-        public void setOrgParticipationId( Long orgParticipationId ) {
+        public void setOrgParticipationId( String orgParticipationId ) {
             this.orgParticipationId = orgParticipationId;
             if ( orgParticipationId != null ) {
                 fixedOrgId = null;
@@ -1249,7 +1249,7 @@ public class Requirement extends ModelObject implements Countable {
                 }
             }
             if ( state.containsKey( "orgParticipationId" ) ) {
-                orgParticipationId = (Long) state.get( "orgParticipationId" );
+                orgParticipationId = (String) state.get( "orgParticipationId" );
             }
             if ( state.containsKey( "jurisdiction" ) ) {
                 Long id = (Long) state.get( "jurisdiction" );

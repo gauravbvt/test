@@ -1,9 +1,9 @@
 package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
+import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;

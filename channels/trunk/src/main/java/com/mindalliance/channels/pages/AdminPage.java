@@ -1,14 +1,14 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.core.community.CommunityDefinitionManager;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * TODO - remove - obsolete
  * Default page for administrators.
  * Allows defining users and plans.
  */
@@ -82,7 +83,7 @@ public class AdminPage extends AbstractChannelsWebPage {
      * The user service.
      */
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private UserParticipationService userParticipationService;
@@ -112,7 +113,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private void init() {
         setStatelessHint( true );
         userList = new ListView<ChannelsUser>( "item",
-                new PropertyModel<List<ChannelsUser>>( userDao, "users" ) ) {
+                new PropertyModel<List<ChannelsUser>>( userInfoService, "users" ) ) {
             private static final long serialVersionUID = 2266583072592123487L;
 
             @Override
@@ -150,7 +151,7 @@ public class AdminPage extends AbstractChannelsWebPage {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 getPlanManager().productize( getPlan() );
-                setResponsePageWithPlan();
+               // setResponsePageWithPlan();
             }
 
 
@@ -169,7 +170,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                 if ( plans.size() > 1 ) {
                     getPlanManager().delete( getPlan() );
                     setPlan( plans.get( 0 ) );
-                    setResponsePageWithPlan();
+                    //setResponsePageWithPlan();
                 }
             }
         };
@@ -256,7 +257,7 @@ public class AdminPage extends AbstractChannelsWebPage {
 
                                     @Override
                                     protected void onUpdate( AjaxRequestTarget target ) {
-                                        setResponsePageWithPlan();
+                                        //setResponsePageWithPlan();
                                     }
                                 } ),
 
@@ -270,7 +271,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                 super.onModelChanged();
                                 String object = getModelObject();
                                 if ( object != null ) {
-                                    userDao.createUser( object );
+                                    // userInfoService.createUser( object );
                                     setModelObject( null );
                                 }
                                 userList.removeAll();
@@ -280,7 +281,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                                     @Override
                                     protected void onValidate( IValidatable<String> validatable ) {
                                         String name = validatable.getValue();
-                                        if ( userDao.getUserNamed( name ) != null ) {
+                                        if ( userInfoService.getUserWithIdentity( name ) != null ) {
                                             Map<String, Object> map = new HashMap<String, Object>();
                                             map.put( "name", name );
                                             error( validatable, "Duplicate", map );
@@ -355,8 +356,8 @@ public class AdminPage extends AbstractChannelsWebPage {
 
     private void submit() {
         for ( ChannelsUser u : toDelete ) {
-            getPlanManager().setAuthorities( u, null, null );
-            userDao.deleteUser( ChannelsUser.current().getUsername(), u, getPlanManager() );
+            // getPlanManager().setAuthorities( u, null, null );
+            userInfoService.deleteUser( ChannelsUser.current().getUsername(), u, getPlanManager() );
             userParticipationService.deleteAllParticipations( u, ChannelsUser.current().getUsername() );
         }
         if ( !toDelete.isEmpty() ) {
@@ -367,7 +368,7 @@ public class AdminPage extends AbstractChannelsWebPage {
         if ( newPlanUri != null && newPlanClient != null ) {
             try {
                 String newPlanName =
-                       !newPlanClient.isEmpty()
+                        !newPlanClient.isEmpty()
                                 ? ( newPlanClient + ( newPlanClient.endsWith( "s" ) ? "'" : "'s" ) + " New Plan" )
                                 : "New Plan";
                 planDefinitionManager.getOrCreate( newPlanUri, newPlanName, newPlanClient );
@@ -387,7 +388,7 @@ public class AdminPage extends AbstractChannelsWebPage {
             LOG.error( "Unable to save user definitions", e );
         }
 */
-        setResponsePageWithPlan();
+        //setResponsePageWithPlan();
     }
 
 
@@ -444,7 +445,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                     @Override
                     protected void onModelChanged() {
                         super.onModelChanged();
-                        userDao.save( item.getModelObject().getUserInfo() );
+                        userInfoService.save( item.getModelObject().getUserRecord() );
                     }
                 },
                 new TextField<String>( "email",
@@ -452,7 +453,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                     @Override
                     protected void onModelChanged() {
                         super.onModelChanged();
-                        userDao.save( item.getModelObject().getUserInfo() );
+                        userInfoService.save( item.getModelObject().getUserRecord() );
                     }
                 }
                         .add( EmailAddressValidator.getInstance() )
@@ -465,8 +466,8 @@ public class AdminPage extends AbstractChannelsWebPage {
                     protected void onModelChanged() {
                         String pwd = getModelObject();
                         if ( pwd != null && !pwd.trim().isEmpty() ) {
-                            item.getModelObject().getUserInfo().setPassword( pwd );
-                            userDao.save( item.getModelObject().getUserInfo() );
+                            item.getModelObject().getUserRecord().setPassword( pwd );
+                            userInfoService.save( item.getModelObject().getUserRecord() );
                         }
                     }
                 }
@@ -536,37 +537,38 @@ public class AdminPage extends AbstractChannelsWebPage {
         }
 
         public Access getObject() {
-            return getObject( userModel.getObject().getUserInfo() );
+            return getObject( userModel.getObject().getUserRecord() );
         }
 
-        private Access getObject( ChannelsUserInfo info ) {
-            return info.isAdmin() ? Access.Admin
+        private Access getObject( UserRecord info ) {
+         /*   return info.isAdmin() ? Access.Admin
                     : info.isPlanner() ? Access.Planner
                     : info.isUser() ? Access.User
                     : !info.isEnabled() ? Access.Disabled
                     : info.isPlanner( getUri() ) ? Access.LPlanner
                     : info.isUser( getUri() ) ? Access.LUser
-                    : Access.LDisabled;
+                    : Access.LDisabled;*/
+            return null;
         }
 
         public void setObject( Access object ) {
             if ( object != null ) {
                 ChannelsUser rowUser = userModel.getObject();
-                switch ( object ) {
+    /*            switch ( object ) {
                     case Admin:
-                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_ADMIN, null );
+                        getPlanManager().setAuthorities( rowUser, UserRecord.ROLE_ADMIN, null );
                         break;
                     case Planner:
-                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_PLANNER, null );
+                        getPlanManager().setAuthorities( rowUser, UserRecord.ROLE_PLANNER, null );
                         break;
                     case User:
-                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_USER, null );
+                        getPlanManager().setAuthorities( rowUser, UserRecord.ROLE_USER, null );
                         break;
                     case LPlanner:
-                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_PLANNER, getUri() );
+                        getPlanManager().setAuthorities( rowUser, UserRecord.ROLE_PLANNER, getUri() );
                         break;
                     case LUser:
-                        getPlanManager().setAuthorities( rowUser, ChannelsUserInfo.ROLE_USER, getUri() );
+                        getPlanManager().setAuthorities( rowUser, UserRecord.ROLE_USER, getUri() );
                         break;
                     case LDisabled:
                         getPlanManager().setAuthorities( rowUser, null, getUri() );
@@ -576,7 +578,7 @@ public class AdminPage extends AbstractChannelsWebPage {
                         getPlanManager().setAuthorities( rowUser, null, null );
                         break;
                 }
-                userDao.save( rowUser.getUserInfo() );
+*/                userInfoService.save( rowUser.getUserRecord() );
             }
         }
     }

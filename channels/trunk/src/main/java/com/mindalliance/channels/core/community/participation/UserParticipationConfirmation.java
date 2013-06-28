@@ -1,11 +1,11 @@
 package com.mindalliance.channels.core.community.participation;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.orm.model.AbstractPersistentChannelsObject;
 
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
  * Date: 10/23/12
  * Time: 11:49 AM
  */
-@Entity
+// @Entity
 public class UserParticipationConfirmation extends AbstractPersistentChannelsObject {
 
     @ManyToOne
@@ -38,7 +38,7 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
                 username );
         this.userParticipation = userParticipation;
         this.supervisorId =  supervisor != null ? supervisor.getActorId() : -1;
-        this.organizationParticipation = supervisor != null ? supervisor.getOrganizationParticipation() : null;
+    //    this.organizationParticipation = supervisor != null ? supervisor.getOrganizationParticipation() : null;
     }
 
     public UserParticipation getUserParticipation() {
@@ -56,7 +56,8 @@ public class UserParticipationConfirmation extends AbstractPersistentChannelsObj
         if ( organizationParticipation == null ) {
             return new Agent( actor );
         } else {
-            return new Agent( actor, organizationParticipation, communityService );
+            return null;
+          //  return new Agent( actor, organizationParticipation, communityService );
         }
     }
 

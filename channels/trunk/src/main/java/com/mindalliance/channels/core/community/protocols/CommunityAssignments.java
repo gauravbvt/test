@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.community.protocols;
 
-import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Place;
 

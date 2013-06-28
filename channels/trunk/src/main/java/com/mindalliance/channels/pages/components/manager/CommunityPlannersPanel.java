@@ -3,11 +3,10 @@ package com.mindalliance.channels.pages.components.manager;
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.CommunityPlanner;
-import com.mindalliance.channels.core.community.participation.CommunityPlannerService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -40,10 +39,10 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
     private static final int MAX_ROWS = 10;
 
     @SpringBean
-    private CommunityPlannerService communityPlannerService;
+    private UserRecordService userRecordService;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     private CommunityPlannersTable communityPlannersTable;
 
@@ -118,7 +117,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
             public void onClick( AjaxRequestTarget target ) {
                 if ( authorizedUser != null ) {
                     Change change;
-                    CommunityPlanner planner = communityPlannerService.authorizePlanner(
+                    UserRecord planner = userRecordService.authorizePlanner(
                             getUsername(),
                             authorizedUser,
                             getCommunityService() );
@@ -144,7 +143,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
     private List<String> getUserFullNamesAndEmails() {
         CommunityService communityService = getCommunityService();
         List<String> fullNamesAndEmails = new ArrayList<String>();
-        for ( ChannelsUser user : communityService.getUserDao().getUsers() ) {
+        for ( ChannelsUser user : communityService.getUserRecordService().getAllEnabledUsers() ) {
             if ( !communityService.isCommunityPlanner( user ) )
                 fullNamesAndEmails.add( user.getFullName() + " (" + user.getEmail() + ")" );
         }
@@ -172,11 +171,11 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
                         ? val.substring( openParIndex + 1 )
                         : val.substring( openParIndex + 1, closedParIndex ) ).trim();
             }
-            ChannelsUserDao userDao = getCommunityService().getUserDao();
+            UserRecordService userDao = getCommunityService().getUserRecordService();
             if ( email != null )
-                authorizedUser = userDao.getUserNamed( email );
+                authorizedUser = userDao.getUserWithIdentity( email );
             if ( authorizedUser == null ) {
-                authorizedUser = userDao.getUserNamed( identifier );
+                authorizedUser = userDao.getUserWithIdentity( identifier );
             }
             if ( authorizedUser == null ) {
                 List<ChannelsUser> users = userDao.findAllUsersWithFullName( identifier, getCommunityService().getPlanCommunity().getUri() );
@@ -191,8 +190,8 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
     public List<CommunityPlannerWrapper> getCommunityPlannerWrappers() {
         List<CommunityPlannerWrapper> wrappers = new ArrayList<CommunityPlannerWrapper>();
-        for ( CommunityPlanner communityPlanner : communityPlannerService.listPlanners( getCommunityService() ) ) {
-            wrappers.add( new CommunityPlannerWrapper( communityPlanner ) );
+        for ( ChannelsUser communityPlanner : userRecordService.getPlanners( getCommunityService().getPlanCommunity().getUri() ) ) {
+            wrappers.add( new CommunityPlannerWrapper( communityPlanner.getUserRecord() ) );
         }
         return wrappers;
     }
@@ -216,9 +215,9 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
     public class CommunityPlannerWrapper implements Serializable {
 
-        private CommunityPlanner communityPlanner;
+        private UserRecord communityPlanner;
 
-        public CommunityPlannerWrapper( CommunityPlanner communityPlanner ) {
+        public CommunityPlannerWrapper( UserRecord communityPlanner ) {
             this.communityPlanner = communityPlanner;
         }
 
@@ -228,13 +227,13 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
         }
 
         public String getEmail() {
-            return communityPlanner.getUserInfo().getEmail();
+            return communityPlanner.getEmail();
         }
 
         public String getAuthorizedBy() {
-            ChannelsUser authorizedBy = userDao.getUserNamed( communityPlanner.getUsername() );
+            ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( communityPlanner.getUsername() );
             return authorizedBy != null
-                    ? authorizedBy.getUserInfo().equals( communityPlanner.getUserInfo() )
+                    ? authorizedBy.getUserRecord().equals( communityPlanner )
                     ? "(Founder)"
                     : authorizedBy.getNormalizedFullName()
                     : null;
@@ -246,20 +245,20 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
         public boolean resign() {
             ChannelsUser planner = getPlannerUser();
-            return communityPlannerService.resignAsPlanner( getUsername(), planner, getCommunityService() );
+            return userRecordService.resignAsPlanner( getUsername(), planner, getCommunityService() );
         }
 
-        public CommunityPlanner getCommunityPlannerIfCanResign() {
+        public UserRecord getCommunityPlannerIfCanResign() {
             ChannelsUser planner = getPlannerUser();
             if ( ( getUser().isAdmin() || ( planner != null && planner.equals( getUser() ) ) )
-                    && communityPlannerService.listPlanners( getCommunityService() ).size() > 1 )
+                    && userRecordService.getPlanners( getCommunityService().getPlanCommunity().getUri() ).size() > 1 )
                 return communityPlanner;
             else
                 return null;
         }
 
         private ChannelsUser getPlannerUser() {
-            return userDao.getUserNamed( communityPlanner.getUserInfo().getUsername() );
+            return userInfoService.getUserWithIdentity( communityPlanner.getUsername() );
         }
     }
 

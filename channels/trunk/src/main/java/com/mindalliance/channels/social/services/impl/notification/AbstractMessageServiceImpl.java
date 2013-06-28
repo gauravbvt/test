@@ -3,9 +3,9 @@ package com.mindalliance.channels.social.services.impl.notification;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.data.users.UserRecord;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.social.services.notification.Messageable;
 import com.mindalliance.channels.social.services.notification.MessagingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
     private PlanManager planManager;
 
     @Autowired
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
-    protected List<ChannelsUserInfo> getToUsers(
+    protected List<UserRecord> getToUsers(
             Messageable messageable,
             String topic,
             CommunityService communityService ) {
@@ -37,28 +37,28 @@ abstract public class AbstractMessageServiceImpl implements MessagingService {
         List<String> toUsernames = messageable.getToUserNames( topic, communityService );
         for ( String toUsername : toUsernames ) {
             String urn = messageable.getPlanUri();
-            if ( toUsername.equals( ChannelsUserInfo.PLANNERS ) )
-                toUsers = userDao.getPlanners( urn );
-            else if ( toUsername.equals( ChannelsUserInfo.USERS ) )
-                toUsers = userDao.getUsers( urn );
+            if ( toUsername.equals( UserRecord.PLANNERS ) )
+                toUsers = userInfoService.getPlanners( urn );
+            else if ( toUsername.equals( UserRecord.USERS ) )
+                toUsers = userInfoService.getUsers( urn );
             else {
-                ChannelsUser aUser = userDao.getUserNamed( toUsername );
+                ChannelsUser aUser = userInfoService.getUserWithIdentity( toUsername );
                 if ( aUser != null )
                     toUsers.add( aUser );
             }
         }
-        List<ChannelsUserInfo> answer = new ArrayList<ChannelsUserInfo>();
+        List<UserRecord> answer = new ArrayList<UserRecord>();
         for ( ChannelsUser toUser : toUsers ) {
-            answer.add( toUser.getUserInfo() );
+            answer.add( toUser.getUserRecord() );
         }
         return answer;
     }
 
-    protected ChannelsUserInfo getFromUser( Messageable messageable, String topic ) {
+    protected UserRecord getFromUser( Messageable messageable, String topic ) {
         String fromUsername = messageable.getFromUsername( topic );
         if ( fromUsername != null ) {
-            ChannelsUser fromUser = userDao.getUserNamed( fromUsername );
-            return fromUser.getUserInfo();
+            ChannelsUser fromUser = userInfoService.getUserWithIdentity( fromUsername );
+            return fromUser.getUserRecord();
         } else {
             return null;
         }

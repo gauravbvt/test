@@ -2,7 +2,7 @@ package com.mindalliance.channels.social.services.notification;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
+import com.mindalliance.channels.db.data.users.UserRecord;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public interface MessagingService {
      * @return a boolean indicating success
      */
     boolean sendReport(
-            List<ChannelsUserInfo> recipients,
+            List<UserRecord> recipients,
             List<? extends Messageable> messageables,
             String topic,
             CommunityService communityService );

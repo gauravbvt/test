@@ -1,11 +1,11 @@
 package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.ModelObjectContext;
-import com.mindalliance.channels.core.community.participation.RegisteredOrganization;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 
 import java.util.Date;
 import java.util.HashMap;

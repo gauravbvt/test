@@ -1,7 +1,7 @@
 package com.mindalliance.channels.graph.diagrams;
 
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.engine.analysis.graph.RequirementRelationship;
@@ -73,8 +73,8 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
 
             @Override
             public String getVertexURL( Agency agency ) {
-                Object[] args = {0, agency.getId()};
-                return MessageFormat.format( VERTEX_URL_FORMAT, args );
+                Object[] args = {0, agency.getUid()};
+                return MessageFormat.format( AGENCY_VERTEX_URL_FORMAT, args );
             }
 
             @Override
@@ -113,7 +113,7 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
         return new VertexNameProvider<Agency>() {
             @Override
             public String getVertexName( Agency agency ) {
-                return Long.toString( agency.getId() );
+                return "_" + agency.getUid() ; // make sure it does not begin with a digit
             }
         };
     }

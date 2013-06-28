@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.ParticipationAnalyst;
+import com.mindalliance.channels.core.community.ParticipationAnalyst;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -53,7 +53,7 @@ public class RequirementRelationship implements Identifiable {
             Agency toAgency,
             Phase.Timing timing,
             Event event ) {
-        relationshipId = fromAgency.getId() + SEPARATOR + toAgency.getId();
+        relationshipId = fromAgency.getUid() + SEPARATOR + toAgency.getUid();
         this.timing = timing;
         this.event = event;
         this.label = "Requirement relationship from " + fromAgency.getName() + " to " + toAgency.getName();
@@ -118,7 +118,7 @@ public class RequirementRelationship implements Identifiable {
     public Agency getFromAgency( CommunityService communityService ) {
         try {
             String[] names = parseId( relationshipId );
-            return getAgency( Long.parseLong( names[0] ), communityService );
+            return getAgency( names[0], communityService );
         } catch ( Exception e ) {
             LOG.warn( "Failed to get from-agency from relationship " + relationshipId );
             return Agency.UNKNOWN;
@@ -128,14 +128,14 @@ public class RequirementRelationship implements Identifiable {
     public Agency getToAgency( CommunityService communityService ) {
         try {
             String[] names = parseId( relationshipId );
-            return getAgency( Long.parseLong( names[1] ), communityService );
+            return getAgency(  names[1], communityService );
         } catch ( Exception e ) {
             LOG.warn( "Failed to get to-agency from relationship " + relationshipId );
             return Agency.UNKNOWN;
         }
     }
 
-    private Agency getAgency( Long id, CommunityService communityService ) {
+    private Agency getAgency( String id, CommunityService communityService ) {
         try {
             return communityService.getParticipationManager().findAgencyById( id, communityService );
         } catch ( NotFoundException e ) {

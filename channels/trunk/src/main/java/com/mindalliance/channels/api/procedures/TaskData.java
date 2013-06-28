@@ -88,7 +88,7 @@ public class TaskData extends AbstractProcedureElementData {
                         employment,
                         null,
                         communityService,
-                        ChannelsUser.current().getUserInfo() ) );
+                        ChannelsUser.current().getUserRecord() ) );
             }
     }
 

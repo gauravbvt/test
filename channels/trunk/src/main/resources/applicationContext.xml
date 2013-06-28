@@ -27,7 +27,15 @@ CONFIGURATION NOTES:
     <!-- ================ MongoDB persistence ====================== -->
 
 
-    <mongo:mongo id="mongo"/>
+    <mongo:mongo id="mongo">
+        <mongo:options connections-per-host="100"
+                       threads-allowed-to-block-for-connection-multiplier="4"
+                       connect-timeout="5000"
+                       max-wait-time="1500"
+                       auto-connect-retry="true"
+                       socket-keep-alive="true"
+                       socket-timeout="1500"/>
+    </mongo:mongo>
 
     <mongo:db-factory id="mongoDbFactory" host="${mongodb.host}" port="${mongodb.port}" dbname="channels"/>
 
@@ -180,14 +188,13 @@ CONFIGURATION NOTES:
         <property name="serverUrl" value="${server.url}"/>
     </bean>
 
-    <bean id="userParticipationService" class="com.mindalliance.channels.core.community.participation.UserParticipationServiceImpl"/>
-    <bean id="userParticipationConfirmationService" class="com.mindalliance.channels.core.community.participation.UserParticipationConfirmationServiceImpl"/>
-    <bean id="registeredOrganizationService" class="com.mindalliance.channels.core.community.participation.RegisteredOrganizationServiceImpl"/>
-    <bean id="organizationParticipationService" class="com.mindalliance.channels.core.community.participation.OrganizationParticipationServiceImpl"/>
-    <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>
+ <!--   <bean id="userParticipationService" class="com.mindalliance.channels.db.services.communities.UserParticipationServiceImpl"/>
+    <bean id="userParticipationConfirmationService" class="com.mindalliance.channels.db.services.communities.UserParticipationConfirmationServiceImpl"/>
+    <bean id="registeredOrganizationService" class="com.mindalliance.channels.db.services.communities.RegisteredOrganizationServiceImpl"/>
+    <bean id="organizationParticipationService" class="com.mindalliance.channels.db.services.communities.OrganizationParticipationServiceImpl"/>
+    <bean id="organizationContactInfoService" class="com.mindalliance.channels.core.community.participation.OrganizationContactInfoServiceImpl"/>-->
     <bean id="surveysDao" class="com.mindalliance.channels.db.services.surveys.SurveysDAOImpl"/>
-    <bean id="participationManager" class="com.mindalliance.channels.core.community.participation.ParticipationManagerImpl"/>
-    <bean id="communityPlannerService" class="com.mindalliance.channels.core.community.participation.CommunityPlannerServiceImpl"/>
+    <bean id="participationManager" class="com.mindalliance.channels.core.community.ParticipationManagerImpl"/>
 
     <bean id="graphRenderer" class="com.mindalliance.channels.graph.GraphvizRenderer">
         <property name="dotPath" value="/usr/bin"/>
@@ -239,15 +246,7 @@ CONFIGURATION NOTES:
         <property name="serverUrl" value="${server.url}"/>
     </bean>
     
-    <bean id="communityService" class="com.mindalliance.channels.core.community.CommunityServiceImpl" scope="prototype" autowire="no">
-        <constructor-arg ref="analyst"/>
-        <constructor-arg ref="userParticipationService"/>
-        <constructor-arg ref="userParticipationConfirmationService"/>
-        <constructor-arg ref="organizationParticipationService"/>
-        <constructor-arg ref="planCommunityManager"/>
-        <constructor-arg ref="participationManager"/>
-        <constructor-arg ref="userDao"/>
-        <constructor-arg ref="communityPlannerService"/>
+    <bean id="communityService" class="com.mindalliance.channels.core.community.CommunityServiceImpl" scope="prototype">
     </bean>
 
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
@@ -366,7 +365,7 @@ CONFIGURATION NOTES:
         </property>
     </bean>
 
-    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.participation.ParticipationAnalystImpl">
+    <bean name="participationAnalyst" class="com.mindalliance.channels.core.community.ParticipationAnalystImpl">
         <property name="issueDetectors">
             <list value-type="java.util.ArrayList">
                  <bean class="com.mindalliance.channels.core.community.participation.issues.detectors.InvalidAgencyParent"/>

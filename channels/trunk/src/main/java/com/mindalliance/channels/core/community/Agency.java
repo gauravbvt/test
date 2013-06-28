@@ -1,6 +1,5 @@
-package com.mindalliance.channels.core.community.participation;
+package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.AbstractUnicastChannelable;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Job;
@@ -8,6 +7,10 @@ import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
+import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -67,7 +70,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public Agency( OrganizationParticipation organizationParticipation, CommunityService communityService ) {
         this.organizationParticipation = organizationParticipation;
-        RegisteredOrganization registeredOrg = organizationParticipation.getRegisteredOrganization();
+        RegisteredOrganization registeredOrg = organizationParticipation.getRegisteredOrganization( communityService );
         name = registeredOrg.getName( communityService );
         description = registeredOrg.getEffectiveDescription( communityService );
         mission = registeredOrg.getEffectiveMission( communityService );
@@ -117,7 +120,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         if ( isFixedOrganization() ) {
             setChannels( getFixedOrganization().getEffectiveChannels() );
         } else {
-            setChannels( registeredOrganizationService.getAllChannels( getRegistration(), communityService ) );
+            setChannels( registeredOrganizationService.getAllChannels( getRegistration( communityService ), communityService ) );
         }
     }
 
@@ -157,10 +160,10 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         if ( isFixedOrganization() ) {
             return null;
         } else {
-            RegisteredOrganization registered = getRegistration();
+            RegisteredOrganization registered = getRegistration( communityService );
             if ( registered == null )
                 return null;
-            RegisteredOrganization parentRegistration = registered.getParent();
+            RegisteredOrganization parentRegistration = registered.getParent( communityService );
             if ( parentRegistration == null ) {
                 return null;
             } else {
@@ -181,12 +184,12 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return organizationParticipation;
     }
 
-    public RegisteredOrganization getRegistration() {
+    public RegisteredOrganization getRegistration( CommunityService communityService ) {
         return fixedOrganization != null
                 ? null
                 : registeredOrganization != null
                 ? registeredOrganization
-                : organizationParticipation.getRegisteredOrganization();
+                : organizationParticipation.getRegisteredOrganization( communityService );
     }
 
     public RegisteredOrganization getRegisteredOrganization() {
@@ -202,12 +205,12 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                 && organizationParticipation.getPlaceholderOrganization( communityService ) != null;
     }
 
-    public boolean isRegisteredByCommunity() {
+    public boolean isRegisteredByCommunity( CommunityService communityService ) {
         if ( fixedOrganization != null ) return false;
         if ( registeredOrganization != null )
             return !registeredOrganization.isFixedOrganization();
         if ( organizationParticipation != null )
-            return !organizationParticipation.getRegisteredOrganization().isFixedOrganization();
+            return !organizationParticipation.getRegisteredOrganization(communityService ).isFixedOrganization();
         else
             throw new IllegalStateException();
     }
@@ -247,7 +250,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
             Organization org = getFixedOrganization();
             return new Agency( org.getTopOrganization() );
         } else {
-            RegisteredOrganization regOrg = getEffectiveRegistereOrganization();
+            RegisteredOrganization regOrg = getEffectiveRegistereOrganization( communityService );
             assert regOrg != null;
             RegisteredOrganization topAgency = communityService.getParticipationManager()
                     .getTopRegisteredOrganization( regOrg, communityService );
@@ -255,11 +258,11 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         }
     }
 
-    private RegisteredOrganization getEffectiveRegistereOrganization() {
+    private RegisteredOrganization getEffectiveRegistereOrganization( CommunityService communityService ) {
         return registeredOrganization != null
                 ? registeredOrganization
                 : organizationParticipation != null
-                ? organizationParticipation.getRegisteredOrganization()
+                ? organizationParticipation.getRegisteredOrganization( communityService )
                 : null;
     }
 
@@ -289,9 +292,9 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public List<Agency> ancestors( CommunityService communityService ) {
         List<Agency> ancestors = new ArrayList<Agency>();
-        if ( isRegisteredByCommunity() ) {
+        if ( isRegisteredByCommunity( communityService ) ) {
             for ( RegisteredOrganization registered
-                    : communityService.getParticipationManager().ancestorsOf( this.getRegistration(), communityService ) ) {
+                    : communityService.getParticipationManager().ancestorsOf( getRegistration( communityService ), communityService ) ) {
                 ancestors.add( new Agency( registered, communityService ) );
             }
         } else {
@@ -317,6 +320,16 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                 : organizationParticipation != null
                 ? ( Long.MAX_VALUE / 2 ) + organizationParticipation.getId()
                 : 0;
+    }
+
+    public String getUid() {
+        String uid = isFixedOrganization()
+                ? Long.toString( getFixedOrganization().getId() )
+                : organizationParticipation != null
+                ? organizationParticipation.getUid()
+                : "0";
+        assert !uid.contains( "," ); // as per assumption in RequirementRelationship
+        return uid;
     }
 
     @Override
@@ -443,36 +456,36 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return organizationParticipation.getPlaceholderOrgId();
     }
 
-    public boolean hasAncestor( final Agency agency, CommunityService communityService ) {
+    public boolean hasAncestor( final Agency agency, final CommunityService communityService ) {
         return CollectionUtils.exists(
                 ancestors( communityService ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         Agency ancestor = (Agency) object;
-                        return ancestor.sameAs( agency );
+                        return ancestor.sameAs( agency, communityService );
                     }
                 }
         );
     }
 
-    private boolean sameAs( Agency other ) {
+    private boolean sameAs( Agency other, CommunityService communityService ) {
         return this.equals( other )
-                || ( getRegistration() != null
-                && other.getRegistration() != null
-                && getRegistration().equals( other.getRegistration() ) );
+                || ( getRegistration(communityService) != null
+                && other.getRegistration(communityService) != null
+                && getRegistration(communityService).equals( other.getRegistration(communityService) ) );
     }
 
     public boolean hasAncestorWithPlaceholder( final Organization placeholder, final CommunityService communityService ) {
         final OrganizationParticipationService organizationParticipationService
                 = communityService.getOrganizationParticipationService();
-        return isRegisteredByCommunity()
+        return isRegisteredByCommunity(communityService)
                 && CollectionUtils.exists(
                 ancestors( communityService ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        RegisteredOrganization registration = ( (Agency) object ).getRegistration();
+                        RegisteredOrganization registration = ( (Agency) object ).getRegistration(communityService);
                         return registration != null
                                 && organizationParticipationService.isAgencyRegisteredAs( registration, placeholder, communityService );
                     }

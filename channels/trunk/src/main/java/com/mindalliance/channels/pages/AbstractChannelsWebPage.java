@@ -17,11 +17,8 @@ import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
-import com.mindalliance.channels.core.community.participation.UserParticipationService;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelEntity;
@@ -36,6 +33,9 @@ import com.mindalliance.channels.core.model.Specable;
 import com.mindalliance.channels.core.nlp.SemanticMatcher;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
@@ -144,7 +144,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     private ChannelsUser user;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private UserParticipationService userParticipationService;
@@ -1077,11 +1077,6 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         return false; // DEFAULT
     }
 
-
-    protected void setResponsePageWithPlan() {
-        setResponsePage( AdminPage.class, makePlanParameters() );
-    }
-
     @Override
     public void update( AjaxRequestTarget target, Object object, String action ) {
         // do nothing
@@ -1164,12 +1159,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         this.user = user;
     }
 
-    public ChannelsUserDao getUserDao() {
-        return userDao;
+    public UserRecordService getUserInfoService() {
+        return userInfoService;
     }
 
-    public void setUserDao( ChannelsUserDao userDao ) {
-        this.userDao = userDao;
+    public void setUserInfoService( UserRecordService userInfoService ) {
+        this.userInfoService = userInfoService;
     }
 
     protected void userLeftPlanCommunity() {

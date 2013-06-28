@@ -3,9 +3,9 @@ package com.mindalliance.channels.db.data.messages;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.text.SimpleDateFormat;
@@ -65,8 +65,8 @@ public class UserMessage extends UserStatement {
 
     public boolean isBroadcast( ChannelsUser currentUser, PlanCommunity planCommunity ) {
         return toUsername == null // legacy - all planners
-                || toUsername.equals( ChannelsUserInfo.PLANNERS ) && currentUser.isPlanner( planCommunity.getPlanUri() )
-                || toUsername.equals( ChannelsUserInfo.USERS );
+                || toUsername.equals( UserRecord.PLANNERS ) && currentUser.isPlanner( planCommunity.getPlanUri() )
+                || toUsername.equals( UserRecord.USERS );
     }
 
     public boolean isNotificationSent() {
@@ -78,11 +78,11 @@ public class UserMessage extends UserStatement {
     }
 
     public boolean isToAllPlanners() {
-        return toUsername.equals( ChannelsUserInfo.PLANNERS );
+        return toUsername.equals( UserRecord.PLANNERS );
     }
 
     public boolean isToAllUsers() {
-        return toUsername.equals( ChannelsUserInfo.USERS );
+        return toUsername.equals( UserRecord.USERS );
     }
 
     public boolean isRead() {

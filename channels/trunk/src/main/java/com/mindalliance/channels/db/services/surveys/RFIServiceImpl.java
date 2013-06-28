@@ -2,7 +2,6 @@ package com.mindalliance.channels.db.services.surveys;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Role;
 import com.mindalliance.channels.db.data.surveys.AnswerSet;
@@ -12,6 +11,7 @@ import com.mindalliance.channels.db.data.surveys.Questionnaire;
 import com.mindalliance.channels.db.data.surveys.RFI;
 import com.mindalliance.channels.db.data.surveys.RFIForward;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.repositories.RFIRepository;
 import com.mindalliance.channels.db.services.AbstractDataService;
 import org.apache.commons.collections.CollectionUtils;
@@ -82,7 +82,7 @@ public class RFIServiceImpl extends AbstractDataService<RFI> implements RFIServi
     public void makeOrUpdateRFI( CommunityService communityService,
                                  String username,
                                  RFISurvey rfiSurvey,
-                                 ChannelsUserInfo userInfo,
+                                 UserRecord userInfo,
                                  Organization organization,
                                  String title,
                                  Role role,
@@ -104,7 +104,7 @@ public class RFIServiceImpl extends AbstractDataService<RFI> implements RFIServi
     }
 
     @Override
-    public void nag( CommunityService communityService, String username, RFISurvey rfiSurvey, ChannelsUserInfo userInfo ) {
+    public void nag( CommunityService communityService, String username, RFISurvey rfiSurvey, UserRecord userInfo ) {
         RFI rfi = find( communityService, rfiSurvey, userInfo.getUsername() );
         if ( rfi != null ) {
             rfi.nag();

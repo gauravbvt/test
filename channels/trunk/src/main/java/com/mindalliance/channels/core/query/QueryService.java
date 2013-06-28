@@ -3,8 +3,6 @@ package com.mindalliance.channels.core.query;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.UserContactInfoService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Agreement;
 import com.mindalliance.channels.core.model.Assignment;
@@ -40,6 +38,7 @@ import com.mindalliance.channels.core.model.Subject;
 import com.mindalliance.channels.core.model.Tag;
 import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.model.UserIssue;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 
 import java.util.Date;
 import java.util.List;
@@ -1269,7 +1268,7 @@ public interface QueryService {
      *
      * @return a persistent  user details service
      */
-    ChannelsUserDao getUserDao();
+    UserRecordService getUserInfoService();
 
 
     /**
@@ -1589,12 +1588,6 @@ public interface QueryService {
     List<String> findAllEoiNames();
 
     /**
-     * Get user contact info service.
-     * @return a user contact info service
-     */
-    UserContactInfoService getUserContactInfoService();
-
-    /**
      * Find all supervisor actors of a given actor.
      * @param actor an actor
      * @return a list of supervising actors
@@ -1636,4 +1629,5 @@ public interface QueryService {
      * @return a boolean
      */
     boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord );
+
 }

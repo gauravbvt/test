@@ -90,6 +90,7 @@ public abstract class AbstractChannelsBasicPage extends AbstractChannelsWebPage 
     private String topicId;
 
     protected AbstractChannelsBasicPage() {
+        this( new PageParameters() );
     }
 
     protected AbstractChannelsBasicPage( PageParameters parameters ) {

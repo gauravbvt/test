@@ -1,6 +1,6 @@
 package com.mindalliance.channels.api.entities;
 
-import com.mindalliance.channels.core.community.participation.Agent;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.protocols.CommunityEmployment;
 
 import javax.xml.bind.annotation.XmlElement;

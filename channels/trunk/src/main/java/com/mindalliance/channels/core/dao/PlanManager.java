@@ -12,7 +12,6 @@ import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import org.springframework.security.access.annotation.Secured;
 
 import java.io.File;
 import java.io.InputStream;
@@ -86,6 +85,13 @@ public interface PlanManager extends CommandListener {
      * @return an unmodifiable list
      */
     List<Plan> getPlans();
+
+    /**
+     * Get development plan given uri.
+     * @param planUri a string
+     * @return a plan
+     */
+    Plan getDevelopmentPlan( String planUri );
 
     /**
      * Force a full save with journal flush.
@@ -225,16 +231,6 @@ public interface PlanManager extends CommandListener {
     Plan getDefaultPlan( ChannelsUser user );
 
     /**
-     * Set the permissions for a user.
-     *
-     * @param user the user
-     * @param role either ROLE_ADMIN, ROLE_PLANNER, ROLE_USER or null for none
-     * @param uri either a plan uri or null for all.
-     */
-    @Secured( "ROLE_ADMIN" )
-    void setAuthorities( ChannelsUser user, String role, String uri );
-
-    /**
      * Get the resource directory for a given plan.
      * @param plan the plan
      * @return the directory
@@ -264,4 +260,11 @@ public interface PlanManager extends CommandListener {
      * @return a list of plans
      */
     List<Plan> getProductionPlans();
-}
+
+    /**
+     * Get all development plans.
+     * @return a list of plans
+     */
+    List<Plan> getDevelopmentPlans();
+
+ }

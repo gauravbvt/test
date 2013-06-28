@@ -1,6 +1,5 @@
-package com.mindalliance.channels.core.community.participation;
+package com.mindalliance.channels.core.community;
 
-import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
@@ -232,7 +231,7 @@ public class ParticipationAnalystImpl implements ParticipationAnalyst {
     @Override
     public String percentSatisfaction( Requirement requirement, CommunityService communityService ) {
         List<RequirementRelationship> reqRels = findRequirementRelationships( requirement, communityService );
-        if ( reqRels.isEmpty() ) return null;
+        if ( reqRels.isEmpty() ) return "N/A";
         int satisfiedCount = 0;
         for ( RequirementRelationship reqRel : reqRels ) {
              Requirement req = reqRel.getRequirements().get( 0 );

@@ -2,12 +2,12 @@ package com.mindalliance.channels.db.services.messages;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.db.data.messages.QUserMessage;
 import com.mindalliance.channels.db.data.messages.UserMessage;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.repositories.UserMessageRepository;
 import com.mindalliance.channels.db.services.AbstractDataService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.bson.types.ObjectId;
@@ -37,7 +37,7 @@ public class UserMessageServiceImpl extends AbstractDataService<UserMessage> imp
     private UserMessageRepository repository;
 
     @Autowired
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     private Map<String, Date> whenLastChanged = new HashMap<String, Date>();
 
@@ -81,8 +81,8 @@ public class UserMessageServiceImpl extends AbstractDataService<UserMessage> imp
     public Iterator<UserMessage> getReceivedMessages( final String username, final CommunityService communityService ) {
         String[] toValues = new String[3];
         toValues[0] = username;
-        toValues[1] = ChannelsUserInfo.PLANNERS;
-        toValues[2] = ChannelsUserInfo.USERS;
+        toValues[1] = UserRecord.PLANNERS;
+        toValues[2] = UserRecord.USERS;
         QUserMessage qUserMessage = QUserMessage.userMessage;
         Iterator<UserMessage> iterator = repository.findAll(
                 qUserMessage.communityUri.eq( communityService.getPlanCommunity().getUri() )
@@ -96,9 +96,9 @@ public class UserMessageServiceImpl extends AbstractDataService<UserMessage> imp
                     public boolean evaluate( Object object ) {
                         UserMessage userMessage = (UserMessage) object;
                         return ( !userMessage.isToAllPlanners()
-                                || userDao.isPlanner( username, communityService.getPlan().getUri() ) )
+                                || userInfoService.isPlanner( username, communityService.getPlan().getUri() ) )
                                 && ( !userMessage.isToAllUsers()
-                                || userDao.isParticipant( username, communityService.getPlan().getUri() ) );
+                                || userInfoService.isParticipant( username, communityService.getPlan().getUri() ) );
                     }
                 } );
     }

@@ -4,8 +4,6 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
-import com.mindalliance.channels.core.dao.user.ChannelsUserInfo;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
@@ -15,9 +13,11 @@ import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
 import com.mindalliance.channels.db.data.surveys.RFI;
 import com.mindalliance.channels.db.data.surveys.RFISurvey;
+import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.surveys.RFIService;
 import com.mindalliance.channels.db.services.surveys.RFISurveyService;
 import com.mindalliance.channels.db.services.surveys.SurveysDAO;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
@@ -73,7 +73,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     private SurveysDAO surveysDAO;
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private PlanCommunityManager planCommunityManager;
@@ -225,7 +225,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                     RFI rfi = null;
                     rfi = rfiService.find( getCommunityService(), rfiSurvey, username );
                     SurveyParticipation surveyParticipation = new SurveyParticipation(
-                            userDao.getUserNamed( username ).getUserInfo(),
+                            userInfoService.getUserWithIdentity( username ).getUserRecord(),
                             rfi,
                             rfiSurvey );
                     if ( !isFilteredOut( surveyParticipation ) ) {
@@ -291,7 +291,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private List<String> getAllUsernames() {
         if ( allUsernames == null ) {
-            allUsernames = userDao.getUsernames();
+            allUsernames = userInfoService.getUsernames();
         }
         return allUsernames;
     }
@@ -325,7 +325,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
     }
 
     private int getUserCount() {
-        return userDao.getUsernames( getPlan().getUri() ).size();
+        return userInfoService.getUsernames( getPlan().getUri() ).size();
     }
 
     @SuppressWarnings( "unchecked" )
@@ -504,7 +504,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                 getModalableParent().getModalContentId(),
                 new Model<RFI>( rfi ),
                 true );
-        String fullName = userDao.getFullName( rfi.getSurveyedUsername() );
+        String fullName = userInfoService.getFullName( rfi.getSurveyedUsername() );
         getModalableParent().showDialog(
                 "Answers from " + fullName,
                 600,
@@ -527,12 +527,12 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     public class SurveyParticipation implements Identifiable {
 
-        private ChannelsUserInfo userInfo;
+        private UserRecord userInfo;
         private RFISurvey rfiSurvey;
         private RFI rfi; // can be null if no participation
         private boolean selected = false;
 
-        public SurveyParticipation( ChannelsUserInfo userInfo, RFI rfi, RFISurvey rfiSurvey ) {
+        public SurveyParticipation( UserRecord userInfo, RFI rfi, RFISurvey rfiSurvey ) {
             this.userInfo = userInfo;
             this.rfi = rfi;
             this.rfiSurvey = rfiSurvey;
@@ -546,7 +546,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
             return rfiSurvey;
         }
 
-        public ChannelsUserInfo getUserInfo() {
+        public UserRecord getUserInfo() {
             return userInfo;
         }
 
@@ -619,7 +619,7 @@ public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
                         @Override
                         public Object transform( Object input ) {
                             String username = (String) input;
-                            ChannelsUser user = userDao.getUserNamed( username );
+                            ChannelsUser user = userInfoService.getUserWithIdentity( username );
                             return user == null ? username : user.getFullName();
                         }
                     } );

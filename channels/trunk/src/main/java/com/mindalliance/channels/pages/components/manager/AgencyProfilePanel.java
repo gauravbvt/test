@@ -2,11 +2,11 @@ package com.mindalliance.channels.pages.components.manager;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.participation.Agency;
-import com.mindalliance.channels.core.community.participation.RegisteredOrganizationService;
 import com.mindalliance.channels.core.model.Channelable;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ChannelListPanel;
@@ -330,8 +330,9 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
 
 
     private boolean canBeEdited() {
+        CommunityService communityService = getCommunityService();
         return !isFixedOrganization()
-                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegistration(), getCommunityService() );
+                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegistration(communityService), communityService );
     }
 
     public String getName() {

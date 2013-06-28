@@ -5,8 +5,7 @@
  */
 package com.mindalliance.channels.pages.reports;
 
-import com.mindalliance.channels.core.community.participation.Agent;
-import com.mindalliance.channels.core.community.participation.UserParticipation;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Assignment;
@@ -20,6 +19,7 @@ import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.query.Assignments;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.components.support.UserFeedbackPanel;
 import org.apache.wicket.AttributeModifier;
@@ -184,7 +184,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
             this.participation = participation;
             actor = employment.getActor();
             organization = employment.getOrganization();
-            actorName = participation != null ? participation.getParticipant().getFullName()
+            actorName = participation != null ? participation.getParticipant( getCommunityService() ).getFullName()
                     : actor == null ? ""
                     : actor.getName();
 
@@ -224,7 +224,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
                 organization = employment.getOrganization();
             }
 
-            actorName = participation != null ? participation.getParticipant().getFullName()
+            actorName = participation != null ? participation.getParticipant( getCommunityService() ).getFullName()
                     : actor == null ? ""
                     : actor.getName();
         }
@@ -256,7 +256,7 @@ public abstract class AbstractParticipantPage extends AbstractChannelsBasicPage 
 
         public UserParticipation findParticipation( QueryService queryService, Actor actor, String username ) {
             if( username == null ) return null;
-            ChannelsUser user = getUserDao().getUserNamed( username );
+            ChannelsUser user = getUserInfoService().getUserWithIdentity( username );
             if ( user == null )
                 return null;
             else

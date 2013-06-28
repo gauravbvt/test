@@ -1,11 +1,11 @@
 package com.mindalliance.channels.pages.components.social.feedback;
 
 import com.mindalliance.channels.core.command.Change;
-import com.mindalliance.channels.core.dao.user.ChannelsUserDao;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.messages.UserMessageService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.social.FeedbackStatementPanel;
 import com.mindalliance.channels.pages.components.social.UserMessagePanel;
@@ -36,7 +36,7 @@ public class FeedbackDiscussionPanel extends AbstractUpdatablePanel {
 
 
     @SpringBean
-    private ChannelsUserDao userDao;
+    private UserRecordService userInfoService;
 
     @SpringBean
     private FeedbackService feedbackService;
