@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>playbook</artifactId>
+        <groupId>com.mindalliance.playbook</groupId>
+        <version>1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <modules>
+        <module>standalone</module>
+        <module>dev</module>
+    </modules>
+
+    <artifactId>playbook-web</artifactId>
+    <packaging>pom</packaging>
+    <name>Playbook webapp</name>
+    <description>Mind-Alliance Playbook Web Application</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.mindalliance.playbook</groupId>
+            <artifactId>playbook-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!--  WICKET DEPENDENCIES -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-spring</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-request</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.octo.captcha</groupId>
+            <artifactId>jcaptcha</artifactId>
+            <version>2.0-alpha-1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.3</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <optimize>true</optimize>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <configuration>
+                    <contextPath>/playbook</contextPath>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanTargets>
+                        <scanTarget>${basedir}/src/main/resources</scanTarget>
+                    </scanTargets>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>8080</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                        <!-- Generate keystore with:
+                             cd ~
+                             keytool -genkey -alias jetty6 -keyalg RSA -keystore playbook.keystore -storepass jetty6 -keypass jetty6 -dname "CN=your domain"
+                        -->
+                        <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+                            <port>8443</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                            <keystore>${user.home}/playbook.keystore</keystore>
+                            <password>jetty6</password>
+                            <keyPassword>jetty6</keyPassword>
+                        </connector>
+                    </connectors>
+                </configuration>
+
+                <dependencies>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+    <reporting>
+        <outputDirectory>../target/site/${project.artifactId}</outputDirectory>
+    </reporting>
+</project>

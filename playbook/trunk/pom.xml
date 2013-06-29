@@ -4,8 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mindalliance.playbook</groupId>
     <artifactId>playbook</artifactId>
-    <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <version>1.1-SNAPSHOT</version>
+    <modules>
+        <module>playbook-web</module>
+        <module>playbook-core</module>
+    </modules>
 
     <name>Playbook</name>
     <description>Mind-Alliance Playbook</description>
@@ -87,199 +91,12 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
-        </dependency>
 
-        <!--  WICKET DEPENDENCIES -->
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-extensions</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-request</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.odlabs.wiquery</groupId>-->
-            <!--<artifactId>wiquery</artifactId>-->
-            <!--<version>1.5-M1</version>            -->
-        <!--</dependency>-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
             <scope>provided</scope>
-        </dependency>
-
-
-        <!-- SPRING DEPENDENCIES -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        
-        <!-- SPRING SOCIAL -->
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-core</artifactId>
-            <version>${spring.social.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-web</artifactId>
-            <version>${spring.social.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-facebook</artifactId>
-            <version>1.0.1.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-twitter</artifactId>
-            <version>1.0.2.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-linkedin</artifactId>
-            <version>1.0.0.RC1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-google</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <!-- HIBERNATE DEPENDENCIES -->
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.1.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
-            <version>4.1.0.CR3</version>
-        </dependency>
-        <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.12.0.GA</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.3.162</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.octo.captcha</groupId>
-            <artifactId>jcaptcha</artifactId>
-            <version>2.0-alpha-1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mnode.ical4j</groupId>
-            <artifactId>ical4j</artifactId>
-            <version>1.0.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.mnode.ical4j</groupId>
-            <artifactId>ical4j-vcard</artifactId>
-            <version>0.9.4</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.3</version>
         </dependency>
 
         <!-- LOGGING DEPENDENCIES - LOG4J -->
@@ -325,32 +142,9 @@
     <build>
         <resources>
             <resource>
-                <filtering>false</filtering>
                 <directory>src/main/resources</directory>
             </resource>
-            <resource>
-                <filtering>false</filtering>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <filtering>false</filtering>
-                <directory>src/test/java</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <inherited>true</inherited>
@@ -372,38 +166,14 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>${jetty.version}</version>
-                <configuration>
-                    <contextPath>/playbook</contextPath>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <scanTargets>
-                        <scanTarget>${basedir}/src/main/resources</scanTarget>
-                    </scanTargets>
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                            <port>8080</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                        <!-- Generate keystore with:
-                             cd ~
-                             keytool -genkey -alias jetty6 -keyalg RSA -keystore playbook.keystore -storepass jetty6 -keypass jetty6 -dname "CN=your domain"
-                        -->
-                        <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
-                            <port>8443</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                            <keystore>${user.home}/playbook.keystore</keystore>
-                            <password>jetty6</password>
-                            <keyPassword>jetty6</keyPassword>
-                        </connector>
-                    </connectors>
-                </configuration>
-                
-                <dependencies>
-                </dependencies>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>2.4</version>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
     
@@ -413,6 +183,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.8.1</version>
+                <inherited>true</inherited>
                 <configuration>
                     <stylesheet>maven</stylesheet>
                     <encoding>UTF-8</encoding>
@@ -432,25 +203,25 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changelog-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <username>${trac.user}</username>
-                    <password>${trac.password}</password>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <query>status!=closed&amp;order=priority&amp;component=${project.artifactId}</query>
-                    <tracUser>${trac.user}</tracUser>
-                    <tracPassword>${trac.password}</tracPassword>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-changelog-plugin</artifactId>-->
+                <!--<version>2.2</version>-->
+                <!--<configuration>-->
+                    <!--<username>${trac.user}</username>-->
+                    <!--<password>${trac.password}</password>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-changes-plugin</artifactId>-->
+                <!--<version>2.6</version>-->
+                <!--<configuration>-->
+                    <!--<query>status!=closed&amp;order=priority&amp;component=${project.artifactId}</query>-->
+                    <!--<tracUser>${trac.user}</tracUser>-->
+                    <!--<tracPassword>${trac.password}</tracPassword>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
