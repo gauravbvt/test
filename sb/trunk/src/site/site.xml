@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
+
+    
+    <bannerLeft>
+      <name>Superbowl 2014 Security ISP</name>
+      <src>banner.png</src>
+      <!--<href>https://channels.mind-alliance.com</href>-->
+    </bannerLeft>
+
+    <publishDate position="left" format="yyyy-MM-dd HH:mm z "/>
+    <version position="left"/>
+
+    <body>
+        <menu name="Design">
+            <item name="Overview" href="design.html"/>
+            <item name="Database model" href="db.html"/>
+        </menu>
+        <menu ref="reports" />
+    </body>
+</project>

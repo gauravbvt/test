@@ -1,0 +1,15 @@
+<div id="header" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:output omit-xml-declaration="yes" />
+
+    <spring:url var="banner" value="/resources/images/sb/logo_njsp-2.png" />
+    <spring:url var="sb" value="/resources/images/sb/sb-logo.png" />
+    <spring:url var="home" value="/" />
+  <a class="left" href="${home}" name="${fn:escapeXml(home_label)}" title="${fn:escapeXml(home_label)}">
+    <img alt="NJSP" src="${banner}" />
+  </a>
+  <img class="right" alt="Superbowl logo" src="${sb}" />
+    <h1>Superbowl 2014
+      <br/>Security
+      <br/><span>Information Sharing Planning</span></h1>
+</div> 

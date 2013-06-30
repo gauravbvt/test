@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+    xmlns:beans="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+    
+    <!-- HTTP security configurations -->
+    <http auto-config="true" use-expressions="true" pattern="/trigger">
+        <http-basic/>
+        <intercept-url pattern="/trigger" access="hasRole('ROLE_ADMIN')" />
+    </http>
+    
+    <beans:bean id="acceptMatcher" class="com.mindalliance.sb.AcceptMatcher">
+        <beans:property name="mimeTypes" value="application/json"/>
+    </beans:bean>
+    <http auto-config="true" use-expressions="true" request-matcher-ref="acceptMatcher">
+        <http-basic/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+    </http>
+
+    <http auto-config="true" use-expressions="true">
+        <form-login login-processing-url="/resources/j_spring_security_check" 
+                    login-page="/login" 
+                    authentication-failure-url="/login?login_error=t" />
+        <logout logout-url="/resources/j_spring_security_logout" />
+        <remember-me key="sb"/>
+
+        <intercept-url pattern="/resources/**" access="permitAll" />
+        <intercept-url pattern="/images/**" access="permitAll" />
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+    </http>
+    
+    <!-- Configure Authentication mechanism -->
+    <authentication-manager alias="authenticationManager">
+        <!-- SHA-256 values can be produced using 'echo -n your_desired_password | sha256sum' (using normal *nix environments) -->
+        <authentication-provider>
+            <password-encoder hash="sha-256" />
+            <user-service>
+                <user name="admin" password="7a167b2b835a71f5855098f6aaf25f169f4634ca4dd942dbb1d180e995ee0a6f" authorities="ROLE_ADMIN" />
+                <user name="user" password="4ca17437cb158d672fc41c94c91b68c1281d9e78d5836094c55b7ca021e1d8ad" authorities="ROLE_USER" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>

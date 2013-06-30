@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.2.xsd
+        http://www.springframework.org/schema/integration/mail http://www.springframework.org/schema/integration/mail/spring-integration-mail-2.2.xsd">
+    
+    <!-- Input to the pipeline via com.mindalliance.sb.TriggerController -->
+    <int:gateway id="trigger" service-interface="com.mindalliance.sb.TriggerService" default-request-channel="triggers"/>
+
+    <!-- Raw signals from SurveyGizmo meaning that new surveys are available. -->
+    <int:channel id="triggers" datatype="java.lang.Integer">
+        <int:queue capacity="10000"/>
+    </int:channel>
+    <int:service-activator input-channel="triggers" output-channel="responseBatches">
+        <bean class="com.mindalliance.sb.LookupService"/>
+        <int:poller fixed-rate="5000"/>
+    </int:service-activator>
+
+    <!-- Batches of unprocessed survey responses -->
+    <int:channel id="responseBatches" datatype="java.util.List"/>
+    <int:splitter input-channel="responseBatches" output-channel="responses">
+        <bean class="org.springframework.integration.splitter.DefaultMessageSplitter"/>
+    </int:splitter>
+
+    <!-- Unprocessed survey responses -->
+    <int:channel id="responses" datatype="com.mindalliance.sb.SurveyResponse"/>
+    <int:service-activator input-channel="responses" output-channel="nullChannel">
+        <bean class="com.mindalliance.sb.Integrator"/>
+    </int:service-activator>
+        
+    <!-- Unvalidated, persisted respondents -->
+    <!--<int:channel id="rawRespondents" datatype="com.mindalliance.sb.model.Respondent"/>-->
+        <!---->
+    <!--<int:object-to-string-transformer input-channel="rawRespondents" output-channel="mailContent"/>-->
+    <!--<int:channel id="mailContent"/>-->
+    <!--<int-mail:header-enricher input-channel="mailContent" output-channel="mailMessages">-->
+        <!--<int-mail:subject value="New respondent"/>-->
+        <!--<int-mail:to value="denis@mind-alliance.com"/>        -->
+    <!--</int-mail:header-enricher>-->
+
+    <!--<int:channel id="mailMessages"/>-->
+    <!--<int-mail:outbound-channel-adapter channel="mailMessages" host="localhost"/>-->
+
+
+</beans>
