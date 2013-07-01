@@ -1004,6 +1004,8 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         if ( encodedPlanUri == null ) {
             // assert parameters.get( COMMUNITY_PARM ) == null;
             String userPlanUri = user.getPlanUri() == null ? "" : user.getPlanUri();
+            if ( isDomainPage() && !user.isPlannerOrAdmin( userPlanUri ) )
+                userPlanUri = "";
             try {
                 encodedPlanUri = URLEncoder.encode( userPlanUri, "UTF-8" );
             } catch ( UnsupportedEncodingException e ) {
@@ -1056,17 +1058,30 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             if ( plans.isEmpty() ) {
                 plans = planManager.getPlans();
             }
-            LOG.warn( "PANIC: selecting first plan where user is authorized as planner" );
-            plan = (Plan) CollectionUtils.find(
-                    plans,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            Plan p = (Plan) object;
-                            return ( p.isProduction() && !isDomainPage() ) || user.isPlannerOrAdmin( p.getUri() );
+            LOG.warn( "PANIC: selecting a plan" );
+            if ( isDomainPage() ) { // must be a plan where user has planner privileges
+                plan = (Plan) CollectionUtils.find(
+                        plans,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Plan p = (Plan) object;
+                                return user.isPlannerOrAdmin( p.getUri() );
+                            }
                         }
-                    }
-            );
+                );
+            } else { // a production plan
+                plan = (Plan) CollectionUtils.find(
+                        plans,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Plan p = (Plan) object;
+                                return p.isProduction();
+                            }
+                        }
+                );
+            }
         }
         if ( plan == null )  // throw the towel
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
@@ -1279,7 +1294,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         galleryWindow.close( target );
     }
 
-   /// END gallery
+    /// END gallery
 
 
     @Override

@@ -147,7 +147,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             }
         };
         adminCheckBox.setOutputMarkupId( true );
-        adminCheckBox.setEnabled( !userRecordUpdate.isDisabled() );
+        adminCheckBox.setEnabled( !userRecordUpdate.isDisabled() && !userRecord.getUsername().equals( getUsername() ) );
         privilegesContainer.addOrReplace( adminCheckBox );
         // disabled
         AjaxCheckBox disabledCheckBox = new AjaxCheckBox(
@@ -161,6 +161,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             }
         };
         disabledCheckBox.setOutputMarkupId( true );
+        disabledCheckBox.setEnabled( !userRecord.getUsername().equals( getUsername() ) );
         privilegesContainer.addOrReplace( disabledCheckBox );
 
     }
@@ -213,6 +214,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 // Do nothing
             }
         } );
+        userRoleDropDownChoice.setEnabled( !userRecord.getUsername().equals( getUsername() ) );
         item.add( userRoleDropDownChoice );
     }
 
@@ -262,6 +264,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 target.add( userRecordContainer );
              }
         };
+        resetLink.setOutputMarkupId( true );
+        makeVisible( resetLink, !userRecord.getUsername().equals( getUsername() ) );
         add( resetLink );
         // apply
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply" ) {
@@ -276,6 +280,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 update( target, change );
             }
         };
+        applyLink.setOutputMarkupId( true );
+        makeVisible( applyLink, !userRecord.getUsername().equals( getUsername() ) );
         add( applyLink );
     }
 

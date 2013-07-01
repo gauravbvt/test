@@ -123,7 +123,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
-             }
+            }
         } );
         searchField.setOutputMarkupId( true );
         selectUserContainer.addOrReplace( searchField );
@@ -136,7 +136,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 addUsersList();
                 target.add( usernamesContainer );
             }
-        });
+        } );
         selectUserContainer.addOrReplace( applySearch );
     }
 
@@ -167,17 +167,17 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                         target.add( usernamesContainer );
                         addUserRecordPanel();
                         target.add( userRecordPanel );
-                     }
+                    }
                 } );
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
                 item.add( selectorImage );
-                item.add( new Label( "username" , userRecord.getFullName() + " (" + userRecord.getUsername() + ")" ));
+                item.add( new Label( "username", userRecord.getFullName() + " (" + userRecord.getUsername() + ")" ) );
             }
         };
         usernamesContainer.add( usersListView );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserRecord> getFoundUserRecords() {
         if ( getSearchString().isEmpty() ) {
             return userRecordService.getAllUserRecords();
@@ -205,7 +205,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
             userRecordPanel = new UserRecordPanel( "userRecord", userRecord );
         }
         userRecordPanel.setOutputMarkupId( true );
-        makeVisible( userRecordPanel, selectedUsername != null);
+        makeVisible( userRecordPanel, selectedUsername != null );
         addOrReplace( userRecordPanel );
     }
 

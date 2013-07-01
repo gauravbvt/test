@@ -27,8 +27,12 @@ public class AbstractChannelsDocument implements ChannelsDocument {
      */
     private static String DATE_FORMAT_STRING = "M/d/yyyy HH:mm";
 
+    private static String DEFAULT_VERSION = "1.0";
+
     @Id
     protected String uid;
+    @Indexed
+    private String documentVersion;
     private Date created;
     @Indexed
     private String username;
@@ -73,6 +77,14 @@ public class AbstractChannelsDocument implements ChannelsDocument {
         setCommunityUri( communityUri );
         setPlanUri( planUri );
         this.planVersion = planVersion;
+    }
+
+    public String getDocumentVersion() {
+        return documentVersion == null ? DEFAULT_VERSION : documentVersion;
+    }
+
+    public void setDocumentVersion( String documentVersion ) {
+        this.documentVersion = documentVersion;
     }
 
     public Date getCreated() {

@@ -470,5 +470,26 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         addUserAccess( new UserAccess( userRole ) );
     }
 
+    public boolean isPlanner() {
+        return CollectionUtils.exists(
+                getAccessList(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (UserAccess) object ).isPlanner();
+                    }
+                } );
+    }
+
+    public boolean isParticipant() {
+        return CollectionUtils.exists(
+                getAccessList(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (UserAccess) object ).isParticipant();
+                    }
+                } );
+    }
 }
 

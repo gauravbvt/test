@@ -24,10 +24,8 @@ import java.util.List;
  */
 public interface UserRecordService extends DataService<UserRecord>, UserDetailsService {
 
-    @Secured( "ROLE_ADMIN" )
     ChannelsUser createUser( String username, String name ) throws DuplicateKeyException;
 
-    @Secured( "ROLE_ADMIN" )
     ChannelsUser createUser( String username, String name, String email ) throws DuplicateKeyException;
 
     /**
@@ -39,7 +37,6 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param email    a string
      * @return a user info
      */
-    @Secured( "ROLE_ADMIN" )
     UserRecord createUserRecord( String username,
                                  String name,
                                  String password,

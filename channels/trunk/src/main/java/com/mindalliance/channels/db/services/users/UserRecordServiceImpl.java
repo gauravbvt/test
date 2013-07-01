@@ -103,6 +103,8 @@ public class UserRecordServiceImpl
 
     @Override
     public boolean updateUserRecord( UserRecord userRecord, UserRecord update ) {
+        if ( userRecord.getUsername().equals( update.getCreatorUsername() ) )
+            return false;
         if ( update.getEmail() != null
                 && !update.getEmail().isEmpty()
                 && !userRecord.getEmail().equals( update.getEmail() ) ) {

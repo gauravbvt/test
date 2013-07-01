@@ -87,11 +87,11 @@ public class UserAccess implements Serializable {
     }
 
 
-    private boolean isParticipant() {
+    public boolean isParticipant() {
         return userRole == UserRole.Participant;
     }
 
-    private boolean isPlanner() {
+    public boolean isPlanner() {
         return userRole == UserRole.Planner;
     }
 
