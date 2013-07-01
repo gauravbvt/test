@@ -36,7 +36,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     private static final Logger LOG = LoggerFactory.getLogger( ChannelsDynamicImageResource.class );
 
 
-    private UserRecordService userInfoService;
+    private UserRecordService userRecordService;
     private PlanManager planManager;
     private CommunityServiceFactory communityServiceFactory;
     private PlanCommunityManager planCommunityManager;
@@ -57,12 +57,12 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
         this.planManager = planManager;
     }
 
-    public UserRecordService getUserInfoService() {
-        return userInfoService;
+    public UserRecordService getUserRecordService() {
+        return userRecordService;
     }
 
-    public void setUserInfoService( UserRecordService userInfoService ) {
-        this.userInfoService = userInfoService;
+    public void setUserRecordService( UserRecordService userRecordService ) {
+        this.userRecordService = userRecordService;
     }
 
     public CommunityServiceFactory getCommunityServiceFactory() {
@@ -91,7 +91,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     }
 
     private PlanCommunity getPlanCommunity() {
-        ChannelsUser user = ChannelsUser.current( getUserInfoService() );
+        ChannelsUser user = ChannelsUser.current( getUserRecordService() );
         if ( user.getPlan() != null ) {
             return planCommunityManager.getDomainPlanCommunity( user.getPlan() );
         } else {
@@ -104,7 +104,7 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
     }
 
     public PlanCommunity getPlanCommunity( PageParameters parameters ) {
-        ChannelsUser user = ChannelsUser.current( getUserInfoService() );
+        ChannelsUser user = ChannelsUser.current( getUserRecordService() );
         if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COMMUNITY_PARM ) ) {
             try {
                 String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COMMUNITY_PARM ).toString(), "UTF-8" );

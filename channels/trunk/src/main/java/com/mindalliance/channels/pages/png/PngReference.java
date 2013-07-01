@@ -17,21 +17,21 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class PngReference extends ResourceReference {
 
     private Class<? extends ChannelsDynamicImageResource> dynamicPngClass;
-    private UserRecordService userInfoService;
+    private UserRecordService userRecordService;
     private PlanManager planManager;
     private CommunityServiceFactory communityServiceFactory;
     private PlanCommunityManager planCommunityManager;
 
     public PngReference(
             Class<? extends ChannelsDynamicImageResource> dynamicPngClass,
-            UserRecordService userInfoService,
+            UserRecordService userRecordService,
             PlanManager planManager,
             CommunityServiceFactory communityServiceFactory,
             PlanCommunityManager planCommunityManager
             ) {
         super( dynamicPngClass, dynamicPngClass.getSimpleName()  );
         this.dynamicPngClass = dynamicPngClass;
-        this.userInfoService = userInfoService;
+        this.userRecordService = userRecordService;
         this.planManager = planManager;
         this.communityServiceFactory = communityServiceFactory;
         this.planCommunityManager = planCommunityManager;
@@ -43,7 +43,7 @@ public class PngReference extends ResourceReference {
         try {
             ChannelsDynamicImageResource channelsDynamicImageResource = dynamicPngClass.newInstance();
             channelsDynamicImageResource.setPlanManager( planManager );
-            channelsDynamicImageResource.setUserInfoService( userInfoService );
+            channelsDynamicImageResource.setUserRecordService( userRecordService );
             channelsDynamicImageResource.setCommunityServiceFactory( communityServiceFactory );
             channelsDynamicImageResource.setPlanCommunityManager( planCommunityManager );
             return channelsDynamicImageResource;

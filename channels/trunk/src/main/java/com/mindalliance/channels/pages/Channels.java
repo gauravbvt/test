@@ -134,7 +134,7 @@ public class Channels extends WebApplication
 
     private AttachmentManager attachmentManager;
     
-    private UserRecordService userInfoService;
+    private UserRecordService userDao;
 
     private CommunityServiceFactory communityServiceFactory;
 
@@ -257,88 +257,96 @@ public class Channels extends WebApplication
 
         mountResource( "users/photos/${name}", new PngReference(
                 UserPhotoPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
                 ) );
         mountResource( "icons/${name}", new PngReference(
                 IconPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "segment.png", new PngReference(
                 FlowMapPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "plan.png", new PngReference(
                 PlanMapPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "network.png", new PngReference(
                 EntityNetworkPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "entities.png", new PngReference(
                 EntitiesNetworkPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "hierarchy.png", new PngReference(
                 HierarchyPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "essential.png", new PngReference(
                 FailureImpactsPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "dissemination.png", new PngReference(
                 DisseminationPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "checklist.png", new PngReference(
                 ChecklistPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "procedures.png", new PngReference(
                 ProceduresPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
         mountResource( "required.png", new PngReference(
                 RequiredNetworkingPng.class,
-                getUserInfoService(),
+                getUserDao(),
                 getPlanManager(),
                 getCommunityServiceFactory(),
                 getPlanCommunityManager()
         ) );
+        mountResource( "segment.png", new PngReference(
+                FlowMapPng.class,
+                getUserDao(),
+                getPlanManager(),
+                getCommunityServiceFactory(),
+                getPlanCommunityManager()
+        ) );
+
         userUploadService.cleanUpPhotos();
 
     }
@@ -461,12 +469,12 @@ public class Channels extends WebApplication
         this.attachmentManager = attachmentManager;
     }
 
-    public void setUserInfoService( UserRecordService userInfoService ) {
-        this.userInfoService = userInfoService;
+    public void setUserDao( UserRecordService userDao ) {
+        this.userDao = userDao;
     }
 
-    public UserRecordService getUserInfoService() {
-        return userInfoService;
+    public UserRecordService getUserDao() {
+        return userDao;
     }
 
     public PlanCommunityManager getPlanCommunityManager() {
