@@ -15,7 +15,6 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -127,17 +126,9 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Organization> item ) {
                 final Organization placeholder = item.getModelObject();
                 boolean selected = selectedPlaceholder != null && placeholder.equals( selectedPlaceholder );
-                // selector image
-                WebMarkupContainer selectorImage = new WebMarkupContainer( "selector" );
-                selectorImage.add( new AttributeModifier(
-                        "src",
-                        selected
-                                ? "images/selected.png"
-                                : "images/not_selected.png"
-                ) );
-                selectorImage.add( new AjaxEventBehavior( "onclick" ) {
+                AjaxLink<String> placeholderLink = new AjaxLink<String>( "placeholderSelector") {
                     @Override
-                    protected void onEvent( AjaxRequestTarget target ) {
+                    public void onClick( AjaxRequestTarget target ) {
                         selectPlaceholder( placeholder );
                         addPlaceholderList();
                         target.add( placeholderListContainer );
@@ -146,11 +137,11 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                     }
-                } );
-                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
-                item.add( selectorImage );
+                };
+                if ( selected ) placeholderLink.add( new AttributeModifier( "class", "selected" ) );
+                item.add( placeholderLink );
                 // name
-                item.add( new Label( "placeholder", placeholder.getName() ) );
+                placeholderLink.add( new Label( "placeholder", placeholder.getName() ) );
                 // metrics
                 int count = getParticipatingAgencies( placeholder ).size();
                 String metrics = "("
@@ -214,7 +205,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         participationContainer = new WebMarkupContainer( "participation" );
         participationContainer.setOutputMarkupId( true );
         addOrReplace( participationContainer );
-        makeVisible( participationContainer, selectedPlaceholder != null );
+        // makeVisible( participationContainer, selectedPlaceholder != null );
         participationContainer.add( new Label(
                 "placeholderName",
                 selectedPlaceholder == null ? "" : selectedPlaceholder.getName() ) );

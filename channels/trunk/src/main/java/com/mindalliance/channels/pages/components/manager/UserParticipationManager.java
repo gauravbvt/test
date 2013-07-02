@@ -142,7 +142,6 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 final Agency agency = item.getModelObject();
                 boolean selected = selectedAgency != null && selectedAgency.equals( agency );
                 // selector image
-                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
                 // name
                 AjaxLink<String> agencyLink = new AjaxLink<String>( "agencySelector" ) {
                     @Override
@@ -158,6 +157,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         target.add( summaryLabel );
                     }
                 };
+                if ( selected ) agencyLink.add( new AttributeModifier( "class", "selected" ) );
                 item.add( agencyLink );
                 agencyLink.add( new Label( "agencyName", agency.getName() ) );
                 // metrics
@@ -275,7 +275,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         target.add( summaryLabel );
                     }
                 };
-                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
+                if ( selected ) agentLink.add( new AttributeModifier( "class", "selected" ) );
                 item.add( agentLink );
                 // name
                 agentLink.add( new Label( "agentName", agent.getName() ) );
