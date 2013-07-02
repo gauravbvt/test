@@ -253,13 +253,29 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     protected void tryAcquiringLock( Change change ) {
-        if ( change.isByIdOnly() && getPlan().isDevelopment() ) {
-            getCommander().requestLockOn( getUser().getUsername(), change.getId() );
+        if ( change.isByIdOnly() ) {
+            if ( ( getPlan().isDevelopment() && getUser().isPlannerOrAdmin( getPlan().getUri() ) )
+                    ||
+                    ( isInCommunityContext() && getUser().isPlannerOrAdmin( getPlanCommunityUri() ) ) )
+                getCommander().requestLockOn( getUser().getUsername(), change.getId() );
         } else if ( change.isForInstanceOf( Identifiable.class ) ) {
             Identifiable identifiable = change.getSubject( getCommunityService() );
-            if ( identifiable != null && !ModelObject.isUnknownModelObject( identifiable )
-                    && ( identifiable.isModifiableInProduction() || getPlan().isDevelopment() )
-                    && getCommander().isLockable( change.getClassName() ) ) {
+            if ( identifiable != null
+                    && !ModelObject.isUnknownModelObject( identifiable )
+                    && getCommander().isLockable( change.getClassName() )
+                    && (
+                    ( isInCommunityContext()
+                            && identifiable.isModifiableInProduction()
+                            && getUser().isPlannerOrAdmin( getPlanCommunityUri() )
+                            ||
+                            ( isPlanContext()
+                                    && getPlan().isProduction()
+                                    && identifiable.isModifiableInProduction() // todo obsolete?
+                                    && getUser().isPlannerOrAdmin( getPlan().getUri() ) )
+                            ||
+                            ( getPlan().isDevelopment()
+                                    && getUser().isPlannerOrAdmin( getPlan().getUri() ) ) ) )
+                    ) {
                 getCommander().requestLockOn( getUser().getUsername(), change.getId() );
             }
         }
@@ -566,7 +582,8 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      */
     public final List<Plan> getPlans() {
         List<Plan> result = new ArrayList<Plan>();
-        for ( Plan p : planManager.getReadablePlans( user ) ) {
+        result.addAll( planManager.getReadablePlans( user ) );
+       /* for ( Plan p : planManager.getReadablePlans( user ) ) {
             String uri = p.getUri();
             if ( user.isPlannerOrAdmin( uri ) )
                 result.add( p );
@@ -575,7 +592,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                     result.add( p );
             }
         }
-        Collections.sort( result, new Comparator<Plan>() {
+*/        Collections.sort( result, new Comparator<Plan>() {
             @Override
             public int compare( Plan p1, Plan p2 ) {
                 return p1.getName().compareTo( p2.getName() );
@@ -1004,7 +1021,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         if ( encodedPlanUri == null ) {
             // assert parameters.get( COMMUNITY_PARM ) == null;
             String userPlanUri = user.getPlanUri() == null ? "" : user.getPlanUri();
-            if ( isDomainPage() && !user.isPlannerOrAdmin( userPlanUri ) )
+            if ( isDomainPage() && !user.hasAccessTo( userPlanUri ) )
                 userPlanUri = "";
             try {
                 encodedPlanUri = URLEncoder.encode( userPlanUri, "UTF-8" );
@@ -1028,51 +1045,53 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_NOT_FOUND, "Not found" );
         }
 
-        List<Plan> plans = planManager.getPlansWithUri( planUri );
+        List<Plan> candidatePlans = planManager.getPlansWithUri( planUri );
 /*
         if ( plans.isEmpty() )
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
 */
 
-        for ( Iterator<Plan> it = plans.iterator(); it.hasNext() && plan == null; ) {
+        for ( Iterator<Plan> it = candidatePlans.iterator(); it.hasNext() && plan == null; ) {
             Plan p = it.next();
-            if ( planVersion == 0 ) {  // unspecified version
-                if ( p.isDevelopment() && user.isPlannerOrAdmin( planUri ) ) {
-                    plan = p;
-                } else if ( p.isProduction() && !user.isPlannerOrAdmin( planUri ) ) {
-                    plan = p;
-                }
-            } else {
-                if ( planVersion == p.getVersion() ) {
-                    if ( p.isProduction() || ( p.isDevelopment() && user.isPlannerOrAdmin( p.getUri() ) ) )
+            if ( user.hasAccessTo( planUri ) ) {
+                if ( planVersion == 0 ) {  // unspecified version - use development version
+                    if ( p.isDevelopment() ) {
                         plan = p;
+                    }
+                } else {
+                    if ( planVersion == p.getVersion() ) {
+                        plan = p;
+                    }
                 }
             }
         }
         // If version mismatch, grab the production plan, if any
-        if ( planUri != null && !planUri.isEmpty() && plan == null ) {
+        if ( planUri != null
+                && !planUri.isEmpty()
+                && plan == null
+                && ( user.hasAccessTo( planUri ) ) ) {
             plan = planManager.findProductionPlan( planUri );
         }
         // if still no plan, panic and grab first authorized one.
         if ( plan == null ) {
-            if ( plans.isEmpty() ) {
-                plans = planManager.getPlans();
-            }
             LOG.warn( "PANIC: selecting a plan" );
+            if ( candidatePlans.isEmpty() ) {
+                candidatePlans = planManager.getPlans(); // forget the plan uri, look at plans with any uris
+            }
             if ( isDomainPage() ) { // must be a plan where user has planner privileges
                 plan = (Plan) CollectionUtils.find(
-                        plans,
+                        candidatePlans,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
                                 Plan p = (Plan) object;
-                                return user.isPlannerOrAdmin( p.getUri() );
+                                return user.hasAccessTo( p.getUri() );
                             }
                         }
                 );
-            } else { // a production plan
+            } else { // any production plan
                 plan = (Plan) CollectionUtils.find(
-                        plans,
+                        candidatePlans,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {

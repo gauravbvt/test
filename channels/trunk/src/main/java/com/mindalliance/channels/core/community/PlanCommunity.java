@@ -258,6 +258,14 @@ public class PlanCommunity extends ModelObject implements ModelObjectContext {
         return false;
     }
 
+    public boolean isEditableBy( ChannelsUser user ) {
+        if ( isDomainCommunity() ) {
+            return isDevelopment() && user.isPlannerOrAdmin( getPlanUri() );
+        } else {
+            return user.isPlannerOrAdmin( getUri() );
+        }
+    }
+
     public boolean isOrganizationLead( ChannelsUser user,
                                        RegisteredOrganization registeredOrganization,
                                        CommunityService communityService ) {

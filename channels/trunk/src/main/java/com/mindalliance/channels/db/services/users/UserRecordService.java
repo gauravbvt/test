@@ -245,4 +245,4 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      */
     void addFounder( ChannelsUser founder, PlanCommunity planCommunity );
 
- }
+}

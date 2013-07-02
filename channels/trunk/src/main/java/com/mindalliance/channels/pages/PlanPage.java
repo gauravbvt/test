@@ -583,7 +583,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
     private void addHeader() {
         addHomeLink();
-        addProductionLock();
+        addPlanLock();
         addRefreshNow();
         //  addGoBackAndForward();
         addActivitiesMenubar();
@@ -598,10 +598,14 @@ public final class PlanPage extends AbstractChannelsWebPage {
         updateNavigation();
     }
 
-    private void addProductionLock() {
+    private void addPlanLock() {
         WebMarkupContainer productionLockImg = new WebMarkupContainer( "productionLock" );
-        productionLockImg.setVisible( getPlan().isProduction() );
-        addTipTitle( productionLockImg, "Production version. Can not be modified." );
+        productionLockImg.setVisible( getPlan().isProduction() || !getUser().isPlannerOrAdmin( getPlan().getUri() ) );
+        addTipTitle(
+                productionLockImg,
+                getPlan().isProduction()
+                        ? "Production version. Can not be modified."
+                        : "You are not authorized to modify this plan" );
         form.add( productionLockImg );
     }
 
@@ -1351,7 +1355,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
             // Find expansions that were locked and are now unlocked
             for ( ModelObject mo : getEditableModelObjects( getExpansions() ) ) {
-                if ( !getCommander().isLockedByUser( getUser().getUsername(), mo ) ) {
+                if ( getUser().isPlannerOrAdmin( getPlan().getUri() )
+                        && !getCommander().isLockedByUser( getUser().getUsername(), mo ) ) {
                     String aspect = getAspectShown( mo );
                     if ( aspect == null || aspectRequiresLock( mo, aspect ) )
                         if ( getCommander().isUnlocked( mo ) ) {
@@ -1768,7 +1773,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     public Part getPart() {
         if ( isZombie( part ) ) {
             Part part = segment.getDefaultPart();
-            getCommander().requestLockOn( getUser().getUsername(), part );
+//            getCommander().requestLockOn( getUser().getUsername(), part );
             return part;
         } else {
             return part;
@@ -1860,8 +1865,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
 
     private void reacquireLocks() {
-        // Part is always "expanded"
-        getCommander().requestLockOn( getUser().getUsername(), getPart() );
         for ( Long id : getExpansions() ) {
             if ( id >= 0 ) {
                 try {

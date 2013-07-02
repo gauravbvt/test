@@ -240,7 +240,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private void addNewMessage() {
         newMessageContainer = new WebMarkupContainer( "newMessage" );
         newMessageContainer.setOutputMarkupId( true );
-        newMessageContainer.setVisible( isPlanner() );
+        // newMessageContainer.setVisible( isPlanner() );
         newMessageContainer.add( makeHelpIcon( "helpNewMessage", "messages", "new-message", "images/help_guide_gray.png" ) );
         addOrReplace( newMessageContainer );
         addRecipientChoice( newMessageContainer );
@@ -260,9 +260,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                     public Object getDisplayValue( ChannelsUser user ) {
                         return user == ALL_PLANNERS
                                 ? "All planners"
- /*                               : user == ALL_USERS
+                                : user == ALL_USERS
                                 ? "Everyone"
-*/
                                 : user.getFullName() + " (" + user.getUsername() + ")";
                     }
 
@@ -282,7 +281,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
 
     private List<ChannelsUser> getCandidateRecipients() {
         List<ChannelsUser> recipients = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userInfoService.getPlanners( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userInfoService.getUsers( getPlan().getUri() ) ) {
             if ( !user.getUsername().equals( getUser().getUsername() ) ) {
                 recipients.add( user );
             }
@@ -293,7 +292,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 return collator.compare( user2.getNormalizedFullName(), user1.getNormalizedFullName() );
             }
         } );
-       // recipients.add( ALL_USERS );
+        recipients.add( ALL_USERS );
         recipients.add( ALL_PLANNERS );
         Collections.reverse( recipients );
         return recipients;

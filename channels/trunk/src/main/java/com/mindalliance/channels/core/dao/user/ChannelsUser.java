@@ -438,5 +438,8 @@ public class ChannelsUser implements UserDetails {
                 : planCommunityUri;
     }
 
+    public boolean hasAccessTo( String uri ) {
+        return isPlannerOrAdmin( uri ) || isParticipant( uri );
+    }
 }
 

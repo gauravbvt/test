@@ -511,7 +511,7 @@ public class PlanManagerImpl implements PlanManager {
         List<Plan> result = new ArrayList<Plan>( planList.size() );
 
         for ( Plan object : planList )
-            if ( user.isParticipant( object.getUri() ) )
+            if ( user.hasAccessTo( object.getUri() ) )
                 result.add( object );
 
         return result;

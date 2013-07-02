@@ -157,7 +157,6 @@ public class PlansPage extends AbstractChannelsBasicPage {
     private void addGotoLinks( CommunityService communityService, ChannelsUser user ) {
         Plan plan = communityService.getPlan();
         String uri = plan.getUri();
-        boolean planner = user.isPlannerOrAdmin( uri );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
@@ -214,7 +213,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
                 // Goto model
                 new WebMarkupContainer( "model" )
                         .add( gotoModelLink )
-                        .setVisible( planner || plan.isVisibleToUsers() )
+                        .setVisible( user.hasAccessTo( plan.getUri() ) || plan.isVisibleToUsers() )
                         .setOutputMarkupId( true ),
 
                 // Goto surveys
@@ -230,7 +229,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
                 // Goto issues report
                 new WebMarkupContainer( "issues" )
                         .add( gotoIssuesLink )
-                        .setVisible( planner || plan.isViewableByAll() )
+                        .setVisible( user.hasAccessTo( plan.getUri() ) || plan.isViewableByAll() )
                         .setOutputMarkupId( true )
         );
 

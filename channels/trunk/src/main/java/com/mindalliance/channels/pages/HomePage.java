@@ -114,7 +114,7 @@ public class HomePage extends AbstractChannelsBasicPage {
                 // Goto model
                 new WebMarkupContainer( "models" )
                         .add( gotoModelsLink )
-                        .setVisible( isAPlanner() )
+                        .setVisible( hasAccessToPlans() )
                         .setOutputMarkupId( true ),
 
                 // Goto protocols
@@ -138,13 +138,13 @@ public class HomePage extends AbstractChannelsBasicPage {
         return "The collaboration communities you participate or could participate in"; // todo show metrics
     }
 
-    private boolean isAPlanner() {
+    private boolean hasAccessToPlans() {
         return CollectionUtils.exists(
                 planManager.getPlans(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return getUser().isPlannerOrAdmin( ( (Plan) object ).getUri() );
+                        return getUser().hasAccessTo( ( (Plan) object ).getUri() );
                     }
                 }
         );

@@ -128,20 +128,20 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
 
     protected void minimizeNormalize( AjaxRequestTarget target ) {
         super.minimizeNormalize( target );
-        if (!isMinimized() ) {
+        if ( !isMinimized() ) {
             refresh( target, new Change( Change.Type.Refresh ), getAspectShown() );
         }
     }
 
-        /**
-        * Panel initialization.
-        */
+    /**
+     * Panel initialization.
+     */
     protected void init() {
         moContainer = new WebMarkupContainer( "mo" );
         getContentContainer().add( moContainer );
         String css = getCssClass();
         moContainer.add( new AttributeModifier( "class", new Model<String>( css ) ) );
-         if ( aspectShown == null )
+        if ( aspectShown == null )
             aspectShown = getDefaultAspect();
         showAspect( aspectShown, getChange() );
     }
@@ -153,13 +153,13 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
 
     public String getHelpSectionId() {
         return aspectPanel instanceof Guidable
-                ? ((Guidable)aspectPanel).getHelpSectionId()
+                ? ( (Guidable) aspectPanel ).getHelpSectionId()
                 : null;
     }
 
     public String getHelpTopicId() {
         return aspectPanel instanceof Guidable
-                ? ((Guidable)aspectPanel).getHelpTopicId()
+                ? ( (Guidable) aspectPanel ).getHelpTopicId()
                 : null;
     }
 
@@ -297,8 +297,8 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
      */
     @Override
     public void releaseAnyLockOn( Identifiable identifiable ) {
-        getCommander().releaseAnyLockOn( getUser().getUsername(), identifiable );
-        lockedIdentifiables.remove( identifiable );
+        if ( getCommander().releaseAnyLockOn( getUser().getUsername(), identifiable ) )
+            lockedIdentifiables.remove( identifiable );
     }
 
     /**
@@ -308,8 +308,8 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
      */
     @Override
     public void requestLockOn( Identifiable identifiable ) {
-        getCommander().requestLockOn( getUser().getUsername(), identifiable );
-        lockedIdentifiables.add( identifiable );
+        if ( getCommander().requestLockOn( getUser().getUsername(), identifiable ) )
+            lockedIdentifiables.add( identifiable );
     }
 
     @Override
@@ -365,7 +365,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
 
     protected PathIcon getSurveysPathIcon( String id ) {
         final Identifiable identifiable = getObject();
-        if ( identifiable instanceof ModelObject && !((ModelObject)identifiable).isUnknown() ) {
+        if ( identifiable instanceof ModelObject && !( (ModelObject) identifiable ).isUnknown() ) {
             AjaxLink surveysLink = new AjaxLink( id ) {
                 @Override
                 public void onClick( AjaxRequestTarget target ) {

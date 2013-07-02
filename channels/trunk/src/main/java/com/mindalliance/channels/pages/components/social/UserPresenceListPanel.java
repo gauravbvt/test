@@ -32,7 +32,7 @@ import java.util.List;
 public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     @SpringBean
-    UserRecordService userInfoService;
+    UserRecordService userRecordService;
 
     @SpringBean
     private PresenceRecordService presenceRecordService;
@@ -113,7 +113,7 @@ public class UserPresenceListPanel extends AbstractSocialListPanel {
 
     public List<ChannelsUser> getUsersPresent() {
         List<ChannelsUser> usersPresent = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userInfoService.getPlanners( getPlan().getUri() ) ) {
+        for ( ChannelsUser user : userRecordService.getUsers( getPlan().getUri() ) ) {
             if ( !showHereOnly || isHere( user.getUsername() ) ) {
                 usersPresent.add( user );
             }
