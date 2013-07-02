@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<elements>
+	<Element>
+		<GivenName>Communities</GivenName>
+		<Title>Channels - Collaboration Planning</Title>
+	</Element>
+	
+	<Element>
+		<GivenName>Communities Link</GivenName>
+		<Xpath></Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Communities</LinkText>
+		<ClassName></ClassName>
+	</Element>
+ 	
+	
+ 	
+ 	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
+ 	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
+ 	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>
+ 	<LogoutPageLoadTimeoutSeconds>50</LogoutPageLoadTimeoutSeconds>
+</elements>

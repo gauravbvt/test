@@ -17,6 +17,31 @@
  	</Element>
  	
  	<Element>
+    	<GivenName>Cant' Access Your Account Link</GivenName>
+    	<Xpath>/html/body/div/div[2]/form/div[6]/a</Xpath>
+    	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Can't access your account?</LinkText>
+    	<ClassName>rightlink</ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+    	<GivenName>Back to Login Link</GivenName>
+    	<Xpath>/html/body/div/div[2]/form/div[6]/a</Xpath>
+    	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Back to Login Link</LinkText>
+    	<ClassName>rightlink</ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+		<GivenName>Channels Login Page</GivenName>
+		<Title>Channels - Sign in</Title>
+	</Element>
+ 	
+ 	<Element>
  		<GivenName>username</GivenName>
  		<Xpath>//input[contains(@name,'j_username')]</Xpath>
  		<Name>j_username</Name>
