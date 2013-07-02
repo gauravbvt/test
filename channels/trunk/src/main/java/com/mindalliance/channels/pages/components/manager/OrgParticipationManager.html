@@ -19,12 +19,12 @@
                 placeholders
             </div>
             <div class="participation-table-cont">
-                <table wicket:id="placeholderListContainer">
-                    <tr wicket:id="placeholders"> <!-- repeated -->
-                        <td><a wicket:id="placeholderSelector" href="#"><span wicket:id="placeholder">placeholder name</span></a></td>
-                        <td><span wicket:id="metrics">1 participation (max is 4)</span></td>
-                    </tr>
-                </table>
+                <div wicket:id="placeholderListContainer">
+                    <a wicket:id="placeholders"> <!-- repeated -->
+                        <span wicket:id="placeholder">placeholder name</span>
+                        <span wicket:id="metrics">1 participation (max is 4)</span>
+                    </a>
+                </div>
             </div>
         </div>
         <div wicket:id="participation">

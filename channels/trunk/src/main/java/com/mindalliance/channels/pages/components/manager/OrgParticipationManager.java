@@ -15,6 +15,7 @@ import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -126,9 +127,9 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Organization> item ) {
                 final Organization placeholder = item.getModelObject();
                 boolean selected = selectedPlaceholder != null && placeholder.equals( selectedPlaceholder );
-                AjaxLink<String> placeholderLink = new AjaxLink<String>( "placeholderSelector") {
+                item.add( new AjaxEventBehavior( "onclick" ) {
                     @Override
-                    public void onClick( AjaxRequestTarget target ) {
+                    protected void onEvent( AjaxRequestTarget target ) {
                         selectPlaceholder( placeholder );
                         addPlaceholderList();
                         target.add( placeholderListContainer );
@@ -137,11 +138,10 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                     }
-                };
-                if ( selected ) placeholderLink.add( new AttributeModifier( "class", "selected" ) );
-                item.add( placeholderLink );
+                });
+                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
                 // name
-                placeholderLink.add( new Label( "placeholder", placeholder.getName() ) );
+                item.add( new Label( "placeholder", placeholder.getName() ) );
                 // metrics
                 int count = getParticipatingAgencies( placeholder ).size();
                 String metrics = "("

@@ -16,6 +16,7 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -141,11 +142,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             protected void populateItem( final ListItem<Agency> item ) {
                 final Agency agency = item.getModelObject();
                 boolean selected = selectedAgency != null && selectedAgency.equals( agency );
-                // selector image
-                // name
-                AjaxLink<String> agencyLink = new AjaxLink<String>( "agencySelector" ) {
+                item.add( new AjaxEventBehavior( "onclick" ) {
                     @Override
-                    public void onClick( AjaxRequestTarget target ) {
+                    protected void onEvent( AjaxRequestTarget target ) {
                         selectAgency( agency );
                         addAgenciesList();
                         target.add( agenciesListContainer );
@@ -156,10 +155,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                     }
-                };
-                if ( selected ) agencyLink.add( new AttributeModifier( "class", "selected" ) );
-                item.add( agencyLink );
-                agencyLink.add( new Label( "agencyName", agency.getName() ) );
+                });
+                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
+                item.add( new Label( "agencyName", agency.getName() ) );
                 // metrics
                 item.add( new Label( "metrics", getAgencyMetrics( agency ) ) );
             }
@@ -263,9 +261,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Agent> item ) {
                 final Agent agent = item.getModelObject();
                 boolean selected = selectedAgent != null && selectedAgent.equals( agent );
-                AjaxLink<String> agentLink = new AjaxLink<String>( "agentSelector" ) {
+                item.add( new AjaxEventBehavior( "onclick" ) {
                     @Override
-                    public void onClick( AjaxRequestTarget target ) {
+                    protected void onEvent( AjaxRequestTarget target ) {
                         selectAgent( agent );
                         addAgentsList();
                         target.add( agentsListContainer );
@@ -274,11 +272,10 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                     }
-                };
-                if ( selected ) agentLink.add( new AttributeModifier( "class", "selected" ) );
-                item.add( agentLink );
-                // name
-                agentLink.add( new Label( "agentName", agent.getName() ) );
+                });
+                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
+                 // name
+                item.add( new Label( "agentName", agent.getName() ) );
                 // metrics
                 item.add( new Label( "metrics", getAgentMetrics( agent ) ) );
             }
