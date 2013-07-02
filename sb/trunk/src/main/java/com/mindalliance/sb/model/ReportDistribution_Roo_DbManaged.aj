@@ -16,7 +16,7 @@ privileged aspect ReportDistribution_Roo_DbManaged {
     @OneToMany(mappedBy = "reportDistribution", cascade = CascadeType.REMOVE)
     private Set<SituationReport> ReportDistribution.situationReports;
     
-    @Column(name = "name", length = 127, unique = true)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
     @NotNull
     private String ReportDistribution.name;
     

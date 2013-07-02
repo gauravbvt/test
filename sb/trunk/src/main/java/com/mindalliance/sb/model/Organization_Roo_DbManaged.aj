@@ -43,17 +43,17 @@ privileged aspect Organization_Roo_DbManaged {
     @JoinColumn(name = "type", referencedColumnName = "id", nullable = false)
     private OrgType Organization.type;
     
-    @Column(name = "name", length = 127)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
     @NotNull
     private String Organization.name;
     
     @Column(name = "logo", columnDefinition = "BLOB")
     private byte[] Organization.logo;
     
-    @Column(name = "acronym", length = 127)
+    @Column(name = "acronym", columnDefinition = "VARCHAR", length = 127)
     private String Organization.acronym;
     
-    @Column(name = "url", length = 127)
+    @Column(name = "url", columnDefinition = "VARCHAR", length = 127)
     private String Organization.url;
     
     public Set<ContactInfo> Organization.getContactInfoes() {

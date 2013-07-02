@@ -20,7 +20,7 @@ import static junit.framework.Assert.*;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration( locations= "classpath:applicationContext-test.xml" )
+@ContextConfiguration( locations= "/META-INF/spring/applicationContext-test.xml" )
 public class SurveyGizmoImplTest {
 
     @Autowired

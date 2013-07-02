@@ -16,7 +16,7 @@ privileged aspect SharingIssueType_Roo_DbManaged {
     @OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE)
     private Set<SharingIssue> SharingIssueType.sharingIssues;
     
-    @Column(name = "name", length = 127, unique = true)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
     @NotNull
     private String SharingIssueType.name;
     

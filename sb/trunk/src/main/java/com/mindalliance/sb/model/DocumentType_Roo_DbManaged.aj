@@ -16,7 +16,7 @@ privileged aspect DocumentType_Roo_DbManaged {
     @OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE)
     private Set<Document> DocumentType.documents;
     
-    @Column(name = "name", length = 127, unique = true)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
     @NotNull
     private String DocumentType.name;
     

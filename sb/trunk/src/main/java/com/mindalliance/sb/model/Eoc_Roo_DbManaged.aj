@@ -21,10 +21,10 @@ privileged aspect Eoc_Roo_DbManaged {
     @Column(name = "comments", columnDefinition = "TEXT")
     private String Eoc.comments;
     
-    @Column(name = "name", length = 127)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
     private String Eoc.name;
     
-    @Column(name = "software", length = 127)
+    @Column(name = "software", columnDefinition = "VARCHAR", length = 127)
     private String Eoc.software;
     
     @Column(name = "activeDuring", columnDefinition = "BIT")

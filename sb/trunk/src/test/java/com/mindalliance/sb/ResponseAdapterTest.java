@@ -18,7 +18,7 @@ import static junit.framework.Assert.assertEquals;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration( locations= "classpath:applicationContext-test.xml" )
+@ContextConfiguration( locations= "/META-INF/spring/applicationContext-test.xml" )
 public class ResponseAdapterTest {
     
     @Autowired

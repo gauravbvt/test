@@ -35,7 +35,7 @@ privileged aspect IncidentSystem_Roo_DbManaged {
     @Column(name = "system", columnDefinition = "INT")
     private Integer IncidentSystem.system;
     
-    @Column(name = "acronym", length = 127)
+    @Column(name = "acronym", columnDefinition = "VARCHAR", length = 127)
     private String IncidentSystem.acronym;
     
     @Column(name = "actual", columnDefinition = "BIT")

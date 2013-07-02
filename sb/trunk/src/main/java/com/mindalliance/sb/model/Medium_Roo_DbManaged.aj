@@ -16,7 +16,7 @@ privileged aspect Medium_Roo_DbManaged {
     @OneToMany(mappedBy = "medium", cascade = CascadeType.REMOVE)
     private Set<SharingMedium> Medium.sharingMediums;
     
-    @Column(name = "name", length = 127, unique = true)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
     @NotNull
     private String Medium.name;
     

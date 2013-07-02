@@ -4,7 +4,12 @@
     <jsp:output omit-xml-declaration="yes"/>
     <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
         <menu:category id="c_view" z="HjmI4Chx/kBYfS/6HjBLbCA+XpU=">
-            <menu:item id="i_view__reportsr1_id" messageCode="global_generic" url="reports/r1" z="pgzxZT/+lUVMf3bzzj8sq6wB/uc="/>
+            <menu:item id="i_view__reportsr1_id" messageCode="global_generic" url="reports/r1" z="user-managed"/>
         </menu:category>
+        <menu:category id="c_organization" label="Lists" z="user-managed">
+            <menu:item id="i_organization_list" label="Organizations" url="/organizations?page=1&amp;size=${empty param.size ? 10 : param.size}" z="user-managed"/>
+            <menu:item id="i_subcommittee_list" url="/subcommittees?page=1&amp;size=${empty param.size ? 10 : param.size}" z="user-managed"/>
+        </menu:category>
+        <menu:category id="c_subcommittee" z="0b89FjZ81oMf3zO/1rJEOpAAzwE="/>
     </menu:menu>
 </div>

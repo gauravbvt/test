@@ -15,7 +15,7 @@ privileged aspect PlanFile_Roo_DbManaged {
     @JoinColumn(name = "superbowl_plan", referencedColumnName = "id", nullable = false)
     private SuperbowlPlan PlanFile.superbowlPlan;
     
-    @Column(name = "name", length = 127)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
     private String PlanFile.name;
     
     @Column(name = "contents", columnDefinition = "MEDIUMBLOB")

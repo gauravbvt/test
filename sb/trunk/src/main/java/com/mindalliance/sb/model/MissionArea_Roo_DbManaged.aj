@@ -21,7 +21,7 @@ privileged aspect MissionArea_Roo_DbManaged {
     @OneToMany(mappedBy = "missionArea", cascade = CascadeType.REMOVE)
     private Set<IncidentMissionArea> MissionArea.incidentMissionAreas;
     
-    @Column(name = "name", length = 127)
+    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
     @NotNull
     private String MissionArea.name;
     
