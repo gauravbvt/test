@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<elements>
+<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<title>Channels - Sign in</title>
+<userName>admin</userName>
+<password>@test123</password>
+</elements>
