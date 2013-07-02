@@ -43,5 +43,35 @@ public class LoginPage {
     	String title=dataController.getPageDataElements(fileName, "Home Page Title", "Title");
     	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
     	UIActions.waitForTitle(title,timeout);
-		}
+	}
+	
+	/**
+	 *  Can't Access Your Account link method navigates to Password reset page 
+	 * @throws UIAutomationException
+	 */
+	public void clickCantAccessYourAccount() throws UIAutomationException{
+		int timeout=0;
+		elementController.requireElementSmart(fileName,"Cant' Access Your Account Link",GlobalVariables.configuration.getAttrSearchList(), "Cant' Access Your Account Link");
+		UIActions.click(fileName,"Cant' Access Your Account Link",GlobalVariables.configuration.getAttrSearchList(), "Cant' Access Your Account Link");
+		
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Channels Login Page", "Title");
+    	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
+    	UIActions.waitForTitle(title,timeout);
+	}
+	
+	
+	public void clickBackToLoginLink() throws UIAutomationException{
+		int timeout=0;
+		elementController.requireElementSmart(fileName,"Back to Login Link",GlobalVariables.configuration.getAttrSearchList(), "Back to Login Link");
+		UIActions.click(fileName,"Back to Login Link",GlobalVariables.configuration.getAttrSearchList(), "Back to Login Link");
+		
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Channels Login Page", "Title");
+    	timeout=Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds"));
+    	UIActions.waitForTitle(title,timeout);
+	}
+	
+		
+	
 	}
