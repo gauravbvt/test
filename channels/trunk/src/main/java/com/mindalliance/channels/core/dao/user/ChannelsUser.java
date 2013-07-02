@@ -159,13 +159,10 @@ public class ChannelsUser implements UserDetails {
         if ( userRecord.isAdmin() ) {
             result.add( new GrantedAuthorityImpl( UserRecord.ROLE_ADMIN ) );
             result.add( new GrantedAuthorityImpl( UserRecord.ROLE_PLANNER ) );
-            result.add( new GrantedAuthorityImpl( UserRecord.ROLE_USER ) );
         }
         // String uri = plan == null ? null : plan.getUri();
         if ( userRecord.isPlanner( ) ) {
             result.add( new GrantedAuthorityImpl( UserRecord.ROLE_PLANNER ) );
-
-            result.add( new GrantedAuthorityImpl( UserRecord.ROLE_USER ) );
         }
         result.add( new GrantedAuthorityImpl( UserRecord.ROLE_USER ) );
         return Collections.unmodifiableList( result );

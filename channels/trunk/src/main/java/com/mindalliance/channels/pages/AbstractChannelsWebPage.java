@@ -1089,7 +1089,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                             }
                         }
                 );
-            } else { // any production plan
+            } else { // any plan, production if possible
                 plan = (Plan) CollectionUtils.find(
                         candidatePlans,
                         new Predicate() {
@@ -1100,10 +1100,16 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                             }
                         }
                 );
+                if ( plan == null && !candidatePlans.isEmpty() ) {
+                    plan = candidatePlans.get( 0 );
+                }
+
             }
         }
-        if ( plan == null )  // throw the towel
+        if ( plan == null ) { // give up - should not happen
+            LOG.error( "No plan exists");
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
+        }
         return plan;
     }
 
