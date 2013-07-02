@@ -16,7 +16,6 @@ import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -76,7 +75,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     public UserParticipationManager( String id ) {
         super( id );
         init();
-     }
+    }
 
     private void init() {
         resetSelectionsAndChanges();
@@ -143,16 +142,11 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 final Agency agency = item.getModelObject();
                 boolean selected = selectedAgency != null && selectedAgency.equals( agency );
                 // selector image
-                final WebMarkupContainer selectorImage = new WebMarkupContainer( "selector" );
-                selectorImage.add( new AttributeModifier(
-                        "src",
-                        selected
-                                ? "images/selected.png"
-                                : "images/not_selected.png"
-                ) );
-                selectorImage.add( new AjaxEventBehavior( "onclick" ) {
+                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
+                // name
+                AjaxLink<String> agencyLink = new AjaxLink<String>( "agencySelector" ) {
                     @Override
-                    protected void onEvent( AjaxRequestTarget target ) {
+                    public void onClick( AjaxRequestTarget target ) {
                         selectAgency( agency );
                         addAgenciesList();
                         target.add( agenciesListContainer );
@@ -163,11 +157,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                     }
-                } );
-                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
-                item.add( selectorImage );
-                // name
-                item.add( new Label( "agencyName", agency.getName() ) );
+                };
+                item.add( agencyLink );
+                agencyLink.add( new Label( "agencyName", agency.getName() ) );
                 // metrics
                 item.add( new Label( "metrics", getAgencyMetrics( agency ) ) );
             }
@@ -215,7 +207,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         return filteredAgencies;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Agent> listUnassignedAgents( Agency agency ) {
         final List<Agent> unassignedAgents = participationManager.findAllUnassignedAgents( getCommunityService() );
         return (List<Agent>) CollectionUtils.select(
@@ -239,7 +231,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         agentsListContainer.setOutputMarkupId( true );
         agentsContainer.addOrReplace( agentsListContainer );
         addAgentsList();
-        makeVisible( agentsContainer, selectedAgency != null );
+        // makeVisible( agentsContainer, selectedAgency != null );
     }
 
     private void addAgentsFilter() {
@@ -271,17 +263,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<Agent> item ) {
                 final Agent agent = item.getModelObject();
                 boolean selected = selectedAgent != null && selectedAgent.equals( agent );
-                // selector image
-                WebMarkupContainer selectorImage = new WebMarkupContainer( "selector" );
-                selectorImage.add( new AttributeModifier(
-                        "src",
-                        selected
-                                ? "images/selected.png"
-                                : "images/not_selected.png"
-                ) );
-                selectorImage.add( new AjaxEventBehavior( "onclick" ) {
+                AjaxLink<String> agentLink = new AjaxLink<String>( "agentSelector" ) {
                     @Override
-                    protected void onEvent( AjaxRequestTarget target ) {
+                    public void onClick( AjaxRequestTarget target ) {
                         selectAgent( agent );
                         addAgentsList();
                         target.add( agentsListContainer );
@@ -290,11 +274,11 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         addSummary();
                         target.add( summaryLabel );
                     }
-                } );
+                };
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
-                item.add( selectorImage );
+                item.add( agentLink );
                 // name
-                item.add( new Label( "agentName", agent.getName() ) );
+                agentLink.add( new Label( "agentName", agent.getName() ) );
                 // metrics
                 item.add( new Label( "metrics", getAgentMetrics( agent ) ) );
             }
@@ -365,8 +349,8 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         List<ChannelsUser> participants = new ArrayList<ChannelsUser>();
         if ( agent != null ) {
             for ( UserParticipation userParticipation
-                    : userParticipationService.getParticipationsAsAgent( agent, communityService) )  {
-                participants.add( new ChannelsUser( userParticipation.getParticipant( communityService) ) );
+                    : userParticipationService.getParticipationsAsAgent( agent, communityService ) ) {
+                participants.add( new ChannelsUser( userParticipation.getParticipant( communityService ) ) );
             }
             Collections.sort( participants, new Comparator<ChannelsUser>() {
                 @Override
@@ -385,7 +369,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         participantsContainer.add( new Label( "agentName", selectedAgent == null ? "" : selectedAgent.getName() ) );
         addParticipantsFilter();
         addParticipantsList();
-        makeVisible( participantsContainer, selectedAgent != null );
+//        makeVisible( participantsContainer, selectedAgent != null );
     }
 
     private void addParticipantsFilter() {
@@ -436,13 +420,13 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 };
                 boolean participationAvailable = selectedAgent != null &&
                         ( participating ||
-                        participationManager.isParticipationAvailable(
-                                selectedAgent,
-                                participant,
-                                getCommunityService() ) );
+                                participationManager.isParticipationAvailable(
+                                        selectedAgent,
+                                        participant,
+                                        getCommunityService() ) );
                 boolean userHasAuthority = selectedAgent != null &&
                         ( getCommunityService().isCommunityPlanner( getUser() )
-                            || participationManager.hasAuthorityOverParticipation(
+                                || participationManager.hasAuthorityOverParticipation(
                                 getCommunityService(),
                                 getUser(),
                                 participant.getUserRecord(),
@@ -500,31 +484,33 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
     private List<ChannelsUser> getFilteredUsers() {
-        List<ChannelsUser> participants = getRegisteredAndPendingParticipants();
-        Collections.sort( participants, new Comparator<ChannelsUser>() {
-            @Override
-            public int compare( ChannelsUser u1, ChannelsUser u2 ) {
-                return u1.getNormalizedFullName().compareTo( u2.getNormalizedFullName() );
-            }
-        } );
         List<ChannelsUser> allUsers = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser participant : participants ) {
-            if ( !isFilteredOut( participant ) ) {
-                allUsers.add( participant );
+        if ( selectedAgent != null ) {
+            List<ChannelsUser> participants = getRegisteredAndPendingParticipants();
+            Collections.sort( participants, new Comparator<ChannelsUser>() {
+                @Override
+                public int compare( ChannelsUser u1, ChannelsUser u2 ) {
+                    return u1.getNormalizedFullName().compareTo( u2.getNormalizedFullName() );
+                }
+            } );
+            for ( ChannelsUser participant : participants ) {
+                if ( !isFilteredOut( participant ) ) {
+                    allUsers.add( participant );
+                }
             }
-        }
-        List<ChannelsUser> nonParticipants = new ArrayList<ChannelsUser>();
-        for ( ChannelsUser user : userInfoService.getAllEnabledUsers() ) {
-            if ( !participants.contains( user ) && !isFilteredOut( user ) )
-                nonParticipants.add( user );
-        }
-        Collections.sort( nonParticipants, new Comparator<ChannelsUser>() {
-            @Override
-            public int compare( ChannelsUser u1, ChannelsUser u2 ) {
-                return u1.getNormalizedFullName().compareTo( u2.getNormalizedFullName() );
+            List<ChannelsUser> nonParticipants = new ArrayList<ChannelsUser>();
+            for ( ChannelsUser user : userInfoService.getAllEnabledUsers() ) {
+                if ( !participants.contains( user ) && !isFilteredOut( user ) )
+                    nonParticipants.add( user );
             }
-        } );
-        allUsers.addAll( nonParticipants );
+            Collections.sort( nonParticipants, new Comparator<ChannelsUser>() {
+                @Override
+                public int compare( ChannelsUser u1, ChannelsUser u2 ) {
+                    return u1.getNormalizedFullName().compareTo( u2.getNormalizedFullName() );
+                }
+            } );
+            allUsers.addAll( nonParticipants );
+        }
         return allUsers;
     }
 

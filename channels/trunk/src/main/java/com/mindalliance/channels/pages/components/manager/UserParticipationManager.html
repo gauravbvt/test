@@ -9,22 +9,21 @@
 <wicket:panel>
     <div class="participationManager">
         <div wicket:id="agenciesContainer" class="participation">
-			<h3>Organizations</h3>
+            <h3>Organizations</h3>
             <div class="participation-filtering">
                 <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> with unassigned agents
             </div>
             <div class="participation-table-cont">
                 <div wicket:id="agenciesListContainer">
                     <a wicket:id="agencies"> <!-- repeated -->
-                        <img wicket:id="selector" src="images/selected.png" alt="pointer"/>
-                        <span wicket:id="agencyName">org name</span>
+                         <a wicket:id="agencySelector" href="#"><span wicket:id="agencyName">org name</span></a>
                         <span class="metrics" wicket:id="metrics">2 assigned (max is 4)</span>
                     </a>
                 </div>
             </div>
         </div>
         <div wicket:id="agentsContainer" class="participation">
-        	<h3>Agents</h3>
+            <h3>Agents</h3>
             <div class="participation-filtering">
                 <!-- Agents in <span wicket:id="agencyName">org name</span><br/> -->
                 <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> that are unassigned
@@ -32,15 +31,14 @@
             <div class="participation-table-cont">
                 <div wicket:id="agentsListContainer">
                     <a wicket:id="agents"> <!-- repeated -->
-                        <img wicket:id="selector" src="images/selected.png" alt="pointer"/>
-                        <span wicket:id="agentName">agent name</span>
+                        <a wicket:id="agentSelector" href="#"><span wicket:id="agentName">agent name</span></a>
                         <span class="metrics" wicket:id="metrics">1 participant (no max)</span>
                     </a>
                 </div>
             </div>
         </div>
         <div wicket:id="participantsContainer" class="participation">
-        	<h3>Users</h3>
+            <h3>Users</h3>
             <!--<div class="participation-title">
                 Users participating as<br/>
                 <span wicket:id="agentName">the agent</span>
