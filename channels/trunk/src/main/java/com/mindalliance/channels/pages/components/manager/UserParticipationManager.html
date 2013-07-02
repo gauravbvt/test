@@ -9,40 +9,42 @@
 <wicket:panel>
     <div class="participationManager">
         <div wicket:id="agenciesContainer" class="participation">
+			<h3>Organizations</h3>
             <div class="participation-filtering">
-                Organizations<br/>
                 <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> with unassigned agents
             </div>
             <div class="participation-table-cont">
-                <table wicket:id="agenciesListContainer">
-                    <tr wicket:id="agencies"> <!-- repeated -->
-                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
-                        <td><span wicket:id="agencyName">org name</span></td>
-                        <td><span wicket:id="metrics">2 assigned (max is 4)</span></td>
-                    </tr>
-                </table>
+                <div wicket:id="agenciesListContainer">
+                    <a wicket:id="agencies"> <!-- repeated -->
+                        <img wicket:id="selector" src="images/selected.png" alt="pointer"/>
+                        <span wicket:id="agencyName">org name</span>
+                        <span class="metrics" wicket:id="metrics">2 assigned (max is 4)</span>
+                    </a>
+                </div>
             </div>
         </div>
         <div wicket:id="agentsContainer" class="participation">
+        	<h3>Agents</h3>
             <div class="participation-filtering">
-                Agents in <span wicket:id="agencyName">org name</span><br/>
+                <!-- Agents in <span wicket:id="agencyName">org name</span><br/> -->
                 <input wicket:id="onlyWithUnassignedAgents" type="checkbox"/> that are unassigned
             </div>
             <div class="participation-table-cont">
-                <table wicket:id="agentsListContainer">
-                    <tr wicket:id="agents"> <!-- repeated -->
-                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
-                        <td><span wicket:id="agentName">agent name</span></td>
-                        <td><span wicket:id="metrics">1 participant (no max)</span></td>
-                    </tr>
-                </table>
+                <div wicket:id="agentsListContainer">
+                    <a wicket:id="agents"> <!-- repeated -->
+                        <img wicket:id="selector" src="images/selected.png" alt="pointer"/>
+                        <span wicket:id="agentName">agent name</span>
+                        <span class="metrics" wicket:id="metrics">1 participant (no max)</span>
+                    </a>
+                </div>
             </div>
         </div>
         <div wicket:id="participantsContainer" class="participation">
-            <div class="participation-title">
+        	<h3>Users</h3>
+            <!--<div class="participation-title">
                 Users participating as<br/>
                 <span wicket:id="agentName">the agent</span>
-            </div>
+            </div>-->
             <div class="participation-table-cont">
                 <table>
                     <tr>
