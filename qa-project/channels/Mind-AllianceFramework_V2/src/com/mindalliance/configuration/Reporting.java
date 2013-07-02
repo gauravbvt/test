@@ -258,7 +258,7 @@ public class Reporting extends TakeScreenshot {
 	 */
 	public void updateTestCaseSheetResultForFunctionalTestCases() throws UIAutomationException, IOException {
 		try {
-			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
+			File file = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
 			Sheet sheet=SpreadSheet.createFromFile(file).getSheet(0);
 			
 			// Update Test Case Sheet
@@ -335,11 +335,11 @@ public class Reporting extends TakeScreenshot {
 			}
 			
 			
-			File outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\FunctionalTestCase.ods");
+			File outputFile = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\Reports\\UIAutomationReport" + "\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
 			sheet.getSpreadSheet().saveAs(outputFile);
 		}
 		catch(IOException ie) {
-			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\FunctionalTestCase.ods"+"'");
+			   throw new UIAutomationException("File not found at path '"+GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+"\\TestCases\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods"+"'");
 		}
 	}
 	
@@ -425,6 +425,8 @@ public class Reporting extends TakeScreenshot {
 			
 			// Update Test Case Sheet Execution Result
 			updateTestCaseSheetResult();
+			
+			updateTestCaseSheetResultForFunctionalTestCases();
 			
 			// No. of Test Cases Passed and Failed
 			totalNoOfTestCasesPassed = testCasesPassed;
@@ -1015,7 +1017,7 @@ public class Reporting extends TakeScreenshot {
 	public String[] readTestCaseIdForFunctional(int sheetNumber) throws UIAutomationException {
 		int index = 0;
 		try {
-			File file1 = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\FunctionalTestCase.ods");
+			File file1 = new File(GlobalVariables.configuration.getCurrentDir().getCanonicalPath().toString() + "\\TestCases\\Mind-AllianceChannelsFunctionalTestCaseSheetV2.ods");
 			// TestCase sheet: Tree_Navigation_Views
 			Sheet sheet1 = SpreadSheet.createFromFile(file1).getSheet(sheetNumber);
 			String[] arrayOfTestCaseId = new String[600];
