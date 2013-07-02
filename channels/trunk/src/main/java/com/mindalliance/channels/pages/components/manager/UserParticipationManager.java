@@ -149,13 +149,14 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         addAgenciesList();
                         target.add( agenciesListContainer );
                         addAgents();
+                        addNoAgencySelected();
                         target.add( agentsContainer );
                         addParticipants();
                         target.add( participantsContainer );
                         addSummary();
                         target.add( summaryLabel );
                     }
-                });
+                } );
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
                 item.add( new Label( "agencyName", agency.getName() ) );
                 // metrics
@@ -229,8 +230,16 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         agentsListContainer.setOutputMarkupId( true );
         agentsContainer.addOrReplace( agentsListContainer );
         addAgentsList();
-        // makeVisible( agentsContainer, selectedAgency != null );
+        addNoAgencySelected();
     }
+
+    private void addNoAgencySelected() {
+        WebMarkupContainer noAgencySelected = new WebMarkupContainer( "noAgencySelected" );
+        noAgencySelected.setOutputMarkupId( true );
+        makeVisible( noAgencySelected, selectedAgency == null );
+        agentsListContainer.addOrReplace( noAgencySelected );
+    }
+
 
     private void addAgentsFilter() {
         AjaxCheckBox onlyUnassignedAgentsCheckBox = new AjaxCheckBox(
@@ -267,14 +276,15 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         selectAgent( agent );
                         addAgentsList();
                         target.add( agentsListContainer );
+                        addNoAgentSelected();
                         addParticipants();
                         target.add( participantsContainer );
                         addSummary();
                         target.add( summaryLabel );
                     }
-                });
+                } );
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
-                 // name
+                // name
                 item.add( new Label( "agentName", agent.getName() ) );
                 // metrics
                 item.add( new Label( "metrics", getAgentMetrics( agent ) ) );
@@ -366,11 +376,14 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         participantsContainer.add( new Label( "agentName", selectedAgent == null ? "" : selectedAgent.getName() ) );
         addParticipantsFilter();
         addParticipantsList();
-//        makeVisible( participantsContainer, selectedAgent != null );
+        addNoAgentSelected();
     }
 
     private void addParticipantsFilter() {
         participantsFilter = null;
+        WebMarkupContainer usersFilterContainer = new WebMarkupContainer( "usersFilterContainer" );
+        usersFilterContainer.setOutputMarkupId( true );
+        participantsContainer.addOrReplace( usersFilterContainer );
         TextField<String> userNameFilter = new TextField<String>(
                 "userNameFilter",
                 new PropertyModel<String>( this, "participantsFilter" )
@@ -382,8 +395,24 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 target.add( participantsContainer );
             }
         } );
-        participantsContainer.add( userNameFilter );
+        makeVisible( usersFilterContainer, selectedAgent != null );
+        usersFilterContainer.add( userNameFilter );
     }
+
+    private void addNoAgentSelected() {
+        WebMarkupContainer noAgentSelected = new WebMarkupContainer( "noAgentSelected" );
+        noAgentSelected.setOutputMarkupId( true );
+        noAgentSelected.add(
+                new Label(
+                        "noAgentSelectedLabel",
+                        selectedAgency == null
+                                ? "Please select a placeholder organization"
+                                : "Please select and agent"
+                ) );
+        makeVisible( noAgentSelected, selectedAgent == null );
+        participantsContainer.addOrReplace( noAgentSelected );
+    }
+
 
     public String getParticipantsFilter() {
         return participantsFilter;

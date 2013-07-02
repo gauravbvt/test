@@ -34,6 +34,7 @@
                        <span wicket:id="agentName">agent name</span>
                         <span class="metrics" wicket:id="metrics">1 participant (no max)</span>
                     </a>
+                    <span wicket:id="noAgencySelected">Please select an organization</span>
                 </div>
             </div>
         </div>
@@ -44,8 +45,8 @@
                 <span wicket:id="agentName">the agent</span>
             </div>-->
             <div class="participation-table-cont">
-                <table>
-                    <tr>
+                <table >
+                    <tr wicket:id="usersFilterContainer">
                         <th>&nbsp;</th>
                         <td>Named: <input wicket:id="userNameFilter" type="text"/> </td>
                         <th>Accepted</th>
@@ -56,6 +57,9 @@
                         <td><span wicket:id="userName">user full name</span></td>
                         <td><span wicket:id="accepted">Yes</span></td>
                         <td><span wicket:id="confirmed">No</span></td>
+                    </tr>
+                    <tr wicket:id="noAgentSelected">
+                        <td colspan="4"><span wicket:id="noAgentSelectedLabel">Please select a placeholder organization</span></td>
                     </tr>
                 </table>
             </div>

@@ -134,6 +134,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         addPlaceholderList();
                         target.add( placeholderListContainer );
                         addAgencyParticipation( );
+                        addNoPlaceholderSelected();
                         target.add( participationContainer );
                         addSummary();
                         target.add( summaryLabel );
@@ -208,8 +209,9 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         // makeVisible( participationContainer, selectedPlaceholder != null );
         participationContainer.add( new Label(
                 "placeholderName",
-                selectedPlaceholder == null ? "" : selectedPlaceholder.getName() ) );
+                selectedPlaceholder == null ? "..." : selectedPlaceholder.getName() ) );
         addOrganizationParticipationList( );
+        addNoPlaceholderSelected();
         addRegisterNewAgency();
     }
 
@@ -272,6 +274,15 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         participatingAgencyList.setOutputMarkupId( true );
         participationContainer.addOrReplace( participatingAgencyList );
     }
+
+    private void addNoPlaceholderSelected() {
+        WebMarkupContainer noPlaceholderSelected = new WebMarkupContainer( "noPlaceholderSelected" );
+        noPlaceholderSelected.setOutputMarkupId( true );
+        makeVisible( noPlaceholderSelected, selectedPlaceholder == null );
+        participationContainer.addOrReplace( noPlaceholderSelected );
+    }
+
+
 
     private boolean canBeRemoved( Agency agency ) {
         return getCommunityService().isCommunityPlanner( getUser() )
