@@ -1274,7 +1274,7 @@
  	
  	<Element>
  		<GivenName>Close Organization Window</GivenName>
- 		<Xpath>/html/body/form/div[16]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[18]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -2872,7 +2872,7 @@
 	
 	<Element>
 		<GivenName>Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id>link</Id>
 		<PartialLinkText></PartialLinkText>
@@ -2882,7 +2882,7 @@
 	
 	<Element>
 		<GivenName>Organizations In Scope Title</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div</Xpath>
+		<Xpath>/html/body/form/div[18]/div/div/div/span</Xpath>
 		<Name></Name>
 		<Id>id185</Id>
 		<PartialLinkText></PartialLinkText>
