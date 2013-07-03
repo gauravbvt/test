@@ -26,6 +26,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -114,27 +115,37 @@ public class MAV0009_viewAboutPlanWindow extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 												
+			// Domain Plans
+			stepNo++;
+			description="Domain Plans";
+			DomainPlanPage domainPlanPage= new DomainPlanPage();
+			domainPlanPage.clickDomainPlans();	
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			// Plan Page
 			stepNo++;
-			description="Naviagated to Plan page";
+			description="Navigated to Plan page";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickDomainPlanEditor();	
 			// Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
 					
-			// Close Plan Map window
-			stepNo++;
-			description="Plan Map window closed";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
+//			// Close Plan Map window
+//			stepNo++;
+//			description="Plan Map window closed";
+//			PlanPage planPage=new PlanPage();
+//			planPage.closePlanMap();
+//			// Write log			
+//			LogFunctions.writeLogs(description);
+//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
 		
 			// Click on 'About Plan' under 'Show' pop up menu
 			stepNo++;
 			description="About plan window opened";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlan"));
 			// Write log			
