@@ -1028,7 +1028,7 @@
 	
 	<Element>
 		<GivenName>Show</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1038,7 +1038,7 @@
 	
 	<Element>
 		<GivenName>Scoping</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1048,7 +1048,7 @@
 	
 	<Element>
 		<GivenName>Searching</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1058,7 +1058,7 @@
 	
 	<Element>
 		<GivenName>Participations</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1068,7 +1068,7 @@
 	
 	<Element>
 		<GivenName>Improving</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1078,7 +1078,7 @@
 	
 	<Element>
 		<GivenName>About Plan</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1215,7 +1215,7 @@
  	</Element>
  	<Element>
  		<GivenName>Close About Plan Window</GivenName>
- 		<Xpath>/html/body/form/div[4]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[4]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1224,7 +1224,7 @@
  	</Element>
  	<Element>
  		<GivenName>Close About Event: Unnamed Window</GivenName>
- 		<Xpath>/html/body/form/div[3]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[3]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1244,7 +1244,7 @@
  	
  	<Element>
  		<GivenName>Close Events Window</GivenName>
- 		<Xpath>/html/body/form/div[15]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[16]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1264,7 +1264,7 @@
  	
  	<Element>
  		<GivenName>Close Classification Window</GivenName>
- 		<Xpath>/html/body/form/div[18]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[20]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -2789,7 +2789,7 @@
 	</Element>
 	<Element>
 		<GivenName>Hide Planners</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2799,7 +2799,7 @@
 	
 	<Element>
 		<GivenName>Events In Scope</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2852,7 +2852,7 @@
 	</Element>
 	<Element>
 		<GivenName>Classification Systems</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2862,7 +2862,7 @@
 	
 	<Element>
 		<GivenName>Classification Systems Title</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div/div/span</Xpath>
+		<Xpath>/html/body/form/div[20]/div/span/div/div/h1</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>

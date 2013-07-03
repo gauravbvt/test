@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <elements>
 	<Element>
-		<GivenName>Communities</GivenName>
+		<GivenName>Communities Page Title</GivenName>
 		<Title>Channels - Collaboration Planning</Title>
 	</Element>
 	
@@ -15,8 +15,21 @@
 		<ClassName></ClassName>
 	</Element>
  	
+ 	<Element>
+		<GivenName>Domain Plans</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Domain Plans</LinkText>
+		<ClassName></ClassName>
+	</Element>
 	
- 	
+ 	<Element>
+		<GivenName>Domain Plan Editor Page Title</GivenName>
+		<Title>Channels - Collaboration Planning</Title>
+	</Element>
+	
  	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
  	<LoginDashboardTimeoutSeconds>50</LoginDashboardTimeoutSeconds>

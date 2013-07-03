@@ -23,7 +23,7 @@
 	</Element>
 	<Element>
 		<GivenName>Admin Page Title</GivenName>
-		<Title>Channels - Settings</Title>
+		<Title>Channels - Collaboration Planning</Title>
 	</Element>
 	<Element>
 		<GivenName>Show Received Text</GivenName>
@@ -66,6 +66,22 @@
     	<LinkText>CHANNELS SETTINGS</LinkText>
     	<ClassName></ClassName>
  	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Domain Plan Editor</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText>Domain Plan Editor</LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+		<GivenName>Domain Plan Editor Page Title</GivenName>
+		<Title>Channels: </Title>
+	</Element>
+	
  	<Element>
  		<GivenName>Messages In Social Panel</GivenName>
  		<Xpath>//li[contains(@class,'tab2')]/a/span</Xpath>
