@@ -107,9 +107,6 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         agenciesContainer.setOutputMarkupId( true );
         addOrReplace( agenciesContainer );
         addAgenciesFilter();
-        agenciesListContainer = new WebMarkupContainer( "agenciesListContainer" );
-        agenciesListContainer.setOutputMarkupId( true );
-        agenciesContainer.addOrReplace( agenciesListContainer );
         addAgenciesList();
     }
 
@@ -134,6 +131,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
     private void addAgenciesList() {
+        agenciesListContainer = new WebMarkupContainer( "agenciesListContainer" );
+        agenciesListContainer.setOutputMarkupId( true );
+        agenciesContainer.addOrReplace( agenciesListContainer );
         ListView<Agency> agencyList = new ListView<Agency>(
                 "agencies",
                 new PropertyModel<List<Agency>>( this, "filteredAgencies" )
@@ -149,7 +149,6 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                         addAgenciesList();
                         target.add( agenciesListContainer );
                         addAgents();
-                        addNoAgencySelected();
                         target.add( agentsContainer );
                         addParticipants();
                         target.add( participantsContainer );
@@ -226,18 +225,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         addOrReplace( agentsContainer );
         agentsContainer.add( new Label( "agencyName", selectedAgency == null ? "" : selectedAgency.getName() ) );
         addAgentsFilter();
-        agentsListContainer = new WebMarkupContainer( "agentsListContainer" );
-        agentsListContainer.setOutputMarkupId( true );
-        agentsContainer.addOrReplace( agentsListContainer );
         addAgentsList();
-        addNoAgencySelected();
-    }
-
-    private void addNoAgencySelected() {
-        WebMarkupContainer noAgencySelected = new WebMarkupContainer( "noAgencySelected" );
-        noAgencySelected.setOutputMarkupId( true );
-        makeVisible( noAgencySelected, selectedAgency == null );
-        agentsListContainer.addOrReplace( noAgencySelected );
     }
 
 
@@ -262,6 +250,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
     private void addAgentsList() {
+        agentsListContainer = new WebMarkupContainer( "agentsListContainer" );
+        agentsListContainer.setOutputMarkupId( true );
+        agentsContainer.addOrReplace( agentsListContainer );
         ListView<Agent> agentList = new ListView<Agent>(
                 "agents",
                 new PropertyModel<List<Agent>>( this, "filteredAgents" )
@@ -292,7 +283,16 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         };
         agentList.setOutputMarkupId( true );
         agentsListContainer.addOrReplace( agentList );
+        addNoAgencySelected();
     }
+
+    private void addNoAgencySelected() {
+        WebMarkupContainer noAgencySelected = new WebMarkupContainer( "noAgencySelected" );
+        noAgencySelected.setOutputMarkupId( true );
+        makeVisible( noAgencySelected, selectedAgency == null );
+        agentsListContainer.addOrReplace( noAgencySelected );
+    }
+
 
     public List<Agent> getFilteredAgents() {
         List<Agent> filteredAgents = new ArrayList<Agent>();
@@ -406,8 +406,8 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 new Label(
                         "noAgentSelectedLabel",
                         selectedAgency == null
-                                ? "Please select a placeholder organization"
-                                : "Please select and agent"
+                                ? "Please select an organization"
+                                : "Please select an agent"
                 ) );
         makeVisible( noAgentSelected, selectedAgent == null );
         participantsContainer.addOrReplace( noAgentSelected );
