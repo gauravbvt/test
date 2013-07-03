@@ -18,17 +18,17 @@ public class HomePage {
 	DataController dataController=new DataController();
 	
 	/**
-	 * Testing
+	 * 'clickDomainPlans' method clicks on Domain Plans Link
+	 * @throws UIAutomationException 
 	 */
-	public void clickDomainPlans() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Collaboration Plan",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan link");
-		UIActions.click(fileName,"Collaboration Plan",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Plan link");
+	public void clickDomainPlanEditor() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
+		UIActions.click(fileName,"Domain Plan Editor",GlobalVariables.configuration.getAttrSearchList(), "Domain Plan Editor link");
 				
 		// Assertion : Check Title of Page
-    	String title=dataController.getPageDataElements(fileName, "Plan Page Title", "Title");
+    	String title=dataController.getPageDataElements(fileName, "Domain Plan Editor Page Title", "Title");
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
-	
 	
 	/**
 	 * 'clickCollaborationPlanLink' method clicks on 'Collaboration Plan' Link

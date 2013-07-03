@@ -27,8 +27,22 @@ public class DomainPlanPage {
 		UIActions.click(fileName,"Communities Link",GlobalVariables.configuration.getAttrSearchList(), "Communities Linkk");
 				
 		// Assertion : Check Title of Page
-    	String title=dataController.getPageDataElements(fileName, "Communities", "Title");
+    	String title=dataController.getPageDataElements(fileName, "Communities Page Title", "Title");
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
+	
+	/**
+	 * 'clickDomainPlans' method clicks on Domain Plans Link
+	 * @throws UIAutomationException 
+	 */
+	public void clickDomainPlans() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Domain Plans",GlobalVariables.configuration.getAttrSearchList(), "Domain Plans link");
+		UIActions.click(fileName,"Domain Plans",GlobalVariables.configuration.getAttrSearchList(), "Domain Plans link");
+				
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Domain Plan Editor Page Title", "Title");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
 	
 }
