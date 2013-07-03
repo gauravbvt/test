@@ -1062,7 +1062,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Searching</LinkText>
+		<LinkText>Participations</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -1072,7 +1072,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Searching</LinkText>
+		<LinkText>Improving</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -1284,7 +1284,7 @@
  	
  	<Element>
  		<GivenName>Close Searching Window</GivenName>
- 		<Xpath>/html/body/form/div[27]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[29]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1294,7 +1294,7 @@
  	
  	<Element>
  		<GivenName>Close All Issues Window</GivenName>
- 		<Xpath>/html/body/form/div[22]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[24]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -2892,7 +2892,7 @@
 	
 	<Element>
 		<GivenName>Who's Who</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2902,7 +2902,7 @@
 	
 	<Element>
 		<GivenName>Who's Who Title</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[2]/div/span[4]/a/span</Xpath>
+		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[4]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2913,7 +2913,7 @@
 	
 	<Element>
 		<GivenName>Index</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/ul/li/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2923,7 +2923,7 @@
 	
 	<Element>
 		<GivenName>Index Title</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[2]/div/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[29]/div/div[2]/div/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2933,7 +2933,7 @@
 	
 	<Element>
 		<GivenName>Tags</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2943,7 +2943,7 @@
 	
 	<Element>
 		<GivenName>Tags Title</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Xpath>/html/body/form/div[29]/div/div[2]/div/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2953,7 +2953,7 @@
 	
 	<Element>
 		<GivenName>All Issues</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[2]/span[3]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[3]/span/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2963,7 +2963,7 @@
 	
 	<Element>
 		<GivenName>All Issues Title</GivenName>
-		<Xpath>/html/body/form/div[22]/div/div/div</Xpath>
+		<Xpath>/html/body/form/div[24]/div/span/div/div/h1</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
