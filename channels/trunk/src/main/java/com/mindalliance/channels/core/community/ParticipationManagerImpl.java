@@ -545,7 +545,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Override
     public OrganizationParticipation getOrganizationParticipation( String uid ) {
-        return organizationParticipationService.load( uid );
+        return uid == null ? null : organizationParticipationService.load( uid );
     }
 
     @Override

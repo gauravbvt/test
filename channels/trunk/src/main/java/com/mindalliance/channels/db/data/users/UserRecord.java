@@ -96,6 +96,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
 
     public UserRecord( String creatorUsername, String name ) {
         super( creatorUsername );
+        assert name != null;
         this.name = name;
     }
 

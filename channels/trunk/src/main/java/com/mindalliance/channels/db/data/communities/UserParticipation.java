@@ -35,7 +35,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
 
     private String participantUsername;
     private long actorId;
-    private String organizationParticipationUid;
+    private String organizationParticipationUid; // can be null if participating as plan-defined actor
     private String supervisorsNotified;
     private boolean accepted;
     private Date whenAccepted;
@@ -55,7 +55,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
                               PlanCommunity planCommunity ) {
         this( username, participatingUser, planCommunity );
         this.actorId = agent.getActorId();
-        organizationParticipationUid = agent.getOrganizationParticipationUid();
+        organizationParticipationUid = agent.getOrganizationParticipationUid(); // can be null if agent is plan-defined
     }
 
     public UserParticipation( UserParticipation participation ) {
@@ -151,7 +151,9 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
     }
 
     public OrganizationParticipation getOrganizationParticipation( CommunityService communityService ) {
-        return communityService.getParticipationManager().getOrganizationParticipation( organizationParticipationUid );
+        return organizationParticipationUid == null
+            ? null
+            : communityService.getParticipationManager().getOrganizationParticipation( organizationParticipationUid );
     }
 
     public void setOrganizationParticipation( OrganizationParticipation organizationParticipation ) {
