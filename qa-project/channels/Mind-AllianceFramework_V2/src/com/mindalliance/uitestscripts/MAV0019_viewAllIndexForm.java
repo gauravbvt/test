@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -115,27 +116,37 @@ public class MAV0019_viewAllIndexForm extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					
 		    								
+			// Domain Plans
+			stepNo++;
+			description="Domain Plans";
+			DomainPlanPage domainPlanPage= new DomainPlanPage();
+			domainPlanPage.clickDomainPlans();	
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			// Plan Page
 			stepNo++;
-			description="Navigated to plan page";
+			description="Navigated to Plan page";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickDomainPlanEditor();	
 			// Write log			
 			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);							
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
 		
-			// Close Plan Map window
-			stepNo++;
-			description="Plan Map window closed";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+//			// Close Plan Map window
+//			stepNo++;
+//			description="Plan Map window closed";
+//			PlanPage planPage=new PlanPage();
+//			planPage.closePlanMap();
+//			// Write log			
+//			LogFunctions.writeLogs(description);
+//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			
-			// Click on Index' under 'Searching' pop up menu
+			// Click on 'Index' under 'Searching' pop up menu
 			stepNo++;
 			description="Index tab selected in searching window";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Searching"));
 			planPage.clickSubmenu(testData.get("Index"));
 			// Write log			
