@@ -7,7 +7,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(versionField = "", table = "org_type")
 @RooDbManaged(automaticallyDelete = true)
+@RooJpaActiveRecord(versionField = "", table = "org_type", finders = { "findOrgTypesByNameEquals" })
 public class OrgType {
 }

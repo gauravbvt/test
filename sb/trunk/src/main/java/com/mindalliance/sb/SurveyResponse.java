@@ -1,5 +1,7 @@
 package com.mindalliance.sb;
 
+import com.mindalliance.sb.model.ContactInfo;
+import com.mindalliance.sb.model.Respondent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.json.RooJson;
@@ -105,6 +107,19 @@ public class SurveyResponse {
             e2.initCause( e );
             throw e2;
         }
+    }
+
+    public Respondent newRespondent() {
+        Respondent result = new Respondent();
+        result.setContactInfo( new ContactInfo() );
+        result.setId( id );
+        result.setSubmitted( dateSubmitted );
+        result.setComments( comment );
+        
+        // Set an initial survey opinion of "Just right"
+        result.setSurveyOpinion( 0 );
+        
+        return result;
     }
 
     public String getComment() {

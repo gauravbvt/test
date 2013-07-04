@@ -13,10 +13,10 @@ import javax.validation.constraints.NotNull;
 
 privileged aspect Subcommittee_Roo_DbManaged {
     
-    @OneToMany(mappedBy = "subcommittee", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "subcommittee", cascade = CascadeType.ALL)
     private Set<RespondentSubcommittee> Subcommittee.respondentSubcommittees;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
+    @Column(name = "name", length = 127, unique = true)
     @NotNull
     private String Subcommittee.name;
     

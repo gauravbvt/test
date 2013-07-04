@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 
 privileged aspect Organization_Roo_DbManaged {
     
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private Set<ContactInfo> Organization.contactInfoes;
     
     @OneToMany(mappedBy = "maintainer", cascade = CascadeType.REMOVE)
@@ -40,20 +40,20 @@ privileged aspect Organization_Roo_DbManaged {
     private Set<SubcommitteeOrganization> Organization.subcommitteeOrganizations;
     
     @ManyToOne
-    @JoinColumn(name = "type", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "type", referencedColumnName = "id")
     private OrgType Organization.type;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "name", length = 127)
     @NotNull
     private String Organization.name;
     
     @Column(name = "logo", columnDefinition = "BLOB")
     private byte[] Organization.logo;
     
-    @Column(name = "acronym", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "acronym", length = 127)
     private String Organization.acronym;
     
-    @Column(name = "url", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "url", length = 127)
     private String Organization.url;
     
     public Set<ContactInfo> Organization.getContactInfoes() {

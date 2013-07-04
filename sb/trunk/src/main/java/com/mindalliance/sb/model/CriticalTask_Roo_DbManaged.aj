@@ -29,10 +29,10 @@ privileged aspect CriticalTask_Roo_DbManaged {
     @JoinColumn(name = "parent", referencedColumnName = "id", insertable = false, updatable = false)
     private CriticalTask CriticalTask.parent;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "name", length = 127)
     private String CriticalTask.name;
     
-    @Column(name = "type", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "type", length = 127)
     private String CriticalTask.type;
     
     @Column(name = "description", columnDefinition = "TEXT")

@@ -18,6 +18,10 @@ privileged aspect RespondentSubcommittee_Roo_Jpa_Entity {
     @EmbeddedId
     private RespondentSubcommitteePK RespondentSubcommittee.id;
     
+    public RespondentSubcommittee.new() {
+        super();
+    }
+
     public RespondentSubcommitteePK RespondentSubcommittee.getId() {
         return this.id;
     }

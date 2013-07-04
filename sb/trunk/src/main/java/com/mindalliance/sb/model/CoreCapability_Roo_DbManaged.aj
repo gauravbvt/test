@@ -36,7 +36,7 @@ privileged aspect CoreCapability_Roo_DbManaged {
     @OneToMany(mappedBy = "coreCapability", cascade = CascadeType.REMOVE)
     private Set<SubcommitteeCapability> CoreCapability.subcommitteeCapabilities;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "name", length = 127)
     @NotNull
     private String CoreCapability.name;
     

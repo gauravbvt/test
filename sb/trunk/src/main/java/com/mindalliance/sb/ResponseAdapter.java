@@ -3,6 +3,7 @@ package com.mindalliance.sb;
 import com.mindalliance.sb.model.ContactInfo;
 import com.mindalliance.sb.model.CoreCapability;
 import com.mindalliance.sb.model.Expertise;
+import com.mindalliance.sb.model.OrgType;
 import com.mindalliance.sb.model.Organization;
 import com.mindalliance.sb.model.Respondent;
 import com.mindalliance.sb.model.RespondentSubcommittee;
@@ -12,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import javax.persistence.NoResultException;
 import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,15 +28,11 @@ public class ResponseAdapter {
 
     public static final int SURVEY = 1272741;
 
-    private final SurveyResponse response;
-    
-    private Respondent respondent = new Respondent();
-    
-    private Set<Expertise> expertises = new HashSet<Expertise>();
+    private final Respondent respondent;
 
-    private Organization organization = new Organization();
-    
     private static final Logger LOG = LoggerFactory.getLogger( ResponseAdapter.class );
+
+    private Organization organization;
 
     public ResponseAdapter( SurveyResponse response ) {
         int surveyId = response.getSurveyId();
@@ -49,32 +44,28 @@ public class ResponseAdapter {
         if ( Respondent.findRespondent( id ) != null )
             throw new IllegalArgumentException( MessageFormat.format( "Response #{0} already converted", id ) );
 
-        this.response = response;
-        respondent.setContactInfo( new ContactInfo() );
-        respondent.getContactInfo().setOrganization( organization );
-        convert();
+        respondent = response.newRespondent();
+
+        convert( response );
     }
 
     /**
-     *  Ugly and long just to make sure we know what to do with all answers
-     *  and detect new questions if survey changes.
-     *  @see com.mindalliance.sb.surveygizmo.SurveyGenerator#output
+     * Ugly and long just to make sure we know what to do with all answers and detect new questions if survey changes.
+     *
+     * @param response what to convert
+     * @see com.mindalliance.sb.surveygizmo.SurveyGenerator#output
      */
-    private void convert() {
-        respondent.setId( response.getId() );
-        respondent.setSubmitted( response.getDateSubmitted() );
-        respondent.setComments( response.getComment() );
-        
+    private void convert( SurveyResponse response ) {
+
         // TODO question comments
         // TODO multiple files
         //------------ Page 1: Title
 
         //------------ Page 5: Respondent identity
         // Name
-        question25(
-            response.getMenu( 142 /* Select one */ ),
-            response.getString( 26 /* First */ ),
-            response.getString( 27 /* Last */ ) );
+        question25( response.getMenu( 142 /* Select one */ ), 
+                    response.getString( 26 /* First */ ), 
+                    response.getString( 27 /* Last */ ) );
 
         // What organization do you work for?
         question231( response.getString( 231 ) );
@@ -84,22 +75,18 @@ public class ResponseAdapter {
         question258( response.getRadio( 258 ) );
 
         // Please provide your contact information
-        question37(
-            response.getString( 38 /* Email */ ),
-            response.getString( 40 /* Mobile */ ),
-            response.getString( 39 /* Landline */ ) );
+        question37( response.getString( 38 /* Email */ ), response.getString( 40 /* Mobile */ ), 
+                    response.getString( 39 /* Landline */ ) );
 
         // Please provide the following information
-        question69(
-            response.getString( 70 /* Your title */ ),
-            response.getString( 71 /* Your department or unit */ ),
-            response.getString( 72 /* Your supervisor's name */ ),
-            response.getString( 73 /* Supervisor's title */ ),
-            response.getString( 74 /* Supervisor's email */ ) );
+        question69( response.getString( 70 /* Your title */ ),
+                    response.getString( 71 /* Your department or unit */ ),
+                    response.getString( 72 /* Your supervisor's name */ ),
+                    response.getString( 73 /* Supervisor's title */ ),
+                    response.getString( 74 /* Supervisor's email */ ) );
 
         // Indicate your personal domains of expertise
         question29( response.getCheckboxes( 29 ) );
-
 
         //------------ Page 4: Respondent subcommittees
         // Are you member of one or more planning subcommittees?
@@ -107,13 +94,12 @@ public class ResponseAdapter {
         question67( response.getRadio( 67 ) );
 
         // What subcommittees are you member of?
-        Map<Object,Object> pipeObjects42 = new LinkedHashMap<Object, Object>();
+        Map<Object, Object> pipeObjects42 = new LinkedHashMap<Object, Object>();
         for ( Entry<Object, String> entry : response.getPipeKeys( 42 ).entrySet() )
             pipeObjects42.put( entry.getKey(), question42( entry.getValue() ) );
 
-
         //------------ Page 3: Subcommittee
-        for( Entry<Object,Object> source : pipeObjects42.entrySet() ) {
+        for ( Entry<Object, Object> source : pipeObjects42.entrySet() ) {
             // Are you in charge of this subcommitee?
             //              | Yes (you will be asked to provide further details) | No | TBD | 
             question46( source.getValue(), response.getRadio( source.getKey(), 46 ) );
@@ -123,8 +109,7 @@ public class ResponseAdapter {
 
             // List the organizations in the <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> subcommittee
             for ( int key : response.getKeys( 45 ) )
-                question44( source.getValue(),
-                            response.getString( source.getKey(), key, 45 /* Name */ ) );
+                question44( source.getValue(), response.getString( source.getKey(), key, 45 /* Name */ ) );
 
             // Are there organizations that are <strong>not</strong> in the <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> subcommittee but should be?
             //              | Yes (you will be asked to provide further details) | No | 
@@ -132,9 +117,7 @@ public class ResponseAdapter {
 
             // List the organizations that should be added to the <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> subcommittee.
             for ( int key : response.getKeys( 136 ) )
-                question135( source.getValue(),
-                             response.getString( source.getKey(), key, 136 /* Name */ ) );
-
+                question135( source.getValue(), response.getString( source.getKey(), key, 136 /* Name */ ) );
         }
 
         //------------ Page 10: Your organization
@@ -143,7 +126,6 @@ public class ResponseAdapter {
 
         // What are the FEMA Core Capabilities of your organization?
         question137( response.getCheckboxes( 137 ) );
-
 
         //------------ Page 16: Super Bowl Plan
         // Does your organization have a security plan specifically designed for the Super Bowl?
@@ -159,23 +141,19 @@ public class ResponseAdapter {
 
         // Who are the planners in your agency?
         for ( int key : response.getKeys( 209, 210, 211 ) )
-            question208(
-                response.getString( key, 209 /* Name */ ),
-                response.getString( key, 210 /* Title */ ),
-                response.getString( key, 211 /* Email */ ) );
+            question208( response.getString( key, 209 /* Name */ ),
+                         response.getString( key, 210 /* Title */ ),
+                         response.getString( key, 211 /* Email */ ) );
 
         // Who is the primary point of contact for determining the information and intelligence needs of your agency?
-        question212(
-            response.getString( 213 /* Name */ ),
-            response.getString( 214 /* Title */ ),
-            response.getString( 215 /* Email */ ) );
+        question212( response.getString( 213 /* Name */ ), response.getString( 214 /* Title */ ), response.getString(
+            215
+            /* Email */ ) );
 
         // Who will be the ultimate decision maker about releasing information from your organization to other organizations engaged in Super Bowl Security?
-        question216(
-            response.getString( 217 /* Name */ ),
-            response.getString( 218 /* Title */ ),
-            response.getString( 219 /* Email */ ) );
-
+        question216( response.getString( 217 /* Name */ ), response.getString( 218 /* Title */ ), response.getString(
+            219
+            /* Email */ ) );
 
         //------------ Page 17: Situation reporting
         // Has your organization defined the scope and format of a hourly/daily situation report or common operating picture report during the Super Bowl?
@@ -183,11 +161,10 @@ public class ResponseAdapter {
         question220( response.getRadio( 220 ) );
 
         // In the context of producing the situation report...
-        question221(
-            response.getEssay( 222 /* Briefly describe the process by which information is captured, analyzed, reviewed, approved, and included */ ),
-            response.getRadio( 226 /* At what time(s) is the situation report distributed? */ ),
-            response.getEssay( 224 /* To what audience? */ ) );
-
+        question221( response.getEssay( 222
+                                        /* Briefly describe the process by which information is captured, analyzed, reviewed, approved, and included */ ),
+                     response.getRadio( 226 /* At what time(s) is the situation report distributed? */ ),
+                     response.getEssay( 224 /* To what audience? */ ) );
 
         //------------ Page 18: EOC
         // Does your organization have an Emergency Operations Center of some kind?
@@ -199,23 +176,20 @@ public class ResponseAdapter {
 
         // What incident management software does your EOC use?
         for ( int key : response.getKeys( 237 ) )
-            question236(
-                response.getString( key, 237 /* Name */ ) );
+            question236( response.getString( key, 237 /* Name */ ) );
 
         // Will your EOC be activated during the Super Bowl?
         //              | Yes | No | 
         question227( response.getRadio( 227 ) );
 
-
         //------------ Page 15: Incidents
         // List the types of incidents that your organization needs to plan for.
-        Map<Object,Object> pipeObjects139 = new LinkedHashMap<Object, Object>();
+        Map<Object, Object> pipeObjects139 = new LinkedHashMap<Object, Object>();
         for ( Entry<Object, String> entry : response.getPipeKeys( 139 ).entrySet() )
             pipeObjects139.put( entry.getKey(), question139( entry.getValue() ) );
 
-
         //------------ Page 14: Incident planning
-        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
+        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
             // Does your organization have a plan for addressing an incident of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
             //              | Yes | No | 
             question200( source.getValue(), response.getRadio( source.getKey(), 200 ) );
@@ -223,11 +197,10 @@ public class ResponseAdapter {
             // Has your organization conducted or participated in training and exercises relevant to type of incident <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> in the last 24 months?
             //              | Yes | No | 
             question201( source.getValue(), response.getRadio( source.getKey(), 201 ) );
-
         }
 
         //------------ Page 8: Incident management
-        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
+        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
             // List the mission areas where your organization is active in regards to an incident of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>
             question84( source.getValue(), response.getCheckboxes( source.getKey(), 84 ) );
 
@@ -326,11 +299,10 @@ public class ResponseAdapter {
 
             // What <strong>Natural and Cultural Resources</strong> FEMA Critical Tasks would your organization be responsible for when addressing an incident of type [page("piped title")]?
             question177( source.getValue(), response.getCheckboxes( source.getKey(), 177 ) );
-
         }
 
         //------------ Page 9: Info sharing for incident
-        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
+        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
             // Does your organization need to <strong><span style="text-decoration:underline;">receive information</span></strong> from other organizations to address incidents of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
             //              | Yes (you will be asked to provide further details) | No | 
             question109( source.getValue(), response.getRadio( source.getKey(), 109 ) );
@@ -338,13 +310,19 @@ public class ResponseAdapter {
             // What information would your organization need to <span style="text-decoration:underline;"><strong>receive</strong></span> in order to address incidents of type<span style="text-decoration:underline;"><strong> [page("piped title")]</strong></span>?
             for ( int key : response.getKeys( 186, 187, 183, 240, 184, 188, 189, 190 ) )
                 question179( source.getValue(),
-                             response.getString( source.getKey(), key, 186 /* From your point of contact */ ),
+                             response.getString( source.getKey(),
+                                                 key,
+                                                 186
+                                                 /* From your point of contact */ ),
                              response.getString( source.getKey(), key, 187 /* with title */ ),
                              response.getString( source.getKey(), key, 183 /* at organization */ ),
-                             response.getMultibox( source.getKey(), key, 240 /* you need to receive this information/these reports */ ),
+                             response.getMultibox( source.getKey(), key, 240
+                                                   /* you need to receive this information/these reports */ ),
                              response.getCheckboxes( source.getKey(), key, 184 /* via */ ),
-                             response.getMultibox( source.getKey(), key, 188 /* Your source's contact information is */ ),
-                             response.getCheckboxes( source.getKey(), key, 189 /* Are there issues? If so, please select them */ ),
+                             response.getMultibox( source.getKey(), key, 188
+                                                   /* Your source's contact information is */ ),
+                             response.getCheckboxes( source.getKey(), key, 189
+                                                     /* Are there issues? If so, please select them */ ),
                              response.getEssay( source.getKey(), key, 190 /* Additional comments */ ) );
 
             // Does your organization<span style="text-decoration:underline;"><strong> share information</strong></span> with other organizations when addressing incidents of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
@@ -354,19 +332,29 @@ public class ResponseAdapter {
             // What information would your organization <span style="text-decoration:underline;"><strong>share</strong></span> when addressing incidents of type <span style="text-decoration:underline;"><strong> [page("piped title")]</strong></span>?
             for ( int key : response.getKeys( 242, 243, 244, 245, 246, 247, 248, 249 ) )
                 question241( source.getValue(),
-                             response.getString( source.getKey(), key, 242 /* Your point of contact */ ),
-                             response.getString( source.getKey(), key, 243 /* with title */ ),
+                             response.getString( source.getKey(),
+                                                 key,
+                                                 242
+                                                 /* Your point of contact */ ),
+                             response.getString( source.getKey(),
+                                                 key,
+                                                 243
+                                                 /* with title */ ),
                              response.getString( source.getKey(), key, 244 /* at organization */ ),
-                             response.getMultibox( source.getKey(), key, 245 /* would receive, from your organization, these information/these reports */ ),
+                             response.getMultibox( source.getKey(),
+                                                   key,
+                                                   245
+                                                   /* would receive, from your organization, these information/these reports */ ),
                              response.getCheckboxes( source.getKey(), key, 246 /* via */ ),
-                             response.getMultibox( source.getKey(), key, 247 /* The recipient's contact information is */ ),
-                             response.getCheckboxes( source.getKey(), key, 248 /* Are there issues? If so, please select them */ ),
+                             response.getMultibox( source.getKey(), key, 247
+                                                   /* The recipient's contact information is */ ),
+                             response.getCheckboxes( source.getKey(), key, 248
+                                                     /* Are there issues? If so, please select them */ ),
                              response.getEssay( source.getKey(), key, 249 /* Additional comments */ ) );
-
         }
 
         //------------ Page 11: Info systems for incident
-        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
+        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
             // Does your organization need to <span style="text-decoration:underline;"><strong>access</strong></span> information systems to address an incident of type <strong>[page("piped title")]</strong>?
             //              | Yes (you will be asked to provide further details) | No | 
             question110( source.getValue(), response.getRadio( source.getKey(), 110 ) );
@@ -377,8 +365,12 @@ public class ResponseAdapter {
                              response.getString( source.getKey(), key, 113 /* From system */ ),
                              response.getString( source.getKey(), key, 116 /* also known as (acronym) */ ),
                              response.getString( source.getKey(), key, 117 /* and administered by organization */ ),
-                             response.getMultibox( source.getKey(), key, 250 /* your organization needs to access this information/these reports */ ),
-                             response.getCheckboxes( source.getKey(), key, 120 /* Are there issues? If so, please select them. */ ),
+                             response.getMultibox( source.getKey(),
+                                                   key,
+                                                   250
+                                                   /* your organization needs to access this information/these reports */ ),
+                             response.getCheckboxes( source.getKey(), key, 120
+                                                     /* Are there issues? If so, please select them. */ ),
                              response.getEssay( source.getKey(), key, 121 /* Additional comments */ ) );
 
             // Does your organization need to publish to information systems to address an incident of type <strong>[page("piped title")]</strong>?
@@ -388,13 +380,14 @@ public class ResponseAdapter {
             // What information does your organization <span style="text-decoration:underline;"><strong>upload or store</strong></span> in the context of incidents of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
             for ( int key : response.getKeys( 252, 253, 254, 255, 256, 257 ) )
                 question251( source.getValue(),
-                             response.getString( source.getKey(), key, 252 /* Your organization uploads to/stores in system */ ),
+                             response.getString( source.getKey(), key, 252
+                                                 /* Your organization uploads to/stores in system */ ),
                              response.getString( source.getKey(), key, 253 /* also known as (acronym) */ ),
                              response.getString( source.getKey(), key, 254 /* and administered by organization */ ),
                              response.getMultibox( source.getKey(), key, 255 /*  this information/these reports */ ),
-                             response.getCheckboxes( source.getKey(), key, 256 /* Are there issues? If so, please select them. */ ),
+                             response.getCheckboxes( source.getKey(), key, 256
+                                                     /* Are there issues? If so, please select them. */ ),
                              response.getEssay( source.getKey(), key, 257 /* Additional comments */ ) );
-
         }
 
         //------------ Page 13: Reference documentation
@@ -404,14 +397,14 @@ public class ResponseAdapter {
 
         // Identify an important reference document
         for ( int key : response.getKeys( 128, 129, 130 ) )
-            question127(
-                response.getString( key, 128 /* Name */ ),
-                response.getCheckboxes( key, 129 /* What kind of document is it? */ ),
-                response.getString( key, 130 /* If available online, please provide a URL. */ ) );
+            question127( response.getString( key, 128 /* Name */ ),
+                         response.getCheckboxes( key,
+                                                 129
+                                                 /* What kind of document is it? */ ),
+                         response.getString( key, 130 /* If available online, please provide a URL. */ ) );
 
         // If documents are not available online, please upload them here.
         question131( response.getFile( 131 ) );
-
 
         //------------ Page 12: About this survey
         // Did you find this survey
@@ -425,12 +418,12 @@ public class ResponseAdapter {
         // Please describe the problems or shortcomings you encountered.
         question124( response.getEssay( 124 ) );
 
-
         //------------ Page 2: Thank You!
     }
 
     private void question179( Object source, String string, String string1, String string2, List<String> multibox,
-                              List<String> checkboxes, List<String> multibox1, List<String> checkboxes1, String essay ) {
+                              List<String> checkboxes, List<String> multibox1, List<String> checkboxes1,
+                              String essay ) {
         // TODO implement this
 
     }
@@ -448,7 +441,8 @@ public class ResponseAdapter {
     }
 
     private void question241( Object source, String string, String string1, String string2, List<String> multibox,
-                              List<String> checkboxes, List<String> multibox1, List<String> checkboxes1, String essay ) {
+                              List<String> checkboxes, List<String> multibox1, List<String> checkboxes1,
+                              String essay ) {
         // TODO implement this
 
     }
@@ -668,19 +662,36 @@ public class ResponseAdapter {
     private void question138( Object source, List<String> checkboxes ) {
         RespondentSubcommittee rs = (RespondentSubcommittee) source;
         for ( String capName : checkboxes ) {
+            CoreCapability coreCapability = CoreCapability.findCoreCapabilitysByNameEquals( capName ).getSingleResult();
+            LOG.debug( "Respondent #{} said subcommittee '{}' has capability '{}'",
+                       respondent.getId(),
+                       rs.getSubcommittee().getName(),
+                       coreCapability.getDescription() );
             SubcommitteeCapability sc = new SubcommitteeCapability();
             sc.setRespondentSubcommittee( rs );
-            sc.setCoreCapability( CoreCapability.findCoreCapabilitysByNameEquals( capName ).getSingleResult() );
+            sc.setCoreCapability( coreCapability );
+            sc.persist();
         }
     }
 
-    private void question46( Object source, String radio ) {
-        // TODO implement this
+    private void question46( Object source, String inCharge ) {
+        if ( "Yes".equals( inCharge ) ) {
+            RespondentSubcommittee rs = (RespondentSubcommittee) source;
+            LOG.debug( "Marking respondent #{} as in charge of {}",
+                       respondent.getId(),
+                       rs.getSubcommittee().getName() );
+            rs.setInCharge( true );
+            rs.merge();
+        }
     }
 
     private void question258( String orgType ) {
-        // TODO implement this
-
+        if ( orgType != null && !orgType.isEmpty() ) {
+            OrgType type = OrgType.findOrgTypesByNameEquals( orgType ).getSingleResult();
+            LOG.debug( "Setting type of '{}' to {}", organization.getName(), type.getName() );
+            organization.setType( type );
+            organization.merge();
+        }
     }
 
     private void question124( String essay ) {
@@ -778,9 +789,10 @@ public class ResponseAdapter {
     }
 
     private Object question42( String subcommitteeName ) {
-        RespondentSubcommittee subcommittee = new RespondentSubcommittee();
-        subcommittee.setSubcommittee( Subcommittee.findSubcommitteesByNameEquals( subcommitteeName ).getSingleResult() );
-        subcommittee.setRespondent( respondent );
+        RespondentSubcommittee subcommittee = new RespondentSubcommittee(
+            respondent,
+            Subcommittee.findSubcommitteesByNameEquals( subcommitteeName ).getSingleResult() );
+        subcommittee.persist();
 
         return subcommittee;
     }
@@ -791,27 +803,47 @@ public class ResponseAdapter {
     }
 
     private void question29( List<String> checkboxes ) {
+        Set<Expertise> set = new HashSet<Expertise>();
         for ( String expertiseName : checkboxes )
-            try {
-                expertises.add( Expertise.findExpertisesByNameEquals( expertiseName ).getSingleResult() );
-            } catch ( NoResultException e ) {
-                LOG.warn( "Can't resolve expertise " + expertiseName, e );
-            } catch ( EmptyResultDataAccessException e ) {
-                LOG.warn( "Can't resolve expertise " + expertiseName, e );
-            }
-}
+            set.add( Expertise.findExpertisesByNameEquals( expertiseName ).getSingleResult() );
+
+        LOG.debug( "Persisting respondent {}", respondent.getId() );
+        respondent.setExpertises( set );
+        
+        // This is where respondent is first persisted...
+        respondent.getContactInfo().persist();
+        respondent.persist();
+    }
 
     private void question69( String title, String department, String supName, String supTitle, String supEmail ) {
         ContactInfo contactInfo = respondent.getContactInfo();
         contactInfo.setTitle( title );
         contactInfo.setDepartment( department );
-        
+
         if ( supName != null || supTitle != null || supEmail != null ) {
+            if ( supEmail != null ) {
+                List<ContactInfo> contacts = ContactInfo.findContactInfoesByEmailEquals( supEmail ).getResultList();
+                if ( !contacts.isEmpty() ) {
+                    ContactInfo supervisor = contacts.get( 0 );
+                    LOG.debug( "Setting supervisor for respondent #{} to contact #{}",
+                               respondent.getId(),
+                               supervisor.getId() );
+                    contactInfo.setSupervisor( supervisor );
+                    return;
+                }
+            }
+
+            LOG.debug( "Creating supervisor for respondent #{}: {} {} {}",
+                       respondent.getId(),
+                       supName,
+                       supTitle,
+                       supEmail );
             ContactInfo supervisor = new ContactInfo();
             supervisor.setLastName( supName );
             supervisor.setTitle( supTitle );
             supervisor.setEmail( supEmail );
-            contactInfo.setSupervisor( supervisor );
+            supervisor.setOrganization( organization );
+            supervisor.persist();
         }
     }
 
@@ -820,7 +852,6 @@ public class ResponseAdapter {
         contactInfo.setEmail( email );
         contactInfo.setLandline( landLine );
         contactInfo.setMobile( mobile );
-
     }
 
     private void question236( String string ) {
@@ -833,26 +864,28 @@ public class ResponseAdapter {
 
     }
 
-    private void question231( String string ) {
-        organization.setName( string );
+    private void question231( String name ) {
+        try {
+            organization = Organization.findOrganizationsByNameEquals( name ).getSingleResult();
+        } catch ( EmptyResultDataAccessException e ) {
+            organization = new Organization();
+            organization.setName( name );
+            LOG.debug( "Creating organization: {}", name );
+            organization.persist();
+        }
+
+        respondent.setOrganization( organization );
     }
 
     private void question25( String prefix, String firstName, String lastName ) {
+        LOG.debug( "Identifying respondent {} as {} {} {}", respondent.getId(), prefix, firstName, lastName );
         ContactInfo contactInfo = respondent.getContactInfo();
         contactInfo.setPrefix( prefix );
         contactInfo.setFirstName( firstName );
         contactInfo.setLastName( lastName );
     }
 
-    public Organization getOrganization() {
-        return organization;
-    }
-
     public Respondent getRespondent() {
         return respondent;
-    }
-
-    public Set<Expertise> getExpertises() {
-        return Collections.unmodifiableSet( expertises );
     }
 }

@@ -21,11 +21,11 @@ privileged aspect Document_Roo_DbManaged {
     @JoinColumn(name = "respondent", referencedColumnName = "id", nullable = false)
     private Respondent Document.respondent;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
+    @Column(name = "name", length = 127, unique = true)
     @NotNull
     private String Document.name;
     
-    @Column(name = "url", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "url", length = 127)
     private String Document.url;
     
     @Column(name = "contents", columnDefinition = "MEDIUMBLOB")

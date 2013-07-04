@@ -16,7 +16,7 @@ privileged aspect SystemInfo_Roo_DbManaged {
     @JoinColumns({ @JoinColumn(name = "respondent", referencedColumnName = "respondent", nullable = false, insertable = false, updatable = false), @JoinColumn(name = "organization", referencedColumnName = "organization", nullable = false, insertable = false, updatable = false), @JoinColumn(name = "incident", referencedColumnName = "incident", nullable = false, insertable = false, updatable = false), @JoinColumn(name = "system_name", referencedColumnName = "name", nullable = false, insertable = false, updatable = false) })
     private IncidentSystem SystemInfo.incidentSystem;
     
-    @Column(name = "description", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "description", length = 127)
     private String SystemInfo.description;
     
     @Column(name = "read", columnDefinition = "BIT")

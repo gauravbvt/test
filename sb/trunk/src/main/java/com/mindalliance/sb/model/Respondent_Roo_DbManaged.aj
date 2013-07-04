@@ -45,7 +45,7 @@ privileged aspect Respondent_Roo_DbManaged {
     @OneToMany(mappedBy = "respondent", cascade = CascadeType.REMOVE)
     private Set<OrganizationIncident> Respondent.organizationIncidents;
     
-    @OneToMany(mappedBy = "respondent", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "respondent", cascade = CascadeType.ALL)
     private Set<RespondentSubcommittee> Respondent.respondentSubcommittees;
     
     @OneToMany(mappedBy = "respondent", cascade = CascadeType.REMOVE)
@@ -58,9 +58,9 @@ privileged aspect Respondent_Roo_DbManaged {
     @JoinColumn(name = "contact_info", referencedColumnName = "id", nullable = false)
     private ContactInfo Respondent.contactInfo;
     
-    @Column(name = "survey_opinion", columnDefinition = "TINYINT")
+    @Column(name = "survey_opinion", columnDefinition = "INT")
     @NotNull
-    private Short Respondent.surveyOpinion;
+    private Integer Respondent.surveyOpinion;
     
     @Column(name = "difficult", columnDefinition = "BIT")
     private Boolean Respondent.difficult;
@@ -149,11 +149,11 @@ privileged aspect Respondent_Roo_DbManaged {
         this.contactInfo = contactInfo;
     }
     
-    public Short Respondent.getSurveyOpinion() {
+    public Integer Respondent.getSurveyOpinion() {
         return surveyOpinion;
     }
     
-    public void Respondent.setSurveyOpinion(Short surveyOpinion) {
+    public void Respondent.setSurveyOpinion(Integer surveyOpinion) {
         this.surveyOpinion = surveyOpinion;
     }
     

@@ -13,10 +13,10 @@ import javax.validation.constraints.NotNull;
 
 privileged aspect Expertise_Roo_DbManaged {
     
-    @ManyToMany(mappedBy = "expertises", cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "expertises", cascade = CascadeType.ALL)
     private Set<Respondent> Expertise.respondents;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", length = 127, unique = true)
+    @Column(name = "name", length = 127, unique = true)
     @NotNull
     private String Expertise.name;
     

@@ -18,10 +18,10 @@ import javax.validation.constraints.NotNull;
 
 privileged aspect ContactInfo_Roo_DbManaged {
     
-    @OneToMany(mappedBy = "supervisor", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "supervisor", cascade = CascadeType.ALL)
     private Set<ContactInfo> ContactInfo.contactInfoes;
     
-    @OneToMany(mappedBy = "contactInfo", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "contactInfo", cascade = CascadeType.ALL)
     private Set<Respondent> ContactInfo.respondents;
     
     @OneToMany(mappedBy = "contactInfo", cascade = CascadeType.REMOVE)
@@ -38,31 +38,29 @@ privileged aspect ContactInfo_Roo_DbManaged {
     @JoinColumn(name = "organization", referencedColumnName = "id", nullable = false)
     private Organization ContactInfo.organization;
     
-    @Column(name = "prefix", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "prefix", length = 127)
     private String ContactInfo.prefix;
     
-    @Column(name = "first_name", columnDefinition = "VARCHAR", length = 127, unique = true)
-    @NotNull
+    @Column(name = "first_name", length = 127)
     private String ContactInfo.firstName;
     
-    @Column(name = "last_name", columnDefinition = "VARCHAR", length = 127, unique = true)
+    @Column(name = "last_name", length = 127)
     @NotNull
     private String ContactInfo.lastName;
     
-    @Column(name = "email", columnDefinition = "VARCHAR", length = 127, unique = true)
-    @NotNull
+    @Column(name = "email", length = 127)
     private String ContactInfo.email;
     
-    @Column(name = "title", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "title", length = 127)
     private String ContactInfo.title;
     
-    @Column(name = "department", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "department", length = 127)
     private String ContactInfo.department;
     
-    @Column(name = "mobile", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "mobile", length = 127)
     private String ContactInfo.mobile;
     
-    @Column(name = "landline", columnDefinition = "VARCHAR", length = 127)
+    @Column(name = "landline", length = 127)
     private String ContactInfo.landline;
     
     @Column(name = "photo", columnDefinition = "BLOB")

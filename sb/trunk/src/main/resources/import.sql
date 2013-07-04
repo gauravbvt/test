@@ -195,7 +195,7 @@ INSERT INTO `critical_task` (`id`, `name`, `type`, `description`, `core_capabili
 INSERT INTO `expertise` (`id`, `name`) VALUES (1,'Communication systems');
 INSERT INTO `expertise` (`id`, `name`) VALUES (2,'Emergency Management');
 INSERT INTO `expertise` (`id`, `name`) VALUES (3,'Environment');
-INSERT INTO `expertise` (`id`, `name`) VALUES (4,'Information Systems');
+INSERT INTO `expertise` (`id`, `name`) VALUES (4,'Information systems');
 INSERT INTO `expertise` (`id`, `name`) VALUES (5,'Intelligence/Analysis');
 INSERT INTO `expertise` (`id`, `name`) VALUES (6,'Law Enforcement');
 INSERT INTO `expertise` (`id`, `name`) VALUES (7,'Legal');
@@ -253,6 +253,12 @@ INSERT INTO `mission_area_core_capability` (`mission_area`, `core_capability`) V
 INSERT INTO `mission_area_core_capability` (`mission_area`, `core_capability`) VALUES (4,29);
 INSERT INTO `mission_area_core_capability` (`mission_area`, `core_capability`) VALUES (2,30);
 INSERT INTO `mission_area_core_capability` (`mission_area`, `core_capability`) VALUES (3,31);
+INSERT INTO `org_type` (`id`, `name`) VALUES (6,'Community');
+INSERT INTO `org_type` (`id`, `name`) VALUES (1,'Federal Government');
+INSERT INTO `org_type` (`id`, `name`) VALUES (3,'Local Government');
+INSERT INTO `org_type` (`id`, `name`) VALUES (5,'Private Sector/Non-Governmental');
+INSERT INTO `org_type` (`id`, `name`) VALUES (2,'State Government');
+INSERT INTO `org_type` (`id`, `name`) VALUES (4,'Tribal Government');
 INSERT INTO `subcommittee` (`id`, `name`) VALUES (1,'Civil Disturbance');
 INSERT INTO `subcommittee` (`id`, `name`) VALUES (2,'Credentialing');
 INSERT INTO `subcommittee` (`id`, `name`) VALUES (3,'Criminal Enterprise');
@@ -273,4 +279,3 @@ INSERT INTO `subcommittee` (`id`, `name`) VALUES (17,'Recovery Management');
 INSERT INTO `subcommittee` (`id`, `name`) VALUES (18,'Tactical');
 INSERT INTO `subcommittee` (`id`, `name`) VALUES (19,'Traffic/Transportation');
 INSERT INTO `subcommittee` (`id`, `name`) VALUES (20,'Training');
-

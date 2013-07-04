@@ -18,7 +18,6 @@ privileged aspect Respondent_Roo_Jpa_Entity {
     declare @type: Respondent: @Table(name = "respondent");
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", columnDefinition = "INT")
     private Integer Respondent.id;
     
