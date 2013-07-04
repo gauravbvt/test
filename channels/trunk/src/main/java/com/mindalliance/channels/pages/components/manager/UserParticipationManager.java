@@ -181,6 +181,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         } else {
             selectedAgency = agency;
         }
+        selectedAgent = null;
         addedParticipants = new HashSet<ChannelsUser>();
         removedParticipants = new HashSet<ChannelsUser>();
     }
@@ -655,8 +656,8 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 executePendingParticipationChanges();
                 resetPendingParticipationChanges();
                 addParticipation();
-                target.add( agenciesListContainer );
-                target.add( agentsListContainer );
+                target.add( agenciesContainer );
+                target.add( agentsContainer );
                 target.add( participantsContainer );
                 target.add( summaryLabel );
                 if ( selectedAgent != null ) {
