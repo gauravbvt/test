@@ -49,7 +49,7 @@ public class RFISurveyServiceImpl extends AbstractDataService<RFISurvey> impleme
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<RFISurvey> listActive( final CommunityService communityService ) {
         QRFISurvey qRFISurvey = QRFISurvey.rFISurvey;
         List<RFISurvey> results = toList(
@@ -103,18 +103,20 @@ public class RFISurveyServiceImpl extends AbstractDataService<RFISurvey> impleme
                              String username,
                              Questionnaire q,
                              ModelObject modelObject ) {
-        Questionnaire questionnaire = questionnaireService.refresh( q );
-        if ( questionnaire != null && questionnaire.isActive() ) {
-            RFISurvey rfiSurvey = new RFISurvey(
-                    communityService.getPlanCommunity(),
-                    username
-            );
-            rfiSurvey.setQuestionnaire( questionnaire );
-            rfiSurvey.setMoRef( modelObject );
-            save( rfiSurvey );
-            return rfiSurvey;
-        } else {
-            return null;
+        synchronized ( communityService.getPlanCommunity() ) {
+            Questionnaire questionnaire = questionnaireService.refresh( q );
+            if ( questionnaire != null && questionnaire.isActive() ) {
+                RFISurvey rfiSurvey = new RFISurvey(
+                        communityService.getPlanCommunity(),
+                        username
+                );
+                rfiSurvey.setQuestionnaire( questionnaire );
+                rfiSurvey.setMoRef( modelObject );
+                save( rfiSurvey );
+                return rfiSurvey;
+            } else {
+                return null;
+            }
         }
     }
 

@@ -69,50 +69,54 @@ public class SurveysDAOImpl implements SurveysDAO {
     private PlanCommunityManager planCommunityManager;
 
     @Override
-    
+
     public RFISurvey getOrCreateRemediationSurvey(
             String username,
             CommunityService communityService,
             Issue issue ) {
-        RFISurvey survey = rfiSurveyService.findRemediationSurvey(
-                communityService,
-                issue
-        );
-        if ( survey == null ) {
-            Questionnaire questionnaire = findOrCreateRemediationQuestionnaire(
-                    username,
+        synchronized ( communityService.getPlanCommunity() ) {
+            RFISurvey survey = rfiSurveyService.findRemediationSurvey(
                     communityService,
-                    issue );
-            survey = new RFISurvey( communityService.getPlanCommunity(), username );
-            survey.setQuestionnaire( questionnaire );
-            survey.setMoRef( issue.getAbout() );
-            rfiSurveyService.save( survey );
+                    issue
+            );
+            if ( survey == null ) {
+                Questionnaire questionnaire = findOrCreateRemediationQuestionnaire(
+                        username,
+                        communityService,
+                        issue );
+                survey = new RFISurvey( communityService.getPlanCommunity(), username );
+                survey.setQuestionnaire( questionnaire );
+                survey.setMoRef( issue.getAbout() );
+                rfiSurveyService.save( survey );
+            }
+            return survey;
         }
-        return survey;
     }
 
     private Questionnaire findOrCreateRemediationQuestionnaire(
             String username,
             CommunityService communityService,
             Issue issue ) {
-        Questionnaire questionnaire = questionnaireService.findRemediationQuestionnaire( communityService, issue );
-        if ( questionnaire == null ) {
-            questionnaire = new Questionnaire( communityService.getPlanCommunity(), username );
-            questionnaire.setName( Questionnaire.makeRemediationName( issue ) );
-            questionnaire.setAbout( Questionnaire.makeRemediationAbout( issue ) );
-            questionnaire.setStatus( Questionnaire.Status.ACTIVE );
-            questionnaire.setIssueRemediated( issue );
-            questionnaireService.save( questionnaire );
-            List<Question> questions = makeRemediationQuestions( questionnaire, username, issue );
-            int index = 0;
-            for ( Question question : questions ) {
-                question.setIndex( index );
-                index++;
-                question.setActivated( true );
-                questionnaireService.saveQuestion( question );
+        synchronized ( communityService.getPlanCommunity() ) {
+            Questionnaire questionnaire = questionnaireService.findRemediationQuestionnaire( communityService, issue );
+            if ( questionnaire == null ) {
+                questionnaire = new Questionnaire( communityService.getPlanCommunity(), username );
+                questionnaire.setName( Questionnaire.makeRemediationName( issue ) );
+                questionnaire.setAbout( Questionnaire.makeRemediationAbout( issue ) );
+                questionnaire.setStatus( Questionnaire.Status.ACTIVE );
+                questionnaire.setIssueRemediated( issue );
+                questionnaireService.save( questionnaire );
+                List<Question> questions = makeRemediationQuestions( questionnaire, username, issue );
+                int index = 0;
+                for ( Question question : questions ) {
+                    question.setIndex( index );
+                    index++;
+                    question.setActivated( true );
+                    questionnaireService.saveQuestion( question );
+                }
             }
+            return questionnaire;
         }
-        return questionnaire;
     }
 
     private List<Question> makeRemediationQuestions( Questionnaire questionnaire, String username, Issue issue ) {
@@ -193,7 +197,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
+
     public int countUnanswered( CommunityService communityService, ChannelsUser user ) {
         return CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -213,13 +217,13 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
+
     public int countIncomplete( CommunityService communityService, ChannelsUser user ) {
         return findIncompleteRFIs( communityService, user ).size();
     }
 
     @Override
-    
+
     public int countLate( final CommunityService communityService, ChannelsUser user ) {
         return CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -234,8 +238,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findIncompleteRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -249,8 +253,8 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findCompletedRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.listUserActiveRFIs( communityService, user ),
@@ -265,10 +269,10 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
+
     public boolean isCompleted( final RFI rfi ) {
         RFISurvey survey = rfiSurveyService.load( rfi.getRfiSurveyUid() );
-        Questionnaire questionnaire = questionnaireService.load( survey.getQuestionnaireUid());
+        Questionnaire questionnaire = questionnaireService.load( survey.getQuestionnaireUid() );
         List<Question> questions = questionnaireService.listQuestions( questionnaire.getUid() );
         // No required, unanswered questions
         return !CollectionUtils.exists(
@@ -292,8 +296,8 @@ public class SurveysDAOImpl implements SurveysDAO {
 
 
     @Override
-    
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findDeclinedRFIs( CommunityService communityService, ChannelsUser user ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.listOngoingUserRFIs( communityService, user ),
@@ -307,12 +311,12 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
+
     public int getRequiredQuestionCount( RFI rfi ) {
         return getRequiredQuestions( rfi ).size();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Question> getRequiredQuestions( RFI rfi ) {
         RFISurvey survey = rfiSurveyService.load( rfi.getRfiSurveyUid() );
         Questionnaire questionnaire = questionnaireService.load( survey.getQuestionnaireUid() );
@@ -329,7 +333,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    
+
     public int getRequiredAnswersCount( RFI rfi ) {
         int count = 0;
         for ( Question question : getRequiredQuestions( rfi ) ) {
@@ -354,7 +358,7 @@ public class SurveysDAOImpl implements SurveysDAO {
         return count;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Question> getOptionalQuestions( RFI rfi ) {
         RFISurvey survey = rfiSurveyService.load( rfi.getRfiSurveyUid() );
         Questionnaire questionnaire = questionnaireService.load( survey.getQuestionnaireUid() );
@@ -414,7 +418,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findAnsweringRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         List<RFI> rfis = rfiService.select( communityService, rfiSurvey );
         return (List<RFI>) CollectionUtils.select(
@@ -497,7 +501,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Question> listAnswerableQuestions( RFISurvey rfiSurvey ) {
         Questionnaire questionnaire = questionnaireService.load( rfiSurvey.getQuestionnaireUid() );
         return (List<Question>) CollectionUtils.select(
@@ -518,7 +522,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<RFI> listIncompleteActiveRFIs( CommunityService communityService ) {
         List<RFI> activeRFIs = rfiService.listActiveRFIs( communityService );
         return (List<RFI>) CollectionUtils.select(
@@ -532,7 +536,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findAllCompletedRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.select( communityService, rfiSurvey ),
@@ -545,7 +549,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findAllIncompleteRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.select( communityService, rfiSurvey ),
@@ -559,7 +563,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<RFI> findAllDeclinedRFIs( CommunityService communityService, RFISurvey rfiSurvey ) {
         return (List<RFI>) CollectionUtils.select(
                 rfiService.select( communityService, rfiSurvey ),
@@ -573,7 +577,7 @@ public class SurveysDAOImpl implements SurveysDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<RFIForward> findAllRFIForwards( CommunityService communityService, RFISurvey rfiSurvey ) {
         return rfiService.selectForwards( communityService, rfiSurvey );
     }
@@ -585,26 +589,28 @@ public class SurveysDAOImpl implements SurveysDAO {
             RFI rfi,
             List<String> forwardedTo,
             String message ) {
-        List<String> alreadyForwardedTo = rfiService.findForwardedTo( rfi );
-        RFISurvey rfiSurvey = rfiSurveyService.load( rfi.getRfiSurveyUid() );
-        List<String> emailsOfParticipants = getParticipantsEmails( communityService, rfiSurvey );
-        List<String> actualForwards = new ArrayList<String>();
-        for ( String email : forwardedTo ) {
-            if ( !alreadyForwardedTo.contains( email ) && !emailsOfParticipants.contains( email ) ) {
-                RFIForward forward = new RFIForward( communityService.getPlanCommunity(), user, rfi, email, message );
-                actualForwards.add( email );
-                alreadyForwardedTo.add( email );
-                // Create new user if needed. Remember generated password.
-                UserRecord forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
-                if ( forwardedToUser != null ) {
-                    RFI newRFI = new RFI( rfi );
-                    newRFI.setSurveyedUsername( userDao.getUserWithIdentity( email ).getUsername() );
-                    rfiService.save( newRFI );
-                    rfiService.saveRFIForward( forward );
+        synchronized ( communityService.getPlanCommunity() ) {
+            List<String> alreadyForwardedTo = rfiService.findForwardedTo( rfi );
+            RFISurvey rfiSurvey = rfiSurveyService.load( rfi.getRfiSurveyUid() );
+            List<String> emailsOfParticipants = getParticipantsEmails( communityService, rfiSurvey );
+            List<String> actualForwards = new ArrayList<String>();
+            for ( String email : forwardedTo ) {
+                if ( !alreadyForwardedTo.contains( email ) && !emailsOfParticipants.contains( email ) ) {
+                    RFIForward forward = new RFIForward( communityService.getPlanCommunity(), user, rfi, email, message );
+                    actualForwards.add( email );
+                    alreadyForwardedTo.add( email );
+                    // Create new user if needed. Remember generated password.
+                    UserRecord forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
+                    if ( forwardedToUser != null ) {
+                        RFI newRFI = new RFI( rfi );
+                        newRFI.setSurveyedUsername( userDao.getUserWithIdentity( email ).getUsername() );
+                        rfiService.save( newRFI );
+                        rfiService.saveRFIForward( forward );
+                    }
                 }
             }
+            return actualForwards;
         }
-        return actualForwards;
     }
 
     @Override

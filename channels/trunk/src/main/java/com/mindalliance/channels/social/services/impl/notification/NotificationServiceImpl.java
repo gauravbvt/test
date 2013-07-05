@@ -118,8 +118,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// USER MESSAGES ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
- //   @Transactional
+    @Scheduled(fixedDelay = 60000)     // every minute
+    //   @Transactional
     public void notifyOfUserMessages() {
         LOG.debug( "Sending out user messages" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -148,8 +148,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// FEEDBACK ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
- //   @Transactional
+    @Scheduled(fixedDelay = 60000)     // every minute
+    //   @Transactional
     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -173,7 +173,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
- //   @Transactional
+    //   @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -207,8 +207,8 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     //// SURVEYS ////
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
- //   @Transactional
+    @Scheduled(fixedDelay = 60000)     // every minute
+    //   @Transactional
     public void notifyOfSurveys() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
@@ -268,7 +268,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
- //   @Transactional
+    //   @Transactional
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of incomplete surveys and surveys status" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -285,7 +285,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
 //    @Transactional
     public void notifyOnUserAccessChange() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -311,7 +311,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
 //    @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -335,33 +335,35 @@ public class NotificationServiceImpl implements NotificationService, Initializin
     }
 
     @Override
-    @Scheduled( fixedDelay = 86400000 )   // each day
+    @Scheduled(fixedDelay = 86400000)   // each day
 //    @Transactional
     public void reportOnParticipationConfirmation() {
         // todo
     }
 
     @Override
-    @Scheduled( fixedDelay = 60000 )     // every minute
+    @Scheduled(fixedDelay = 60000)     // every minute
 //    @Transactional
     public void notifyOfParticipationRequest() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
             CommunityService communityService = getCommunityService( planCommunity );
             UserParticipationService userParticipationService = communityService.getUserParticipationService();
-            for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( communityService ) ) {
-                if ( userParticipation.isRequested()
-                        && !userParticipation.isAccepted()
-                        && !userParticipation.isRequestNotified() ) {
-                    List<String> successes = sendMessages(
-                            userParticipation,
-                            UserParticipation.ACCEPTANCE_REQUESTED,
-                            false,
-                            communityService );
-                    if ( !successes.isEmpty() ) {
-                        userParticipation.setRequestNotified( true );
+            synchronized ( planCommunity ) {
+                for ( UserParticipation userParticipation : userParticipationService.getAllParticipations( communityService ) ) {
+                    if ( userParticipation.isRequested()
+                            && !userParticipation.isAccepted()
+                            && !userParticipation.isRequestNotified() ) {
+                        List<String> successes = sendMessages(
+                                userParticipation,
+                                UserParticipation.ACCEPTANCE_REQUESTED,
+                                false,
+                                communityService );
+                        if ( !successes.isEmpty() ) {
+                            userParticipation.setRequestNotified( true );
+                        }
+                        userParticipationService.save( userParticipation );
                     }
-                    userParticipationService.save( userParticipation );
                 }
             }
         }

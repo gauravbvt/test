@@ -44,7 +44,7 @@
         <div wicket:id="participantsContainer" class="participation users">
             <h3>
             Users
-            <input value="search..." type="text"/>
+            <input wicket:id="userNameFilter" value="search..." type="text"/>
             </h3>
             <!--<div class="participation-title">
                 Users participating as<br/>
@@ -52,7 +52,7 @@
             </div>-->
             <div class="participation-table-cont">
                 <table >
-                    <tr wicket:id="usersFilterContainer">
+                    <tr>
                         <th>&nbsp;</th>
                         <th class="name">Name <!-- Named: <input wicket:id="userNameFilter" type="text"/> --> </th>
                         <th class="accepted">Accepted</th>
@@ -61,8 +61,8 @@
                     <tr wicket:id="participants"> <!-- repeated -->
                         <td class="check"><input wicket:id="participating" type="checkbox" width="20"/></td>
                         <td class="name">
-                        	<span class="full-name" wicket:id="userName">user full name</span>
-                        	<span class="username">username</span>
+                        	<span class="full-name" wicket:id="fullName">user full name</span>
+                        	<span class="username" wicket:id="username">username</span>
   						</td>
                         <td class="accepted"><span wicket:id="accepted">Yes</span></td>
                         <td class="confirmed"><span wicket:id="confirmed">No</span></td>

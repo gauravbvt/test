@@ -74,8 +74,8 @@ public class RegisteredOrganizationServiceImpl
         return validate(
                 toList(
                         repository.findAll(
-                                qRegisteredOrganization.classLabel.eq( RegisteredOrganization.class.getSimpleName())
-                                .and( qRegisteredOrganization.communityUri.eq(communityService.getPlanCommunity().getUri())),
+                                qRegisteredOrganization.classLabel.eq( RegisteredOrganization.class.getSimpleName() )
+                                        .and( qRegisteredOrganization.communityUri.eq( communityService.getPlanCommunity().getUri() ) ),
                                 qRegisteredOrganization.created.desc()
                         )
                 ),
@@ -84,40 +84,44 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     public RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, CommunityService communityService ) {
-        RegisteredOrganization registered = find( orgName, communityService );
-        if ( registered == null ) {
-            Organization fixedOrg = communityService.getPlanService().findActualEntity( Organization.class, orgName );
-            if ( fixedOrg != null ) {
-                registered = new RegisteredOrganization(
-                        user.getUsername(),
-                        fixedOrg.getId(),
-                        communityService.getPlanCommunity()
-                );
-            } else {
-                registered = new RegisteredOrganization(
-                        user.getUsername(),
-                        orgName,
-                        communityService.getPlanCommunity()
-                );
+        synchronized ( communityService.getPlanCommunity() ) {
+            RegisteredOrganization registered = find( orgName, communityService );
+            if ( registered == null ) {
+                Organization fixedOrg = communityService.getPlanService().findActualEntity( Organization.class, orgName );
+                if ( fixedOrg != null ) {
+                    registered = new RegisteredOrganization(
+                            user.getUsername(),
+                            fixedOrg.getId(),
+                            communityService.getPlanCommunity()
+                    );
+                } else {
+                    registered = new RegisteredOrganization(
+                            user.getUsername(),
+                            orgName,
+                            communityService.getPlanCommunity()
+                    );
+                }
+                save( registered );
+                communityService.clearCache();
             }
-            save( registered );
-            communityService.clearCache();
+            return registered;
         }
-        return registered;
     }
 
     @Override
     public boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService ) {
-        RegisteredOrganization registered = find( orgName, communityService );
-        if ( registered != null ) {
-            boolean inParticipation = !organizationParticipationService
-                    .findAllParticipationBy( registered, communityService ).isEmpty();
-            if ( !inParticipation ) {
-                delete( registered );
-                return true;
+        synchronized ( communityService.getPlanCommunity() ) {
+            RegisteredOrganization registered = find( orgName, communityService );
+            if ( registered != null ) {
+                boolean inParticipation = !organizationParticipationService
+                        .findAllParticipationBy( registered, communityService ).isEmpty();
+                if ( !inParticipation ) {
+                    delete( registered );
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -132,33 +136,35 @@ public class RegisteredOrganizationServiceImpl
 
     @Override
     public boolean updateWith( ChannelsUser user, String orgName, Agency agency, CommunityService communityService ) {
-        boolean success = false;
-        RegisteredOrganization registered = find( orgName, communityService );
-        if ( registered != null ) {
-            String parentName = agency.getParentName();
-            if ( parentName != null ) {
-                if ( communityService.canHaveParentAgency(
-                        agency.getName(),
-                        parentName ) ) {
-                    RegisteredOrganization registeredParent = find( parentName, communityService );
-                    if ( registeredParent == null ) {
-                        registeredParent = new RegisteredOrganization(
-                                user.getUsername(),
-                                parentName,
-                                communityService.getPlanCommunity() );
-                        save( registeredParent );
+        synchronized ( communityService.getPlanCommunity() ) {
+            boolean success = false;
+            RegisteredOrganization registered = find( orgName, communityService );
+            if ( registered != null ) {
+                String parentName = agency.getParentName();
+                if ( parentName != null ) {
+                    if ( communityService.canHaveParentAgency(
+                            agency.getName(),
+                            parentName ) ) {
+                        RegisteredOrganization registeredParent = find( parentName, communityService );
+                        if ( registeredParent == null ) {
+                            registeredParent = new RegisteredOrganization(
+                                    user.getUsername(),
+                                    parentName,
+                                    communityService.getPlanCommunity() );
+                            save( registeredParent );
+                        }
+                        registered.setParent( registeredParent );
                     }
-                    registered.setParent( registeredParent );
+                } else {
+                    registered.setParent( null );
                 }
-            } else {
-                registered.setParent( null );
+                registered.updateWith( agency );
+                setChannels( user, registered, agency.getEffectiveChannels(), communityService );
+                save( registered );
+                success = true;
             }
-            registered.updateWith( agency );
-            setChannels( user, registered, agency.getEffectiveChannels(), communityService );
-            save( registered );
-            success = true;
+            return success;
         }
-        return success;
     }
 
     @Override
@@ -209,7 +215,7 @@ public class RegisteredOrganizationServiceImpl
                 && ( registeredOrg.getParent( communityService ) == null || isValid( registeredOrg.getParent( communityService ), communityService ) );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<RegisteredOrganization> validate(
             List<RegisteredOrganization> registeredOrganizations,
             final CommunityService communityService ) {

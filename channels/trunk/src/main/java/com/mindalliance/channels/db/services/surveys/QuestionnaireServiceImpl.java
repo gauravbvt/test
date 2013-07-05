@@ -127,8 +127,10 @@ public class QuestionnaireServiceImpl
     @Override
     public void deleteQuestion( Question question ) {
         Questionnaire questionnaire = load( question.getQuestionnaireUid() );
-        questionnaire.removeQuestion( question );
-        save( questionnaire );
+        if ( questionnaire != null ) {
+            questionnaire.removeQuestion( question );
+            save( questionnaire );
+        }
 /*
 
         DBObject toDelete = new BasicDBObject( "_id", new ObjectId( question.getUid() ) );
@@ -151,8 +153,10 @@ public class QuestionnaireServiceImpl
 
     @Override
     public void updateQuestion( Question question ) {
-        deleteQuestion( question );
-        saveQuestion( question );
+        synchronized ( this ) {
+            deleteQuestion( question );
+            saveQuestion( question );
+        }
     }
 
     @Override
@@ -184,12 +188,14 @@ public class QuestionnaireServiceImpl
 
     @Override
     public void moveUp( Question q ) {
-        Question question = refresh( q );
-        if ( question != null ) {
-            Questionnaire questionnaire = load( question.getQuestionnaireUid() );
-            if ( questionnaire != null ) {
-                questionnaire.moveUpQuestion( question );
-                save( questionnaire );
+        synchronized ( this ) {
+            Question question = refresh( q );
+            if ( question != null ) {
+                Questionnaire questionnaire = load( question.getQuestionnaireUid() );
+                if ( questionnaire != null ) {
+                    questionnaire.moveUpQuestion( question );
+                    save( questionnaire );
+                }
             }
         }
     }
@@ -201,12 +207,14 @@ public class QuestionnaireServiceImpl
 
     @Override
     public void moveDown( final Question q ) {
-        Question question = refresh( q );
-        if ( question != null ) {
-            Questionnaire questionnaire = load( question.getQuestionnaireUid() );
-            if ( questionnaire != null ) {
-                questionnaire.moveDownQuestion( question );
-                save( questionnaire );
+        synchronized ( this ) {
+            Question question = refresh( q );
+            if ( question != null ) {
+                Questionnaire questionnaire = load( question.getQuestionnaireUid() );
+                if ( questionnaire != null ) {
+                    questionnaire.moveDownQuestion( question );
+                    save( questionnaire );
+                }
             }
         }
     }
@@ -233,7 +241,7 @@ public class QuestionnaireServiceImpl
             Question question = new Question( user.getUsername(), questionnaire );
             questionnaire.addQuestion( question );
             save( questionnaire );
-             return question;
+            return question;
         } else {
             return null;
         }
@@ -277,7 +285,7 @@ public class QuestionnaireServiceImpl
             getDb().updateFirst(
                     new Query( where( "_id" ).is( new ObjectId( q.getQuestionnaireUid() ) )
                             .and( "questions._id" ).is( new ObjectId( q.getUid() ) ) ),
-                    new Update().set( "questions.*.answerChoices" , newChoices ),
+                    new Update().set( "questions.*.answerChoices", newChoices ),
                     Questionnaire.class
             );
         }
@@ -285,26 +293,28 @@ public class QuestionnaireServiceImpl
 
     @Override
     public boolean deleteQuestionsIfUnanswered( Questionnaire qr ) {
-        Questionnaire questionnaire = load( qr.getUid() );
-        if ( questionnaire != null ) {
-            List<Question> questions = listQuestions( questionnaire.getUid() );
-            boolean answered = CollectionUtils.exists(
-                    questions,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return rfiService.getAnswerCount( (Question) object ) > 0;
+        synchronized ( this ) {
+            Questionnaire questionnaire = load( qr.getUid() );
+            if ( questionnaire != null ) {
+                List<Question> questions = listQuestions( questionnaire.getUid() );
+                boolean answered = CollectionUtils.exists(
+                        questions,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return rfiService.getAnswerCount( (Question) object ) > 0;
+                            }
                         }
+                );
+                if ( !answered ) {
+                    for ( Question question : questions ) {
+                        deleteQuestion( question );
                     }
-            );
-            if ( !answered ) {
-                for ( Question question : questions ) {
-                    deleteQuestion( question );
+                    return true;
                 }
-                return true;
             }
+            return false;
         }
-        return false;
     }
 }
 

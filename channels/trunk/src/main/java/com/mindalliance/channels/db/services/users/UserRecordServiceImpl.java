@@ -77,7 +77,7 @@ public class UserRecordServiceImpl
 
     @Override
     public ChannelsUser createUser( String username, String name, String email ) throws DuplicateKeyException {
-        if ( getUserWithIdentity( name ) != null || (!email.isEmpty() && getUserWithIdentity( email ) != null ) )
+        if ( getUserWithIdentity( name ) != null || ( !email.isEmpty() && getUserWithIdentity( email ) != null ) )
             throw new DuplicateKeyException();
         else
             return new ChannelsUser( createUserRecord( username, name, "", name, email ) );
@@ -89,7 +89,7 @@ public class UserRecordServiceImpl
                                         String password,
                                         String fullName,
                                         String email ) throws DuplicateKeyException {
-        if ( getUserWithIdentity( name ) != null || (!email.isEmpty() && getUserWithIdentity( email ) != null ) )
+        if ( getUserWithIdentity( name ) != null || ( !email.isEmpty() && getUserWithIdentity( email ) != null ) )
             throw new DuplicateKeyException();
         UserRecord userRecord = new UserRecord(
                 username,
@@ -144,7 +144,7 @@ public class UserRecordServiceImpl
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((UserRecord)object).isEnabled();
+                        return ( (UserRecord) object ).isEnabled();
                     }
                 }
         );
@@ -168,8 +168,8 @@ public class UserRecordServiceImpl
         }
     }
 
-    private  List<UserRecord> getAllUserRecordsOf( String identifier ) {
-        if ( identifier == null ) return new ArrayList<UserRecord>(  );
+    private List<UserRecord> getAllUserRecordsOf( String identifier ) {
+        if ( identifier == null ) return new ArrayList<UserRecord>();
         QUserRecord qUserRecord = QUserRecord.userRecord;
         return toList(
                 repository.findAll(
@@ -181,7 +181,7 @@ public class UserRecordServiceImpl
     }
 
 
-        @Override
+    @Override
     public UserRecord getUserRecord( String username ) {
         if ( username == null ) return null;
         QUserRecord qUserRecord = QUserRecord.userRecord;
@@ -217,7 +217,7 @@ public class UserRecordServiceImpl
         } );
         for ( UserRecord userRecord : userRecords ) {
             if ( !userRecord.isDisabled() )
-            result.add( new ChannelsUser( userRecord ) );
+                result.add( new ChannelsUser( userRecord ) );
         }
         return result;
     }
@@ -263,31 +263,33 @@ public class UserRecordServiceImpl
 
     @Override
     public UserRecord getOrMakeUserFromEmail( String email, QueryService queryService ) {
-        UserRecord userRecord;
-        ChannelsUser userFromEmail = getUserWithIdentity( email );
-        if ( userFromEmail != null ) {
-            userRecord = userFromEmail.getUserRecord();
-        } else {
-            if ( !ChannelsUtils.isValidEmailAddress( email ) ) return null;
-            String newUsername = makeNewUsernameFromEmail( email );
-            String password = makeNewPassword();
-            try {
-                ChannelsUser newUser = createUser( newUsername, email );
-                userRecord = newUser.getUserRecord();
-                userRecord.setPassword( password );
-                userRecord.setGeneratedPassword( password );
-            } catch ( DuplicateKeyException e ) {
-                LOG.warn( "Failed to create new user " + email, e );
-                return null;
+        synchronized ( this ) {
+            UserRecord userRecord;
+            ChannelsUser userFromEmail = getUserWithIdentity( email );
+            if ( userFromEmail != null ) {
+                userRecord = userFromEmail.getUserRecord();
+            } else {
+                if ( !ChannelsUtils.isValidEmailAddress( email ) ) return null;
+                String newUsername = makeNewUsernameFromEmail( email );
+                String password = makeNewPassword();
+                try {
+                    ChannelsUser newUser = createUser( newUsername, email );
+                    userRecord = newUser.getUserRecord();
+                    userRecord.setPassword( password );
+                    userRecord.setGeneratedPassword( password );
+                } catch ( DuplicateKeyException e ) {
+                    LOG.warn( "Failed to create new user " + email, e );
+                    return null;
+                }
             }
+            // Ensure user is authorized for plan in at least USER role
+            String planUri = queryService.getPlan().getUri();
+            if ( !userRecord.isParticipant( planUri ) ) {
+                userRecord.makeParticipantOf( planUri );
+            }
+            save( userRecord );
+            return userRecord;
         }
-        // Ensure user is authorized for plan in at least USER role
-        String planUri = queryService.getPlan().getUri();
-        if ( !userRecord.isParticipant( planUri ) ) {
-            userRecord.makeParticipantOf( planUri );
-        }
-        save( userRecord );
-        return userRecord;
     }
 
     private String makeNewUsernameFromEmail( String email ) {
@@ -413,48 +415,55 @@ public class UserRecordServiceImpl
     public UserRecord authorizeCommunityPlanner( String username,
                                                  ChannelsUser authorizedUser,
                                                  CommunityService communityService ) {
-        ChannelsUser authorizingUser = getUserWithIdentity( username );
-        String uri = communityService.getPlanCommunity().getUri();
-        if ( authorizingUser != null && authorizedUser != null
-                && authorizingUser.isPlannerOrAdmin( uri ) //allows admins to authorize community planners
-                && !authorizedUser.isCommunityPlanner( uri ) ) {
-            UserRecord userRecord = authorizedUser.getUserRecord();
-            userRecord.makePlannerOf( communityService.getPlanCommunity().getUri() );
-            save( userRecord );
-            communityService.clearCache();
-            return userRecord;
-        } else {
-            return null;
+        synchronized ( communityService.getPlanCommunity() ) {
+            ChannelsUser authorizingUser = getUserWithIdentity( username );
+            String uri = communityService.getPlanCommunity().getUri();
+            if ( authorizingUser != null && authorizedUser != null
+                    && authorizingUser.isPlannerOrAdmin( uri ) //allows admins to authorize community planners
+                    && !authorizedUser.isCommunityPlanner( uri ) ) {
+                UserRecord userRecord = authorizedUser.getUserRecord();
+                userRecord.makePlannerOf( communityService.getPlanCommunity().getUri() );
+                save( userRecord );
+                communityService.clearCache();
+                return userRecord;
+            } else {
+                return null;
+            }
         }
     }
 
 
     @Override
-    public boolean resignAsCommunityPlanner( String username, ChannelsUser planner, CommunityService communityService ) {
-        ChannelsUser user = getUserWithIdentity( username );
-        String uri = communityService.getPlanCommunity().getUri();
-        if ( ( user != null
-                && ( user.isPlannerOrAdmin( uri ) )
-                && getCommunityPlanners( uri ).size() > 1 )
-                && planner.isCommunityPlanner(  uri ) ) {
-            UserRecord userRecord = planner.getUserRecord();
-            userRecord.makeParticipantOf( uri );
-            save( userRecord );
-            communityService.clearCache();
-            return true;
+    public boolean resignAsCommunityPlanner( String username,
+                                             ChannelsUser planner,
+                                             CommunityService communityService ) {
+        synchronized ( communityService.getPlanCommunity() ) {
+            ChannelsUser user = getUserWithIdentity( username );
+            String uri = communityService.getPlanCommunity().getUri();
+            if ( ( user != null
+                    && ( user.isPlannerOrAdmin( uri ) )
+                    && getCommunityPlanners( uri ).size() > 1 )
+                    && planner.isCommunityPlanner( uri ) ) {
+                UserRecord userRecord = planner.getUserRecord();
+                userRecord.makeParticipantOf( uri );
+                save( userRecord );
+                communityService.clearCache();
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
     @Override
     public void addFounder( ChannelsUser founder, PlanCommunity planCommunity ) {
-        List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
-        assert planners.isEmpty(); // Make sure founder is first planner
-        UserRecord userRecord = founder.getUserRecord();
-        userRecord.makePlannerOf( planCommunity.getUri() );
-        save( userRecord );
+        synchronized ( planCommunity ) {
+            List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
+            assert planners.isEmpty(); // Make sure founder is first planner
+            UserRecord userRecord = founder.getUserRecord();
+            userRecord.makePlannerOf( planCommunity.getUri() );
+            save( userRecord );
+        }
     }
-
 
 
     ///////// MESSAGEABLE

@@ -155,7 +155,7 @@ public class OrganizationParticipationServiceImpl
 
     private List<OrganizationParticipation> getOrganizationParticipations( RegisteredOrganization registeredOrg,
                                                                            Organization placeholder,
-                                                                           CommunityService communityService) {
+                                                                           CommunityService communityService ) {
         QOrganizationParticipation qOrganizationParticipation = QOrganizationParticipation.organizationParticipation;
         return validate( toList(
                 repository.findAll(
@@ -175,22 +175,27 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
-    public boolean unassignOrganizationAs( ChannelsUser user, RegisteredOrganization registeredOrg, Organization placeholder, CommunityService communityService ) {
-        if ( canUnassignOrganizationFrom( user, placeholder, communityService ) ) {
-            OrganizationParticipation organizationParticipation = findOrganizationParticipation(
-                    registeredOrg.getName( communityService ),
-                    placeholder,
-                    communityService );
-            if ( organizationParticipation != null
-                    && userParticipationService.listUserParticipationIn(
-                    organizationParticipation,
-                    communityService ).isEmpty() ) {
-                delete( organizationParticipation );
-                communityService.clearCache();
-                return true;
+    public boolean unassignOrganizationAs( ChannelsUser user,
+                                           RegisteredOrganization registeredOrg,
+                                           Organization placeholder,
+                                           CommunityService communityService ) {
+        synchronized ( communityService.getPlanCommunity() ) {
+            if ( canUnassignOrganizationFrom( user, placeholder, communityService ) ) {
+                OrganizationParticipation organizationParticipation = findOrganizationParticipation(
+                        registeredOrg.getName( communityService ),
+                        placeholder,
+                        communityService );
+                if ( organizationParticipation != null
+                        && userParticipationService.listUserParticipationIn(
+                        organizationParticipation,
+                        communityService ).isEmpty() ) {
+                    delete( organizationParticipation );
+                    communityService.clearCache();
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
     @Override

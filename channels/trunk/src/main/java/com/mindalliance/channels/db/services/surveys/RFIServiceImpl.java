@@ -87,20 +87,22 @@ public class RFIServiceImpl extends AbstractDataService<RFI> implements RFIServi
                                  String title,
                                  Role role,
                                  Date deadlineDate ) {
-        String surveyedUsername = userInfo.getUsername();
-        RFI rfi = find( communityService, rfiSurvey, surveyedUsername );
-        if ( rfi == null ) {
-            rfi = new RFI( username, communityService.getPlanCommunity() );
-            rfi.setSurveyedUsername( surveyedUsername );
-            if ( organization != null )
-                rfi.setOrganizationId( organization.getId() );
-            if ( role != null )
-                rfi.setRoleId( role.getId() );
-            rfi.setRfiSurvey( rfiSurvey );
+        synchronized ( communityService.getPlanCommunity() ) {
+            String surveyedUsername = userInfo.getUsername();
+            RFI rfi = find( communityService, rfiSurvey, surveyedUsername );
+            if ( rfi == null ) {
+                rfi = new RFI( username, communityService.getPlanCommunity() );
+                rfi.setSurveyedUsername( surveyedUsername );
+                if ( organization != null )
+                    rfi.setOrganizationId( organization.getId() );
+                if ( role != null )
+                    rfi.setRoleId( role.getId() );
+                rfi.setRfiSurvey( rfiSurvey );
+            }
+            rfi.setTitle( title );
+            rfi.setDeadline( deadlineDate );
+            save( rfi );
         }
-        rfi.setTitle( title );
-        rfi.setDeadline( deadlineDate );
-        save( rfi );
     }
 
     @Override

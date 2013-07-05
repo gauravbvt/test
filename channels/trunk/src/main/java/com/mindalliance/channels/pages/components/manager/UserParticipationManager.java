@@ -168,11 +168,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
 
     private String getAgencyMetrics( Agency agency ) {
         int count = listUnassignedAgents( agency ).size();
-        return "("
-                + count
+        return count
                 + " unassigned "
-                + ( count > 1 ? "agents" : "agent" )
-                + ")";
+                + ( count > 1 ? "agents" : "agent" );
     }
 
     private void selectAgency( Agency agency ) {
@@ -189,12 +187,14 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     public List<Agency> getFilteredAgencies() {
         List<Agency> filteredAgencies = new ArrayList<Agency>();
         for ( Agency agency : participationManager.getAllKnownAgencies( getCommunityService() ) ) {
-            if ( onlyShowUnassignedAgencies ) {
-                List<Agent> unassignedAgents = listUnassignedAgents( agency );
-                if ( unassignedAgents.isEmpty() )
+            if ( agency.hasAssignableAgents( getCommunityService() ) ) {
+                if ( onlyShowUnassignedAgencies ) {
+                    List<Agent> unassignedAgents = listUnassignedAgents( agency );
+                    if ( !unassignedAgents.isEmpty() )
+                        filteredAgencies.add( agency );
+                } else {
                     filteredAgencies.add( agency );
-            } else {
-                filteredAgencies.add( agency );
+                }
             }
         }
         Collections.sort( filteredAgencies, new Comparator<Agency>() {
@@ -206,7 +206,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         return filteredAgencies;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Agent> listUnassignedAgents( Agency agency ) {
         final List<Agent> unassignedAgents = participationManager.findAllUnassignedAgents( getCommunityService() );
         return (List<Agent>) CollectionUtils.select(
@@ -332,15 +332,13 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 : getRegisteredParticipants( agent ).size();
         Actor actor = agent.getActor();
         StringBuilder sb = new StringBuilder();
-        sb.append( "(" )
-                .append( count )
+        sb.append( count )
                 .append( count > 1 ? " participants" : " participant" );
         if ( actor.getMaxParticipation() > 0 ) {
             sb.append( ", " )
                     .append( actor.getMaxParticipation() )
                     .append( " max" );
         }
-        sb.append( ")" );
         return sb.toString();
     }
 
@@ -382,9 +380,6 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
 
     private void addParticipantsFilter() {
         participantsFilter = null;
-        WebMarkupContainer usersFilterContainer = new WebMarkupContainer( "usersFilterContainer" );
-        usersFilterContainer.setOutputMarkupId( true );
-        participantsContainer.addOrReplace( usersFilterContainer );
         TextField<String> userNameFilter = new TextField<String>(
                 "userNameFilter",
                 new PropertyModel<String>( this, "participantsFilter" )
@@ -396,8 +391,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 target.add( participantsContainer );
             }
         } );
-        makeVisible( usersFilterContainer, selectedAgent != null );
-        usersFilterContainer.add( userNameFilter );
+        userNameFilter.setOutputMarkupId( true );
+        makeVisible( userNameFilter, selectedAgent != null );
+        participantsContainer.addOrReplace( userNameFilter );
     }
 
     private void addNoAgentSelected() {
@@ -462,7 +458,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 participatingCheckBox.setEnabled( participationAvailable && userHasAuthority );
                 item.add( participatingCheckBox );
                 // user name
-                Label userNameLabel = new Label( "userName", participant.getNormalizedFullName() );
+                Label userNameLabel = new Label( "fullName", participant.getSimpleNormalizedFullName() );
                 String tooltip = "";
                 if ( selectedAgent != null && !participationAvailable )
                     tooltip += "Participation as " + selectedAgent.getName() + " is not available to this user. ";
@@ -470,6 +466,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                     tooltip += "You are not authorized to assign this user as " + selectedAgent.getName();
                 if ( !tooltip.isEmpty() ) addTipTitle( userNameLabel, tooltip );
                 item.add( userNameLabel );
+                item.add( new Label( "username", participant.getUsername() ) );
                 // accepted
                 item.add( new Label( "accepted", isAcceptedParticipation( participant ) ? "Yes" : "No" ) );
                 // confirmed
@@ -599,7 +596,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 if ( !registeredParticipants.isEmpty() ) {
                     sb.append( " will also participate." );
                 } else {
-                    sb.append( "will participate as " )
+                    sb.append( " will participate as " )
                             .append( selectedAgent.getName() )
                             .append( "." );
                 }

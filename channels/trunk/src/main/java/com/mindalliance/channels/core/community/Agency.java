@@ -492,5 +492,9 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                 }
         );
     }
+
+    public boolean hasAssignableAgents( CommunityService communityService ) {
+        return !getAgents( communityService ).isEmpty();
+    }
 }
 
