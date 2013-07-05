@@ -2779,11 +2779,20 @@ div.participationManager div.participation {
     float: left;
     height: 300px;
     margin: 0 0 10px;
-    overflow: auto;
+    overflow: hidden;
     padding: 0;
     width: 220px;
     border: 1px solid #cccccc;
     border-right: 0;
+}
+
+div.participationManager div.participation.org {
+	width: 382px;
+}
+
+div.participationManager div.participation.org select {
+	font-size: 10px;
+    padding: 0;
 }
 
 div.participationManager div.participation.users {
@@ -2791,13 +2800,13 @@ div.participationManager div.participation.users {
 	border-right: 1px solid #cccccc;
 }
 
-div.participation.users table {
+div.participation table {
     border-collapse: collapse;
     text-align: left;
     width: 100%;
 }
 
-div.participation.users table th {
+div.participation table th {
     background: none repeat scroll 0 0 #E8E8E8;
     border-bottom: 1px solid #CCCCCC;
     color: #333333;
@@ -2814,12 +2823,12 @@ div.participation.users table th.confirmed {
 	text-align: center;
 }
 
-div.participation.users table td {
+div.participation table td {
 	border-bottom: 1px solid #CCCCCC;
 	height: 50px;
 }
 
-div.participation.users table td.check {
+div.participation table td.check {
 	padding: 0 10px;	
 }
 
@@ -2829,6 +2838,26 @@ div.participation.users table td.confirmed {
     font-size: 10px;
     text-transform: uppercase;
 }
+
+div.participation.org table.org td.check {
+	width: 15px;
+}
+
+div.participation.org table.org td.name span {
+    color: #727272;
+    font-weight: bold;	
+}
+
+div.participation.org table.org td.remove,
+div.participation.org table.org td.profile {
+    width: 80px;
+}
+
+div.participation.org table.org td.remove a,
+div.participation.org table.org td.profile a {
+	padding: 0 3px 0 14px;
+	width: auto;
+ }
 
 span.full-name {
 	color: #727272;
@@ -2865,10 +2894,20 @@ div.participation div.participation-table-cont a {
     width: 200px;
 }
 
+div.participation.org div.participation-table-cont a {
+	width: 362px;
+}
+
 div.participation div.participation-table-cont a:hover,
 div.participation div.participation-table-cont a.selected {
 	color: #333333;
     background: url("../images/part-arrow.png") no-repeat scroll 195px center #e8e8e8;
+}
+
+div.participation.org div.participation-table-cont a:hover,
+div.participation.org div.participation-table-cont a.selected {
+	color: #333333;
+    background: url("../images/part-arrow.png") no-repeat scroll 357px center #e8e8e8;
 }
 
 div.participation div.participation-table-cont img {

@@ -8,7 +8,16 @@
 <body>
 <wicket:panel>
     <div class="participationManager">
-        <div class="participation">
+	    <div wicket:id="summary" class="partman-note">No organization participates as "placeholder"</div>
+        <div class="participation org">
+        	<h3>
+        	Placeholders
+            <select wicket:id="phFilter">
+                <option>All</option>
+                <option>Empty</option>
+                <option>Non-empty</option>
+            </select>
+        	</h3><!--
             <div class="participation-filtering">
                 Show
                 <select wicket:id="phFilter">
@@ -17,42 +26,42 @@
                     <option>Non-empty</option>
                 </select>
                 placeholders
-            </div>
+            </div> -->
             <div class="participation-table-cont">
                 <div wicket:id="placeholderListContainer">
                     <a wicket:id="placeholders"> <!-- repeated -->
                         <span wicket:id="placeholder">placeholder name</span>
-                        <span wicket:id="metrics">1 participation (max is 4)</span>
+                        <span class="metrics" wicket:id="metrics">1 participation (max is 4)</span>
                     </a>
                 </div>
             </div>
         </div>
-        <div wicket:id="participation">
-            <div class="participation">
-                <div class="participation-title">
-                    Organizations participating as <span wicket:id="placeholderName">the placeholder</span><br/>
-                </div>
-                <div class="participation-table-cont">
-                    <table>
-                        <tr wicket:id="agencies"> <!-- repeated -->
-                            <td><input wicket:id="participating" type="checkbox"/></td>
-                            <td><span wicket:id="agency">agency name</span></td>
-                            <td><a wicket:id="profile" class="more">Profile</a></td>
-                            <td><a wicket:id="remove" class="more">Remove</a></td>
-                        </tr>
-                        <tr wicket:id="noPlaceholderSelected">
-                            <td colspan="4">Please select a placeholder organization</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+        <div class="participation org" wicket:id="participation">
+        	<h3>
+        	Organizations<!--
             <div wicket:id="registering" class="add-new-org">
                 <label>Add new organization participating as <span wicket:id="phName">ph name</span> :</label>
                 <input wicket:id="newAgencyName" type="text"/>
                 <input wicket:id="registerIt" type="button" value="Add"/>
+            </div>-->
+        	</h3><!--
+            <div class="participation-title">
+                Organizations participating as <span wicket:id="placeholderName">the placeholder</span><br/>
+            </div> -->
+            <div class="participation-table-cont">
+                <table class="org">
+                    <tr wicket:id="agencies"> <!-- repeated -->
+                        <td class="check"><input wicket:id="participating" type="checkbox"/></td>
+                        <td class="name"><span wicket:id="agency">agency name</span></td>
+                        <td class="remove"><a wicket:id="remove" class="more">Remove</a></td>
+                        <td class="profile"><a wicket:id="profile" class="more">Profile</a></td>
+                    </tr>
+                    <tr wicket:id="noPlaceholderSelected">
+                        <td colspan="4"><span class="empty-note">Please select a placeholder organization</span></td>
+                    </tr>
+                </table>
             </div>
         </div>
-        <div wicket:id="summary" class="partman-note">No organization participates as "placeholder"</div>
         <input wicket:id="cancel" type="button" value="Cancel"/>
         <input wicket:id="submit" type="button" value="Submit"/>
     </div>
