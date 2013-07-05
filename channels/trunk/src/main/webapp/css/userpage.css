@@ -2776,24 +2776,84 @@ div.participationManager {
 }
 
 div.participationManager div.participation {
-    border: 0 none;
     float: left;
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-    width: 240px;
-    border-right: 1px solid #cccccc;
-    border-left: 1px solid #cccccc;
+    height: 300px;
+    margin: 0 0 10px;
+    overflow: auto;
+    padding: 0;
+    width: 220px;
+    border: 1px solid #cccccc;
+    border-right: 0;
+}
+
+div.participationManager div.participation.users {
+	width: 322px;
+	border-right: 1px solid #cccccc;
+}
+
+div.participation.users table {
+    border-collapse: collapse;
+    text-align: left;
+    width: 100%;
+}
+
+div.participation.users table th {
+    background: none repeat scroll 0 0 #E8E8E8;
+    border-bottom: 1px solid #CCCCCC;
+    color: #333333;
+    font-size: 10px;
+    font-weight: normal;
+    height: 21px;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+div.participation.users table th.accepted,
+div.participation.users table th.confirmed {
+	text-align: center;
+}
+
+div.participation.users table td {
+	border-bottom: 1px solid #CCCCCC;
+	height: 50px;
+}
+
+div.participation.users table td.check {
+	padding: 0 10px;	
+}
+
+div.participation.users table td.accepted,
+div.participation.users table td.confirmed {
+	text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+span.full-name {
+	color: #727272;
+	font-weight: bold;
+}
+
+span.username {
+    font-size: 10px;
+    text-transform: uppercase;
+    display: block;
 }
 
 div.participationManager div.participation h3 {
-    background: none repeat scroll 0 0 #E8E8E8;
-    border-bottom: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
+    background: none repeat scroll 0 0 #cccccc;
     color: #666666;
     font-size: 14px;
     padding: 5px;
     text-transform: uppercase;
 }	
+
+div.participationManager div.participation h3 input {
+    height: 11px;
+    padding: 1px;
+    width: 75px;
+}
 
 div.participation div.participation-table-cont a {
     border-bottom: 1px solid #CCCCCC;
@@ -2802,13 +2862,13 @@ div.participation div.participation-table-cont a {
     display: block;
     float: left;
     padding: 10px;
-    width: 220px;
+    width: 200px;
 }
 
 div.participation div.participation-table-cont a:hover,
 div.participation div.participation-table-cont a.selected {
 	color: #333333;
-    background: url("../images/part-arrow.png") no-repeat scroll 215px center #e8e8e8;
+    background: url("../images/part-arrow.png") no-repeat scroll 195px center #e8e8e8;
 }
 
 div.participation div.participation-table-cont img {
@@ -2825,10 +2885,41 @@ span.metrics {
 div.participation-filtering,
 div.participation-table-cont,
 div.participation-table-cont div {
-	float: none;
+	float: left;
     padding: 0;
     width: inherit;
 }
+
+div.participation-filtering {
+	background: none repeat scroll 0 0 #E8E8E8;
+	border-bottom: 1px solid #CCCCCC;
+	float: left;
+	font-size: 10px;
+	text-transform: uppercase;
+}
+
+div.participation-filtering input {
+    float: left;
+    margin: 4px 0 4px 4px;	
+}
+
+div.participation-filtering span {
+	display: block;
+	float: left;
+	margin: 3px 0 0 4px;
+}
+
+span.empty-note {
+    background: gold;
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 
 /*
 
@@ -2924,14 +3015,14 @@ div.add-new-org input[type=button] {
 */
 
 div.partman-note {
-	background:#f9da73;
-	padding: 10px;
-	border: 1px solid gray;
-	float: left;
-	font-size: 11px;
-	font-style: italic;
-	margin: 15px 0;
-	width: 734px;
+    background: #E8E8E8;
+    border: 1px dashed #999999;
+    float: left;
+    font-size: 11px;
+    font-style: normal;
+    margin: 0 0 15px;
+    padding: 10px;
+    width: 744px;
 }
 
 /*
