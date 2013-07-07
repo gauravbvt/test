@@ -2794,6 +2794,7 @@ div.participationManager div.participation {
 
 div.participationManager div.participation.org {
 	width: 382px;
+    overflow-y: auto;
 }
 
 div.participationManager div.participation.org select {
