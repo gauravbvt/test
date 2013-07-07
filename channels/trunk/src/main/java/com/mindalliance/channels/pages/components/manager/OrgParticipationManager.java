@@ -499,7 +499,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         else if ( i < size - 2 )
                             sb.append( ", " );
                     }
-                    sb.append( "will no longer participate as " )
+                    sb.append( " will no longer participate as " )
                             .append( selectedPlaceholder.getName() )
                             .append( "." );
                 }
