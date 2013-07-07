@@ -132,14 +132,5 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
         return parameters;
     }
 
-    private PageParameters makeAgentParameters( String username, Agent agent ) {
-        PageParameters parameters = new PageParameters();
-        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
-        parameters.set( USER, username );
-        parameters.set( AGENT, agent.getId() );
-        if ( agent.getOrganizationParticipation() != null )
-            parameters.set( ORG, agent.getOrganizationParticipation().getUid() );
-        return parameters;
-    }
 
 }

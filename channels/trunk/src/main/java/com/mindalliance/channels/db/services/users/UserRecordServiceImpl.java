@@ -103,8 +103,6 @@ public class UserRecordServiceImpl
 
     @Override
     public boolean updateUserRecord( UserRecord userRecord, UserRecord update ) {
-        if ( userRecord.getUsername().equals( update.getCreatorUsername() ) )
-            return false;
         if ( update.getEmail() != null
                 && !update.getEmail().isEmpty()
                 && !userRecord.getEmail().equals( update.getEmail() ) ) {
@@ -121,6 +119,10 @@ public class UserRecordServiceImpl
         userRecord.clearAccess();
         for ( UserAccess userAccess : update.getAccessList() ) {
             userRecord.addUserAccess( new UserAccess( userAccess ) );
+        }
+        userRecord.clearContactInfo();
+        for ( ContactInfo contactInfo : update.getContactInfoList() ) {
+            userRecord.addContactInfo( new ContactInfo( contactInfo ) );
         }
         save( userRecord );
         return true;

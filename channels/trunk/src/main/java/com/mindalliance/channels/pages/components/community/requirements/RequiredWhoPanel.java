@@ -219,7 +219,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         List<String> names = new ArrayList<String>();
         for ( Agency agency :
                 getCommunityService().getParticipationManager().getAllKnownAgencies( getCommunityService() ) ) {
-            if ( agency.isFixedOrganization() || agency.isParticipatingAsPlaceholder() ) {
+            if ( agency.isFixedOrganization() || agency.isParticipatingAsAPlaceholder() ) {
                 names.add( agency.getName() );
             }
         }
@@ -312,12 +312,12 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                             getAgentSpecPath( "fixedOrgId" ),
                             agency.getFixedOrganization().getId()
                     ) );
-                } else if ( agency.isParticipatingAsPlaceholder() ) {
+                } else if ( agency.isRegisteredByCommunity() ) {
                     doCommand( new UpdatePlanObject(
                             getUsername(),
                             requirement,
-                            getAgentSpecPath( "orgParticipationId" ),
-                            agency.getOrganizationParticipation().getUid()
+                            getAgentSpecPath( "registeredOrgId" ),
+                            agency.getRegisteredOrganization().getUid()
                     ) );
                 }
             }
@@ -335,7 +335,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                 multiCommand.addCommand( new UpdatePlanObject(
                         getUsername(),
                         requirement,
-                        getAgentSpecPath( "orgParticipationId" ),
+                        getAgentSpecPath( "registeredOrgId" ),
                         null
                 ) );
             }

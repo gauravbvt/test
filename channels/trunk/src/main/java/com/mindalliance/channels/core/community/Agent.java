@@ -39,10 +39,6 @@ public class Agent implements Nameable, Identifiable {
         }
     }
 
-    public Agent( Actor actor, Agency agency, CommunityService communityService ) {
-        this( actor, agency.getOrganizationParticipation(), communityService );
-    }
-
     public Actor getActor() {
         return actor;
     }

@@ -21,8 +21,8 @@ import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.UserIssue;
 import com.mindalliance.channels.core.query.PlanService;
-import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
@@ -66,11 +66,14 @@ public class CommunityServiceImpl implements CommunityService {
     private ParticipationManager participationManager;
     @Autowired
     private UserRecordService userRecordService;
+    @Autowired
+    private RegisteredOrganizationService registeredOrganizationService;
 
     private PlanCommunity planCommunity;
     private PlanService planService;
 
-    public CommunityServiceImpl() {}
+    public CommunityServiceImpl() {
+    }
 
     @Override
     public PlanCommunity getPlanCommunity() {
@@ -119,6 +122,11 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public UserRecordService getUserRecordService() {
         return userRecordService;
+    }
+
+    @Override
+    public RegisteredOrganizationService getRegisteredOrganizationService() {
+        return registeredOrganizationService;
     }
 
     private void setParticipationManager( ParticipationManager participationManager ) {
@@ -174,10 +182,33 @@ public class CommunityServiceImpl implements CommunityService {
         Agency agency = getParticipationManager().findAgencyNamed( name, this );
         Agency parentAgency = getParticipationManager().findAgencyNamed( parentName, this );
         if ( agency == null || parentAgency == null ) return false; // should not happen
-        Organization placeholder = agency.getPlaceholder( this );
-        if ( placeholder != null ) {
-            Organization parentPlaceholder = parentAgency.getPlaceholder( this );
-            return ChannelsUtils.areEqualOrNull( placeholder.getParent(), parentPlaceholder );
+        List<Organization> agencyPlaceholders = agency.getPlaceholders( this );
+        // If the agency participates as placeholders, the parent agency is considered if, for all fo the agency's placeholders,:
+        // 1. the agency's placeholder has no parent, or
+        // 2. the agency's placeholder has the same parent as one of the parent agency candidate's placeholders
+        if ( !agencyPlaceholders.isEmpty() ) {
+            final List<Organization> parentAgencyPlaceholders = parentAgency.getPlaceholders( this );
+            return !CollectionUtils.exists(
+                    agencyPlaceholders,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            final Organization agencyPlaceholder = (Organization) object;
+                            return agencyPlaceholder.getParent() != null
+                                    &&
+                                    !CollectionUtils.exists(
+                                            parentAgencyPlaceholders,
+                                            new Predicate() {
+                                                @Override
+                                                public boolean evaluate( Object object ) {
+                                                    Organization parentAgencyPlaceholder = (Organization) object;
+                                                    return  agencyPlaceholder.getParent().equals( parentAgencyPlaceholder );
+                                                }
+                                            }
+                                    );
+                        }
+                    }
+            );
         }
         return true;
     }
@@ -216,7 +247,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Boolean isCommunityPlanner( ChannelsUser user ) {
-        return user.isCommunityPlanner(  getPlanCommunity().getUri() );
+        return user.isCommunityPlanner( getPlanCommunity().getUri() );
     }
 
     @Override
@@ -302,24 +333,24 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Issue> listUserIssues( final ModelObject modelObject ) {
-        return (List<Issue>)CollectionUtils.select(
+        return (List<Issue>) CollectionUtils.select(
                 list( UserIssue.class ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Issue)object).getAbout().equals( modelObject );
+                        return ( (Issue) object ).getAbout().equals( modelObject );
                     }
                 }
         );
     }
 
-     ///////////////////////
+    ///////////////////////
 
     @Override
     public CommunityCommitments getAllCommitments( Boolean includeToSelf ) {
         CommunityCommitments commitments = new CommunityCommitments( getCommunityLocale() );
         CommunityAssignments allAssignments = getAllAssignments();
-        for ( Flow flow: getPlanService().findAllFlows() ) {
+        for ( Flow flow : getPlanService().findAllFlows() ) {
             if ( flow.isSharing() && !flow.isProhibited() ) {
                 CommunityAssignments beneficiaries = allAssignments.assignedTo( (Part) flow.getTarget() );
                 for ( CommunityAssignment committer : allAssignments.assignedTo( (Part) flow.getSource() ) ) {
@@ -377,7 +408,7 @@ public class CommunityServiceImpl implements CommunityService {
                         employment = new CommunityEmployment(
                                 planAssignment.getEmployment(),
                                 agent,
-                                new Agency( employer ),
+                                new Agency( employer, this ),
                                 this );
                     }
                     CommunityAssignment assignment = new CommunityAssignment(
@@ -398,7 +429,6 @@ public class CommunityServiceImpl implements CommunityService {
         return custodian != null
                 && getUserParticipationService().isUserParticipatingAs( user, new Agent( custodian ), this );
     }
-
 
 
     @SuppressWarnings( "unchecked" )
@@ -457,7 +487,7 @@ public class CommunityServiceImpl implements CommunityService {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !allowsCommitment( committer, beneficiary, (Flow.Restriction)object );
+                        return !allowsCommitment( committer, beneficiary, (Flow.Restriction) object );
                     }
                 }
         );
@@ -471,7 +501,7 @@ public class CommunityServiceImpl implements CommunityService {
             Agency beneficiaryAgency = beneficiary.getAgency();
             Place committerLocation = committer.getLocation( this );
             Place beneficiaryLocation = beneficiary.getLocation( this );
-            switch( restriction ) {
+            switch ( restriction ) {
 
                 case SameTopOrganization:
                     return committerAgency.getTopAgency( this )
@@ -485,7 +515,7 @@ public class CommunityServiceImpl implements CommunityService {
 
                 case DifferentTopOrganizations:
                     return !committerAgency.getTopAgency( this )
-                            .equals( beneficiaryAgency.getTopAgency( this ));
+                            .equals( beneficiaryAgency.getTopAgency( this ) );
 
                 case SameLocation:
                     return ModelObject.isNullOrUnknown( committerLocation )
@@ -528,7 +558,6 @@ public class CommunityServiceImpl implements CommunityService {
                 }
         );
     }
-
 
 
     ///////////////////////////

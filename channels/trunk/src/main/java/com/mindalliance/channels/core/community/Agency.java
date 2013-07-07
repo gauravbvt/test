@@ -22,6 +22,7 @@ import java.util.Set;
 
 /**
  * An organization participating in a plan, either fixed or registered.
+ * This is a transient object which state is set from database.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -33,21 +34,25 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     public static final Agency UNKNOWN = new Agency();
     // Only one of fixedOrganization or organizationParticipation or registeredOrganization must be set.
     private Organization fixedOrganization;
-    private RegisteredOrganization registeredOrganization;
-    private OrganizationParticipation organizationParticipation;
-    private String name;  // computed and cached
+    private RegisteredOrganization registeredOrganization; // registered into community, not from plan
+
+    private List<OrganizationParticipation> organizationParticipationList; // how the agency participates in the community
+    // computed and cached
+    private String name;
     private String description;
     private String mission;
     private String parentName;
     private String address;
     private boolean editable = false;
-    private Organization planOrganization;
+    private List<Organization> planOrganizations; // can have multiple plan organizations from participation
 
     public Agency() {
         name = "?";
         description = "Unknown agency";
         mission = "";
         fixedOrganization = Organization.UNKNOWN;
+        organizationParticipationList = new ArrayList<OrganizationParticipation>();
+        planOrganizations = new ArrayList<Organization>(  );
     }
 
     public Agency( String name ) {
@@ -55,50 +60,78 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         this.name = name;
     }
 
-    public Agency( Organization fixedOrganization ) {
+    public Agency( Organization fixedOrganization, CommunityService communityService ) {
         assert fixedOrganization.isActual();
         this.fixedOrganization = fixedOrganization;
+        initializeFromParticipation( communityService );
         name = fixedOrganization.getName();
         description = fixedOrganization.getDescription();
         mission = fixedOrganization.getMission();
         parentName = fixedOrganization.getParent() != null
                 ? fixedOrganization.getParent().getName()
                 : null;
-        planOrganization = fixedOrganization;
-        address = planOrganization.getFullAddress();
     }
 
     public Agency( OrganizationParticipation organizationParticipation, CommunityService communityService ) {
-        this.organizationParticipation = organizationParticipation;
         RegisteredOrganization registeredOrg = organizationParticipation.getRegisteredOrganization( communityService );
+        if ( registeredOrg.isFixedOrganization() ) {
+            fixedOrganization = registeredOrg.getFixedOrganization( communityService );
+        } else {
+            registeredOrganization = registeredOrg;
+        }
+        initializeFromParticipation( communityService );
         name = registeredOrg.getName( communityService );
         description = registeredOrg.getEffectiveDescription( communityService );
         mission = registeredOrg.getEffectiveMission( communityService );
         parentName = registeredOrg.getParentName( communityService );
-        planOrganization = findPlanOrganization( communityService );
-        address = registeredOrg.getAddress();
     }
 
     public Agency( RegisteredOrganization registeredOrganization, CommunityService communityService ) {
         this.registeredOrganization = registeredOrganization;
+        initializeFromParticipation( communityService );
         name = registeredOrganization.getName( communityService );
         description = registeredOrganization.getEffectiveDescription( communityService );
         mission = registeredOrganization.getEffectiveMission( communityService );
         parentName = registeredOrganization.getParentName( communityService );
-        planOrganization = findPlanOrganization( communityService );
-        address = registeredOrganization.getAddress();
     }
 
     public Agency( Agency agency ) {
         fixedOrganization = agency.getFixedOrganization();
         registeredOrganization = agency.getRegisteredOrganization();
-        organizationParticipation = agency.getOrganizationParticipation();
+        organizationParticipationList = agency.getOrganizationParticipationList();
         name = agency.getName();
         description = agency.getDescription();
         mission = agency.getMission();
         parentName = agency.getParentName();
-        planOrganization = agency.getPlanOrganization();
+        planOrganizations = agency.getPlanOrganizations();
         address = agency.getAddress();
+    }
+
+    private void initializeFromParticipation( CommunityService communityService ) {
+        OrganizationParticipationService organizationParticipationService
+                = communityService.getOrganizationParticipationService();
+        planOrganizations = new ArrayList<Organization>(  );
+        if ( registeredOrganization != null ) {
+            organizationParticipationList = organizationParticipationService.findAllParticipationBy(
+                    registeredOrganization,
+                    communityService );
+            address = registeredOrganization.getAddress();
+
+        } else if ( fixedOrganization != null ) {
+            organizationParticipationList = organizationParticipationService.findAllParticipationBy(
+                    fixedOrganization,
+                    communityService );
+            planOrganizations.add( fixedOrganization );
+            address = fixedOrganization.getFullAddress();
+
+        } else {
+            organizationParticipationList = new ArrayList<OrganizationParticipation>();
+        }
+        for ( OrganizationParticipation organizationParticipation : organizationParticipationList ) {
+            Organization placeholder = organizationParticipation.getPlaceholderOrganization( communityService );
+            if ( !planOrganizations.contains( placeholder ) )
+                planOrganizations.add( placeholder );
+        }
     }
 
     @Override
@@ -120,7 +153,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         if ( isFixedOrganization() ) {
             setChannels( getFixedOrganization().getEffectiveChannels() );
         } else {
-            setChannels( registeredOrganizationService.getAllChannels( getRegistration( communityService ), communityService ) );
+            setChannels( registeredOrganizationService.getAllChannels( getRegistration(), communityService ) );
         }
     }
 
@@ -152,15 +185,15 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         this.address = address;
     }
 
-    public Organization getPlanOrganization() {
-        return planOrganization;
+    public List<Organization> getPlanOrganizations() {
+        return planOrganizations;
     }
 
     public RegisteredOrganization getParentRegistration( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
             return null;
         } else {
-            RegisteredOrganization registered = getRegistration( communityService );
+            RegisteredOrganization registered = getRegistration();
             if ( registered == null )
                 return null;
             RegisteredOrganization parentRegistration = registered.getParent( communityService );
@@ -180,16 +213,13 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return fixedOrganization;
     }
 
-    public OrganizationParticipation getOrganizationParticipation() {
-        return organizationParticipation;
+    public List<OrganizationParticipation> getOrganizationParticipationList() {
+        return organizationParticipationList;
     }
 
-    public RegisteredOrganization getRegistration( CommunityService communityService ) {
-        return fixedOrganization != null
-                ? null
-                : registeredOrganization != null
-                ? registeredOrganization
-                : organizationParticipation.getRegisteredOrganization( communityService );
+
+    public RegisteredOrganization getRegistration() {
+        return registeredOrganization;
     }
 
     public RegisteredOrganization getRegisteredOrganization() {
@@ -200,30 +230,17 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return fixedOrganization != null;
     }
 
-    public boolean hasPlaceholder( CommunityService communityService ) {
-        return organizationParticipation != null
-                && organizationParticipation.getPlaceholderOrganization( communityService ) != null;
-    }
-
-    public boolean isRegisteredByCommunity( CommunityService communityService ) {
-        if ( fixedOrganization != null ) return false;
-        if ( registeredOrganization != null )
-            return !registeredOrganization.isFixedOrganization();
-        if ( organizationParticipation != null )
-            return !organizationParticipation.getRegisteredOrganization(communityService ).isFixedOrganization();
-        else
-            throw new IllegalStateException();
-    }
-
-    public boolean isParticipatingAsPlaceholder() {
-        return organizationParticipation != null;
+    public boolean isRegisteredByCommunity(  ) {
+        return !isFixedOrganization();
     }
 
     public List<Agent> getAgents( CommunityService communityService ) {
         Set<Agent> agents = new HashSet<Agent>();
-        for ( Job job : getPlaceholderJobs( communityService ) ) {
-            Agent agent = new Agent( job.getActor(), organizationParticipation, communityService );
-            agents.add( agent );
+        for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
+            for ( Job job : getPlaceholderJobs( organizationParticipation, communityService ) ) {
+                Agent agent = new Agent( job.getActor(), organizationParticipation, communityService );
+                agents.add( agent );
+            }
         }
         for ( Job job : getFixedJobs( communityService ) ) {   // if any
             Agent agent = new Agent( job.getActor() );
@@ -232,13 +249,13 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return Collections.unmodifiableList( new ArrayList<Agent>( agents ) );
     }
 
-    public Place getJurisdiction( CommunityService communityService ) {
+    public Place getJurisdiction( OrganizationParticipation participation, CommunityService communityService ) {
         if ( fixedOrganization != null )
             return fixedOrganization.getJurisdiction();
         else if ( registeredOrganization != null )
             return registeredOrganization.getJurisdiction( communityService );
         else {
-            Organization placeholder = organizationParticipation.getPlaceholderOrganization( communityService );
+            Organization placeholder = participation.getPlaceholderOrganization( communityService );
             if ( placeholder != null )
                 return placeholder.getJurisdiction();
         }
@@ -248,38 +265,19 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     public Agency getTopAgency( CommunityService communityService ) {
         if ( isFixedOrganization() ) {
             Organization org = getFixedOrganization();
-            return new Agency( org.getTopOrganization() );
+            return new Agency( org.getTopOrganization(), communityService );
         } else {
-            RegisteredOrganization regOrg = getEffectiveRegistereOrganization( communityService );
-            assert regOrg != null;
+            assert registeredOrganization != null;
             RegisteredOrganization topAgency = communityService.getParticipationManager()
-                    .getTopRegisteredOrganization( regOrg, communityService );
+                    .getTopRegisteredOrganization( registeredOrganization, communityService );
             return new Agency( topAgency, communityService );
-        }
-    }
-
-    private RegisteredOrganization getEffectiveRegistereOrganization( CommunityService communityService ) {
-        return registeredOrganization != null
-                ? registeredOrganization
-                : organizationParticipation != null
-                ? organizationParticipation.getRegisteredOrganization( communityService )
-                : null;
-    }
-
-    private Organization findPlanOrganization( CommunityService communityService ) {
-        if ( isFixedOrganization() ) {
-            return getFixedOrganization();
-        } else if ( isParticipatingAsPlaceholder() ) {
-            return getPlaceholder( communityService );
-        } else {
-            return null;
         }
     }
 
     public Agency getParent( CommunityService communityService ) {
         if ( parentName != null ) {
             if ( isFixedOrganization() ) {
-                return new Agency( getFixedOrganization().getParent() );
+                return new Agency( getFixedOrganization().getParent(), communityService );
             } else {
                 RegisteredOrganization registeredParent = getParentRegistration( communityService );
                 if ( registeredParent != null ) {
@@ -292,14 +290,14 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public List<Agency> ancestors( CommunityService communityService ) {
         List<Agency> ancestors = new ArrayList<Agency>();
-        if ( isRegisteredByCommunity( communityService ) ) {
+        if ( isRegisteredByCommunity(  ) ) {
             for ( RegisteredOrganization registered
-                    : communityService.getParticipationManager().ancestorsOf( getRegistration( communityService ), communityService ) ) {
+                    : communityService.getParticipationManager().ancestorsOf( getRegistration(), communityService ) ) {
                 ancestors.add( new Agency( registered, communityService ) );
             }
         } else {
-            for ( Organization org : getPlanOrganization().ancestors() ) {
-                ancestors.add( new Agency( org ) );
+            for ( Organization org : getFixedOrganization().ancestors() ) {
+                ancestors.add( new Agency( org, communityService ) );
             }
         }
         return ancestors;
@@ -317,17 +315,13 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     public long getId() {
         return isFixedOrganization()
                 ? getFixedOrganization().getId()
-                : organizationParticipation != null
-                ? ( Long.MAX_VALUE / 2 ) + organizationParticipation.getId()
-                : 0;
+                : ( Long.MAX_VALUE / 2 ) + registeredOrganization.getId();
     }
 
     public String getUid() {
         String uid = isFixedOrganization()
                 ? Long.toString( getFixedOrganization().getId() )
-                : organizationParticipation != null
-                ? organizationParticipation.getUid()
-                : "0";
+                : registeredOrganization.getUid();
         assert !uid.contains( "," ); // as per assumption in RequirementRelationship
         return uid;
     }
@@ -347,34 +341,24 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return name;
     }
 
-    /**
-     * Get the jobs inherited from placeholder organization.
-     *
-     * @param communityService a plan community service
-     * @return a list of jobs
-     */
-    public List<Job> getPlaceholderJobs( CommunityService communityService ) {
-        if ( organizationParticipation != null ) {
-            return organizationParticipation.getPlaceholderJobs( communityService );
-        } else {
-            return new ArrayList<Job>();
-        }
-    }
 
     public List<Job> getFixedJobs( CommunityService communityService ) {
-        if ( organizationParticipation != null ) {
-            return organizationParticipation.getFixedJobs( communityService );
-        } else if ( fixedOrganization != null ) {
-            return fixedOrganization.getJobs();
-        } else {
-            return new ArrayList<Job>();
+        List<Job> jobs = new ArrayList<Job>();
+        for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
+            jobs.addAll( organizationParticipation.getFixedJobs( communityService ) );
         }
+        if ( fixedOrganization != null ) {
+            jobs.addAll( fixedOrganization.getJobs() );
+        }
+        return jobs;
     }
 
     public List<Job> getAllJobs( CommunityService communityService ) {
         List<Job> jobs = new ArrayList<Job>();
         jobs.addAll( getFixedJobs( communityService ) );
-        jobs.addAll( getPlaceholderJobs( communityService ) );
+        for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
+            jobs.addAll( getPlaceholderJobs( organizationParticipation, communityService ) );
+        }
         return jobs;
     }
 
@@ -383,7 +367,6 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         if ( object instanceof Agency ) {
             Agency other = (Agency) object;
             return ChannelsUtils.areEqualOrNull( fixedOrganization, other.getFixedOrganization() )
-                    && ChannelsUtils.areEqualOrNull( organizationParticipation, other.getOrganizationParticipation() )
                     && ChannelsUtils.areEqualOrNull( registeredOrganization, other.getRegisteredOrganization() );
         } else {
             return false;
@@ -394,8 +377,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     public int hashCode() {
         int hash = 1;
         if ( fixedOrganization != null ) hash = hash * 31 + fixedOrganization.hashCode();
-        if ( organizationParticipation != null ) hash = hash * 31 + organizationParticipation.hashCode();
-        if ( registeredOrganization != null ) hash = hash * 31 + getRegisteredOrganization().hashCode();
+        if ( registeredOrganization != null ) hash = hash * 31 + registeredOrganization.hashCode();
         return hash;
     }
 
@@ -432,28 +414,12 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     /////////
 
-    public Long getOrganizationId() {
-        return getPlanOrganization() != null ? getPlanOrganization().getId() : null;
-    }
-
-    public Organization getPlaceholder( CommunityService communityService ) {
-        if ( organizationParticipation != null ) {
-            return organizationParticipation.getPlaceholderOrganization( communityService );
-        } else {
-            return null;
+    public List<Long> getOrganizationIds() {
+        List<Long> ids = new ArrayList<Long>(  );
+        for ( Organization organization : getPlanOrganizations() ) {
+            ids.add( organization.getId() );
         }
-    }
-
-    public Organization getOrganizationParticipatedAs( CommunityService communityService ) {
-        if ( organizationParticipation != null ) {
-            return organizationParticipation.getOrganizationParticipatedAs( communityService );
-        } else {
-            return null;
-        }
-    }
-
-    public long getPlaceholderId() {
-        return organizationParticipation.getPlaceholderOrgId();
+        return ids;
     }
 
     public boolean hasAncestor( final Agency agency, final CommunityService communityService ) {
@@ -462,30 +428,22 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Agency ancestor = (Agency) object;
-                        return ancestor.sameAs( agency, communityService );
+                        return object.equals( agency );
                     }
                 }
         );
     }
 
-    private boolean sameAs( Agency other, CommunityService communityService ) {
-        return this.equals( other )
-                || ( getRegistration(communityService) != null
-                && other.getRegistration(communityService) != null
-                && getRegistration(communityService).equals( other.getRegistration(communityService) ) );
-    }
-
     public boolean hasAncestorWithPlaceholder( final Organization placeholder, final CommunityService communityService ) {
         final OrganizationParticipationService organizationParticipationService
                 = communityService.getOrganizationParticipationService();
-        return isRegisteredByCommunity(communityService)
+        return isRegisteredByCommunity( )
                 && CollectionUtils.exists(
                 ancestors( communityService ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        RegisteredOrganization registration = ( (Agency) object ).getRegistration(communityService);
+                        RegisteredOrganization registration = ( (Agency) object ).getRegistration(  );
                         return registration != null
                                 && organizationParticipationService.isAgencyRegisteredAs( registration, placeholder, communityService );
                     }
@@ -495,6 +453,38 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public boolean hasAssignableAgents( CommunityService communityService ) {
         return !getAgents( communityService ).isEmpty();
+    }
+
+    public List<Job> getPlaceholderJobs(
+            OrganizationParticipation organizationParticipation,
+            CommunityService communityService ) {
+        return organizationParticipation.getPlaceholderJobs( communityService );
+    }
+
+    public boolean participatesAsPlaceholder( final Organization placeholder ) {
+        return CollectionUtils.exists(
+                getOrganizationParticipationList(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return((OrganizationParticipation)object).getPlaceholderOrgId() == placeholder.getId();
+                    }
+                }
+        );
+    }
+
+    public List<Organization> getPlaceholders( CommunityService communityService ) {
+        List<Organization> placeholders = new ArrayList<Organization>(  );
+        for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
+            Organization placeholder = organizationParticipation.getPlaceholderOrganization( communityService );
+            if ( placeholder != null && ! placeholders.contains( placeholder ) )
+                placeholders.add( placeholder );
+        }
+        return placeholders;
+    }
+
+    public boolean isParticipatingAsAPlaceholder() {
+        return !getOrganizationParticipationList().isEmpty();
     }
 }
 

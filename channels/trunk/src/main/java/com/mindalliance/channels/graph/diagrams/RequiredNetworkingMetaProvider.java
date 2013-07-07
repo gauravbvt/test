@@ -173,9 +173,9 @@ public class RequiredNetworkingMetaProvider extends AbstractMetaProvider<Agency,
             int numLines = Math.min( lines.length, 3 );
             iconName = service.findIconName(
                     communityService,
-                    agency.getPlanOrganization() == null
-                            ? agency
-                            : agency.getPlanOrganization() );
+                    agency.getPlanOrganizations().size() == 1 // todo: always use agency icon if exists
+                            ? agency.getPlanOrganizations().get( 0 )
+                            : agency );
             return iconName + ( numLines > 0 ? numLines : "" ) + ".png";
         }
 

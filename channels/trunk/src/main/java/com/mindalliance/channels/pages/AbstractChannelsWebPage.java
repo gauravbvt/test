@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.ModelObjectContext;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.Commander;
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
@@ -40,7 +41,6 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.engine.imaging.ImagingService;
 import com.mindalliance.channels.pages.components.guide.IGuidePanel;
 import com.mindalliance.channels.pages.components.help.GalleryPanel;
-import com.mindalliance.channels.pages.reports.AbstractParticipantPage;
 import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
@@ -91,6 +91,13 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     // Explicit plan community (for a community of adopters of a plan)
     public static final String COMMUNITY_PARM = "community";
+
+    public static final String AGENT = "agent";
+
+    public static final String ORG = "org";
+
+    public static final String USER = "user";
+
 
     /**
      * Delay between refresh check callbacks.
@@ -415,7 +422,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PlanCommunity getPlanCommunity() {
         if ( planCommunity == null ) {
             planCommunity = user.getPlan() != null  // domain context else community context
-                    ? planCommunityManager.getDomainPlanCommunity( getPlan() )
+                    ? planCommunityManager.getDomainPlanCommunity( user.getPlan() )
                     : planCommunityManager.getPlanCommunity( getPlanCommunityUri() );
         }
         return planCommunity;
@@ -443,13 +450,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                     planCommunity );
 
         } else {
-            Actor actor = userParticipations.get( 0 ).getAgent( getCommunityService() ).getActor(); // todo - COMMUNITY - agents!
+            assert ( userParticipations.size() == 1 );
+            Agent agent = userParticipations.get( 0 ).getAgent( getCommunityService() );
             guidelinesLink = newTargetedLink( id,
                     "",
                     ChecklistsPage.class,
-                    AbstractParticipantPage.createParameters(
-                            actor,
-                            planCommunity ),
+                    makeAgentParameters( getUser().getUsername(), agent ),
                     null,
                     planCommunity );
         }
@@ -457,6 +463,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             guidelinesLink.add( new AttributeModifier( "target", new Model<String>( "_blank" ) ) );
         return guidelinesLink;
     }
+
 
     public BookmarkablePageLink<? extends WebPage> getRFIsLink(
             String id,
@@ -592,7 +599,8 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                     result.add( p );
             }
         }
-*/        Collections.sort( result, new Comparator<Plan>() {
+*/
+        Collections.sort( result, new Comparator<Plan>() {
             @Override
             public int compare( Plan p1, Plan p2 ) {
                 return p1.getName().compareTo( p2.getName() );
@@ -700,6 +708,17 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         }
         return params;
     }
+
+    protected PageParameters makeAgentParameters( String username, Agent agent ) {
+        PageParameters parameters = new PageParameters();
+        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+        parameters.set( USER, username );
+        parameters.set( AGENT, agent.getId() );
+        if ( agent.getOrganizationParticipation() != null )
+            parameters.set( ORG, agent.getOrganizationParticipation().getUid() );
+        return parameters;
+    }
+
 
     @Override
     public PageParameters addFromCommunityParameters( PageParameters params, PlanCommunity planCommunity ) {
@@ -1107,7 +1126,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             }
         }
         if ( plan == null ) { // give up - should not happen
-            LOG.error( "No plan exists");
+            LOG.error( "No plan exists" );
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_FORBIDDEN, "Unauthorized access" );
         }
         return plan;

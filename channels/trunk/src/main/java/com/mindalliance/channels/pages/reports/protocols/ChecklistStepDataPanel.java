@@ -67,14 +67,16 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
                 ? new ActionStepDataPanel( "act", stepData, getFinder() )
                 : getStep().isCommunicationStep()
                 ? new CommunicationStepDataPanel( "act", stepData, getFinder() )
+                : getStep().isReceiptConfirmation()
+                ? new ReceiptConfirmationDataPanel( "act", stepData, getFinder() )
                 : new SubTaskStepDataPanel( "act", stepData, getFinder() );
         actPanel.add( new AttributeModifier( "class", getStep().isRequired() ? "required" : "optional" ) );
         stepContainer.add( actPanel );
     }
 
-    private Label makeLocalActStep(  ) {
+    private Label makeLocalActStep() {
         Label actLabel = new Label( "act", getStep().getLabel() );
-        actLabel.add(  new AttributeModifier("class", "step-act") );
+        actLabel.add( new AttributeModifier( "class", "step-act" ) );
         return actLabel;
     }
 
@@ -120,7 +122,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
         ifsContainer.add( ifListView );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepGuard> getIfGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().getStepGuards(),
@@ -159,7 +161,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
         unlessesContainer.add( unlessListView );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<StepGuard> getUnlessGuards() {
         return (List<StepGuard>) CollectionUtils.select(
                 getChecklist().getStepGuards(),
@@ -191,7 +193,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
                     addTipTitle( stepLabel, label );
                 }
                 item.add( stepLabel );
-             }
+            }
         };
         aftersContainer.add( prerequisiteListView );
     }
@@ -211,7 +213,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
 
     private void addTaskLink() { // todo - add task link to subtask steps
         WebMarkupContainer link = new WebMarkupContainer( "link" );
-        link.add(  new AttributeModifier( "href", "#" + getSubOrFollowUpTask().getAnchor() ) );
+        link.add( new AttributeModifier( "href", "#" + getSubOrFollowUpTask().getAnchor() ) );
         add( link );
         link.add( new Label( "taskName",
                 "I do task \"" + getSubOrFollowUpTask().getLabel() + "\"" ) );

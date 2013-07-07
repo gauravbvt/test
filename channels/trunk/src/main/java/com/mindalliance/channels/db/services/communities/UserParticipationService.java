@@ -78,6 +78,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     void refuse( UserParticipation participation, CommunityService communityService );
 
+    // accepted and confirmed (i.e. active)
     boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService );
 
     List<UserParticipation> listUserParticipationIn(

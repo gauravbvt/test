@@ -13,6 +13,7 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
@@ -76,6 +77,8 @@ public interface CommunityService {
     ParticipationManager getParticipationManager();
 
     UserRecordService getUserRecordService();
+
+    RegisteredOrganizationService getRegisteredOrganizationService();
 
     ParticipationAnalyst getParticipationAnalyst();
 

@@ -25,17 +25,17 @@ import java.util.Set;
  * Date: 4/5/13
  * Time: 9:14 AM
  */
-@XmlType(propOrder = {"name", "registeredByCommunity", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationId"})
+@XmlType(propOrder = {"name", "registeredByCommunity", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationIds", "documentation"})
 public class AgencyData implements Serializable {
 
     private Agency agency;
     private String parentName;
     private List<EmploymentData> employments;
     private List<ChannelData> channelDataList;
-    private Long planOrganizationId;
+    private List<Long> planOrganizationIds;
     private AgencyData parentData;
-    private DocumentationData documentationData;
     private boolean registeredByCommunity;
+    private DocumentationData documentationData;
 
     public AgencyData() {
         // required
@@ -43,11 +43,16 @@ public class AgencyData implements Serializable {
 
     public AgencyData( String serverUrl, Agency agency, CommunityService communityService ) {
         this.agency = agency;
-        registeredByCommunity = agency.isRegisteredByCommunity( communityService );
+        registeredByCommunity = agency.isRegisteredByCommunity(  );
         initPlanOrganization( serverUrl, communityService );
         initChannels( serverUrl, communityService );
         initParent( serverUrl, communityService );
         initEmployments( serverUrl, communityService );
+        if ( agency.isFixedOrganization() ) { // todo - always use agency documentation data?
+            documentationData = new DocumentationData( serverUrl, agency.getFixedOrganization() );
+        } else {
+            documentationData = new DocumentationData( serverUrl, agency );
+        }
     }
 
     private void initChannels( String serverUrl, CommunityService communityService ) {
@@ -58,10 +63,9 @@ public class AgencyData implements Serializable {
     }
 
     private void initPlanOrganization( String serverUrl, CommunityService communityService ) {
-        Organization organization = agency.getPlanOrganization();
-        if ( organization != null ) {
-            planOrganizationId = organization.getId();
-            documentationData = new DocumentationData( serverUrl, organization );
+        planOrganizationIds = new ArrayList<Long>(  );
+        for ( Organization organization : agency.getPlanOrganizations() ) {
+            planOrganizationIds.add(organization.getId() );
         }
     }
 
@@ -119,17 +123,13 @@ public class AgencyData implements Serializable {
         return employments;
     }
 
-    @XmlElement
-    public Long getPlanOrganizationId() {
-        return planOrganizationId;
+    @XmlElement(name = "organizationId" )
+    public List<Long> getPlanOrganizationIds() {
+        return planOrganizationIds;
     }
 
     public Set<Long> allOrganizationIds() {
-        Set<Long> ids = new HashSet<Long>();
-        if ( planOrganizationId != null ) {
-            ids.add( planOrganizationId );
-        }
-        return ids;
+        return new HashSet<Long>( planOrganizationIds );
     }
 
     public Set<Long> allMediumIds() {
@@ -176,7 +176,9 @@ public class AgencyData implements Serializable {
         return parentData;
     }
 
+    @XmlElement
     public DocumentationData getDocumentation() {
         return documentationData;
     }
+
 }

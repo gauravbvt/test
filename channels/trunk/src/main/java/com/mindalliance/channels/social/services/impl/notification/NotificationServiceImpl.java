@@ -119,7 +119,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
-    //   @Transactional
     public void notifyOfUserMessages() {
         LOG.debug( "Sending out user messages" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -149,8 +148,7 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
-    //   @Transactional
-    public void notifyOfUrgentFeedback() {
+     public void notifyOfUrgentFeedback() {
         LOG.debug( "Sending out urgent feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
@@ -173,7 +171,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
-    //   @Transactional
     public void reportOnNewFeedback() {
         LOG.debug( "Sending out reports of new feedback" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -208,7 +205,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
-    //   @Transactional
     public void notifyOfSurveys() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( planCommunity.isDomainCommunity() ) {
@@ -268,7 +264,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
 //    @Scheduled( fixedDelay = 86400000 )   // each day
-    //   @Transactional
     public void reportOnSurveys() {
         LOG.debug( "Sending out reports of incomplete surveys and surveys status" );
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
@@ -286,7 +281,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
-//    @Transactional
     public void notifyOnUserAccessChange() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             CommunityService communityService = getCommunityService( planCommunity );
@@ -312,7 +306,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
-//    @Transactional
     public void notifyOfParticipationConfirmation() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
@@ -336,14 +329,12 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled(fixedDelay = 86400000)   // each day
-//    @Transactional
     public void reportOnParticipationConfirmation() {
         // todo
     }
 
     @Override
     @Scheduled(fixedDelay = 60000)     // every minute
-//    @Transactional
     public void notifyOfParticipationRequest() {
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             ChannelsUser.current().setCommunityService( getCommunityService( planCommunity ) );
@@ -371,7 +362,6 @@ public class NotificationServiceImpl implements NotificationService, Initializin
 
     @Override
     @Scheduled( fixedDelay = 86400000 )   // each day
-//    @Transactional
     public void reportOnParticipationRequests() {
         //Todo
     }

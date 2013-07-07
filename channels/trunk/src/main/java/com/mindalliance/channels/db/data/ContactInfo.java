@@ -28,6 +28,11 @@ public class ContactInfo implements Serializable {
         this.address = channel.getAddress();
     }
 
+    public ContactInfo( ContactInfo contactInfo ) {
+        transmissionMediumId = contactInfo.getTransmissionMediumId();
+        address = contactInfo.getAddress();
+    }
+
     public String getAddress() {
         return address;
     }

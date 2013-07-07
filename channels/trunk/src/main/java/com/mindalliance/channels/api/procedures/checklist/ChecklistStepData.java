@@ -4,6 +4,7 @@ import com.mindalliance.channels.api.directory.ContactData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
+import com.mindalliance.channels.core.model.checklist.ReceiptConfirmationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 
@@ -21,7 +22,8 @@ import java.util.Set;
  * Date: 4/5/13
  * Time: 8:52 PM
  */
-@XmlType( propOrder = {"index", "actionStep", "notificationStep", "requestStep", "answerStep", "researchStep", "followUpStep"} )
+@XmlType( propOrder = {"index", "actionStep", "notificationStep", "requestStep", "answerStep",
+        "researchStep", "followUpStep", "receiptConfirmation"} )
 public class ChecklistStepData implements Serializable {
 
     private int index;
@@ -34,6 +36,7 @@ public class ChecklistStepData implements Serializable {
     private AnswerStepData answerStep;
     private ResearchStepData researchStep;
     private FollowUpStepData followUpStep;
+    private ReceiptConfirmationStepData receiptConfirmationStep;
 
     public ChecklistStepData() {
         // required
@@ -73,6 +76,13 @@ public class ChecklistStepData implements Serializable {
             }  else {
                 throw new RuntimeException( "Unknown sub-task step" );
             }
+        } else if ( step.isReceiptConfirmation() ) {
+            receiptConfirmationStep = new ReceiptConfirmationStepData(
+                    (ReceiptConfirmationStep)step,
+                    checklist,
+                    serverUrl,
+                    communityService,
+                    user );
         } else {
             throw new RuntimeException( "Unknown step" );
         }
@@ -102,6 +112,11 @@ public class ChecklistStepData implements Serializable {
     @XmlElement
     public RequestStepData getRequestStep() {
         return requestStep;
+    }
+
+    @XmlElement
+    public ReceiptConfirmationStepData getReceiptConfirmation() {
+        return receiptConfirmationStep;
     }
 
     @XmlElement
@@ -164,6 +179,8 @@ public class ChecklistStepData implements Serializable {
                 ? researchStep
                 : followUpStep != null
                 ? followUpStep
+                : receiptConfirmationStep != null
+                ? receiptConfirmationStep
                 : null;
         assert stepData != null;
         return stepData;
@@ -177,6 +194,7 @@ public class ChecklistStepData implements Serializable {
             allContacts.addAll( requestStep.allContacts() );
         else if ( answerStep != null )
             allContacts.addAll( answerStep.allContacts() );
+        // todo add contacts to confirm receipt
         return allContacts;
     }
 

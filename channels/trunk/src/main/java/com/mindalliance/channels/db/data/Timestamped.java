@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.orm.model;
+package com.mindalliance.channels.db.data;
 
 /**
  * Object that has a last-modified timestamp property and accessors for it.

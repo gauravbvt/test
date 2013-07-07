@@ -450,6 +450,7 @@ public class UserParticipationServiceImpl
         BooleanBuilder bb = new BooleanBuilder();
         bb.and( qUserParticipation.classLabel.eq( UserParticipation.class.getSimpleName() ) )
                 .and( qUserParticipation.communityUri.eq( communityService.getPlanCommunity().getUri() ) )
+                .and( qUserParticipation.participantUsername.eq( participation.getParticipantUsername() ) )
                 .and( qUserParticipation.actorId.eq( participation.getActorId() ) );
         if ( organizationParticipation == null ) {
             bb.and( qUserParticipation.organizationParticipationUid.isNull() );

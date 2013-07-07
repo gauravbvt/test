@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages.components.social.menus;
 
 import com.mindalliance.channels.core.command.CommandException;
-import com.mindalliance.channels.core.orm.model.PersistentPlanObject;
+import com.mindalliance.channels.db.data.PersistentPlanObject;
 import com.mindalliance.channels.db.data.messages.UserMessage;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.pages.Updatable;

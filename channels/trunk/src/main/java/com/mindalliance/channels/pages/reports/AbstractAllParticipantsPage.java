@@ -27,11 +27,6 @@ import java.util.List;
  */
 public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicPage {
 
-    public static final String AGENT = "agent";
-
-    public static final String ORG = "org";
-
-    public static final String USER = "user";
 
     @SpringBean
     private PlanManager planManager;

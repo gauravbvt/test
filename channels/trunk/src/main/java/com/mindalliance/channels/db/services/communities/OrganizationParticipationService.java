@@ -49,6 +49,10 @@ public interface OrganizationParticipationService extends DataService<Organizati
             RegisteredOrganization registeredOrganization,
             CommunityService communityService );
 
+    List<OrganizationParticipation> findAllParticipationBy(
+            Organization fixedOrganization,
+            CommunityService communityService );
+
     OrganizationParticipation assignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,

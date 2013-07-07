@@ -197,9 +197,9 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     public Set<Long> allOrganizationIds() {
         Set<Long> ids = new HashSet<Long>();
         for ( CommunityEmployment employment : findAllEmployments() ) {
-            Organization organization = employment.getEmployer().getPlanOrganization();
-            if ( organization != null )
+            for ( Organization organization :employment.getEmployer().getPlanOrganizations()) {
                 ids.add( organization.getId() );
+            }
         }
         return ids;
     }

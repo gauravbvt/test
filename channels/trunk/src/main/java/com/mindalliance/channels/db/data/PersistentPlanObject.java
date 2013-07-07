@@ -1,4 +1,4 @@
-package com.mindalliance.channels.core.orm.model;
+package com.mindalliance.channels.db.data;
 
 import com.mindalliance.channels.core.ChannelsLockable;
 import com.mindalliance.channels.core.model.Identifiable;

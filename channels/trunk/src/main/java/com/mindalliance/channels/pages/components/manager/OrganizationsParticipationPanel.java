@@ -252,8 +252,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     private boolean isFilteredOut( Agency agency ) {
-        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity( getCommunityService() );
-        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity( getCommunityService() );
+        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity( );
+        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity( );
     }
 
     private void addRegistering() {
@@ -535,7 +535,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         public String getStatus() {
             if ( agency == null ) {
                 return null;
-            } else if ( agency.isRegisteredByCommunity( getCommunityService() ) ) {
+            } else if ( agency.isRegisteredByCommunity( ) ) {
                 return "Community";
             } else {
                 if ( agency.getFixedOrganization().isPlaceHolder() )
@@ -547,7 +547,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
         private boolean isNonParticipatingCommunityRegistered() {
             return agency != null && organizationParticipation == null
-                    && agency.isRegisteredByCommunity( getCommunityService() );
+                    && agency.isRegisteredByCommunity( );
         }
 
         public String getDefaultParticipateAsText() {

@@ -5,7 +5,6 @@ import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
-import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
 
@@ -77,10 +76,6 @@ public class CommunityEmployment implements Serializable {
 
     public Boolean isConfirmed() {
         return employment.isConfirmed();
-    }
-
-    public Organization getEmployerOrganization() {
-        return getEmployer().getPlanOrganization();
     }
 
     public String getLabel() {

@@ -71,7 +71,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         // fixed
         for ( Organization organization : planService.listActualEntities( Organization.class, true ) ) {
             if ( !organization.isPlaceHolder() )
-                agencies.add( new Agency( organization ) );
+                agencies.add( new Agency( organization, communityService ) );
         }
         // registered as placeholder
         agencies.addAll( organizationParticipationService.listParticipatingAgencies( communityService ) );
@@ -96,8 +96,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        Organization org = ( (Agency) object ).getPlaceholder( communityService );
-                        return org != null && org.equals( placeholder );
+                        return( (Agency) object ).participatesAsPlaceholder( placeholder );
                     }
                 }
         );
@@ -109,7 +108,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         // fixed
         Organization organization = planService.findActualEntity( Organization.class, agencyName );
         if ( organization != null && !organization.isPlaceHolder() )
-            return new Agency( organization );
+            return new Agency( organization, communityService );
         // registered as placeholder
         for ( Agency agency : organizationParticipationService.listParticipatingAgencies( communityService ) ) {
             if ( agency.getName().equals( agencyName ) )
@@ -150,7 +149,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         }
         // Registered agents
         for ( Agency agency : organizationParticipationService.listParticipatingAgencies( communityService ) ) {
-            if ( agency.isRegisteredByCommunity( communityService ) )
+            if ( agency.isRegisteredByCommunity( ) )
                 agents.addAll( agency.getAgents( communityService ) );
         }
         return new ArrayList<Agent>( agents );
@@ -262,19 +261,21 @@ public class ParticipationManagerImpl implements ParticipationManager {
         // When a fixed organization is registered under a placeholder,
         // it has the jobs it derives from the placeholder in addition to the jobs it already defines.
         for ( Agency agency : organizationParticipationService.listParticipatingAgencies( communityService ) ) {
-            for ( Job job : agency.getPlaceholderJobs( communityService ) ) {
-                if ( new Agent( job.getActor(), agency, communityService ).equals( agent ) ) {
-                    if ( job.getSupervisor() != null ) {
-                        Agent supervisor = new Agent( job.getSupervisor(), agency, communityService );
-                        supervisors.add( supervisor );
+            for ( OrganizationParticipation organizationParticipation : agency.getOrganizationParticipationList() ) {
+                for ( Job job : agency.getPlaceholderJobs( organizationParticipation, communityService ) ) {
+                    if ( new Agent( job.getActor(), organizationParticipation, communityService ).equals( agent ) ) {
+                        if ( job.getSupervisor() != null ) {
+                            Agent supervisor = new Agent( job.getSupervisor(), organizationParticipation, communityService );
+                            supervisors.add( supervisor );
+                        }
                     }
                 }
-            }
-            for ( Job job : agency.getFixedJobs( communityService ) ) {
-                if ( actor.equals( job.getActor() ) ) {
-                    if ( job.getSupervisor() != null ) {
-                        Agent supervisor = new Agent( job.getSupervisor() );
-                        supervisors.add( supervisor );
+                for ( Job job : agency.getFixedJobs( communityService ) ) {
+                    if ( actor.equals( job.getActor() ) ) {
+                        if ( job.getSupervisor() != null ) {
+                            Agent supervisor = new Agent( job.getSupervisor() );
+                            supervisors.add( supervisor );
+                        }
                     }
                 }
             }
@@ -290,7 +291,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         for ( Employment employment : planService.findAllEmploymentsForActor( agent.getActor() ) ) {
             Organization org = employment.getOrganization();
             if ( !org.isPlaceHolder() ) {
-                employers.add( new Agency( org ) );
+                employers.add( new Agency( org, communityService ) );
             }
         }
         // registered organization, if one
@@ -311,7 +312,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         for ( Employment employment : planService.findAllEmploymentsForActor( agent.getActor() ) ) {
             Organization org = employment.getOrganization();
             if ( !org.isPlaceHolder() ) {
-                employments.add( new CommunityEmployment( employment, agent, new Agency( org ), communityService ) );
+                employments.add( new CommunityEmployment( employment, agent, new Agency( org, communityService ), communityService ) );
             } else {
                 if ( agencyPlaceholder != null && agencyPlaceholder.equals( org ) ) {
                     employments.add( new CommunityEmployment(
@@ -328,17 +329,24 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Override
     public List<CommunityEmployment> findAllEmploymentsBy( Agency agency, CommunityService communityService ) {
         List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
-        OrganizationParticipation organizationParticipation = agency.getOrganizationParticipation();
         Organization fixedOrganization = agency.getFixedOrganization();
-        if ( organizationParticipation != null || fixedOrganization != null ) {
-            for ( Job job : agency.getAllJobs( communityService ) ) {
-                Agent agent = fixedOrganization != null
-                        ? new Agent( job.getActor() )
-                        : new Agent( job.getActor(), organizationParticipation, communityService );
-                Organization organization =
-                        fixedOrganization != null
-                                ? fixedOrganization
-                                : organizationParticipation.getPlaceholderOrganization( communityService );
+        if ( fixedOrganization!= null ) {
+            for ( Job job : agency.getFixedJobs( communityService ) ) {
+                Employment employment = new Employment( fixedOrganization, job );
+                Agent agent = new Agent( job.getActor() );
+                CommunityEmployment communityEmployment = new CommunityEmployment(
+                        employment,
+                        agent,
+                        agency,
+                        communityService
+                );
+                employments.add( communityEmployment );
+            }
+        }
+        for ( OrganizationParticipation organizationParticipation : agency.getOrganizationParticipationList() ) {
+             for ( Job job : agency.getPlaceholderJobs( organizationParticipation, communityService ) ) {
+                Agent agent = new Agent( job.getActor(), organizationParticipation, communityService );
+                Organization organization = organizationParticipation.getPlaceholderOrganization( communityService );
                 Employment employment = new Employment( organization, job );
                 CommunityEmployment communityEmployment = new CommunityEmployment(
                         employment,
@@ -532,11 +540,11 @@ public class ParticipationManagerImpl implements ParticipationManager {
         try {
             long longId = Long.parseLong( id );
             Organization org = communityService.getPlanService().find( Organization.class, longId ); // todo - COMMUNITY - id could have shifted since recorded
-            agency = new Agency( org );
+            agency = new Agency( org, communityService );
         } catch ( NumberFormatException e ) {
-            OrganizationParticipation orgParticipation = organizationParticipationService.load( id );
-            if ( orgParticipation != null ) {
-                agency = new Agency( orgParticipation, communityService );
+            RegisteredOrganization registeredOrganization = registeredOrganizationService.load( id );
+            if ( registeredOrganization != null ) {
+                agency = new Agency( registeredOrganization, communityService );
             }
         }
         if ( agency == null ) throw new NotFoundException();

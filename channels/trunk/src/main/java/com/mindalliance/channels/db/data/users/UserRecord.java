@@ -106,6 +106,20 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         setEmail( email == null ? "" : email );
     }
 
+    public UserRecord( UserRecord userRecord ) {
+        this( userRecord.getCreatorUsername(),
+                userRecord.getUsername(),
+                userRecord.getFullName(),
+                userRecord.getEmail() );
+        setPhoto( userRecord.getPhoto() );
+        for ( UserAccess userAccess : userRecord.getAccessList() ) {
+            addUserAccess( new UserAccess( userAccess ) );
+        }
+        for ( ContactInfo contactInfo : userRecord.getContactInfoList() ) {
+            addContactInfo( new ContactInfo( contactInfo ) );
+        }
+    }
+
     public UserRecord( String creatorUsername, String name, String fullName, String email, UserAccess.UserRole userRole ) {
         this( creatorUsername, name );
         this.fullName = fullName;
@@ -372,6 +386,11 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
 
     public void clearAccess() {
         accessList = new ArrayList<UserAccess>();
+    }
+
+
+    public void clearContactInfo() {
+       contactInfoList = new ArrayList<ContactInfo>(  );
     }
 
     public void clearAccess( String uri ) {

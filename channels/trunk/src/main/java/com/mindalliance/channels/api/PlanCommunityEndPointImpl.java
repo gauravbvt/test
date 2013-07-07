@@ -302,7 +302,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting community summary for " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
-            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            PlanCommunity planCommunity = authorize( user, communityUri );
             if ( !planCommunity.isDomainCommunity() ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 return new CommunitySummaryData( serverUrl, communityService );
@@ -391,7 +391,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting user protocols for community " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
-            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            PlanCommunity planCommunity = authorize( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
                     user,
@@ -413,16 +413,16 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     @Override
     public ProtocolsData getAgentProtocols( String communityUri,
-                                            String agentId,
+                                            String actorId,
                                             String orgParticipationId ) {
         ChannelsUser user = ChannelsUser.current( userRecordService );
-        LOG.info( "Getting protocols of agent " + agentId
+        LOG.info( "Getting protocols of agent " + actorId
                 + " for organization participation" + orgParticipationId
                 + " in community " + communityUri );
         try {
-            PlanCommunity planCommunity = authorizeCommunityLeader( user, communityUri );
+            PlanCommunity planCommunity = authorize( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) );
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
             OrganizationParticipation organizationParticipation =
                     organizationParticipationService.load( orgParticipationId );
             if ( organizationParticipation == null ) throw new NotFoundException();
@@ -432,7 +432,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                     new Agent( actor, organizationParticipation, communityService ),
                     user );
         } catch ( Exception e ) {
-            LOG.warn( "No protocols available for agent " + agentId, e );
+            LOG.warn( "No protocols available for agent " + actorId, e );
             throw new WebApplicationException(
                     Response
                             .status( Response.Status.BAD_REQUEST )
@@ -593,7 +593,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     private PlanCommunity authorizeCommunityLeader( ChannelsUser user, String communityUri ) throws Exception {
-        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri ); // if domain plan community, development plan community implied
+         PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri ); // if domain plan community, development plan community implied
         if ( planCommunity == null )
             throw new Exception( "No such community " + communityUri );
         CommunityService communityService = getCommunityService( planCommunity );
@@ -604,19 +604,25 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         return planCommunity;
     }
 
+    private PlanCommunity authorize( ChannelsUser user, String uri )  throws Exception {
+        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( uri );
+        if ( user == null || planCommunity == null || planCommunity.isDomainCommunity() )
+            throw new Exception( "No such community " + uri );
+        return planCommunity;
+    }
 
-    // Only planners can request access to a specific version of a plan.
+    // Only planners can request access to data about a development version of a plan community.
     private PlanCommunity authorize( ChannelsUser user, String uri, String version ) throws Exception {
         // domain plan community
         PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri, Integer.parseInt( version ) );
         if ( planCommunity == null || !planCommunity.isDomainCommunity() )
-            throw new Exception( "No such plan " + uri );
+            throw new Exception( "No such community " + uri );
         CommunityService communityService = getCommunityService( planCommunity );
         Plan plan = communityService.getPlan();
         if ( user == null
                 || plan == null
-                || ( plan.isDevelopment() && !user.isPlannerOrAdmin( uri ) )
-                || ( plan.isProduction() && !user.isParticipant( uri ) ) )
+               || ( plan.isDevelopment() && !user.isPlannerOrAdmin( uri ) )
+               /* || ( plan.isProduction() && !user.isParticipant( uri ) )*/ )
             throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
         user.setCommunityService( communityService );
         return planCommunity;

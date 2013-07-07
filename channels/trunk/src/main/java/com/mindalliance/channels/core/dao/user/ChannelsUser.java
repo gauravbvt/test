@@ -270,7 +270,7 @@ public class ChannelsUser implements UserDetails {
      * @return a boolean
      */
     public boolean isCommunityPlanner( String communityUri ) {
-        return userRecord.isCommunityPlanner( communityUri );
+        return isAdmin() || userRecord.isCommunityPlanner( communityUri );
     }
 
 

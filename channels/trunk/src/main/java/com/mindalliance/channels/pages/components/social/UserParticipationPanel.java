@@ -128,7 +128,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                         resetAll();
                         // getPlanManager().clearCache();
                         target.add( userParticipationContainer );
-                        update( target, new Change( Change.Type.Updated, getPlan(), "participation" ) );
+                        update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
                     }
                 };
                 item.add( acceptedCheckBox );
@@ -208,6 +208,10 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         if ( !planCommunity.isDomainCommunity() ) {
             for ( Agent agent : participationManager.findSelfAssignableOpenAgents( getCommunityService(), getUser() ) ) {
                 if ( agent.isUnconstrainedParticipation() ) {
+                    if ( !getCommunityService().getUserParticipationService().isUserParticipatingAs(
+                            getUser(),
+                            agent,
+                            getCommunityService() ) )
                     participations.add( new UserParticipation( getUsername(), getUser(), agent, planCommunity ) );
                 }
             }
@@ -316,7 +320,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         resetAll();
         // getPlanManager().clearCache();
         target.add( userParticipationContainer );
-        update( target, new Change( Change.Type.Updated, getPlan(), "participation" ) );
+        update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
     }
 
     private void addPartipationAgencyChoice(

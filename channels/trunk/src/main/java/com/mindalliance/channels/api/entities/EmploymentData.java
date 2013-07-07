@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Set;
  * Date: 12/1/11
  * Time: 10:27 AM
  */
-@XmlType( propOrder = {"agentName", "agencyName", "supervisorName", "actorId", "organizationId", "title",
+@XmlType( propOrder = {"agentName", "agencyName", "supervisorName", "actorId", "organizationIds", "title",
         "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
 public class EmploymentData implements Serializable {
 
@@ -84,9 +85,9 @@ public class EmploymentData implements Serializable {
         return employment.isConfirmed();
     }
 
-    @XmlElement
-    public Long getOrganizationId() {
-        return employment.getEmployer().getOrganizationId();
+    @XmlElement( name="organizationId")
+    public List<Long> getOrganizationIds() {
+        return employment.getEmployer().getOrganizationIds();
     }
 
     public Set<Long> allActorIds() {

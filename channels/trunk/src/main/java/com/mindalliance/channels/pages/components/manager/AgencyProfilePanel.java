@@ -332,7 +332,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
     private boolean canBeEdited() {
         CommunityService communityService = getCommunityService();
         return !isFixedOrganization()
-                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegistration(communityService), communityService );
+                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegistration( ), communityService );
     }
 
     public String getName() {

@@ -57,7 +57,7 @@ public class CommunityAssignment implements Serializable {
         else if ( assignedLocation.isAgentJurisdiction() )
             return getEmployment().getJurisdiction();
         else if ( assignedLocation.isOrganizationJurisdiction() )
-            return getAgency().getJurisdiction( communityService );
+            return getAgency().getJurisdiction( getAgent().getOrganizationParticipation(), communityService );
         else
             return null;
     }

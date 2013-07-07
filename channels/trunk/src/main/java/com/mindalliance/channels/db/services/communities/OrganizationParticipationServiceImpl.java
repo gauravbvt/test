@@ -213,6 +213,14 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
+    public List<OrganizationParticipation> findAllParticipationBy( Organization fixedOrganization, CommunityService communityService ) {
+        RegisteredOrganization registeredOrganization = registeredOrganizationService.find( fixedOrganization.getName(), communityService );
+        return registeredOrganization == null
+                ? new ArrayList<OrganizationParticipation>(  )
+                : findAllParticipationBy( registeredOrganization, communityService );
+    }
+
+    @Override
     public boolean isAgencyRegisteredAs( RegisteredOrganization registeredOrg, Organization placeholder, CommunityService communityService ) {
         return !getOrganizationParticipations( registeredOrg, placeholder, communityService ).isEmpty();
     }

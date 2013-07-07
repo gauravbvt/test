@@ -119,13 +119,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
     private void resetTemp() {
         ChannelsUser user = getUser();
-        UserRecord tempUserInfo = new UserRecord(
-                user.getUsername(),
-                user.getUsername(),
-                user.getFullName(),
-                user.getEmail()
-        );
-        tempUserInfo.setPhoto( user.getPhoto() );
+        UserRecord tempUserInfo = new UserRecord( user.getUserRecord() );
         temp = new ChannelsUser( tempUserInfo );
         newPassword = "";
         repeatNewPassword = "";
