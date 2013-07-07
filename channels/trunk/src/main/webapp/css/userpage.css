@@ -812,10 +812,14 @@ div.participation select {
     padding: 3px;
 }
 
-div.new-community input[type="button"],
-div.participation input[type="button"] {
+div.new-community input[type="button"] {
     clear: both;
     margin: 10px 0 0;
+}
+
+div.participation input[type="button"] {
+    clear: right;
+    margin-bottom: 10px;
 }
 
 /* ---- Social ----- */
@@ -2162,11 +2166,13 @@ div.participation h4 {
 .participation input[type='text'] {
     background: none repeat scroll 0 0 #E8E8E8;
     border: 1px solid #999999;
-    float: right;
+    float: left;
     font-size: 11px;
     padding: 3px;
-    width: 50px;
+    width: 280px;
+    margin-left: 5px;
 }
+
 
 /* issue details */
 

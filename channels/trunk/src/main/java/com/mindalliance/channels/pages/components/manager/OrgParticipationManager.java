@@ -321,11 +321,11 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         registeringContainer.setOutputMarkupId( true );
         makeVisible( registeringContainer, canManageAnAgency() );
         participationContainer.addOrReplace( registeringContainer );
-        registeringContainer.add(
+ /*       registeringContainer.add(
                 new Label(
                         "phName",
                         selectedPlaceholder == null ? "" : selectedPlaceholder.getName() ) );
-        addRegisterAgencyNameField();
+*/        addRegisterAgencyNameField();
         addRegisterAgencyButton();
     }
 
