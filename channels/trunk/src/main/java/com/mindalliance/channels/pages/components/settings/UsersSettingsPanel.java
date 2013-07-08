@@ -239,5 +239,6 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
             addUsersList();
             target.add( usernamesContainer );
         }
+        super.updateWith( target, change, updated );
     }
 }

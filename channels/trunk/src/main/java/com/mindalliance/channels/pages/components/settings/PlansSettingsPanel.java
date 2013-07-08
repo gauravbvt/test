@@ -325,6 +325,10 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 updatePlan();
                 initSettings();
                 target.add( settingsContainer );
+                Change change = new Change( Change.Type.NeedsRefresh );
+                change.setMessage( "Settings changed for plan " + getPlan().getUri() );
+                update( target, change );
+
             }
         };
         applyLink.setOutputMarkupId( true );

@@ -2663,6 +2663,10 @@ div.authorizing-container h2 {
     text-transform: uppercase;
 }
 
+div.manage-users a.button { /* added by JF */
+    float: none;
+}
+
 div.new-user table,
 div.new-plan table,
 div.manage-plan table,
