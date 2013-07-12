@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/commons-configuration-1.8.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/commons-configuration-1.8-javadoc.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/imap.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/jacoco-0.6.1.201212121017.zip"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/jacocoagent.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/jacocoant.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/javacsv-2.0.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/jOpenDocument-1.2.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/junit-dep-4.10.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/jxl.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/mailapi.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.borders_0.9.12.I20090506-2220.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.grouplayouts_0.9.12.I20090506-2220.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.layouts_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.lnfs_0.9.12.I20090506-2220.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.parser_0.9.12.I20090522-2330.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.types_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.widgets_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.jacoco.agent-0.6.1.201212121017.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.jacoco.ant-0.6.1.201212121017.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.jacoco.core-0.6.1.201212121017.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/org.jacoco.report-0.6.1.201212121017.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/pop3.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0-srcs.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/selenium-server-standalone-2.24.1.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/smtp.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/selenium-2.32.0/selenium-java-2.32.0.jar"/>
-	<classpathentry kind="lib" path="D:/AnalystChannelsMindAlliance/channels/Mind-AllianceFramework_V2/lib/selenium-2.32.0/selenium-java-2.32.0-srcs.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_21/jre/lib/rt.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_21/jre/lib/jce.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Java/jre7/lib/rt.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/commons-configuration-1.8.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/commons-configuration-1.8-javadoc.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/imap.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/jacoco-0.6.1.201212121017.zip"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/jacocoagent.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/jacocoant.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/javacsv-2.0.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/jOpenDocument-1.2.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/junit-dep-4.10.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/jxl.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/mailapi.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.borders_0.9.12.I20090506-2220.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.grouplayouts_0.9.12.I20090506-2220.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.layouts_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.lnfs_0.9.12.I20090506-2220.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.parser_0.9.12.I20090522-2330.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.types_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing.widgets_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.dyno.visual.swing_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.jacoco.agent-0.6.1.201212121017.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.jacoco.ant-0.6.1.201212121017.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.jacoco.core-0.6.1.201212121017.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/org.jacoco.report-0.6.1.201212121017.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/pop3.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0-srcs.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-server-standalone-2.24.1.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/smtp.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.33.0.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.33.0-srcs.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
