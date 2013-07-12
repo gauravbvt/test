@@ -2,12 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/junit-4.9b4.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/junit-4.9b4-src.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/junit-dep-4.9b4.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6-javadoc.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6-sources.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6-tests.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/httpclient-4.0.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/junit-4.9b4.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/junit-4.9b4-src.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/junit-dep-4.9b4.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6-javadoc.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6-sources.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/commons-codec-1.6/commons-codec-1.6-tests.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceApiTesting/Library/restclient-cli-3.1-jar-with-dependencies.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
