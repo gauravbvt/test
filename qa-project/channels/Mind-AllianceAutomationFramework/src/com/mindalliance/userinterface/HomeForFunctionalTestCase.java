@@ -36,6 +36,11 @@ import com.mindalliance.globallibrary.GenericFunctionLibrary;
 import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.ReportFunctions;
 
+/**
+ * The HomeForFunctionalTestCase class uses the Swing Components 
+ * for creating the User Interface for the Channels Functional Test case execution
+ * @author Afour
+ */
 public class HomeForFunctionalTestCase extends JFrame implements ActionListener, ItemListener {
 	
 	boolean clFlag=true,hpFlag=true,caFlag=true,dcFlag=true,ceFlag=true,cpFlag=true,psFlag=true,tfFlag=true,teFlag=true,isgFlag=true,ifmFlag=true,acFlag=true,lfFlag=true,misgFlag=true,isrFlag=true,sqFlag=true;
@@ -89,7 +94,10 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 	BufferedImage image;
 	
-	// Constructor
+	/**
+	 * Constructor of HomeForFunctionalTestCase class
+	 * @author Afour
+	 */
 	public HomeForFunctionalTestCase() {
 		try {
 			initComponents();
@@ -100,35 +108,41 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 	}
 
-	// Parameterized Constructor for Image
+	/**
+	 * Parameterized constructor for Image
+	 * @author Afour
+	 */
 	HomeForFunctionalTestCase(BufferedImage image) {
         this.image = image;
     }
 
-	// Initialize Components
+	/**
+	 * This method is used to initialize all the components
+	 * @author Afour
+	 */
 	private void initComponents() {
 		setTitle("Mind Alliance Automation Framework");
 		setLayout(new GroupLayout());
 	
-		// Text Field
+		// Position the Text Field
 		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));
 		
-		// ScrollPanes
+		// Position the ScrollPanes
 		add(getJScrollPane0(), new Constraints(new Leading(500, 350, 100, 50), new Leading(34, 317, 12, 12)));
 		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));
 		
-		// Labels
+		// Position the Labels
 		add(getJLabel0(), new Constraints(new Leading(500, 200, 200), new Leading(16, 20, 20)));
 		add(getJLabel3(), new Constraints(new Leading(1024, 12, 12), new Leading(453, 10, 10)));
 		add(getJLabel4(), new Constraints(new Leading(1024, 12, 12), new Leading(489, 12, 12)));
 		
-		// Panel
+		// Position the Panel
 		add(getJPanel0(), new Constraints(new Leading(43, 892, 10, 10), new Leading(363, 278, 10, 10)));
 		
-		// ProgressBar
+		// Position the ProgressBar
 		add(getJProgressBar0(), new Constraints(new Leading(1024, 298, 10, 10), new Leading(413, 12, 12)));
 		
-		// Buttons
+		// Position the Buttons
 		add(getJButton0(), new Constraints(new Leading(900, 10, 10), new Leading(174, 12, 12)));
 		add(getJButton1(), new Constraints(new Leading(1153, 12, 12), new Leading(369, 12, 12)));
 		add(getJButton2(), new Constraints(new Leading(1027, 12, 12), new Leading(525, 10, 10)));
@@ -137,10 +151,10 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		add(getJButton5(), new Constraints(new Leading(1239, 10, 10), new Leading(369, 12, 12)));
 		add(getjButtonSendEmail(), new Constraints(new Leading(1126, 110, 10, 10), new Leading(525, 12, 12)));
 		
-		// ComboBox
+		// Position the ComboBox
 		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));
 		
-		// CheckBox
+		// Position the CheckBoxes
 		add(getJCheckBox0(), new Constraints(new Leading(620, 300, 600), new Leading(10, 10, 10)));
 		add(getJCheckBox1(), new Constraints(new Leading(100, 300, 200), new Leading(30, 10, 10)));
 		add(getJCheckBox2(), new Constraints(new Leading(100, 400, 300), new Leading(50, 10, 10)));
@@ -161,7 +175,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		setSize(1356, 698);
 	}
 
-	// JTextField
+	/**
+	 * This method is used to create a JTextField
+	 * @return jTextField0
+	 * @author Afour
+	 */
 	private JTextField getJTextField0() {
 		if (jTextField0 == null) {
 			jTextField0 = new JTextField();
@@ -169,13 +187,23 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jTextField0;
 	}
 
-	// JScrollPane
+	/**
+	 * This method is used to create a JScrollPane
+	 * @return jScrollPane0
+	 * @author Afour
+	 */
 	private JScrollPane getJScrollPane0() {
 		if (jScrollPane0 == null) {
 			jScrollPane0 = new JScrollPane();
 		}
 		return jScrollPane0;
 	}
+	
+	/**
+	 * This method is used to create JScrollPane
+	 * @return jScrollPane3
+	 * @author Afour
+	 */
 	private JScrollPane getJScrollPane3() {
 		if (jScrollPane3 == null) {
 			jScrollPane3 = new JScrollPane();
@@ -184,7 +212,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jScrollPane3;
 	}
 
-	// JPanel
+	/**
+	 * This method is used to add the JPanel
+	 * @return jPanelReport
+	 * @author Afour
+	 */
 	private JPanel getJPanel0() {
 		if (jPanelReport == null) {
 			jPanelReport = new JPanel();
@@ -198,6 +230,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jPanelReport;
 	}
+	
+	/**
+	 * This method is used to add Image/Logo to the JPanel
+	 * @return jPanelLogo
+	 * @author Afour
+	 */
 	private JPanel getJPanel1() {
 		if (jPanelLogo == null) {
 			jPanelLogo = new JPanel();
@@ -212,7 +250,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jPanelLogo;
 	}
 	
-	// JLabel
+	/**
+	 * This method adds the Functional Test Case Label
+	 * @return jLabel0
+	 * @author Afour
+	 */
 	private JLabel getJLabel0() {
 		if (jLabel0 == null) {
 			jLabel0 = new JLabel();
@@ -220,6 +262,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabel0;
 	}
+	
+	/**
+	 * This method adds Status Label
+	 * @return jLabelStatus
+	 * @author Afour
+	 */
 	private JLabel getJLabel3() {
 		if (jLabelStatus == null) {
 			jLabelStatus = new JLabel();
@@ -227,6 +275,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabelStatus;
 	}
+	
+	/**
+	 * This method adds the Test Case Id Label
+	 * @return jLabelTestCaseId
+	 * @author Afour
+	 */
 	private JLabel getJLabel4() {
 		if (jLabelTestCaseId == null) {
 			jLabelTestCaseId = new JLabel();
@@ -234,6 +288,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabelTestCaseId;
 	}
+	
+	/**
+	 * This method adds the Start DateTime Label
+	 * @return jLabelStartDateTime
+	 * @author Afour
+	 */
 	private JLabel getJLabel5() {
 		if (jLabelStartDateTime == null) {
 			jLabelStartDateTime = new JLabel();
@@ -241,6 +301,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabelStartDateTime;
 	}
+	
+	/**
+	 * This method adds the End DateTime Label
+	 * @return jLabelEndDateTime
+	 * @author Afour
+	 */
 	private JLabel getJLabel6() {
 		if (jLabelEndDateTime == null) {
 			jLabelEndDateTime = new JLabel();
@@ -248,6 +314,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabelEndDateTime;
 	}
+	
+	/**
+	 * This method adds the Number of TestCases Executed Label
+	 * @return jLabelNumberOfTestCasesExecuted
+	 * @author Afour
+	 */
 	private JLabel getJLabel7() {
 		if (jLabelNumberOfTestCasesExecuted == null) {
 			jLabelNumberOfTestCasesExecuted = new JLabel();
@@ -255,6 +327,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabelNumberOfTestCasesExecuted;
 	}
+	
+	/**
+	 * This method adds the Number of TestCases Passes Label
+	 * @return jLabelNumberOfTestCasesPasses
+	 * @author Afour
+	 */
 	private JLabel getJLabel8() {
 		if (jLabelNumberOfTestCasesPassed == null) {
 			jLabelNumberOfTestCasesPassed = new JLabel();
@@ -262,6 +340,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jLabelNumberOfTestCasesPassed;
 	}
+	
+	/**
+	 * This method adds the Number of TestCases Failed Label
+	 * @return jLabelNumberOfTestCasesExecuted
+	 * @author Afour
+	 */
 	private JLabel getJLabel9() {
 		if (jLabelNumberOfTestCasesFailed == null) {
 			jLabelNumberOfTestCasesFailed = new JLabel();
@@ -270,13 +354,22 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jLabelNumberOfTestCasesFailed;
 	}
 
-	// JProgressBar
+	/**
+	 * This method created the status Progress-bar
+	 * @return jProgressBarStatus
+	 * @author Afour
+	 */
 	private JProgressBar getJProgressBar0() {
 		if (jProgressBarStatus == null) {
 			jProgressBarStatus = new JProgressBar();
 		}
 		return jProgressBarStatus;
 	}
+	
+	/**
+	 * This method updates the status Progress bar
+	 * @author Afour
+	 */
 	public void updateProgressBar(int percent) {
 		jProgressBarStatus.setValue(percent);
 		jProgressBarStatus.setString("Completed: " + Integer.toString(percent) + "/" + noOfSelectedTestCases);
@@ -287,7 +380,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		jProgressBarStatus.paintImmediately(progressRect);
 	}
 	
-	// JButton
+	/**
+	 * This method adds the ">" button
+	 * @return jButtonAdd
+	 * @author Afour
+	 */
 	private JButton getJButton0() {
 		if (jButtonAdd == null) {
 			jButtonAdd = new JButton();
@@ -297,6 +394,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jButtonAdd;
 	}
+
+	/**
+	 * This method adds the Execute button
+	 * @return jButtonExecute
+	 * @author Afour
+	 */
 	private JButton getJButton1() {
 		if (jButtonExecute == null) {
 			jButtonExecute = new JButton();
@@ -306,6 +409,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jButtonExecute;
 	}
+	
+	/**
+	 * This method adds the Logs button
+	 * @return jButtonLogLink
+	 * @author Afour
+	 */
 	private JButton getJButton2() {
 		if (jButtonLogLink == null) {
 			jButtonLogLink = new JButton();
@@ -316,6 +425,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jButtonLogLink;
 	}
+	
+	/**
+	 * This method adds the Reports button
+	 * @return jButtonReportLink
+	 * @author Afour
+	 */
 	private JButton getJButton3() {
 		if (jButtonReportLink == null) {
 			jButtonReportLink = new JButton();
@@ -326,6 +441,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jButtonReportLink;
 	}
+	
+	/**
+	 * This method adds the Exit button
+	 * @return jButtonExit
+	 * @author Afour
+	 */
 	private JButton getJButton4() {
 		if (jButtonExit == null) {
 			jButtonExit = new JButton();
@@ -335,6 +456,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jButtonExit;
 	}
+	
+	/**
+	 * This method adds the New Test button
+	 * @return jButtonNewTest
+	 * @author Afour
+	 */
 	private JButton getJButton5() {
 		if (jButtonNewTest == null) {
 			jButtonNewTest = new JButton();
@@ -344,6 +471,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jButtonNewTest;
 	}
+	
+	/**
+	 * This method adds the Send Email button
+	 * @return jButtonSendEmail
+	 * @author Afour
+	 */
 	private JButton getjButtonSendEmail() {
 		if (jButtonSendEmail == null) {
 			jButtonSendEmail = new JButton();
@@ -355,7 +488,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jButtonSendEmail;
 	}
 
-	// JComboBox
+	/**
+	 * This method adds the browsers to the JComboBox
+	 * @return jComboBoxBrowser
+	 * @author Afour
+	 */
 	private JComboBox getJComboBox0() {
 		if (jComboBoxBrowser == null) {
 			jComboBoxBrowser = new JComboBox();
@@ -366,7 +503,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jComboBoxBrowser;
 	}
 
-	// JCheckBox
+	/**
+	 * This method creates the Select All checkbox
+	 * @return jCheckBoxFunctionalTestCase
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox0() {
 		if (jCheckBoxFunctionalTestCase == null) {
 			jCheckBoxFunctionalTestCase = new JCheckBox();
@@ -375,6 +516,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxFunctionalTestCase;
 	}
+	
+	/**
+	 * This method creates the Channels Login Checkbox
+	 * @return jCheckBoxLogin
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox1(){
 		if (jCheckBoxChannelsLogin == null) {
 			jCheckBoxChannelsLogin = new JCheckBox();
@@ -383,6 +530,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxChannelsLogin;
 	}
+	
+	/**
+	 * This method creates the Home Page Checkbox
+	 * @return jCheckBoxHomePage
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox2(){
 		if (jCheckBoxHomePage == null) {
 			jCheckBoxHomePage = new JCheckBox();
@@ -391,6 +544,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxHomePage;
 	}
+	
+	/**
+	 * This method creates the Channels Administration Checkbox
+	 * @return jCheckBoxChannelsAdmin
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox3(){
 		if (jCheckBoxChannelsAdmin == null) {
 			jCheckBoxChannelsAdmin = new JCheckBox();
@@ -399,6 +558,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxChannelsAdmin;
 	}
+	
+	/**
+	 * This method creates the Display Controls Checkbox
+	 * @return jCheckBoxDisplayControl
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox4(){
 		if (jCheckBoxDisplayControl == null) {
 			jCheckBoxDisplayControl = new JCheckBox();
@@ -407,6 +572,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxDisplayControl;
 	}
+	
+	/**
+	 * This method creates the Channels Commands
+	 * @return jCheckBoxChannelsCommands
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox5(){
 		if (jCheckBoxChannelsCommands == null) {
 			jCheckBoxChannelsCommands = new JCheckBox();
@@ -415,6 +586,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxChannelsCommands;
 	}
+	
+	/**
+	 * This method creates the Plan and Segment Checkbox
+	 * @return jCheckBoxPlanSegmentBar
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox6(){
 		if (jCheckBoxPlanSegmentBar == null) {
 			jCheckBoxPlanSegmentBar = new JCheckBox();
@@ -423,6 +600,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxPlanSegmentBar;
 	}
+	
+	/**
+	 * This method creates the Collaboration Panel Checkbox
+	 * @return jCheckBoxCollaborationPanel
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox7(){
 		if (jCheckBoxCollaborationPanel == null) {
 			jCheckBoxCollaborationPanel = new JCheckBox();
@@ -431,6 +614,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxCollaborationPanel;
 	}
+	
+	/**
+	 * This method creates the Task and Flow Panel Checkbox
+	 * @return jCheckBoxTaskFlowPanel
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox8(){
 		if (jCheckBoxTaskFlowPanel == null) {
 			jCheckBoxTaskFlowPanel = new JCheckBox();
@@ -439,6 +628,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxTaskFlowPanel;
 	}
+	
+	/**
+	 * This method creates the Entities Checkbox
+	 * @return jCheckBoxEntities
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox9(){
 		if (jCheckBoxEntities == null) {
 			jCheckBoxEntities = new JCheckBox();
@@ -447,6 +642,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxEntities;
 	}
+	
+	/**
+	 * This method creates the Information Flow Map Checkbox
+	 * @return jCheckBoxFlowMap
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox10(){
 		if (jCheckBoxInfoFlowMap == null) {
 			jCheckBoxInfoFlowMap = new JCheckBox();
@@ -455,6 +656,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxInfoFlowMap;
 	}
+	
+	/**
+	 * This method creates the Information Sharing Guidelines Checkbox
+	 * @return jCheckBoxInfoSharing
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox11(){
 		if (jCheckBoxInfoSharing == null) {
 			jCheckBoxInfoSharing = new JCheckBox();
@@ -463,6 +670,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxInfoSharing;
 	}
+	
+	/**
+	 * This method creates the Assignments and Commitments Checkbox
+	 * @return jCheckBoxAssignmentCommitments
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox12(){
 		if (jCheckBoxAssignmentCommitments == null) {
 			jCheckBoxAssignmentCommitments = new JCheckBox();
@@ -471,6 +684,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxAssignmentCommitments;
 	}
+	
+	/**
+	 * This method creates the Lock Functionality Checkbox
+	 * @return jCheckBoxLockFunctionality
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox13(){
 		if (jCheckBoxLockFunctionality == null) {
 			jCheckBoxLockFunctionality = new JCheckBox();
@@ -479,6 +698,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxLockFunctionality;
 	}
+	
+	/**
+	 * This method creates the My Information Sharing Guidelines(User) Checkbox
+	 * @return jCheckBoxInfoGuidelines
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox14(){
 		if (jCheckBoxInfoGuidelines == null) {
 			jCheckBoxInfoGuidelines = new JCheckBox();
@@ -487,6 +712,12 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 		return jCheckBoxInfoGuidelines;
 	}
+	
+	/**
+	 * This method creates the Issue Summary Report Checkbox
+	 * @return jCheckBoxIssueReportSummary
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox15(){
 		if (jCheckBoxIssueReportSummary == null) {
 			jCheckBoxIssueReportSummary = new JCheckBox();
@@ -496,6 +727,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jCheckBoxIssueReportSummary;
 	}
 	
+	/**
+	 * This method creates the Survey and Questionnaire Checkbox
+	 * @return jCheckBoxSurveyQuestionnaire
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox16(){
 		if(jCheckBoxSurveyQuestionnaire == null){
 			jCheckBoxSurveyQuestionnaire = new JCheckBox();
@@ -505,7 +741,11 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jCheckBoxSurveyQuestionnaire;
 	}
 
-	// JList
+	/**
+	 * This method adds the test cases to be executed to the JList
+	 * @return GlobalVariables.jListExecute
+	 * @author Afour
+	 */
 	private JList getJList3() {
 		if (GlobalVariables.jListExecute == null) {
 			GlobalVariables.jListExecute = new JList();
@@ -578,7 +818,13 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		return jListFunctional;
 	}
 
-	// Execute Test Cases
+    /**
+     * This method is used to execute the Test cases,
+     * initialize the test data, set the Start and End Date & time,
+     * load the Object Repository,
+     * get the total number of Test cases executed,passed & failed
+     * @author Afour
+     */
 	public void executeTestCases(Vector<Object> arrayOfTestCaseId) {
 		int totalExecute;
 		try {
@@ -670,7 +916,10 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 	}
 
-	// Look & Feel
+	/**
+	 * This method is used to set the Look and feel
+	 * @author Afour
+	 */
 	private static void installLnF() {
 		try {
 			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
@@ -681,11 +930,15 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 	}
 
-	// Called When an Action Performed
+	/**
+	 * This method is called when an action is performed
+	 * @author Afour
+	 */
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		try {
-			if ("add".equals(e.getActionCommand())) {// when clicked on '>' button
+			// when clicked on '>' button
+			if ("add".equals(e.getActionCommand())) {
 				Object[] arrayOfListObject;
 				DefaultListModel listModel = new DefaultListModel();
 				arrayOfListObject = jListFunctional.getSelectedValues();
@@ -693,7 +946,8 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 					listModel.addElement(listObject);
 				GlobalVariables.jListExecute.setModel(listModel);
 			}
-			else if ("execute".equals(e.getActionCommand())) { // when clicked on 'Execute' button
+			// when clicked on 'Execute' button
+			else if ("execute".equals(e.getActionCommand())) { 
 				if (GlobalVariables.jListExecute.getModel().getSize() > 0) {
 					jButtonExecute.setEnabled(false);
 					Vector<Object> vc = new Vector<Object>();
@@ -709,24 +963,29 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 				else
 					JOptionPane.showMessageDialog(rootPane, "Please select the testcases.");
 			}
-			else if ("newtest".equals(e.getActionCommand())) { // when clicked on 'New Test' button
+			// when clicked on 'New Test' button
+			else if ("newtest".equals(e.getActionCommand())) { 
 				clearTestPlanResult();
 			}
-			else if ("logs".equals(e.getActionCommand())) { // when clicked on 'Logs' button
+			// when clicked on 'Logs' button
+			else if ("logs".equals(e.getActionCommand())) { 
 				File file = new File(GlobalVariables.sLogDirectoryPath);
 				Desktop desktop = Desktop.getDesktop();
 				desktop.open(file);
 			}
-			else if ("reports".equals(e.getActionCommand())) { // when clicked on 'Reports' button
+			// when clicked on 'Reports' button
+			else if ("reports".equals(e.getActionCommand())) { 
 				File file = new File(GlobalVariables.sReportDstDirectoryPath+"//index.htm");
 				Desktop desktop = Desktop.getDesktop();
 				desktop.open(file);
 			}
+			//when clicked on 'Send' button
 			else if("send".equals(e.getActionCommand())){
 				@SuppressWarnings("unused")
 				EmailNotification emi=new EmailNotification();
 			}
-			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
+			// when clicked on 'Exit' button
+			else if ("exit".equals(e.getActionCommand())) { 
 				System.exit(0);
 			}
 		} 
@@ -736,7 +995,10 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 	}
 
-	// Clear Test Plan Result
+	/**
+	 * This method is used to clear the test plan result
+	 * @author Afour
+	 */
 	private void clearTestPlanResult() {
 		try {
 			DefaultListModel listModel = new DefaultListModel();
@@ -768,15 +1030,15 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 			jLabelEndDateTime.setText("End DateTime: ");
 			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
 			jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
-			// Clear totalExecuted TestCaseId
+			// Clear total Executed TestCaseId
 			jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: ");
 			jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
 			jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
-			// Clear totalTestCasesPassed
+			// Clear totalTest Cases Passed
 			jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: ");
 			jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
 			jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
-			// Clear totalTestCasesFailed
+			// Clear total Test Cases Failed
 			jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: ");
 			jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
 			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
@@ -794,166 +1056,222 @@ public class HomeForFunctionalTestCase extends JFrame implements ActionListener,
 		}
 	}
 
-	// Called when Item State Changed
+	/**
+	 * This method is called when the Item status is changed
+	 * @author Afour
+	 */
 	public void itemStateChanged(ItemEvent e) {
 		try {
 			JCheckBox chk=(JCheckBox)e.getSource();
-			if(chk.getText().equalsIgnoreCase("Channels Login")) {
+			//Test cases of the  Channels Login sheet will be loaded in the JScrollPane
+			    if(chk.getText().equalsIgnoreCase("Channels Login")) {
 				if(chk.isSelected() && clFlag==true) {
 					jScrollPane0.setViewportView(getJList0(1));
 					clFlag=false;
 				}
+				//The test cases of Channels login with the prefix "CL"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("CL"));
 					clFlag=true;
 				}
 			}
+		    //Test cases of the Home Page sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Home Page")) {
+				
 				if(chk.isSelected() && hpFlag==true) {
 					jScrollPane0.setViewportView(getJList0(2));
 					hpFlag=false;
 				}
+				//The test cases of Home Page with the prefix "HP"
+				//will be loaded in the JScrollPane
 				else{
 					jScrollPane0.setViewportView(getJListModified0("HP"));
 					hpFlag=true;
 				}
 			}
-			else if(chk.getText().equalsIgnoreCase("Channels Administration")) {
-				if(chk.isSelected() && caFlag==true) {
+			//Test cases of the Channels Administration sheet will be loaded in the JScrollPane
+			else if(chk.getText().equalsIgnoreCase("Channels Administration")) {	
+				if(chk.isSelected() && caFlag==true) {	
 					jScrollPane0.setViewportView(getJList0(3));
 					caFlag=false;
 				}
-				else {
+				//The test cases of Channels Administration with the prefix "CA"
+				//will be loaded in the JScrollPane 
+				else{
 					jScrollPane0.setViewportView(getJListModified0("CA"));
 					caFlag=true;
 				}
 			}
+			    
+			//Test cases of the Display Controls sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Display Controls")) {
 				if(chk.isSelected() && dcFlag==true) {
 					jScrollPane0.setViewportView(getJList0(6));
 					dcFlag=false;
 				}
+				//The test cases of Display Controls with the prefix "DC"
+				//will be loaded in the JScrollPane 
 				else {
+					
 					jScrollPane0.setViewportView(getJListModified0("DC"));
 					dcFlag=true;
 				}
 			}
+			//Test cases of the Channels Commands sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Channels Commands")) {
-				if(chk.isSelected() && ceFlag==true) {
+				if(chk.isSelected() && ceFlag==true) {	
 					jScrollPane0.setViewportView(getJList0(7));
 					ceFlag=false;
 				}
+				//The test cases of Channels Commands with the prefix "CC"
+				//will be loaded in the JScrollPane 
 				else {
 					jScrollPane0.setViewportView(getJListModified0("CC"));
 					ceFlag=true;
 				}
 			}
+			//Test cases of the Collaboration Panel sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Collaboration Panel")) {
-				if(chk.isSelected() && cpFlag==true) {
+				if(chk.isSelected() && cpFlag==true) {	
 					jScrollPane0.setViewportView(getJList0(8));
 					cpFlag=false;
 				}
+				//The test cases of Collaboration Panel with the prefix "CP"
+				//will be loaded in the JScrollPane 
 				else {
 					jScrollPane0.setViewportView(getJListModified0("CP"));
 					cpFlag=true;
 				}
 			}
+			//Test cases of the Plan and Segment sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Plan and Segment")) {
 				if(chk.isSelected() && psFlag==true){
 					jScrollPane0.setViewportView(getJList0(9));
 					psFlag=false;
 				}
+				//The test cases of Plan and segment with the prefix "PS"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("PS"));
 					psFlag=true;
 				}
 			}
+			//Test cases of the Task and Flow Panel sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Task and Flow Panel")){
 				if(chk.isSelected() && tfFlag==true){
 					jScrollPane0.setViewportView(getJList0(10));
 					tfFlag=false;
 				}
+				//The test cases of Task and Flow Panel with the prefix "TF"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("TF"));
 					tfFlag=true;
 				}
 			}
+			//Test cases of Entities sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Entities")){
 				if(chk.isSelected() && teFlag==true){
 					jScrollPane0.setViewportView(getJList0(11));
 					teFlag=false;
 				}
+				//The test cases of Entities with the prefix "TE"
+				//will be loaded in the JScrollPane 
 				else{
+					
 					jScrollPane0.setViewportView(getJListModified0("TE"));
 					teFlag=true;
 				}
 			}
+			//Test cases of Information Flow Map sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Information Flow Map")){
 				if(chk.isSelected() && ifmFlag==true){
 					jScrollPane0.setViewportView(getJList0(12));
 					ifmFlag=false;
 				}
-				else{
+			     //The test cases of Information Flow Map with the prefix "IF"
+				//will be loaded in the JScrollPane 
+				else{	
 					jScrollPane0.setViewportView(getJListModified0("IF"));
 					ifmFlag=true;
 				}
 			}
+			    
+			//Test cases of Information Sharing Guidelines sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Information Sharing Guidelines")) {
 				if(chk.isSelected() && isgFlag==true){
 					jScrollPane0.setViewportView(getJList0(13));
 					isgFlag=false;
 				}
+				//The test cases of Information Sharing Guidelines with the prefix "PP"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("PP"));
 					isgFlag=true;
 				}
 			}
+			//Test cases of Assignments and Commitments sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Assignments and Commitments")){
 				if(chk.isSelected() && acFlag==true){
 					jScrollPane0.setViewportView(getJList0(14));
 					acFlag=false;
 				}
+				//The test cases of Assignments and Commitments with the prefix "PE"
+				//will be loaded in the JScrollPane
 				else{
 					jScrollPane0.setViewportView(getJListModified0("PE"));
 					acFlag=true;
 				}
 			}
+			//Test cases of Lock Functionality sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Lock Functionality")){
 				if(chk.isSelected() && lfFlag==true){
 					jScrollPane0.setViewportView(getJList0(15));
 					lfFlag=false;
 				}
-				else{
+				//The test cases of Lock Functionality with the prefix "PE"
+				//will be loaded in the JScrollPane 
+				else{	
 					jScrollPane0.setViewportView(getJListModified0("LF"));
 					lfFlag=true;
 				}
 			}
+		    //Test cases of My Information Sharing Guidelines(User) sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("My Information Sharing Guidelines(User)")){
 				if(chk.isSelected() && misgFlag==true){
 					jScrollPane0.setViewportView(getJList0(16));
 					misgFlag=false;
 				}
+				//The test cases of My Information Sharing Guidelines(User) with the prefix "SG"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("SG"));
 					misgFlag=true;
 				}
 			}
+			//Test cases of Issue Summary Report sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Issue Summary Report")){
 				if(chk.isSelected() && isrFlag==true){
 					jScrollPane0.setViewportView(getJList0(17));
 					isrFlag=false;
 				}
+				//The test cases of Issue Summary Report with the prefix "IS"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("IS"));
 					isrFlag=true;
 				}
 			}
 			
+			 //Test cases of Survey and Questionnaire Sheet will be loaded in the JScrollPane
 			else if(chk.getText().equalsIgnoreCase("Survey And Questionnaire")){
 				if(chk.isSelected() && sqFlag==true){
 					jScrollPane0.setViewportView(getJList0(19));
 					sqFlag=false;
 				}
+				//The test cases of Surveys and Questionnaire with the prefix "SQ"
+				//will be loaded in the JScrollPane 
 				else{
 					jScrollPane0.setViewportView(getJListModified0("SQ"));
 					sqFlag=true;

@@ -41,6 +41,11 @@ import org.dyno.visual.swing.layouts.Leading;
 import com.mindalliance.globallibrary.GlobalVariables;
 
 //VS4E -- DO NOT REMOVE THIS LINE!
+/**
+ * The class EmailNotification provides an GUI of Swing component where user can send email
+ * @author Afour
+ *
+ */
 public class EmailNotification extends JFrame implements ActionListener, ItemListener{
 	private static final long serialVersionUID = 1L;
 //	private static int noOfSelectedTestCases;
@@ -62,6 +67,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	BufferedImage image;
 	private JButton jButtonExit;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
+	
+	/**
+	 * Constructor of EmailNotification
+	 * @author Afour
+	 */
 	public EmailNotification() {
 		installLnF();
 		initComponents();
@@ -74,6 +84,10 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 	}
 
+	/**
+	 * The initComponent method initilize the Swing component with its background, foreground color and etc
+	 * @author Afour
+	 */
 	private void initComponents() {
 		setTitle("Mind-Alliance Automation Framework");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -88,6 +102,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		setSize(1366, 720);
 	}
 
+	/**
+	 * This method create an Exit button
+	 * @return jButtonExit
+	 * @author Afour
+	 */
 	private JButton getJButton4() {
 		if (jButtonExit == null) {
 			jButtonExit = new JButton();
@@ -102,6 +121,12 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 	        this.image = image;
 	    }
 	
+	/**
+	 * This method sets the layout of Logo
+	 * @return jPanelLogo
+	 * @author Afour
+	 * 
+	 */
 	private JPanel getJPanel1() {
 		if (jPanelLogo == null) {
 			jPanelLogo = new JPanel();
@@ -110,6 +135,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jPanelLogo;
 	}
 
+	/**
+	 * This method positions the components created on the frame or panel
+	 * @return jPanelReport
+	 * @author Afour
+	 */
 	private JPanel getJPanel0() {
 		if (jPanelReport == null) {
 			jPanelReport = new JPanel();
@@ -130,6 +160,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jPanelReport;
 	}
 
+	/**
+	 * This method create an SMTP Port label
+	 * @return jLabelSMTPPort
+	 * @author Afour
+	 */
 	private JLabel getJLabelSMTPPort() {
 		if (jLabelSMTPPort == null) {
 			jLabelSMTPPort = new JLabel();
@@ -137,7 +172,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		return jLabelSMTPPort;
 	}
-
+	/**
+	 * This method create an Receipent Email Id label
+	 * @return jLabelReceipentEmail
+	 * @author Afour
+	 */
 	private JLabel getJLabelReceiptmentEmail() {
 		if (jLabelReceipentEmail == null) {
 			jLabelReceipentEmail = new JLabel();
@@ -145,7 +184,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		return jLabelReceipentEmail;
 	}
-
+	/**
+	 * This method create an Multiple Receiptnt should be comma seperated label
+	 * @return jLabelMultipleEmail
+	 * @author Afour
+	 */
 	private JLabel getJLabelMultipleEmail() {
 		if (jLabelMultipleEmail == null) {
 			jLabelMultipleEmail = new JLabel();
@@ -163,7 +206,12 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 //		}
 //		return jCheckBoxEnableServer;
 //	}
-
+	
+	/**
+	 * This method create an SMTP server textfield
+	 * @return jTextFiledSMTPServer
+	 * @author Afour
+	 */
 	private JTextField getTextSMTPServerName(){
 		if (jTextFiledSMTPServer == null) {
 			jTextFiledSMTPServer = new JTextField();
@@ -174,6 +222,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jTextFiledSMTPServer;
 	}
 
+	/**
+	 * This method create an Username textfield
+	 * @return jTextFieldUserName
+	 * @author Afour
+	 */
 	private JTextField getTextUserName(){
 		if (jTextFieldUserName == null) {
 			jTextFieldUserName = new JTextField();
@@ -183,7 +236,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		return jTextFieldUserName;
 	}
-	
+	/**
+	 * This method create an Password textfield
+	 * @return jTextFieldPassword
+	 * @author Afour
+	 */
 	private JTextField getTextPassword(){
 		if (jTextFieldPassword == null) {
 			jTextFieldPassword = new JPasswordField();
@@ -194,6 +251,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jTextFieldPassword;
 	}
 	
+	/**
+	 * This method create an Receipent EmailId textfield
+	 * @return jTextReceipentEmailId
+	 * @author Afour
+	 */
 	private JTextField getTextReceipentEmail(){
 		if (jTextReceipentEmailId == null) {
 			jTextReceipentEmailId = new JFormattedTextField();
@@ -203,6 +265,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jTextReceipentEmailId;
 	}
 	
+	/**
+	 * This method create an SMTP port textfield
+	 * @return jTextSMTPPort
+	 * @author Afour
+	 */
 	private JTextField getTextSMTPPort(){
 		if (jTextSMTPPort == null) {
 			jTextSMTPPort = new JTextField();
@@ -212,7 +279,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		return jTextSMTPPort;
 	}
-	
+	/**
+	 * This method create an Send label
+	 * @return jButtonExecute
+	 * @author Afour
+	 */
 	private JButton getJButtonSave() {
 		if (jButtonExecute == null) {
 			jButtonExecute = new JButton();
@@ -222,7 +293,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		return jButtonExecute;
 	}
-
+	/**
+	 * This method create an Password label
+	 * @return jLabel2
+	 * @author Afour
+	 */
 	private JLabel getJLabelPassword() {
 		if (jLabel2 == null) {
 			jLabel2 = new JLabel();
@@ -230,7 +305,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 		return jLabel2;
 	}
-
+	/**
+	 * This method create an Username label
+	 * @return jLabel1
+	 * @author Afour
+	 */
 	private JLabel getJLabelUsername() {
 		if (jLabel1 == null) {
 			jLabel1 = new JLabel();
@@ -239,6 +318,11 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		return jLabel1;
 	}
 
+	/**
+	 * This method create an SAMTP server label
+	 * @return jLabel0
+	 * @author Afour
+	 */
 	private JLabel getJLabelSMTPServer() {
 		if (jLabel0 == null) {
 			jLabel0 = new JLabel();
@@ -267,6 +351,10 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 		}
 	}
 	
+	/**
+	 * This methos is an event handler of action performed, which invoke the sendMail method when clicked on Send button
+	 * @author Afour
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -282,13 +370,32 @@ public class EmailNotification extends JFrame implements ActionListener, ItemLis
 			EmailNotification.sendMail(jTextFieldUserName.getText(),jTextFieldPassword.getText(),jTextFiledSMTPServer.getText(),jTextSMTPPort.getText(),"true","true",true,"javax.net.ssl.SSLSocketFactory","false",to,cc,"Mind-Alliance UI Automation Report");
 		}
 	}
-		
+	
+	/**
+	 * This methos is an event handler of item state changed
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	/**
+	 * This method sendMail uses MimeMessage for sending emails
+	 * @param userName
+	 * @param passWord
+	 * @param host
+	 * @param port
+	 * @param starttls
+	 * @param auth
+	 * @param debug
+	 * @param socketFactoryClass
+	 * @param fallback
+	 * @param to
+	 * @param cc
+	 * @param subject
+	 * @return
+	 */
 	public synchronized static boolean sendMail(String userName,String passWord,String host,String port,String starttls,String auth,boolean debug,String socketFactoryClass,String fallback,String[] to,String[] cc,String subject){
         Properties props = new Properties();
         props.put("mail.smtp.user", jTextFieldUserName.getText());

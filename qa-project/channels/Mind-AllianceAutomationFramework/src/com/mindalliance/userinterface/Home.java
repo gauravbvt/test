@@ -36,6 +36,11 @@ import com.mindalliance.globallibrary.GlobalVariables;
 import com.mindalliance.globallibrary.ReportFunctions;
 import com.mindalliance.userinterface.EmailNotification;
 
+/**
+ * The Home is an Swing GUI class which uses the swing components for creating the UI for Channels Test cases execution
+ * @author Afour
+ *
+ */
 public class Home extends JFrame implements ActionListener, ItemListener{
 	private static final long serialVersionUID = 1L;
 	private JList jListView;
@@ -76,7 +81,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 	private JButton jButtonSendMessage;
 	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
 
-	// Constructor 
+	
+	/**
+	 * Constructor of Home class 
+	 * @author Afour
+	 */
 	public Home() {
 		try {
 			// Initialize Components
@@ -88,22 +97,30 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 	}
 
-	// Parameterized Constructor for Image
+	/**
+	 * Parameterized Constructor of Image
+	 * @param image
+	 * @author Afour
+	 */
 	Home(BufferedImage image) {
 		this.image = image;
 	}
 
+	/**
+	 * The initComponent() method provides and places all the swing component on the panel as per their positions
+	 * @author Afour 
+	 */
 	private void initComponents() {
 		setTitle("Mind Alliance Automation Framework");
 		setLayout(new GroupLayout());		
-		// TextField
+		// Position for Textfield
 		add(getJTextField0(), new Constraints(new Leading(256, -53, 10, 10), new Leading(63, 12, 12)));		
-		// Scroll Panes
+		// Position for the Scroll panes
 		add(getJScrollPane0(), new Constraints(new Leading(41, 298, 10, 10), new Leading(34, 317, 12, 12)));
 		add(getJScrollPane1(), new Constraints(new Leading(338, 298, 10, 10), new Leading(34, 317, 10, 10)));
 		add(getJScrollPane2(), new Constraints(new Leading(634, 298, 10, 10), new Leading(34, 317, 10, 10)));
 		add(getJScrollPane3(), new Constraints(new Leading(1027, 298, 10, 10), new Leading(34, 317, 10, 10)));		
-		// Buttons
+		// Position the Buttons
 		add(getJButton0(), new Constraints(new Leading(959, 10, 10), new Leading(174, 12, 12)));
 		add(getJButton1(), new Constraints(new Leading(1153, 12, 12), new Leading(369, 12, 12)));
 		add(getJButton2(), new Constraints(new Leading(1027, 12, 12), new Leading(525, 10, 10)));
@@ -111,26 +128,30 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		add(getJButton4(), new Constraints(new Leading(1026, 12, 12), new Leading(622, 10, 10)));		
 		add(getJButton5(), new Constraints(new Leading(1239, 10, 10), new Leading(369, 12, 12)));
 		add(getJButton6(), new Constraints(new Leading(1137, 112, 12, 12), new Leading(575, 12, 12)));		
-		// Labels
+		// Position the Labels
 		add(getJLabel0(), new Constraints(new Leading(41, 12, 12), new Leading(8, 10, 10)));
 		add(getJLabel1(), new Constraints(new Leading(341, 10, 10), new Leading(8, 12, 12)));
 		add(getJLabel2(), new Constraints(new Leading(637, 12, 12), new Leading(10, 12, 12, 12)));
 		add(getJLabel3(), new Constraints(new Leading(1024, 12, 12), new Leading(453, 10, 10)));
 		add(getJLabel4(), new Constraints(new Leading(1024, 12, 12), new Leading(489, 12, 12)));		
-		// CheckBoxes
+		// Position the CheckBoxes
 		add(getJCheckBox0(), new Constraints(new Leading(166, 10, 10), new Leading(4, 8, 8)));
 		add(getJCheckBox1(), new Constraints(new Leading(374, 8, 8), new Leading(4, 8, 8)));
 		add(getJCheckBox2(), new Constraints(new Leading(798, 10, 10), new Leading(4, 8, 8)));		
-		// Panel
+		// Position the JPanel
 		add(getJPanel0(), new Constraints(new Leading(43, 892, 10, 10), new Leading(363, 278, 10, 10)));		
-		// ProgressBar
+		// Position the ProgressBar
 		add(getJProgressBar0(), new Constraints(new Leading(1024, 298, 10, 10), new Leading(413, 12, 12)));		
-		// ComboBox
+		// Position the ComboBox
 		add(getJComboBox0(), new Constraints(new Leading(1023, 122, 10, 10), new Leading(369, 12, 12)));		
 		setSize(1356, 698);
 	}
 
-	// JTextField
+	/**
+	 * This method creates the JTextField
+	 * @return jTextField0
+	 * @author Afour
+	 */
 	private JTextField getJTextField0() {
 		if (jTextField0 == null) {
 			jTextField0 = new JTextField();
@@ -138,7 +159,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jTextField0;
 	}
 	
-	// JScrollPane
+	/**
+	 * This method creates the JScrollPane
+	 * @return jScrollPane0
+	 * @author Afour
+	 */
 	private JScrollPane getJScrollPane0() {
 		if (jScrollPane0 == null) {
 			jScrollPane0 = new JScrollPane();
@@ -146,6 +171,12 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jScrollPane0;
 	}
+	
+	/**
+	 * This method creates the JScrollPane
+	 * @return jScrollPane1
+	 * @author Afour
+	 */
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
@@ -153,6 +184,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jScrollPane1;
 	}
+	/**
+	 * This method creates the JScrollPane
+	 * @return jScrollPane2
+	 * @author Afour
+	 */
 	private JScrollPane getJScrollPane2() {
 		if (jScrollPane2 == null) {
 			jScrollPane2 = new JScrollPane();
@@ -160,6 +196,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jScrollPane2;
 	}
+	/**
+	 * This method creates the JScrollPane
+	 * @return jScrollPane3
+	 * @author Afour
+	 */
 	private JScrollPane getJScrollPane3() {
 		if (jScrollPane3 == null) {
 			jScrollPane3 = new JScrollPane();
@@ -168,7 +209,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jScrollPane3;
 	}
 
-	// JButton
+	/**
+	 * This method adds button for ">"
+	 * @return jButtonAdd
+	 * @author Afour
+	 */
 	private JButton getJButton0() {
 		if (jButtonAdd == null) {
 			jButtonAdd = new JButton();
@@ -178,6 +223,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jButtonAdd;
 	}
+	/**
+	 * This method adds execute button
+	 * @return jButtonExecute
+	 * @author Afour
+	 */
 	private JButton getJButton1() {
 		if (jButtonExecute == null) {
 			jButtonExecute = new JButton();
@@ -187,6 +237,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jButtonExecute;
 	}
+	/**
+	 * This method adds Logs button
+	 * @return jButtonLogLink
+	 * @author Afour 
+	 */
 	private JButton getJButton2() {
 		if (jButtonLogLink == null) {
 			jButtonLogLink = new JButton();
@@ -197,6 +252,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jButtonLogLink;
 	}
+	/**
+	 * This method adds Reports button
+	 * @return jButtonReportLink
+	 * @author Afour 
+	 */ 
 	private JButton getJButton3() {
 		if (jButtonReportLink == null) {
 			jButtonReportLink = new JButton();
@@ -207,6 +267,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jButtonReportLink;
 	}
+	/**
+	 * This method adds Exit button
+	 * @return jButtonExit
+	 * @author Afour 
+	 */
 	private JButton getJButton4() {
 		if (jButtonExit == null) {
 			jButtonExit = new JButton();
@@ -216,6 +281,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jButtonExit;
 	}
+	/**
+	 * This method adds New Test button
+	 * @return jButtonNewTest
+	 * @author Afour 
+	 */
 	private JButton getJButton5() {
 		if (jButtonNewTest == null) {
 			jButtonNewTest = new JButton();
@@ -225,6 +295,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jButtonNewTest;
 	}
+	/**
+	* This method adds Send Email button
+	* @return jButtonSendMessage
+	* @author Afour 
+	*/
 	private JButton getJButton6() {
 		if (jButtonSendMessage == null) {
 			jButtonSendMessage = new JButton();
@@ -236,7 +311,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jButtonSendMessage;
 	}
 
-	// JLabel
+	/**
+	 * This methods adds View label
+	 * @return jLabel0
+	 * @author Afour
+	 */
 	private JLabel getJLabel0() {
 		if (jLabel0 == null) {
 			jLabel0 = new JLabel();
@@ -244,6 +323,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabel0;
 	}
+	/**
+	 * This methods adds Plan label
+	 * @return jLabel1
+	 * @author Afour
+	 */
 	private JLabel getJLabel1() {
 		if (jLabel1 == null) {
 			jLabel1 = new JLabel();
@@ -251,6 +335,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabel1;
 	}
+	/**
+	 * This methods adds Command label
+	 * @return jLabel2
+	 * @author Afour
+	 */
 	private JLabel getJLabel2() {
 		if (jLabel2 == null) {
 			jLabel2 = new JLabel();
@@ -258,6 +347,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabel2;
 	}
+	/**
+	 * This methods adds Status label
+	 * @return jLabelStatus
+	 * @author Afour
+	 */
 	private JLabel getJLabel3() {
 		if (jLabelStatus == null) {
 			jLabelStatus = new JLabel();
@@ -265,6 +359,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabelStatus;
 	}
+	/**
+	 * This methods adds TestCaseId label
+	 * @return jLabelTestCaseId
+	 * @author Afour
+	 */
 	private JLabel getJLabel4() {
 		if (jLabelTestCaseId == null) {
 			jLabelTestCaseId = new JLabel();
@@ -272,6 +371,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabelTestCaseId;
 	}
+	/**
+	 * This methods adds Start Date time label
+	 * @return jLabelStartDateTime
+	 * @author Afour
+	 */
 	private JLabel getJLabel5() {
 		if (jLabelStartDateTime == null) {
 			jLabelStartDateTime = new JLabel();
@@ -279,6 +383,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabelStartDateTime;
 	}
+	/**
+	 * This methods adds End date time label
+	 * @return jLabelEndDateTime
+	 * @author Afour
+	 */
 	private JLabel getJLabel6() {
 		if (jLabelEndDateTime == null) {
 			jLabelEndDateTime = new JLabel();
@@ -286,6 +395,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabelEndDateTime;
 	}
+	/**
+	 * This methods adds Number of test cases executed label
+	 * @return jLabelNumberOfTestCasesExecuted
+	 * @author Afour
+	 */
 	private JLabel getJLabel7() {
 		if (jLabelNumberOfTestCasesExecuted == null) {
 			jLabelNumberOfTestCasesExecuted = new JLabel();
@@ -293,6 +407,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabelNumberOfTestCasesExecuted;
 	}
+	/**
+	 * This method adds Number of test cases passed label
+	 * @return jLabelNumberOfTestCasesPassed
+	 * @author Afour
+	 */
 	private JLabel getJLabel8() {
 		if (jLabelNumberOfTestCasesPassed == null) {
 			jLabelNumberOfTestCasesPassed = new JLabel();
@@ -300,6 +419,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jLabelNumberOfTestCasesPassed;
 	}
+	/**
+	 * This method adds the Number of test cases failed label  
+	 * @return jLabelNumberOfTestCasesFailed
+	 * @author Afour
+	 */
 	private JLabel getJLabel9() {
 		if (jLabelNumberOfTestCasesFailed == null) {
 			jLabelNumberOfTestCasesFailed = new JLabel();
@@ -308,7 +432,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jLabelNumberOfTestCasesFailed;
 	}
 
-	// JCheckBox
+	/**
+	 * This method creates the Select All checkbox
+	 * @return jCheckBoxView
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox0() {
 		if (jCheckBoxView == null) {
 			jCheckBoxView = new JCheckBox();
@@ -317,6 +445,12 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jCheckBoxView;
 	}
+
+	/**
+	 * This method creates the Select All checkbox
+	 * @return jCheckBoxPlan
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox1() {
 		if (jCheckBoxPlan == null) {
 			jCheckBoxPlan = new JCheckBox();
@@ -325,6 +459,12 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jCheckBoxPlan;
 	}
+
+	/**
+	 * This method creates the Select All checkbox
+	 * @return jCheckCommand
+	 * @author Afour
+	 */
 	private JCheckBox getJCheckBox2() {
 		if (jCheckBoxCommand == null) {
 			jCheckBoxCommand = new JCheckBox();
@@ -334,8 +474,12 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jCheckBoxCommand;
 	}
 
-	// JPanel
+	/**
+	 * This method adds Panel on the swing component as desired position
+	 * @author Afour
+	 */
 	private JPanel getJPanel0() {
+		
 		if (jPanelReport == null) {
 			jPanelReport = new JPanel();
 			jPanelReport.setLayout(new GroupLayout());
@@ -348,6 +492,10 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jPanelReport;
 	}
+	/**
+	 * This method adds the Image/Logo to the JPanel
+	 * @author Afour
+	 */
 	private JPanel getJPanel1() {
 		if (jPanelLogo == null) {
 			jPanelLogo = new JPanel();
@@ -363,13 +511,21 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jPanelLogo;
 	}
 	
-	// JProgressBar
+	/**
+	 * This method adds the status progress-bar
+	 * @return jProgressBarStarus
+	 * @author afour
+	 */
 	private JProgressBar getJProgressBar0() {
 		if (jProgressBarStatus == null) {
 			jProgressBarStatus = new JProgressBar();
 		}
 		return jProgressBarStatus;
 	}
+	/**
+	 * This method is used to update the status Progress-bar
+	 * @author Afour
+	 */
 	public void updateProgressBar(int percent) {
 		jProgressBarStatus.setValue(percent);
 		jProgressBarStatus.setString("Completed: " + Integer.toString(percent) + "/" + noOfSelectedTestCases);
@@ -380,7 +536,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		jProgressBarStatus.paintImmediately(progressRect);
 	}
 	
-	// JComboBox
+	/**
+	 * This method is used to add the Browsers to the JCombobox
+	 * @author Afour
+	 * @return jComboBoxBrowser
+	 */
 	private JComboBox getJComboBox0() {
 		if (jComboBoxBrowser == null) {
 			jComboBoxBrowser = new JComboBox();
@@ -392,7 +552,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jComboBoxBrowser;
 	}
 	
-	// JList
+	/**
+	 * This method is used to add test cases to be executed to the JList
+	 * @author Afour
+	 * @return jListExecute 
+	 */
 	private JList getJList3() {
 		if (GlobalVariables.jListExecute == null) {
 			GlobalVariables.jListExecute = new JList();
@@ -401,6 +565,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return GlobalVariables.jListExecute;
 	}
+	/**
+	 * This method is used to add the test cases to the JList of View
+	 * @return jListView
+	 * @author Afour
+	 */
 	private JList getJList0() {
 		try {
 			jListView = new JList();
@@ -418,6 +587,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jListView;
 	}
+	/**
+	 * This method is used to add the test cases to the JList of Plan
+	 * @return jListPlan
+	 * @author Afour
+	 */
 	private JList getJList1() {
 		try {
 			jListPlan = new JList();
@@ -435,6 +609,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 		return jListPlan;
 	}
+	/**
+	 * This method is used to add the test cases to the JList of Command
+	 * @return jListCommand
+	 * @author Afour
+	 */
 	private JList getJList2() {
 		try {
 			jListCommand = new JList();
@@ -454,7 +633,11 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		return jListCommand;
 	}
 
-	// Execute Test Cases
+	/**
+	 * This method is used to execute the test cases. This method initialize testdata and loads object repository and also calls teardown method
+	 * It calls the report generation methods and writes an start and end date time on the swing frame
+	 * @author Afour
+	 */
 	public void executeTestCases(Vector<Object> arrayOfTestCaseId) {
 		int totalExecute;
 		try {
@@ -526,16 +709,16 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 			jLabelEndDateTime.setText("End DateTime: " + GlobalVariables.sEndDateTime);
 			jLabelEndDateTime.setSize(jLabelEndDateTime.getPreferredSize());
 			jLabelEndDateTime.paintImmediately(jLabelEndDateTime.getVisibleRect());
-			// Get totalExecuted TestCaseId
+			// Get total Executed TestCaseId
 			totalExecute = ReportFunctions.totalNoOfTestCasesPassed + ReportFunctions.totalNoOfTestCasesFailed;
 			jLabelNumberOfTestCasesExecuted.setText("Number of TestCases Executed: " + Integer.toString(totalExecute));
 			jLabelNumberOfTestCasesExecuted.setSize(jLabelNumberOfTestCasesExecuted.getPreferredSize());
 			jLabelNumberOfTestCasesExecuted.paintImmediately(jLabelNumberOfTestCasesExecuted.getVisibleRect());
-			// Get totalTestCasesPassed
+			// Get total Test Cases Passed
 			jLabelNumberOfTestCasesPassed.setText("Number of TestCases Passed: " + Integer.toString(ReportFunctions.totalNoOfTestCasesPassed));
 			jLabelNumberOfTestCasesPassed.setSize(jLabelNumberOfTestCasesPassed.getPreferredSize());
 			jLabelNumberOfTestCasesPassed.paintImmediately(jLabelNumberOfTestCasesPassed.getVisibleRect());
-			// Get totalTestCasesFailed
+			// Get total TestCases Failed
 			jLabelNumberOfTestCasesFailed.setText("Number of TestCases Failed: " + Integer.toString(ReportFunctions.totalNoOfTestCasesFailed));
 			jLabelNumberOfTestCasesFailed.setSize(jLabelNumberOfTestCasesFailed.getPreferredSize());
 			jLabelNumberOfTestCasesFailed.paintImmediately(jLabelNumberOfTestCasesFailed.getVisibleRect());
@@ -546,7 +729,10 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 	}
 
-	// Look & Feel
+	/**
+	 * This method is used to set the look and feel
+	 * @author Afour
+	 */
 	private static void installLnF() {
 		try {
 			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
@@ -557,7 +743,10 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 	}
 	
-	// Called When Action Performed
+	/**
+	 * This method is Called When Action is Performed
+	 * @author Afour
+	 */
 	public void actionPerformed(ActionEvent e) {
 		try {
 			if ("add".equals(e.getActionCommand())) {// when clicked on '>' button
@@ -603,23 +792,28 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 				else
 					JOptionPane.showMessageDialog(rootPane, "Please select the testcases.");
 			}
-			else if ("newtest".equals(e.getActionCommand())) { // when clicked on 'New Test' button
+			// when clicked on 'New Test' button
+			else if ("newtest".equals(e.getActionCommand())) { 
 				clearTestPlanResult();
 			}
-			else if ("logs".equals(e.getActionCommand())) { // when clicked on 'Logs' button
+			// when clicked on 'Logs' button
+			else if ("logs".equals(e.getActionCommand())) { 
 				File file = new File(GlobalVariables.sLogDirectoryPath);
 				Desktop desktop = Desktop.getDesktop();	
 				desktop.open(file);
 			}
-			else if ("reports".equals(e.getActionCommand())) { // when clicked on 'Reports' button
+			 // when clicked on 'Reports' button
+			else if ("reports".equals(e.getActionCommand())) {
 				File file = new File(GlobalVariables.sReportDstDirectoryPath+"//index.htm");
 				Desktop desktop = Desktop.getDesktop();	
 				desktop.open(file);
 			}
+			 // when clicked on 'Send message' button
 			else if ("message".equals(e.getActionCommand())){
 				@SuppressWarnings("unused")
 				EmailNotification emi=new EmailNotification();
 			}
+			 // when clicked on 'Exit' button
 			else if ("exit".equals(e.getActionCommand())) { // when clicked on 'Exit' button
 				System.exit(0);
 			}
@@ -631,7 +825,10 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 	}
 
-	// Clear Test Plan Result
+	/**
+	 * This method is used to clear the Test Plan Result
+	 * @author Afour 
+	 */
 	private void clearTestPlanResult() {
 		try {
 			DefaultListModel listModel = new DefaultListModel();
@@ -689,7 +886,10 @@ public class Home extends JFrame implements ActionListener, ItemListener{
 		}
 	}
 	
-	// Called when Item Status Changed
+	/**
+	 *  This method is called when Item Status Changed
+	 *  @author Afour 
+	 */
 	public void itemStateChanged(ItemEvent e) {
 		try {
 			if (e.getSource() == jCheckBoxView) {
