@@ -1,8 +1,8 @@
 <project name="jmeter-test-common" default="run" basedir="." xmlns:ac="antlib:net.sf.antcontrib">
 
 <property name="jmeter.dir" value="E:\apache-jmeter-2.7"/>
-<property name="test.dir" value="D:\channels\Mind-AllianceConcurrentTestProject\PerformanceTest"/>
-<property name="jmeter.file" value="Mind-Alliance Revision 4299"/>
+<property name="test.dir" value="D:\AnalysChannelsMindAlliance\qa-project\channels\Mind-AllianceConcurrentTestProject\PerformanceTest"/>
+<property name="jmeter.file" value="Mind-Alliance Revision Latest"/>
 <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
 
 
