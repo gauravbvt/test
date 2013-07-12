@@ -23,9 +23,7 @@ public class Home {
 		suite.addTestSuite(CL0001_LoginPage.class);
 		suite.addTestSuite(CL0007_ClickSignInButton.class);
 		suite.addTestSuite(CL0018_ClickCantAccessYourAccountLink.class);
-		
 		//		View
-		
 		suite.addTestSuite(MAV0001_viewLoginPage.class);		
 		suite.addTestSuite(MAV0002_viewHomePage.class);
 		suite.addTestSuite(MAV0003_SignoutOnHomePage.class);
