@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/dsn.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/google-collect-1.0-rc2.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/google-io-extra.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/httpclient-4.0.2.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/httpclient-4.0.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/httpcore-4.0.1.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/imap.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/javacsv-2.0.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/jna.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/jna-3.2.2.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/jOpenDocument-1.2.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/json-20070829.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/mailapi.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.borders_0.9.12.I20090506-2220.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.grouplayouts_0.9.12.I20090506-2220.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.layouts_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.lnfs_0.9.12.I20090506-2220.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.parser_0.9.12.I20090522-2330.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.types_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing.widgets_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/org.dyno.visual.swing_0.9.12.I20090527-2200.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/pop3.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b1.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b1-srcs.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-java-2.0b3-srcs.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/selenium-server-standalone-2.0b3.jar"/>
-	<classpathentry kind="lib" path="D:/channels/Mind-AllianceAutomationFramework/Library/smtp.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.6.0_23/jre/lib/rt.jar"/>
+	<classpathentry kind="lib" path="Library/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="Library/dsn.jar"/>
+	<classpathentry kind="lib" path="Library/google-collect-1.0-rc2.jar"/>
+	<classpathentry kind="lib" path="Library/google-io-extra.jar"/>
+	<classpathentry kind="lib" path="Library/httpclient-4.0.2.jar"/>
+	<classpathentry kind="lib" path="Library/httpclient-4.0.jar"/>
+	<classpathentry kind="lib" path="Library/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="Library/imap.jar"/>
+	<classpathentry kind="lib" path="Library/javacsv-2.0.jar"/>
+	<classpathentry kind="lib" path="Library/jna-3.2.2.jar"/>
+	<classpathentry kind="lib" path="Library/jna.jar"/>
+	<classpathentry kind="lib" path="Library/jOpenDocument-1.2.jar"/>
+	<classpathentry kind="lib" path="Library/json-20070829.jar"/>
+	<classpathentry kind="lib" path="Library/mailapi.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.borders_0.9.12.I20090506-2220.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.grouplayouts_0.9.12.I20090506-2220.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.layouts_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.lnfs_0.9.12.I20090506-2220.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.parser_0.9.12.I20090522-2330.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.types_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="Library/org.dyno.visual.swing.widgets_0.9.12.I20090527-2200.jar"/>
+	<classpathentry kind="lib" path="Library/pop3.jar"/>
+	<classpathentry kind="lib" path="Library/selenium-java-2.0b1-srcs.jar"/>
+	<classpathentry kind="lib" path="Library/selenium-java-2.0b1.jar"/>
+	<classpathentry kind="lib" path="Library/selenium-java-2.0b3-srcs.jar"/>
+	<classpathentry kind="lib" path="Library/selenium-java-2.0b3.jar"/>
+	<classpathentry kind="lib" path="Library/selenium-server-standalone-2.0b3.jar"/>
+	<classpathentry kind="lib" path="Library/smtp.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.7.0_04/jre/lib/rt.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0.jar"/>
+	<classpathentry kind="lib" path="D:/AnalysChannelsMindAlliance/qa-project/channels/Mind-AllianceFramework_V2/lib/selenium-java-2.25.0-srcs.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
