@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.dao.PlanDefinitionManager;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
@@ -154,11 +155,11 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         add( addPlanLink );
     }
 
-    private boolean addPlanWithUri( String newPlanUri ) {
-        if ( newPlanUri != null && !newPlanUri.trim().isEmpty() ) {
+    private boolean addPlanWithUri( String planUri ) {
+        if ( planUri != null && !planUri.trim().isEmpty() ) {
             try {
-                String newPlanName = "New Plan " + newPlanUri;
-                PlanDefinition newPlanDefinition = planDefinitionManager.getOrCreate( newPlanUri, newPlanName, "Unnamed" );
+                String newPlanName = "New Plan " + planUri;
+                PlanDefinition newPlanDefinition = planDefinitionManager.getOrCreate( planUri, newPlanName, "Unnamed" );
                 getPlanManager().assignPlans();
                 selectedPlan = planManager.getPlan( newPlanDefinition.getUri(),
                         newPlanDefinition.getDevelopmentVersion().getNumber() );
@@ -435,6 +436,6 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     }
 
     public void setNewPlanUri( String newPlanUri ) {
-        this.newPlanUri = newPlanUri;
+        this.newPlanUri = ChannelsUtils.sanitize( newPlanUri );
     }
 }

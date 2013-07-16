@@ -126,8 +126,10 @@ public class PlanDefinitionManager implements InitializingBean, Iterable<PlanDef
      */
     public Version get( String uri, boolean development ) {
         PlanDefinition definition = definitions.get( uri );
-
-        return development ? definition.getDevelopmentVersion()
+        if ( definition == null )
+            return null;
+        else
+            return development ? definition.getDevelopmentVersion()
                 : definition.getProductionVersion();
     }
 

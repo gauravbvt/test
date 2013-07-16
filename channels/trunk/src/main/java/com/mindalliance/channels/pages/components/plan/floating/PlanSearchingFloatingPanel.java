@@ -14,6 +14,8 @@ import com.mindalliance.channels.pages.components.plan.PlanWhosWhoPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,12 @@ import java.util.Set;
  * Time: 7:17 PM
  */
 public class PlanSearchingFloatingPanel extends AbstractFloatingMultiAspectPanel {
+
+    /**
+     * Class logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger( PlanSearchingFloatingPanel.class );
+
 
     public static final String INDEX = "Index";
     public static final String TAGS = "Tags";
@@ -94,7 +102,8 @@ public class PlanSearchingFloatingPanel extends AbstractFloatingMultiAspectPanel
         } else if ( aspect.equals( ATTACHMENTS ) ) {
             return getPlanBibliographyPanel();
         } else {
-            throw new RuntimeException( "Unknown searching aspect " + aspect ); }
+            throw new RuntimeException( "Unknown searching aspect " + aspect );
+        }
     }
 
     @Override

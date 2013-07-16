@@ -283,7 +283,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
                 new ChannelListPanel(
                         "contactInfo",
                         new Model<Channelable>( new UserChannels(
-                                getUser().getUserRecord()
+                                temp.getUserRecord()
                         ) ),
                         false,     // don't allow adding new media
                         true ) );  // restrict to immutable media
@@ -520,15 +520,15 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     public class UserChannels implements Channelable {
 
 
-        private UserRecord userInfo;
+        private UserRecord tempUserRecord;
 
-        public UserChannels( UserRecord userInfo ) {
-            this.userInfo = userInfo;
+        public UserChannels( UserRecord tempUserRecord ) {
+            this.tempUserRecord = tempUserRecord;
         }
 
         @Override
         public List<Channel> getEffectiveChannels() {
-            return userInfoService.findChannels( getUserInfo(), getCommunityService() );
+            return getUserRecord().findChannels( getCommunityService() );
         }
 
         @Override
@@ -538,17 +538,17 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
         @Override
         public void addChannel( Channel channel ) {
-            userInfoService.addChannel( getUserInfo().getUsername(), getUserInfo(), channel );
+            getUserRecord().addChannel( channel );
         }
 
         @Override
         public void removeChannel( Channel channel ) {
-            userInfoService.removeChannel( getUserInfo(), channel );
+            getUserRecord().removeChannel( channel );
         }
 
         @Override
         public void setAddress( Channel channel, String address ) {
-            userInfoService.setAddress( getUserInfo(), channel, address );
+            getUserRecord().setAddress( channel, address );
         }
 
         @Override
@@ -616,7 +616,7 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
         @Override
         public long getId() {
-            return getUserInfo().getId();
+            return getUserRecord().getId();
         }
 
         @Override
@@ -641,11 +641,11 @@ public class UserInfoPanel extends AbstractSocialListPanel {
 
         @Override
         public String getName() {
-            return getUserInfo().getFullName();
+            return getUserRecord().getFullName();
         }
 
-        private UserRecord getUserInfo() {
-            return userInfo;
+        private UserRecord getUserRecord() {
+            return tempUserRecord;
         }
     }
 }

@@ -201,11 +201,13 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
     }
 
     private void showAspect( String aspect, Change change ) {
+        if ( !isMinimized() ) {
         setSelectedTabName( aspect );
         String aspectToShow = aspect == null ? getDefaultAspect() : aspect;
         aspectPanel = makeAspectPanel( aspectToShow, change );
         aspectPanel.setOutputMarkupId( true );
         moContainer.addOrReplace( aspectPanel );
+        }
     }
 
     private void releaseAspectShown() {
@@ -273,10 +275,16 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
                 || change.isDisplay()
                 || change.isModified()
                 || change.isSelected() ) {
-            if ( !isMinimized() ) {
+            if ( !isMinimized() && isAspect( aspect ) ) {
                 showAspect( aspect, change, target );
             }
         }
+    }
+
+    protected boolean isAspect( String aspect ) {
+        return aspect != null
+                && !aspect.isEmpty()
+                && getAllAspects().contains( aspect );
     }
 
     /**

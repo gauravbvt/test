@@ -2,6 +2,9 @@ package com.mindalliance.channels.db.data.users;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
+import com.mindalliance.channels.core.model.Channel;
+import com.mindalliance.channels.core.model.NotFoundException;
+import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.AbstractChannelsDocument;
 import com.mindalliance.channels.db.data.ContactInfo;
@@ -390,7 +393,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
 
 
     public void clearContactInfo() {
-       contactInfoList = new ArrayList<ContactInfo>(  );
+        contactInfoList = new ArrayList<ContactInfo>();
     }
 
     public void clearAccess( String uri ) {
@@ -510,6 +513,46 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
                         return ( (UserAccess) object ).isParticipant();
                     }
                 } );
+    }
+
+    public List<Channel> findChannels( CommunityService communityService ) {
+        List<Channel> channels = new ArrayList<Channel>();
+        for ( ContactInfo contactInfo : getContactInfoList() ) {
+            try {
+                TransmissionMedium medium = TransmissionMedium.getUNKNOWN();
+                if ( communityService != null ) {
+                    // check if medium still valid
+                    medium = communityService.find(
+                            TransmissionMedium.class,
+                            contactInfo.getTransmissionMediumId() );
+                }
+                channels.add( new Channel( medium, contactInfo.getAddress() ) );
+            } catch ( NotFoundException e ) {
+                // ignore
+            }
+        }
+        return channels;
+    }
+
+    public void setAddress( Channel channel, String address ) {
+        ContactInfo contactInfo = new ContactInfo( channel );
+        removeContactInfo( contactInfo );
+        contactInfo.setAddress( address );
+        addContactInfo( contactInfo );
+    }
+
+    public void addChannel( Channel channel ) {
+        ContactInfo contactInfo = new ContactInfo( channel );
+        addContactInfo( contactInfo );
+    }
+
+    public void removeChannel( Channel channel ) {
+        ContactInfo contactInfo = new ContactInfo( channel );
+        removeContactInfo( contactInfo );
+    }
+
+    public void removeAllChannels() {
+        contactInfoList = new ArrayList<ContactInfo>(  );
     }
 }
 

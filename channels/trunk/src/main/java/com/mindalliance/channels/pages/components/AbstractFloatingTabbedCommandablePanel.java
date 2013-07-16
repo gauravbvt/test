@@ -481,7 +481,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         this.selectedTabName = selectedTabName;
     }
 
-    protected boolean isMinimized() {
+    public boolean isMinimized() {
         return minimized;
     }
 

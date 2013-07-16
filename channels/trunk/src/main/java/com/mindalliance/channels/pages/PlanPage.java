@@ -1797,7 +1797,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         part = p;
         if ( part == null )
             part = segment.getDefaultPart();
-        if ( part.getSegment() != segment )
+        if ( !part.getSegment().equals( segment ) )
             setSegment( part.getSegment() );
     }
 
@@ -2025,7 +2025,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             try {
                 ModelObject expanded = getQueryService().find( ModelObject.class, id );
                 if ( expanded instanceof SegmentObject ) {
-                    if ( ( (SegmentObject) expanded ).getSegment() == segment ) {
+                    if ( ( (SegmentObject) expanded ).getSegment().equals( segment ) ) {
                         toCollapse.add( expanded );
                     }
                 }
@@ -2556,8 +2556,11 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 && identifiable instanceof Segment
                 ||
                 identifiable != null && change.isSelected() && identifiable instanceof Part ) {
-            addSegmentEditPanel();
-            target.add( segmentEditPanel );
+            if ( !( segmentEditPanel instanceof SegmentEditPanel
+                    && ( (SegmentEditPanel) segmentEditPanel ).isMinimized() ) ) {
+                addSegmentEditPanel();
+                target.add( segmentEditPanel );
+            }
             addBreadCrumbs();
             target.add( breadCrumbs );
         } else if ( segmentEditPanel instanceof SegmentEditPanel ) {

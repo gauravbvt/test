@@ -6,8 +6,6 @@ import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.model.NotFoundException;
-import com.mindalliance.channels.core.model.TransmissionMedium;
 import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.ContactInfo;
@@ -473,54 +471,31 @@ public class UserRecordServiceImpl
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Channel> findChannels( UserRecord userRecord, CommunityService communityService ) {
-        List<Channel> channels = new ArrayList<Channel>();
-        for ( ContactInfo contactInfo : userRecord.getContactInfoList() ) {
-            try {
-                TransmissionMedium medium = TransmissionMedium.getUNKNOWN();
-                if ( communityService != null ) {
-                    // check if medium still valid
-                    medium = communityService.find(
-                            TransmissionMedium.class,
-                            contactInfo.getTransmissionMediumId() );
-                }
-                channels.add( new Channel( medium, contactInfo.getAddress() ) );
-            } catch ( NotFoundException e ) {
-                // ignore
-            }
-        }
-        return channels;
+        return userRecord.findChannels( communityService );
     }
 
     @Override
     @SuppressWarnings( "unchecked" )
     public void setAddress( UserRecord userRecord, Channel channel, String address ) {
-        ContactInfo contactInfo = new ContactInfo( channel );
-        userRecord.removeContactInfo( contactInfo );
-        contactInfo.setAddress( address );
-        userRecord.addContactInfo( contactInfo );
+        userRecord.setAddress( channel, address );
         save( userRecord );
     }
 
     @Override
-    public void addChannel( String username, UserRecord user, Channel channel ) {
-        ContactInfo contactInfo = new ContactInfo( channel );
-        user.addContactInfo( contactInfo );
-        save( user );
+    public void addChannel( String username, UserRecord userRecord, Channel channel ) {
+        userRecord.addChannel( channel );
+        save( userRecord );
     }
 
     @Override
     public void removeChannel( UserRecord userRecord, Channel channel ) {
-        ContactInfo contactInfo = new ContactInfo( channel );
-        userRecord.removeContactInfo( contactInfo );
+        userRecord.removeChannel( channel );
         save( userRecord );
     }
 
     @Override
     public void removeAllChannels( UserRecord userRecord ) {
-        for ( Channel channel : findChannels( userRecord, null ) ) {
-            // null = don't do validation of channel media
-            userRecord.removeContactInfo( new ContactInfo( channel ) );
-        }
+        userRecord.removeAllChannels();
         save( userRecord );
     }
 
