@@ -95,7 +95,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
                         Flow.getJurisdictionString( part ),
-                        ("if " + flow.getRestrictionString( isSend ) ) );
+                        (" if " + flow.getRestrictionString( isSend ) ) );
             }
         } else {
             // receive
@@ -118,7 +118,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
-                            ( "if " + flow.getRestrictionString( isSend ) ) );
+                            ( " if " + flow.getRestrictionString( isSend ) ) );
                 } else
                     return "Notified of";
             }

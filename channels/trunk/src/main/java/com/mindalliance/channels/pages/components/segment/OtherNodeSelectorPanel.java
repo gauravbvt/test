@@ -106,7 +106,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
         unknownOtherNode = new Part() {
             /** {@inheritDoc} */
             public String toString() {
-                return "Enter a task name";
+                return "";
             }
 
             /** {@inheritDoc} */
@@ -208,6 +208,7 @@ public class OtherNodeSelectorPanel extends AbstractCommandablePanel {
                 return candidates.iterator();
             }
         };
+        addTipTitle( secondChoiceInput, "Enter task name" );
         secondChoiceInput.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 makeVisible( secondChoice, false );
