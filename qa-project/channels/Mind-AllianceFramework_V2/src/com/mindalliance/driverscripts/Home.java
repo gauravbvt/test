@@ -40,15 +40,18 @@ public class Home {
 		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
 		suite.addTestSuite(MAV0019_viewAllIndexForm.class);
 		suite.addTestSuite(MAV0020_viewAllTagForm.class);
-//		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
-//		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
-//		suite.addTestSuite(MAV0023_viewAllVersionsForm.class);
-//		suite.addTestSuite(MAV0025_closeAboutPlanWindow.class);
-//		suite.addTestSuite(MAV0026_viewAboutPlanSegmentWindow.class);
-//		suite.addTestSuite(MAV0028_viewGoalsForm.class);
-//		suite.addTestSuite(MAV0029_viewOrganizationsForm.class);
-//		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);
-//		suite.addTestSuite(MAV0007_logoutOnPlanPage.class);
+		
+//		yet to modify
+		
+		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
+		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
+		suite.addTestSuite(MAV0023_viewAllVersionsForm.class);
+		suite.addTestSuite(MAV0025_closeAboutPlanWindow.class);
+		suite.addTestSuite(MAV0026_viewAboutPlanSegmentWindow.class);
+		suite.addTestSuite(MAV0028_viewGoalsForm.class);
+		suite.addTestSuite(MAV0029_viewOrganizationsForm.class);
+		suite.addTestSuite(MAV0005_logoutOnAdminPage.class);
+		suite.addTestSuite(MAV0007_logoutOnPlanPage.class);
 //		suite.addTestSuite(MAV0030_viewMapWindow.class);
 //		suite.addTestSuite(MAV0031_viewTaskMoversForm.class);
 //		suite.addTestSuite(MAV0033_closeAboutPlanSegmentWindow.class);
