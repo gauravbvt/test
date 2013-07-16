@@ -1688,6 +1688,10 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                 && queryService.subsetOf( other.getEffectiveEois(), getEffectiveEois() );
     }
 
+    public boolean isRestricted() {
+        return !getRestrictions().isEmpty();
+    }
+
     /**
      * The significance of a flow.
      */
