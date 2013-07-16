@@ -28,7 +28,8 @@ public class BrowserController{
 		try{
 			switch (browser) {
 			case "Mozilla Firefox":
-				driver = new FirefoxDriver(DesiredCapabilities.firefox());
+//				driver = new FirefoxDriver();
+				driver = new FirefoxDriver();
 		      	GlobalVariables.configuration.setWebDriver(driver);
 		    	
 		    	//Maximize the Browser
@@ -75,6 +76,7 @@ public class BrowserController{
     	
     	// Assertion : Check Title of Page
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+       	System.out.println("Hiee///");
     }
      
 }
