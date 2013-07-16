@@ -68,6 +68,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private Label urlLabel;
     private AjaxLink<String> urlKindLink;
     private AjaxLink<String> fileKindLink;
+    private AjaxLink<String> attachUrlLink;
 
     /**
      * Available attachment kind. Each kind should have a corresponding field.
@@ -172,41 +173,48 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         super( id, model, null );
         this.readOnly = readOnly;
         this.attachablePath = attachablePath;
+        init();
+    }
+
+    private void init() {
         container = new WebMarkupContainer( "container" );
         container.setOutputMarkupId( true );
-        add( container );
+        addOrReplace( container );
         addAttachmentList();
         addNewAttachment();
+        adjustFields();
     }
 
     private void addNewAttachment() {
         addAttachmentContainer = new WebMarkupContainer( "addAttachment" );
         addAttachmentContainer.setOutputMarkupId( true );
-        container.add( addAttachmentContainer );
+        container.addOrReplace( addAttachmentContainer );
         makeVisible( addAttachmentContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
-        addControlsHeader( addAttachmentContainer );
-        addControls( addAttachmentContainer );
+        addControlsHeader( );
+        addControls( );
     }
 
-    private void addControlsHeader( WebMarkupContainer addAttachmentContainer ) {
+    private void addControlsHeader( ) {
         AjaxLink<String> showControlsLink = new AjaxLink<String>( "showControls" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 showingControls = !showingControls;
+                addControls( );
                 makeVisible( controlsContainer, showingControls );
                 target.add( controlsContainer );
             }
         };
+        showControlsLink.setOutputMarkupId( true );
         addTipTitle( showControlsLink, "Click to expand or collapse" );
         showControlsLink.add( makeHelpIcon( "help", "user", "attachments", "add-attachment", "images/help_guide_gray.png" ) );
-        addAttachmentContainer.add( showControlsLink );
+        addAttachmentContainer.addOrReplace( showControlsLink );
     }
 
-    private void addControls( WebMarkupContainer addAttachmentContainer ) {
+    private void addControls(  ) {
         controlsContainer = new WebMarkupContainer( "controls" );
         controlsContainer.setOutputMarkupId( true );
         makeVisible( controlsContainer, showingControls );
-        addAttachmentContainer.add( controlsContainer );
+        addAttachmentContainer.addOrReplace( controlsContainer );
         addTypeChoice();
         addSelectedKind();
         addKindSelector();
@@ -214,6 +222,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         addUploadField();
         addUrlField();
         addSubmit();
+        addAttachUrl();
         updateNewAttachmentFields();
     }
 
@@ -229,7 +238,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addSubmit() {
         submit = new AjaxButton( "submit" ) {
             protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
-                addAttachmentList();
+                init();
                 refresh( target );
                 update( target, new Change( Change.Type.Unknown, "attachments" ) );
             }
@@ -240,27 +249,40 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             }
         };
         submit.setOutputMarkupId( true );
+        makeVisible( submit, getKind() == Kind.File );
         submit.setEnabled( false );
-        controlsContainer.add( submit );
+        controlsContainer.addOrReplace( submit );
+    }
+
+    private void addAttachUrl() {
+        attachUrlLink = new AjaxLink<String>( "attachUrl" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                if ( url != null && !url.isEmpty() ) {
+                    attachUrl();
+                    init();
+                    refresh( target );
+                    update( target, new Change( Change.Type.Unknown, "attachments" ) );
+                }
+            }
+        };
+        attachUrlLink.setOutputMarkupId( true );
+        makeVisible( attachUrlLink, getKind() == Kind.URL );
+        controlsContainer.addOrReplace( attachUrlLink );
     }
 
     private void adjustFields() {
         makeVisible( uploadField, Kind.File.equals( kind ) );
         makeVisible( urlField, Kind.URL.equals( kind ) );
+        makeVisible( attachUrlLink, getKind() == Kind.URL );
+        makeVisible( submit, getKind() == Kind.File );
         makeVisible( addAttachmentContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
         makeVisible( controlsContainer, showingControls );
     }
 
     private void refresh( AjaxRequestTarget target ) {
-        adjustFields();
-        target.add( nameField );
-        target.add( controlsContainer );
-        target.add( uploadField );
-        target.add( urlField );
-        target.add( submit );
-        target.add( attachmentsContainer );
-        addTypeChoice();
-        target.add( typeChoice );
+        init();
+        target.add( container );
     }
 
     private void addUrlField() {
@@ -270,16 +292,16 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         urlField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                addAttachmentList();
-                refresh( target );
+ /*               refresh( target );
                 update( target, new Change(
                         Change.Type.Updated,
                         getAttachee(),
                         "attachmentTickets"
                 ) );
+*/
             }
         } );
-        controlsContainer.add( urlField );
+        controlsContainer.addOrReplace( urlField );
     }
 
     private void addNameField() {
@@ -287,13 +309,14 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 "name",
                 new PropertyModel<String>( this, "name" )
         );
+        nameField.setOutputMarkupId( true );
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 // do nothing
             }
         } );
-        controlsContainer.add( nameField );
+        controlsContainer.addOrReplace( nameField );
     }
 
     private void addUploadField() {
@@ -307,7 +330,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 target.add( submit );
             }
         } );
-        controlsContainer.add( uploadField );
+        controlsContainer.addOrReplace( uploadField );
     }
 
     private void addTypeChoice() {
@@ -357,8 +380,9 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 ) );
             }
         };
+        attachmentList.setOutputMarkupId( true );
         makeVisible( attachmentsContainer, !getAttachments().isEmpty() );
-        attachmentsContainer.add( attachmentList );
+        attachmentsContainer.addOrReplace( attachmentList );
     }
 
     private void addCopyImage( ListItem<Attachment> item ) {
@@ -415,6 +439,8 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         makeVisible( urlKindLink, Kind.File.equals( getKind() ) );
         makeVisible( fileLabel, Kind.File.equals( getKind() ) );
         makeVisible( urlLabel, Kind.URL.equals( getKind() ) );
+        makeVisible( attachUrlLink, getKind() == Kind.URL );
+        makeVisible( submit, getKind() == Kind.File );
         submit.setEnabled( Kind.File.equals( getKind() ) );
     }
 
@@ -423,6 +449,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 setKind( Kind.URL );
+                url = null;
                 updateNewAttachmentFields();
                 target.add( AttachmentPanel.this );
             }
@@ -432,6 +459,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 setKind( Kind.File );
+                url = null;
                 updateNewAttachmentFields();
                 target.add( AttachmentPanel.this );
             }
@@ -530,24 +558,27 @@ public class AttachmentPanel extends AbstractCommandablePanel {
      * @param value the url string
      */
     public void setUrl( String value ) {
-        Logger logger = LoggerFactory.getLogger( getClass() );
         this.url = value;
-        if ( value != null ) {
-            ModelObject mo = getAttachee();
+    }
 
+    private void attachUrl() {
+        if ( url != null && !url.isEmpty() ) {
+            Logger logger = LoggerFactory.getLogger( getClass() );
+            ModelObject mo = getAttachee();
             logger.info( "Attaching URL to {}", mo );
             // URL url;
             try {
-                new URL( value );
-                Attachment attachment = new AttachmentImpl( value, getSelectedType(), getName() );
+                new URL( url );
+                Attachment attachment = new AttachmentImpl( url, getSelectedType(), getName() );
                 doCommand( new AttachDocument( getUser().getUsername(), mo, attachablePath, attachment ) );
                 postProcess( attachment );
                 this.url = null;
                 this.name = "";
             } catch ( MalformedURLException e ) {
-                logger.warn( "Invalid URL: " + value );
-                if ( value.indexOf( "://" ) < 0 ) {
-                    setUrl( "http://" + value );
+                logger.warn( "Invalid URL: " + url );
+                if ( url.indexOf( "://" ) < 0 ) {
+                    setUrl( "http://" + url );
+                    attachUrl();
                 }
             }
         }
