@@ -105,7 +105,7 @@ public class MAV0008_hidePlannerInfo extends TestCase{
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);								
-			    
+			
 			// Login page
 			stepNo++;
 			description="Login successful";	
