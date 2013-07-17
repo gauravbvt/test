@@ -449,42 +449,53 @@
 	
 	<Element>
 		<GivenName>Show All Users</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Xpath>//div[contains(@class,'text-controls')]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>show all users</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Hide Inactive Users</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Xpath>//div[contains(@class,'text-controls')]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>Presence</LinkText>
+		<LinkText>hide inactive users</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>Activities</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div/ul/li[2]/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/span/div/div/div/ul/li[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>Activities</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>Hide My Activities</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Xpath>//div[contains(@class,'text-controls')]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>hide my activites</LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Show all Activities</GivenName>
+		<Xpath>//div[contains(@class,'text-controls')]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>show all activites</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Organization Name Textbox In Organizations In Scope</GivenName>
 		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/fieldset/input</Xpath>
@@ -1138,7 +1149,7 @@
 	
 	<Element>
 		<GivenName>Add New Segment</GivenName>
-		<Xpath>/html/body/form/div[27]/div/div[3]/span[2]/span/ul/li/ul/li[8]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[8]/span/a/span</Xpath>
 		<Name>Add new segment</Name>
 		<Id></Id>
 		<PartialLinkText>Add new segment</PartialLinkText>
@@ -1170,7 +1181,7 @@
 		
 	<Element>
 		<GivenName>Remove This Segment</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[9]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[9]/span/a/span</Xpath>
 		<Name>Remove this segment</Name>
 		<Id></Id>
 		<PartialLinkText>Remove this segment</PartialLinkText>
@@ -1354,7 +1365,7 @@
  	
  	<Element>
  		<GivenName>Close Assignment Window</GivenName>
- 		<Xpath>/html/body/form/div[6]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[6]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1364,7 +1375,7 @@
  	
  	<Element>
  		<GivenName>Close Failure Impacts Window</GivenName>
- 		<Xpath>/html/body/form/div[9]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[11]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1374,7 +1385,7 @@
 
 	<Element>
  		<GivenName>Close Dissemination Window</GivenName>
- 		<Xpath>/html/body/form/div[10]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[12]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -2158,7 +2169,7 @@
 		
 	<Element>
 		<GivenName>Failure Impacts Title</GivenName>
-		<Xpath>/html/body/form/div[9]/div/div/div/span</Xpath>
+		<Xpath>/html/body/form/div[11]/div/div/div/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2178,7 +2189,7 @@
 		
 	<Element>
 		<GivenName>Dissemination Title</GivenName>
-		<Xpath>/html/body/form/div[10]/div/div/div/span</Xpath>
+		<Xpath>/html/body/form/div[12]/div/div/div/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
