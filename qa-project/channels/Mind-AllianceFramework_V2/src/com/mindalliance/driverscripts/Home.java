@@ -81,12 +81,15 @@ public class Home {
 		suite.addTestSuite(MAV0109_hideInactiveUsers.class);
 		suite.addTestSuite(MAV0110_viewActivitiesAllUsers.class);
 		
+		
+		suite.addTestSuite(MAV0111_hideActivities.class);
+		suite.addTestSuite(MAV0112_viewAllActivities.class);
+		
 		// yet to modify
-//		suite.addTestSuite(MAV0111_hideActivities.class);
-//		suite.addTestSuite(MAV0112_viewAllActivities.class);
-//		suite.addTestSuite(MAV0113_viewMessages.class);
-//		suite.addTestSuite(MAV0114_hideBroadcasts.class);
-//		suite.addTestSuite(MAV0115_showAllMessages.class);
+		
+		suite.addTestSuite(MAV0113_viewMessages.class);
+		suite.addTestSuite(MAV0114_hideBroadcasts.class);
+		suite.addTestSuite(MAV0115_showAllMessages.class);
 //		suite.addTestSuite(MAV0116_showSent.class);
 //		suite.addTestSuite(MAV0117_showReceived.class);
 //		suite.addTestSuite(MAV0124_sendMessage.class);
