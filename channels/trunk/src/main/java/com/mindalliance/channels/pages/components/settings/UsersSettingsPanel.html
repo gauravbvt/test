@@ -18,15 +18,14 @@
             <div>
                 <input wicket:id="search" type="text" style="width:75%"/>
                 <img wicket:id="applySearch" src="images/search.png" alt="Search users"/>
-                <table wicket:id="usernamesContainer">
-                    <tr wicket:id="usernames"> <!-- repeated -->
-                        <td><img wicket:id="selector" src="images/selected.png" alt="pointer"/></td>
-                        <td><span wicket:id="username">username</span></td>
-                    </tr>
-                </table>
+                <ul wicket:id="usernamesContainer">
+                    <li wicket:id="usernames"> <!-- repeated -->
+                        <a wicket:id="userLink" href="#"><span wicket:id="username">username</span></a> <!-- class can be "selected" -->
+                    </li>
+                </ul>
             </div>
         </div>
-       <span wicket:id="userRecord">[user record panel]</span>
+        <span wicket:id="userRecord">[user record panel]</span>
     </div>
 </wicket:panel>
 </body>

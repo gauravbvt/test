@@ -152,26 +152,20 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
             protected void populateItem( ListItem<UserRecord> item ) {
                 final UserRecord userRecord = item.getModelObject();
                 boolean selected = selectedUsername != null && selectedUsername.equals( userRecord.getUsername() );
-                final WebMarkupContainer selectorImage = new WebMarkupContainer( "selector" );
-                selectorImage.add( new AttributeModifier(
-                        "src",
-                        selected
-                                ? "images/selected.png"
-                                : "images/not_selected.png"
-                ) );
-                selectorImage.add( new AjaxEventBehavior( "onclick" ) {
+                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
+                AjaxLink<String> userLink = new AjaxLink<String>( "userLink") {
                     @Override
-                    protected void onEvent( AjaxRequestTarget target ) {
+                    public void onClick( AjaxRequestTarget target ) {
                         selectedUsername = userRecord.getUsername();
                         addUsersList();
                         target.add( usernamesContainer );
                         addUserRecordPanel();
                         target.add( userRecordPanel );
                     }
-                } );
-                if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
-                item.add( selectorImage );
-                item.add( new Label( "username", userRecord.getFullName() + " (" + userRecord.getUsername() + ")" ) );
+                };
+                if ( selected ) userLink.add( new AttributeModifier( "class", "selected" ) );
+                item.add( userLink );
+                userLink.add( new Label( "username", userRecord.getFullName() + " (" + userRecord.getUsername() + ")" ) );
             }
         };
         usernamesContainer.add( usersListView );

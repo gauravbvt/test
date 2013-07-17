@@ -170,7 +170,9 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         planPrivilegesContainer = new WebMarkupContainer( "planPrivilegesContainer" );
         planPrivilegesContainer.setOutputMarkupId( true );
         privilegesContainer.addOrReplace( planPrivilegesContainer );
-        makeVisible( planPrivilegesContainer, !userRecordUpdate.isAdmin() && !userRecordUpdate.isDisabled() );
+        makeVisible( planPrivilegesContainer, !userRecord.getUsername().equals( getUsername() )
+                && !userRecordUpdate.isAdmin()
+                && !userRecordUpdate.isDisabled() );
         addPlanPrivilegesList();
     }
 
@@ -265,7 +267,6 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
              }
         };
         resetLink.setOutputMarkupId( true );
-        makeVisible( resetLink, !userRecord.getUsername().equals( getUsername() ) );
         add( resetLink );
         // apply
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply" ) {
@@ -281,7 +282,6 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             }
         };
         applyLink.setOutputMarkupId( true );
-        makeVisible( applyLink, !userRecord.getUsername().equals( getUsername() ) );
         add( applyLink );
     }
 
