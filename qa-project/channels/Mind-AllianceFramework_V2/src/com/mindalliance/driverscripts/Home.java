@@ -40,9 +40,6 @@ public class Home {
 		suite.addTestSuite(MAV0017_viewAllIssueForm.class);
 		suite.addTestSuite(MAV0019_viewAllIndexForm.class);
 		suite.addTestSuite(MAV0020_viewAllTagForm.class);
-		
-//		yet to modify
-		
 		suite.addTestSuite(MAV0021_viewAllEvaluationForm.class);
 //		suite.addTestSuite(MAV0022_viewAllParticipationsForm.class);
 		suite.addTestSuite(MAV0023_viewAllVersionsForm.class);
@@ -62,6 +59,8 @@ public class Home {
 		suite.addTestSuite(MAV0075_undoAddNewIssueUnderAction.class);
 		suite.addTestSuite(MAV0076_redoAddNewIssueUnderAction.class);
 		suite.addTestSuite(MAV0080_addNewTask.class);
+		
+		// yet to modify
 //		suite.addTestSuite(MAV0081_hideDetails.class);
 //		suite.addTestSuite(MAV0082_TaskDetails.class);
 //		suite.addTestSuite(MAV0083_addAssignment.class);
