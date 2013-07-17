@@ -137,6 +137,10 @@ public class PlanPage {
 			UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
 			
 			// Assertion: Verify Event window is closed
+			try{
+				Thread.sleep(2000);
+			}
+			catch(Exception e){}
 			xPath=dataController.getPageDataElements(fileName,"Close Events Window", "Xpath");
 			List<WebElement> webElemets=UIActions.getElements(xPath);
 			if(!webElemets.isEmpty()){
