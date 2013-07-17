@@ -59,29 +59,29 @@ public class Home {
 		suite.addTestSuite(MAV0075_undoAddNewIssueUnderAction.class);
 		suite.addTestSuite(MAV0076_redoAddNewIssueUnderAction.class);
 		suite.addTestSuite(MAV0080_addNewTask.class);
-		
-		// yet to modify
-//		suite.addTestSuite(MAV0081_hideDetails.class);
-//		suite.addTestSuite(MAV0082_TaskDetails.class);
-//		suite.addTestSuite(MAV0083_addAssignment.class);
-//		suite.addTestSuite(MAV0084_closeAssignment.class);
-//		suite.addTestSuite(MAV0085_FailureImpact.class);
-//		suite.addTestSuite(MAV0086_closeFailureImpact.class);
-//		suite.addTestSuite(MAV0087_Dissimination.class);
-//		suite.addTestSuite(MAV0088_closeDissemination.class);
-//		suite.addTestSuite(MAV0089_viewActionsPopup.class);
-//		suite.addTestSuite(MAV0090_addNewIssue.class);
-//		suite.addTestSuite(MAV0091_closeNewIssue.class);
-//		suite.addTestSuite(MAV0092_addNewSegment.class);
-//		suite.addTestSuite(MAV0093_closeNewSegment.class);
-//		suite.addTestSuite(MAV0098_removeSegmentUnderAction.class);
-//		suite.addTestSuite(MAV0100_moveTaskUnderAction.class);
-//		suite.addTestSuite(MAV0101_closeTaskMover.class);
+		suite.addTestSuite(MAV0081_hideDetails.class);
+		suite.addTestSuite(MAV0082_TaskDetails.class);
+		suite.addTestSuite(MAV0083_addAssignment.class);
+		suite.addTestSuite(MAV0084_closeAssignment.class);
+		suite.addTestSuite(MAV0085_FailureImpact.class);
+		suite.addTestSuite(MAV0086_closeFailureImpact.class);		
+		suite.addTestSuite(MAV0087_Dissimination.class);
+		suite.addTestSuite(MAV0088_closeDissemination.class);
+		suite.addTestSuite(MAV0089_viewActionsPopup.class);
+		suite.addTestSuite(MAV0090_addNewIssue.class);
+		suite.addTestSuite(MAV0091_closeNewIssue.class);
+		suite.addTestSuite(MAV0092_addNewSegment.class);
+		suite.addTestSuite(MAV0093_closeNewSegment.class);
+		suite.addTestSuite(MAV0098_removeSegmentUnderAction.class);
+		suite.addTestSuite(MAV0100_moveTaskUnderAction.class);
+		suite.addTestSuite(MAV0101_closeTaskMover.class);
 //		suite.addTestSuite(MAV0102_viewHelpForm.class);
 //		suite.addTestSuite(MAV0103_viewHelpFormWithFeedback.class);
-//		suite.addTestSuite(MAV0107_viewPresence.class);
-//		suite.addTestSuite(MAV0109_hideInactiveUsers.class);
-//		suite.addTestSuite(MAV0110_viewActivitiesAllUsers.class);
+		suite.addTestSuite(MAV0107_viewPresence.class);
+		suite.addTestSuite(MAV0109_hideInactiveUsers.class);
+		suite.addTestSuite(MAV0110_viewActivitiesAllUsers.class);
+		
+		// yet to modify
 //		suite.addTestSuite(MAV0111_hideActivities.class);
 //		suite.addTestSuite(MAV0112_viewAllActivities.class);
 //		suite.addTestSuite(MAV0113_viewMessages.class);
