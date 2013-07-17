@@ -76,7 +76,6 @@ public class BrowserController{
     	
     	// Assertion : Check Title of Page
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
-       	System.out.println("Hiee///");
     }
      
 }
