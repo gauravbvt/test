@@ -25,10 +25,7 @@ import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
 import com.mindalliance.pages.HeaderController;
-import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
-import com.mindalliance.pages.PlanPage;
-
 import junit.framework.TestCase;
 
 
@@ -116,23 +113,23 @@ public class MAV0103_viewHelpFormWithFeedback extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		 		  	
-		    // Click on 'Collaboration Plan' link
- 		    stepNo++;
-	 		description="Navigated to plan page";
-		    HomePage homePage=new HomePage();
-		    homePage.clickCollaborationPlanLink();
-			// Write log			
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-		 		  	
-		    // Close Plan Map window
- 			stepNo++;
-			description="Plan Map window closed";
- 			PlanPage planPage=new PlanPage();
- 			planPage.closePlanMap();
- 			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//		    // Click on 'Collaboration Plan' link
+// 		    stepNo++;
+//	 		description="Navigated to plan page";
+//		    HomePage homePage=new HomePage();
+//		    homePage.clickCollaborationPlanLink();
+//			// Write log			
+// 			LogFunctions.writeLogs(description);
+// 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+//		 		  	
+//		    // Close Plan Map window
+// 			stepNo++;
+//			description="Plan Map window closed";
+// 			PlanPage planPage=new PlanPage();
+// 			planPage.closePlanMap();
+// 			// Write log			
+//			LogFunctions.writeLogs(description);
+//			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  				  	
 		    // Click on 'Help' button
 			stepNo++;

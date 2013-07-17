@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -114,27 +115,28 @@ public class MAV0100_moveTaskUnderAction extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		 		
-			// Plan Page
-		    stepNo++;
- 	 		description="Navigated to plan page";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-		 
-			// Close Plan Map window
+			// Domain Plans
 			stepNo++;
-			description="Plan Map window closed";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+			description="Domain Plans";
+			DomainPlanPage domainPlanPage= new DomainPlanPage();
+			domainPlanPage.clickDomainPlans();	
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
+			// Plan Page
+			stepNo++;
+			description="Navigated to Plan page";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 		 		
 			// Click Actions pop up menu and Add New Segment
 			stepNo++;
 			description="New Segment added";
+			PlanPage planPage= new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));	
 			// Write log			
@@ -144,7 +146,7 @@ public class MAV0100_moveTaskUnderAction extends TestCase{
 			// Click on 'Move Tasks' under 'Actions' pop up menu
 			stepNo++;
 			description="Task mover window opened";
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
+			planPage.clickPopupMenu(testData.get("Improving"));
 			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
 			// Write log			
 			LogFunctions.writeLogs(description);
@@ -248,7 +250,7 @@ public class MAV0100_moveTaskUnderAction extends TestCase{
 	        this.testData.put("RemoveThisSegment",oXmlEleMAV0100_moveTaskUnderAction.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleMAV0100_moveTaskUnderAction.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("Title",oXmlEleMAV0100_moveTaskUnderAction.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("ActionsInSegment",oXmlEleMAV0100_moveTaskUnderAction.getElementsByTagName("actionsInSegment").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Improving",oXmlEleMAV0100_moveTaskUnderAction.getElementsByTagName("improving").item(0).getChildNodes().item(0).getNodeValue());
 	       	this.testData.put("MoveTasksInSegment",oXmlEleMAV0100_moveTaskUnderAction.getElementsByTagName("moveTasksInSegment").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
