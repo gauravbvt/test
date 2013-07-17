@@ -538,21 +538,16 @@ public class Reporting extends TakeScreenshot {
 	private void generateFinalTestPassReport() throws UIAutomationException,
 			IOException {
 		try {
-			OutputStream destination = new FileOutputStream(
-					GlobalVariables.configuration.getCurrentDir()
-							.getCanonicalPath()
-							+ "\\Reports\\UIAutomationReport\\index.htm");
+			OutputStream destination = new FileOutputStream(GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ "\\Reports\\UIAutomationReport\\index.htm");
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-			XMLStreamWriter xml = outputFactory
-					.createXMLStreamWriter(destination);
+			XMLStreamWriter xml = outputFactory.createXMLStreamWriter(destination);
 
 			xml.writeStartDocument();
 			xml.writeStartElement("html");
 			xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
 			xml.writeStartElement("head");
 			xml.writeStartElement("title");
-			xml.writeCharacters("Mind-Alliance Automation TestPass Report: "
-					+ reportDirectoryName);
+			xml.writeCharacters("Mind-Alliance Automation TestPass Report: "+ reportDirectoryName);
 			xml.writeEndElement();
 			xml.writeEndElement();
 			xml.writeStartElement("frameset");
@@ -576,10 +571,7 @@ public class Reporting extends TakeScreenshot {
 			xml.close();
 			destination.close();
 		} catch (IOException ie) {
-			throw new UIAutomationException("File not found at path '"
-					+ GlobalVariables.configuration.getCurrentDir()
-							.getCanonicalPath()
-					+ "\\Reports\\UIAutomationReport\\index.htm" + "'");
+			throw new UIAutomationException("File not found at path '"+ GlobalVariables.configuration.getCurrentDir().getCanonicalPath()+ "\\Reports\\UIAutomationReport\\index.htm" + "'");
 		} catch (XMLStreamException xe) {
 			throw new UIAutomationException("XML File not found");
 		}
@@ -627,7 +619,7 @@ public class Reporting extends TakeScreenshot {
 			xml.writeCharacters("End Datetime: "
 					+ GlobalVariables.configuration.getEndtime());
 			xml.writeEmptyElement("br");
-			xml.writeCharacters("Browser: " + BrowserController.browserName);
+			xml.writeCharacters("Browser: " + GlobalVariables.configuration.getConfigData().get("Browser").toString());
 			xml.writeEmptyElement("br");
 			xml.writeEndElement();
 			xml.writeEndElement();
@@ -702,11 +694,9 @@ public class Reporting extends TakeScreenshot {
 			xml.writeAttribute("bgColor", "#DDDDDD");
 			xml.writeStartElement("td");
 			xml.writeStartElement("center");
-			xml.writeCharacters("Start Datetime: "
-					+ GlobalVariables.configuration.getStartTime());
+			xml.writeCharacters("Start Datetime: "+ GlobalVariables.configuration.startTime);
 			xml.writeEmptyElement("br");
-			xml.writeCharacters("End Datetime: "
-					+ GlobalVariables.configuration.getEndtime());
+			xml.writeCharacters("End Datetime: "+ GlobalVariables.configuration.currentDate);
 			xml.writeEmptyElement("br");
 			xml.writeCharacters("Browser: "
 					+ GlobalVariables.configuration.getConfigData().get(
