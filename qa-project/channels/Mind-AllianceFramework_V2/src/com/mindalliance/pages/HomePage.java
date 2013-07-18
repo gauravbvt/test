@@ -105,22 +105,7 @@ public class HomePage {
 		}
 	
 	}
-	/**
-	 * Clicks on 'About Me' tab
-	 * @throws UIAutomationException
-	 */
-	public void clickAboutMeTabInSocialPanel() throws UIAutomationException{	
-		elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
-		UIActions.click(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
-		
-		elementController.requireElementSmart(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
-		String tabTextInPage=UIActions.getText(fileName,"About Me In Social Panel",GlobalVariables.configuration.getAttrSearchList(), "About Me In Social Panel");
-		String tabTextInXML=dataController.getPageDataElements(fileName,"About Me Tab Text" , "Name");
-		if(!tabTextInPage.contains(tabTextInXML)){
-			throw new UIAutomationException( "'"+tabTextInXML +"' not found");
-		}
 	
-	}
 	/**
 	 * Clicks on 'show sent' and 'show received'
 	 * @throws UIAutomationException

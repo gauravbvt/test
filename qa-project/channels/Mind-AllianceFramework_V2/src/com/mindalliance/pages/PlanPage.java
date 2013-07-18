@@ -33,19 +33,19 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	 */
 	public void closeAboutPlanWindow() throws UIAutomationException{
-			elementController.requireElementSmart(fileName,"Close About Plan Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Window");
-			UIActions.click(fileName,"Close About Plan Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Window");
-			
-			// Assertion: Verify About plan window is closed
-			try{
-				Thread.sleep(1000);
-			}
-			catch(Exception e){}
-			xPath=dataController.getPageDataElements(fileName,"Close About Plan Window", "Xpath");
-			List<WebElement> webElemets=UIActions.getElements(xPath);
-			if(!webElemets.isEmpty()){
-				throw new UIAutomationException("About plan window can not be closed.");
-			}
+		elementController.requireElementSmart(fileName,"Close About Plan Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Window");
+		UIActions.click(fileName,"Close About Plan Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Plan Window");
+		
+		// Assertion: Verify About plan window is closed
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		xPath=dataController.getPageDataElements(fileName,"Close About Plan Window", "Xpath");
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("About plan window can not be closed.");
+		}
 	}
 	
 	/**
@@ -53,19 +53,20 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	 */
 	public void closeAboutEventUnnamedWindow() throws UIAutomationException{
-			elementController.requireElementSmart(fileName,"Close About Event: Unnamed Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Event: Unnamed Window");
-			UIActions.click(fileName,"Close About Event: Unnamed Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Event: Unnamed Window");
-			
-			// Assertion: Verify About event window is closed
-			try{
-				Thread.sleep(1000);
-			}
-			catch(Exception e){}
-			xPath=dataController.getPageDataElements(fileName,"Close About Event: Unnamed Window", "Xpath");
-			List<WebElement> webElemets=UIActions.getElements(xPath);
-			if(!webElemets.isEmpty()){
-				throw new UIAutomationException("About event window can not be closed.");
-			}
+		
+		elementController.requireElementSmart(fileName,"Close About Event: Unnamed Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Event: Unnamed Window");
+		UIActions.click(fileName,"Close About Event: Unnamed Window",GlobalVariables.configuration.getAttrSearchList(), "Close About Event: Unnamed Window");
+		
+		// Assertion: Verify About event window is closed
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		xPath=dataController.getPageDataElements(fileName,"Close About Event: Unnamed Window", "Xpath");
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("About event window can not be closed.");
+		}
 	}
 
 	/**
@@ -73,19 +74,19 @@ public class PlanPage {
 	 * @throws UIAutomationException 
      */
 	public void closePlanMap() throws UIAutomationException{
-			elementController.requireElementSmart(fileName,"Close Plan Map Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
-			UIActions.click(fileName,"Close Plan Map Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
-			
-			// Assertion: Verify plan map window is closed
-			try{
-				Thread.sleep(1000);
-			}
-			catch(Exception e){}
-			xPath=dataController.getPageDataElements(fileName,"Close Plan Map Window", "Xpath");
-			List<WebElement> webElemets=UIActions.getElements(xPath);
-			if(!webElemets.isEmpty()){
-				throw new UIAutomationException("Plan map window can not be closed.");
-			}
+		elementController.requireElementSmart(fileName,"Close Plan Map Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
+		UIActions.click(fileName,"Close Plan Map Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan map window");
+		
+		// Assertion: Verify plan map window is closed
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		xPath=dataController.getPageDataElements(fileName,"Close Plan Map Window", "Xpath");
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("Plan map window can not be closed.");
+		}
 	}
 	
 	/**
@@ -113,19 +114,19 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	 */
 	public void closeSegmentWindow() throws UIAutomationException{
-			elementController.requireElementSmart(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
-			xPath=dataController.getPageDataElements(fileName,"Close Segment Window", "Xpath");
-			UIActions.click(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
-		
-			// Asertion: Verify segment window is closed
-			try{
-				Thread.sleep(2000);
-			}
-			catch(Exception e){}
-			List<WebElement> webElemets=UIActions.getElements(xPath);
-			if(!webElemets.isEmpty()){
-				throw new UIAutomationException("Segment window can not be closed.");
-			}
+		elementController.requireElementSmart(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
+		xPath=dataController.getPageDataElements(fileName,"Close Segment Window", "Xpath");
+		UIActions.click(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
+	
+		// Asertion: Verify segment window is closed
+		try{
+			Thread.sleep(2000);
+		}
+		catch(Exception e){}
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("Segment window can not be closed.");
+		}
 	}
 	
 	/**
@@ -133,19 +134,19 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	*/
 	public void closeEventsWindow() throws UIAutomationException{
-			elementController.requireElementSmart(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
-			UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
-			
-			// Assertion: Verify Event window is closed
-			try{
-				Thread.sleep(2000);
-			}
-			catch(Exception e){}
-			xPath=dataController.getPageDataElements(fileName,"Close Events Window", "Xpath");
-			List<WebElement> webElemets=UIActions.getElements(xPath);
-			if(!webElemets.isEmpty()){
-				throw new UIAutomationException("Events window can not be closed.");
-			}
+		elementController.requireElementSmart(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
+		UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Events Window");
+		
+		// Assertion: Verify Event window is closed
+		try{
+			Thread.sleep(2000);
+		}
+		catch(Exception e){}
+		xPath=dataController.getPageDataElements(fileName,"Close Events Window", "Xpath");
+		List<WebElement> webElemets=UIActions.getElements(xPath);
+		if(!webElemets.isEmpty()){
+			throw new UIAutomationException("Events window can not be closed.");
+		}
 			
 	}
 	
@@ -2033,6 +2034,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickUnnamedLinkIntask() throws UIAutomationException{
+		
 		elementController.requireElementSmart(fileName,"Can End Event Unnamed Link In Task", GlobalVariables.configuration.getAttrSearchList(), "Can End Event Unnamed Link In Task");
 		UIActions.click(fileName,"Can End Event Unnamed Link In Task", GlobalVariables.configuration.getAttrSearchList(), "Can End Event Unnamed Link In Task");
 				
