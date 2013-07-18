@@ -23,6 +23,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class UIActions {
 	
+	public static void scrollDown(){
+		
+			for(int i=0;i<35; i++){
+				GlobalVariables.configuration.getWebElement().sendKeys(Keys.ARROW_DOWN);
+			}
+	}
 	/**
 	 *  Clicks on a particular page element. The page element is obtained from
 	 *  the configuration object.
