@@ -3103,6 +3103,21 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Verify Attachment link is present in task panel
+	 * @throws UIAutomationException 
+	 */
+	public void clickAttachmentLinkInTask() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Task Attachment Link",GlobalVariables.configuration.getAttrSearchList(), "Task Attachment Link");
+		UIActions.click(fileName,"Task Attachment Link",GlobalVariables.configuration.getAttrSearchList(), "Task Attachment Link");
+	
+//		elementController.requireElementSmart(fileName,"Verify Goal Added In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Verify Goal Added In Task Panel");
+//		String goalNameInPage=UIActions.getText(fileName,"Verify Goal Added In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Verify Goal Added In Task Panel");
+//		if(!goalNameInPage.contains("")){
+//			throw new UIAutomationException("Goal is not selected from dropdown list.");
+//		}
+	}
+	
+	/**
 	 * Verify attach dropdown in task panel contains reference, policy, mandating policy, prohibiting policy
 	 * @param reference
 	 * @param policy
@@ -3111,6 +3126,8 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void verifyAttachDropdownInTask(String reference,String policy,String mandatingPolicy,String prohibitingPolicy) throws UIAutomationException{
+		UIActions.scrollDown();
+		
 		elementController.requireElementSmart(fileName,"Attach Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Task Panel");
 		UIActions.click(fileName,"Attach Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Task Panel");
 							
@@ -3269,6 +3286,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void verifyAttachDropdownInSendsPanel(String reference,String policy,String picture,String mandatingPolicy,String prohibitingPolicy) throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Attach Dropdown In Send Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Send Panel");
 		UIActions.click(fileName,"Attach Dropdown In Send Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Send Panel");
 							
@@ -3614,6 +3632,7 @@ public class PlanPage {
 			String inTheSameOrganization, String inTheSameOrganizationAndLocation, String inTheSameOverallOrganization,
 			String toASupervisor,String toSelf,String toSomeoneElse) throws UIAutomationException{
 		
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"But Only If In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If In Sends Panel");
 		UIActions.click(fileName,"But Only If In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If In Sends Panel");
 		
@@ -3716,6 +3735,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void enterWithinInSends(String number) throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Within Count In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Sends Panel");
 		UIActions.click(fileName,"Within Count In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Sends Panel");
 		
