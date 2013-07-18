@@ -600,7 +600,7 @@ public class SurveysDAOImpl implements SurveysDAO {
                     actualForwards.add( email );
                     alreadyForwardedTo.add( email );
                     // Create new user if needed. Remember generated password.
-                    UserRecord forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService.getPlanService() );
+                    UserRecord forwardedToUser = userDao.getOrMakeUserFromEmail( email, communityService );
                     if ( forwardedToUser != null ) {
                         RFI newRFI = new RFI( rfi );
                         newRFI.setSurveyedUsername( userDao.getUserWithIdentity( email ).getUsername() );

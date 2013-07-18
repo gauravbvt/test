@@ -256,7 +256,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, uri );
             CommunityService communityService = getCommunityService( planCommunity );
-            UserRecord invitedUser = userRecordService.getOrMakeUserFromEmail( email, communityService.getPlanService() );
+            UserRecord invitedUser = userRecordService.getOrMakeUserFromEmail( email, communityService );
             message = message + makeInvitation( invitedUser, communityService );
             emailMessagingService.sendInvitation( user, invitedUser.getEmail(), message );
 
@@ -495,7 +495,8 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             userRecordService.addChannel(
                     user.getUsername(),
                     user.getUserRecord(),
-                    new Channel( medium, address ) );
+                    new Channel( medium, address ),
+                    communityService );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response
@@ -513,7 +514,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             TransmissionMedium medium = communityService.getPlanService().find( TransmissionMedium.class, Long.parseLong( mediumId ) );
-            userRecordService.removeChannel( user.getUserRecord(), new Channel( medium, address ) );
+            userRecordService.removeChannel( user.getUserRecord(), new Channel( medium, address ), communityService );
         } catch ( Exception e ) {
             throw new WebApplicationException(
                     Response

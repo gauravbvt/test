@@ -150,7 +150,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public boolean isActive( UserParticipation userParticipation, CommunityService communityService ) {
+    public Boolean isActive( UserParticipation userParticipation, CommunityService communityService ) {
         Agent agent = userParticipation.getAgent( communityService );
         if ( agent == null || !userParticipation.isAccepted() ) return false;
         if ( userParticipation.isSupervised( communityService ) ) {
@@ -218,7 +218,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-     public boolean isParticipationNotFull( Agent agent, CommunityService communityService ) {
+     public Boolean isParticipationNotFull( Agent agent, CommunityService communityService ) {
         if ( agent.isAnyNumberOfParticipants() ) return true;
         else {
             int count = getParticipationsAsAgent( agent, communityService ).size();
@@ -227,7 +227,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public boolean isParticipatedAs( Agent agent, CommunityService communityService ) {
+    public Boolean isParticipatedAs( Agent agent, CommunityService communityService ) {
         return !getParticipationsAsAgent( agent, communityService ).isEmpty();
     }
 
@@ -426,7 +426,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService ) {
+    public Boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService ) {
         boolean success = false;
         if ( agent != null ) {
             for ( UserParticipation participation : getParticipationsAsAgent( agent, communityService ) ) {
@@ -495,7 +495,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService ) {
+    public Boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService ) {
         return listAgentsUserParticipatesAs( user, communityService ).contains( agent );
     }
 
@@ -559,7 +559,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public boolean isValid( UserParticipation userParticipation, CommunityService communityService ) {
+    public Boolean isValid( UserParticipation userParticipation, CommunityService communityService ) {
         return userParticipation != null
                 && userParticipation.getParticipant( communityService ) != null
                 && communityService.getPlanService().exists( Actor.class, userParticipation.getActorId(), userParticipation.getCreated() )

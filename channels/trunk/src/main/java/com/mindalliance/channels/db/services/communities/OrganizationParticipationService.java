@@ -23,7 +23,7 @@ public interface OrganizationParticipationService extends DataService<Organizati
 
     List<OrganizationParticipation> getAllOrganizationParticipations( CommunityService communityService );
 
-    boolean isValid( OrganizationParticipation registration, CommunityService communityService );
+    Boolean isValid( OrganizationParticipation registration, CommunityService communityService );
 
     List<Agency> listParticipatingAgencies( CommunityService communityService );
 
@@ -34,12 +34,12 @@ public interface OrganizationParticipationService extends DataService<Organizati
             Organization placeholder,
             CommunityService communityService );
 
-    boolean canUnassignOrganizationFrom(
+    Boolean canUnassignOrganizationFrom(
             ChannelsUser user,
             Organization placeholder,
             CommunityService communityService );
 
-    boolean unassignOrganizationAs(
+    Boolean unassignOrganizationAs(
             ChannelsUser user,
             RegisteredOrganization registeredOrganization,
             Organization placeholder,
@@ -59,7 +59,7 @@ public interface OrganizationParticipationService extends DataService<Organizati
             Organization placeholder,
             CommunityService communityService );
 
-    boolean isAgencyRegisteredAs(
+    Boolean isAgencyRegisteredAs(
             RegisteredOrganization registeredOrg,
             Organization placeholder,
             CommunityService communityService );

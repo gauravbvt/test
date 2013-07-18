@@ -37,18 +37,18 @@ public interface UserParticipationConfirmationService  extends DataService<UserP
             Agent supervisor,
             CommunityService communityService );
 
-    boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor );
+    Boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor );
 
     void deleteConfirmations( UserParticipation participation, CommunityService communityService );
 
-    boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, CommunityService communityService );
+    Boolean isConfirmedByAllSupervisors( UserParticipation userParticipation, CommunityService communityService );
 
-    boolean isConfirmationByUserRequired( UserParticipation userParticipation, ChannelsUser user, CommunityService communityService );
+    Boolean isConfirmationByUserRequired( UserParticipation userParticipation, ChannelsUser user, CommunityService communityService );
 
     List<UserParticipationConfirmation> listUserParticipationsConfirmedBy(
             ChannelsUser user,
             final CommunityService communityService );
 
-    boolean isValid( UserParticipationConfirmation confirmation, CommunityService communityService );
+    Boolean isValid( UserParticipationConfirmation confirmation, CommunityService communityService );
 
 }

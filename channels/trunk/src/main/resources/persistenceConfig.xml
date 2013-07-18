@@ -105,6 +105,64 @@
                      advice-ref="communitySet" order="1"/>
         <aop:advisor pointcut="execution(com.mindalliance.channels.core.community.protocols.CommunityCommitments com.mindalliance.channels.core.community.CommunityService.*(..))"
                      advice-ref="communitySet" order="1"/>
+            <!--DB services -->
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.is*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.can*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.get*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.find*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.OrganizationParticipationService.list*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.RegisteredOrganizationService.is*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.RegisteredOrganizationService.can*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.RegisteredOrganizationService.get*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.RegisteredOrganizationService.find*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.RegisteredOrganizationService.list*(..))"
+                     advice-ref="communitySet" order="1"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService.is*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService.can*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService.get*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService.find*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationConfirmationService.list*(..))"
+                     advice-ref="communitySet" order="1"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationService.is*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationService.can*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationService.get*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationService.find*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.communities.UserParticipationService.list*(..))"
+                     advice-ref="communitySet" order="1"/>
+
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.users.UserRecordService.is*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.users.UserRecordService.can*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.users.UserRecordService.get*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.users.UserRecordService.find*(..))"
+                     advice-ref="communitySet" order="1"/>
+        <aop:advisor pointcut="execution(* com.mindalliance.channels.db.services.users.UserRecordService.list*(..))"
+                     advice-ref="communitySet" order="1"/>
+
+
         <aop:advisor pointcut="execution(* com.mindalliance.channels.core.community.CommunityService.clearCache(..))" advice-ref="communityClear" order="1"/>
 
 

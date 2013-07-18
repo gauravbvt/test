@@ -25,11 +25,11 @@ public interface RegisteredOrganizationService extends DataService<RegisteredOrg
 
     RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, CommunityService communityService );
 
-    boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService );
+    Boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService );
 
     List<String> getAllRegisteredNames( CommunityService communityService );
 
-    boolean updateWith( ChannelsUser user,
+    Boolean updateWith( ChannelsUser user,
                         String orgName,
                         Agency agency,
                         CommunityService communityService );
@@ -39,7 +39,7 @@ public interface RegisteredOrganizationService extends DataService<RegisteredOrg
 
     List<RegisteredOrganization> findAncestors( String orgName, CommunityService communityService );
 
-    boolean isValid( RegisteredOrganization registeredOrg, CommunityService communityService );
+    Boolean isValid( RegisteredOrganization registeredOrg, CommunityService communityService );
 
     ///// Contact info
 
@@ -48,6 +48,6 @@ public interface RegisteredOrganizationService extends DataService<RegisteredOrg
                       List<Channel> channels,
                       CommunityService communityService );
 
-    boolean isValid( ContactInfo orgContactInfo, CommunityService communityService );
+    Boolean isValid( ContactInfo orgContactInfo, CommunityService communityService );
 
 }

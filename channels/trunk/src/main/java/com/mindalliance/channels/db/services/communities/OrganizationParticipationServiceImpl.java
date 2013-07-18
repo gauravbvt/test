@@ -91,7 +91,7 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
-    public boolean isValid( OrganizationParticipation orgParticipation, CommunityService communityService ) {
+    public Boolean isValid( OrganizationParticipation orgParticipation, CommunityService communityService ) {
         if ( orgParticipation == null ) return false;
         Organization placeholder = orgParticipation.getPlaceholderOrganization( communityService );
         return placeholder != null
@@ -169,13 +169,13 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
-    public boolean canUnassignOrganizationFrom( ChannelsUser user, Organization placeholder, CommunityService communityService ) {
+    public Boolean canUnassignOrganizationFrom( ChannelsUser user, Organization placeholder, CommunityService communityService ) {
         return placeholder.isPlaceHolder()
                 && communityService.isCustodianOf( user, placeholder );
     }
 
     @Override
-    public boolean unassignOrganizationAs( ChannelsUser user,
+    public Boolean unassignOrganizationAs( ChannelsUser user,
                                            RegisteredOrganization registeredOrg,
                                            Organization placeholder,
                                            CommunityService communityService ) {
@@ -221,7 +221,7 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
-    public boolean isAgencyRegisteredAs( RegisteredOrganization registeredOrg, Organization placeholder, CommunityService communityService ) {
+    public Boolean isAgencyRegisteredAs( RegisteredOrganization registeredOrg, Organization placeholder, CommunityService communityService ) {
         return !getOrganizationParticipations( registeredOrg, placeholder, communityService ).isEmpty();
     }
 

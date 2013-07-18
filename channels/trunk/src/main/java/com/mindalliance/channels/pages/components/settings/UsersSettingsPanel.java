@@ -87,7 +87,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                         Change change = Change.failed( newUsername + " is already taken." );
                         update( target, change );
                     } else {
-                        userRecordService.createUser( getUsername(), newUsername );
+                        userRecordService.createUser( getUsername(), newUsername, getCommunityService() );
                         Change change = Change.message( "User " + newUsername + " was added." );
                         selectedUsername = newUsername;
                         addSelectUser();

@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.data.users.QUserRecord;
@@ -69,16 +68,16 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public ChannelsUser createUser( String username, String name ) throws DuplicateKeyException {
-        return createUser( username, name, "" );
+    public ChannelsUser createUser( String username, String name, CommunityService communityService ) throws DuplicateKeyException {
+        return createUser( username, name, "", communityService );
     }
 
     @Override
-    public ChannelsUser createUser( String username, String name, String email ) throws DuplicateKeyException {
+    public ChannelsUser createUser( String username, String name, String email, CommunityService communityService ) throws DuplicateKeyException {
         if ( getUserWithIdentity( name ) != null || ( !email.isEmpty() && getUserWithIdentity( email ) != null ) )
             throw new DuplicateKeyException();
         else
-            return new ChannelsUser( createUserRecord( username, name, "", name, email ) );
+            return new ChannelsUser( createUserRecord( username, name, "", name, email, communityService ) );
     }
 
     @Override
@@ -86,7 +85,8 @@ public class UserRecordServiceImpl
                                         String name,
                                         String password,
                                         String fullName,
-                                        String email ) throws DuplicateKeyException {
+                                        String email,
+                                        CommunityService communityService ) throws DuplicateKeyException {
         if ( getUserWithIdentity( name ) != null || ( !email.isEmpty() && getUserWithIdentity( email ) != null ) )
             throw new DuplicateKeyException();
         UserRecord userRecord = new UserRecord(
@@ -96,11 +96,12 @@ public class UserRecordServiceImpl
                 email );
         userRecord.setPassword( password );
         save( userRecord );
+        communityService.clearCache();
         return userRecord;
     }
 
     @Override
-    public boolean updateUserRecord( UserRecord userRecord, UserRecord update ) {
+    public boolean updateUserRecord( UserRecord userRecord, UserRecord update, CommunityService communityService ) {
         if ( update.getEmail() != null
                 && !update.getEmail().isEmpty()
                 && !userRecord.getEmail().equals( update.getEmail() ) ) {
@@ -123,16 +124,18 @@ public class UserRecordServiceImpl
             userRecord.addContactInfo( new ContactInfo( contactInfo ) );
         }
         save( userRecord );
+        communityService.clearCache();
         return true;
     }
 
     @Override
     public void deleteUser( String username,
                             ChannelsUser user,
-                            PlanManager planManager ) {
+                            CommunityService communityService ) {
         // Delete user contact info
-        removeAllChannels( user.getUserRecord() );
+        removeAllChannels( user.getUserRecord(), communityService );
         delete( user.getUserRecord() );
+        communityService.clearCache();
     }
 
     @Override
@@ -244,7 +247,7 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public boolean isPlanner( final String username, String planUri ) {
+    public Boolean isPlanner( final String username, String planUri ) {
         return CollectionUtils.exists(
                 getPlanners( planUri ),
                 new Predicate() {
@@ -262,7 +265,7 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public UserRecord getOrMakeUserFromEmail( String email, QueryService queryService ) {
+    public UserRecord getOrMakeUserFromEmail( String email, CommunityService communityService ) {
         synchronized ( this ) {
             UserRecord userRecord;
             ChannelsUser userFromEmail = getUserWithIdentity( email );
@@ -273,7 +276,7 @@ public class UserRecordServiceImpl
                 String newUsername = makeNewUsernameFromEmail( email );
                 String password = makeNewPassword();
                 try {
-                    ChannelsUser newUser = createUser( newUsername, email );
+                    ChannelsUser newUser = createUser( newUsername, email, communityService );
                     userRecord = newUser.getUserRecord();
                     userRecord.setPassword( password );
                     userRecord.setGeneratedPassword( password );
@@ -283,11 +286,12 @@ public class UserRecordServiceImpl
                 }
             }
             // Ensure user is authorized for plan in at least USER role
-            String planUri = queryService.getPlan().getUri();
+            String planUri = communityService.getPlan().getUri();
             if ( !userRecord.isParticipant( planUri ) ) {
                 userRecord.makeParticipantOf( planUri );
             }
             save( userRecord );
+            communityService.clearCache();
             return userRecord;
         }
     }
@@ -310,7 +314,7 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public boolean isParticipant( final String username, String planUri ) {
+    public Boolean isParticipant( final String username, String planUri ) {
         return getUsernames( planUri ).contains( username );
     }
 
@@ -351,7 +355,9 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public boolean changePassword( ChannelsUser user, PlanManager planManager, MailSender mailSender ) {
+    public boolean changePassword( ChannelsUser user,
+                                   PlanManager planManager,
+                                   MailSender mailSender ) {
         boolean success = false;
         String newPassword = makeNewPassword();
         SimpleMailMessage email = new SimpleMailMessage();
@@ -455,13 +461,15 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public void addFounder( ChannelsUser founder, PlanCommunity planCommunity ) {
+    public void addFounder( ChannelsUser founder, CommunityService communityService ) {
+        PlanCommunity planCommunity = communityService.getPlanCommunity();
         synchronized ( planCommunity ) {
             List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
             assert planners.isEmpty(); // Make sure founder is first planner
             UserRecord userRecord = founder.getUserRecord();
             userRecord.makePlannerOf( planCommunity.getUri() );
             save( userRecord );
+            communityService.clearCache();
         }
     }
 
@@ -482,21 +490,24 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public void addChannel( String username, UserRecord userRecord, Channel channel ) {
+    public void addChannel( String username, UserRecord userRecord, Channel channel, CommunityService communityService ) {
         userRecord.addChannel( channel );
         save( userRecord );
+        communityService.clearCache();
     }
 
     @Override
-    public void removeChannel( UserRecord userRecord, Channel channel ) {
+    public void removeChannel( UserRecord userRecord, Channel channel, CommunityService communityService ) {
         userRecord.removeChannel( channel );
         save( userRecord );
+        communityService.clearCache();
     }
 
     @Override
-    public void removeAllChannels( UserRecord userRecord ) {
+    public void removeAllChannels( UserRecord userRecord, CommunityService communityService ) {
         userRecord.removeAllChannels();
         save( userRecord );
+        communityService.clearCache();
     }
 
 

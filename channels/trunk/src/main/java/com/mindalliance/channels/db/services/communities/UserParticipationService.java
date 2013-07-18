@@ -32,9 +32,9 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     UserParticipation getParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 
-    boolean isParticipationNotFull( Agent agent, CommunityService communityService );
+    Boolean isParticipationNotFull( Agent agent, CommunityService communityService );
 
-    boolean isParticipatedAs( Agent agent, CommunityService communityService );
+    Boolean isParticipatedAs( Agent agent, CommunityService communityService );
 
     List<Agent> listAgentsParticipatedAs( CommunityService communityService );
 
@@ -44,7 +44,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     List<UserParticipation> getAllActiveParticipations( CommunityService communityService );
 
-    boolean isActive( UserParticipation userParticipation, CommunityService communityService );
+    Boolean isActive( UserParticipation userParticipation, CommunityService communityService );
 
     /**
      * Delete all participations by a user.
@@ -71,7 +71,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService );
 
-    boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
+    Boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService );
 
 
     void accept( UserParticipation participation, CommunityService communityService );
@@ -79,7 +79,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
     void refuse( UserParticipation participation, CommunityService communityService );
 
     // accepted and confirmed (i.e. active)
-    boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService );
+    Boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService );
 
     List<UserParticipation> listUserParticipationIn(
             OrganizationParticipation organizationParticipation,
@@ -89,6 +89,6 @@ public interface UserParticipationService extends DataService<UserParticipation>
             ChannelsUser user,
             CommunityService communityService );
 
-    boolean isValid( UserParticipation userParticipation, CommunityService communityService );
+    Boolean isValid( UserParticipation userParticipation, CommunityService communityService );
 
 }

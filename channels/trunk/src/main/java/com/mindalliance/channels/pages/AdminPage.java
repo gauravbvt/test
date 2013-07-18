@@ -357,7 +357,7 @@ public class AdminPage extends AbstractChannelsWebPage {
     private void submit() {
         for ( ChannelsUser u : toDelete ) {
             // getPlanManager().setAuthorities( u, null, null );
-            userInfoService.deleteUser( ChannelsUser.current().getUsername(), u, getPlanManager() );
+            userInfoService.deleteUser( ChannelsUser.current().getUsername(), u, getCommunityService() );
             userParticipationService.deleteAllParticipations( u, ChannelsUser.current().getUsername() );
         }
         if ( !toDelete.isEmpty() ) {

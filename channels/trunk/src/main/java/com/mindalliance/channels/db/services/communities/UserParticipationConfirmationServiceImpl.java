@@ -141,7 +141,7 @@ public class UserParticipationConfirmationServiceImpl
     }
 
     @Override
-    public boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor ) {
+    public Boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor ) {
          return !getConfirmations( userParticipation, supervisor ).isEmpty();
     }
 
@@ -176,7 +176,7 @@ public class UserParticipationConfirmationServiceImpl
     }
 
     @Override
-    public boolean isConfirmedByAllSupervisors(
+    public Boolean isConfirmedByAllSupervisors(
             UserParticipation userParticipation,
             final CommunityService communityService ) {
         // Find all supervisors for participation's agent
@@ -205,7 +205,7 @@ public class UserParticipationConfirmationServiceImpl
     }
 
     @Override
-    public boolean isConfirmationByUserRequired(
+    public Boolean isConfirmationByUserRequired(
             final UserParticipation userParticipation,
             ChannelsUser user,
             CommunityService communityService ) {
@@ -254,7 +254,7 @@ public class UserParticipationConfirmationServiceImpl
     }
 
     @Override
-    public boolean isValid( UserParticipationConfirmation confirmation, CommunityService communityService ) {
+    public Boolean isValid( UserParticipationConfirmation confirmation, CommunityService communityService ) {
         return confirmation != null &&
                 userParticipationService.isValid( confirmation.getUserParticipation( communityService ), communityService )
                 && confirmation.getSupervisor( communityService ) != null

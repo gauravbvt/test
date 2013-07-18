@@ -347,12 +347,12 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
 
     @Override
-    public PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder ) {
+    public PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder, CommunityService communityService ) {
         CommunityDefinition communityDefinition = communityDefinitionManager.create(
                 plan.getUri(),
                 plan.getVersion() );
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
-        userRecordService.addFounder( founder, planCommunity );
+        userRecordService.addFounder( founder, communityService );
         planCommunity.setClosed( true );
         planCommunity.setDateCreated( new Date() );
         return planCommunity;

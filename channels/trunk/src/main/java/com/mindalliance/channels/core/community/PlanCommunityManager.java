@@ -80,7 +80,7 @@ public interface PlanCommunityManager extends CommandListener {
      * @param founder a user
      * @return a PlanCommunity
      */
-    PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder );
+    PlanCommunity createNewCommunityFor( Plan plan, ChannelsUser founder, CommunityService communityService );
 
     /**
      * List the usernames who are members of communities having adopted a given plan.

@@ -1,12 +1,10 @@
 package com.mindalliance.channels.db.services.users;
 
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
-import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.DataService;
 import org.springframework.mail.MailSender;
@@ -24,9 +22,9 @@ import java.util.List;
  */
 public interface UserRecordService extends DataService<UserRecord>, UserDetailsService {
 
-    ChannelsUser createUser( String username, String name ) throws DuplicateKeyException;
+    ChannelsUser createUser( String username, String name, CommunityService communityService ) throws DuplicateKeyException;
 
-    ChannelsUser createUser( String username, String name, String email ) throws DuplicateKeyException;
+    ChannelsUser createUser( String username, String name, String email, CommunityService communityService ) throws DuplicateKeyException;
 
     /**
      * Create a user info.
@@ -41,10 +39,11 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
                                  String name,
                                  String password,
                                  String fullName,
-                                 String email ) throws DuplicateKeyException;
+                                 String email,
+                                 CommunityService communityService ) throws DuplicateKeyException;
 
-    @Secured( "ROLE_ADMIN" )
-    void deleteUser( String username, ChannelsUser user, PlanManager planManager );
+    @Secured("ROLE_ADMIN")
+    void deleteUser( String username, ChannelsUser user, CommunityService communityService );
 
     /**
      * Get user by email.
@@ -56,6 +55,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
 
     /**
      * Find user record, enabled or not, with given username.
+     *
      * @param username a username
      * @return a user record or null
      */
@@ -79,6 +79,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
 
     /**
      * Get all users who are explicitly planners for a community given its uri.
+     *
      * @param communityUri a community uri
      * @return a list of Channels users
      */
@@ -122,17 +123,20 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param mailSender  a mail sender service
      * @return a boolean indicating success
      */
-    boolean changePassword( ChannelsUser user, PlanManager planManager, MailSender mailSender );
+    boolean changePassword( ChannelsUser user,
+                            PlanManager planManager,
+                            MailSender mailSender );
 
 
     /**
      * Update a persisted user record from the values of another.
      *
-     * @param userRecord a persisted user record
-     * @param update     another user info with undigested password
+     * @param userRecord       a persisted user record
+     * @param update           another user info with undigested password
+     * @param communityService a community service
      * @return whether successful
      */
-    boolean updateUserRecord( UserRecord userRecord, UserRecord update );
+    boolean updateUserRecord( UserRecord userRecord, UserRecord update, CommunityService communityService );
 
     /**
      * Whether username of a participant in given plan.
@@ -141,7 +145,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param planUri  a string
      * @return a boolean
      */
-    boolean isParticipant( final String username, String planUri );
+    Boolean isParticipant( final String username, String planUri );
 
     /**
      * Whether username of a participant in given plan.
@@ -150,7 +154,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param planUri  a string
      * @return a boolean
      */
-    boolean isPlanner( final String username, String planUri );
+    Boolean isPlanner( final String username, String planUri );
 
     /**
      * Get a user's full name.
@@ -163,11 +167,11 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
     /**
      * Get or create a new user authorized for a plan given an email address.
      *
-     * @param email        a string
-     * @param queryService a query service
+     * @param email            a string
+     * @param communityService a community service
      * @return a clear password or null if user creation failed
      */
-    UserRecord getOrMakeUserFromEmail( String email, QueryService queryService );
+    UserRecord getOrMakeUserFromEmail( String email, CommunityService communityService );
 
     /**
      * Find all users with a given full name.
@@ -193,26 +197,29 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
     /**
      * Adding a contact info from user.
      *
-     * @param username   user name of user doing the adding
-     * @param userRecord user to be added channel to
-     * @param channel    a channel
+     * @param username         user name of user doing the adding
+     * @param userRecord       user to be added channel to
+     * @param channel          a channel
+     * @param communityService a community service
      */
-    void addChannel( String username, UserRecord userRecord, Channel channel );
+    void addChannel( String username, UserRecord userRecord, Channel channel, CommunityService communityService );
 
     /**
      * Remove a contact info from user.
      *
      * @param userRecord user to be removed channel from
      * @param channel    a channel
+     * @param communityService a community service
      */
-    void removeChannel( UserRecord userRecord, Channel channel );
+    void removeChannel( UserRecord userRecord, Channel channel, CommunityService communityService );
 
     /**
      * Remove all user's contact info.
      *
      * @param userRecord a user record
+     * @param communityService a community service
      */
-    void removeAllChannels( UserRecord userRecord );
+    void removeAllChannels( UserRecord userRecord, CommunityService communityService );
 
     //////
 
@@ -240,9 +247,9 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
     /**
      * Add a first planner to a plan community.
      *
-     * @param founder       a Channels user
-     * @param planCommunity a plan community
+     * @param founder          a Channels user
+     * @param communityService a community service
      */
-    void addFounder( ChannelsUser founder, PlanCommunity planCommunity );
+    void addFounder( ChannelsUser founder, CommunityService communityService );
 
 }

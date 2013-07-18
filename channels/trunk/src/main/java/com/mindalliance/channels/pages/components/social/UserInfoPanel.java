@@ -453,7 +453,10 @@ public class UserInfoPanel extends AbstractSocialListPanel {
             temp.getUserRecord().setPassword( newPassword );
         }
         if ( canSave() ) {
-            return userInfoService.updateUserRecord( getUser().getUserRecord(), temp.getUserRecord() );
+            return userInfoService.updateUserRecord(
+                    getUser().getUserRecord(),
+                    temp.getUserRecord(),
+                    getCommunityService() );
         } else {
             return false;
         }

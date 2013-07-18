@@ -124,7 +124,7 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
     }
 
     private void startNewCommunity() {
-        planCommunityManager.createNewCommunityFor( selectedProductionPlan, getUser() );
+        planCommunityManager.createNewCommunityFor( selectedProductionPlan, getUser(), getCommunityService() );
     }
 
     public void updateContent( AjaxRequestTarget target ) {

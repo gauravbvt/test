@@ -109,7 +109,7 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    public boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService ) {
+    public Boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService ) {
         synchronized ( communityService.getPlanCommunity() ) {
             RegisteredOrganization registered = find( orgName, communityService );
             if ( registered != null ) {
@@ -117,6 +117,7 @@ public class RegisteredOrganizationServiceImpl
                         .findAllParticipationBy( registered, communityService ).isEmpty();
                 if ( !inParticipation ) {
                     delete( registered );
+                    communityService.clearCache();
                     return true;
                 }
             }
@@ -135,7 +136,7 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    public boolean updateWith( ChannelsUser user, String orgName, Agency agency, CommunityService communityService ) {
+    public Boolean updateWith( ChannelsUser user, String orgName, Agency agency, CommunityService communityService ) {
         synchronized ( communityService.getPlanCommunity() ) {
             boolean success = false;
             RegisteredOrganization registered = find( orgName, communityService );
@@ -152,6 +153,7 @@ public class RegisteredOrganizationServiceImpl
                                     parentName,
                                     communityService.getPlanCommunity() );
                             save( registeredParent );
+                            communityService.clearCache();
                         }
                         registered.setParent( registeredParent );
                     }
@@ -161,6 +163,7 @@ public class RegisteredOrganizationServiceImpl
                 registered.updateWith( agency );
                 setChannels( user, registered, agency.getEffectiveChannels(), communityService );
                 save( registered );
+                communityService.clearCache();
                 success = true;
             }
             return success;
@@ -209,7 +212,7 @@ public class RegisteredOrganizationServiceImpl
 
 
     @Override
-    public boolean isValid( RegisteredOrganization registeredOrg, CommunityService communityService ) {
+    public Boolean isValid( RegisteredOrganization registeredOrg, CommunityService communityService ) {
         return registeredOrg != null
                 && !( registeredOrg.isFixedOrganization() && registeredOrg.getFixedOrganization( communityService ) == null )
                 && ( registeredOrg.getParent( communityService ) == null || isValid( registeredOrg.getParent( communityService ), communityService ) );
@@ -250,7 +253,7 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    public boolean isValid( ContactInfo orgContactInfo, CommunityService communityService ) {
+    public Boolean isValid( ContactInfo orgContactInfo, CommunityService communityService ) {
         return orgContactInfo.isValid( communityService );
     }
 

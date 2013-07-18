@@ -278,7 +278,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                userRecordService.updateUserRecord( userRecord, userRecordUpdate );
+                userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
                 resetUserRecord();
                 addUserRecord();
                 target.add( userRecordContainer );
