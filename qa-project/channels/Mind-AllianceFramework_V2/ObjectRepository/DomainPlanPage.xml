@@ -25,6 +25,16 @@
 		<ClassName></ClassName>
 	</Element>
 	
+	<Element>
+ 		<GivenName>About Me In Social Panel</GivenName>
+ 		<Xpath>//li[contains(@class,'tab0 selected')]/a/span</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
  	<Element>
 		<GivenName>Domain Plan Editor Page Title</GivenName>
 		<Title>Channels - Collaboration Planning</Title>

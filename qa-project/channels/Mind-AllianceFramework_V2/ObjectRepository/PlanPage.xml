@@ -232,7 +232,7 @@
 	</Element>
 	<Element>
 		<GivenName>Strench Up Forms</GivenName>
-		<Xpath>/html/body/form/span/div/div/span[6]/img</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div/span[6]/img</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -696,17 +696,17 @@
 	
 	<Element>
 		<GivenName>Messages</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div/ul/li[3]/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/span/div/div/div/ul/li[3]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>Messages</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>Tags In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/td/span/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/td/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -770,7 +770,7 @@
 	</Element>
 	<Element>
 		<GivenName>Tags Link In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[2]/th/label/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -797,7 +797,7 @@
 	</Element>
 	<Element>
 		<GivenName>Usually Completes After In Task</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -806,8 +806,8 @@
 	</Element>
 	<Element>
 		<GivenName>Usually Completes After Textbox</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/span/input</Xpath>
-		<Name></Name>
+		<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-amount')]</Xpath>
+		<Name>segment:part:timingContainer:completion-time:delay-amount</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -820,7 +820,7 @@
 	</Element>
 	<Element>
 		<GivenName>Repeats Every In Task</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -941,7 +941,7 @@
 	</Element>
 	<Element>
 		<GivenName>Can End Event Unnamed Link In Task</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/span/a[2]/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/span/a[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -959,11 +959,11 @@
 	</Element>
 	<Element>
 		<GivenName>Hide Broadcasts</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div/div/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>hide broadcasts</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -989,21 +989,21 @@
 	
 	<Element>
 		<GivenName>Show Sent</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div/div/a[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>show sent</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
 		<GivenName>Show Received</GivenName>
-		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a[2]/span</Xpath>
+		<Xpath>/html/body/form/span[2]/span/div/div/div[2]/div/div/a[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>show received</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -2069,8 +2069,8 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<LinkText>Show advanced form</LinkText>
+		<ClassName>simple-advanced</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Show Advanced Simple Form In Receives Panel</GivenName>
@@ -2078,7 +2078,7 @@
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>Show advanced form</LinkText>
 		<ClassName>simple-advanced</ClassName>
 	</Element>
 	<Element>
@@ -2256,7 +2256,7 @@
 	
 	<Element>
 		<GivenName>Add Info Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/a/span</Xpath>
 		<Name>Add +</Name>
 		<Id></Id>
 		<PartialLinkText>Add +</PartialLinkText>
@@ -2265,43 +2265,43 @@
 	</Element>
 	<Element>
 		<GivenName>Add Info Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/a/span</Xpath>
-		<Name></Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/a/span</Xpath>
+		<Name>Add +</Name>
 		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<PartialLinkText>Add +</PartialLinkText>
+		<LinkText>Add +</LinkText>
+		<ClassName>Add +</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Show In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>show</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Show In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>show</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Actions In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>show</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Actions In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2319,7 +2319,7 @@
 	</Element>
 	<Element>
 		<GivenName>Flow Copied Message</GivenName>
-		<Xpath>/html/body/div[2]/div</Xpath>
+		<Xpath>/html/body/div[3]/div</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2328,7 +2328,7 @@
 	</Element>
 	<Element>
 		<GivenName>Copy Need</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2337,7 +2337,7 @@
 	</Element>
 	<Element>
 		<GivenName>Need Copied Message</GivenName>
-		<Xpath>/html/body/div[2]/div</Xpath>
+		<Xpath>/html/body/div[3]/div</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2346,7 +2346,7 @@
 	</Element>
 	<Element>
 		<GivenName>Task Copied Message</GivenName>
-		<Xpath>/html/body/div[2]/div</Xpath>
+		<Xpath>/html/body/div[3]/div</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2355,7 +2355,7 @@
 	</Element>
 	<Element>
 		<GivenName>Capability Copied Message</GivenName>
-		<Xpath>/html/body/div[2]/div</Xpath>
+		<Xpath>/html/body/div[3]/div</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2746,7 +2746,7 @@
 	
 	<Element>
 		<GivenName>New Issue In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2755,25 +2755,25 @@
 	</Element>
 	<Element>
 		<GivenName>New Issue Text In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/span[2]/div/span/ol/li/span/span[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<LinkText>(Minor) (No description)</LinkText>
+		<ClassName>issue</ClassName>
 	</Element>
 	<Element>
 		<GivenName>New Issue Text In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span[2]/div/span/ol/li/span/span[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
+		<LinkText>(Minor) (No description)</LinkText>
+		<ClassName>issue</ClassName>
 	</Element>
 	<Element>
 		<GivenName>Remove Info Need In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2782,7 +2782,7 @@
 	</Element>
 	<Element>
 		<GivenName>Remove Info Sharing Capability In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[6]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
