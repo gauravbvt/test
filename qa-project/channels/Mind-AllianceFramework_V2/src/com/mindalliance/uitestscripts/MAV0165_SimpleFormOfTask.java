@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -116,27 +117,28 @@ public class MAV0165_SimpleFormOfTask extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
 		 	
-			// Plan Page
-		    stepNo++;
-			description="Navigated to plan page";	
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log			
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
-		 	
-			// Close Plan Map window
+			// Domain Plans
 			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+			description="Domain Plans";
+			DomainPlanPage domainPlanPage= new DomainPlanPage();
+			domainPlanPage.clickDomainPlans();	
 			// Write log			
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
+			// Plan Page
+			stepNo++;
+			description="Navigated to Plan page";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
+			// Write log			
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 		 	
 			// Click on 'strench Up forms' icon 
 			stepNo++;
 			description="Strench up form";
+			PlanPage planPage = new PlanPage();
 			planPage.clickStrenchUpForm();
 			// Write log			
  			LogFunctions.writeLogs(description);

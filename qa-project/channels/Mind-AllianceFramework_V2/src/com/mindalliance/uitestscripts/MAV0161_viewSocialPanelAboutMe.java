@@ -8,6 +8,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +26,9 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
-import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  *  TestCase Id: MAV0161_viewSocialPanelAboutMe 
@@ -116,8 +116,8 @@ public class MAV0161_viewSocialPanelAboutMe extends TestCase{
 			// Click on 'About Me' tab under 'Social Panel' on 'Home Page'
 			stepNo++;
 			description="About Me tab opened";	
-			HomePage homePage=new HomePage();
-			homePage.clickAboutMeTabInSocialPanel();
+			DomainPlanPage domainPlanPage = new DomainPlanPage();
+			domainPlanPage.clickAboutMeTabInSocialPanel();
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
