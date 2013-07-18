@@ -165,7 +165,8 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 };
                 if ( selected ) userLink.add( new AttributeModifier( "class", "selected" ) );
                 item.add( userLink );
-                userLink.add( new Label( "username", userRecord.getFullName() + " (" + userRecord.getUsername() + ")" ) );
+				userLink.add( new Label( "name", userRecord.getFullName() ) );              
+                userLink.add( new Label( "username", userRecord.getUsername() ) );
             }
         };
         usernamesContainer.add( usersListView );

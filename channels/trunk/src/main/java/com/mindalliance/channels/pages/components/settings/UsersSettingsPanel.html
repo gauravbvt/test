@@ -7,23 +7,32 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="manage-users">
-        <div>
-            <label>New user</label>
-            <input type="text" wicket:id="newUsername" style="width:50%">
-            <a class="button" wicket:id="addUser">Add</a>
-        </div>
-        <div wicket:id="selectUserContainer" class="usernames" style="float: left;">
-            <h3>Usernames</h3>
-            <div>
+    <div class="manage-users admin">
+		<div class="user-left-col">        
+        <div wicket:id="selectUserContainer" class="usernames">
+            <h3>Users</h3>
+            <div class="user-search">
                 <input wicket:id="search" type="text" style="width:75%"/>
                 <img wicket:id="applySearch" src="images/search.png" alt="Search users"/>
+            </div>
+            <div class="namelist-cont">
                 <ul wicket:id="usernamesContainer">
                     <li wicket:id="usernames"> <!-- repeated -->
-                        <a wicket:id="userLink" href="#"><span wicket:id="username">username</span></a> <!-- class can be "selected" -->
+                        <a wicket:id="userLink" href="#">
+                        	<span class="name" wicket:id="name">name</span>
+                        	<span class="username" wicket:id="username">username</span>
+                        </a> <!-- class can be "selected" -->
                     </li>
                 </ul>
             </div>
+        </div>
+        <div class="new-user">
+	        <h3>New User</h3>
+	        <div>
+	            <input type="text" wicket:id="newUsername">
+	            <a class="button" wicket:id="addUser">Add</a>
+            </div>
+        </div>
         </div>
         <span wicket:id="userRecord">[user record panel]</span>
     </div>

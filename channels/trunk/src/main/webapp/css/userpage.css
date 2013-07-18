@@ -3083,3 +3083,180 @@ div.assignedOrgs-title {
 	text-transform: uppercase;
 	padding: 0 0 15px 0;
 }*/
+
+/* ----- Channels Admin ----- */
+
+div.manage-users.admin {
+	border: none;
+	margin: 0;	
+}
+
+div.manage-users.admin div.user-left-col {
+	float: left;
+}
+
+div.manage-users.admin div.new-user {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 0 none;
+    clear: both;
+    float: left;
+    margin: 10px 0 0 0;
+    width: 200px;
+}
+
+div.manage-users.admin div.new-user h3 {
+	background: none repeat scroll 0 0 #D95B43;
+    color: #FFFFFF;
+    font-family: montserrat;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+div.manage-users.admin div.new-user div {
+	padding: 10px;
+}
+
+div.manage-users.admin div.new-user a.button {
+    float: right;
+    margin: 10px 0;
+}
+
+div.manage-users.admin div.user-search {
+	display: none;
+}
+
+div.user-disabled-admin {
+	display: none;
+}
+
+div.manage-users.admin div.usernames {
+	float: left;
+	width: 200px;
+	background: #eeeeee;
+}
+
+div.usernames div.namelist-cont {
+    height: 229px;
+    overflow: auto;
+}
+
+div.manage-users.admin div.usernames ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+div.manage-users.admin div.usernames ul li {
+	margin: 0;
+	padding: 0;
+}
+
+div.manage-users.admin div.usernames ul li a {
+    display: block;
+    padding: 10px;	
+    color: #333333;
+}
+
+div.manage-users.admin div.usernames ul li a:hover,
+div.manage-users.admin div.usernames ul li a.selected {
+	background: #cccccc;
+	border: 0;
+}
+
+div.manage-users.admin div.usernames ul li a span.name {
+	display: block;
+	font-family: 'Montserrat',sans-serif;
+}
+
+div.manage-users.admin div.usernames ul li a span.username {
+	display: block;
+	font-size: 10px;
+	text-transform: uppercase;
+	color: #999999;
+}
+
+div.manage-users.admin div.user {
+    float: left;
+    margin: 0 0 0 10px;
+    width: 554px;
+}
+
+div.manage-users.admin div.user a {
+	float: right;
+}
+
+div.user-details,
+div.user-priviledges {
+	background: #EEEEEE;
+	float: left;
+	margin: 0 0 10px;
+	width: 554px;
+}
+
+div.user-details h3,
+div.user-priviledges h3 {
+    background: none repeat scroll 0 0 #7E9ABF;
+    color: #FFFFFF;
+    font-family: montserrat;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+div.usernames h3 {
+	background: #679177;
+    color: #FFFFFF;
+    font-family: montserrat;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px;
+    text-transform: uppercase;	
+}
+
+div.user-details table,
+div.user-priviledges table {
+    border-collapse: collapse;
+    float: left;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+    width: 554px;
+}
+
+div.user-details table tr.even,
+div.user-priviledges table tr.even {
+	background: #DDDEDE;
+}
+
+div.user-details table td,
+div.user-priviledges table td {
+	padding: 10px;
+}
+
+div.new-user input[type=text],
+div.user-details table input[type=text],
+div.user-priviledges table input[type=text] {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #999999;
+    float: right;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 12px;
+    padding: 3px 5px;
+    width: 250px;
+}
+
+div.new-user input[type=text] {
+	width: 168px;
+}
+
+div.user-details table select,
+div.user-priviledges table select {
+    border: 1px solid #999999;
+    float: right;
+    font-family: open sans;
+    font-size: 12px;
+    padding: 3px 5px;
+    width: 150px;
+}

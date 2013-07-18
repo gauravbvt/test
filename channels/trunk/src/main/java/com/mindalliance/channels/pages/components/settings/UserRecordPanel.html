@@ -7,27 +7,50 @@
         lang="en">
 <body>
 <wicket:panel>
-    <div class="user" style="float: right; width: 70%;">
+    <div class="user">
         <div wicket:id= "userRecordContainer">
-            <table wicket:id="userIdentityContainer" >
-                <tr>
-                    <td class="label">Full name:</td>
-                    <td><input wicket:id="fullName" type="text"/> </td>
-                </tr>
-                <tr>
-                    <td class="label">Email:</td>
-                    <td><input wicket:id="email" type="text"/> </td>
-                </tr>
-                <tr>
-                    <td class="label">Password:</td>
-                    <td><input wicket:id="password" type="text"/> </td>
-                </tr>
-            </table>
-            <h3>Access</h3>
-            <div wicket:id="privilegesContainer">
-                <span wicket:id="username">username</span>
-                <input wicket:id="isDisabled" type="checkbox"/> is disabled
-                <input wicket:id="isAdmin" type="checkbox"/> is admin
+	    	<div class="user-details">
+		    	<h3>Details</h3>
+	            <table wicket:id="userIdentityContainer" >
+	                <tr>
+	                    <td class="label">Full Name:</td>
+	                    <td><input wicket:id="fullName" type="text"/> </td>
+	                </tr>
+	                <tr class="even">
+	                    <td class="label">Email:</td>
+	                    <td><input wicket:id="email" type="text"/> </td>
+	                </tr>
+	                <tr>
+	                    <td class="label">Password:</td>
+	                    <td><input wicket:id="password" type="text"/> </td>
+	                </tr>
+	                <tr class="even">
+	                    <td class="label">Administrator:</td>
+	                    <td>
+	                        <select>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <td class="label">Disabled:</td>
+	                    <td>
+	                        <select>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+	                    </td>
+	                </tr>
+	            </table>
+	        </div>
+            <div class="user-priviledges" wicket:id="privilegesContainer">
+	            <h3>Access</h3>
+	            <div class="user-disabled-admin">
+	                <span wicket:id="username">username</span>
+	                <input wicket:id="isDisabled" type="checkbox"/> is disabled
+	                <input wicket:id="isAdmin" type="checkbox"/> is admin
+                </div>
                 <table wicket:id="planPrivilegesContainer">
                     <tr wicket:id="planPrivileges">
                         <td><span wicket:id="planName">plan name</span> </td>
