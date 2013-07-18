@@ -8,6 +8,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,9 +31,6 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0193_TaskAttachOptions 
  * Summary: Verify reference,policy,mandatin policy,prohibiting policy options are present
@@ -128,10 +128,18 @@ public class MAV0193_TaskAttachOptions extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
 			
+			// Click on 'strench Up forms' icon 
+ 			stepNo++;
+			description="Strench up form";	
+			PlanPage planPage = new PlanPage();
+			planPage.clickStrenchUpForm();
+			 // Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);  
+ 			
 			// Click on 'Details' under 'Show' pop up under 'Task' panel
 			stepNo++;
 			description="Details Task";
-			PlanPage planPage = new PlanPage();
 			planPage.clickPopupMenu(testData.get("ShowInTask"));
 			planPage.clickSubmenu(testData.get("Details"));	
 			// Click on 'Show Advanced Form' link
@@ -139,7 +147,7 @@ public class MAV0193_TaskAttachOptions extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+
 			// Check attach dropdown list is present
 			stepNo++;
 			description="Attachment is Present";
