@@ -27,7 +27,7 @@
 	                <tr class="even">
 	                    <td class="label">Administrator:</td>
 	                    <td>
-	                        <select>
+	                        <select wicket:id="isAdmin">
                                 <option>Yes</option>
                                 <option>No</option>
                             </select>
@@ -36,7 +36,7 @@
 	                <tr>
 	                    <td class="label">Disabled:</td>
 	                    <td>
-	                        <select>
+	                        <select wicket:id="isDisabled">
                                 <option>Yes</option>
                                 <option>No</option>
                             </select>
@@ -46,11 +46,6 @@
 	        </div>
             <div class="user-priviledges" wicket:id="privilegesContainer">
 	            <h3>Access</h3>
-	            <div class="user-disabled-admin">
-	                <span wicket:id="username">username</span>
-	                <input wicket:id="isDisabled" type="checkbox"/> is disabled
-	                <input wicket:id="isAdmin" type="checkbox"/> is admin
-                </div>
                 <table wicket:id="planPrivilegesContainer">
                     <tr wicket:id="planPrivileges">
                         <td><span wicket:id="planName">plan name</span> </td>

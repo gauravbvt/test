@@ -60,7 +60,8 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
     private void resetAll() {
         newUsername = null;
         searchString = null;
-        selectedUsername = null;
+        List<UserRecord> userRecords = getFoundUserRecords();
+        selectedUsername = userRecords.isEmpty() ? null : userRecords.get(0).getUsername();
     }
 
     private void addNewUser() {
@@ -165,6 +166,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 };
                 if ( selected ) userLink.add( new AttributeModifier( "class", "selected" ) );
                 item.add( userLink );
+                item.add( new AttributeModifier( "class", item.getIndex() % 2 == 0 ? "even" : "odd"));
 				userLink.add( new Label( "name", userRecord.getFullName() ) );              
                 userLink.add( new Label( "username", userRecord.getUsername() ) );
             }

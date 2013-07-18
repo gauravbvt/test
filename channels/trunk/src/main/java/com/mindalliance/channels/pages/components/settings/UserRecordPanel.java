@@ -7,10 +7,10 @@ import com.mindalliance.channels.db.data.users.UserAccess;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -22,6 +22,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,6 +34,10 @@ import java.util.List;
  * Time: 3:34 PM
  */
 public class UserRecordPanel extends AbstractUpdatablePanel {
+
+    private final static String YES = "Yes";
+    private final static String NO = "No";
+    private final static String[] YES_NO = {YES, NO};
 
     private static final String NOT_AUTHORIZED = "Not authorized";
     private static final String GUEST = "Guest"; // == plan participant
@@ -63,7 +68,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     }
 
     private void addUserRecord() {
-        userRecordContainer = new WebMarkupContainer( "userRecordContainer"  );
+        userRecordContainer = new WebMarkupContainer( "userRecordContainer" );
         userRecordContainer.setOutputMarkupId( true );
         addOrReplace( userRecordContainer );
         addUserIdentityFields();
@@ -77,6 +82,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         addFullName();
         addEmail();
         addPassword();
+        addGlobalAccess();
     }
 
     private void addFullName() {
@@ -124,45 +130,47 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     private void addPrivileges() {
         privilegesContainer = new WebMarkupContainer( "privilegesContainer" );
         privilegesContainer.setOutputMarkupId( true );
-        addUsernameLabels();
-        addGlobalAccess();
         addPlanPrivileges();
+        makeVisible( privilegesContainer, !isDisabled()
+                && !isAdmin()
+                && !userRecord.getUsername().equals( getUsername() ) );
         userRecordContainer.addOrReplace( privilegesContainer );
     }
 
-    private void addUsernameLabels() {
-        privilegesContainer.addOrReplace( new Label( "username", userRecord.getUsername() ).setOutputMarkupId( true ) );
-    }
 
     private void addGlobalAccess() {
         // admin
-        AjaxCheckBox adminCheckBox = new AjaxCheckBox(
+        DropDownChoice<String> adminChoice = new DropDownChoice<String>(
                 "isAdmin",
-                new PropertyModel<Boolean>( this, "admin" )
-        ) {
+                new PropertyModel<String>( this, "adminYesNo" ),
+                Arrays.asList( YES_NO )
+        );
+        adminChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addPrivileges();
                 target.add( privilegesContainer );
             }
-        };
-        adminCheckBox.setOutputMarkupId( true );
-        adminCheckBox.setEnabled( !userRecordUpdate.isDisabled() && !userRecord.getUsername().equals( getUsername() ) );
-        privilegesContainer.addOrReplace( adminCheckBox );
+        } );
+        adminChoice.setOutputMarkupId( true );
+        userIdentityContainer.addOrReplace( adminChoice );
+        adminChoice.setEnabled( !userRecordUpdate.isDisabled() && !userRecord.getUsername().equals( getUsername() ) );
         // disabled
-        AjaxCheckBox disabledCheckBox = new AjaxCheckBox(
+        DropDownChoice<String> disabledChoice = new DropDownChoice<String>(
                 "isDisabled",
-                new PropertyModel<Boolean>( this, "disabled" )
-        ) {
+                new PropertyModel<String>( this, "disabledYesNo" ),
+                Arrays.asList( YES_NO )
+        );
+        disabledChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
                 addPrivileges();
                 target.add( privilegesContainer );
             }
-        };
-        disabledCheckBox.setOutputMarkupId( true );
-        disabledCheckBox.setEnabled( !userRecord.getUsername().equals( getUsername() ) );
-        privilegesContainer.addOrReplace( disabledCheckBox );
+        } );
+        disabledChoice.setOutputMarkupId( true );
+        userIdentityContainer.addOrReplace( disabledChoice );
+        disabledChoice.setEnabled( !userRecord.getUsername().equals( getUsername() ) );
 
     }
 
@@ -170,9 +178,6 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         planPrivilegesContainer = new WebMarkupContainer( "planPrivilegesContainer" );
         planPrivilegesContainer.setOutputMarkupId( true );
         privilegesContainer.addOrReplace( planPrivilegesContainer );
-        makeVisible( planPrivilegesContainer, !userRecord.getUsername().equals( getUsername() )
-                && !userRecordUpdate.isAdmin()
-                && !userRecordUpdate.isDisabled() );
         addPlanPrivilegesList();
     }
 
@@ -184,6 +189,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             @Override
             protected void populateItem( ListItem<PlanAccessWrapper> item ) {
                 PlanAccessWrapper planAccessWrapper = item.getModelObject();
+                item.add( new AttributeModifier( "class", item.getIndex() % 2 == 0 ? "even" : "odd" ) );
                 item.add( new Label( "planName", planAccessWrapper.getPlanName() ) );
                 addUserRoleChoice( item );
             }
@@ -191,10 +197,10 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         planPrivilegesContainer.add( planPrivilegesListView );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<PlanAccessWrapper> getPlanAccessWrappers() {
         final List<String> planUris = planManager.getPlanUris();
-        List<PlanAccessWrapper> wrappers = new ArrayList<PlanAccessWrapper>(  );
+        List<PlanAccessWrapper> wrappers = new ArrayList<PlanAccessWrapper>();
         for ( String planUri : planUris ) {
             Plan plan = planManager.getDevelopmentPlan( planUri );
             PlanAccessWrapper wrapper = new PlanAccessWrapper( plan );
@@ -264,7 +270,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 resetUserRecord();
                 addUserRecord();
                 target.add( userRecordContainer );
-             }
+            }
         };
         resetLink.setOutputMarkupId( true );
         add( resetLink );
@@ -338,12 +344,29 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         this.selectedPlan = selectedPlan;
     }
 
+    public String getAdminYesNo() {
+        return isAdmin() ? YES : NO;
+    }
+
+    public void setAdminYesNo( String val ) {
+        setAdmin( val.equals( YES ) );
+    }
+
+    public String getDisabledYesNo() {
+        return isDisabled() ? YES : NO;
+    }
+
+    public void setDisabledYesNo( String val ) {
+        setDisabled( val.equals( YES ) );
+    }
+
+
     public class PlanAccessWrapper implements Serializable {
 
         private Plan plan;
 
         public PlanAccessWrapper( Plan plan ) {
-            this.plan= plan;
+            this.plan = plan;
         }
 
         public String getPlanName() {
@@ -359,16 +382,15 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
 
         public void setUserRoleName( String val ) {
             if ( val != null ) {
-                 if ( val.equals( NOT_AUTHORIZED ) )
+                if ( val.equals( NOT_AUTHORIZED ) )
                     userRecordUpdate.clearAccess( plan.getUri() );
                 else if ( val.equals( GUEST ) ) {
                     UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.Participant );
                     userRecordUpdate.addUserAccess( userAccess );
-                }
-                else {
+                } else {
                     UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.valueOf( val ) );
-                     userRecordUpdate.addUserAccess( userAccess );
-                 }
+                    userRecordUpdate.addUserAccess( userAccess );
+                }
             }
 
         }
