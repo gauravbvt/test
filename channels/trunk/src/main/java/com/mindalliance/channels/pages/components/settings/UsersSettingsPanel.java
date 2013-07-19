@@ -76,6 +76,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 // do nothing
             }
         } );
+        addTipTitle( newUserField, "Enter a new username (alphanumerics, no spaces)");
         add( newUserField );
         // add user button
         AjaxLink<String> addUserLink = new AjaxLink<String>( "addUser" ) {
@@ -123,7 +124,8 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
         searchField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                // do nothing
+                addUsersList();
+                target.add( usernamesContainer );
             }
         } );
         searchField.setOutputMarkupId( true );

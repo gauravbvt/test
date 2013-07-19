@@ -70,7 +70,6 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     }
 
     private void init() {
-        addNewPlan();
         initSettings();
     }
 
@@ -86,7 +85,9 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         settingsContainer.setOutputMarkupId( true );
         addOrReplace( settingsContainer );
         addPlanSelection();
+        addNewPlan();
         addPlanProperties();
+        addPlanActions();
         addCancelApply();
     }
 
@@ -133,7 +134,8 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         newPlanUriField.setOutputMarkupId( true );
-        add( newPlanUriField );
+        addTipTitle( newPlanUriField, "Enter a unique URI (alphanumerics and underscores, no spaces)" );
+        settingsContainer.addOrReplace( newPlanUriField );
         // button
         AjaxLink<String> addPlanLink = new AjaxLink<String>( "addPlan" ) {
             @Override
@@ -152,7 +154,8 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                     update( target, Change.failed( "Invalid uri; can't add new plan." ) );
             }
         };
-        add( addPlanLink );
+        addPlanLink.setOutputMarkupId( true );
+        settingsContainer.addOrReplace( addPlanLink );
     }
 
     private boolean addPlanWithUri( String planUri ) {
@@ -187,7 +190,6 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         Label devVersionLabel = new Label( "devVersion", Integer.toString( getSelectedPlan().getVersion() ) );
         devVersionLabel.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( devVersionLabel );
-        addPlanActions();
     }
 
     private int getCommunitiesCount() {
@@ -249,7 +251,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         };
         productizeLink.setOutputMarkupId( true );
-        planPropertiesContainer.addOrReplace( productizeLink );
+        settingsContainer.addOrReplace( productizeLink );
         // delete
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "deletePlan",
@@ -267,7 +269,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         };
         makeVisible( deleteLink, canBeDeletedPlan( getSelectedPlan() ) );
         deleteLink.setOutputMarkupId( true );
-        planPropertiesContainer.addOrReplace( deleteLink );
+        settingsContainer.addOrReplace( deleteLink );
     }
 
     private String getProductizeConfirmationMessage() {

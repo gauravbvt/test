@@ -64,7 +64,6 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
 
     private void init() {
         addUserRecord();
-        addResetAndApply();
     }
 
     private void addUserRecord() {
@@ -72,6 +71,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         userRecordContainer.setOutputMarkupId( true );
         addOrReplace( userRecordContainer );
         addUserIdentityFields();
+        addUserIdentityResetAndApply();
         addPrivileges();
     }
 
@@ -131,10 +131,41 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         privilegesContainer = new WebMarkupContainer( "privilegesContainer" );
         privilegesContainer.setOutputMarkupId( true );
         addPlanPrivileges();
+        addPlanPrivilegesResetAndApply();
         makeVisible( privilegesContainer, !isDisabled()
                 && !isAdmin()
                 && !userRecord.getUsername().equals( getUsername() ) );
         userRecordContainer.addOrReplace( privilegesContainer );
+    }
+
+    private void addPlanPrivilegesResetAndApply() {
+        // reset
+        AjaxLink<String> resetLink = new AjaxLink<String>( "reset2" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                resetUserRecord();
+                addUserRecord();
+                target.add( userRecordContainer );
+            }
+        };
+        resetLink.setOutputMarkupId( true );
+        privilegesContainer.addOrReplace( resetLink );
+        // apply
+        AjaxLink<String> applyLink = new AjaxLink<String>( "apply2" ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
+                resetUserRecord();
+                addUserRecord();
+                target.add( userRecordContainer );
+                Change change = new Change( Change.Type.NeedsRefresh );
+                change.setMessage( "Settings changed for " + userRecord.getUsername() );
+                update( target, change );
+            }
+        };
+        applyLink.setOutputMarkupId( true );
+        privilegesContainer.addOrReplace( applyLink );
+
     }
 
 
@@ -262,9 +293,9 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     }
 
 
-    private void addResetAndApply() {
+    private void addUserIdentityResetAndApply() {
         // reset
-        AjaxLink<String> resetLink = new AjaxLink<String>( "reset" ) {
+        AjaxLink<String> resetLink = new AjaxLink<String>( "reset1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 resetUserRecord();
@@ -273,9 +304,9 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             }
         };
         resetLink.setOutputMarkupId( true );
-        add( resetLink );
+        userRecordContainer.addOrReplace( resetLink );
         // apply
-        AjaxLink<String> applyLink = new AjaxLink<String>( "apply" ) {
+        AjaxLink<String> applyLink = new AjaxLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
@@ -288,7 +319,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             }
         };
         applyLink.setOutputMarkupId( true );
-        add( applyLink );
+        userRecordContainer.addOrReplace( applyLink );
     }
 
     private void resetUserRecord() {

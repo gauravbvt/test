@@ -20,8 +20,8 @@
 	    	<div class="new-plan">
 				<h3>New Plan</h3>
 				<div>
-		    		<input type="text"/>  <!-- wicket:id="newPlanUri" -->
-		    		<a class="button">Add</a> <!-- wicket:id="addPlan" -->
+		    		<input wicket:id="newPlanUri" type="text"/>
+		    		<a wicket:id="addPlan" class="button">Add</a>
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
                 		</td>
             		</tr>
             		<tr class="even">
-                		<td class="label">Communities:</td>
+                		<td class="label">Community Adoptions:</td>
                 		<td style="text-align: right;">
                     		<span wicket:id="communitiesCount">0</span>
                 		</td>
@@ -55,21 +55,21 @@
                 		</td>
             		</tr>
             		<tr class="even">
-                		<td class="label">Planner Feedback Email:</td>
+                		<td class="label">Planner Feedback Emailed To:</td>
                 		<td>
                     		<input type="text" wicket:id="plannerSupportEmail"/>
                 		</td>
             		</tr>
             		<tr class="odd">
-                		<td class="label">Participant Feedback Email:</td>
+                		<td class="label">Participant Feedback Emailed To:</td>
                 		<td>
                     		<input type="text" wicket:id="participantSupportEmail"/>
                 		</td>
             		</tr>
         		</table>
         		<div class="button-bar">
-	           		<a class="button">Productize</a> <!--  wicket:id="productize" -->
-	       		    <a class="button">Delete Plan</a> <!--  wicket:id="deletePlan" -->
+	           		<a wicket:id="productize" class="button">Productize</a>
+	       		    <a wicket:id="deletePlan" class="button">Delete Plan</a>
 	        		<a class="button" wicket:id="reset">Reset</a>
 	        		<a class="button" wicket:id="apply">Save</a>
         		</div>
