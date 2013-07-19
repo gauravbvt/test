@@ -2629,10 +2629,6 @@ div.issues.settings li {
     font-weight: bold;
 }
 
-div.new-user,
-div.new-plan,
-div.manage-users,
-div.manage-plan,
 div.registering-container,
 div.assignment-container,
 div.authorizing-container,
@@ -2647,10 +2643,6 @@ div.attachment-panel-add-container {
     width: 375px;
 }
 
-div.new-user h2,
-div.new-plan h2,
-div.manage-users h2,
-div.manage-plan h2,
 div.registering-container h2,
 div.assignment-container h2,
 div.authorizing-container h2 {
@@ -2663,13 +2655,6 @@ div.authorizing-container h2 {
     text-transform: uppercase;
 }
 
-div.manage-users a.button { /* added by JF */
-    float: none;
-}
-
-div.new-user table,
-div.new-plan table,
-div.manage-plan table,
 div.registering-container table,
 div.assignment-container table,
 div.authorizing-container table,
@@ -2681,9 +2666,6 @@ div.attachment-panel-add-container table {
 	width: 100%;
 }
 
-div.new-user table td,
-div.new-plan table td,
-div.manage-plan table td,
 div.registering-container table td,
 div.assignment-container table td,
 div.authorizing-container table td,
@@ -2691,9 +2673,6 @@ div.attachment-panel-add-container table td {
 	padding: 10px 5px 10px 10px;
 }
 
-div.new-user input[type="text"],
-div.new-plan input[type="text"],
-div.manage-plan input[type="text"],
 div.registering-container input[type="text"],
 div.assignment-container input[type="text"],
 div.authorizing-container input[type="text"],
@@ -2714,17 +2693,6 @@ div.attachment-panel-add-container input[type="file"] {
 	float: right;
 }
 
-div.manage-plan select {
-    background: none repeat scroll 0 0 #FFFFFF;
-    border: 1px solid #999999;
-    float: right;
-    font-size: 11px;
-    margin-right: -5px;
-    padding: 3px;
-    width: 310px;
-    text-transform: none;
-}
-
 div.registering-container select,
 div.assignment-container select,
 div.authorizing-container select,
@@ -2741,31 +2709,6 @@ div.attachment-panel-add-container select {
 	width: 200px;
 }
 
-div.manage-users input.submit {
-	margin: 10px 15px 15px;
-}
-
-div.manage-users table.data-table.users {
-	border-top: none;
-}
-
-div.manage-plan h3 {
-    background: none repeat scroll 0 0 #E8E8E8;
-    border-bottom: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
-    color: #333333;
-    font-size: 13px;
-    padding: 5px 10px;
-    text-transform: uppercase;
-}
-
-div.manage-plan td.plan-uri {
-	text-align: right;
-}
-
-div.manage-plan a.button {
-    padding: 8px 10px 7px;
-}
 
 /* Added by JF */
 .issues .help-icon {
@@ -2970,100 +2913,6 @@ span.empty-note {
     text-transform: uppercase;
 }
 
-
-/*
-
-div.participation-filtering,
-div.participation-title {
-	font-size: 11px;
-	text-transform: uppercase;
-	background: #ccc;
-	border-bottom: 1px solid gray;
-	height: 40px;
-	display: block;
-	float: left;
-	padding: 10px;
-	margin: 0;
-	width: 230px;
-}
-
-div.participation-filtering select {
-	font-size: 12px;
-	text-transform: uppercase;
-	
-}
-
-div.participation div.participation-table-cont {
-	height: 200px;
-	min-height: 200px;
-	display:block;
-	float: left;
-	width: 250px;
-	overflow-x: hidden;
-	padding: 0;
-	margin: 0;
-}
-
-div.participation table {
-	margin:0;
-	padding: 0;
-	width:100%;
-	border:none;
-	background: #e8e8e8;
-	border-collapse: collapse;
-	font-size: 11px;
-}
-
-div.participation table td {
-	padding: 10px;
-	border-top: 1px solid gray;
-	height: 25px;
-}
-
-div.participation table tr:first-child td,
-div.participation-right table tr:first-child td {
-	border-top: none;
-}
-
-
-div.participation table tr td:first-child {
-	width: 15px;
-	padding: 10px 0 10px 10px;
-}
-
-div.participation table tr td:last-child {
-	font-size: 10px;
-}
-
-div.participation-right table td a.more {
-	float: right;
-}
-
-div.add-new-org {
-	padding:15px;
-	border: 1px solid gray;
-	background: #e8e8e8;
-	border-collapse: collapse;
-	float: left;
-}
-
-div.add-new-org input[type=text] {
-	clear: both;
-	float: right;
-	margin: 0 0 5px 0;
-	padding: 3px;
-	width: 250px;
-}
-
-
-div.add-new-org input[type=button] {
-	float: right;
-	clear: both;
-	margin-top: 5px;
-}
-
-*/
-
 div.partman-note {
     background: #E8E8E8;
     border: 1px dashed #999999;
@@ -3075,35 +2924,31 @@ div.partman-note {
     width: 744px;
 }
 
-/*
-div.assignedOrgs-title {
-	font-size: 14px;
-	font-weight: bold;
-	color: #333333;
-	text-transform: uppercase;
-	padding: 0 0 15px 0;
-}*/
 
 /* ----- Channels Admin ----- */
 
+div.manage-plan.admin,
 div.manage-users.admin {
 	border: none;
 	margin: 0;	
 }
 
+div.manage-plan.admin div.plan-left-col,
 div.manage-users.admin div.user-left-col {
 	float: left;
 }
 
+div.manage-plan.admin div.new-plan,
 div.manage-users.admin div.new-user {
-    background: none repeat scroll 0 0 #EEEEEE;
-    border: 0 none;
+    background: #EEEEEE;
+    border: 1px solid #D95B43;
     clear: both;
     float: left;
     margin: 10px 0 0 0;
-    width: 200px;
+    width: 198px;
 }
 
+div.manage-plan.admin div.new-plan h3,
 div.manage-users.admin div.new-user h3 {
 	background: none repeat scroll 0 0 #D95B43;
     color: #FFFFFF;
@@ -3114,32 +2959,50 @@ div.manage-users.admin div.new-user h3 {
     text-transform: uppercase;
 }
 
+div.manage-plan.admin div.select-plan {
+    background: #EEEEEE;
+    border: 1px solid #679177;
+    clear: both;
+    float: left;
+    width: 198px;
+}
+
+div.manage-plan.admin div.select-plan h3 {
+	background: none repeat scroll 0 0 #679177;
+    color: #FFFFFF;
+    font-family: montserrat;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+
+div.manage-plan.admin div.select-plan div,
+div.manage-plan.admin div.new-plan div,
 div.manage-users.admin div.new-user div {
 	padding: 10px;
+	float: left;
 }
 
+div.manage-plan.admin div.new-plan a.button,
 div.manage-users.admin div.new-user a.button {
     float: right;
-    margin: 10px 0;
-}
-
-div.manage-users.admin div.user-search {
-	display: none;
-}
-
-div.user-disabled-admin {
-	display: none;
+    margin: 10px 0 0;
 }
 
 div.manage-users.admin div.usernames {
 	float: left;
-	width: 200px;
+	width: 198px;
 	background: #eeeeee;
+	border: 1px solid #679177;
 }
 
 div.usernames div.namelist-cont {
-    height: 229px;
+    float: left;
+    height: 275px;
     overflow: auto;
+    width: 198px;
 }
 
 div.manage-users.admin div.usernames ul {
@@ -3157,12 +3020,14 @@ div.manage-users.admin div.usernames ul li a {
     display: block;
     padding: 10px;	
     color: #333333;
+    border-bottom: 1px solid #999999;
 }
 
 div.manage-users.admin div.usernames ul li a:hover,
 div.manage-users.admin div.usernames ul li a.selected {
 	background: #cccccc;
 	border: 0;
+	border-bottom: 1px solid #999999;
 }
 
 div.manage-users.admin div.usernames ul li a span.name {
@@ -3177,6 +3042,7 @@ div.manage-users.admin div.usernames ul li a span.username {
 	color: #999999;
 }
 
+div.manage-plan.admin div.plan,
 div.manage-users.admin div.user {
     float: left;
     margin: 0 0 0 10px;
@@ -3187,14 +3053,17 @@ div.manage-users.admin div.user a {
 	float: right;
 }
 
+div.plan-details,
 div.user-details,
 div.user-priviledges {
 	background: #EEEEEE;
 	float: left;
 	margin: 0 0 10px;
 	width: 554px;
+	border: 1px solid #7E9ABF;
 }
 
+div.plan-details h3,
 div.user-details h3,
 div.user-priviledges h3 {
     background: none repeat scroll 0 0 #7E9ABF;
@@ -3206,9 +3075,31 @@ div.user-priviledges h3 {
     text-transform: uppercase;
 }
 
+div.plan-details div.button-bar,
+div.user-details div.button-bar,
+div.user-priviledges div.button-bar {
+    border-top: 1px solid #CCCCCC;
+    float: left;
+    height: 34px;
+    padding: 11px 10px 0 0;
+    width: 544px;	
+}
+
+div.plan-details div.button-bar a.button,
+div.user-details div.button-bar a.button,
+div.user-priviledges div.button-bar a.button {
+	background: #D8D8D8;
+}
+
+div.usernames div.header-cont {
+    background: none repeat scroll 0 0 #679177;
+    float: left;
+    width: 198px;
+}
+
 div.usernames h3 {
-	background: #679177;
     color: #FFFFFF;
+    float: left;
     font-family: montserrat;
     font-size: 14px;
     font-weight: normal;
@@ -3216,6 +3107,28 @@ div.usernames h3 {
     text-transform: uppercase;	
 }
 
+div.usernames div.header-cont span {
+    display: block;
+    float: right;
+}
+
+div.usernames div.header-cont span input {
+    background: none repeat scroll 0 0 #CED7CD;
+    border: medium none;
+    float: left;
+    font-family: open sans;
+    font-size: 10px;
+    margin: 11px 0 0;
+    padding: 1px;
+    width: 60px;
+}
+
+div.usernames div.header-cont span img {
+    float: right;
+    padding: 10px 10px 11px;
+}
+
+div.plan-details table,
 div.user-details table,
 div.user-priviledges table {
     border-collapse: collapse;
@@ -3225,19 +3138,23 @@ div.user-priviledges table {
     width: 554px;
 }
 
-div.user-details table tr.even,
-div.user-priviledges table tr.even {
+div.plan-details table tr.odd,
+div.user-details table tr.odd,
+div.user-priviledges table tr.odd {
 	background: #DDDEDE;
 }
 
+div.plan-details table td,
 div.user-details table td,
 div.user-priviledges table td {
 	padding: 10px;
 }
 
+div.new-plan input[type=text], 
 div.new-user input[type=text],
 div.user-details table input[type=text],
-div.user-priviledges table input[type=text] {
+div.user-priviledges table input[type=text],
+div.plan-details table input[type="text"] {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #999999;
     float: right;
@@ -3247,10 +3164,12 @@ div.user-priviledges table input[type=text] {
     width: 250px;
 }
 
+div.new-plan input[type=text],
 div.new-user input[type=text] {
-	width: 168px;
+	width: 166px;
 }
 
+div.manage-plan.admin div.select-plan select,
 div.user-details table select,
 div.user-priviledges table select {
     border: 1px solid #999999;
@@ -3259,4 +3178,8 @@ div.user-priviledges table select {
     font-size: 12px;
     padding: 3px 5px;
     width: 150px;
+}
+
+div.manage-plan.admin div.select-plan select {
+	width: 178px;
 }

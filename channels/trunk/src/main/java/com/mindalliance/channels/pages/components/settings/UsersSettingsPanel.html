@@ -10,11 +10,13 @@
     <div class="manage-users admin">
 		<div class="user-left-col">        
         <div wicket:id="selectUserContainer" class="usernames">
-            <h3>Users</h3>
-            <div class="user-search">
-                <input wicket:id="search" type="text" style="width:75%"/>
-                <img wicket:id="applySearch" src="images/search.png" alt="Search users"/>
-            </div>
+        	<div class="header-cont">
+	            <h3>Users</h3>
+	           	<span>
+					<input wicket:id="search" type="text" />
+					<img wicket:id="applySearch" src="images/search-settings.png" alt="Search users"/>
+				</span>
+			</div>
             <div class="namelist-cont">
                 <ul wicket:id="usernamesContainer">
                     <li wicket:id="usernames"> <!-- repeated  class = "even" or "odd"-->

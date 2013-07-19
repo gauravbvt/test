@@ -7,57 +7,74 @@
         lang="en">
 <body>
 <wicket:panel>
-    <label>New plan with uri:</label>
-    <input type="text" wicket:id="newPlanUri"/>
-    <a class="button" wicket:id="addPlan">Add</a>
-    <div class="manage-plan" wicket:id="settingsContainer">
-        <h2>Manage Plans
-            <select wicket:id="plan-sel" name="plan">
-                <option>Some plan</option>
-            </select>
-        </h2>
-        <table wicket:id="planProperties" width="100%" border="0" cellspacing="0" cellpadding="0">
-             <tr>
-                <td class="label">Plan URI:</td>
-                <td>
-                    <span wicket:id="planUri">uri</span>
-                    <a class="button" wicket:id="deletePlan">Delete Plan</a>
-                </td>
-            </tr>
-            <tr>
-                <td class="label">Development version:</td>
-                <td>
-                    <span wicket:id="devVersion">3</span>
-                     <a class="button" wicket:id="productize">Productize</a>
-                </td>
-            </tr>
-            <tr>
-                <td class="label">Communities based on plan:</td>
-                <td>
-                    <span wicket:id="communitiesCount">0</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="label">Plan owner:</td>
-                <td>
-                    <input type="text" wicket:id="planOwner"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="label">Send planner feedback to:</td>
-                <td>
-                    <input type="text" wicket:id="plannerSupportEmail"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="label">Send participant feedback to:</td>
-                <td>
-                    <input type="text" wicket:id="participantSupportEmail"/>
-                </td>
-            </tr>
-        </table>
-        <a class="button" wicket:id="reset">Reset</a>
-        <a class="button" wicket:id="apply">Save</a>
+    <div class="manage-plan admin" wicket:id="settingsContainer">
+		<div class="plan-left-col">
+			<div class="select-plan">
+				<h3>Plans</h3>
+				<div>
+		            <select wicket:id="plan-sel" name="plan">
+		                <option>Some plan</option>
+		            </select>
+				</div>
+			</div>
+	    	<div class="new-plan">
+				<h3>New Plan</h3>
+				<div>
+		    		<input type="text"/>  <!-- wicket:id="newPlanUri" -->
+		    		<a class="button">Add</a> <!-- wicket:id="addPlan" -->
+				</div>
+			</div>
+		</div>
+
+	    <div class="plan">
+	    	<div class="plan-details">
+		    	<h3>Details</h3>
+        		<table wicket:id="planProperties" width="100%" border="0" cellspacing="0" cellpadding="0">
+            		 <tr class="even">
+                		<td class="label">Plan URI:</td>
+                		<td style="text-align: right;">
+                		    <span wicket:id="planUri">uri</span>
+               			</td>
+            		</tr>
+            		<tr class="odd">
+                		<td class="label">Development Version:</td>
+                		<td style="text-align: right;">
+                    		<span wicket:id="devVersion">3</span>
+                		</td>
+            		</tr>
+            		<tr class="even">
+                		<td class="label">Communities:</td>
+                		<td style="text-align: right;">
+                    		<span wicket:id="communitiesCount">0</span>
+                		</td>
+            		</tr>
+            		<tr class="odd">
+               			<td class="label">Plan Owner:</td>
+                		<td>
+                    		<input type="text" wicket:id="planOwner"/>
+                		</td>
+            		</tr>
+            		<tr class="even">
+                		<td class="label">Planner Feedback Email:</td>
+                		<td>
+                    		<input type="text" wicket:id="plannerSupportEmail"/>
+                		</td>
+            		</tr>
+            		<tr class="odd">
+                		<td class="label">Participant Feedback Email:</td>
+                		<td>
+                    		<input type="text" wicket:id="participantSupportEmail"/>
+                		</td>
+            		</tr>
+        		</table>
+        		<div class="button-bar">
+	           		<a class="button">Productize</a> <!--  wicket:id="productize" -->
+	       		    <a class="button">Delete Plan</a> <!--  wicket:id="deletePlan" -->
+	        		<a class="button" wicket:id="reset">Reset</a>
+	        		<a class="button" wicket:id="apply">Save</a>
+        		</div>
+        	</div>
+        </div>
     </div>
 </wicket:panel>
 </body>

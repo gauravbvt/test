@@ -12,19 +12,19 @@
 	    	<div class="user-details">
 		    	<h3>Details</h3>
 	            <table wicket:id="userIdentityContainer" >
-	                <tr>
+	                <tr class="even">
 	                    <td class="label">Full Name:</td>
 	                    <td><input wicket:id="fullName" type="text"/> </td>
 	                </tr>
-	                <tr class="even">
+	                <tr class="odd">
 	                    <td class="label">Email:</td>
 	                    <td><input wicket:id="email" type="text"/> </td>
 	                </tr>
-	                <tr>
+	                <tr class="even">
 	                    <td class="label">Password:</td>
 	                    <td><input wicket:id="password" type="text"/> </td>
 	                </tr>
-	                <tr class="even">
+	                <tr class="odd">
 	                    <td class="label">Administrator:</td>
 	                    <td>
 	                        <select wicket:id="isAdmin">
@@ -33,7 +33,7 @@
                             </select>
 	                    </td>
 	                </tr>
-	                <tr>
+	                <tr class="even">
 	                    <td class="label">Disabled:</td>
 	                    <td>
 	                        <select wicket:id="isDisabled">
@@ -43,6 +43,10 @@
 	                    </td>
 	                </tr>
 	            </table>
+           		<div class="button-bar">
+			        <a class="button" href="#">Reset</a> <!-- wicket:id="reset" -->
+			        <a class="button" href="#">Apply</a> <!--  wicket:id="apply" -->
+	    		</div>
 	        </div>
             <div class="user-priviledges" wicket:id="privilegesContainer">
 	            <h3>Access</h3>
@@ -57,10 +61,12 @@
                         </td>
                     </tr>
                 </table>
+           		<div class="button-bar">
+			        <a class="button" href="#">Reset</a> <!-- wicket:id="reset" -->
+			        <a class="button" href="#">Apply</a> <!--  wicket:id="apply" -->
+			    </div>
             </div>
         </div>
-        <a wicket:id="reset" class="button" href="#">Reset</a>
-        <a wicket:id="apply" class="button" href="#">Apply</a>
     </div>
 </wicket:panel>
 </body>
