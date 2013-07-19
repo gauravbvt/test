@@ -1053,6 +1053,7 @@ public class PlanPage {
 		break;	
 		
 	case "New Issue In Receives Panel":
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		try{
@@ -1070,6 +1071,7 @@ public class PlanPage {
 		break;
 		
 	case "New Issue In Sends Panel":
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		try{
@@ -1873,6 +1875,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void enterValueInCausesEventInTask(String eventName) throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Causes Event In Task",GlobalVariables.configuration.getAttrSearchList(), "Causes Event In Task");
 		UIActions.click(fileName,"Causes Event In Task",GlobalVariables.configuration.getAttrSearchList(), "Causes Event In Task");
 		UIActions.enterValueInTextBox(eventName,fileName,"Causes Event In Task",GlobalVariables.configuration.getAttrSearchList(), "Causes Event In Task");
@@ -2034,7 +2037,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickUnnamedLinkIntask() throws UIAutomationException{
-		
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Can End Event Unnamed Link In Task", GlobalVariables.configuration.getAttrSearchList(), "Can End Event Unnamed Link In Task");
 		UIActions.click(fileName,"Can End Event Unnamed Link In Task", GlobalVariables.configuration.getAttrSearchList(), "Can End Event Unnamed Link In Task");
 				
@@ -2411,6 +2414,7 @@ public class PlanPage {
 		boolean textboxIsEnabled=false;
 		boolean dropdownIsEnabled=false;
 		
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Usually Completes After In Task",GlobalVariables.configuration.getAttrSearchList(), "Usually Completes After In Task");
 		UIActions.click(fileName,"Usually Completes After In Task",GlobalVariables.configuration.getAttrSearchList(), "Usually Completes After In Task");
 				
@@ -2455,6 +2459,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickIsOngoing() throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Is ongoing In Task",GlobalVariables.configuration.getAttrSearchList(), "Is ongoing In Task");
 		UIActions.click(fileName,"Is ongoing In Task",GlobalVariables.configuration.getAttrSearchList(), "Is ongoing In Task");
 			
@@ -2480,6 +2485,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickCanEndEvent() throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Can End Event In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Can End Event In Task Panel");
 		UIActions.click(fileName,"Can End Event In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Can End Event In Task Panel");
 			
@@ -2522,6 +2528,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickGoalsLinkInTask() throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Goals Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Goals Link In Task Panel");
 		UIActions.click(fileName,"Goals Link In Task Panel",GlobalVariables.configuration.getAttrSearchList(), "Goals Link In Task Panel");
 		clickStrenchUpForm();
@@ -3311,6 +3318,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void verifyAttachDropdownInReceivesPanel(String reference,String policy,String picture,String mandatingPolicy,String prohibitingPolicy) throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Attach Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Receives Panel");
 		UIActions.click(fileName,"Attach Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Receives Panel");
 							
