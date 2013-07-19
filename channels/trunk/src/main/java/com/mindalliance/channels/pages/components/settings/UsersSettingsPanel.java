@@ -37,6 +37,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
     private String newUsername;
     private String searchString;
     private String selectedUsername;
+    private boolean showDisabledUsers = false;
 
     @SpringBean
     private UserRecordService userRecordService;
@@ -44,6 +45,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
     private WebMarkupContainer selectUserContainer;
     private Component userRecordPanel;
     private WebMarkupContainer usernamesContainer;
+    private TextField<String> newUserField;
 
     public UsersSettingsPanel( String id ) {
         super( id );
@@ -61,12 +63,12 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
         newUsername = null;
         searchString = null;
         List<UserRecord> userRecords = getFoundUserRecords();
-        selectedUsername = userRecords.isEmpty() ? null : userRecords.get(0).getUsername();
+        selectedUsername = userRecords.isEmpty() ? null : userRecords.get( 0 ).getUsername();
     }
 
     private void addNewUser() {
         // username field
-        TextField<String> newUserField = new TextField<String>(
+        newUserField = new TextField<String>(
                 "newUsername",
                 new PropertyModel<String>( this, "newUsername" )
         );
@@ -76,23 +78,26 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 // do nothing
             }
         } );
-        addTipTitle( newUserField, "Enter a new username (alphanumerics, no spaces)");
-        add( newUserField );
+        newUserField.setOutputMarkupId( true );
+        addTipTitle( newUserField, "Enter a new username (alphanumerics, no spaces)" );
+        addOrReplace( newUserField );
         // add user button
         AjaxLink<String> addUserLink = new AjaxLink<String>( "addUser" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 if ( newUsername != null && !newUsername.isEmpty() ) {
                     if ( userRecordService.getUserWithIdentity( newUsername ) != null ) {
-                        newUsername = null;
                         Change change = Change.failed( newUsername + " is already taken." );
                         update( target, change );
                     } else {
                         userRecordService.createUser( getUsername(), newUsername, getCommunityService() );
                         Change change = Change.message( "User " + newUsername + " was added." );
                         selectedUsername = newUsername;
+                        newUsername = null;
                         addSelectUser();
+                        addNewUser();
                         addUserRecordPanel();
+                        target.add( newUserField );
                         target.add( selectUserContainer );
                         target.add( userRecordPanel );
                         update( target, change );
@@ -104,7 +109,8 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
 
             }
         };
-        add( addUserLink );
+        addUserLink.setOutputMarkupId( true );
+        addOrReplace( addUserLink );
     }
 
     private void addSelectUser() {
@@ -129,18 +135,27 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
             }
         } );
         searchField.setOutputMarkupId( true );
+        addTipTitle( searchField, "Filter users" );
         selectUserContainer.addOrReplace( searchField );
-        // apply
-        WebMarkupContainer applySearch = new WebMarkupContainer( "applySearch" );
-        applySearch.setOutputMarkupId( true );
-        applySearch.add( new AjaxEventBehavior( "onclick" ) {
+        // hide-show disabled users
+        WebMarkupContainer hideShowDisabled = new WebMarkupContainer( "hideShowDisabled" );
+        hideShowDisabled.setOutputMarkupId( true );
+        addTipTitle( hideShowDisabled, showDisabledUsers ? "Hide disabled users" : "Show disabled users" );
+        hideShowDisabled.add( new AjaxEventBehavior( "onclick" ) {
             @Override
             protected void onEvent( AjaxRequestTarget target ) {
+                toggleShowDisabledUsers();
+                addUserSearch();
                 addUsersList();
+                target.add( selectUserContainer );
                 target.add( usernamesContainer );
             }
         } );
-        selectUserContainer.addOrReplace( applySearch );
+        selectUserContainer.addOrReplace( hideShowDisabled );
+    }
+
+    private void toggleShowDisabledUsers() {
+        showDisabledUsers = !showDisabledUsers;
     }
 
     private void addUsersList() {
@@ -156,7 +171,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 final UserRecord userRecord = item.getModelObject();
                 boolean selected = selectedUsername != null && selectedUsername.equals( userRecord.getUsername() );
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
-                AjaxLink<String> userLink = new AjaxLink<String>( "userLink") {
+                AjaxLink<String> userLink = new AjaxLink<String>( "userLink" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
                         selectedUsername = userRecord.getUsername();
@@ -168,32 +183,32 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                 };
                 if ( selected ) userLink.add( new AttributeModifier( "class", "selected" ) );
                 item.add( userLink );
-                item.add( new AttributeModifier( "class", item.getIndex() % 2 == 0 ? "even" : "odd"));
-				userLink.add( new Label( "name", userRecord.getFullName() ) );              
+                item.add( new AttributeModifier( "class", item.getIndex() % 2 == 0 ? "even" : "odd" ) );
+                Label nameLabel = new Label( "name", userRecord.getFullName() );
+                nameLabel.add( new AttributeModifier( "class", userRecord.isDisabled() ? "disabled-name" : "name" ) );
+                userLink.add( nameLabel );
                 userLink.add( new Label( "username", userRecord.getUsername() ) );
             }
         };
         usernamesContainer.add( usersListView );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<UserRecord> getFoundUserRecords() {
-        if ( getSearchString().isEmpty() ) {
-            return userRecordService.getAllUserRecords();
-        } else {
-            return (List<UserRecord>) CollectionUtils.select(
-                    userRecordService.getAllUserRecords(),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            UserRecord userRecord = (UserRecord) object;
-                            return Matcher.contains( userRecord.getFullName(), getSearchString() )
-                                    || Matcher.contains( userRecord.getUsername(), getSearchString() )
-                                    || Matcher.contains( userRecord.getEmail(), getSearchString() );
-                        }
+        return (List<UserRecord>) CollectionUtils.select(
+                userRecordService.getAllUserRecords(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        UserRecord userRecord = (UserRecord) object;
+                        return ( showDisabledUsers || !userRecord.isDisabled() )
+                                && ( getSearchString().isEmpty()
+                                || Matcher.contains( userRecord.getFullName(), getSearchString() )
+                                || Matcher.contains( userRecord.getUsername(), getSearchString() )
+                                || Matcher.contains( userRecord.getEmail(), getSearchString() ) );
                     }
-            );
-        }
+                }
+        );
     }
 
     private void addUserRecordPanel() {

@@ -14,14 +14,14 @@
 	            <h3>Users</h3>
 	           	<span>
 					<input wicket:id="search" type="text" />
-					<img wicket:id="applySearch" style="cursor:pointer" src="images/search-settings.png" alt="Search users"/>
+					<img wicket:id="hideShowDisabled" style="cursor:pointer" src="images/search-settings.png" alt="Hide or show disabled users"/>
 				</span>
 			</div>
             <div class="namelist-cont">
                 <ul wicket:id="usernamesContainer">
                     <li wicket:id="usernames"> <!-- repeated  class = "even" or "odd"-->
                         <a wicket:id="userLink" href="#">
-                        	<span class="name" wicket:id="name">name</span>
+                        	<span wicket:id="name">name</span> <!-- class="name" or "disabled-name"-->
                         	<span class="username" wicket:id="username">username</span>
                         </a> <!-- class can be "selected" -->
                     </li>
