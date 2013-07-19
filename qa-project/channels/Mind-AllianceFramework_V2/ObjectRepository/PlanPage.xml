@@ -788,8 +788,8 @@
 	</Element>
 	<Element>
 		<GivenName>Causes Event In Task</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[10]/td/input</Xpath>
-		<Name></Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/input</Xpath>
+		<Name>segment:part:initiatedEvent</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -797,7 +797,7 @@
 	</Element>
 	<Element>
 		<GivenName>Usually Completes After In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[4]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[4]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -844,7 +844,7 @@
 	
 	<Element>
 		<GivenName>Is ongoing In Task</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[2]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[2]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -854,7 +854,7 @@
 	
 	<Element>
 		<GivenName>Header In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table/tbody/tr/td/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table/tbody/tr/td/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -863,7 +863,7 @@
 	</Element>
 	<Element>
 		<GivenName>Can End Event In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[3]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -872,7 +872,7 @@
 	</Element>
 	<Element>
 		<GivenName>Goals Link In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/th/a</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/th/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -921,7 +921,7 @@
 	
 	<Element>
 		<GivenName>Verify Goal Added In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -930,8 +930,8 @@
 	</Element>
 	<Element>
 		<GivenName>Uncheck Checkbox Of Goal In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span/table/tbody/tr/td[2]/input</Xpath>
-		<Name></Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td[2]/input</Xpath>
+		<Name>segment:part:goals:goals:0:confirmed</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -1402,7 +1402,7 @@
  	
  	<Element>
  		<GivenName>Close Element Of Information Window</GivenName>
- 		<Xpath>/html/body/form/div[8]/div/div/div[3]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[10]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1411,7 +1411,7 @@
  	</Element>
 	<Element>
  		<GivenName>Element Of Information Window Heading</GivenName>
- 		<Xpath>/html/body/form/div[8]/div/span/div/div/h1</Xpath>
+ 		<Xpath>/html/body/form/div[10]/div/span/div/div/h1</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
