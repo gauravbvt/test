@@ -80,7 +80,7 @@ public class ProtocolsFinder implements Serializable {
             CommunityService communityService,
             PlanCommunityEndPoint channelsService ) {
         Plan plan = communityService.getPlan();
-        planScopeData = channelsService.getPlanScope( plan.getUri(), Integer.toString( plan.getVersion() ) );
+        planScopeData = channelsService.planScope( plan.getUri(), Integer.toString( plan.getVersion() ), false );
         // directoryData = new DirectoryData( proceduresData );
         ongoingProcedures = new ArrayList<ChecklistData>();
         onObservations = new HashMap<ObservationData, List<ChecklistData>>();

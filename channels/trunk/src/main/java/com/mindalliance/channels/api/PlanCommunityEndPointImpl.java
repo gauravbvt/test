@@ -23,7 +23,6 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
@@ -32,7 +31,6 @@ import com.mindalliance.channels.db.services.communities.OrganizationParticipati
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
-import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.pages.AbstractChannelsWebPage;
 import com.mindalliance.channels.social.services.notification.EmailMessagingService;
 import org.slf4j.Logger;
@@ -67,17 +65,12 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     private static final Logger LOG = LoggerFactory.getLogger( PlanCommunityEndPointImpl.class );
 
     @Autowired
-    private PlanServiceFactory planServiceFactory;
-
-    @Autowired
     private FeedbackService feedbackService;
 
     @Autowired
     private PlanManager planManager;
     @Autowired
     private UserRecordService userRecordService;
-    @Autowired
-    private Analyst analyst;
     @Autowired
     private UserParticipationService userParticipationService;
     @Autowired
@@ -125,7 +118,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting summary for community " + uri + " and plan version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
+            PlanCommunity planCommunity = authorizeAccessToPlan( user, uri, version );
             CommunityService communityService = getCommunityService( planCommunity );
             return new PlanSummaryData(
                     serverUrl,
@@ -191,10 +184,14 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
      * @return a plan's scope
      */
     public PlanScopeData getPlanScope( String uri, String version ) {
+        return planScope( uri, version, true );
+    }
+
+    public PlanScopeData planScope( String uri, String version, boolean plannerOnly ) {
         LOG.info( "Getting scope for plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
+            PlanCommunity planCommunity = authorizeAccessToPlan( user, uri, version, plannerOnly );
             return new PlanScopeData(
                     serverUrl,
                     getCommunityService( planCommunity ) );
@@ -207,12 +204,13 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         }
     }
 
+
     @Override
     public IssuesData getIssues( String uri, String version ) {
         LOG.info( "Getting issues in plan " + uri + " version " + version );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
-            PlanCommunity planCommunity = authorize( user, uri, version );
+            PlanCommunity planCommunity = authorizePlanner( user, uri, version );
             CommunityService communityService = getCommunityService( planCommunity );
             return new IssuesData( serverUrl, communityService );
         } catch ( Exception e ) {
@@ -302,7 +300,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting community summary for " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
-            PlanCommunity planCommunity = authorize( user, communityUri );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             if ( !planCommunity.isDomainCommunity() ) {
                 CommunityService communityService = communityServiceFactory.getService( planCommunity );
                 return new CommunitySummaryData( serverUrl, communityService );
@@ -391,7 +389,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         LOG.info( "Getting user protocols for community " + communityUri );
         try {
             ChannelsUser user = ChannelsUser.current( userRecordService );
-            PlanCommunity planCommunity = authorize( user, communityUri );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             List<UserParticipation> participations = userParticipationService.getActiveUserParticipations(
                     user,
@@ -420,7 +418,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
                 + " for organization participation" + orgParticipationId
                 + " in community " + communityUri );
         try {
-            PlanCommunity planCommunity = authorize( user, communityUri );
+            PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
             OrganizationParticipation organizationParticipation =
@@ -582,7 +580,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
 
     private PlanCommunity authorizeParticipant( ChannelsUser user, String communityUri ) throws Exception {
         PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri ); // if domain plan community, development plan community implied
-        if ( planCommunity == null )
+        if ( user == null || planCommunity == null )
             throw new Exception( "No such community " + communityUri );
         CommunityService communityService = getCommunityService( planCommunity );
         Plan plan = communityService.getPlan();
@@ -605,15 +603,18 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         return planCommunity;
     }
 
-    private PlanCommunity authorize( ChannelsUser user, String uri )  throws Exception {
-        PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( uri );
-        if ( user == null || planCommunity == null || planCommunity.isDomainCommunity() )
-            throw new Exception( "No such community " + uri );
-        return planCommunity;
+    // Only planners can request access to data about a development version of a plan community.
+    private PlanCommunity authorizeAccessToPlan( ChannelsUser user, String uri, String version ) throws Exception {
+        return authorizeAccessToPlan( user, uri, version, false );
     }
 
     // Only planners can request access to data about a development version of a plan community.
-    private PlanCommunity authorize( ChannelsUser user, String uri, String version ) throws Exception {
+    private PlanCommunity authorizePlanner( ChannelsUser user, String uri, String version ) throws Exception {
+        return authorizeAccessToPlan( user, uri, version, true );
+    }
+
+    // Only planners can request access to data about a development version of a plan community.
+    private PlanCommunity authorizeAccessToPlan( ChannelsUser user, String uri, String version, boolean plannerOnly ) throws Exception {
         // domain plan community
         PlanCommunity planCommunity = planCommunityManager.findPlanCommunity( uri, Integer.parseInt( version ) );
         if ( planCommunity == null || !planCommunity.isDomainCommunity() )
@@ -622,12 +623,13 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         Plan plan = communityService.getPlan();
         if ( user == null
                 || plan == null
-               || ( plan.isDevelopment() && !user.isPlannerOrAdmin( uri ) )
-               /* || ( plan.isProduction() && !user.isParticipant( uri ) )*/ )
+                || ( plannerOnly && !user.isPlannerOrAdmin( uri ) )
+                || ( plan.isDevelopment() && !user.isPlannerOrAdmin( uri ) ) )
             throw new Exception( "Unauthorized access to plan community " + uri + " and plan version " + version );
         user.setCommunityService( communityService );
         return planCommunity;
     }
+
 
     private String makeInvitation( UserRecord invitedUser, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();

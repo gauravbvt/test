@@ -57,6 +57,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     private WebMarkupContainer settingsContainer;
 
     private Plan selectedPlan;
+    private String planName;
     private String planOwner;
     private String plannerSupportEmail;
     private String participantSupportEmail;
@@ -74,6 +75,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     }
 
     private void resetAll() {
+        planName = null;
         planOwner = null;
         plannerSupportEmail = null;
         participantSupportEmail = null;
@@ -161,7 +163,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     private boolean addPlanWithUri( String planUri ) {
         if ( planUri != null && !planUri.trim().isEmpty() ) {
             try {
-                String newPlanName = "New Plan " + planUri;
+                String newPlanName = "New Unnamed Plan";
                 PlanDefinition newPlanDefinition = planDefinitionManager.getOrCreate( planUri, newPlanName, "Unnamed" );
                 getPlanManager().assignPlans();
                 selectedPlan = planManager.getPlan( newPlanDefinition.getUri(),
@@ -197,6 +199,18 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     }
 
     private void addPlanEditableProperties() {
+        // name
+        TextField<String> planNameField = new TextField<String>(
+                "planName",
+                new PropertyModel<String>( this, "planName" ) );
+        planNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // do nothing
+            }
+        } );
+        planNameField.setOutputMarkupId( true );
+        planPropertiesContainer.addOrReplace( planNameField );
         // owner
         TextField<String> planOwnerField = new TextField<String>(
                 "planOwner",
@@ -343,6 +357,15 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         MultiCommand multiCommand = new MultiCommand( getUsername(), "Update plan settings" );
         multiCommand.setChange( new Change( Change.Type.Updated, getSelectedPlan() ) );
         multiCommand.makeUndoable( false );
+        if ( !getPlanName().equals( getSelectedPlan().getName() ) ) {
+            multiCommand.addCommand( new UpdatePlanObject(
+                    getUsername(),
+                    getSelectedPlan(),
+                    "name",
+                    planName,
+                    UpdateObject.Action.Set
+            ) );
+        }
         if ( !getPlanOwner().equals( getSelectedPlan().getClient() ) ) {
             multiCommand.addCommand( new UpdatePlanObject(
                     getUsername(),
@@ -411,6 +434,16 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
 
     public void setPlannerSupportEmail( String plannerSupportEmail ) {
         this.plannerSupportEmail = plannerSupportEmail;
+    }
+
+    public String getPlanName() {
+        return planName == null
+                ? getSelectedPlan().getName()
+                : planName;
+    }
+
+    public void setPlanName( String planName ) {
+        this.planName = planName;
     }
 
     public String getPlanOwner() {

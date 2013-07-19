@@ -39,7 +39,8 @@ public interface PlanCommunityEndPoint {
 
     @GET
     @Path( "plans" )
-    @Produces( MediaType.APPLICATION_XML )      // @Produces( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_XML )
+    // @Produces( MediaType.APPLICATION_JSON )
     /**
      * Get summaries of all plan versions visible to the authenticated user.
      * @return plan summaries
@@ -82,6 +83,7 @@ public interface PlanCommunityEndPoint {
     /**
      * Get the scope of a version of a plan (for authorized planners only).
      * @param uri a plan's URI
+     * @param version the plan's version
      * @return a plan's scope
      */
     PlanScopeData getPlanScope( @PathParam( "uri" ) String uri, @PathParam( "version" ) String version );
@@ -98,20 +100,20 @@ public interface PlanCommunityEndPoint {
                           @PathParam( "version" ) String version );
 
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path( "plan/{uri}/feedback")
+    @Consumes( MediaType.APPLICATION_FORM_URLENCODED )
+    @Path( "plan/{uri}/feedback" )
     void addFeedback(
             @PathParam( "uri" ) String uri,
             @FormParam( "type" ) String type, // one of "QUESTION", "PROBLEM", "SUGGESTION"
             @FormParam( "feedback" ) String feedback,
-            @FormParam( "urgent") String urgent );  // "true" or "false"
+            @FormParam( "urgent" ) String urgent );  // "true" or "false"
 
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path( "plan/{uri}/invite")
-    void invite( @PathParam("uri") String uri,
-                 @FormParam("email") String email,
-                 @FormParam( "message") String message );
+    @Consumes( MediaType.APPLICATION_FORM_URLENCODED )
+    @Path( "plan/{uri}/invite" )
+    void invite( @PathParam( "uri" ) String uri,
+                 @FormParam( "email" ) String email,
+                 @FormParam( "message" ) String message );
 
 
     /// COMMUNITIES
@@ -158,19 +160,19 @@ public interface PlanCommunityEndPoint {
     @Path( "community/{uri}/user/{user}/protocols" )
     @Produces( MediaType.APPLICATION_XML )
     ProtocolsData getUserProtocols(
-            @PathParam("uri") String communityUri,
-            @PathParam("user") String username );
+            @PathParam( "uri" ) String communityUri,
+            @PathParam( "user" ) String username );
 
 
     @GET
-    @Path("community/{uri}/agent/{agentId}/org/{orgParticipationId}/protocols")
+    @Path( "community/{uri}/agent/{agentId}/org/{orgParticipationId}/protocols" )
     @Produces( MediaType.APPLICATION_XML )
 /**
  *     Get the protocols of an agent in an organization.
  */
-    ProtocolsData getAgentProtocols( @PathParam("uri") String uri,
-                                       @PathParam("agentId") String agentId,
-                                       @PathParam("orgParticipationId") String orgParticipationId );  // agent in dynamically participating organization
+    ProtocolsData getAgentProtocols( @PathParam( "uri" ) String uri,
+                                     @PathParam( "agentId" ) String agentId,
+                                     @PathParam( "orgParticipationId" ) String orgParticipationId );  // agent in dynamically participating organization
 
     @GET
     @Path( "community/{uri}/user/{user}/directory" )
@@ -182,41 +184,51 @@ public interface PlanCommunityEndPoint {
      * @param username a username
      * @return directory data
      */
-    DirectoryData getUserDirectory( @PathParam("uri") String communityUri,
-                                    @PathParam("user") String username );
+    DirectoryData getUserDirectory( @PathParam( "uri" ) String communityUri,
+                                    @PathParam( "user" ) String username );
 
     @GET
     @Path( "community/{uri}/directory" )
     @Produces( MediaType.APPLICATION_XML )
-    DirectoryData getMyDirectory( @PathParam("uri") String communityUri );
+    DirectoryData getMyDirectory( @PathParam( "uri" ) String communityUri );
 
     @PUT
-    @Path( "community/{uri}/contact/medium/{mediumId}/address/{address}")
-    void addContactInfo( @PathParam("uri") String communityUri,
-                         @PathParam( "mediumId") String mediumId,
-                         @PathParam("address") String address );
+    @Path( "community/{uri}/contact/medium/{mediumId}/address/{address}" )
+    void addContactInfo( @PathParam( "uri" ) String communityUri,
+                         @PathParam( "mediumId" ) String mediumId,
+                         @PathParam( "address" ) String address );
 
     @DELETE
-    @Path( "community/{uri}/contact/medium/{mediumId}/address/{address}")
-    void removeContactInfo( @PathParam("uri") String communityUri,
-                            @PathParam( "mediumId") String mediumId,
-                            @PathParam("address") String address );
+    @Path( "community/{uri}/contact/medium/{mediumId}/address/{address}" )
+    void removeContactInfo( @PathParam( "uri" ) String communityUri,
+                            @PathParam( "mediumId" ) String mediumId,
+                            @PathParam( "address" ) String address );
 
     @PUT
-    @Path( "community/{uri}/agent/{agentId}/participation")
+    @Path( "community/{uri}/agent/{agentId}/participation" )
     void acceptParticipation( @PathParam( "uri" ) String communityUri,
                               @PathParam( "agentId" ) String agentId );
 
     @DELETE
-    @Path( "community/{uri}/agent/{agentId}/participation")
+    @Path( "community/{uri}/agent/{agentId}/participation" )
     void refuseParticipation( @PathParam( "uri" ) String communityUri,
                               @PathParam( "agentId" ) String agentId );
-
 
 
     /////////
 
     @WebMethod( exclude = true )
     String getServerUrl();
+
+    /**
+     * Get the scope of a version of a plan (for authorized planners only).
+     *
+     * @param uri               a plan's URI
+     * @param version           the plan's version
+     * @param plannerOnly       whether only planners are authorized
+     * @return a plan's scope
+     */
+    PlanScopeData planScope( String uri, String version, boolean plannerOnly );
+
 
 }
