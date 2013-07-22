@@ -4,6 +4,7 @@
 package com.mindalliance.sb.mvc;
 
 import com.mindalliance.sb.model.ContactInfo;
+import com.mindalliance.sb.model.Discipline;
 import com.mindalliance.sb.model.IncidentSystem;
 import com.mindalliance.sb.model.OrgType;
 import com.mindalliance.sb.model.Organization;
@@ -15,6 +16,8 @@ import com.mindalliance.sb.mvc.OrganizationController;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.joda.time.format.DateTimeFormat;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +31,10 @@ privileged aspect OrganizationController_Roo_Controller {
     
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String OrganizationController.show(@PathVariable("id") Integer id, Model uiModel) {
+        addDateTimeFormatPatterns(uiModel);
         uiModel.addAttribute("organization", Organization.findOrganization(id));
         uiModel.addAttribute("itemId", id);
-        return "organizations/show";
+        return "lists/organizations/show";
     }
     
     @RequestMapping(produces = "text/html")
@@ -44,31 +48,39 @@ privileged aspect OrganizationController_Roo_Controller {
         } else {
             uiModel.addAttribute("organizations", Organization.findAllOrganizations());
         }
-        return "organizations/list";
+        addDateTimeFormatPatterns(uiModel);
+        return "lists/organizations/list";
     }
     
     @RequestMapping(method = RequestMethod.PUT, produces = "text/html")
     public String OrganizationController.update(@Valid Organization organization, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, organization);
-            return "organizations/update";
+            return "lists/organizations/update";
         }
         uiModel.asMap().clear();
         organization.merge();
-        return "redirect:/organizations/" + encodeUrlPathSegment(organization.getId().toString(), httpServletRequest);
+        return "redirect:/lists/organizations/" + encodeUrlPathSegment(organization.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String OrganizationController.updateForm(@PathVariable("id") Integer id, Model uiModel) {
         populateEditForm(uiModel, Organization.findOrganization(id));
-        return "organizations/update";
+        return "lists/organizations/update";
+    }
+    
+    void OrganizationController.addDateTimeFormatPatterns(Model uiModel) {
+        uiModel.addAttribute("organization_added_date_format", DateTimeFormat.patternForStyle("MM", LocaleContextHolder.getLocale()));
     }
     
     void OrganizationController.populateEditForm(Model uiModel, Organization organization) {
         uiModel.addAttribute("organization", organization);
+        addDateTimeFormatPatterns(uiModel);
         uiModel.addAttribute("contactinfoes", ContactInfo.findAllContactInfoes());
+        uiModel.addAttribute("disciplines", Discipline.findAllDisciplines());
         uiModel.addAttribute("incidentsystems", IncidentSystem.findAllIncidentSystems());
         uiModel.addAttribute("orgtypes", OrgType.findAllOrgTypes());
+        uiModel.addAttribute("organizations", Organization.findAllOrganizations());
         uiModel.addAttribute("organizationcapabilitys", OrganizationCapability.findAllOrganizationCapabilitys());
         uiModel.addAttribute("organizationincidents", OrganizationIncident.findAllOrganizationIncidents());
         uiModel.addAttribute("sharings", Sharing.findAllSharings());

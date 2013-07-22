@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_PlanFile" object="${planfile}" path="/lists/planfiles" z="66AFntyyDGfOv0K3iGNumDtLex0=">
+        <field:display field="superbowlPlan" id="s_com_mindalliance_sb_model_PlanFile_superbowlPlan" object="${planfile}" z="htOBx9haOWle2ATnlQNcDtgPgwM="/>
+        <field:display field="name" id="s_com_mindalliance_sb_model_PlanFile_name" object="${planfile}" z="NrC2RI8A0xJxzZktQoTVh5BQnlw="/>
+        <field:display field="contents" id="s_com_mindalliance_sb_model_PlanFile_contents" object="${planfile}" z="xuVAvN6r424oivJu+SVIaJLJEOw="/>
+        <field:display field="checksum" id="s_com_mindalliance_sb_model_PlanFile_checksum" object="${planfile}" z="OoMLtHbfDMTd1KQGtLCooRCt7A4="/>
+        <field:display field="mimeType" id="s_com_mindalliance_sb_model_PlanFile_mimeType" object="${planfile}" z="EERmvmvJdxCYq17AUVetIv969as="/>
+        <field:display field="size" id="s_com_mindalliance_sb_model_PlanFile_size" object="${planfile}" z="No8HNuA8erslATvQKq+6c6oiXm4="/>
+    </page:show>
+</div>

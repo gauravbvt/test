@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_RespondentSubcommittee" object="${respondentsubcommittee}" path="/lists/respondentsubcommittees" z="m+woiuyJKyS5jjAScOLTlSP3D+Q=">
+        <field:display field="respondent" id="s_com_mindalliance_sb_model_RespondentSubcommittee_respondent" object="${respondentsubcommittee}" z="K9vZrrB7LgcZhHKGwNmDUaeq8iI="/>
+        <field:display field="subcommittee" id="s_com_mindalliance_sb_model_RespondentSubcommittee_subcommittee" object="${respondentsubcommittee}" z="r5PRookW0Kdm1b5mXsoTsDuzyYg="/>
+        <field:display field="inCharge" id="s_com_mindalliance_sb_model_RespondentSubcommittee_inCharge" object="${respondentsubcommittee}" z="W3hBdU6edu/FxIMQjWWe+c3EOZg="/>
+    </page:show>
+</div>

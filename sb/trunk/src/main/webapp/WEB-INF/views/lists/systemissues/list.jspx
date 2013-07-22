@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_SystemIssue" items="${systemissues}" z="GQO0bBAxWeNt60ZWe6s0LCzNl00=">
+        <table:table data="${systemissues}" id="l_com_mindalliance_sb_model_SystemIssue" path="/lists/systemissues" z="NGpxZRexLTJv5DVKvdp5s1fiqkA=">
+            <table:column id="c_com_mindalliance_sb_model_SystemIssue_type" property="type" z="0BoLV9DSeNz0TQBqGJfshddBDG4="/>
+            <table:column id="c_com_mindalliance_sb_model_SystemIssue_incidentSystem" property="incidentSystem" z="ZQANxtc+iztwvoOPRG9BX+SKjN4="/>
+        </table:table>
+    </page:list>
+</div>

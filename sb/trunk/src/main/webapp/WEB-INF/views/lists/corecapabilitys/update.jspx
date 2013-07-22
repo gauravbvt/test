@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_mindalliance_sb_model_CoreCapability" modelAttribute="coreCapability" path="/lists/corecapabilitys" versionField="none" z="wT/wrSBjgHyckCu5tlCIth/hWZw=">
+        <field:select field="missionAreas" id="c_com_mindalliance_sb_model_CoreCapability_missionAreas" itemValue="id" items="${missionareas}" multiple="true" path="/lists/missionareas" z="76oWPuUjqj27XYIq2iNOz4DiuPo="/>
+        <field:simple field="criticalTasks" id="c_com_mindalliance_sb_model_CoreCapability_criticalTasks" messageCode="entity_reference_not_managed" messageCodeAttribute="Critical Task" z="27+ARMQyQhVAops2VRErjdO1CPk="/>
+        <field:simple field="incidentCapabilities" id="c_com_mindalliance_sb_model_CoreCapability_incidentCapabilities" messageCode="entity_reference_not_managed" messageCodeAttribute="Incident Capability" z="pIfZTPUlKktvMNCbtx93ueFygjU="/>
+        <field:simple field="organizationCapabilities" id="c_com_mindalliance_sb_model_CoreCapability_organizationCapabilities" messageCode="entity_reference_not_managed" messageCodeAttribute="Organization Capability" z="u0pm20PWMgn0biRPRPhuIgQbc3c="/>
+        <field:simple field="subcommitteeCapabilities" id="c_com_mindalliance_sb_model_CoreCapability_subcommitteeCapabilities" messageCode="entity_reference_not_managed" messageCodeAttribute="Subcommittee Capability" z="r81+wAy97puof2H9Egu0yfs/kaA="/>
+        <field:input field="name" id="c_com_mindalliance_sb_model_CoreCapability_name" required="true" z="KnKLQfOO0Kv7e3MSuCNxmbHdlZ0="/>
+        <field:input field="description" id="c_com_mindalliance_sb_model_CoreCapability_description" z="wAxXeMjy4TK1C7WnY6I+kMa6shc="/>
+    </form:update>
+</div>

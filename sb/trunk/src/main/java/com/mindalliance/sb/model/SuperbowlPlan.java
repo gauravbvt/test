@@ -10,4 +10,16 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(versionField = "", table = "superbowl_plan")
 @RooDbManaged(automaticallyDelete = true)
 public class SuperbowlPlan {
+
+    private SuperbowlPlan() {
+    }
+
+    public SuperbowlPlan(Respondent respondent) {
+        setRespondent(respondent);
+    }
+
+    public void addFile(PlanFile planFile) {
+        planFile.setSuperbowlPlan(this);
+        planFile.persist();
+    }
 }

@@ -23,7 +23,7 @@ privileged aspect SystemInfoPK_Roo_Identifier {
     @Column(name = "incident", columnDefinition = "INT", nullable = false)
     private Integer SystemInfoPK.incident;
     
-    @Column(name = "system_name", columnDefinition = "VARCHAR", nullable = false, length = 127)
+    @Column(name = "system_name", nullable = false, length = 127)
     private String SystemInfoPK.systemName;
     
     public SystemInfoPK.new(Integer id, Integer respondent, Integer organization, Integer incident, String systemName) {

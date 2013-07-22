@@ -11,7 +11,7 @@ privileged aspect SharedInfoPK_Roo_Identifier {
     
     declare @type: SharedInfoPK: @Embeddable;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", nullable = false, length = 127)
+    @Column(name = "name", nullable = false, length = 127)
     private String SharedInfoPK.name;
     
     @Column(name = "sharing_respondent", columnDefinition = "INT", nullable = false)

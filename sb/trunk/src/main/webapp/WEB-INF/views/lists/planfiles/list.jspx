@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_PlanFile" items="${planfiles}" z="zoKGZfKuZcmNv4O4az0DGiLBIuc=">
+        <table:table data="${planfiles}" id="l_com_mindalliance_sb_model_PlanFile" path="/lists/planfiles" z="vmdXoeRAU2DRAdg8A2j6ms8HDls=">
+            <table:column id="c_com_mindalliance_sb_model_PlanFile_superbowlPlan" property="superbowlPlan" z="lFWHWRORc4hjpKF1FlGi8bcP25s="/>
+            <table:column id="c_com_mindalliance_sb_model_PlanFile_name" property="name" z="jHc6vJaeADdf1MHwbVk0IiqLHtY="/>
+            <table:column id="c_com_mindalliance_sb_model_PlanFile_contents" property="contents" z="blPMerCsVFszuEZ5cZVtaE5aK+g="/>
+            <table:column id="c_com_mindalliance_sb_model_PlanFile_checksum" property="checksum" z="LFkv8P+THDXJgHGkd9xw2iv3zRY="/>
+            <table:column id="c_com_mindalliance_sb_model_PlanFile_mimeType" property="mimeType" z="2jDcukuNUor9r06MgloYC7pJfsg="/>
+            <table:column id="c_com_mindalliance_sb_model_PlanFile_size" property="size" z="HRxigwvuccnLVG2NC5WlWWktwbM="/>
+        </table:table>
+    </page:list>
+</div>

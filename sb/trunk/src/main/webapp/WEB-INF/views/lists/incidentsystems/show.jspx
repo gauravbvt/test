@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_IncidentSystem" object="${incidentsystem}" path="/lists/incidentsystems" z="tdpGum25xpg+3RfH3jcMFVdOd/U=">
+        <field:display field="organizationIncident" id="s_com_mindalliance_sb_model_IncidentSystem_organizationIncident" object="${incidentsystem}" z="viBIdk17A4u6msfdJ4UyGAbgFkY="/>
+        <field:display field="maintainer" id="s_com_mindalliance_sb_model_IncidentSystem_maintainer" object="${incidentsystem}" z="AveIbOgQLw7r9Niyn7zYBTlHOSw="/>
+        <field:display field="system" id="s_com_mindalliance_sb_model_IncidentSystem_system" object="${incidentsystem}" z="0glCg/A+NVKmI/LMEfvYjYnTtr0="/>
+        <field:display field="acronym" id="s_com_mindalliance_sb_model_IncidentSystem_acronym" object="${incidentsystem}" z="UwZgx/sgwegXTQJwN9TiSzl1rho="/>
+        <field:display field="actual" id="s_com_mindalliance_sb_model_IncidentSystem_actual" object="${incidentsystem}" z="796rZNvHZQChOYVaA4a3VH8EPhA="/>
+        <field:display field="send" id="s_com_mindalliance_sb_model_IncidentSystem_send" object="${incidentsystem}" z="oY2sEbz+KuWcl0xvLMJIYR5RgCc="/>
+        <field:display field="comment" id="s_com_mindalliance_sb_model_IncidentSystem_comment" object="${incidentsystem}" z="o0qApILeEgQyQMxds9ZFYsM1OTc="/>
+        <field:display field="logo" id="s_com_mindalliance_sb_model_IncidentSystem_logo" object="${incidentsystem}" z="k5hUNv1AP+GHTbkDd4sMslHqlwo="/>
+    </page:show>
+</div>

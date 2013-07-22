@@ -1,5 +1,6 @@
 package com.mindalliance.sb.model;
 
+import java.util.Set;
 import org.springframework.roo.addon.dbre.RooDbManaged;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
@@ -15,10 +16,15 @@ public class Respondent {
     }
 
     public void setOrganization(Organization result) {
-        getContactInfo().setOrganization( result );
+        getContactInfo().setOrganization(result);
     }
 
     public Organization getOrganization() {
         return getContactInfo().getOrganization();
+    }
+
+    public SuperbowlPlan getSuperbowlPlan() {
+        Set<SuperbowlPlan> plans = getSuperbowlPlans();
+        return plans.isEmpty() ? null : plans.iterator().next();
     }
 }

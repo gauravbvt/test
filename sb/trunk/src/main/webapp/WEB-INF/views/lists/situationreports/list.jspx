@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_SituationReport" items="${situationreports}" z="mVlv5pbsp2zVSec6t34iJHbkGRE=">
+        <table:table data="${situationreports}" id="l_com_mindalliance_sb_model_SituationReport" path="/lists/situationreports" z="MX7FmnRqNvtnpcP+vPZjDwwhd70=">
+            <table:column id="c_com_mindalliance_sb_model_SituationReport_respondent" property="respondent" z="8v1a8yHW17qwozI+rxv6YL6PVf0="/>
+            <table:column id="c_com_mindalliance_sb_model_SituationReport_reportDistribution" property="reportDistribution" z="kPWEjB5d/fyH87zZKw9sKkLo/S4="/>
+            <table:column id="c_com_mindalliance_sb_model_SituationReport_comments" property="comments" z="p87LjZHxVCRNuwhYed0JCAy6e3E="/>
+            <table:column id="c_com_mindalliance_sb_model_SituationReport_process" property="process" z="DzwOscTz89H3OA9d6MTUzUlUisc="/>
+            <table:column id="c_com_mindalliance_sb_model_SituationReport_audience" property="audience" z="AeTTT06ZD2FK1hkOcBj8jQ2F4T0="/>
+        </table:table>
+    </page:list>
+</div>

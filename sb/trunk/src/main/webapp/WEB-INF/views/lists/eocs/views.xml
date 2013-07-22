@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="lists/eocs/list">
+        <put-attribute name="body" value="/WEB-INF/views/lists/eocs/list.jspx"/>
+    </definition>
+<definition extends="default" name="lists/eocs/show">
+        <put-attribute name="body" value="/WEB-INF/views/lists/eocs/show.jspx"/>
+    </definition>
+<definition extends="default" name="lists/eocs/create">
+        <put-attribute name="body" value="/WEB-INF/views/lists/eocs/create.jspx"/>
+    </definition>
+<definition extends="default" name="lists/eocs/update">
+        <put-attribute name="body" value="/WEB-INF/views/lists/eocs/update.jspx"/>
+    </definition>
+</tiles-definitions>

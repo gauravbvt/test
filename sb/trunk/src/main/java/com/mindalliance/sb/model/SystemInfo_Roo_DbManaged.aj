@@ -19,11 +19,11 @@ privileged aspect SystemInfo_Roo_DbManaged {
     @Column(name = "description", length = 127)
     private String SystemInfo.description;
     
-    @Column(name = "read", columnDefinition = "BIT")
-    private Boolean SystemInfo.read;
+    @Column(name = "readable", columnDefinition = "BIT")
+    private Boolean SystemInfo.readable;
     
-    @Column(name = "write", columnDefinition = "BIT")
-    private Boolean SystemInfo.write;
+    @Column(name = "writable", columnDefinition = "BIT")
+    private Boolean SystemInfo.writable;
     
     public IncidentSystem SystemInfo.getIncidentSystem() {
         return incidentSystem;
@@ -41,20 +41,20 @@ privileged aspect SystemInfo_Roo_DbManaged {
         this.description = description;
     }
     
-    public Boolean SystemInfo.getRead() {
-        return read;
+    public Boolean SystemInfo.getReadable() {
+        return readable;
     }
     
-    public void SystemInfo.setRead(Boolean read) {
-        this.read = read;
+    public void SystemInfo.setReadable(Boolean readable) {
+        this.readable = readable;
     }
     
-    public Boolean SystemInfo.getWrite() {
-        return write;
+    public Boolean SystemInfo.getWritable() {
+        return writable;
     }
     
-    public void SystemInfo.setWrite(Boolean write) {
-        this.write = write;
+    public void SystemInfo.setWritable(Boolean writable) {
+        this.writable = writable;
     }
     
 }

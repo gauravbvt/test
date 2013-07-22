@@ -8,6 +8,7 @@ import com.mindalliance.sb.model.SuperbowlPlan;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 privileged aspect PlanFile_Roo_DbManaged {
     
@@ -16,10 +17,23 @@ privileged aspect PlanFile_Roo_DbManaged {
     private SuperbowlPlan PlanFile.superbowlPlan;
     
     @Column(name = "name", length = 127)
+    @NotNull
     private String PlanFile.name;
     
     @Column(name = "contents", columnDefinition = "MEDIUMBLOB")
+    @NotNull
     private byte[] PlanFile.contents;
+    
+    @Column(name = "checksum", columnDefinition = "TINYBLOB")
+    @NotNull
+    private byte[] PlanFile.checksum;
+    
+    @Column(name = "mime_type", length = 127)
+    private String PlanFile.mimeType;
+    
+    @Column(name = "size", columnDefinition = "INT")
+    @NotNull
+    private Integer PlanFile.size;
     
     public SuperbowlPlan PlanFile.getSuperbowlPlan() {
         return superbowlPlan;
@@ -43,6 +57,30 @@ privileged aspect PlanFile_Roo_DbManaged {
     
     public void PlanFile.setContents(byte[] contents) {
         this.contents = contents;
+    }
+    
+    public byte[] PlanFile.getChecksum() {
+        return checksum;
+    }
+    
+    public void PlanFile.setChecksum(byte[] checksum) {
+        this.checksum = checksum;
+    }
+    
+    public String PlanFile.getMimeType() {
+        return mimeType;
+    }
+    
+    public void PlanFile.setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+    
+    public Integer PlanFile.getSize() {
+        return size;
+    }
+    
+    public void PlanFile.setSize(Integer size) {
+        this.size = size;
     }
     
 }

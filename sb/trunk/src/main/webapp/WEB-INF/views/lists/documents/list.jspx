@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_Document" items="${documents}" z="X4rL6abYQl4xUbVx2roFec5bmtE=">
+        <table:table data="${documents}" id="l_com_mindalliance_sb_model_Document" path="/lists/documents" z="XZv1WB6QoJpGNDzwJVB1f8yOzUk=">
+            <table:column id="c_com_mindalliance_sb_model_Document_type" property="type" z="ZOwFsTUoF8pWfUR2qL++kVrsqrI="/>
+            <table:column id="c_com_mindalliance_sb_model_Document_respondent" property="respondent" z="5cmBbUNR7mC2asO4DcD2G3EfbPY="/>
+            <table:column id="c_com_mindalliance_sb_model_Document_name" property="name" z="IYNwPOGRco8ZZTcLly6vZqWEPdo="/>
+            <table:column id="c_com_mindalliance_sb_model_Document_url" property="url" z="81qMXpoI0E4hofbKbD6hOZZaozs="/>
+            <table:column id="c_com_mindalliance_sb_model_Document_contents" property="contents" z="aPjxcnBwhDjpG0GiTqqmhs++PsM="/>
+        </table:table>
+    </page:list>
+</div>

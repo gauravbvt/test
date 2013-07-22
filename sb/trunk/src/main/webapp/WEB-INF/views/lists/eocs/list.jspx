@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_Eoc" items="${eocs}" z="iA2+Lc+4lluX7iY454ac1Bp7LmY=">
+        <table:table data="${eocs}" id="l_com_mindalliance_sb_model_Eoc" path="/lists/eocs" z="T4weSkbdJfT3emt8wIJUuHqsGJg=">
+            <table:column id="c_com_mindalliance_sb_model_Eoc_respondent" property="respondent" z="3gjQ5q7aSUyLP9qU5hDQRfwL3yk="/>
+            <table:column id="c_com_mindalliance_sb_model_Eoc_existing" property="existing" z="1ExqPVmvv+hvVYGJ83P5B8fk9jE="/>
+            <table:column id="c_com_mindalliance_sb_model_Eoc_comments" property="comments" z="o+LiUr9cGnMXoH9r9FXAYltxE6I="/>
+            <table:column id="c_com_mindalliance_sb_model_Eoc_name" property="name" z="7p4cJ9To02Sb0TygZvhL3slCYIs="/>
+            <table:column id="c_com_mindalliance_sb_model_Eoc_software" property="software" z="b2u5OpHagm35B0LH8dEjzHpB2t4="/>
+            <table:column id="c_com_mindalliance_sb_model_Eoc_activeDuring" property="activeDuring" z="htC0uDvRgvuAgedntXUw4P2RsnE="/>
+        </table:table>
+    </page:list>
+</div>

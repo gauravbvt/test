@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_mindalliance_sb_model_IncidentSystem" modelAttribute="incidentSystem" path="/lists/incidentsystems" versionField="none" z="EVDdfpAbSdoSwfyh31kPYiuA6l4=">
+        <field:simple field="systemInfoes" id="c_com_mindalliance_sb_model_IncidentSystem_systemInfoes" messageCode="entity_reference_not_managed" messageCodeAttribute="System Info" z="MzF8GqBgVZO3lVMJGqNEZXOG46A="/>
+        <field:simple field="systemIssues" id="c_com_mindalliance_sb_model_IncidentSystem_systemIssues" messageCode="entity_reference_not_managed" messageCodeAttribute="System Issue" z="9KjtcCwe8P/+jP2d+qI9P0ObhAQ="/>
+        <field:select field="organizationIncident" id="c_com_mindalliance_sb_model_IncidentSystem_organizationIncident" itemValue="id" items="${organizationincidents}" path="/lists/organizationincidents" z="3iQPyUOtY6NOSo18iuNbHdVh6mM="/>
+        <field:select field="maintainer" id="c_com_mindalliance_sb_model_IncidentSystem_maintainer" itemValue="id" items="${organizations}" path="/lists/organizations" z="7J5V8jZ7WUr9LSv0aB+W068VEDg="/>
+        <field:input field="system" id="c_com_mindalliance_sb_model_IncidentSystem_system" validationMessageCode="field_invalid_integer" z="giPM/3YSoVaP+PgQPiA7s+w2XhQ="/>
+        <field:input field="acronym" id="c_com_mindalliance_sb_model_IncidentSystem_acronym" z="D4Os1GULFGtRBbLnIOy7Em1A474="/>
+        <field:checkbox field="actual" id="c_com_mindalliance_sb_model_IncidentSystem_actual" z="6Qq6pm7DnVDsHQ7EuwQukADIlrc="/>
+        <field:checkbox field="send" id="c_com_mindalliance_sb_model_IncidentSystem_send" z="wRhQqfbD2fNr3nBOTK/jU+RWjIY="/>
+        <field:input field="comment" id="c_com_mindalliance_sb_model_IncidentSystem_comment" z="HfNSQo8R0/9xXLnV10OpS7Vk6ao="/>
+        <field:input field="logo" id="c_com_mindalliance_sb_model_IncidentSystem_logo" z="HUZmu/WWT9eg6crPGcD8mn0F1dQ="/>
+    </form:update>
+</div>

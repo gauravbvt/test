@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_CoreCapability" items="${corecapabilitys}" z="tPI5tm9kxVZawagC80HtqSyucG0=">
+        <table:table data="${corecapabilitys}" id="l_com_mindalliance_sb_model_CoreCapability" path="/lists/corecapabilitys" z="FLHMT30TZxYBqqRjiRRTqugCAwM=">
+            <table:column id="c_com_mindalliance_sb_model_CoreCapability_missionAreas" property="missionAreas" z="TI46G+VGITM6sqv/enFJZadvvAM="/>
+            <table:column id="c_com_mindalliance_sb_model_CoreCapability_name" property="name" z="O9MDHqTCPxu1TG/FmY+L1k9Hkos="/>
+        </table:table>
+    </page:list>
+</div>

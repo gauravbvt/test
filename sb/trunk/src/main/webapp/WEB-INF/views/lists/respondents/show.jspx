@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_Respondent" object="${respondent}" path="/lists/respondents" z="/nrg6GKXtHKaPk2TertF/jxzsxs=">
+        <field:display field="expertises" id="s_com_mindalliance_sb_model_Respondent_expertises" object="${respondent}" z="j5lcq7LLgr/VYS+kFD/Lul9+awk="/>
+        <field:display field="contactInfo" id="s_com_mindalliance_sb_model_Respondent_contactInfo" object="${respondent}" z="S89uH2bd8vcF6RVDSGa2GHBmOGo="/>
+        <field:display field="surveyOpinion" id="s_com_mindalliance_sb_model_Respondent_surveyOpinion" object="${respondent}" z="v70dcxn8QSe1VRcFOcqUq5dbZ0U="/>
+        <field:display field="difficult" id="s_com_mindalliance_sb_model_Respondent_difficult" object="${respondent}" z="ny+f2ipj3L2367uU0F2vjgZE070="/>
+        <field:display field="comments" id="s_com_mindalliance_sb_model_Respondent_comments" object="${respondent}" z="LpzHJqsR11zYeIZSvCDvNjrt094="/>
+        <field:display date="true" dateTimePattern="${respondent_submitted_date_format}" field="submitted" id="s_com_mindalliance_sb_model_Respondent_submitted" object="${respondent}" z="CJSYNbFaO3YXp8bfAyU1b3jdl7s="/>
+        <field:display field="problems" id="s_com_mindalliance_sb_model_Respondent_problems" object="${respondent}" z="6X8fNnx90LMh2X7WbEWXp5ApHMs="/>
+    </page:show>
+</div>

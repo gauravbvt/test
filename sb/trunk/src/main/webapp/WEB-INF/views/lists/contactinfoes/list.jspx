@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <page:list id="pl_com_mindalliance_sb_model_ContactInfo" items="${contactinfoes}" z="uFdYQb2+zn6VJVAc3w8C0pHucQ0=">
+        <table:table data="${contactinfoes}" id="l_com_mindalliance_sb_model_ContactInfo" path="/lists/contactinfoes" z="5oEK9QEY24LvXQbJflp0XBMbKa8=">
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_prefix" property="prefix"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_firstname" property="firstName"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_lastname" property="lastName"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_email" property="email"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_landline" property="landline"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_mobile" property="mobile"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_organization" property="organization" z="h7B+A+YWxWiTjuy88S3PklFuGtA="/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_title" property="title"/>
+            <table:column id="c_com_mindalliance_sb_model_ContactInfo_supervisor" property="supervisor" z="BrOl+Lt5gk7/RDOmvF+M3L49JZw="/>
+        </table:table>
+    </page:list>
+</div>

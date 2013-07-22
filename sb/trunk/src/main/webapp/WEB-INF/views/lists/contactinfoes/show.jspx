@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_ContactInfo" object="${contactinfo}" path="/lists/contactinfoes" z="NVRlgnZ1pzM3J6SWqVPaXOIBr9A=">
+        <field:display field="supervisor" id="s_com_mindalliance_sb_model_ContactInfo_supervisor" object="${contactinfo}" z="QcggRWPJOUli8i6VVJYDqYUUJ+c="/>
+        <field:display field="organization" id="s_com_mindalliance_sb_model_ContactInfo_organization" object="${contactinfo}" z="+f1KdRwOgC9dwcbjUkDSnu+g9Vk="/>
+        <field:display field="prefix" id="s_com_mindalliance_sb_model_ContactInfo_prefix" object="${contactinfo}" z="kjgNCc5tp0criqT59Sbb/2bCOLc="/>
+        <field:display field="firstName" id="s_com_mindalliance_sb_model_ContactInfo_firstName" object="${contactinfo}" z="ac5QmYXrwPNLFOEcr0w5SEHJtP0="/>
+        <field:display field="lastName" id="s_com_mindalliance_sb_model_ContactInfo_lastName" object="${contactinfo}" z="Jii55uE3cUrSAG+HOI2iNqjPFZE="/>
+        <field:display field="email" id="s_com_mindalliance_sb_model_ContactInfo_email" object="${contactinfo}" z="xWZfGOrux9LYOaQawA8wf/cQvLo="/>
+        <field:display field="title" id="s_com_mindalliance_sb_model_ContactInfo_title" object="${contactinfo}" z="fxZPfm67gOmG/Er+PHGS/smspcs="/>
+        <field:display field="department" id="s_com_mindalliance_sb_model_ContactInfo_department" object="${contactinfo}" z="pTgnHB5YrSG7eUmX3jgE+Oas5GY="/>
+        <field:display field="mobile" id="s_com_mindalliance_sb_model_ContactInfo_mobile" object="${contactinfo}" z="z/6SNPdlnhuC661AZ0j1xw/HRXo="/>
+        <field:display field="landline" id="s_com_mindalliance_sb_model_ContactInfo_landline" object="${contactinfo}" z="FLsFjMudaG2ER04LLa6Ba05/k9s="/>
+        <field:display field="photo" id="s_com_mindalliance_sb_model_ContactInfo_photo" object="${contactinfo}" z="Xy2Fl1HnOJExGVnPpkW7KnI5PyU="/>
+    </page:show>
+</div>

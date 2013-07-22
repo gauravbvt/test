@@ -13,12 +13,12 @@ import javax.persistence.ManyToOne;
 privileged aspect SuperbowlPlanner_Roo_DbManaged {
     
     @ManyToOne
-    @JoinColumn(name = "superbowl_plan", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    private SuperbowlPlan SuperbowlPlanner.superbowlPlan;
-    
-    @ManyToOne
     @JoinColumn(name = "contact_info", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private ContactInfo SuperbowlPlanner.contactInfo;
+    
+    @ManyToOne
+    @JoinColumn(name = "superbowl_plan", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private SuperbowlPlan SuperbowlPlanner.superbowlPlan;
     
     @Column(name = "main", columnDefinition = "BIT")
     private Boolean SuperbowlPlanner.main;
@@ -26,20 +26,20 @@ privileged aspect SuperbowlPlanner_Roo_DbManaged {
     @Column(name = "decider", columnDefinition = "BIT")
     private Boolean SuperbowlPlanner.decider;
     
-    public SuperbowlPlan SuperbowlPlanner.getSuperbowlPlan() {
-        return superbowlPlan;
-    }
-    
-    public void SuperbowlPlanner.setSuperbowlPlan(SuperbowlPlan superbowlPlan) {
-        this.superbowlPlan = superbowlPlan;
-    }
-    
     public ContactInfo SuperbowlPlanner.getContactInfo() {
         return contactInfo;
     }
     
     public void SuperbowlPlanner.setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
+    }
+    
+    public SuperbowlPlan SuperbowlPlanner.getSuperbowlPlan() {
+        return superbowlPlan;
+    }
+    
+    public void SuperbowlPlanner.setSuperbowlPlan(SuperbowlPlan superbowlPlan) {
+        this.superbowlPlan = superbowlPlan;
     }
     
     public Boolean SuperbowlPlanner.getMain() {

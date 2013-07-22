@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_SharingIssue" object="${sharingissue}" path="/lists/sharingissues" z="AuLwlNBrYwTZByW1q0gGU8rAHTw=">
+        <field:display field="type" id="s_com_mindalliance_sb_model_SharingIssue_type" object="${sharingissue}" z="7JuuWSAJk1ndorpTT9BhzM00Q1c="/>
+        <field:display field="sharing" id="s_com_mindalliance_sb_model_SharingIssue_sharing" object="${sharingissue}" z="9A/Svwx1IzhlSxw+HEvVoi6GaZQ="/>
+    </page:show>
+</div>

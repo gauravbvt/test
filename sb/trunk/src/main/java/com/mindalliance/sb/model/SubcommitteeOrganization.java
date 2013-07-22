@@ -10,4 +10,13 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(identifierType = SubcommitteeOrganizationPK.class, versionField = "", table = "subcommittee_organization")
 @RooDbManaged(automaticallyDelete = true)
 public class SubcommitteeOrganization {
+
+    private SubcommitteeOrganization() {
+    }
+
+    public SubcommitteeOrganization(RespondentSubcommittee rs, Organization org) {
+        setOrganization(org);
+        setRespondentSubcommittee(rs);
+        setId(new SubcommitteeOrganizationPK(rs.getRespondent().getId(), rs.getSubcommittee().getId(), org.getId()));
+    }
 }

@@ -24,7 +24,7 @@ privileged aspect SubcommitteeController_Roo_Controller {
     public String SubcommitteeController.show(@PathVariable("id") Integer id, Model uiModel) {
         uiModel.addAttribute("subcommittee", Subcommittee.findSubcommittee(id));
         uiModel.addAttribute("itemId", id);
-        return "subcommittees/show";
+        return "lists/subcommittees/show";
     }
     
     @RequestMapping(produces = "text/html")
@@ -38,24 +38,24 @@ privileged aspect SubcommitteeController_Roo_Controller {
         } else {
             uiModel.addAttribute("subcommittees", Subcommittee.findAllSubcommittees());
         }
-        return "subcommittees/list";
+        return "lists/subcommittees/list";
     }
     
     @RequestMapping(method = RequestMethod.PUT, produces = "text/html")
     public String SubcommitteeController.update(@Valid Subcommittee subcommittee, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, subcommittee);
-            return "subcommittees/update";
+            return "lists/subcommittees/update";
         }
         uiModel.asMap().clear();
         subcommittee.merge();
-        return "redirect:/subcommittees/" + encodeUrlPathSegment(subcommittee.getId().toString(), httpServletRequest);
+        return "redirect:/lists/subcommittees/" + encodeUrlPathSegment(subcommittee.getId().toString(), httpServletRequest);
     }
     
     @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String SubcommitteeController.updateForm(@PathVariable("id") Integer id, Model uiModel) {
         populateEditForm(uiModel, Subcommittee.findSubcommittee(id));
-        return "subcommittees/update";
+        return "lists/subcommittees/update";
     }
     
     void SubcommitteeController.populateEditForm(Model uiModel, Subcommittee subcommittee) {

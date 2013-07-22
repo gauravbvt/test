@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_OrganizationIncident" object="${organizationincident}" path="/lists/organizationincidents" z="kIn8jwIjahjsC4yiBIOSIfpIflI=">
+        <field:display field="incident" id="s_com_mindalliance_sb_model_OrganizationIncident_incident" object="${organizationincident}" z="oVqBLMaRapznwBBBa0GSQkAHacE="/>
+        <field:display field="organization" id="s_com_mindalliance_sb_model_OrganizationIncident_organization" object="${organizationincident}" z="DNTh0XWkuWB9nTEp4h03I+rGMRw="/>
+        <field:display field="respondent" id="s_com_mindalliance_sb_model_OrganizationIncident_respondent" object="${organizationincident}" z="HkXGUHJdbjMyk/S9lg59lDYmpC4="/>
+        <field:display field="impact" id="s_com_mindalliance_sb_model_OrganizationIncident_impact" object="${organizationincident}" z="B8F+RJosPJ0Jq6SXKM1le7bv4xU="/>
+        <field:display field="description" id="s_com_mindalliance_sb_model_OrganizationIncident_description" object="${organizationincident}" z="ZlwkMS5xibh7Fbr5CFsoY9pAvdY="/>
+        <field:display field="plannedFor" id="s_com_mindalliance_sb_model_OrganizationIncident_plannedFor" object="${organizationincident}" z="2b3qeghGVdk+ifKaODRC5KkchKo="/>
+        <field:display field="trained" id="s_com_mindalliance_sb_model_OrganizationIncident_trained" object="${organizationincident}" z="2In8MEQejxyPDWsPd7lDv5vHkqA="/>
+    </page:show>
+</div>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_mindalliance_sb_model_CriticalTask" modelAttribute="criticalTask" path="/lists/criticaltasks" render="${empty dependencies}" z="1LP/abFWXKlG0dhdxjFESD4liiE=">
+        <field:simple field="criticalTasks" id="c_com_mindalliance_sb_model_CriticalTask_criticalTasks" messageCode="entity_reference_not_managed" messageCodeAttribute="Critical Task" z="xxuN6ATqj6QQEbFrDWMC2lm6HY8="/>
+        <field:simple field="incidentTasks" id="c_com_mindalliance_sb_model_CriticalTask_incidentTasks" messageCode="entity_reference_not_managed" messageCodeAttribute="Incident Task" z="Uzf57W8HGHGa1OYZ8u+M7eFjSz0="/>
+        <field:select field="coreCapability" id="c_com_mindalliance_sb_model_CriticalTask_coreCapability" itemValue="id" items="${corecapabilitys}" path="/lists/corecapabilitys" z="pcurKYXmx+PPGx5ZS4Qrs0iEAYk="/>
+        <field:select field="parent" id="c_com_mindalliance_sb_model_CriticalTask_parent" itemValue="id" items="${criticaltasks}" path="/lists/criticaltasks" z="bMSBoG0PsQSUrJ2YvhteD4YQsOo="/>
+        <field:input field="name" id="c_com_mindalliance_sb_model_CriticalTask_name" z="w3CdyMW0EA4IwtRYdtnYQFCA+aM="/>
+        <field:input field="type" id="c_com_mindalliance_sb_model_CriticalTask_type" z="fL8USxTXi+ZY5KxHN33YexTtfgs="/>
+        <field:input field="description" id="c_com_mindalliance_sb_model_CriticalTask_description" z="wmPTEwlETKjyN4h2jlJ369aZ2uc="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_mindalliance_sb_model_CriticalTask" render="${not empty dependencies}" z="E8l6573SzFGo4wQlKg2o7VdeWbA="/>
+</div>

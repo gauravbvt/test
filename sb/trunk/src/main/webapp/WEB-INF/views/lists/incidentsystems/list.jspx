@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_IncidentSystem" items="${incidentsystems}" z="Y93aa0J+2geLnc7MA7QnmKFoy1Y=">
+        <table:table data="${incidentsystems}" id="l_com_mindalliance_sb_model_IncidentSystem" path="/lists/incidentsystems" z="Pr22g5Q1cTNAppnRyGZdUM/VTN8=">
+            <table:column id="c_com_mindalliance_sb_model_IncidentSystem_organizationIncident" property="organizationIncident" z="eLUUmooNRukIahZXMiiJUCI5s5I="/>
+            <table:column id="c_com_mindalliance_sb_model_IncidentSystem_maintainer" property="maintainer" z="+hQsw2RsnGZRODZ+vaHAX3QIsgU="/>
+            <table:column id="c_com_mindalliance_sb_model_IncidentSystem_system" property="system" z="KMZZHBvvH5rFSkHTfexRuhTd8lQ="/>
+            <table:column id="c_com_mindalliance_sb_model_IncidentSystem_acronym" property="acronym" z="aVwH3s0CKB2TlVHpnjIIBwrLq+o="/>
+        </table:table>
+    </page:list>
+</div>

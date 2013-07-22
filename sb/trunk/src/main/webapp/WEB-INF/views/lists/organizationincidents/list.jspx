@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_OrganizationIncident" items="${organizationincidents}" z="I+U8TwG09WHhgCJDLHwsjvRthUw=">
+        <table:table data="${organizationincidents}" id="l_com_mindalliance_sb_model_OrganizationIncident" path="/lists/organizationincidents" z="CHubVySvVntvriwNH//QXShHIik=">
+            <table:column id="c_com_mindalliance_sb_model_OrganizationIncident_incident" property="incident" z="UXyskOl4gFIZn+Ky58Y15v+zD/A="/>
+        </table:table>
+    </page:list>
+</div>

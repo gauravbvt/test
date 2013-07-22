@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_mindalliance_sb_model_Eoc" modelAttribute="eoc" path="/lists/eocs" versionField="none" z="BekGYzCxOw3U7HZ7lfnBhD9aTu0=">
+        <field:select field="respondent" id="c_com_mindalliance_sb_model_Eoc_respondent" itemValue="id" items="${respondents}" path="/lists/respondents" z="Jg2QUuPmHvKV8hVp/eiykEJOsNA="/>
+        <field:checkbox field="existing" id="c_com_mindalliance_sb_model_Eoc_existing" z="Ur4qoAkWQlaHQT4TBlSt5Dz4CeE="/>
+        <field:input field="comments" id="c_com_mindalliance_sb_model_Eoc_comments" z="2j7107F6ynlZZ+9bZUtHLXHEwEM="/>
+        <field:input field="name" id="c_com_mindalliance_sb_model_Eoc_name" z="dYPA4vDiYO8tz/OLEgkOusElcww="/>
+        <field:input field="software" id="c_com_mindalliance_sb_model_Eoc_software" z="MlL8s7QPZ2MTbAYxTvCRvv1evuk="/>
+        <field:checkbox field="activeDuring" id="c_com_mindalliance_sb_model_Eoc_activeDuring" z="mx2CgbCLK0PBfSW4n4VtLRuhbQQ="/>
+        <field:input field="activeComments" id="c_com_mindalliance_sb_model_Eoc_activeComments" z="3E+Abs3sBts/nHiNcNXqddhVskw="/>
+    </form:update>
+</div>

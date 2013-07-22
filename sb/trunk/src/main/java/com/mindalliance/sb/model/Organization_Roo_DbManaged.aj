@@ -4,6 +4,7 @@
 package com.mindalliance.sb.model;
 
 import com.mindalliance.sb.model.ContactInfo;
+import com.mindalliance.sb.model.Discipline;
 import com.mindalliance.sb.model.IncidentSystem;
 import com.mindalliance.sb.model.OrgType;
 import com.mindalliance.sb.model.Organization;
@@ -11,21 +12,34 @@ import com.mindalliance.sb.model.OrganizationCapability;
 import com.mindalliance.sb.model.OrganizationIncident;
 import com.mindalliance.sb.model.Sharing;
 import com.mindalliance.sb.model.SubcommitteeOrganization;
+import java.util.Calendar;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 privileged aspect Organization_Roo_DbManaged {
+    
+    @ManyToMany
+    @JoinTable(name = "organization_discipline", joinColumns = { @JoinColumn(name = "organization_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "discipline_id", nullable = false) })
+    private Set<Discipline> Organization.disciplines;
     
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private Set<ContactInfo> Organization.contactInfoes;
     
     @OneToMany(mappedBy = "maintainer", cascade = CascadeType.REMOVE)
     private Set<IncidentSystem> Organization.incidentSystems;
+    
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private Set<Organization> Organization.organizations;
     
     @OneToMany(mappedBy = "organization", cascade = CascadeType.REMOVE)
     private Set<OrganizationCapability> Organization.organizationCapabilities;
@@ -43,6 +57,10 @@ privileged aspect Organization_Roo_DbManaged {
     @JoinColumn(name = "type", referencedColumnName = "id")
     private OrgType Organization.type;
     
+    @ManyToOne
+    @JoinColumn(name = "parent", referencedColumnName = "id", insertable = false, updatable = false)
+    private Organization Organization.parent;
+    
     @Column(name = "name", length = 127)
     @NotNull
     private String Organization.name;
@@ -55,6 +73,19 @@ privileged aspect Organization_Roo_DbManaged {
     
     @Column(name = "url", length = 127)
     private String Organization.url;
+    
+    @Column(name = "added", columnDefinition = "TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(style = "MM")
+    private Calendar Organization.added;
+    
+    public Set<Discipline> Organization.getDisciplines() {
+        return disciplines;
+    }
+    
+    public void Organization.setDisciplines(Set<Discipline> disciplines) {
+        this.disciplines = disciplines;
+    }
     
     public Set<ContactInfo> Organization.getContactInfoes() {
         return contactInfoes;
@@ -70,6 +101,14 @@ privileged aspect Organization_Roo_DbManaged {
     
     public void Organization.setIncidentSystems(Set<IncidentSystem> incidentSystems) {
         this.incidentSystems = incidentSystems;
+    }
+    
+    public Set<Organization> Organization.getOrganizations() {
+        return organizations;
+    }
+    
+    public void Organization.setOrganizations(Set<Organization> organizations) {
+        this.organizations = organizations;
     }
     
     public Set<OrganizationCapability> Organization.getOrganizationCapabilities() {
@@ -112,6 +151,14 @@ privileged aspect Organization_Roo_DbManaged {
         this.type = type;
     }
     
+    public Organization Organization.getParent() {
+        return parent;
+    }
+    
+    public void Organization.setParent(Organization parent) {
+        this.parent = parent;
+    }
+    
     public String Organization.getName() {
         return name;
     }
@@ -142,6 +189,14 @@ privileged aspect Organization_Roo_DbManaged {
     
     public void Organization.setUrl(String url) {
         this.url = url;
+    }
+    
+    public Calendar Organization.getAdded() {
+        return added;
+    }
+    
+    public void Organization.setAdded(Calendar added) {
+        this.added = added;
     }
     
 }

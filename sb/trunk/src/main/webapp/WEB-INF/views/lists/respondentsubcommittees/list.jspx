@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_mindalliance_sb_model_RespondentSubcommittee" items="${respondentsubcommittees}" z="lhGOi6JNJsDzqtmUpRXc4XSy7KY=">
+        <table:table data="${respondentsubcommittees}" id="l_com_mindalliance_sb_model_RespondentSubcommittee" path="/lists/respondentsubcommittees" z="QSrbOFkeLxyo2OClnTJ3NoW/Uzg=">
+            <table:column id="c_com_mindalliance_sb_model_RespondentSubcommittee_respondent" property="respondent" z="Vl//x5czZQYyr9DD6bsaH9DJZGM="/>
+            <table:column id="c_com_mindalliance_sb_model_RespondentSubcommittee_subcommittee" property="subcommittee" z="ii5KRorSvufdrkn/cFAnhaVmNpU="/>
+            <table:column id="c_com_mindalliance_sb_model_RespondentSubcommittee_inCharge" property="inCharge" z="IjABpk/kcdcdUU4GHE4jce2od8A="/>
+        </table:table>
+    </page:list>
+</div>

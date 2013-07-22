@@ -42,10 +42,12 @@ public class ResponseAdapterTest {
     @Test
     public void testConvert() throws Exception {
         List<SurveyResponse> responses = gizmo.getResponses( survey.getId(), new Date( 0L ) );
+        assertEquals( 3, responses.size() );
 
-        ResponseAdapter responseAdapter = new ResponseAdapter( responses.get( 0 ) );
+        int id = 2;
+        ResponseAdapter responseAdapter = new ResponseAdapter( responses.get( id ) );
         Respondent respondent = responseAdapter.getRespondent();
-        assertEquals( 1, (int) respondent.getId() );
+        assertEquals( id+1, (int) respondent.getId() );
     }
 
     @Test

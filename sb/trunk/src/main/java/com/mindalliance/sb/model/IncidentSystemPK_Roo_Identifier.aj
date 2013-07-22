@@ -20,7 +20,7 @@ privileged aspect IncidentSystemPK_Roo_Identifier {
     @Column(name = "incident", columnDefinition = "INT", nullable = false)
     private Integer IncidentSystemPK.incident;
     
-    @Column(name = "name", columnDefinition = "VARCHAR", nullable = false, length = 127)
+    @Column(name = "name", nullable = false, length = 127)
     private String IncidentSystemPK.name;
     
     public IncidentSystemPK.new(Integer respondent, Integer organization, Integer incident, String name) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create compositePkField="id" id="fc_com_mindalliance_sb_model_IncidentSystem" modelAttribute="incidentSystem" path="/lists/incidentsystems" render="${empty dependencies}" z="xMzheeCgZQYGYZYHvLVdwuYpuiU=">
+        <field:input disableFormBinding="true" field="id.respondent" id="c_com_mindalliance_sb_model_IncidentSystem_id_respondent" required="true" validationMessageCode="field_invalid_integer" z="IQ4m5xX9zubaJTTNc0XpXqKVQAM="/>
+        <field:input disableFormBinding="true" field="id.organization" id="c_com_mindalliance_sb_model_IncidentSystem_id_organization" required="true" validationMessageCode="field_invalid_integer" z="/RLTyRC2Nyw8HTIrhkQ6zeCPczI="/>
+        <field:input disableFormBinding="true" field="id.incident" id="c_com_mindalliance_sb_model_IncidentSystem_id_incident" required="true" validationMessageCode="field_invalid_integer" z="aeytGxwnMQ2rleA6a2m3eBxlZT4="/>
+        <field:input disableFormBinding="true" field="id.name" id="c_com_mindalliance_sb_model_IncidentSystem_id_name" required="true" z="iUx7qQG9Kol6BsgCiZInHC7U0WY="/>
+        <field:simple field="systemInfoes" id="c_com_mindalliance_sb_model_IncidentSystem_systemInfoes" messageCode="entity_reference_not_managed" messageCodeAttribute="System Info" z="MzF8GqBgVZO3lVMJGqNEZXOG46A="/>
+        <field:simple field="systemIssues" id="c_com_mindalliance_sb_model_IncidentSystem_systemIssues" messageCode="entity_reference_not_managed" messageCodeAttribute="System Issue" z="9KjtcCwe8P/+jP2d+qI9P0ObhAQ="/>
+        <field:select field="organizationIncident" id="c_com_mindalliance_sb_model_IncidentSystem_organizationIncident" itemValue="id" items="${organizationincidents}" path="/lists/organizationincidents" z="3iQPyUOtY6NOSo18iuNbHdVh6mM="/>
+        <field:select field="maintainer" id="c_com_mindalliance_sb_model_IncidentSystem_maintainer" itemValue="id" items="${organizations}" path="/lists/organizations" z="7J5V8jZ7WUr9LSv0aB+W068VEDg="/>
+        <field:input field="system" id="c_com_mindalliance_sb_model_IncidentSystem_system" validationMessageCode="field_invalid_integer" z="giPM/3YSoVaP+PgQPiA7s+w2XhQ="/>
+        <field:input field="acronym" id="c_com_mindalliance_sb_model_IncidentSystem_acronym" z="D4Os1GULFGtRBbLnIOy7Em1A474="/>
+        <field:checkbox field="actual" id="c_com_mindalliance_sb_model_IncidentSystem_actual" z="6Qq6pm7DnVDsHQ7EuwQukADIlrc="/>
+        <field:checkbox field="send" id="c_com_mindalliance_sb_model_IncidentSystem_send" z="wRhQqfbD2fNr3nBOTK/jU+RWjIY="/>
+        <field:input field="comment" id="c_com_mindalliance_sb_model_IncidentSystem_comment" z="HfNSQo8R0/9xXLnV10OpS7Vk6ao="/>
+        <field:input field="logo" id="c_com_mindalliance_sb_model_IncidentSystem_logo" z="HUZmu/WWT9eg6crPGcD8mn0F1dQ="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_mindalliance_sb_model_IncidentSystem" render="${not empty dependencies}" z="6xo6FQ5TwRFRU4kTgTel2oph9a8="/>
+</div>

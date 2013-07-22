@@ -9,11 +9,14 @@ import com.mindalliance.sb.model.Respondent;
 import com.mindalliance.sb.model.RespondentSubcommittee;
 import com.mindalliance.sb.model.Subcommittee;
 import com.mindalliance.sb.model.SubcommitteeCapability;
+import com.mindalliance.sb.model.SuperbowlPlan;
+import com.mindalliance.sb.model.SuperbowlPlanner;
+import com.mindalliance.sb.surveygizmo.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,30 +66,43 @@ public class ResponseAdapter {
 
         //------------ Page 5: Respondent identity
         // Name
-        question25( response.getMenu( 142 /* Select one */ ), 
-                    response.getString( 26 /* First */ ), 
-                    response.getString( 27 /* Last */ ) );
+        question25(
+            response.getMenu( 142 /* Select one */ ),
+            response.getString( 26 /* First */ ),
+            response.getString( 27 /* Last */ ) );
 
         // What organization do you work for?
         question231( response.getString( 231 ) );
 
-        // How would you categorize you organizations?
+        // How would you categorize you organization?
         //              | Federal Government | State Government | Local Government | Tribal Government | Private Sector/Non-Governmental | Community | 
         question258( response.getRadio( 258 ) );
 
         // Please provide your contact information
-        question37( response.getString( 38 /* Email */ ), response.getString( 40 /* Mobile */ ), 
-                    response.getString( 39 /* Landline */ ) );
+        question37(
+            response.getString( 38 /* Email */ ),
+            response.getString( 40 /* Mobile */ ),
+            response.getString( 39 /* Landline */ ) );
 
         // Please provide the following information
-        question69( response.getString( 70 /* Your title */ ),
-                    response.getString( 71 /* Your department or unit */ ),
-                    response.getString( 72 /* Your supervisor's name */ ),
-                    response.getString( 73 /* Supervisor's title */ ),
-                    response.getString( 74 /* Supervisor's email */ ) );
+        question69(
+            response.getString( 70 /* Your title */ ),
+            response.getString( 71 /* Your department or unit */ ),
+            response.getString( 72 /* Your supervisor's name */ ),
+            response.getString( 73 /* Supervisor's title */ ),
+            response.getString( 74 /* Supervisor's email */ ) );
 
         // Indicate your personal domains of expertise
         question29( response.getCheckboxes( 29 ) );
+
+
+        //------------ Page 10: Your organization
+        // Please select your organization type
+        question141( response.getMenu( 141 ) );
+
+        // What are the FEMA Core Capabilities of your organization?
+        question137( response.getCheckboxes( 137 ) );
+
 
         //------------ Page 4: Respondent subcommittees
         // Are you member of one or more planning subcommittees?
@@ -94,12 +110,13 @@ public class ResponseAdapter {
         question67( response.getRadio( 67 ) );
 
         // What subcommittees are you member of?
-        Map<Object, Object> pipeObjects42 = new LinkedHashMap<Object, Object>();
+        Map<Object,Object> pipeObjects42 = new LinkedHashMap<Object, Object>();
         for ( Entry<Object, String> entry : response.getPipeKeys( 42 ).entrySet() )
             pipeObjects42.put( entry.getKey(), question42( entry.getValue() ) );
 
+
         //------------ Page 3: Subcommittee
-        for ( Entry<Object, Object> source : pipeObjects42.entrySet() ) {
+        for( Entry<Object,Object> source : pipeObjects42.entrySet() ) {
             // Are you in charge of this subcommitee?
             //              | Yes (you will be asked to provide further details) | No | TBD | 
             question46( source.getValue(), response.getRadio( source.getKey(), 46 ) );
@@ -108,24 +125,20 @@ public class ResponseAdapter {
             question138( source.getValue(), response.getCheckboxes( source.getKey(), 138 ) );
 
             // List the organizations in the <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> subcommittee
-            for ( int key : response.getKeys( 45 ) )
-                question44( source.getValue(), response.getString( source.getKey(), key, 45 /* Name */ ) );
+            for ( int key : response.getSourcedKeys( source.getKey(), 45 ) )
+                question44( source.getValue(),
+                            response.getString( source.getKey(), key, 45 /* Name */ ) );
 
             // Are there organizations that are <strong>not</strong> in the <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> subcommittee but should be?
             //              | Yes (you will be asked to provide further details) | No | 
             question134( source.getValue(), response.getRadio( source.getKey(), 134 ) );
 
             // List the organizations that should be added to the <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> subcommittee.
-            for ( int key : response.getKeys( 136 ) )
-                question135( source.getValue(), response.getString( source.getKey(), key, 136 /* Name */ ) );
+            for ( int key : response.getSourcedKeys( source.getKey(), 136 ) )
+                question135( source.getValue(),
+                             response.getString( source.getKey(), key, 136 /* Name */ ) );
+
         }
-
-        //------------ Page 10: Your organization
-        // Please select your organization type
-        question141( response.getMenu( 141 ) );
-
-        // What are the FEMA Core Capabilities of your organization?
-        question137( response.getCheckboxes( 137 ) );
 
         //------------ Page 16: Super Bowl Plan
         // Does your organization have a security plan specifically designed for the Super Bowl?
@@ -137,23 +150,27 @@ public class ResponseAdapter {
         question205( response.getRadio( 205 ) );
 
         // If possible, please make available the relevant planning documents (maximum 10 files, no more than 25M each)
-        question233( response.getFile( 233 ) );
+        question233( response.getFiles( 233 ) );
 
         // Who are the planners in your agency?
         for ( int key : response.getKeys( 209, 210, 211 ) )
-            question208( response.getString( key, 209 /* Name */ ),
-                         response.getString( key, 210 /* Title */ ),
-                         response.getString( key, 211 /* Email */ ) );
+            question208(
+                response.getString( key, 209 /* Name */ ),
+                response.getString( key, 210 /* Title */ ),
+                response.getString( key, 211 /* Email */ ) );
 
         // Who is the primary point of contact for determining the information and intelligence needs of your agency?
-        question212( response.getString( 213 /* Name */ ), response.getString( 214 /* Title */ ), response.getString(
-            215
-            /* Email */ ) );
+        question212(
+            response.getString( 213 /* Name */ ),
+            response.getString( 214 /* Title */ ),
+            response.getString( 215 /* Email */ ) );
 
         // Who will be the ultimate decision maker about releasing information from your organization to other organizations engaged in Super Bowl Security?
-        question216( response.getString( 217 /* Name */ ), response.getString( 218 /* Title */ ), response.getString(
-            219
-            /* Email */ ) );
+        question216(
+            response.getString( 217 /* Name */ ),
+            response.getString( 218 /* Title */ ),
+            response.getString( 219 /* Email */ ) );
+
 
         //------------ Page 17: Situation reporting
         // Has your organization defined the scope and format of a hourly/daily situation report or common operating picture report during the Super Bowl?
@@ -161,10 +178,11 @@ public class ResponseAdapter {
         question220( response.getRadio( 220 ) );
 
         // In the context of producing the situation report...
-        question221( response.getEssay( 222
-                                        /* Briefly describe the process by which information is captured, analyzed, reviewed, approved, and included */ ),
-                     response.getRadio( 226 /* At what time(s) is the situation report distributed? */ ),
-                     response.getEssay( 224 /* To what audience? */ ) );
+        question221(
+            response.getEssay( 222 /* Briefly describe the process by which information is captured, analyzed, reviewed, approved, and included */ ),
+            response.getRadio( 226 /* At what time(s) is the situation report distributed? */ ),
+            response.getEssay( 224 /* To what audience? */ ) );
+
 
         //------------ Page 18: EOC
         // Does your organization have an Emergency Operations Center of some kind?
@@ -176,20 +194,23 @@ public class ResponseAdapter {
 
         // What incident management software does your EOC use?
         for ( int key : response.getKeys( 237 ) )
-            question236( response.getString( key, 237 /* Name */ ) );
+            question236(
+                response.getString( key, 237 /* Name */ ) );
 
         // Will your EOC be activated during the Super Bowl?
         //              | Yes | No | 
         question227( response.getRadio( 227 ) );
 
+
         //------------ Page 15: Incidents
         // List the types of incidents that your organization needs to plan for.
-        Map<Object, Object> pipeObjects139 = new LinkedHashMap<Object, Object>();
+        Map<Object,Object> pipeObjects139 = new LinkedHashMap<Object, Object>();
         for ( Entry<Object, String> entry : response.getPipeKeys( 139 ).entrySet() )
             pipeObjects139.put( entry.getKey(), question139( entry.getValue() ) );
 
+
         //------------ Page 14: Incident planning
-        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
+        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
             // Does your organization have a plan for addressing an incident of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
             //              | Yes | No | 
             question200( source.getValue(), response.getRadio( source.getKey(), 200 ) );
@@ -197,10 +218,11 @@ public class ResponseAdapter {
             // Has your organization conducted or participated in training and exercises relevant to type of incident <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span> in the last 24 months?
             //              | Yes | No | 
             question201( source.getValue(), response.getRadio( source.getKey(), 201 ) );
+
         }
 
         //------------ Page 8: Incident management
-        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
+        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
             // List the mission areas where your organization is active in regards to an incident of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>
             question84( source.getValue(), response.getCheckboxes( source.getKey(), 84 ) );
 
@@ -299,30 +321,25 @@ public class ResponseAdapter {
 
             // What <strong>Natural and Cultural Resources</strong> FEMA Critical Tasks would your organization be responsible for when addressing an incident of type [page("piped title")]?
             question177( source.getValue(), response.getCheckboxes( source.getKey(), 177 ) );
+
         }
 
         //------------ Page 9: Info sharing for incident
-        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
+        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
             // Does your organization need to <strong><span style="text-decoration:underline;">receive information</span></strong> from other organizations to address incidents of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
             //              | Yes (you will be asked to provide further details) | No | 
             question109( source.getValue(), response.getRadio( source.getKey(), 109 ) );
 
             // What information would your organization need to <span style="text-decoration:underline;"><strong>receive</strong></span> in order to address incidents of type<span style="text-decoration:underline;"><strong> [page("piped title")]</strong></span>?
-            for ( int key : response.getKeys( 186, 187, 183, 240, 184, 188, 189, 190 ) )
+            for ( int key : response.getSourcedKeys( source.getKey(), 186, 187, 183, 240, 184, 188, 189, 190 ) )
                 question179( source.getValue(),
-                             response.getString( source.getKey(),
-                                                 key,
-                                                 186
-                                                 /* From your point of contact */ ),
+                             response.getString( source.getKey(), key, 186 /* From your point of contact */ ),
                              response.getString( source.getKey(), key, 187 /* with title */ ),
                              response.getString( source.getKey(), key, 183 /* at organization */ ),
-                             response.getMultibox( source.getKey(), key, 240
-                                                   /* you need to receive this information/these reports */ ),
+                             response.getMultibox( source.getKey(), key, 240 /* you need to receive this information/these reports */ ),
                              response.getCheckboxes( source.getKey(), key, 184 /* via */ ),
-                             response.getMultibox( source.getKey(), key, 188
-                                                   /* Your source's contact information is */ ),
-                             response.getCheckboxes( source.getKey(), key, 189
-                                                     /* Are there issues? If so, please select them */ ),
+                             response.getMultibox( source.getKey(), key, 188 /* Your source's contact information is */ ),
+                             response.getCheckboxes( source.getKey(), key, 189 /* Are there issues? If so, please select them */ ),
                              response.getEssay( source.getKey(), key, 190 /* Additional comments */ ) );
 
             // Does your organization<span style="text-decoration:underline;"><strong> share information</strong></span> with other organizations when addressing incidents of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
@@ -330,47 +347,33 @@ public class ResponseAdapter {
             question178( source.getValue(), response.getRadio( source.getKey(), 178 ) );
 
             // What information would your organization <span style="text-decoration:underline;"><strong>share</strong></span> when addressing incidents of type <span style="text-decoration:underline;"><strong> [page("piped title")]</strong></span>?
-            for ( int key : response.getKeys( 242, 243, 244, 245, 246, 247, 248, 249 ) )
+            for ( int key : response.getSourcedKeys( source.getKey(), 242, 243, 244, 245, 246, 247, 248, 249 ) )
                 question241( source.getValue(),
-                             response.getString( source.getKey(),
-                                                 key,
-                                                 242
-                                                 /* Your point of contact */ ),
-                             response.getString( source.getKey(),
-                                                 key,
-                                                 243
-                                                 /* with title */ ),
+                             response.getString( source.getKey(), key, 242 /* Your point of contact */ ),
+                             response.getString( source.getKey(), key, 243 /* with title */ ),
                              response.getString( source.getKey(), key, 244 /* at organization */ ),
-                             response.getMultibox( source.getKey(),
-                                                   key,
-                                                   245
-                                                   /* would receive, from your organization, these information/these reports */ ),
+                             response.getMultibox( source.getKey(), key, 245 /* would receive, from your organization, these information/these reports */ ),
                              response.getCheckboxes( source.getKey(), key, 246 /* via */ ),
-                             response.getMultibox( source.getKey(), key, 247
-                                                   /* The recipient's contact information is */ ),
-                             response.getCheckboxes( source.getKey(), key, 248
-                                                     /* Are there issues? If so, please select them */ ),
+                             response.getMultibox( source.getKey(), key, 247 /* The recipient's contact information is */ ),
+                             response.getCheckboxes( source.getKey(), key, 248 /* Are there issues? If so, please select them */ ),
                              response.getEssay( source.getKey(), key, 249 /* Additional comments */ ) );
+
         }
 
         //------------ Page 11: Info systems for incident
-        for ( Entry<Object, Object> source : pipeObjects139.entrySet() ) {
+        for( Entry<Object,Object> source : pipeObjects139.entrySet() ) {
             // Does your organization need to <span style="text-decoration:underline;"><strong>access</strong></span> information systems to address an incident of type <strong>[page("piped title")]</strong>?
             //              | Yes (you will be asked to provide further details) | No | 
             question110( source.getValue(), response.getRadio( source.getKey(), 110 ) );
 
             // What information would your organization need to <strong>access</strong> from an information system in order to address an incident of type <strong>[page("piped title")]</strong>?
-            for ( int key : response.getKeys( 113, 116, 117, 250, 120, 121 ) )
+            for ( int key : response.getSourcedKeys( source.getKey(), 113, 116, 117, 250, 120, 121 ) )
                 question111( source.getValue(),
                              response.getString( source.getKey(), key, 113 /* From system */ ),
                              response.getString( source.getKey(), key, 116 /* also known as (acronym) */ ),
                              response.getString( source.getKey(), key, 117 /* and administered by organization */ ),
-                             response.getMultibox( source.getKey(),
-                                                   key,
-                                                   250
-                                                   /* your organization needs to access this information/these reports */ ),
-                             response.getCheckboxes( source.getKey(), key, 120
-                                                     /* Are there issues? If so, please select them. */ ),
+                             response.getMultibox( source.getKey(), key, 250 /* your organization needs to access this information/these reports */ ),
+                             response.getCheckboxes( source.getKey(), key, 120 /* Are there issues? If so, please select them. */ ),
                              response.getEssay( source.getKey(), key, 121 /* Additional comments */ ) );
 
             // Does your organization need to publish to information systems to address an incident of type <strong>[page("piped title")]</strong>?
@@ -378,16 +381,15 @@ public class ResponseAdapter {
             question191( source.getValue(), response.getRadio( source.getKey(), 191 ) );
 
             // What information does your organization <span style="text-decoration:underline;"><strong>upload or store</strong></span> in the context of incidents of type <span style="text-decoration:underline;"><strong>[page("piped title")]</strong></span>?
-            for ( int key : response.getKeys( 252, 253, 254, 255, 256, 257 ) )
+            for ( int key : response.getSourcedKeys( source.getKey(), 252, 253, 254, 255, 256, 257 ) )
                 question251( source.getValue(),
-                             response.getString( source.getKey(), key, 252
-                                                 /* Your organization uploads to/stores in system */ ),
+                             response.getString( source.getKey(), key, 252 /* Your organization uploads to/stores in system */ ),
                              response.getString( source.getKey(), key, 253 /* also known as (acronym) */ ),
                              response.getString( source.getKey(), key, 254 /* and administered by organization */ ),
                              response.getMultibox( source.getKey(), key, 255 /*  this information/these reports */ ),
-                             response.getCheckboxes( source.getKey(), key, 256
-                                                     /* Are there issues? If so, please select them. */ ),
+                             response.getCheckboxes( source.getKey(), key, 256 /* Are there issues? If so, please select them. */ ),
                              response.getEssay( source.getKey(), key, 257 /* Additional comments */ ) );
+
         }
 
         //------------ Page 13: Reference documentation
@@ -397,14 +399,14 @@ public class ResponseAdapter {
 
         // Identify an important reference document
         for ( int key : response.getKeys( 128, 129, 130 ) )
-            question127( response.getString( key, 128 /* Name */ ),
-                         response.getCheckboxes( key,
-                                                 129
-                                                 /* What kind of document is it? */ ),
-                         response.getString( key, 130 /* If available online, please provide a URL. */ ) );
+            question127(
+                response.getString( key, 128 /* Name */ ),
+                response.getCheckboxes( key, 129 /* What kind of document is it? */ ),
+                response.getString( key, 130 /* If available online, please provide a URL. */ ) );
 
         // If documents are not available online, please upload them here.
-        question131( response.getFile( 131 ) );
+        question131( response.getFiles( 131 ) );
+
 
         //------------ Page 12: About this survey
         // Did you find this survey
@@ -417,6 +419,7 @@ public class ResponseAdapter {
 
         // Please describe the problems or shortcomings you encountered.
         question124( response.getEssay( 124 ) );
+
 
         //------------ Page 2: Thank You!
     }
@@ -643,20 +646,14 @@ public class ResponseAdapter {
     }
 
     private void question135( Object object, String orgName ) {
-        RespondentSubcommittee sc = (RespondentSubcommittee) object;
-        // TODO
-
+        ((RespondentSubcommittee) object).addSubcommitteeOrg( orgName, false );
     }
 
     private void question134( Object source, String radio ) {
-        // TODO implement this
-
     }
 
-    private void question44( Object source, String inCharge ) {
-        RespondentSubcommittee rs = (RespondentSubcommittee) source;
-        if ( inCharge != null && !"TBD".equals( inCharge ) )
-            rs.setInCharge( !"No".equals( inCharge ) );
+    private void question44( Object source, String orgName ) {
+        ((RespondentSubcommittee) source).addSubcommitteeOrg( orgName, true );        
     }
 
     private void question138( Object source, List<String> checkboxes ) {
@@ -667,9 +664,7 @@ public class ResponseAdapter {
                        respondent.getId(),
                        rs.getSubcommittee().getName(),
                        coreCapability.getDescription() );
-            SubcommitteeCapability sc = new SubcommitteeCapability();
-            sc.setRespondentSubcommittee( rs );
-            sc.setCoreCapability( coreCapability );
+            SubcommitteeCapability sc = new SubcommitteeCapability( rs, coreCapability );
             sc.persist();
         }
     }
@@ -699,13 +694,15 @@ public class ResponseAdapter {
 
     }
 
-    private void question131( byte[] file ) {
+    private void question131( List<UploadedFile> file ) {
         // TODO implement this
 
     }
 
-    private void question233( byte[] file ) {
-        // TODO implement this
+    private void question233( List<UploadedFile> files ) {
+        SuperbowlPlan plan = respondent.getSuperbowlPlan();
+        for ( UploadedFile file : files )
+            plan.addFile( file.toPlanFile() );
     }
 
     private Object question139( String incidentName ) {
@@ -744,13 +741,14 @@ public class ResponseAdapter {
     }
 
     private void question205( String radio ) {
-        // TODO implement this
-
+        SuperbowlPlan plan = new SuperbowlPlan( respondent );
+        plan.setShared( "Yes".equals( radio ) );
+        plan.persist();
+        
+        respondent.setSuperbowlPlans( Collections.singleton( plan ) );
     }
 
     private void question202( String radio ) {
-        // TODO implement this
-
     }
 
     private void question141( String menu ) {
@@ -773,14 +771,18 @@ public class ResponseAdapter {
 
     }
 
-    private void question216( String string, String string1, String string2 ) {
-        // TODO implement this
-
+    private void question216( String name, String title, String email ) {
+        SuperbowlPlanner planner = SuperbowlPlanner.findOrCreate( organization.addContact( name, title, email ),
+                                                                  respondent.getSuperbowlPlan() );
+        planner.setDecider( true );
+        planner.merge();
     }
 
-    private void question212( String string, String string1, String string2 ) {
-        // TODO implement this
-
+    private void question212( String name, String title, String email ) {
+        SuperbowlPlanner planner = SuperbowlPlanner.findOrCreate( organization.addContact( name, title, email ),
+                                                                  respondent.getSuperbowlPlan() );
+        planner.setMain( true );
+        planner.merge();
     }
 
     private void question137( List<String> checkboxes ) {
@@ -797,9 +799,10 @@ public class ResponseAdapter {
         return subcommittee;
     }
 
-    private void question208( String string, String string1, String string2 ) {
-        // TODO implement this
-
+    private void question208( String name, String title, String email ) {
+        new SuperbowlPlanner( organization.addContact( name, title, email ), 
+                              respondent.getSuperbowlPlan() )
+            .persist();
     }
 
     private void question29( List<String> checkboxes ) {
@@ -811,7 +814,7 @@ public class ResponseAdapter {
         respondent.setExpertises( set );
         
         // This is where respondent is first persisted...
-        respondent.getContactInfo().persist();
+//        respondent.getContactInfo().merge();
         respondent.persist();
     }
 
@@ -825,10 +828,11 @@ public class ResponseAdapter {
                 List<ContactInfo> contacts = ContactInfo.findContactInfoesByEmailEquals( supEmail ).getResultList();
                 if ( !contacts.isEmpty() ) {
                     ContactInfo supervisor = contacts.get( 0 );
-                    LOG.debug( "Setting supervisor for respondent #{} to contact #{}",
+                    LOG.debug( "Setting supervisor for respondent #{} to contact {}",
                                respondent.getId(),
-                               supervisor.getId() );
+                               supervisor );
                     contactInfo.setSupervisor( supervisor );
+                    contactInfo.merge();
                     return;
                 }
             }
@@ -838,20 +842,29 @@ public class ResponseAdapter {
                        supName,
                        supTitle,
                        supEmail );
-            ContactInfo supervisor = new ContactInfo();
-            supervisor.setLastName( supName );
-            supervisor.setTitle( supTitle );
-            supervisor.setEmail( supEmail );
-            supervisor.setOrganization( organization );
-            supervisor.persist();
+
+            contactInfo.setSupervisor( organization.addContact( supName, supTitle, supEmail ) );
+            contactInfo.merge();
         }
     }
 
+    /**
+     * Possibly override existing contact information with what the actual respondent fills in.
+     * @param email the email
+     * @param mobile cell phone number
+     * @param landLine regular phone number
+     */
     private void question37( String email, String mobile, String landLine ) {
-        ContactInfo contactInfo = respondent.getContactInfo();
-        contactInfo.setEmail( email );
-        contactInfo.setLandline( landLine );
-        contactInfo.setMobile( mobile );
+        ContactInfo oldInfo = respondent.getContactInfo();
+        ContactInfo newInfo = ContactInfo.findOrCreate( oldInfo.getFirstName(),
+                                                         oldInfo.getLastName(),
+                                                         oldInfo.getTitle(),
+                                                         email, organization );
+
+        // Contact info is now persisted
+        newInfo.setLandline( landLine );
+        newInfo.setMobile( mobile );
+        respondent.setContactInfo( newInfo );
     }
 
     private void question236( String string ) {
@@ -865,15 +878,7 @@ public class ResponseAdapter {
     }
 
     private void question231( String name ) {
-        try {
-            organization = Organization.findOrganizationsByNameEquals( name ).getSingleResult();
-        } catch ( EmptyResultDataAccessException e ) {
-            organization = new Organization();
-            organization.setName( name );
-            LOG.debug( "Creating organization: {}", name );
-            organization.persist();
-        }
-
+        organization = Organization.findOrCreate( name, respondent.getSubmitted() );
         respondent.setOrganization( organization );
     }
 

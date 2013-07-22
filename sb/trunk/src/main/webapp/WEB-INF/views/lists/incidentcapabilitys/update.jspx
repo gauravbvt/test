@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_mindalliance_sb_model_IncidentCapability" modelAttribute="incidentCapability" path="/lists/incidentcapabilitys" versionField="none" z="PklX1lstAyJfUkYD6ZzMbLngIZE=">
+        <field:select field="organizationIncident" id="c_com_mindalliance_sb_model_IncidentCapability_organizationIncident" itemValue="id" items="${organizationincidents}" path="/lists/organizationincidents" z="heA9eTVd+4a2rG0FW8D2rjTmnIc="/>
+    </form:update>
+</div>

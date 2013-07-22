@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_SituationReport" object="${situationreport}" path="/lists/situationreports" z="MqgWab5hUbmaOAmDuDZzEP096Rc=">
+        <field:display field="respondent" id="s_com_mindalliance_sb_model_SituationReport_respondent" object="${situationreport}" z="36fOhyojzDhb/QcE2Rf5GzEK9fw="/>
+        <field:display field="reportDistribution" id="s_com_mindalliance_sb_model_SituationReport_reportDistribution" object="${situationreport}" z="YYM/o2DtG7d8jLrQ7CrOHvIcARs="/>
+        <field:display field="comments" id="s_com_mindalliance_sb_model_SituationReport_comments" object="${situationreport}" z="AMoweTMeeIuPaqBC8E2Rrj0QVnc="/>
+        <field:display field="process" id="s_com_mindalliance_sb_model_SituationReport_process" object="${situationreport}" z="27nCeIDo3Dn9Alar7/jipfyh4OM="/>
+        <field:display field="audience" id="s_com_mindalliance_sb_model_SituationReport_audience" object="${situationreport}" z="aFij5fS66l4IdjPEy5n3b2Ng/rI="/>
+    </page:show>
+</div>

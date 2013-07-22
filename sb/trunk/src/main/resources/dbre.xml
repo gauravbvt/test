@@ -116,6 +116,20 @@
             <index-column name="parent"/>
         </index>
     </table>
+    <table name="discipline">
+        <column name="id" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
+        <column name="name" primaryKey="false" required="true" scale="0" size="127" type="12,VARCHAR"/>
+        <foreign-key foreignTable="organization_discipline" name="fk_organization_discipline_discipline1" onDelete="cascade" onUpdate="cascade">
+            <option key="exported" value="true"/>
+            <reference foreign="discipline_id" local="id"/>
+        </foreign-key>
+        <unique name="PRIMARY">
+            <unique-column name="id"/>
+        </unique>
+        <unique name="name_UNIQUE">
+            <unique-column name="name"/>
+        </unique>
+    </table>
     <table name="document">
         <column name="id" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
         <column name="respondent" primaryKey="false" required="true" scale="0" size="10" type="4,INT"/>
@@ -420,9 +434,15 @@
         <column name="logo" primaryKey="false" required="false" scale="0" size="65535" type="-4,BLOB"/>
         <column name="acronym" primaryKey="false" required="false" scale="0" size="127" type="12,VARCHAR"/>
         <column name="url" primaryKey="false" required="false" scale="0" size="127" type="12,VARCHAR"/>
+        <column name="parent" primaryKey="false" required="false" scale="0" size="10" type="4,INT"/>
+        <column name="added" primaryKey="false" required="false" scale="0" size="19" type="93,TIMESTAMP"/>
         <foreign-key foreignTable="org_type" name="fk_organization_org_type1" onDelete="cascade" onUpdate="none">
             <option key="exported" value="false"/>
             <reference foreign="id" local="type"/>
+        </foreign-key>
+        <foreign-key foreignTable="organization" name="fk_organization_organization1" onDelete="cascade" onUpdate="cascade">
+            <option key="exported" value="false"/>
+            <reference foreign="id" local="parent"/>
         </foreign-key>
         <foreign-key foreignTable="contact_info" name="fk_contact_info_organization1" onDelete="cascade" onUpdate="cascade">
             <option key="exported" value="true"/>
@@ -432,9 +452,17 @@
             <option key="exported" value="true"/>
             <reference foreign="maintainer" local="id"/>
         </foreign-key>
+        <foreign-key foreignTable="organization" name="fk_organization_organization1" onDelete="cascade" onUpdate="cascade">
+            <option key="exported" value="true"/>
+            <reference foreign="parent" local="id"/>
+        </foreign-key>
         <foreign-key foreignTable="organization_capability" name="fk_respondent_organization_organization1" onDelete="cascade" onUpdate="none">
             <option key="exported" value="true"/>
             <reference foreign="organization" local="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="organization_discipline" name="fk_organization_discipline_organization1" onDelete="cascade" onUpdate="cascade">
+            <option key="exported" value="true"/>
+            <reference foreign="organization_id" local="id"/>
         </foreign-key>
         <foreign-key foreignTable="organization_incident" name="fk_respondent_organization1_organization1" onDelete="cascade" onUpdate="none">
             <option key="exported" value="true"/>
@@ -453,6 +481,9 @@
         </unique>
         <index name="fk_organization_org_type1">
             <index-column name="type"/>
+        </index>
+        <index name="fk_organization_organization1">
+            <index-column name="parent"/>
         </index>
     </table>
     <table name="organization_capability">
@@ -484,6 +515,28 @@
         </index>
         <index name="fk_respondent_organization_core_capability1">
             <index-column name="core_capability"/>
+        </index>
+    </table>
+    <table name="organization_discipline">
+        <column name="organization_id" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
+        <column name="discipline_id" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
+        <foreign-key foreignTable="organization" name="fk_organization_discipline_organization1" onDelete="cascade" onUpdate="cascade">
+            <option key="exported" value="false"/>
+            <reference foreign="id" local="organization_id"/>
+        </foreign-key>
+        <foreign-key foreignTable="discipline" name="fk_organization_discipline_discipline1" onDelete="cascade" onUpdate="cascade">
+            <option key="exported" value="false"/>
+            <reference foreign="id" local="discipline_id"/>
+        </foreign-key>
+        <unique name="PRIMARY">
+            <unique-column name="organization_id"/>
+            <unique-column name="discipline_id"/>
+        </unique>
+        <index name="fk_organization_discipline_discipline1">
+            <index-column name="discipline_id"/>
+        </index>
+        <index name="fk_organization_discipline_organization1">
+            <index-column name="organization_id"/>
         </index>
     </table>
     <table name="organization_incident">
@@ -554,8 +607,11 @@
     <table name="plan_file">
         <column name="id" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
         <column name="superbowl_plan" primaryKey="false" required="true" scale="0" size="10" type="4,INT"/>
-        <column name="name" primaryKey="false" required="false" scale="0" size="127" type="12,VARCHAR"/>
-        <column name="contents" primaryKey="false" required="false" scale="0" size="16777215" type="-4,MEDIUMBLOB"/>
+        <column name="name" primaryKey="false" required="true" scale="0" size="127" type="12,VARCHAR"/>
+        <column name="contents" primaryKey="false" required="true" scale="0" size="16777215" type="-4,MEDIUMBLOB"/>
+        <column name="checksum" primaryKey="false" required="true" scale="0" size="255" type="-2,TINYBLOB"/>
+        <column name="mime_type" primaryKey="false" required="false" scale="0" size="127" type="12,VARCHAR"/>
+        <column name="size" primaryKey="false" required="true" scale="0" size="10" type="4,INT"/>
         <foreign-key foreignTable="superbowl_plan" name="fk_plan_file_superbowl_plan1" onDelete="cascade" onUpdate="none">
             <option key="exported" value="false"/>
             <reference foreign="id" local="superbowl_plan"/>
@@ -983,13 +1039,13 @@
         <column name="contact_info" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
         <column name="main" primaryKey="false" required="false" scale="0" size="0" type="-7,BIT"/>
         <column name="decider" primaryKey="false" required="false" scale="0" size="0" type="-7,BIT"/>
-        <foreign-key foreignTable="superbowl_plan" name="fk_superbowl_plan_contact_info_superbowl_plan1" onDelete="cascade" onUpdate="none">
-            <option key="exported" value="false"/>
-            <reference foreign="id" local="superbowl_plan"/>
-        </foreign-key>
         <foreign-key foreignTable="contact_info" name="fk_superbowl_plan_contact_info_contact_info1" onDelete="cascade" onUpdate="none">
             <option key="exported" value="false"/>
             <reference foreign="id" local="contact_info"/>
+        </foreign-key>
+        <foreign-key foreignTable="superbowl_plan" name="fk_superbowl_plan_contact_info_superbowl_plan1" onDelete="cascade" onUpdate="none">
+            <option key="exported" value="false"/>
+            <reference foreign="id" local="superbowl_plan"/>
         </foreign-key>
         <unique name="PRIMARY">
             <unique-column name="superbowl_plan"/>
@@ -1009,8 +1065,8 @@
         <column name="incident" primaryKey="true" required="true" scale="0" size="10" type="4,INT"/>
         <column name="system_name" primaryKey="true" required="true" scale="0" size="127" type="12,VARCHAR"/>
         <column name="description" primaryKey="false" required="false" scale="0" size="127" type="12,VARCHAR"/>
-        <column name="read" primaryKey="false" required="false" scale="0" size="0" type="-7,BIT"/>
-        <column name="write" primaryKey="false" required="false" scale="0" size="0" type="-7,BIT"/>
+        <column name="readable" primaryKey="false" required="false" scale="0" size="0" type="-7,BIT"/>
+        <column name="writable" primaryKey="false" required="false" scale="0" size="0" type="-7,BIT"/>
         <foreign-key foreignTable="incident_system" name="fk_system_info_incident_system1" onDelete="cascade" onUpdate="none">
             <option key="exported" value="false"/>
             <reference foreign="respondent" local="respondent"/>

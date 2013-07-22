@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_mindalliance_sb_model_ContactInfo" modelAttribute="contactInfo" path="/lists/contactinfoes" versionField="none" z="rc5cjIxEkJ1kLWQxQkKWfCzHXBE=">
+        <field:simple field="contactInfoes" id="c_com_mindalliance_sb_model_ContactInfo_contactInfoes" messageCode="entity_reference_not_managed" messageCodeAttribute="Contact Info" z="uG5Lquortt/c3F+OPoQKaZUKVVw="/>
+        <field:simple field="respondents" id="c_com_mindalliance_sb_model_ContactInfo_respondents" messageCode="entity_reference_not_managed" messageCodeAttribute="Respondent" z="HFSpm2mkzvPAEANxy56mHo2N6X0="/>
+        <field:simple field="sharings" id="c_com_mindalliance_sb_model_ContactInfo_sharings" messageCode="entity_reference_not_managed" messageCodeAttribute="Sharing" z="KJgg4K/7j9sTXsDVoEtD3erB0GI="/>
+        <field:simple field="superbowlPlanners" id="c_com_mindalliance_sb_model_ContactInfo_superbowlPlanners" messageCode="entity_reference_not_managed" messageCodeAttribute="Superbowl Planner" z="GpKwxzRR/av3p5mdOr5f0eC8qE0="/>
+        <field:select field="supervisor" id="c_com_mindalliance_sb_model_ContactInfo_supervisor" itemValue="id" items="${contactinfoes}" path="/lists/contactinfoes" z="BB54h1hVfPxm0Ohvpq/Xk9MF084="/>
+        <field:select field="organization" id="c_com_mindalliance_sb_model_ContactInfo_organization" itemValue="id" items="${organizations}" path="/lists/organizations" z="i4mSwEeniCyaqwjxK3pYWZXGvDk="/>
+        <field:input field="prefix" id="c_com_mindalliance_sb_model_ContactInfo_prefix" z="kP/E3YxcmcExfn9Cscrjr1X9nuY="/>
+        <field:input field="firstName" id="c_com_mindalliance_sb_model_ContactInfo_firstName" z="qM6+oqqO8GLD5lVEm9htEkFnjj8="/>
+        <field:input field="lastName" id="c_com_mindalliance_sb_model_ContactInfo_lastName" required="true" z="cym/2rvlkTzenoI2dw4xu260QWI="/>
+        <field:input field="email" id="c_com_mindalliance_sb_model_ContactInfo_email" validationMessageCode="field_invalid_email" z="DfZtR4vcTz/zMDeg1PWJlVdbA2Y="/>
+        <field:input field="title" id="c_com_mindalliance_sb_model_ContactInfo_title" z="U8TNlLN7z6UVFlEkz+DOdRx1E/4="/>
+        <field:input field="department" id="c_com_mindalliance_sb_model_ContactInfo_department" z="KEc22zZS6nGY0Kyi0Hb6EBn5gdQ="/>
+        <field:input field="mobile" id="c_com_mindalliance_sb_model_ContactInfo_mobile" z="3R4gk3H8hg7bnGKyp9Hab+othB0="/>
+        <field:input field="landline" id="c_com_mindalliance_sb_model_ContactInfo_landline" z="jilmQaHMYTkIm4HbQ8cIpfY+hOU="/>
+        <field:input field="photo" id="c_com_mindalliance_sb_model_ContactInfo_photo" z="a7TJf+PNtyflVGhp5hlZ7A8ixxk="/>
+    </form:update>
+</div>

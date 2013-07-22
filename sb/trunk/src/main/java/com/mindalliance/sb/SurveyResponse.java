@@ -2,6 +2,7 @@ package com.mindalliance.sb;
 
 import com.mindalliance.sb.model.ContactInfo;
 import com.mindalliance.sb.model.Respondent;
+import com.mindalliance.sb.surveygizmo.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.json.RooJson;
@@ -160,14 +161,11 @@ public class SurveyResponse {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append( "SurveyResponse" );
-        sb.append( " #" ).append( id );
-        sb.append( " from " ).append( surveyId );
-        return sb.toString();
+        return "SurveyResponse #" + id + " from " + surveyId;
     }
 
     public String getRadio( int question ) {
+        // TODO deal with "other:"
         return getString( question );
     }
 
@@ -187,21 +185,40 @@ public class SurveyResponse {
         return getString( pageKey, optionKey, question );
     }
 
-    public byte[] getFile( int question ) {
-        // TODO implement this
-        return null;
+    public List<UploadedFile> getFiles( int question ) {
+        List<UploadedFile> result = new ArrayList<UploadedFile>();
+        Map<RawAnswer, String> map = questions.get( question );
+        if ( map != null )
+            for ( String fileSpec : map.values() )
+                if ( fileSpec != null && !fileSpec.isEmpty() )
+                    result.add( new UploadedFile( fileSpec, surveyId ) );
+
+        return result;
     }
 
     public Set<Integer> getKeys( int... questions ) {
         HashSet<Integer> set = new HashSet<Integer>();
 
         for ( int question : questions )
-            for ( RawAnswer rawAnswer : this.questions.get( question ).keySet() ) {
-                Integer questionPipe = rawAnswer.questionPipe;
-                if ( questionPipe != null )
+            for ( Entry<RawAnswer, String> rawAnswer : this.questions.get( question ).entrySet() ) {
+                Integer questionPipe = rawAnswer.getKey().questionPipe;
+                if ( questionPipe != null && !"".equals( rawAnswer.getValue() ) )
                     set.add( questionPipe );
             }
         
+        return set;
+    }
+
+    public Set<Integer> getSourcedKeys( Object key, int... questions ) {
+        HashSet<Integer> set = new HashSet<Integer>();
+
+        for ( int question : questions )
+            for ( Entry<RawAnswer, String> rawAnswer : this.questions.get( question ).entrySet() ) {
+                Integer questionPipe = rawAnswer.getKey().questionPipe;
+                if ( questionPipe != null && key.equals( rawAnswer.getKey().getPagePipe() ) )
+                    set.add( questionPipe );
+            }
+
         return set;
     }
 
@@ -292,7 +309,7 @@ public class SurveyResponse {
         if ( answers == null || answers.isEmpty() )        // unanswered question
             return null;
         if ( answers.size() > 1 )
-            LOG.warn( "Too many answers for question #", question );
+            LOG.warn( "Too many answers for question #{}", question );
 
         for ( String s : answers.values() )
             if ( s != null && !s.isEmpty() )

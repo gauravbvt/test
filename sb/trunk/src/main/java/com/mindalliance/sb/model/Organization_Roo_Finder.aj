@@ -17,4 +17,14 @@ privileged aspect Organization_Roo_Finder {
         return q;
     }
     
+    public static TypedQuery<Organization> Organization.findOrganizationsByNameEqualsOrAcronymEquals(String name, String acronym) {
+        if (name == null || name.length() == 0) throw new IllegalArgumentException("The name argument is required");
+        if (acronym == null || acronym.length() == 0) throw new IllegalArgumentException("The acronym argument is required");
+        EntityManager em = Organization.entityManager();
+        TypedQuery<Organization> q = em.createQuery("SELECT o FROM Organization AS o WHERE o.name = :name  OR o.acronym = :acronym", Organization.class);
+        q.setParameter("name", name);
+        q.setParameter("acronym", acronym);
+        return q;
+    }
+    
 }

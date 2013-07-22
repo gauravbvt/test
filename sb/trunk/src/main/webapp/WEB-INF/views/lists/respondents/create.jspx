@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_mindalliance_sb_model_Respondent" modelAttribute="respondent" path="/lists/respondents" render="${empty dependencies}" z="TBPrxLph9fYYeOhdsn1zX7E/puk=">
+        <field:select field="expertises" id="c_com_mindalliance_sb_model_Respondent_expertises" itemValue="id" items="${expertises}" multiple="true" path="/expertises" z="Lb8KfX0ePcZ/14iCMmFvJfOavpM="/>
+        <field:simple field="documents" id="c_com_mindalliance_sb_model_Respondent_documents" messageCode="entity_reference_not_managed" messageCodeAttribute="Document" z="/r7nx+MrVxzAadUmaMaZHo375Vw="/>
+        <field:simple field="eocs" id="c_com_mindalliance_sb_model_Respondent_eocs" messageCode="entity_reference_not_managed" messageCodeAttribute="Eoc" z="i3FtFx3JCcuD7u+3cW38yOJrOzo="/>
+        <field:simple field="organizationCapabilities" id="c_com_mindalliance_sb_model_Respondent_organizationCapabilities" messageCode="entity_reference_not_managed" messageCodeAttribute="Organization Capability" z="UpSFGdvM80ArXGp18xyl8ErT59k="/>
+        <field:simple field="organizationIncidents" id="c_com_mindalliance_sb_model_Respondent_organizationIncidents" messageCode="entity_reference_not_managed" messageCodeAttribute="Organization Incident" z="x5+ZAgtzDB3Rtcw7jk5u18LRCyM="/>
+        <field:simple field="respondentSubcommittees" id="c_com_mindalliance_sb_model_Respondent_respondentSubcommittees" messageCode="entity_reference_not_managed" messageCodeAttribute="Respondent Subcommittee" z="cKqplATX9rkWdeprFItTEzzo/ZI="/>
+        <field:simple field="situationReports" id="c_com_mindalliance_sb_model_Respondent_situationReports" messageCode="entity_reference_not_managed" messageCodeAttribute="Situation Report" z="VQjf6xmqgNWqp4qCVzRJZZbFh3c="/>
+        <field:simple field="superbowlPlans" id="c_com_mindalliance_sb_model_Respondent_superbowlPlans" messageCode="entity_reference_not_managed" messageCodeAttribute="Superbowl Plan" z="jIhVYCI45wnvxbGddL4nPI716so="/>
+        <field:select field="contactInfo" id="c_com_mindalliance_sb_model_Respondent_contactInfo" itemValue="id" items="${contactinfoes}" path="/lists/contactinfoes" z="qhs/EqSUoIJAjy8YP0znZBwnbko="/>
+        <field:input field="surveyOpinion" id="c_com_mindalliance_sb_model_Respondent_surveyOpinion" required="true" validationMessageCode="field_invalid_integer" z="M9XErXcWLysvCffb1npzOEbmkhs="/>
+        <field:checkbox field="difficult" id="c_com_mindalliance_sb_model_Respondent_difficult" z="GhtAq/uqt7TpxKqvffMAuYR8Gow="/>
+        <field:input field="comments" id="c_com_mindalliance_sb_model_Respondent_comments" z="yzV6tSWvWXPePySOmAIvh3uMKQU="/>
+        <field:datetime dateTimePattern="${respondent_submitted_date_format}" field="submitted" id="c_com_mindalliance_sb_model_Respondent_submitted" required="true" z="Qt9RkZfeVfqbb5zy0BIZC6d4XaU="/>
+        <field:input field="problems" id="c_com_mindalliance_sb_model_Respondent_problems" z="zEcXZ0i15zlF3zROy8UCq46ZO/c="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_mindalliance_sb_model_Respondent" render="${not empty dependencies}" z="lA24dupucUGVpGz3qtTkDdSVV8k="/>
+</div>

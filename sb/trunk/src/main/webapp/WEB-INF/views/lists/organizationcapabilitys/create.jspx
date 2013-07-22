@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create compositePkField="id" id="fc_com_mindalliance_sb_model_OrganizationCapability" modelAttribute="organizationCapability" path="/lists/organizationcapabilitys" render="${empty dependencies}" z="/AChMnsc3l35Zd2lEhYgx5zI7Mw=">
+        <field:input disableFormBinding="true" field="id.respondent" id="c_com_mindalliance_sb_model_OrganizationCapability_id_respondent" required="true" validationMessageCode="field_invalid_integer" z="9FK82bSkx7GL77udcE4JXeT3Qbs="/>
+        <field:input disableFormBinding="true" field="id.organization" id="c_com_mindalliance_sb_model_OrganizationCapability_id_organization" required="true" validationMessageCode="field_invalid_integer" z="M5Wm4VvcKyotx+U5//5v7qemLBg="/>
+        <field:input disableFormBinding="true" field="id.coreCapability" id="c_com_mindalliance_sb_model_OrganizationCapability_id_coreCapability" required="true" validationMessageCode="field_invalid_integer" z="7lJMC7GxD4Ug2Sp5b/Y4JVOcmp0="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_mindalliance_sb_model_OrganizationCapability" render="${not empty dependencies}" z="w7MpLNXEZP3qZ/vB49cY0kgtmtU="/>
+</div>

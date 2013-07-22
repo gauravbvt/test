@@ -1,7 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+                                   "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
     <definition extends="default" name="reports/r1">
         <put-attribute name="body" value="/WEB-INF/views/reports/r1.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r2a">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r2a.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r2b">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r2b.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r3">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r3.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r4">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r4.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r6">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r6.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r7a">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r7a.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r7b">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r7b.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r8a">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r8a.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r8b">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r8b.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r9a">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r9a.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r9b">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r9b.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r10a">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r10a.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r10b">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r10b.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r11a">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r11a.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r11b">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r11b.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r11c">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r11c.jspx"/>
+    </definition>
+    <definition extends="default" name="reports/r12">
+        <put-attribute name="body" value="/WEB-INF/views/reports/r12.jspx"/>
     </definition>
 </tiles-definitions>

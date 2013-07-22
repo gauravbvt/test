@@ -45,7 +45,7 @@ public class SurveyQuestion {
         else if ( "menu".equals( _subtype ) )
             return "Menu";
         else if ( "file".equals( _subtype ) )
-            return "File";
+            return "Files";
         else if ( "multi_textbox".equals( _subtype ) )
             return "Multibox";
         else if ( "essay".equals( _subtype ) )

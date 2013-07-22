@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_Eoc" object="${eoc}" path="/lists/eocs" z="wnpncyeDnLn36UQ7DO2BPh+cNEQ=">
+        <field:display field="respondent" id="s_com_mindalliance_sb_model_Eoc_respondent" object="${eoc}" z="YSCUQFMPkycDadRDZwRmSsL4fy8="/>
+        <field:display field="existing" id="s_com_mindalliance_sb_model_Eoc_existing" object="${eoc}" z="iR3afIU+i2SP8cq5wBwzkEaQjVI="/>
+        <field:display field="comments" id="s_com_mindalliance_sb_model_Eoc_comments" object="${eoc}" z="pkJ7AexT5ilmfigMyH7knFysWNA="/>
+        <field:display field="name" id="s_com_mindalliance_sb_model_Eoc_name" object="${eoc}" z="8XQtWL4jXQScmh+evB0fU7ucEKw="/>
+        <field:display field="software" id="s_com_mindalliance_sb_model_Eoc_software" object="${eoc}" z="Bn5CQzuzirNok1zvLdCbPAa03gA="/>
+        <field:display field="activeDuring" id="s_com_mindalliance_sb_model_Eoc_activeDuring" object="${eoc}" z="NELNyQ4lO46jGUAb4AQQLbXDIQQ="/>
+        <field:display field="activeComments" id="s_com_mindalliance_sb_model_Eoc_activeComments" object="${eoc}" z="1X/cDatJ/2+NzQSXogjtQP7LTqE="/>
+    </page:show>
+</div>

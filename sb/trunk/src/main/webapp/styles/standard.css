@@ -96,7 +96,7 @@ body {
 }
 
 #menu li {
-	padding: 0 0 0.5em 0;
+	padding: 0 0 0.25em 0;
 }
 
 #menu h2 {
@@ -109,7 +109,6 @@ body {
 
 #menu a {
 	color: #666666;
-	background: #efefef;
 	text-decoration: none;
 	padding: 0;
 }
@@ -195,15 +194,44 @@ a img {
 	vertical-align: middle;
 }
 
-tr:nth-child(odd) {
-	background-color: #FFFFFF;
-}
-
-tr:nth-child(even) {
-	background-color: #EFEFEF;
-}
-
 .flag {
 	height: 11px;
 	width: 16px;
+}
+
+/* -------------- Icons */
+#icons {
+    margin: 0 0 8px;
+    text-align: right;
+}
+
+#icons ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+
+#icons li {
+    display: inline;
+    margin: 0 0 0 18px;
+    padding: 0;
+}
+
+#icons li.csv {
+    background: url('/images/sb/csv.png') no-repeat;
+}
+#icons li.rss {
+    background: url('/images/sb/rss.gif') no-repeat;
+}
+#icons li.vcard {
+    background: url('/images/sb/vcard.png') no-repeat;
+}
+#icons a {
+    padding: 0 0 0 18px;
+}
+#icons li.csv a {
+ }
+#icons li.rss a {
+}
+#icons li.vcard a {
 }

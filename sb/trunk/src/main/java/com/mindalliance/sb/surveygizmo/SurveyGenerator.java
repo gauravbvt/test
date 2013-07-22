@@ -76,7 +76,11 @@ public class SurveyGenerator {
     private void outputAsNeededQuestion( PrintStream out, SurveyQuestion question, SurveyQuestion source ) {
         int questionId = question.getId();
         out.println( "// " + question.getEnglishTitle() );
-        out.print( "for ( int key : response.getKeys( " );
+        out.print( "for ( int key : " );
+        if ( source != null )
+            out.print( "response.getSourcedKeys( source.getKey(), " );
+        else
+            out.print( "response.getKeys( " );
 
         List<Integer> skus = question.getSub_question_skus();
         boolean first = true;

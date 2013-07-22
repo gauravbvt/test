@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_CriticalTask" object="${criticaltask}" path="/lists/criticaltasks" z="zjVcq7gZyaAC/KiR743G2Wy8kj0=">
+        <field:display field="coreCapability" id="s_com_mindalliance_sb_model_CriticalTask_coreCapability" object="${criticaltask}" z="bqjg5S40JD0E74SzzgoZnHHIrJ4="/>
+        <field:display field="parent" id="s_com_mindalliance_sb_model_CriticalTask_parent" object="${criticaltask}" z="GGb/zo6XbTubllnnUirom1UUQ84="/>
+        <field:display field="name" id="s_com_mindalliance_sb_model_CriticalTask_name" object="${criticaltask}" z="5gP9MH0VTN3eOdkaBZlO1qXuPWQ="/>
+        <field:display field="type" id="s_com_mindalliance_sb_model_CriticalTask_type" object="${criticaltask}" z="qdpLvMy3qJLC8MgRevtTMaHAgTo="/>
+        <field:display field="description" id="s_com_mindalliance_sb_model_CriticalTask_description" object="${criticaltask}" z="aj6gZuhdXcuP8aMcV4Ezwz3JmvY="/>
+    </page:show>
+</div>

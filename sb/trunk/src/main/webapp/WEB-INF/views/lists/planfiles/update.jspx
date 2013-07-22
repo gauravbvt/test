@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_mindalliance_sb_model_PlanFile" modelAttribute="planFile" path="/lists/planfiles" versionField="none" z="HGv32tf+8h1P03/u5BEWlBK2dpk=">
+        <field:select field="superbowlPlan" id="c_com_mindalliance_sb_model_PlanFile_superbowlPlan" itemValue="id" items="${superbowlplans}" path="/superbowlplans" z="xqCe0/h+0GgN2AZUzCPcqlI9jac="/>
+        <field:input field="name" id="c_com_mindalliance_sb_model_PlanFile_name" required="true" z="f8G3Hl2iqlBSDUIyQgcQJad5OJo="/>
+        <field:input field="contents" id="c_com_mindalliance_sb_model_PlanFile_contents" required="true" z="edOnmwnUOcJ00SJt0YWam91jNRA="/>
+        <field:input field="checksum" id="c_com_mindalliance_sb_model_PlanFile_checksum" required="true" z="2Dm86e7VS4MJD5z1LFltsoFQsAE="/>
+        <field:input field="mimeType" id="c_com_mindalliance_sb_model_PlanFile_mimeType" z="6msUt06sLibcu8YZk4A7MuuGEp8="/>
+        <field:input field="size" id="c_com_mindalliance_sb_model_PlanFile_size" required="true" validationMessageCode="field_invalid_integer" z="Yz60Hw511ZfIbmlvUNRegtebtbQ="/>
+    </form:update>
+</div>

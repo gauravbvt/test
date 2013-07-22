@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="lists/criticaltasks/list">
+        <put-attribute name="body" value="/WEB-INF/views/lists/criticaltasks/list.jspx"/>
+    </definition>
+<definition extends="default" name="lists/criticaltasks/show">
+        <put-attribute name="body" value="/WEB-INF/views/lists/criticaltasks/show.jspx"/>
+    </definition>
+<definition extends="default" name="lists/criticaltasks/create">
+        <put-attribute name="body" value="/WEB-INF/views/lists/criticaltasks/create.jspx"/>
+    </definition>
+<definition extends="default" name="lists/criticaltasks/update">
+        <put-attribute name="body" value="/WEB-INF/views/lists/criticaltasks/update.jspx"/>
+    </definition>
+</tiles-definitions>

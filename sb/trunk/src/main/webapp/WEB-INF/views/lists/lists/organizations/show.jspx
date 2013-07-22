@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show create="false" delete="false" id="ps_com_mindalliance_sb_model_Organization" object="${organization}" path="/lists/lists/organizations" z="RUyKuz4jZX9Ekvjba0fh4oTAuaQ=">
+        <field:display field="disciplines" id="s_com_mindalliance_sb_model_Organization_disciplines" object="${organization}" z="SKB6e4aZ+DV8VqPGUR+WsD3RKD8="/>
+        <field:display field="type" id="s_com_mindalliance_sb_model_Organization_type" object="${organization}" z="Q7S56M16GsdZxzqon18ntDqoMDM="/>
+        <field:display field="parent" id="s_com_mindalliance_sb_model_Organization_parent" object="${organization}" z="Wh6ep09btIdCFrYj5xl5NJ7z5LY="/>
+        <field:display field="name" id="s_com_mindalliance_sb_model_Organization_name" object="${organization}" z="1MyhQvQT6GfWZ/vnC5rsinlTZ+o="/>
+        <field:display field="logo" id="s_com_mindalliance_sb_model_Organization_logo" object="${organization}" z="b7Wh8sGf2OR6cGXYZWUE/Iz/5HI="/>
+        <field:display field="acronym" id="s_com_mindalliance_sb_model_Organization_acronym" object="${organization}" z="zjZhVfdA0Aav4xMl3IK10AS91Lw="/>
+        <field:display field="url" id="s_com_mindalliance_sb_model_Organization_url" object="${organization}" z="bVOqXUsjC0brx/SnTBhzfSevoU4="/>
+        <field:display calendar="true" dateTimePattern="${organization_added_date_format}" field="added" id="s_com_mindalliance_sb_model_Organization_added" object="${organization}" z="f7wgyTtaX3x2+pANrGG66FQnR20="/>
+    </page:show>
+</div>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_mindalliance_sb_model_OrganizationCapability" object="${organizationcapability}" path="/lists/organizationcapabilitys" z="0Vf+b98Xr+UZ/RU94fC989r1hvg=">
+        <field:display field="coreCapability" id="s_com_mindalliance_sb_model_OrganizationCapability_coreCapability" object="${organizationcapability}" z="dyoO941PCWJd+CHUxzS1IIzWTw4="/>
+        <field:display field="organization" id="s_com_mindalliance_sb_model_OrganizationCapability_organization" object="${organizationcapability}" z="/MXwLZDO5zl65vcXbOFMOUkAOBc="/>
+        <field:display field="respondent" id="s_com_mindalliance_sb_model_OrganizationCapability_respondent" object="${organizationcapability}" z="t6U9VJlzb56XhGu5NBG5G1FZdeQ="/>
+    </page:show>
+</div>
