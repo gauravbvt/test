@@ -38,7 +38,7 @@
         <authentication-provider>
             <password-encoder hash="sha-256" />
             <user-service>
-                <user name="admin" password="7a167b2b835a71f5855098f6aaf25f169f4634ca4dd942dbb1d180e995ee0a6f" authorities="ROLE_ADMIN" />
+                <user name="admin" password="eb30787351d13e5ebf9b59d295ccade9175f4aa656b8712338f02c4757f012b1" authorities="ROLE_ADMIN" />
                 <user name="user" password="4ca17437cb158d672fc41c94c91b68c1281d9e78d5836094c55b7ca021e1d8ad" authorities="ROLE_USER" />
             </user-service>
         </authentication-provider>

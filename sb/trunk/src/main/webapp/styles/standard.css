@@ -7,14 +7,14 @@ body,div,td {
 }
 
 body {
-	background: #aca380 url("/images/sb/back.png") repeat;
+	background: #aca380 url("../images/sb/back.png") repeat;
 	text-align: center;
     margin: 0;
 }
 
 #header {
 	margin: 0;
-    background: #4e4936 url("/images/sb/back-header.png") no-repeat;
+    background: #4e4936 url("../images/sb/back-header.png") no-repeat;
     height: 136px;
 }
 #header h1 {
@@ -218,13 +218,13 @@ a img {
 }
 
 #icons li.csv {
-    background: url('/images/sb/csv.png') no-repeat;
+    background: url('../images/sb/csv.png') no-repeat;
 }
 #icons li.rss {
-    background: url('/images/sb/rss.gif') no-repeat;
+    background: url('../images/sb/rss.gif') no-repeat;
 }
 #icons li.vcard {
-    background: url('/images/sb/vcard.png') no-repeat;
+    background: url('../images/sb/vcard.png') no-repeat;
 }
 #icons a {
     padding: 0 0 0 18px;

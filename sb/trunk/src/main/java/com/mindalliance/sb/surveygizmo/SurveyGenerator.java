@@ -126,6 +126,9 @@ public class SurveyGenerator {
 
     private void outputQuestion( PrintStream out, SurveyQuestion question, SurveyQuestion source ) {
         int questionId = question.getId();
+        if ( "SurveyAction".equals( question.get_type() ) )
+            return;
+        
         out.println( "// " + question.getEnglishTitle() );
         if ( "group".equals( question.get_subtype() ) ) {
             out.print( "question" + questionId + '(' );
