@@ -106,9 +106,9 @@
 
         <div id="icons">
             <ul>
-                <li class="csv"><a href="${path}/data.csv">CSV</a></li>
-                <li class="rss"><a href="${path}/feed.rss">RSS Feed</a></li>
-                <li class="vcard"><a href="${path}/contacts.vcf">Contacts</a></li>
+                <li class="csv"><a href="../${path}/data.csv">CSV</a></li>
+                <li class="rss"><a href="../${path}/feed.rss">RSS Feed</a></li>
+                <li class="vcard"><a href="../${path}/contacts.vcf">Contacts</a></li>
             </ul>
         </div>
 
