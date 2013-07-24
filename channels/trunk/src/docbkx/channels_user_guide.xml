@@ -10091,8 +10091,22 @@
                 
                 <entry><para>No</para></entry>
               </row>
-              
-              
+
+                <row>
+                    <entry><para>The checklist is not fully connected to the task context</para></entry>
+
+                    <entry><para>Depends on impacted tasks</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Add the missing contextual conditions and outcomes to steps in the checklists</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
+
             </tbody>
           </tgroup>
         </informaltable>

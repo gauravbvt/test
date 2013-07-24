@@ -559,19 +559,17 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         Node source = getSource();
         if ( source.isConnector() ) {
             title = MessageFormat.format(
-                    isAskedFor() ? "Needs to {0}ask for \"{1}\""
+                    isAskedFor() ? "Needs to ask for \"{0}\""
                             //  : isTriggeringToTarget() ? "Needs to be told to {0}"
-                            : "Needs to be notified {0}of \"{1}\"",
-                    ( isPublished() ? "" : "privately " ),
+                            : "Needs to be notified of \"{0}\"",
                     message.toLowerCase() );
 
         } else {
             Part part = (Part) source;
             title = MessageFormat.format(
-                    isAskedFor() ? "Ask {0}{2}{3}{4} for \"{1}\""
+                    isAskedFor() ? "Ask {1}{2}{3} for \"{0}\""
                             //   : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
-                            : "Notified {0}of \"{1}\" by {2}{3}{4}",
-                    ( isPublished() ? "" : "privately " ),
+                            : "Notified of \"{0}\" by {1}{2}{3}",
                     message.toLowerCase(),
                     getShortName( part, false ),
                     getOrganizationString( part ),
@@ -607,20 +605,18 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
         Node node = getTarget();
         if ( node.isConnector() ) {
-            String format = isAskedFor() ? "Can answer {0}with \"{1}\""
-                    : "Can notify {0}of \"{1}\"";
+            String format = isAskedFor() ? "Can answer with \"{0}\""
+                    : "Can notify of \"{0}\"";
 
             title = MessageFormat.format( format,
-                    ( isPublished() ? "" : "privately " ),
                     message.toLowerCase() );
 
         } else {
             Part part = (Part) node;
-            String format = isAskedFor() ? "Answer {0}{2}{3}{4} with \"{1}\""
-                    : "Notify {0}{2}{3}{4} of \"{1}\"";
+            String format = isAskedFor() ? "Answer {1}{2}{3} with \"{0}\""
+                    : "Notify {1}{2}{3} of \"{0}\"";
 
             title = MessageFormat.format(
-                    ( isPublished() ? "" : "privately " ),
                     format, message.toLowerCase(),
                     getShortName( node, true ),
                     getOrganizationString( part ),

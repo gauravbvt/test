@@ -313,6 +313,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartDoesNotImplementFunction"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CommandWithoutAuthority"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CriticalNotificationNotTriggering"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnmatchedToChecklistStep"/>
             </list>
         </property>
     </bean>

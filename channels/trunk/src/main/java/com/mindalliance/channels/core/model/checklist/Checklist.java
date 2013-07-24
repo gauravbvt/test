@@ -484,7 +484,7 @@ public class Checklist implements Serializable, Mappable {
 
     // Event timing conditions
 
-    private List<EventTimingCondition> listEventTimingConditions() {
+    public List<EventTimingCondition> listEventTimingConditions() {
         List<EventTimingCondition> eventTimingConditions = new ArrayList<EventTimingCondition>();
         if ( part.isTerminatesEventPhase() ) {
             EventTiming eventTiming = part.getSegment().getEventPhase().getEventTiming().getEventTimingAfterThis();
@@ -501,7 +501,7 @@ public class Checklist implements Serializable, Mappable {
 
     // Goal conditions
 
-    private List<GoalCondition> listGoalConditions() {
+    public List<GoalCondition> listGoalConditions() {
         List<GoalCondition> goalConditions = new ArrayList<GoalCondition>();
         for ( Goal goal : part.getGoalsAchieved() ) {
             goalConditions.add( new GoalCondition( goal ) );
@@ -509,7 +509,7 @@ public class Checklist implements Serializable, Mappable {
         return goalConditions;
     }
 
-    private List<NeedSatisfiedCondition> listNeedSatisfiedConditions() {
+    public List<NeedSatisfiedCondition> listNeedSatisfiedConditions() {
         List<NeedSatisfiedCondition> needSatisfiedConditions = new ArrayList<NeedSatisfiedCondition>();
         for ( Information need : part.getNeededInformation() ) {
             needSatisfiedConditions.add( new NeedSatisfiedCondition( need ) );
@@ -517,7 +517,7 @@ public class Checklist implements Serializable, Mappable {
         return needSatisfiedConditions;
     }
 
-    private List<EventOutcome> listEventOutcomes() {
+    public List<EventOutcome> listEventOutcomes() {
         List<EventOutcome> eventOutcomes = new ArrayList<EventOutcome>();
         Event event = part.getInitiatedEvent();
         if ( event != null ) {
@@ -526,7 +526,7 @@ public class Checklist implements Serializable, Mappable {
         return eventOutcomes;
     }
 
-    private List<GoalAchievedOutcome> listGoalAchievedOutcomes() {
+    public List<GoalAchievedOutcome> listGoalAchievedOutcomes() {
         List<GoalAchievedOutcome> goalAchievedOutcomes = new ArrayList<GoalAchievedOutcome>();
         for ( Goal goal : part.getGoalsAchieved() ) {
             goalAchievedOutcomes.add( new GoalAchievedOutcome( goal ) );
@@ -534,7 +534,7 @@ public class Checklist implements Serializable, Mappable {
         return goalAchievedOutcomes;
     }
 
-    private List<CapabilityCreatedOutcome> listCapabilityCreatedOutcomes() {
+    public List<CapabilityCreatedOutcome> listCapabilityCreatedOutcomes() {
         List<CapabilityCreatedOutcome> capabilityCreatedOutcomes = new ArrayList<CapabilityCreatedOutcome>();
         for ( Information capability : part.getInformationCapabilities() ) {
             capabilityCreatedOutcomes.add( new CapabilityCreatedOutcome( capability ) );

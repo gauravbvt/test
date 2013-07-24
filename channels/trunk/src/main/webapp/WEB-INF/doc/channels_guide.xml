@@ -686,13 +686,19 @@ A step can be either
 * a self-assigned research sub-task
 * a self-assigned follow up sub-task
 
-A step may be required or optional. It may have to be preceded by other steps and may also be subject to some stated conditions being present or absent.
+A step may be required or optional. A step may have identify the completion of other steps as pre-requisites.
+
+A step, to be executable, may also require that some stated conditions (an event phase, a goal having been achieved, an information need having been satisfied) be present or absent.
+
+Channels will raise an issue whenever a condition or outcome from the definition of a task is not referenced by at least one step, for example, when a goal achieved by the task is not associated with a step in its checklist.
 
 The communication steps of a checklist are implied by the flows in and out of a task, to and from other agents(requested info to be received and notifications to be sent). 
 
 The sub-task steps are implied by flows to self - research sub-tasks are triggering requests to self and followup sub-tasks are triggering notifications to self.
 
 The conditions on executing steps can be the goals achieved and events triggered by the task, or other stated conditions.
+
+The outcomes of a task (events caused or terminated, goals achieved, sharing capabilities acquired) can be associated with the execution of individual steps.
                     </description>
                 </item>
             </topic>
@@ -1322,6 +1328,7 @@ A step can be given:
 * Prerequisite steps  - steps the step must come "after"
 * Conditions that must be present for the step to be taken ("if")
 * Conditions that must be absent for the step to be taken ("unless")
+* Outcomes from the execution of a step
 
 Action steps (not communication steps) can be marked as "required", else they are optional. Communication and sub-task steps are marked as required if they are notifications or follow-ups.
 
@@ -1329,6 +1336,11 @@ Conditions applicable on steps are either:
 * Goals achieved by the task
 * Events triggered or terminated by the task
 * Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
+
+Outcomes of a steps can be:
+* Goals, if any, achieved by the task
+* Events, if any,  caused or terminated by the task
+* Sharing capabilities acquired for or from successfully executing the task
 
 A checklist must be confirmed to be deployed to participants as such. Any change to the implied communication steps or to the action steps requires a re-confirmation.
                     
@@ -1347,7 +1359,9 @@ The green dot represents start of execution and the red dot its end. Execution i
 
 Steps that can be executed in parallel are depicted in parallel. Steps that must precede one another are depicted in sequences.
 
-Steps that are executed conditionally are preceded by ''if'' and/or ''unless'' conditions. If there is more than one condition constraining a step, the conditions precede the step in a sequence.</description>
+Steps that are executed conditionally are preceded by ''if'' and/or ''unless'' conditions. If there is more than one condition constraining a step, the conditions precede the step in a sequence.
+
+The outcomes of steps are shown linked to the steps.</description>
                 </item>
             </topic>
         </section>
