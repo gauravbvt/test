@@ -4,9 +4,11 @@ import com.mindalliance.channels.core.model.checklist.ActionStep;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.LocalCondition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepGuard;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
+import com.mindalliance.channels.core.model.checklist.StepOutcome;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -40,6 +42,7 @@ public class ChecklistConverter extends AbstractChannelsConverter {
         Checklist checklist = (Checklist) object;
         List<Step> effectiveSteps = checklist.listEffectiveSteps();
         List<Condition> effectiveConditions = checklist.listEffectiveConditions();
+        List<Outcome> effectiveOutcomes = checklist.listEffectiveOutcomes();
         for ( ActionStep actionStep : checklist.getActionSteps() ) {
             writer.startNode( "actionStep" );
             writer.addAttribute( "required", Boolean.toString( actionStep.isRequired() ) );
@@ -72,6 +75,16 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.endNode();
             writer.startNode( "stepRef" );
             writer.setValue( stepGuard.getStepRef() );
+            writer.endNode();
+            writer.endNode();
+        }
+        for ( StepOutcome stepOutcome : checklist.listEffectiveStepOutcomes( effectiveSteps, effectiveOutcomes ) ) {
+            writer.startNode( "stepOutcome" );
+            writer.startNode( "outcomeRef" );
+            writer.setValue( stepOutcome.getOutcomeRef() );
+            writer.endNode();
+            writer.startNode( "stepRef" );
+            writer.setValue( stepOutcome.getStepRef() );
             writer.endNode();
             writer.endNode();
         }
@@ -121,6 +134,17 @@ public class ChecklistConverter extends AbstractChannelsConverter {
                 stepGuard.setStepRef( reader.getValue() );
                 reader.moveUp();
                 checklist.addStepGuard( stepGuard );
+            } else if ( nodeName.equals( "stepOutcome" ) ) {
+                StepOutcome stepOutcome = new StepOutcome();
+                reader.moveDown();
+                assert reader.getNodeName().equals( "outcomeRef" );
+                stepOutcome.setOutcomeRef( reader.getValue() );
+                reader.moveUp();
+                reader.moveDown();
+                assert reader.getNodeName().equals( "stepRef" );
+                stepOutcome.setStepRef( reader.getValue() );
+                reader.moveUp();
+                checklist.addStepOutcome( stepOutcome );
             } else if ( nodeName.equals( "confirmed" ) ) {
                 checklist.setConfirmed( Boolean.parseBoolean( reader.getValue() ) );
             }

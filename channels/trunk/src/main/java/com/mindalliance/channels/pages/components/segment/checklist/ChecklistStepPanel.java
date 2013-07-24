@@ -9,9 +9,11 @@ import com.mindalliance.channels.core.model.checklist.ActionStep;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Condition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepGuard;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
+import com.mindalliance.channels.core.model.checklist.StepOutcome;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -52,6 +54,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
     private boolean edited;
     private WebMarkupContainer stepContainer;
     private WebMarkupContainer constraintsContainer;
+    private WebMarkupContainer outcomesContainer;
 
     public ChecklistStepPanel( String id, Part part, Step step, boolean edited, int index ) {
         super( id );
@@ -74,6 +77,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addEditDoneButton();
         addStepRequired();
         addConstraints();
+        addOutcomes();
     }
 
     private void addStepRequired() {
@@ -207,6 +211,13 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         addIfGuards();
         addUnlessGuards();
         addPrerequisiteSteps();
+    }
+
+    private void addOutcomes() {
+        outcomesContainer = new WebMarkupContainer( "outcomesContainer" );
+        outcomesContainer.setVisible( edited || getChecklist().hasOutcomes( step ) );
+        stepContainer.add( outcomesContainer );
+        addStepOutcomes();
     }
 
     private boolean isConstrained( Step step ) {
@@ -467,6 +478,119 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         command.makeUndoable( false );
         doCommand( command ); // add step order
 
+    }
+
+    private void addStepOutcomes() {
+        List<StepOutcome> stepOutcomes = getStepOutcomes();
+        ListView<StepOutcome> stepOutcomeListView = new ListView<StepOutcome>(
+                "outcomes",
+                stepOutcomes
+        ) {
+            @Override
+            protected void populateItem( ListItem<StepOutcome> item ) {
+                final StepOutcome stepOutcome = item.getModelObject();
+                Outcome outcome = getChecklist().deRefOutcome( stepOutcome.getOutcomeRef() );
+                String outcomeString = outcome.getLabel();
+                Label label = new Label( "outcome", StringUtils.abbreviate( outcomeString, MAX_SIZE ) );
+                item.add( label );
+                if ( outcomeString.length() > MAX_SIZE ) {
+                    addTipTitle( label, outcomeString );
+                }
+                // delete
+                AjaxLink<String> deleteIfLink = new AjaxLink<String>( "deleteOutcome" ) {
+                    @Override
+                    public void onClick( AjaxRequestTarget target ) {
+                        int index = getChecklist().getStepOutcomes().indexOf( stepOutcome );
+                        if ( index >= 0 ) {
+                            Command command = new UpdateSegmentObject( getUsername(),
+                                    part,
+                                    "checklist.stepOutcomes",
+                                    stepOutcome,
+                                    UpdateObject.Action.Remove );
+                            command.makeUndoable( false );
+                            doCommand( command ); // delete step outcome
+                            getChecklist().cleanUp();
+                            Change change = new Change( Change.Type.Updated, part );
+                            change.setProperty( "checklist" );
+                            update( target, change );
+                        }
+                    }
+                };
+                addTipTitle( deleteIfLink, "Delete this outcome" );
+                deleteIfLink.setVisible( edited );
+                item.add( deleteIfLink );
+            }
+        };
+        stepOutcomeListView.setOutputMarkupId( true );
+        makeVisible( stepOutcomeListView, !stepOutcomes.isEmpty() );
+        outcomesContainer.add( stepOutcomeListView );
+        // add new
+        addNewStepOutcome();
+    }
+
+    private void addNewStepOutcome() {
+        WebMarkupContainer addOutcomeContainer = new WebMarkupContainer( "addOutcomeContainer" );
+        addOutcomeContainer.setVisible( edited );
+        DropDownChoice<Outcome> outcomeChoices = new DropDownChoice<Outcome>(
+                "outcomeChoices",
+                new PropertyModel<Outcome>( this, "addedOutcome" ),
+                getOutcomeChoices(),
+                new IChoiceRenderer<Outcome>() {
+                    @Override
+                    public Object getDisplayValue( Outcome outcome ) {
+                        return StringUtils.abbreviate( outcome.getLabel(), MAX_SIZE );
+                    }
+
+                    @Override
+                    public String getIdValue( Outcome outcome, int index ) {
+                        return Integer.toString( index );
+                    }
+                }
+        );
+        outcomeChoices.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                Change change = new Change( Change.Type.Updated, part );
+                change.setProperty( "checklist" );
+                update( target, change );
+            }
+        });
+        addOutcomeContainer.add( outcomeChoices );
+        outcomesContainer.add( addOutcomeContainer );
+    }
+
+    private List<Outcome> getOutcomeChoices() {
+        List<Outcome> outcomes = getChecklist().listEffectiveOutcomes();
+        outcomes.removeAll( getChecklist().listOutcomesFor( step ) );
+        Collections.sort( outcomes, new Comparator<Outcome>() {
+            @Override
+            public int compare( Outcome o1, Outcome o2 ) {
+                return o1.getLabel().compareTo( o2.getLabel() );
+            }
+        } );
+        return outcomes;
+    }
+
+    public void setAddedOutcome( Outcome outcome ) {
+        StepOutcome stepOutcome = new StepOutcome( outcome, step );
+        Command command = new UpdateSegmentObject(
+                getUsername(),
+                part,
+                "checklist.stepOutcomes",
+                stepOutcome,
+                UpdateObject.Action.Add
+        );
+        command.makeUndoable( false );
+        doCommand( command );
+    }
+
+    public Outcome getAddedOutcome() {
+        return null;
+     }
+
+    @SuppressWarnings( "unchecked" )
+    private List<StepOutcome> getStepOutcomes() {
+        return getChecklist().listEffectiveStepOutcomesFor( step );
     }
 
 

@@ -76,6 +76,8 @@ public abstract class AbstractStepData implements Serializable {
             return new EventTimingConditionData( condition, serverUrl, communityService, user );
          else if ( condition.isGoalCondition() )
             return new GoalConditionData(condition, serverUrl, communityService, user );
+        else if ( condition.isNeedSatisfiedCondition() )
+            return new NeedSatisfiedConditionData(condition, serverUrl, communityService, user );
         else
             throw new RuntimeException( "Unknown condition" );
     }

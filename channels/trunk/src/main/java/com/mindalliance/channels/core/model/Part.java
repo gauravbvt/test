@@ -1414,6 +1414,55 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         ).size();
     }
 
+    public List<Information> getNeededInformation() {
+        List<Information> explicitNeeds = new ArrayList<Information>();
+        for ( Flow need : getNeeds() ) {
+            explicitNeeds.add( new Information( need ) );
+        }
+        Set<Information> sharedInfoList = new HashSet<Information>();
+        for ( Flow sharing : getAllSharingReceives() ) {
+            final Information sharedInfo = new Information( sharing );
+            if ( !CollectionUtils.exists(
+                    explicitNeeds,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return sharedInfo.narrowsOrEquals( (Information) object );
+                        }
+                    }
+            ) ) {
+                sharedInfoList.add( sharedInfo );
+            }
+        }
+        List<Information>neededInfoList = new ArrayList<Information>( explicitNeeds );
+        neededInfoList.addAll( sharedInfoList );
+        return neededInfoList;
+    }
+
+    public List<Information> getInformationCapabilities() {
+        List<Information> explicitCapabilities = new ArrayList<Information>(  );
+        for ( Flow capability : getCapabilities() ) {
+            explicitCapabilities.add( new Information( capability ));
+        }
+        Set<Information> sharedInfoList = new HashSet<Information>();
+        for ( Flow sharing : getAllSharingSends() ) {
+            final Information sharedInfo = new Information( sharing );
+            if ( !CollectionUtils.exists(
+                    explicitCapabilities,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return sharedInfo.narrowsOrEquals( (Information) object );
+                        }
+                    }
+            ) ) {
+                sharedInfoList.add( sharedInfo );
+            }
+        }
+        List<Information>infoCapabilities = new ArrayList<Information>( explicitCapabilities );
+        infoCapabilities.addAll( sharedInfoList );
+        return infoCapabilities;
+    }
 
 
     /**

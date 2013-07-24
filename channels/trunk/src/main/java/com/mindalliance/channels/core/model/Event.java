@@ -128,4 +128,9 @@ public class Event extends ModelEntity implements GeoLocatable {
         return sb.toString();
     }
 
+    public String getStepOutcomeLabel() {
+        return "Event \""
+                + getName()
+                + "\" is caused";
+    }
 }

@@ -109,6 +109,11 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
      */
     private boolean standardized = false;
 
+    /**
+     * Whether the need, capability or implied commitments (if sharing flow) can be made visible to third parties.
+     */
+    private boolean published = false;
+
     protected Flow() {
     }
 
@@ -448,6 +453,14 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         this.standardized = standardized;
     }
 
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished( boolean published ) {
+        this.published = published;
+    }
+
     public String getShortName( Node node, boolean qualified ) {
         String result = "somebody";
 
@@ -546,17 +559,19 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         Node source = getSource();
         if ( source.isConnector() ) {
             title = MessageFormat.format(
-                    isAskedFor() ? "Needs to ask for \"{0}\""
+                    isAskedFor() ? "Needs to {0}ask for \"{1}\""
                             //  : isTriggeringToTarget() ? "Needs to be told to {0}"
-                            : "Needs to be notified of \"{0}\"",
+                            : "Needs to be notified {0}of \"{1}\"",
+                    ( isPublished() ? "" : "privately " ),
                     message.toLowerCase() );
 
         } else {
             Part part = (Part) source;
             title = MessageFormat.format(
-                    isAskedFor() ? "Ask {1}{2}{3} for \"{0}\""
+                    isAskedFor() ? "Ask {0}{2}{3}{4} for \"{1}\""
                             //   : isTriggeringToTarget() ? "Told to {0} by {1}{2}{3}"
-                            : "Notified of \"{0}\" by {1}{2}{3}",
+                            : "Notified {0}of \"{1}\" by {2}{3}{4}",
+                    ( isPublished() ? "" : "privately " ),
                     message.toLowerCase(),
                     getShortName( part, false ),
                     getOrganizationString( part ),
@@ -592,19 +607,20 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
         Node node = getTarget();
         if ( node.isConnector() ) {
-            String format = isAskedFor() ? "Can answer with \"{0}\""
-                    //   : isTriggeringToTarget() ? "Can tell to {0}"
-                    : "Can notify of \"{0}\"";
+            String format = isAskedFor() ? "Can answer {0}with \"{1}\""
+                    : "Can notify {0}of \"{1}\"";
 
-            title = MessageFormat.format( format, message.toLowerCase() );
+            title = MessageFormat.format( format,
+                    ( isPublished() ? "" : "privately " ),
+                    message.toLowerCase() );
 
         } else {
             Part part = (Part) node;
-            String format = isAskedFor() ? "Answer {1}{2}{3} with \"{0}\""
-                    //  : isTriggeringToTarget() ? "Tell {1}{2}{3} to {0}"
-                    : "Notify {1}{2}{3} of \"{0}\"";
+            String format = isAskedFor() ? "Answer {0}{2}{3}{4} with \"{1}\""
+                    : "Notify {0}{2}{3}{4} of \"{1}\"";
 
             title = MessageFormat.format(
+                    ( isPublished() ? "" : "privately " ),
                     format, message.toLowerCase(),
                     getShortName( node, true ),
                     getOrganizationString( part ),
@@ -684,7 +700,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     }
 
     private boolean isImplied( final Restriction restriction ) {
-        return !restrictions.isEmpty()  &&
+        return !restrictions.isEmpty() &&
                 CollectionUtils.exists(
                         restrictions,
                         new Predicate() {
@@ -1312,7 +1328,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<String> getRestrictionLabels( final boolean isSend ) {
         return (List<String>) CollectionUtils.collect(
                 getRestrictions(),
@@ -1561,8 +1577,9 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         state.put( "significanceToTarget", getSignificanceToTarget() );
         state.put( "significanceToSource", getSignificanceToSource() );
         state.put( "intent", getIntent() );
-        state.put( "restrictions", new ArrayList<Restriction> ( getRestrictions() ) );
+        state.put( "restrictions", new ArrayList<Restriction>( getRestrictions() ) );
         state.put( "prohibited", isProhibited() );
+        state.put( "published", isPublished() );
         state.put( "ifTaskFails", isIfTaskFails() );
         state.put( "referencesEventPhase", isReferencesEventPhase() );
         state.put( "canBypassIntermediate", isCanBypassIntermediate() );
@@ -1597,6 +1614,8 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
             setIntent( (Intent) state.get( "intent" ) );
         if ( state.containsKey( "prohibited" ) )
             setProhibited( (Boolean) state.get( "prohibited" ) );
+        if ( state.containsKey( "published" ) )
+            setPublished( (Boolean) state.get( "published" ) );
         if ( state.containsKey( "restrictions" ) )
             setRestrictions( (List<Restriction>) state.get( "restrictions" ) );
         if ( state.containsKey( "ifTaskFails" ) )
@@ -1691,6 +1710,20 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
     public boolean isRestricted() {
         return !getRestrictions().isEmpty();
     }
+
+    @SuppressWarnings( "unchecked" )
+    public List<String> getEffectiveEoiNames() {
+        return (List<String>) CollectionUtils.collect(
+                getEffectiveEois(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ( (ElementOfInformation) input ).getContent();
+                    }
+                }
+        );
+    }
+
 
     /**
      * The significance of a flow.
@@ -1863,13 +1896,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
 
         public String getLabel( boolean isSend ) {
             if ( this == Supervisor || this == Supervised || this == Self || this == Other ) {
-                StringBuilder sb = new StringBuilder(  );
-                sb.append ( isSend ? "to " : "from " );
+                StringBuilder sb = new StringBuilder();
+                sb.append( isSend ? "to " : "from " );
                 if ( this == Supervisor )
                     sb.append( isSend ? Supervisor.toString() : Supervised.toString() );
                 else if ( this == Supervised )
                     sb.append( isSend ? Supervised.toString() : Supervisor.toString() );
-                else sb.append( this.toString());
+                else sb.append( this.toString() );
                 return sb.toString();
             } else {
                 return "in " + toString();
@@ -2016,10 +2049,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         }
 
         public Restriction inverse() {
-            switch( this ) {
-                case Supervisor: return Supervised;
-                case Supervised: return Supervisor;
-                default: return this;
+            switch ( this ) {
+                case Supervisor:
+                    return Supervised;
+                case Supervised:
+                    return Supervisor;
+                default:
+                    return this;
             }
         }
 
@@ -2030,13 +2066,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            final Restriction needRestriction = (Restriction)object;
+                            final Restriction needRestriction = (Restriction) object;
                             return CollectionUtils.exists(
-                                  capabilityRestrictions,
+                                    capabilityRestrictions,
                                     new Predicate() {
                                         @Override
                                         public boolean evaluate( Object object ) {
-                                            Restriction capabilityRestriction = (Restriction)object;
+                                            Restriction capabilityRestriction = (Restriction) object;
                                             return capabilityRestriction.contradicts( needRestriction );
                                         }
                                     }
@@ -2050,13 +2086,13 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            final Restriction needRestriction = (Restriction)object;
+                            final Restriction needRestriction = (Restriction) object;
                             return !CollectionUtils.exists(
                                     capabilityRestrictions,
                                     new Predicate() {
                                         @Override
                                         public boolean evaluate( Object object ) {
-                                            Restriction capabilityRestriction = (Restriction)object;
+                                            Restriction capabilityRestriction = (Restriction) object;
                                             return Restriction.implies( capabilityRestriction, needRestriction );
                                         }
                                     }

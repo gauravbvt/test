@@ -102,6 +102,37 @@
             <td>&nbsp;</td>
         </tr>
 
+        <tr wicket:id="outcomesContainer">
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <th aligh="right">Expected outcomes</th>
+                        <td>
+                            <table>
+                                <tr wicket:id="outcomes">
+                                    <td><span wicket:id="outcome">outcome</span> </td>
+                                    <td>
+                                        <a class="delete" wicket:id="deleteOutcome" href="#">
+                                            <img src="images/delete.png" alt="Delete outcome"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr wicket:id="addOutcomeContainer">
+                        <td colspan="2">
+                            <select wicket:id="outcomeChoices">
+                                <option>an outcome</option>
+                            </select>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+
 
      </table>
 </wicket:panel>

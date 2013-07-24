@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -27,6 +28,7 @@ public class Information implements Serializable {
     private String name = "";
     private InfoProduct infoProduct;
     private List<ElementOfInformation> eois = new ArrayList<ElementOfInformation>();
+    private boolean published = false;
 
     public Information() {
     }
@@ -37,6 +39,13 @@ public class Information implements Serializable {
 
     public Information( InfoProduct infoProduct ) {
         this.infoProduct = infoProduct;
+    }
+
+    public Information( Flow flow ) {
+        name = flow.getName();
+        infoProduct = flow.getInfoProduct();
+        eois = flow.getEffectiveEois();
+        published = flow.isPublished();
     }
 
     public List<ElementOfInformation> getEois() {
@@ -63,6 +72,14 @@ public class Information implements Serializable {
         this.infoProduct = infoProduct;
     }
 
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished( boolean published ) {
+        this.published = published;
+    }
+
     public void addEoi( ElementOfInformation eoi ) {
         eois.add( eoi );
     }
@@ -70,8 +87,8 @@ public class Information implements Serializable {
     public List<ElementOfInformation> getEffectiveEois() {
         List<ElementOfInformation> effective = new ArrayList<ElementOfInformation>( getEois() );
         if ( infoProduct != null ) {
-            for (ElementOfInformation eoi : infoProduct.getEffectiveEois() ) {
-                if ( !effective.contains( eoi ))
+            for ( ElementOfInformation eoi : infoProduct.getEffectiveEois() ) {
+                if ( !effective.contains( eoi ) )
                     effective.add( eoi );
             }
         }
@@ -80,13 +97,14 @@ public class Information implements Serializable {
             public int compare( ElementOfInformation e1, ElementOfInformation e2 ) {
                 return e1.getContent().compareTo( e2.getContent() );
             }
-        });
+        } );
         return effective;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
+    // Sorts the names
     public List<String> getEffectiveEoiNames() {
-        return (List<String>) CollectionUtils.collect(
+        List<String> eoiNames = (List<String>) CollectionUtils.collect(
                 getEffectiveEois(),
                 new Transformer() {
                     @Override
@@ -95,9 +113,11 @@ public class Information implements Serializable {
                     }
                 }
         );
+        Collections.sort( eoiNames );
+        return eoiNames;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<String> getLocalEoiNames() {
         return (List<String>) CollectionUtils.collect(
                 getEois(),
@@ -118,7 +138,7 @@ public class Information implements Serializable {
                     public boolean evaluate( Object object ) {
                         final Flow flow = (Flow) object;
                         return Matcher.same( flow.getName(), getName() ) &&
-                                ( infoProduct == null || infoProduct.narrowsOrEquals( flow.getInfoProduct() )) &&
+                                ( infoProduct == null || infoProduct.narrowsOrEquals( flow.getInfoProduct() ) ) &&
                                 ( getEois().isEmpty() ||
                                         !flow.getEois().isEmpty()
                                                 && !CollectionUtils.exists(
@@ -167,6 +187,7 @@ public class Information implements Serializable {
         if ( infoProduct != null )
             state.put( "infoProduct", infoProduct.getName() );
         state.put( "eois", copyEois() );
+        state.put( "published", isPublished() );
         return state;
     }
 
@@ -178,17 +199,18 @@ public class Information implements Serializable {
         return copy;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public static Information fromState( Map<String, Object> state, QueryService queryService ) {
         Information info = new Information();
         info.setName( (String) state.get( "name" ) );
-        String infoProductName = (String)state.get( "infoProduct" );
+        String infoProductName = (String) state.get( "infoProduct" );
         if ( infoProductName != null ) {
             info.setInfoProduct( queryService.findOrCreateType( InfoProduct.class, infoProductName ) );
         }
         for ( ElementOfInformation eoi : (List<ElementOfInformation>) state.get( "eois" ) ) {
             info.addEoi( new ElementOfInformation( eoi ) );
         }
+        info.setPublished( (Boolean)state.get( "published" ) );
         return info;
     }
 
@@ -196,4 +218,70 @@ public class Information implements Serializable {
         return getLocalEoiNames().contains( eoi.getContent() );
     }
 
- }
+    public String getStepConditionLabel() {
+        // The info is needed if a step condition
+        StringBuilder sb = new StringBuilder();
+        sb.append( "The need for information \"" )
+                .append( getName().isEmpty() ? "something" : getName() );
+        if ( !getEois().isEmpty() ) {
+            sb.append( " with element " )
+                    .append( ChannelsUtils.listToString( getEffectiveEoiNames(), ", ", " and " ) );
+        }
+        sb.append( "\" is satisfied" );
+        return sb.toString();
+    }
+
+    public String getStepOutcomeLabel() {
+        // The info is sharing capability as a step outcome
+        StringBuilder sb = new StringBuilder();
+        sb.append( "The information \"" )
+                .append( getName().isEmpty() ? "something" : getName() );
+        if ( !getEois().isEmpty() ) {
+            sb.append( " with element " )
+                    .append( ChannelsUtils.listToString( getEffectiveEoiNames(), ", ", " and " ) );
+        }
+        sb.append( "\" can be shared" );
+        return sb.toString();
+    }
+
+
+
+    public boolean narrowsOrEquals( Information other ) {
+        return Matcher.same( getName(), other.getName() )
+                && other.getEOIsString( ",", "," ).contains( getEOIsString( ",", "," ) );
+    }
+
+    @Override
+    public boolean equals( Object object ) {
+        if ( object instanceof Information ) {
+            Information other = (Information) object;
+            return Matcher.same( getName(), other.getName() )
+                    && getEOIsString( ",", "," ).equals( other.getEOIsString( ",", "," ) );
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash = 31 * getName().hashCode();
+        hash = hash + 31 * getEOIsString( ",", "," ).hashCode();
+        return hash;
+    }
+
+    private String getEOIsString( String sep, String lastSep ) {
+        return ChannelsUtils.listToString( getEffectiveEoiNames(), sep, lastSep );
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( getName() );
+        if ( !getEffectiveEois().isEmpty() ) {
+            sb.append( "(" )
+                    .append( getEOIsString( ", ", " and " ) );
+        }
+        return sb.toString();
+    }
+}

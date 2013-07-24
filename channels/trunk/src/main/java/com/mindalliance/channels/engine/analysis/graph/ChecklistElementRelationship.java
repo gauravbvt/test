@@ -86,4 +86,8 @@ public class ChecklistElementRelationship implements Identifiable {
     public boolean isBetweenConditions() {
         return fromElement.isCondition() && toElement.isCondition();
     }
+
+    public boolean isWithOutcome() {
+        return toElement.isOutcome();
+    }
 }

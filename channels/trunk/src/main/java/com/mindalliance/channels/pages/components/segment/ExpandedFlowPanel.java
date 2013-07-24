@@ -258,6 +258,14 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      * EOIs list container.
      */
     private WebMarkupContainer eoisContainer;
+    /**
+     * Flow privacy container.
+     */
+    private WebMarkupContainer privacyContainer;
+    /**
+     * Privacy checkbox.
+     */
+    private AjaxCheckBox privateCheckBox;
 
     protected ExpandedFlowPanel(
             String id,
@@ -287,6 +295,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         addClassificationFields();
         addEOIs();
         addReferencesEventPhaseField();
+        addPrivacy();
         addAskedForRadios();
         addSignificanceToTarget();
         addOtherField();
@@ -545,6 +554,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         referencesEventPhaseCheckBox.setEnabled( lockedByUser && f.canSetReferencesEventPhase() );
         canBypassIntermediateCheckBox.setEnabled( lockedByUser && f.canSetCanBypassIntermediate() );
         receiptConfirmationRequestedCheckBox.setEnabled( lockedByUser && f.canSetReceiptConfirmationRequested() );
+        privateCheckBox.setEnabled( lockedByUser && canSetPrivacy() );
     }
 
     /**
@@ -577,6 +587,12 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         // true if agent has the initiative (notifies or asks)
         //return isSend() && f.isNotification() || !isSend() && f.isAskedFor();
         return isSend() && f.isNotification();
+    }
+
+    private boolean canSetPrivacy() {
+        Flow f = getFlow();
+        return isSend() && ( f.isCapability() || f.isNotification() )
+                || !isSend() && ( f.isNeed() || f.isAskedFor() );
     }
 
     private void addInfoLabelOrLink() {
@@ -696,6 +712,29 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         return choices.iterator();
     }
 
+    private void addPrivacy() {
+        privacyContainer = new WebMarkupContainer( "privacy" );
+        privacyContainer.setOutputMarkupId( true );
+        addOrReplace( privacyContainer );
+        privateCheckBox = new AjaxCheckBox(
+                "private",
+                new PropertyModel<Boolean>( this, "private" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getFlow(), "published" ) );
+            }
+        };
+        addTipTitle( privateCheckBox, "The occurrence of a private "
+                + ( getFlow().isNeed()
+                ? "need"
+                : getFlow().isCapability()
+                ? "capability"
+                : "sharing" )
+                + " is not to be revealed" );
+        privateCheckBox.setEnabled( canSetPrivacy() );
+        privacyContainer.add( privateCheckBox );
+    }
+
     private void addAskedForRadios() {
         askedForButtons = new RadioGroup<Boolean>(
                 "askedFor",
@@ -707,10 +746,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         askedForButtons.add( new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-/*
-                makeVisible( channelRow, isChannelRelevant( getFlow() ) );
-                target.add( channelRow );
-*/
                 makeVisible( ifTaskFailsContainer, canGetIfTaskFails() );
                 ifTaskFailsCheckBox.setEnabled( canSetIfTaskFails() );
                 target.add( ifTaskFailsContainer );
@@ -718,6 +753,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 target.add( significanceToTargetLabel );
                 addSignificanceToSource();
                 target.add( significanceToSourceContainer );
+                addPrivacy();
+                target.add( privacyContainer );
                 update( target, new Change( Change.Type.Updated, getFlow(), "askedFor" ) );
             }
         } );
@@ -1704,6 +1741,19 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
 
     public void setStandardized( boolean val ) {
         doCommand( new StandardizeInformation( getUser().getUsername(), getFlow(), val ) );
+    }
+
+    /**
+     * Get whether the flow is NOT published.
+     *
+     * @return a boolean
+     */
+    public boolean isPrivate() {
+        return !getFlow().isPublished();
+    }
+
+    public void setPrivate( boolean val ) {
+        doCommand( new UpdateSegmentObject( getUser().getUsername(), getFlow(), "published", !val ) );
     }
 
 

@@ -58,13 +58,16 @@
             <tr>
                 <th align="right">As:</th>
                 <td>
-                <span wicket:id="askedFor">
-                    <label><input wicket:id="askedForFalse" type="radio"> Notification</label>
-                    <label><input wicket:id="askedForTrue" type="radio"> Reply</label>
-                </span>
-                <span class="as-target">
-                    <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target"><option>is critical to</option></select> <span wicket:id="target-label">this task</span></label>
-                </span>
+                    <span wicket:id="privacy">
+                        <input wicket:id="private" type="checkbox"/> <label>A private</label>
+                    </span>
+                    <span wicket:id="askedFor">
+                        <label><input wicket:id="askedForFalse" type="radio"> notification</label>
+                        <label><input wicket:id="askedForTrue" type="radio"> reply</label>
+                    </span>
+                    <span class="as-target">
+                        <label wicket:id="target-significance-label">that <select wicket:id="significance-to-target"><option>is critical to</option></select> <span wicket:id="target-label">this task</span></label>
+                    </span>
                 </td>
             </tr>
             <tr>

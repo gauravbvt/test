@@ -1240,11 +1240,12 @@ Note that as little and as much as wanted can be put into a task's definition.
             <topic id="define-flow">
                 <name>Define a send or receive</name>
                 <item>
-                    <description>Specify an info need, capability or sharing by
+                    <description>Specify an information need, capability or sharing by
 * naming the information
 * requiring the information to be compliant with a named information product
 * listing its elements
 * indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
+* whether the need, capability or sharing is private or can be made known to parties other than those who need, can share, share or receive the information.
 * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets
 * the communication channels to use, each including transmission medium and, optionally, a required format
 * timeliness constraints

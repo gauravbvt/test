@@ -312,6 +312,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.FunctionMissingEois"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartDoesNotImplementFunction"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CommandWithoutAuthority"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.CriticalNotificationNotTriggering"/>
             </list>
         </property>
     </bean>

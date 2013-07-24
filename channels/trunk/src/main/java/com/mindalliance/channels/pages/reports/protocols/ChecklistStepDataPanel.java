@@ -6,9 +6,11 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.Condition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepGuard;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
+import com.mindalliance.channels.core.model.checklist.StepOutcome;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +40,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
     private int index;
     private WebMarkupContainer stepContainer;
     private WebMarkupContainer constraintsContainer;
+    private WebMarkupContainer outcomesContainer;
 
     public ChecklistStepDataPanel( String id, Part part, ChecklistStepData stepData, int index, ProtocolsFinder finder ) {
         super( id, finder );
@@ -54,6 +57,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
         add( stepContainer );
         addStepAct();
         addConstraints();
+        addOutcomes();
     }
 
 
@@ -198,6 +202,35 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
         aftersContainer.add( prerequisiteListView );
     }
 
+    private void addOutcomes() {
+        outcomesContainer = new WebMarkupContainer( "outcomesContainer" );
+        outcomesContainer.setVisible( getChecklist().hasOutcomes( getStep() ) );
+        stepContainer.add( outcomesContainer );
+        addStepOutcomes();
+    }
+
+    private void addStepOutcomes() {
+        List<StepOutcome> stepOutcomes = getChecklist().listEffectiveStepOutcomesFor( getStep() );
+        ListView<StepOutcome> outcomeListView = new ListView<StepOutcome>(
+                "outcomes",
+                stepOutcomes
+        ) {
+            @Override
+            protected void populateItem( ListItem<StepOutcome> item ) {
+                final StepOutcome stepOutcome = item.getModelObject();
+                Outcome outcome = getChecklist().deRefOutcome( stepOutcome.getOutcomeRef() );
+                String outcomeString = outcome.getLabel();
+                Label label = new Label( "outcome", StringUtils.abbreviate( outcomeString, MAX_SIZE ) );
+                item.add( label );
+                if ( outcomeString.length() > MAX_SIZE ) {
+                    addTipTitle( label, outcomeString );
+                }
+            }
+        };
+        outcomeListView.setOutputMarkupId( true );
+        outcomeListView.setVisible( !stepOutcomes.isEmpty() );
+        outcomesContainer.add( outcomeListView );
+    }
 
     private List<StepOrder> getStepOrders() {
         return getChecklist().listStepOrdersFor( getStep() );

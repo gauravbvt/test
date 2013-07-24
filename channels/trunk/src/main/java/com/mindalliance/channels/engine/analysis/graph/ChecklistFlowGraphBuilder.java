@@ -4,6 +4,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.Condition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.engine.analysis.Analyst;
@@ -65,6 +66,8 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
             List<Step> priors = checklist.listStepsJustBefore( toStep );
             List<Condition> allConditions = checklist.listEffectiveConditions();
             List<Condition> stepConditions = checklist.listConditionsFor( toStep );
+            List<Outcome> allOutcomes = checklist.listEffectiveOutcomes();
+            List<Outcome> outcomes = checklist.listOutcomesFor( toStep );
             // add step-step flow edges, condition-flow edges, flow-condition edges, and in-flow condition vertices
             ChecklistElementHolder toStepHolder = new ChecklistElementHolder( toStep, steps.indexOf( toStep ) );
             for ( Step fromStep : priors ) {
@@ -107,6 +110,20 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
                                 new ChecklistElementRelationship( conditionHolder, toStepHolder, checklist )
                         );
                 }
+            }
+            // outcomes
+            for ( Outcome outcome : outcomes ) {
+                ChecklistElementHolder outcomeHolder = new ChecklistElementHolder(
+                        outcome,
+                        allOutcomes.indexOf( outcome )
+                );
+                digraph.addVertex( outcomeHolder );
+                if ( !digraph.containsEdge( toStepHolder, outcomeHolder ) )
+                    digraph.addEdge(
+                            toStepHolder,
+                            outcomeHolder,
+                            new ChecklistElementRelationship( toStepHolder, outcomeHolder, checklist )
+                    );
             }
         }
     }

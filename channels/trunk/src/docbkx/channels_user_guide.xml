@@ -11370,6 +11370,26 @@
                 <entry><para>No</para></entry>
               </row>
 
+                <row>
+                    <entry><para>Notification to the task is not triggering it</para></entry>
+
+                    <entry><para>Depends on impacted tasks</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make the notification triggering</para>
+                        </listitem>
+                        <listitem>
+                            <para>Make it a request</para>
+                        </listitem>
+                        <listitem>
+                            <para>Downgrade it to merely useful</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
 
             </tbody>
           </tgroup>

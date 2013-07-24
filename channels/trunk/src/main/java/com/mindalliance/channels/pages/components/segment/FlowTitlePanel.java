@@ -73,25 +73,30 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
     }
 
     private String getPre() {
+        boolean published = flow.isPublished();
         if ( isSend ) {
             Node node = flow.getTarget();
             if ( node.isConnector() ) {
-                return flow.isAskedFor()
-                        ? "Can answer with"
+                String format = flow.isAskedFor()
+                        ? "Can answer {0}with"
                         : flow.isIfTaskFails()
-                        ? "If task fails, would notify of"
-                        : "Can notify of";
+                        ? "If task fails, would notify {0}of"
+                        : "Can notify {0}of";
+                return MessageFormat.format(
+                        format,
+                        ( published ? "" : "privately " ) );
             } else {
                 // send
                 Part part = (Part) node;
                 String format = flow.isAskedFor()
-                        ? "Answer {0}{1}{2}{3} with"
+                        ? "Answer {0}{1}{2}{3}{4} with"
                         : flow.isIfTaskFails()
-                        ? "If task fails, notify {0}{1}{2}{3} of"
-                        : "Notify {0}{1}{2}{3} of";
+                        ? "If task fails, notify {0}{1}{2}{3}{4} of"
+                        : "Notify {0}{1}{2}{3}{4} of";
 
                 return MessageFormat.format(
                         format,
+                        ( published ? "" : "privately " ),
                         flow.getShortName( node, true ),
                         Flow.getOrganizationString( part ),
                         Flow.getJurisdictionString( part ),
@@ -101,11 +106,14 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
             // receive
             Node source = flow.getSource();
             if ( source.isConnector() ) {
-                return !flow.isAskedFor()
-                        ? "Needs to be notified of"
+                String format = !flow.isAskedFor()
+                        ? "Needs to be notified {0}of"
                         : flow.isIfTaskFails()
-                        ? "If task fails, needs to ask for"
-                        : "Needs to ask for";
+                        ? "If task fails, needs to ask {0}for"
+                        : "Needs to ask {0}for";
+                return MessageFormat.format(
+                        format,
+                        ( published ? "" : "privately " ) );
             } else {
                 Part part = (Part) source;
                 if ( flow.isAskedFor() ) {
@@ -113,14 +121,20 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                             ? "If task fails, ask"
                             : "Ask";
                     return MessageFormat.format(
-                            "{0} {1}{2}{3}{4} for",
+                            "{0}{1} {2}{3}{4}{5} for",
                             ask,
+                            ( published ? "" : " privately" ),
                             flow.getShortName( part, false ),
                             Flow.getOrganizationString( part ),
                             Flow.getJurisdictionString( part ),
                             ( flow.isRestricted() ? " if " + flow.getRestrictionString( isSend ) : "" ) );
-                } else
-                    return "Notified of";
+                } else {
+                    String format = "Notified {0}of";
+                    return MessageFormat.format(
+                            format,
+                            ( published ? "" : "privately " )
+                    );
+                }
             }
 
         }

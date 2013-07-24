@@ -19,9 +19,13 @@ public interface ChecklistElement extends Identifiable {
 
     boolean isCondition();
 
+    boolean isOutcome();
+
     Step getStep();
 
     Condition getCondition();
+
+    Outcome getOutcome();
 
     String getContext();
 

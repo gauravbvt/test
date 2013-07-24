@@ -14,7 +14,7 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
     private long id;
 
 
-    protected abstract String getLabel();
+    public abstract String getLabel();
 
     @Override
     public String getClassLabel() {
@@ -42,6 +42,11 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
     }
 
     @Override
+    public boolean isOutcome() {
+        return false; // DEFAULT
+    }
+
+    @Override
     public Step getStep() {
         return null; // DEFAULT
     }
@@ -49,6 +54,11 @@ public abstract class AbstractChecklistElement implements ChecklistElement {
     @Override
     public Condition getCondition() {
         return null;  // DEFAULT
+    }
+
+    @Override
+    public Outcome getOutcome() {
+        return null;
     }
 
     @Override

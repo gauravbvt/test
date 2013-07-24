@@ -282,6 +282,11 @@ public class Goal implements Serializable, Mappable {
         return label;
     }
 
+    public String getStepOutcomeLabel() {
+        return getStepConditionLabel();
+    }
+
+
     /**
      * Return a success label for the goals.
      *

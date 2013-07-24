@@ -44,6 +44,11 @@ public class GoalCondition extends Condition {
     }
 
     @Override
+    public boolean isNeedSatisfiedCondition() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return getGoal().getStepConditionLabel();
     }

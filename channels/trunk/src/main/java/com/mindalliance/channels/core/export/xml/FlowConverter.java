@@ -149,6 +149,10 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.startNode( "standardized" );
         writer.setValue( Boolean.toString( flow.isStandardized() ) );
         writer.endNode();
+        // Flow is published
+        writer.startNode( "published" );
+        writer.setValue( Boolean.toString( flow.isPublished() ) );
+        writer.endNode();
 
     }
 
@@ -316,6 +320,8 @@ public class FlowConverter extends AbstractChannelsConverter {
                 if ( flow.isStandardized() ) {
                     flow.setProductInfoFromName( getPlanDao() );
                 }
+            } else if ( nodeName.equals( "published" ) ) {
+                flow.setPublished( Boolean.valueOf( reader.getValue() ) );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

@@ -1,17 +1,24 @@
 package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
+import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.ActionStep;
+import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Condition;
+import com.mindalliance.channels.core.model.checklist.EventOutcome;
 import com.mindalliance.channels.core.model.checklist.EventTimingCondition;
+import com.mindalliance.channels.core.model.checklist.GoalAchievedOutcome;
 import com.mindalliance.channels.core.model.checklist.GoalCondition;
 import com.mindalliance.channels.core.model.checklist.LocalCondition;
+import com.mindalliance.channels.core.model.checklist.NeedSatisfiedCondition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.ReceiptConfirmationStep;
 import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.SubTaskStep;
@@ -64,6 +71,8 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
     private static final String RECEIPT_CONFIRMATION_ICON = "step_receipt_confirmation";
     private static final String RESEARCH_ICON = "step_research";
     private static final String FOLLOW_UP_ICON = "step_follow_up";
+    private static final String EVENT_OUTCOME_ICON = "event";
+    private static final String CAPABILITY_CREATED_OUTCOME_ICON = "info_product";
 
 
     private final Part part;
@@ -172,13 +181,13 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                 : ( (Part) commStep.getSharing().getSource() ).resourceSpec().getName() );
 
             } else if ( step.isReceiptConfirmation() ) {
-                ReceiptConfirmationStep confStep = (ReceiptConfirmationStep)step;
+                ReceiptConfirmationStep confStep = (ReceiptConfirmationStep) step;
                 Flow sharing = confStep.getSharingToConfirm();
-                sb.append( "CONFIRM RECEIPT of ")
+                sb.append( "CONFIRM RECEIPT of " )
                         .append( sharing.isNotification()
                                 ? sharing.getIntent() != null
-                                    ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
-                                    : "notification of "
+                                ? ( sharing.getIntent().getLabel().toLowerCase() + " " )
+                                : "notification of "
                                 : "request for "
                         )
                         .append( sharing.getName() )
@@ -186,7 +195,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( sharing.isNotification()
                                 ? ( (Part) sharing.getSource() ).resourceSpec().getName()
                                 : ( (Part) sharing.getTarget() ).resourceSpec().getName() );
-            } else  {
+            } else {
                 SubTaskStep subTaskStep = (SubTaskStep) step;
                 sb.append( subTaskStep.isResearch() ? "RESEARCH " : "FOLLOW UP with " )
                         .append( subTaskStep.getSharing().getName() )
@@ -205,9 +214,32 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( goal.getLabel() )
                         .append( goal.isGain() ? " is realized" : " is mitigated" );
 
+            } else if ( condition.isNeedSatisfiedCondition() ) {
+                Information need = ( (NeedSatisfiedCondition) condition ).getNeededInfo();
+                sb.append( ifUnless )
+                        .append( "need for " )
+                        .append( need.getName() )
+                        .append( " is satisfied" );
+
             } else { //EventTiming condition
                 sb.append( ifUnless )
                         .append( ( (EventTimingCondition) condition ).getEventTiming().getLabel() );
+            }
+        } else if ( cle.isOutcome() ) {
+            Outcome outcome = cle.getOutcome();
+            if ( outcome.isEventOutcome() ) {
+                Event event = ( (EventOutcome) outcome ).getEvent();
+                sb.append( event.getLabel() )
+                        .append( " is caused" );
+            } else if ( outcome.isGoalAchievedOutcome() ) {
+                Goal goal = ( (GoalAchievedOutcome) outcome ).getGoal();
+                sb.append( goal.getLabel() )
+                        .append( goal.isGain() ? " is realized" : " is mitigated" );
+            } else if ( outcome.isCapabilityOutcome() ) {
+                Information capability = ( (CapabilityCreatedOutcome) outcome ).getCapability();
+                sb.append( "Info \"" )
+                        .append( capability.getName() )
+                        .append( "\" can now be shared" );
             }
         }
         return sanitize( sb.toString() );
@@ -247,14 +279,21 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                                                      ChecklistElementRelationship edge,
                                                      boolean highlighted ) {
             List<DOTAttribute> list = DOTAttribute.emptyList();
-            list.add( new DOTAttribute( "color", "black" ) );
-            list.add( new DOTAttribute( "len", "1.5" ) );
-            list.add( new DOTAttribute( "weight", "2.0" ) );
-            list.add( new DOTAttribute( "style", "normal" ) );
-            list.add( new DOTAttribute( "arrowhead", "open" ) );
-            list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
-            list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
-            list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
+            if ( edge.isWithOutcome() ) {
+                list.add( new DOTAttribute( "color", "gray" ) );
+                list.add( new DOTAttribute( "arrowhead", "none" ) );
+                list.add( new DOTAttribute( "len", "1.5" ) );
+                list.add( new DOTAttribute( "weight", "2.0" ) );
+            } else {
+                list.add( new DOTAttribute( "color", "black" ) );
+                list.add( new DOTAttribute( "len", "1.5" ) );
+                list.add( new DOTAttribute( "weight", "2.0" ) );
+                list.add( new DOTAttribute( "style", "normal" ) );
+                list.add( new DOTAttribute( "arrowhead", "open" ) );
+                list.add( new DOTAttribute( "fontname", EDGE_FONT_BOLD ) );
+                list.add( new DOTAttribute( "fontsize", EDGE_FONT_SIZE ) );
+                list.add( new DOTAttribute( "fontcolor", "darkslategray" ) );
+            }
             return list;
         }
 
@@ -297,10 +336,19 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                             ? RESEARCH_ICON
                             : FOLLOW_UP_ICON;
                 }
-            } else {
+            } else if ( vertex.isCondition() ) {
                 iconName = vertex.getContext().equals( Condition.IF )
                         ? CONDITION_ICON_IF
                         : CONDITION_ICON_UNLESS;
+            } else if ( vertex.isOutcome() ) {
+                Outcome outcome = vertex.getOutcome();
+                iconName = outcome.isEventOutcome()
+                        ? EVENT_OUTCOME_ICON
+                        : outcome.isCapabilityOutcome()
+                        ? CAPABILITY_CREATED_OUTCOME_ICON
+                        : getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part );
+            } else {
+                iconName = null;
             }
 
             String name = imagingService.getImageDirPath() + '/' + iconName + ( numLines > 0 ? numLines : "" ) + ".png";
@@ -322,5 +370,34 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             return "";
     }
 
+    private String getGoalIcon( Goal goal, Part part ) {
+        if ( goal.isRiskMitigation() ) {
+            switch ( goal.getLevel() ) {
+                case Low:
+                    return "risk_minor";
+                case Medium:
+                    return "risk_major";
+                case High:
+                    return "risk_severe";
+                case Highest:
+                    return "risk_extreme";
+                default:
+                    throw new RuntimeException( "Unknown risk level" );
+            }
+        } else {
+            switch ( goal.getLevel() ) {
+                case Low:
+                    return "gain_low";
+                case Medium:
+                    return "gain_medium";
+                case High:
+                    return "gain_high";
+                case Highest:
+                    return "gain_highest";
+                default:
+                    throw new RuntimeException( "Unknown gain level" );
+            }
+        }
+    }
 
 }

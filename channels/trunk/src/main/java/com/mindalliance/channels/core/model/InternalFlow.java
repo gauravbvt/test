@@ -75,6 +75,7 @@ public class InternalFlow extends Flow {
         setName( flow.getName() );
         setDescription( flow.getDescription() );
         if ( !hasConnector() ) setMaxDelay( flow.getMaxDelay() );
+        setPublished( flow.isPublished() );
         setAskedFor( flow.isAskedFor() );
         setChannels( flow.copyChannels() );
         if ( !source.isConnector() ) setSignificanceToSource( flow.getSignificanceToSource() );

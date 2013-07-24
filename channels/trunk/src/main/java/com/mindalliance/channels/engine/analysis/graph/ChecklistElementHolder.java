@@ -2,6 +2,7 @@ package com.mindalliance.channels.engine.analysis.graph;
 
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.Condition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
 
 /**
@@ -29,6 +30,16 @@ public class ChecklistElementHolder implements ChecklistElement {
     @Override
     public Condition getCondition() {
         return checklistElement.getCondition();
+    }
+
+    @Override
+    public Outcome getOutcome() {
+        return checklistElement.getOutcome();
+    }
+
+    @Override
+    public boolean isOutcome() {
+        return checklistElement.isOutcome();
     }
 
     @Override

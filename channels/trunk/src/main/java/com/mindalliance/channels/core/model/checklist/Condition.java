@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model.checklist;
 
 /**
+ * A condition that ought to be met before executing a step in a task checklist.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
@@ -16,9 +17,9 @@ public abstract class Condition extends AbstractChecklistElement {
 
     public abstract boolean isGoalCondition();
 
-    public abstract boolean isLocalCondition();
+    public abstract boolean isNeedSatisfiedCondition();
 
-    public abstract String getLabel();
+    public abstract boolean isLocalCondition();
 
     @Override
     public boolean isCondition() {

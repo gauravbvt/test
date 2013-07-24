@@ -44,6 +44,11 @@ public class EventTimingCondition extends Condition {
     }
 
     @Override
+    public boolean isNeedSatisfiedCondition() {
+        return false;
+    }
+
+    @Override
     public String getLabel() {
         return getEventTiming().getStepConditionLabel();
     }
