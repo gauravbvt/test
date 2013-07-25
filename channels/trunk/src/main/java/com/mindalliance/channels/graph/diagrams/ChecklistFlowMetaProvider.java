@@ -2,6 +2,7 @@ package com.mindalliance.channels.graph.diagrams;
 
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Information;
@@ -12,8 +13,8 @@ import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
 import com.mindalliance.channels.core.model.checklist.Condition;
-import com.mindalliance.channels.core.model.checklist.EventOutcome;
 import com.mindalliance.channels.core.model.checklist.EventTimingCondition;
+import com.mindalliance.channels.core.model.checklist.EventTimingOutcome;
 import com.mindalliance.channels.core.model.checklist.GoalAchievedOutcome;
 import com.mindalliance.channels.core.model.checklist.GoalCondition;
 import com.mindalliance.channels.core.model.checklist.LocalCondition;
@@ -91,7 +92,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
 
     @Override
     public Object getContext() {
-        return part.getChecklist();
+        return part.getEffectiveChecklist();
     }
 
     @Override
@@ -227,15 +228,16 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
             }
         } else if ( cle.isOutcome() ) {
             Outcome outcome = cle.getOutcome();
-            if ( outcome.isEventOutcome() ) {
-                Event event = ( (EventOutcome) outcome ).getEvent();
-                sb.append( event.getLabel() )
-                        .append( " is caused" );
+            if ( outcome.isEventTimingOutcome() ) {
+                EventTiming eventTiming = ( (EventTimingOutcome) outcome ).getEventTiming();
+                Event event = eventTiming.getEvent();
+                sb.append( event.getLabel() );
+                sb.append( eventTiming.isConcurrent() ? " is caused" : " is terminated");
             } else if ( outcome.isGoalAchievedOutcome() ) {
                 Goal goal = ( (GoalAchievedOutcome) outcome ).getGoal();
                 sb.append( goal.getLabel() )
                         .append( goal.isGain() ? " is realized" : " is mitigated" );
-            } else if ( outcome.isCapabilityOutcome() ) {
+            } else if ( outcome.isCapabilityCreatedOutcome() ) {
                 Information capability = ( (CapabilityCreatedOutcome) outcome ).getCapability();
                 sb.append( "Info \"" )
                         .append( capability.getName() )
@@ -342,9 +344,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         : CONDITION_ICON_UNLESS;
             } else if ( vertex.isOutcome() ) {
                 Outcome outcome = vertex.getOutcome();
-                iconName = outcome.isEventOutcome()
+                iconName = outcome.isEventTimingOutcome()
                         ? EVENT_OUTCOME_ICON
-                        : outcome.isCapabilityOutcome()
+                        : outcome.isCapabilityCreatedOutcome()
                         ? CAPABILITY_CREATED_OUTCOME_ICON
                         : getGoalIcon( ( (GoalAchievedOutcome) outcome ).getGoal(), part );
             } else {

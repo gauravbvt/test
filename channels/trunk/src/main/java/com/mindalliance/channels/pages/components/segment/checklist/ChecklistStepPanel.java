@@ -599,7 +599,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
     }
 
     private Checklist getChecklist() {
-        return part.getChecklist();
+        return part.getEffectiveChecklist();
     }
 
 

@@ -32,7 +32,7 @@ public class ChecklistIsEmpty extends AbstractIssueDetector {
     @Override
     public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Part part = (Part) modelObject;
-        Checklist checklist = part.getChecklist();
+        Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>();
         if ( checklist.isEmpty() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );

@@ -37,7 +37,7 @@ public class UnmatchedToChecklistStep extends AbstractIssueDetector {
     @Override
     public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Part part = (Part)modelObject;
-        Checklist checklist = part.getChecklist();
+        Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>(  );
         // conditions from context
         List<Condition> contextConditions = new ArrayList<Condition>(  );
@@ -63,7 +63,7 @@ public class UnmatchedToChecklistStep extends AbstractIssueDetector {
         }
         // outcomes from context
         List<Outcome> contextOutcomes = new ArrayList<Outcome>(  );
-        contextOutcomes.addAll( checklist.listEventOutcomes() );
+        contextOutcomes.addAll( checklist.listEventTimingOutcomes() );
         contextOutcomes.addAll( checklist.listGoalAchievedOutcomes() );
         contextOutcomes.addAll( checklist.listCapabilityCreatedOutcomes() );
         for ( final Outcome outcome : contextOutcomes ) {

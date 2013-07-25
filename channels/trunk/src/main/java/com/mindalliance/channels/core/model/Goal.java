@@ -324,11 +324,20 @@ public class Goal implements Serializable, Mappable {
                     public boolean evaluate( Object object ) {
                         Goal other = (Goal) object;
                         return Goal.this.getCategory().equals( other.getCategory() )
+                                && isPositive() == other.isPositive()
                                 && Goal.this.getLevel().compareTo( other.getLevel() ) <= 0;
                     }
                 }
         );
     }
+
+    public boolean narrowsOrEquals( Goal other ) {
+        return getCategory().equals( other.getCategory() )
+                && isPositive() == other.isPositive()
+                && getLevel().compareTo( other.getLevel() ) >= 0;
+    }
+
+
 
     /**
      * Serialize goal to a map.
@@ -346,7 +355,7 @@ public class Goal implements Serializable, Mappable {
         return map;
     }
 
-    /**
+     /**
      * Type of risk.
      */
     public enum Category {

@@ -37,7 +37,7 @@ public class ChecklistHasContradictoryConditions extends AbstractIssueDetector {
     @Override
     public List<? extends Issue> detectIssues( QueryService queryService, ModelObject modelObject ) {
         Part part = (Part) modelObject;
-        Checklist checklist = part.getChecklist();
+        Checklist checklist = part.getEffectiveChecklist();
         List<Issue> issues = new ArrayList<Issue>();
         if ( !checklist.isEmpty() ) {
             for ( Step step : checklist.listEffectiveSteps() ) {

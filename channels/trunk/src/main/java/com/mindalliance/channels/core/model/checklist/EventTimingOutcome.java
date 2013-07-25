@@ -1,6 +1,6 @@
 package com.mindalliance.channels.core.model.checklist;
 
-import com.mindalliance.channels.core.model.Event;
+import com.mindalliance.channels.core.model.EventTiming;
 
 /**
  * Event caused by a step in a checklist.
@@ -10,31 +10,31 @@ import com.mindalliance.channels.core.model.Event;
  * Date: 7/23/13
  * Time: 11:04 AM
  */
-public class EventOutcome extends Outcome {
+public class EventTimingOutcome extends Outcome {
 
     public static final String REF_PREFIX = "event|";
 
-    private Event event;
+    private EventTiming eventTiming;
 
-    public EventOutcome( Event event ) {
-        this.event = event;
+    public EventTimingOutcome( EventTiming eventTiming ) {
+        this.eventTiming = eventTiming;
     }
 
     public static boolean isEventOutcomeRef( String outcomeRef ) {
         return outcomeRef.startsWith( REF_PREFIX );
     }
 
-    public Event getEvent() {
-        return event;
+    public EventTiming getEventTiming() {
+        return eventTiming;
     }
 
     @Override
-    public boolean isCapabilityOutcome() {
+    public boolean isCapabilityCreatedOutcome() {
         return false;
     }
 
     @Override
-    public boolean isEventOutcome() {
+    public boolean isEventTimingOutcome() {
         return true;
     }
 
@@ -45,23 +45,23 @@ public class EventOutcome extends Outcome {
 
     @Override
     public String getLabel() {
-        return getEvent().getStepOutcomeLabel();
+        return getEventTiming().getStepOutcomeLabel();
     }
 
     @Override
     public String getRef() {
-        return REF_PREFIX + event.getId();
+        return REF_PREFIX + eventTiming.getTiming().name() + "|" + eventTiming.getEvent().getId();
     }
 
     @Override
     public int hashCode() {
-        return event.hashCode();
+        return eventTiming.hashCode();
     }
 
     @Override
     public boolean equals( Object object ) {
-        return object instanceof EventOutcome
-                && event.equals( ((EventOutcome)object).getEvent() );
+        return object instanceof EventTimingOutcome
+                && eventTiming.equals( ( (EventTimingOutcome) object ).getEventTiming() );
     }
 
 }

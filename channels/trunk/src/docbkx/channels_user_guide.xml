@@ -10106,6 +10106,26 @@
                     <entry><para>Yes</para></entry>
                 </row>
 
+                <row>
+                    <entry><para>A step in the checklist should be pre-requisite to another but is nott</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make the step with an outcome matching a condition of a second step be a direct or indirect pre-requisite of that step.</para>
+                        </listitem>
+                        <listitem>
+                            <para>Remove the outcome</para>
+                        </listitem>
+                        <listitem>
+                            <para>Remove the condition</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
+                </row>
+
 
             </tbody>
           </tgroup>

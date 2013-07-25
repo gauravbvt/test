@@ -184,6 +184,6 @@ public class StepGuardPanel extends AbstractCommandablePanel {
     }
 
     private Checklist getChecklist() {
-        return part.getChecklist();
+        return part.getEffectiveChecklist();
     }
 }

@@ -237,7 +237,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
     }
 
     private Checklist getChecklist() {
-        return part.getChecklist();
+        return part.getEffectiveChecklist();
     }
 
     private Step getStep() {

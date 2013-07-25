@@ -50,6 +50,17 @@ public class NeedSatisfiedCondition extends Condition {
     }
 
     @Override
+    public boolean matches( Outcome outcome ) {
+        if ( outcome.isCapabilityCreatedOutcome() ) {
+           CapabilityCreatedOutcome capabilityCreatedOutcome = (CapabilityCreatedOutcome)outcome;
+            Information capability = capabilityCreatedOutcome.getCapability();
+            return capability.narrowsOrEquals( neededInfo );
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public String getLabel() {
         return getNeededInfo().getStepConditionLabel();
     }

@@ -31,4 +31,5 @@ public abstract class Condition extends AbstractChecklistElement {
         return this;
     }
 
- }
+    public abstract boolean matches( Outcome outcome );
+}

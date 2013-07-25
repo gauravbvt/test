@@ -74,6 +74,6 @@ public class ChecklistFlowDiagram extends AbstractDiagram<ChecklistElement, Chec
         String orientation = getOrientation();
         if ( orientation != null )
             metaProvider.setGraphOrientation( orientation );
-        return new ChecklistFlowDOTExporter( metaProvider, part.getChecklist() );
+        return new ChecklistFlowDOTExporter( metaProvider, part.getEffectiveChecklist() );
     }
 }

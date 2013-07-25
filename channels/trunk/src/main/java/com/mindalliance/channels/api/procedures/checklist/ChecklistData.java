@@ -79,7 +79,7 @@ public class ChecklistData implements Serializable {
                 benefitingCommitments,
                 committingCommitments,
                 communityService, user );
-        checklist = assignment.getPart().getChecklist();
+        checklist = assignment.getPart().getEffectiveChecklist();
         sortedSteps = checklist.listEffectiveSteps();
         checklist.sort( sortedSteps );
         initEmployer( serverUrl, communityService );
@@ -201,7 +201,7 @@ public class ChecklistData implements Serializable {
     }
 
     public Checklist checklist() {
-        return assignment.getPart().getChecklist();
+        return assignment.getPart().getEffectiveChecklist();
     }
 
     @XmlElement

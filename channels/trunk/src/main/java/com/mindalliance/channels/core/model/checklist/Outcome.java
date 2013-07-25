@@ -11,9 +11,9 @@ package com.mindalliance.channels.core.model.checklist;
 public abstract class Outcome extends AbstractChecklistElement {
 
 
-    public abstract boolean isEventOutcome();
+    public abstract boolean isEventTimingOutcome();
 
-    public abstract boolean isCapabilityOutcome();
+    public abstract boolean isCapabilityCreatedOutcome();
 
     public abstract boolean isGoalAchievedOutcome();
 

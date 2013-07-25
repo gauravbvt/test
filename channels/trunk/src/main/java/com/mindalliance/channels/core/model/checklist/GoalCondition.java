@@ -44,6 +44,16 @@ public class GoalCondition extends Condition {
     }
 
     @Override
+    public boolean matches( Outcome outcome ) {
+        if ( outcome.isGoalAchievedOutcome() ) {
+            Goal outcomeGoal = ((GoalAchievedOutcome)outcome).getGoal();
+            return outcomeGoal.narrowsOrEquals( getGoal() );
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean isNeedSatisfiedCondition() {
         return false;
     }

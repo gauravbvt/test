@@ -2,7 +2,6 @@ package com.mindalliance.channels.core.model.checklist;
 
 import com.mindalliance.channels.core.command.MappedList;
 import com.mindalliance.channels.core.command.ModelObjectRef;
-import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
@@ -85,7 +84,7 @@ public class Checklist implements Serializable, Mappable {
 
     public List<Outcome> listEffectiveOutcomes() {
         List<Outcome> outcomes = new ArrayList<Outcome>();
-        outcomes.addAll( listEventOutcomes() );
+        outcomes.addAll( listEventTimingOutcomes() );
         outcomes.addAll( listGoalAchievedOutcomes() );
         outcomes.addAll( listCapabilityCreatedOutcomes() );
         for ( Outcome outcome : outcomes ) {
@@ -383,7 +382,7 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public Outcome deRefOutcome( String outcomeRef ) {
-        return EventOutcome.isEventOutcomeRef( outcomeRef )
+        return EventTimingOutcome.isEventOutcomeRef( outcomeRef )
                 ? findEventOutcome( outcomeRef )
                 : GoalAchievedOutcome.isGoalAchievedOutcomeRef( outcomeRef )
                 ? findGoalAchievedOutcome( outcomeRef )
@@ -445,11 +444,11 @@ public class Checklist implements Serializable, Mappable {
     @SuppressWarnings( "unchecked" )
     private Outcome findEventOutcome( final String outcomeRef ) {
         return (Outcome) CollectionUtils.find(
-                listEventOutcomes(),
+                listEventTimingOutcomes(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (EventOutcome) object ).getRef().equals( outcomeRef );
+                        return ( (EventTimingOutcome) object ).getRef().equals( outcomeRef );
                     }
                 }
         );
@@ -496,6 +495,7 @@ public class Checklist implements Serializable, Mappable {
                     new EventTimingCondition(
                             new EventTiming( Phase.Timing.Concurrent, part.getInitiatedEvent() ) ) );
         }
+        // If the task is initiated by an event, then, implicitly, all steps are conditional to it. So it's not included.
         return eventTimingConditions;
     }
 
@@ -517,13 +517,19 @@ public class Checklist implements Serializable, Mappable {
         return needSatisfiedConditions;
     }
 
-    public List<EventOutcome> listEventOutcomes() {
-        List<EventOutcome> eventOutcomes = new ArrayList<EventOutcome>();
-        Event event = part.getInitiatedEvent();
-        if ( event != null ) {
-            eventOutcomes.add( new EventOutcome( event ) );
+    public List<EventTimingOutcome> listEventTimingOutcomes() {
+        List<EventTimingOutcome> eventTimingOutcomes = new ArrayList<EventTimingOutcome>();
+        if ( part.isTerminatesEventPhase() ) {
+            EventTiming eventTiming = part.getSegment().getEventPhase().getEventTiming().getEventTimingAfterThis();
+            if ( eventTiming != null )
+                eventTimingOutcomes.add( new EventTimingOutcome( eventTiming ) );
         }
-        return eventOutcomes;
+        if ( part.getInitiatedEvent() != null ) {
+            eventTimingOutcomes.add(
+                    new EventTimingOutcome(
+                            new EventTiming( Phase.Timing.Concurrent, part.getInitiatedEvent() ) ) );
+        }
+        return eventTimingOutcomes;
     }
 
     public List<GoalAchievedOutcome> listGoalAchievedOutcomes() {

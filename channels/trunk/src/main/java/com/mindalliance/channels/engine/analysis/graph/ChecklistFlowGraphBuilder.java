@@ -45,7 +45,7 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
                                 return new ChecklistElementRelationship(
                                         checklistElement,
                                         otherChecklistElement,
-                                        part.getChecklist() );
+                                        part.getEffectiveChecklist() );
                             }
                         } );
         populateGraph( digraph );
@@ -53,7 +53,7 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
     }
 
     private void populateGraph( DirectedGraph<ChecklistElement, ChecklistElementRelationship> digraph ) {
-        Checklist checklist = part.getChecklist();
+        Checklist checklist = part.getEffectiveChecklist();
         // add step vertices
         List<Step> steps = checklist.listEffectiveSteps();
         for ( Step step : steps ) {

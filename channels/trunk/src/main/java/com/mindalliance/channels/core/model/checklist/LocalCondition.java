@@ -55,6 +55,11 @@ public class LocalCondition extends Condition implements Mappable {
     }
 
     @Override
+    public boolean matches( Outcome outcome ) {
+        return false;
+    }
+
+    @Override
     public boolean isNeedSatisfiedCondition() {
         return false;
     }

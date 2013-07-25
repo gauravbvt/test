@@ -29,12 +29,12 @@ public class CapabilityCreatedOutcome extends Outcome {
     }
 
     @Override
-    public boolean isCapabilityOutcome() {
+    public boolean isCapabilityCreatedOutcome() {
         return true;
     }
 
     @Override
-    public boolean isEventOutcome() {
+    public boolean isEventTimingOutcome() {
         return false;
     }
 

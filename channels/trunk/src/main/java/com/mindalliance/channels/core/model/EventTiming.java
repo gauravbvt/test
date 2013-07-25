@@ -160,4 +160,11 @@ public class EventTiming implements Serializable {
     public String getLabel() {
         return toString();
     }
+
+    public String getStepOutcomeLabel() {
+        assert timing != Timing.PreEvent;
+        return ( timing == Timing.Concurrent
+                ? "Causes:"
+                : "Terminates: ") + getEvent();
+    }
 }

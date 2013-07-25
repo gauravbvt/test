@@ -50,7 +50,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
     }
 
     private void addChecklistTitle() {
-        checklistTitle =   new Label( "checklistTitle", getPart().getChecklist().isConfirmed()
+        checklistTitle =   new Label( "checklistTitle", getPart().getEffectiveChecklist().isConfirmed()
                 ? "Confirmed checklist"
                 : "Unconfirmed checklist" );
         checklistTitle.setOutputMarkupId( true );
@@ -84,7 +84,7 @@ public class ChecklistFloatingPanel extends AbstractFloatingCommandablePanel {
 
     @Override
     protected void doClose( AjaxRequestTarget target ) {
-        getPart().getChecklist().cleanUp();
+        getPart().getEffectiveChecklist().cleanUp();
         Change change = new Change( Change.Type.AspectClosed, getPart(), "checklist" );
         update( target, change );
     }

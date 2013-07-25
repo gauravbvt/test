@@ -90,7 +90,7 @@ public class ChecklistFlowDiagramPanel extends AbstractDiagramPanel {
     protected void onSelectVertex( String graphId, String vertexId, String domIdentifier, int scrollTop, int scrollLeft, Map<String, String> extras, AjaxRequestTarget target ) {
         int index = Integer.parseInt( vertexId );
         if ( index < 1000 ) {
-            List<Step> steps = getPart().getChecklist().listEffectiveSteps();
+            List<Step> steps = getPart().getEffectiveChecklist().listEffectiveSteps();
             if ( index < steps.size() && index >= 0 ) {
                 Step step = steps.get( index );
                 if ( step.isSubTaskStep() ) {

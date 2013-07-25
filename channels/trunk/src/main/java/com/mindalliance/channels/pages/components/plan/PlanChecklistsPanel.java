@@ -119,8 +119,8 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
                         Part part = (Part)object;
                         return ( status.equals( ALL )
                                 || ( status.equals( CONFIRMED )
-                                ? part.getChecklist().isConfirmed()
-                                : !part.getChecklist().isConfirmed() )
+                                ? part.getEffectiveChecklist().isConfirmed()
+                                : !part.getEffectiveChecklist().isConfirmed() )
                                 )
                                 && ( !isOnlyIfWithIssues() || hasChecklistIssues( part ) );
                     }
@@ -184,7 +184,7 @@ public class PlanChecklistsPanel extends AbstractUpdatablePanel {
         }
 
         public Checklist getChecklist() {
-            return part.getChecklist();
+            return part.getEffectiveChecklist();
         }
 
         public int getChecklistIssueCount() {

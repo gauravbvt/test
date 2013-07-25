@@ -1,6 +1,7 @@
 package com.mindalliance.channels.core.model.checklist;
 
 import com.mindalliance.channels.core.model.EventTiming;
+import com.mindalliance.channels.core.model.Place;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -40,6 +41,15 @@ public class EventTimingCondition extends Condition {
 
     @Override
     public boolean isLocalCondition() {
+        return false;
+    }
+
+    @Override
+    public boolean matches( Outcome outcome ) {
+        if ( outcome.isEventTimingOutcome() ) {
+            EventTimingOutcome eventTimingOutcome = (EventTimingOutcome)outcome;
+            return eventTimingOutcome.getEventTiming().narrowsOrEquals( eventTiming, Place.UNKNOWN );
+        }
         return false;
     }
 
