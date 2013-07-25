@@ -112,7 +112,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
             protected void populateItem( ListItem<StepGuard> item ) {
                 final StepGuard stepGuard = item.getModelObject();
                 Condition condition = getChecklist().deRefCondition( stepGuard.getConditionRef() );
-                String conditionString = condition.getLabel();
+                String conditionString = condition == null ? "UNDEFINED" : condition.getLabel();
                 Label label = new Label( "if", StringUtils.abbreviate( conditionString, MAX_SIZE ) );
                 item.add( label );
                 if ( conditionString.length() > MAX_SIZE ) {
@@ -152,7 +152,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
             protected void populateItem( ListItem<StepGuard> item ) {
                 final StepGuard stepGuard = item.getModelObject();
                 Condition condition = getChecklist().deRefCondition( stepGuard.getConditionRef() );
-                String conditionString = condition.getLabel();
+                String conditionString = condition == null ? "UNDEFINED" : condition.getLabel();
                 Label label = new Label( "unless", StringUtils.abbreviate( conditionString, MAX_SIZE ) );
                 item.add( label );
                 if ( conditionString.length() > MAX_SIZE ) {
@@ -219,7 +219,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
             protected void populateItem( ListItem<StepOutcome> item ) {
                 final StepOutcome stepOutcome = item.getModelObject();
                 Outcome outcome = getChecklist().deRefOutcome( stepOutcome.getOutcomeRef() );
-                String outcomeString = outcome.getLabel();
+                String outcomeString = outcome == null ? "UNDEFINED" : outcome.getLabel();
                 Label label = new Label( "outcome", StringUtils.abbreviate( outcomeString, MAX_SIZE ) );
                 item.add( label );
                 if ( outcomeString.length() > MAX_SIZE ) {

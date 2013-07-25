@@ -20,7 +20,7 @@ import java.util.List;
  * Date: 4/8/13
  * Time: 8:34 PM
  */
-@XmlType( name = "researchStep", propOrder = {"label", "research", "ifConditions", "unlessConditions", "prerequisites"} )
+@XmlType( name = "researchStep", propOrder = {"label", "research", "ifConditions", "unlessConditions", "prerequisites", "outcomes"} )
 public class ResearchStepData extends SubTaskStepData {
 
     private ResearchData research;
@@ -82,6 +82,12 @@ public class ResearchStepData extends SubTaskStepData {
     @XmlElement( name = "unless" )
     public List<ConditionData> getUnlessConditions() {
         return super.getUnlessConditions();
+    }
+
+    @Override
+    @XmlElement( name = "outcome" )
+    public List<OutcomeData> getOutcomes() {
+        return super.getOutcomes();
     }
 
     @XmlElement

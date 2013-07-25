@@ -238,7 +238,7 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                 sb.append( goal.getLabel() )
                         .append( goal.isGain() ? " is realized" : " is mitigated" );
             } else if ( outcome.isCapabilityCreatedOutcome() ) {
-                Information capability = ( (CapabilityCreatedOutcome) outcome ).getCapability();
+                Information capability = ( (CapabilityCreatedOutcome) outcome ).getShareableInfo();
                 sb.append( "Info \"" )
                         .append( capability.getName() )
                         .append( "\" can now be shared" );

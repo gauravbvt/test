@@ -55,9 +55,26 @@ public abstract class ConditionData implements Serializable {
         return new HashSet<Long>(  );
     }
 
-    public Set<Long> allOrganizationIds() {
+    public Set<Long> allActorIds() { // todo satisfied info need resource spec....
         return new HashSet<Long>(  );
     }
+
+    public Set<Long> allRoleIds() {  // todo satisfied info need resource spec....
+        return new HashSet<Long>(  );
+    }
+
+    public Set<Long> allPlaceIds() {  // todo satisfied info need resource spec....
+        return new HashSet<Long>(  );
+    }
+
+    public Set<Long> allOrganizationIds() {  // todo satisfied info need resource spec....
+        return new HashSet<Long>(  );
+    }
+
+    public Set<Long> allInfoProductIds() { // todo created info capability resource spec....
+        return new HashSet<Long>(  );
+    }
+
 
     public boolean isLocalCondition() {
         return condition.isLocalCondition();
@@ -71,4 +88,7 @@ public abstract class ConditionData implements Serializable {
         return condition.isEventTimingCondition();
     }
 
+    public boolean isNeedSatisfiedCondition() {
+        return condition.isNeedSatisfiedCondition();
+    }
 }

@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model.checklist;
 
+import com.mindalliance.channels.core.model.InfoCapability;
 import com.mindalliance.channels.core.model.Information;
 
 /**
@@ -14,18 +15,22 @@ public class CapabilityCreatedOutcome extends Outcome {
 
     public static final String REF_PREFIX = "capability|";
 
-    private Information capability;
+    private InfoCapability infoCapability;
 
-    public CapabilityCreatedOutcome( Information capability ) {
-        this.capability = capability;
+    public CapabilityCreatedOutcome( InfoCapability infoCapability ) {
+        this.infoCapability = infoCapability;
     }
 
     public static boolean isCapabilityCreatedOutcomeRef( String outcomeRef ) {
         return outcomeRef.startsWith( REF_PREFIX );
     }
 
-    public Information getCapability() {
-        return capability;
+    public Information getShareableInfo() {
+        return infoCapability.getInformation();
+    }
+
+    public InfoCapability getInfoCapability() {
+        return infoCapability;
     }
 
     @Override
@@ -45,23 +50,26 @@ public class CapabilityCreatedOutcome extends Outcome {
 
     @Override
     public String getLabel() {
-        return getCapability().getStepOutcomeLabel();
+        return getInfoCapability().getStepOutcomeLabel();
     }
 
     @Override
     public String getRef() {
-        return REF_PREFIX +  capability.toString();
+        return REF_PREFIX
+                + getShareableInfo()
+                + "|"
+                + infoCapability.getTargetSpec();
     }
 
     @Override
     public int hashCode() {
-        return capability.hashCode();
+        return infoCapability.hashCode();
     }
 
     @Override
     public boolean equals( Object object ) {
         return object instanceof CapabilityCreatedOutcome
-                && capability.equals( ((CapabilityCreatedOutcome)object).getCapability() );
+                && infoCapability.equals( ( (CapabilityCreatedOutcome) object ).getInfoCapability() );
     }
 
 }

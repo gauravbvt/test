@@ -194,7 +194,7 @@ public class ChecklistStepData implements Serializable {
             allContacts.addAll( requestStep.allContacts() );
         else if ( answerStep != null )
             allContacts.addAll( answerStep.allContacts() );
-        // todo add contacts to confirm receipt
+        // todo add contacts to confirm receipt?
         return allContacts;
     }
 

@@ -19,7 +19,7 @@ import java.util.Set;
  * Date: 4/1/13
  * Time: 10:05 PM
  */
-@XmlType(name = "notificationStep", propOrder = {"label", "notification", "ifConditions", "unlessConditions", "prerequisites"})
+@XmlType(name = "notificationStep", propOrder = {"label", "notification", "ifConditions", "unlessConditions", "prerequisites", "outcomes"})
 public class NotificationStepData extends CommunicationStepData {
 
     private NotificationData notification;
@@ -77,6 +77,12 @@ public class NotificationStepData extends CommunicationStepData {
     @XmlElement(name = "unless")
     public List<ConditionData> getUnlessConditions() {
         return super.getUnlessConditions();
+    }
+
+    @Override
+    @XmlElement( name = "outcome" )
+    public List<OutcomeData> getOutcomes() {
+        return super.getOutcomes();
     }
 
     @XmlElement

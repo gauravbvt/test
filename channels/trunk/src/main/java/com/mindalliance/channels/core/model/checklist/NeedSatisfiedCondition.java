@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model.checklist;
 
+import com.mindalliance.channels.core.model.InfoCapability;
+import com.mindalliance.channels.core.model.InfoNeed;
 import com.mindalliance.channels.core.model.Information;
 
 /**
@@ -14,19 +16,26 @@ public class NeedSatisfiedCondition extends Condition {
 
     public static final String REF_PREFIX = "need|";
 
-    private Information neededInfo;
+    private InfoNeed infoNeed;
 
-    public NeedSatisfiedCondition( Information neededInfo ) {
-        this.neededInfo = neededInfo;
+    public NeedSatisfiedCondition( InfoNeed infoNeed ) {
+        this.infoNeed = infoNeed;
     }
 
     public Information getNeededInfo() {
-        return neededInfo;
+        return infoNeed.getInformation();
+    }
+
+    public InfoNeed getInfoNeed() {
+        return infoNeed;
     }
 
     @Override
     public String getRef() {
-        return REF_PREFIX +  neededInfo.toString();
+        return REF_PREFIX
+                +  getNeededInfo()
+                + "|"
+                + infoNeed.getSourceSpec();
     }
 
     @Override
@@ -51,10 +60,11 @@ public class NeedSatisfiedCondition extends Condition {
 
     @Override
     public boolean matches( Outcome outcome ) {
+        // meaningful when a step produces info needed needed by another in the same checklist
         if ( outcome.isCapabilityCreatedOutcome() ) {
            CapabilityCreatedOutcome capabilityCreatedOutcome = (CapabilityCreatedOutcome)outcome;
-            Information capability = capabilityCreatedOutcome.getCapability();
-            return capability.narrowsOrEquals( neededInfo );
+            InfoCapability capability = capabilityCreatedOutcome.getInfoCapability();
+            return capability.getInformation().narrowsOrEquals( infoNeed.getInformation() );
         } else {
             return false;
         }
@@ -62,7 +72,7 @@ public class NeedSatisfiedCondition extends Condition {
 
     @Override
     public String getLabel() {
-        return getNeededInfo().getStepConditionLabel();
+        return getInfoNeed().getStepConditionLabel();
     }
 
     public static boolean isNeedRef( String conditionRef ) {
@@ -71,13 +81,13 @@ public class NeedSatisfiedCondition extends Condition {
 
     @Override
     public int hashCode() {
-        return neededInfo.hashCode();
+        return infoNeed.hashCode();
     }
 
     @Override
     public boolean equals( Object object ) {
         return object instanceof NeedSatisfiedCondition
-                && neededInfo.equals( ((NeedSatisfiedCondition)object).getNeededInfo() );
+                && infoNeed.equals( ((NeedSatisfiedCondition)object).getInfoNeed() );
     }
 
 }

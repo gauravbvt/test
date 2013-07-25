@@ -1414,52 +1414,52 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         ).size();
     }
 
-    public List<Information> getNeededInformation() {
-        List<Information> explicitNeeds = new ArrayList<Information>();
+    public List<InfoNeed> getInfoNeeds() {
+        List<InfoNeed> explicitNeeds = new ArrayList<InfoNeed>();
         for ( Flow need : getNeeds() ) {
-            explicitNeeds.add( new Information( need ) );
+            explicitNeeds.add( new InfoNeed( need ) );
         }
-        Set<Information> sharedInfoList = new HashSet<Information>();
+        Set<InfoNeed> sharedInfoList = new HashSet<InfoNeed>();
         for ( Flow sharing : getAllSharingReceives() ) {
-            final Information sharedInfo = new Information( sharing );
+            final InfoNeed sharedInfo = new InfoNeed( sharing );
             if ( !CollectionUtils.exists(
                     explicitNeeds,
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return sharedInfo.narrowsOrEquals( (Information) object );
+                            return sharedInfo.narrowsOrEquals( (InfoNeed) object );
                         }
                     }
             ) ) {
                 sharedInfoList.add( sharedInfo );
             }
         }
-        List<Information>neededInfoList = new ArrayList<Information>( explicitNeeds );
+        List<InfoNeed>neededInfoList = new ArrayList<InfoNeed>( explicitNeeds );
         neededInfoList.addAll( sharedInfoList );
         return neededInfoList;
     }
 
-    public List<Information> getInformationCapabilities() {
-        List<Information> explicitCapabilities = new ArrayList<Information>(  );
+    public List<InfoCapability> getInformationCapabilities() {
+        List<InfoCapability> explicitCapabilities = new ArrayList<InfoCapability>(  );
         for ( Flow capability : getCapabilities() ) {
-            explicitCapabilities.add( new Information( capability ));
+            explicitCapabilities.add( new InfoCapability( capability ) );
         }
-        Set<Information> sharedInfoList = new HashSet<Information>();
+        Set<InfoCapability> sharedInfoList = new HashSet<InfoCapability>();
         for ( Flow sharing : getAllSharingSends() ) {
-            final Information sharedInfo = new Information( sharing );
+            final InfoCapability sharedInfo = new InfoCapability( sharing );
             if ( !CollectionUtils.exists(
                     explicitCapabilities,
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {
-                            return sharedInfo.narrowsOrEquals( (Information) object );
+                            return sharedInfo.narrowsOrEquals( (InfoCapability) object );
                         }
                     }
             ) ) {
                 sharedInfoList.add( sharedInfo );
             }
         }
-        List<Information>infoCapabilities = new ArrayList<Information>( explicitCapabilities );
+        List<InfoCapability>infoCapabilities = new ArrayList<InfoCapability>( explicitCapabilities );
         infoCapabilities.addAll( sharedInfoList );
         return infoCapabilities;
     }

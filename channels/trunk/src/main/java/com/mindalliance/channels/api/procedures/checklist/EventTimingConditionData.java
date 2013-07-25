@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.checklist.EventTimingCondition;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -32,11 +33,6 @@ public class EventTimingConditionData extends ConditionData {
         super( condition, serverUrl, communityService, user );
     }
 
-    @Override
-    @XmlElement
-    public String getLabel() {
-        return super.getLabel();
-    }
 
     @Override
     protected void initData( Condition condition, String serverUrl, CommunityService communityService, ChannelsUser user ) {
@@ -44,8 +40,22 @@ public class EventTimingConditionData extends ConditionData {
         eventTiming = new EventTimingData( ((EventTimingCondition)getCondition()).getEventTiming() ) ;
     }
 
+    @Override
+    @XmlElement
+    public String getLabel() {
+        return super.getLabel();
+    }
+
     @XmlElement
     public EventTimingData getEventTiming() {
         return eventTiming;
     }
+
+    @Override
+    public Set<Long> allEventIds() {
+        Set<Long> ids = super.allEventIds();
+        ids.add( eventTiming.getEvent() );
+        return ids;
+    }
+
 }

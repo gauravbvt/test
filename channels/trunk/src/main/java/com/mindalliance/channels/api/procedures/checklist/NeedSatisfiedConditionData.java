@@ -1,14 +1,13 @@
 package com.mindalliance.channels.api.procedures.checklist;
 
-import com.mindalliance.channels.api.entities.InformationData;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Information;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.NeedSatisfiedCondition;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -17,10 +16,11 @@ import javax.xml.bind.annotation.XmlType;
  * Date: 7/22/13
  * Time: 4:17 PM
  */
-@XmlType(name = "needSatisfiedCondition", propOrder = {"label", "need"})
+@XmlType( name = "needSatisfiedCondition", propOrder = {"label", "infoNeed"} )
 public class NeedSatisfiedConditionData extends ConditionData {
 
-    private InformationData need;
+    private InfoNeedData infoNeed;
+
 
     public NeedSatisfiedConditionData() {
         // required
@@ -39,8 +39,10 @@ public class NeedSatisfiedConditionData extends ConditionData {
                              CommunityService communityService,
                              ChannelsUser user ) {
         super.initData( condition, serverUrl, communityService, user );
-        Information information = ((NeedSatisfiedCondition)condition).getNeededInfo();
-        need = new InformationData( serverUrl, information, communityService );
+        infoNeed = new InfoNeedData(
+                serverUrl,
+                ( (NeedSatisfiedCondition) condition ).getInfoNeed(),
+                communityService );
     }
 
     @Override
@@ -50,8 +52,27 @@ public class NeedSatisfiedConditionData extends ConditionData {
     }
 
     @XmlElement
-    public InformationData getNeed() {
-        return need;
+    public InfoNeedData getInfoNeed() {
+        return infoNeed;
     }
 
+    @Override
+    public Set<Long> allActorIds() {
+        return infoNeed.allActorIds();
+    }
+
+    @Override
+    public Set<Long> allOrganizationIds() {
+        return infoNeed.allOrganizationIds();
+    }
+
+    @Override
+    public Set<Long> allPlaceIds() {
+        return infoNeed.allPlaceIds();
+    }
+
+    @Override
+    public Set<Long> allRoleIds() {
+        return infoNeed.allRoleIds();
+    }
 }

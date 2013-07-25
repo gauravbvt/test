@@ -5,7 +5,8 @@ import com.mindalliance.channels.core.command.ModelObjectRef;
 import com.mindalliance.channels.core.model.EventTiming;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Goal;
-import com.mindalliance.channels.core.model.Information;
+import com.mindalliance.channels.core.model.InfoCapability;
+import com.mindalliance.channels.core.model.InfoNeed;
 import com.mindalliance.channels.core.model.Mappable;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Phase;
@@ -511,7 +512,7 @@ public class Checklist implements Serializable, Mappable {
 
     public List<NeedSatisfiedCondition> listNeedSatisfiedConditions() {
         List<NeedSatisfiedCondition> needSatisfiedConditions = new ArrayList<NeedSatisfiedCondition>();
-        for ( Information need : part.getNeededInformation() ) {
+        for ( InfoNeed need : part.getInfoNeeds() ) {
             needSatisfiedConditions.add( new NeedSatisfiedCondition( need ) );
         }
         return needSatisfiedConditions;
@@ -542,7 +543,7 @@ public class Checklist implements Serializable, Mappable {
 
     public List<CapabilityCreatedOutcome> listCapabilityCreatedOutcomes() {
         List<CapabilityCreatedOutcome> capabilityCreatedOutcomes = new ArrayList<CapabilityCreatedOutcome>();
-        for ( Information capability : part.getInformationCapabilities() ) {
+        for ( InfoCapability capability : part.getInformationCapabilities() ) {
             capabilityCreatedOutcomes.add( new CapabilityCreatedOutcome( capability ) );
         }
         return capabilityCreatedOutcomes;

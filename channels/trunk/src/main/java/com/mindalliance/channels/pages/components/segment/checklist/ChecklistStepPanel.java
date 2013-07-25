@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class ChecklistStepPanel extends AbstractCommandablePanel {
 
-    private static final int MAX_SIZE = 65;
+    private static final int MAX_SIZE = 100;
     private static final boolean POSITIVE = true;
 
     private Part part;

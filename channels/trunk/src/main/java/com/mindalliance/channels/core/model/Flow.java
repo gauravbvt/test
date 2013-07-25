@@ -1707,7 +1707,7 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
         return !getRestrictions().isEmpty();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<String> getEffectiveEoiNames() {
         return (List<String>) CollectionUtils.collect(
                 getEffectiveEois(),
@@ -1718,6 +1718,24 @@ public abstract class Flow extends ModelObject implements Channelable, SegmentOb
                     }
                 }
         );
+    }
+
+    public ResourceSpec getSourceResourceSpec() {
+        Node source = getSource();
+        if ( source.isPart() ) {
+            return ( (Part) source ).resourceSpec();
+        } else {
+            return new ResourceSpec();
+        }
+    }
+
+    public ResourceSpec getTargetResourceSpec() {
+        Node target = getTarget();
+        if ( target.isPart() ) {
+            return ( (Part) target ).resourceSpec();
+        } else {
+            return new ResourceSpec();
+        }
     }
 
 

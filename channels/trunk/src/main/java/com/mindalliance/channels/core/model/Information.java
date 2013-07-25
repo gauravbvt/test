@@ -218,34 +218,6 @@ public class Information implements Serializable {
         return getLocalEoiNames().contains( eoi.getContent() );
     }
 
-    public String getStepConditionLabel() {
-        // The info is needed if a step condition
-        StringBuilder sb = new StringBuilder();
-        sb.append( "The need for information \"" )
-                .append( getName().isEmpty() ? "something" : getName() );
-        if ( !getEois().isEmpty() ) {
-            sb.append( " with element " )
-                    .append( ChannelsUtils.listToString( getEffectiveEoiNames(), ", ", " and " ) );
-        }
-        sb.append( "\" is satisfied" );
-        return sb.toString();
-    }
-
-    public String getStepOutcomeLabel() {
-        // The info is sharing capability as a step outcome
-        StringBuilder sb = new StringBuilder();
-        sb.append( "The information \"" )
-                .append( getName().isEmpty() ? "something" : getName() );
-        if ( !getEois().isEmpty() ) {
-            sb.append( " with element " )
-                    .append( ChannelsUtils.listToString( getEffectiveEoiNames(), ", ", " and " ) );
-        }
-        sb.append( "\" can be shared" );
-        return sb.toString();
-    }
-
-
-
     public boolean narrowsOrEquals( Information other ) {
         return Matcher.same( getName(), other.getName() )
                 && other.getEOIsString( ",", "," ).contains( getEOIsString( ",", "," ) );

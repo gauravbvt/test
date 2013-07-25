@@ -3,6 +3,7 @@ package com.mindalliance.channels.api.procedures.checklist;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.checklist.Condition;
+import com.mindalliance.channels.core.model.checklist.Outcome;
 import com.mindalliance.channels.core.model.checklist.Step;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public abstract class AbstractStepData implements Serializable {
     private ChecklistData checklist;
     private List<ConditionData> ifConditions;
     private List<ConditionData> unlessConditions;
+    private List<OutcomeData> outcomes;
     private Step step;
     private List<Integer> prerequisites;
 
@@ -52,6 +54,7 @@ public abstract class AbstractStepData implements Serializable {
     protected void initData( String serverUrl, CommunityService communityService, ChannelsUser user ) {
         prerequisites = getChecklist().prerequisiteIndicesOfStep( step );
         initConditions( serverUrl, communityService, user );
+        initOutcomes( serverUrl, communityService, user );
     }
 
     private void initConditions( String serverUrl, CommunityService communityService, ChannelsUser user ) {
@@ -82,12 +85,37 @@ public abstract class AbstractStepData implements Serializable {
             throw new RuntimeException( "Unknown condition" );
     }
 
+    private void initOutcomes( String serverUrl, CommunityService communityService, ChannelsUser user ) {
+        outcomes = new ArrayList<OutcomeData>(  );
+        for ( Outcome outcome : getChecklist().checklist().listOutcomesFor( step ) ) {
+            outcomes.add( makeOutcomeData( outcome, serverUrl, communityService, user ) );
+        }
+    }
+
+    private OutcomeData makeOutcomeData( Outcome outcome,
+                                         String serverUrl,
+                                         CommunityService communityService,
+                                         ChannelsUser user ) {
+        if ( outcome.isGoalAchievedOutcome() ) {
+            return new GoalAchievedOutcomeData( outcome, serverUrl, communityService, user );
+        } else if ( outcome.isEventTimingOutcome() ) {
+            return new EventTimingOutcomeData( outcome, serverUrl, communityService, user );
+        } else if ( outcome.isCapabilityCreatedOutcome() ) {
+            return new CapabilityCreatedOutcomeData( outcome, serverUrl, communityService, user );
+        } else
+            throw new RuntimeException( "Unknown outcome" );
+    }
+
     public List<ConditionData> getIfConditions() {
         return ifConditions;
     }
 
     public List<ConditionData> getUnlessConditions() {
         return unlessConditions;
+    }
+
+    public List<OutcomeData> getOutcomes() {
+        return outcomes;
     }
 
     public List<Integer> getPrerequisites() {
@@ -114,6 +142,9 @@ public abstract class AbstractStepData implements Serializable {
         for (ConditionData conditionData : getUnlessConditions() ) {
             ids.addAll( conditionData.allEventIds() );
         }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allEventIds() );
+        }
         return ids;
     }
 
@@ -124,6 +155,9 @@ public abstract class AbstractStepData implements Serializable {
         }
         for (ConditionData conditionData : getUnlessConditions() ) {
             ids.addAll( conditionData.allPhaseIds() );
+        }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allPhaseIds() );
         }
         return ids;
     }
@@ -136,19 +170,52 @@ public abstract class AbstractStepData implements Serializable {
         for (ConditionData conditionData : getUnlessConditions() ) {
             ids.addAll( conditionData.allOrganizationIds() );
         }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allOrganizationIds() );
+        }
         return ids;
     }
 
     public Set<Long> allActorIds() {
-        return new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>(  );
+        for (ConditionData conditionData : getIfConditions() ) {
+            ids.addAll( conditionData.allActorIds() );
+        }
+        for (ConditionData conditionData : getUnlessConditions() ) {
+            ids.addAll( conditionData.allActorIds() );
+        }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allActorIds() );
+        }
+        return ids;
     }
 
     public Set<Long> allRoleIds(){
-        return new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>(  );
+        for (ConditionData conditionData : getIfConditions() ) {
+            ids.addAll( conditionData.allRoleIds() );
+        }
+        for (ConditionData conditionData : getUnlessConditions() ) {
+            ids.addAll( conditionData.allRoleIds() );
+        }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allRoleIds() );
+        }
+        return ids;
     }
 
     public Set<Long> allPlaceIds() {
-        return new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>(  );
+        for (ConditionData conditionData : getIfConditions() ) {
+            ids.addAll( conditionData.allPlaceIds() );
+        }
+        for (ConditionData conditionData : getUnlessConditions() ) {
+            ids.addAll( conditionData.allPlaceIds() );
+        }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allPlaceIds() );
+        }
+        return ids;
     }
 
     public Set<Long> allMediumIds() {
@@ -156,7 +223,17 @@ public abstract class AbstractStepData implements Serializable {
     }
 
     public Set<Long> allInfoProductIds() {
-        return new HashSet<Long>(  );
+        Set<Long> ids = new HashSet<Long>(  );
+        for (ConditionData conditionData : getIfConditions() ) {
+            ids.addAll( conditionData.allInfoProductIds() );
+        }
+        for (ConditionData conditionData : getUnlessConditions() ) {
+            ids.addAll( conditionData.allInfoProductIds() );
+        }
+        for (OutcomeData outcomeData : getOutcomes() ) {
+            ids.addAll( outcomeData.allInfoProductIds() );
+        }
+        return ids;
     }
 
     public Set<Long> allInfoFormatIds() {

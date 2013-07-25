@@ -5,6 +5,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
+import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
@@ -91,8 +93,12 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                         Outcome outcome = checklist.deRefOutcome( stepOutcome.getOutcomeRef() );
                         if ( outcome != null && outcome.isCapabilityCreatedOutcome() ) {
                             CapabilityCreatedOutcome capabilityCreatedOutcome = (CapabilityCreatedOutcome) outcome;
-                            Information capabilityInfo = capabilityCreatedOutcome.getCapability();
-                            if ( capabilityInfo.narrowsOrEquals( sharedInfo ) ) {
+                            Information capabilityInfo = capabilityCreatedOutcome.getShareableInfo();
+                            ResourceSpec capabilityTargetSpec =
+                                    capabilityCreatedOutcome.getInfoCapability().getTargetSpec();
+                            ResourceSpec notifiedResourceSpec = communicationStep.getSharing().getTargetResourceSpec();
+                            if ( capabilityInfo.narrowsOrEquals( sharedInfo )
+                                    && notifiedResourceSpec.narrowsOrEquals( capabilityTargetSpec, Place.UNKNOWN )) {
                                 Step outcomeStep = checklist.derefStep( stepOutcome.getStepRef() );
                                 if ( outcomeStep != null
                                         && !communicationStep.equals( outcomeStep )
