@@ -1,6 +1,7 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.model.Issue;
+import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.checklist.Checklist;
@@ -17,16 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Need satisfaction, capability creation, caused/observed event, achieved goal not mapped to a step in the task's checklist.
+ * Need satisfaction, capability creation, caused event, achieved goal not mapped to a step in the task's checklist.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 7/24/13
  * Time: 9:07 AM
  */
-public class UnmatchedToChecklistStep extends AbstractIssueDetector {
+public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetector {
 
-    public UnmatchedToChecklistStep() {
+    public ChecklistNotFullyConnectedToTaskContext() {
     }
 
     @Override
@@ -41,8 +42,6 @@ public class UnmatchedToChecklistStep extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>(  );
         // conditions from context
         List<Condition> contextConditions = new ArrayList<Condition>(  );
-        contextConditions.addAll( checklist.listEventTimingConditions() );
-        contextConditions.addAll( checklist.listGoalConditions() );
         contextConditions.addAll( checklist.listNeedSatisfiedConditions() );
         for ( final Condition condition : contextConditions ) {
             if ( !CollectionUtils.exists(
@@ -56,7 +55,7 @@ public class UnmatchedToChecklistStep extends AbstractIssueDetector {
             )) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                 issue.setDescription( "No checklist step has precondition '" + condition.getLabel() + "'" );
-                issue.setSeverity( queryService.computePartPriority( part ) );
+                issue.setSeverity( Level.Medium );
                 issue.setRemediation( "Make '" + condition.getLabel() + "' a condition for at least one of the steps");
                 issues.add( issue );
             }
@@ -78,7 +77,7 @@ public class UnmatchedToChecklistStep extends AbstractIssueDetector {
             )) {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                 issue.setDescription( "No checklist step has outcome '" + outcome.getLabel() + "'" );
-                issue.setSeverity( queryService.computePartPriority( part ) );
+                issue.setSeverity( Level.Medium );
                 issue.setRemediation( "Make '" + outcome.getLabel() + "' an outcome for at least one of the steps");
                 issues.add( issue );
             }

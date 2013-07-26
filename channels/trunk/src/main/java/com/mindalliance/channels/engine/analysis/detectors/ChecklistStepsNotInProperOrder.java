@@ -5,8 +5,6 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
-import com.mindalliance.channels.core.model.Place;
-import com.mindalliance.channels.core.model.ResourceSpec;
 import com.mindalliance.channels.core.model.checklist.CapabilityCreatedOutcome;
 import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.CommunicationStep;
@@ -65,6 +63,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                                         + outcomeStep.getLabel()
                                         + "\" with outcome '"
                                         + outcome.getLabel()
+                                        + "'"
                                 );
                                 issue.setSeverity( Level.Medium );
                                 issue.setRemediation( "Make step \""
@@ -77,6 +76,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                                         + condition.getLabel()
                                         + "'"
                                 );
+                                issues.add( issue );
                             }
                         }
                     }
@@ -94,11 +94,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                         if ( outcome != null && outcome.isCapabilityCreatedOutcome() ) {
                             CapabilityCreatedOutcome capabilityCreatedOutcome = (CapabilityCreatedOutcome) outcome;
                             Information capabilityInfo = capabilityCreatedOutcome.getShareableInfo();
-                            ResourceSpec capabilityTargetSpec =
-                                    capabilityCreatedOutcome.getInfoCapability().getTargetSpec();
-                            ResourceSpec notifiedResourceSpec = communicationStep.getSharing().getTargetResourceSpec();
-                            if ( capabilityInfo.narrowsOrEquals( sharedInfo )
-                                    && notifiedResourceSpec.narrowsOrEquals( capabilityTargetSpec, Place.UNKNOWN )) {
+                            if ( capabilityInfo.narrowsOrEquals( sharedInfo ) ) {
                                 Step outcomeStep = checklist.derefStep( stepOutcome.getStepRef() );
                                 if ( outcomeStep != null
                                         && !communicationStep.equals( outcomeStep )
@@ -112,6 +108,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                                             + outcomeStep.getLabel()
                                             + "\" with outcome '"
                                             + outcome.getLabel()
+                                            + "'"
                                     );
                                     issue.setSeverity( Level.Medium );
                                     issue.setRemediation( "Make step \""
@@ -120,7 +117,9 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                                             + communicationStep
                                             + "\"\nor remove outcome \'"
                                             + outcome.getLabel()
+                                            + "'"
                                     );
+                                    issues.add( issue );
                                 }
                             }
                         }

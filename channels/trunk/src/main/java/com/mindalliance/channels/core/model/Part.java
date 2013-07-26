@@ -427,7 +427,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      *
      * @return a list of goals
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Goal> getMitigations() {
         return (List<Goal>) CollectionUtils.select( goals, new Predicate() {
             @Override
@@ -497,7 +497,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Iterator<Flow> sendsNamed( final String name ) {
         return new FilterIterator( sends(), new Predicate() {
             @Override
@@ -514,7 +514,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @param name a flow name
      * @return a boolean
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Iterator<Flow> receivesNamed( final String name ) {
         return new FilterIterator( receives(), new Predicate() {
             @Override
@@ -749,7 +749,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      *
      * @return a list of flows
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> getNeeds() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( receives() ), new Predicate() {
             @Override
@@ -764,7 +764,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      *
      * @return a list of flows
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> getCapabilities() {
         return (List<Flow>) CollectionUtils.select( IteratorUtils.toList( sends() ), new Predicate() {
             @Override
@@ -950,7 +950,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         return state;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         super.initFromMap( state, communityService );
         PlanService planService = communityService.getPlanService();
@@ -1165,7 +1165,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Flow> getAllFlows() {
         List<Flow> allFlows = new ArrayList<Flow>();
         allFlows.addAll( (List<Flow>) IteratorUtils.toList( receives() ) );
@@ -1214,7 +1214,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         return !findDependentReceives( infoProduct, queryService ).isEmpty();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<Flow> findDependentReceives( final InfoProduct infoProduct, final QueryService queryService ) {
         return (List<Flow>) CollectionUtils.select(
                 getAllSharingReceives(),
@@ -1232,7 +1232,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean dependsOnInfoFormat( final InfoFormat infoFormat, final QueryService queryService ) {
         return !findDependentReceives( infoFormat, queryService ).isEmpty();
     }
@@ -1414,33 +1414,35 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         ).size();
     }
 
-    public List<InfoNeed> getInfoNeeds() {
+    public List<InfoNeed> getNonTriggeringInfoNeeds() {
         List<InfoNeed> explicitNeeds = new ArrayList<InfoNeed>();
         for ( Flow need : getNeeds() ) {
             explicitNeeds.add( new InfoNeed( need ) );
         }
         Set<InfoNeed> sharedInfoList = new HashSet<InfoNeed>();
         for ( Flow sharing : getAllSharingReceives() ) {
-            final InfoNeed sharedInfo = new InfoNeed( sharing );
-            if ( !CollectionUtils.exists(
-                    explicitNeeds,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            return sharedInfo.narrowsOrEquals( (InfoNeed) object );
+            if ( !sharing.isTriggeringToTarget() ) {
+                final InfoNeed sharedInfo = new InfoNeed( sharing );
+                if ( !CollectionUtils.exists(
+                        explicitNeeds,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return sharedInfo.narrowsOrEquals( (InfoNeed) object );
+                            }
                         }
-                    }
-            ) ) {
-                sharedInfoList.add( sharedInfo );
+                ) ) {
+                    sharedInfoList.add( sharedInfo );
+                }
             }
         }
-        List<InfoNeed>neededInfoList = new ArrayList<InfoNeed>( explicitNeeds );
+        List<InfoNeed> neededInfoList = new ArrayList<InfoNeed>( explicitNeeds );
         neededInfoList.addAll( sharedInfoList );
         return neededInfoList;
     }
 
     public List<InfoCapability> getInformationCapabilities() {
-        List<InfoCapability> explicitCapabilities = new ArrayList<InfoCapability>(  );
+        List<InfoCapability> explicitCapabilities = new ArrayList<InfoCapability>();
         for ( Flow capability : getCapabilities() ) {
             explicitCapabilities.add( new InfoCapability( capability ) );
         }
@@ -1459,7 +1461,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
                 sharedInfoList.add( sharedInfo );
             }
         }
-        List<InfoCapability>infoCapabilities = new ArrayList<InfoCapability>( explicitCapabilities );
+        List<InfoCapability> infoCapabilities = new ArrayList<InfoCapability>( explicitCapabilities );
         infoCapabilities.addAll( sharedInfoList );
         return infoCapabilities;
     }

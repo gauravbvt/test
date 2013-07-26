@@ -313,7 +313,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PartDoesNotImplementFunction"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CommandWithoutAuthority"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CriticalNotificationNotTriggering"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.UnmatchedToChecklistStep"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistNotFullyConnectedToTaskContext"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistStepsNotInProperOrder"/>
             </list>
         </property>
