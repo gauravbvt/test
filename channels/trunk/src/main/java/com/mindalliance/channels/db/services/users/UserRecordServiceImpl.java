@@ -74,7 +74,7 @@ public class UserRecordServiceImpl
 
     @Override
     public ChannelsUser createUser( String username, String name, String email, CommunityService communityService ) throws DuplicateKeyException {
-        if ( getUserWithIdentity( name ) != null || ( !email.isEmpty() && getUserWithIdentity( email ) != null ) )
+        if (  !getAllUserRecordsOf( name ).isEmpty() || ( !email.isEmpty() &&  !getAllUserRecordsOf( email ).isEmpty() ) )
             throw new DuplicateKeyException();
         else
             return new ChannelsUser( createUserRecord( username, name, "", name, email, communityService ) );
@@ -172,7 +172,7 @@ public class UserRecordServiceImpl
     }
 
     private List<UserRecord> getAllUserRecordsOf( String identifier ) {
-        if ( identifier == null ) return new ArrayList<UserRecord>();
+        if ( identifier == null || identifier.trim().isEmpty() ) return new ArrayList<UserRecord>();
         QUserRecord qUserRecord = QUserRecord.userRecord;
         return toList(
                 repository.findAll(

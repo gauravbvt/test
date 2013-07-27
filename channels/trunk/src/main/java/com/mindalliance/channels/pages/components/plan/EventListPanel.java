@@ -167,7 +167,7 @@ public class EventListPanel extends AbstractCommandablePanel {
         } );
         confirmedCheckBox.setEnabled(
                 isLockedByUser( Channels.ALL_EVENTS ) && ( wrapper.isMarkedForCreation()
-                        || !(wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) ) );
+                        || !( wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) ) );
     }
 
     /**
@@ -277,8 +277,10 @@ public class EventListPanel extends AbstractCommandablePanel {
          * @param value a string
          */
         public void setName( String value ) {
-            event.setName( value );
-            setConfirmed( true );
+            if ( value != null && !value.trim().isEmpty() ) {
+                event.setName( value );
+                setConfirmed( true );
+            }
         }
 
         /**

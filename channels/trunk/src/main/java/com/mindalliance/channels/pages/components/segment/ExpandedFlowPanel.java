@@ -715,7 +715,11 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
     private void addPrivacy() {
         privacyContainer = new WebMarkupContainer( "privacy" );
         privacyContainer.setOutputMarkupId( true );
+        makeVisible( privacyContainer, getFlow().isNeed() || getFlow().isCapability() );
         addOrReplace( privacyContainer );
+        Label needOrCapabilityLabel = new Label("needOrCapability", getFlow().isNeed() ? " need for a" : " capability to share via");
+        needOrCapabilityLabel.setOutputMarkupId( true );
+        privacyContainer.addOrReplace( needOrCapabilityLabel );
         privateCheckBox = new AjaxCheckBox(
                 "private",
                 new PropertyModel<Boolean>( this, "private" ) ) {
@@ -724,13 +728,15 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 update( target, new Change( Change.Type.Updated, getFlow(), "published" ) );
             }
         };
-        addTipTitle( privateCheckBox, "The occurrence of a private "
-                + ( getFlow().isNeed()
-                ? "need"
-                : getFlow().isCapability()
-                ? "capability"
-                : "sharing" )
-                + " is not to be revealed" );
+        if ( getFlow().isNeed() || getFlow().isCapability() ) {
+            addTipTitle( privateCheckBox, "The occurrence of a private "
+                    + ( getFlow().isNeed()
+                    ? "need"
+                    : getFlow().isCapability()
+                    ? "capability"
+                    : "sharing" )
+                    + " is not to be revealed" );
+        }
         privateCheckBox.setEnabled( canSetPrivacy() );
         privacyContainer.add( privateCheckBox );
     }
@@ -1252,7 +1258,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         }
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean isRedundant( Part part ) {
         String info = getFlow().getName();
         // redundant if part has a matching need or capability
@@ -1275,7 +1281,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
      *
      * @return a list of parts
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Node> getSecondChoices() {
         final List<Part> relatedParts = findRelatedParts();
         final Node node = getNode();

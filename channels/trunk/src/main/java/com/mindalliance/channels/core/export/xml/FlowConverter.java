@@ -150,10 +150,11 @@ public class FlowConverter extends AbstractChannelsConverter {
         writer.setValue( Boolean.toString( flow.isStandardized() ) );
         writer.endNode();
         // Flow is published
-        writer.startNode( "published" );
-        writer.setValue( Boolean.toString( flow.isPublished() ) );
-        writer.endNode();
-
+        if ( flow.isNeed() || flow.isCapability() ) {
+            writer.startNode( "published" );
+            writer.setValue( Boolean.toString( flow.isPublished() ) );
+            writer.endNode();
+        }
     }
 
     private void writeFlowNodes( InternalFlow flow,
@@ -238,7 +239,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ) {
         idMap = getIdMap( context );
         proxyConnectors = getProxyConnectors( context );
@@ -300,7 +301,7 @@ public class FlowConverter extends AbstractChannelsConverter {
                 flow.setIntent( Flow.Intent.valueOf( reader.getValue() ) );
             } else if ( nodeName.equals( "restriction" ) ) {
                 String restrictionName = reader.getValue();
-                if ( restrictionName.equals( "SameOrganizationAndLocation")) { // OBSOLETE
+                if ( restrictionName.equals( "SameOrganizationAndLocation" ) ) { // OBSOLETE
                     flow.addRestriction( Flow.Restriction.SameOrganization );
                     flow.addRestriction( Flow.Restriction.SameLocation );
                 }
@@ -364,7 +365,7 @@ public class FlowConverter extends AbstractChannelsConverter {
     private Part resolvePart( HierarchicalStreamReader reader,
                               Segment segment ) {
         Long id = Long.parseLong( reader.getAttribute( "id" ) );
-        // When importing a segment (vs reloading a plan), ids are re-assigned
+         // When importing a segment (vs reloading a plan), ids are re-assigned
         return (Part) segment.getNode( idMap.get( id ) );
     }
 

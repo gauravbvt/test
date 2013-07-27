@@ -106,7 +106,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
     public boolean isEmpty() {
         List<LinkMenuItem> items = null;
         items = allMenuItems();
-        return items != null && items.size() > 1;  // discount ubiquitous help menu item
+        return items != null && items.size() < 2;  // discount ubiquitous help menu item
     }
 
     /**

@@ -233,14 +233,16 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
 
     public void setAddingGoalCategory( Goal.Category goalCategory ) {
         Objective objective = new Objective( goalCategory, addingRiskOrGain.equals( GAIN ) );
-        Command command = new UpdatePlanObject(
-                getUsername(),
-                getFunction(),
-                "objectives",
-                objective,
-                UpdateObject.Action.Add
-        );
-        this.doCommand( command );
+        if ( !getFunction().getObjectives().contains( objective ) ) {
+            Command command = new UpdatePlanObject(
+                    getUsername(),
+                    getFunction(),
+                    "objectives",
+                    objective,
+                    UpdateObject.Action.Add
+            );
+            this.doCommand( command );
+        }
     }
 
     public Function getFunction() {
@@ -289,7 +291,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
             addNewInformation();
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void addInformationList() {
             ListView<Information> infoList = new ListView<Information>(
                     "infoList",
@@ -531,7 +533,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
             }
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private List<Information> getInformationList() {
             return (List<Information>) ChannelsUtils.getProperty(
                     getFunction(),
@@ -688,7 +690,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
 
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private List<Information> getInformationList() {
             return (List<Information>) ChannelsUtils.getProperty(
                     getFunction(),

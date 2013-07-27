@@ -2,6 +2,8 @@ package com.mindalliance.channels.pages.components.settings;
 
 import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
+import com.mindalliance.channels.core.dao.DuplicateKeyException;
+import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.Updatable;
@@ -46,6 +48,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
     private Component userRecordPanel;
     private WebMarkupContainer usernamesContainer;
     private TextField<String> newUserField;
+    private AjaxLink<String> addUserLink;
 
     public UsersSettingsPanel( String id ) {
         super( id );
@@ -82,7 +85,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
         addTipTitle( newUserField, "Enter a new username (alphanumerics, no spaces)" );
         addOrReplace( newUserField );
         // add user button
-        AjaxLink<String> addUserLink = new AjaxLink<String>( "addUser" ) {
+        addUserLink = new AjaxLink<String>( "addUser" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 if ( newUsername != null && !newUsername.isEmpty() ) {
@@ -90,17 +93,25 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
                         Change change = Change.failed( newUsername + " is already taken." );
                         update( target, change );
                     } else {
-                        userRecordService.createUser( getUsername(), newUsername, getCommunityService() );
-                        Change change = Change.message( "User " + newUsername + " was added." );
+                        try {
+                        ChannelsUser newUser = userRecordService.createUser( getUsername(), newUsername, getCommunityService() );
+                        Change change = Change.message( "User "
+                                + newUsername
+                                + (newUser != null ? " was added." : " was not added (already exists?)") );
                         selectedUsername = newUsername;
                         newUsername = null;
                         addSelectUser();
                         addNewUser();
                         addUserRecordPanel();
                         target.add( newUserField );
+                        target.add( addUserLink );
                         target.add( selectUserContainer );
                         target.add( userRecordPanel );
                         update( target, change );
+                        } catch ( DuplicateKeyException e ) {
+                            Change change = Change.failed( "Please provide a unique user name" );
+                            update( target, change );
+                        }
                     }
                 } else {
                     Change change = Change.failed( "Please provide a unique user name" );

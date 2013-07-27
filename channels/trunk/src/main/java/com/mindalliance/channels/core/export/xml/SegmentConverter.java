@@ -222,7 +222,11 @@ public class SegmentConverter extends AbstractChannelsConverter {
             } else if ( nodeName.equals( "part" ) ) {
                 context.convertAnother( segment, Part.class );
             } else if ( nodeName.equals( "flow" ) ) {
-                context.convertAnother( segment, Flow.class );
+                try {
+                    context.convertAnother( segment, Flow.class );
+                } catch ( Exception e ) {
+                    System.out.println( "OOPS!");
+                }
                 // Risks
                 // Issues
             } else if ( nodeName.equals( "issue" ) ) {
