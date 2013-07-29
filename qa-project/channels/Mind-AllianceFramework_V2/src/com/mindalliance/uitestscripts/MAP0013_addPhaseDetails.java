@@ -26,6 +26,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -108,20 +109,30 @@ public class MAP0013_addPhaseDetails extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
+ 			 stepNo++;
+  			description="Domain Plans";
+  			DomainPlanPage domainPlanPage= new DomainPlanPage();
+  			domainPlanPage.clickDomainPlans();	
+  			// Write log			
+  			LogFunctions.writeLogs(description);
+  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+  			
+ 			// Plan Page
+ 		    stepNo++;
+ 			description="Domain Plan Editor";
+ 			HomePage homePage=new HomePage();
+ 			homePage.clickDomainPlanEditor();	
+ 			// Write log
+  			LogFunctions.writeLogs(description);
+  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+  			
+  		    // Click on 'Add New Segment' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Add New Segment";
 			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("AddNewSegment"));
+			planPage.enterSegmentName(testData.get("SegmentForAddPhaseDetails"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -254,7 +265,7 @@ public class MAP0013_addPhaseDetails extends TestCase{
 	        
 	        this.testData.put("Actions",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AddNewSegment",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("SegmentForAddPhase",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("segmentForAddPhase").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("SegmentForAddPhaseDetails",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("segmentForAddPhaseDetails").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Phase",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("phase").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("PhaseDescription",oXmlEleMAP0013_addPhaseDetails.getElementsByTagName("phaseDescription").item(0).getChildNodes().item(0).getNodeValue());

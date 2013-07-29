@@ -3114,6 +3114,7 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	 */
 	public void clickAttachmentLinkInTask() throws UIAutomationException{
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Task Attachment Link",GlobalVariables.configuration.getAttrSearchList(), "Task Attachment Link");
 		UIActions.click(fileName,"Task Attachment Link",GlobalVariables.configuration.getAttrSearchList(), "Task Attachment Link");
 	
@@ -3133,7 +3134,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void verifyAttachDropdownInTask(String reference,String policy,String mandatingPolicy,String prohibitingPolicy) throws UIAutomationException{
-		UIActions.scrollDown();
+	
 		
 		elementController.requireElementSmart(fileName,"Attach Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Task Panel");
 		UIActions.click(fileName,"Attach Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Task Panel");
@@ -3464,7 +3465,19 @@ public class PlanPage {
 		UIActions.click(fileName,"Attach Dropdown In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In New Issue In Sends Panel");
 		
 	}
+	
 	/**
+	 * Click Attachment Panel In New Issues in the Sends panel
+	 * @throws UIAutomationException
+	 */
+	public void clickAttachmentPanelInNewIssuesSends() throws UIAutomationException{
+		
+		UIActions.scrollDown();
+		elementController.requireElementSmart(fileName,"Attachment Panel In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Attachment Panel In New Issue In Sends Panel");
+		UIActions.click(fileName,"Attachment Panel In New Issue In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Attachment Panel In New Issue In Sends Panel");
+	
+	}
+		/**
 	 * Verify attach dropdown in issues in receives panel
 	 * @param reference
 	 * @param policy
@@ -3643,6 +3656,9 @@ public class PlanPage {
 		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"But Only If In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If In Sends Panel");
 		UIActions.click(fileName,"But Only If In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If In Sends Panel");
+	
+		elementController.requireElementSmart(fileName,"Change Button In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Change Button In Sends Panel");
+		UIActions.click(fileName,"Change Button In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Change Button In Sends Panel");
 		
 		// Verify dropdown is enabled
 		elementController.requireElementSmart(fileName,"But Only If Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "But Only If Dropdown In Sends Panel");
@@ -3662,6 +3678,10 @@ public class PlanPage {
 				(butOnlyIfDropdown.contains(toASupervisor))&&(butOnlyIfDropdown.contains(toSelf))&&(butOnlyIfDropdown.contains(toSomeoneElse))){
 			throw new UIAutomationException("But only if dropdown in sends panel is not present.");
 		}
+		
+		elementController.requireElementSmart(fileName,"But Only If Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If Dropdown In Sends Panel");
+		UIActions.click(fileName,"But Only If Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If Dropdown In Sends Panel");
+		
 	}
 	
 	/**
@@ -3751,12 +3771,28 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(number,fileName,"Within Count In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"Within Count In Sends Panel");
 		
 	}
+	
+	/**
+	 * Enter File name to be attached
+	 * @param fileName
+	 * @throws UIAutomationException
+	 */
+	public void clickAttachmentPanelInSegment() throws UIAutomationException{
+		
+		elementController.requireElementSmart(fileName,"Attachment Panel In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attachment Panel In About Plan Segment");
+		UIActions.click(fileName,"Attachment Panel In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attachment Panel In About Plan Segment");
+	    UIActions.scrollDown();
+		
+	}
 	/**
 	 * Enter File name to be attached
 	 * @param fileName
 	 * @throws UIAutomationException
 	 */
 	public void enterAttachFileNameInSegment(String fileName1) throws UIAutomationException{
+		
+		
+		
 		elementController.requireElementSmart(fileName,"Attach File Name Textbox In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Name Textbox In About Plan Segment");
 		UIActions.click(fileName,"Attach File Name Textbox In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Name Textbox In About Plan Segment");
 		UIActions.enterValueInTextBox(fileName1,fileName,"Attach File Name Textbox In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Name Textbox In About Plan Segment");
@@ -3824,8 +3860,12 @@ public class PlanPage {
 			String inTheSameOrganization, String inTheSameOrganizationAndLocation, String inTheSameOverallOrganization,
 			String toASupervisor,String toSelf,String toSomeoneElse) throws UIAutomationException{
 		
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"But Only If In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If In Receives Panel");
 		UIActions.click(fileName,"But Only If In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"But Only If In Receives Panel");
+		
+		elementController.requireElementSmart(fileName,"Change Button In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Change Button In Receives Panel");
+		UIActions.click(fileName,"Change Button In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Change Button In Receives Panel");
 		
 		// Verify dropdown is enabled
 		elementController.requireElementSmart(fileName,"But Only If Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "But Only If Dropdown In Receives Panel");
@@ -4000,10 +4040,10 @@ public class PlanPage {
 		GlobalVariables.configuration.getWebElement().sendKeys("D:\\Channels\\Mind-AllianceFramework_V2\\TestData\\CAP.txt");		
 	}
 	
-//	public void enterFileNameInAttachFileInAboutPlanSegment(String fileName) throws UIAutomationException{
-//		String path=getPath(fileName);
-//		GlobalVariables.configuration.getWebElement().sendKeys(path);
-//	}
+public void enterFileNameInAttachFileInAboutPlanSegment(String fileName) throws UIAutomationException{
+		String path=getPath(fileName);
+	GlobalVariables.configuration.getWebElement().sendKeys(path);
+	}
 	/**
 	 * Gets file path
 	 * @param fileName

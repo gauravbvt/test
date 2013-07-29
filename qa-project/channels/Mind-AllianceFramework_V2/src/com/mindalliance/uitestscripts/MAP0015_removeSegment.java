@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -108,20 +109,20 @@ public class MAP0015_removeSegment extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
+ 		    // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+ 			
+			// Plan Page
+		    stepNo++;
+			description="Domain Plan Editor";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -129,8 +130,10 @@ public class MAP0015_removeSegment extends TestCase {
  			// Click on 'Add New Segment' under 'Actions' pop up menu
  			stepNo++;
 			description="Add New Segment";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
+			
 			// Enter Segment Name
 			planPage.enterSegmentName(testData.get("SegmentForRemoveSegment"));
 			// Write log

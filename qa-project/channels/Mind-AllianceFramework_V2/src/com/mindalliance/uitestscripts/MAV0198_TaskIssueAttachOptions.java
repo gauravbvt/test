@@ -275,6 +275,7 @@ public class MAV0198_TaskIssueAttachOptions extends TestCase{
 			this.testData.put("Actions",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("AddNewSegment",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("AttachDropDownInNewIssue",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("attachDropDownInNewIssue").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Description",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("description").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Reference",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("reference").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Policy",oXmlEleMAV0198_TaskIssueAttachOptions.getElementsByTagName("policy").item(0).getChildNodes().item(0).getNodeValue());			

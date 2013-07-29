@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -103,20 +104,20 @@ public class MAV0213_AttachReceiveSentAttachOption extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
+ 			 // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+ 			
+			// Plan Page
+		    stepNo++;
+			description="Domain Plan Editor";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -124,6 +125,7 @@ public class MAV0213_AttachReceiveSentAttachOption extends TestCase{
 			// Add New Segment
  			stepNo++;
 			description="Add New Segment";
+			PlanPage planPage= new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			// Write log
@@ -160,7 +162,10 @@ public class MAV0213_AttachReceiveSentAttachOption extends TestCase{
 			// Verify dropdown of attach in issue
 			stepNo++;
 			description="Issues Drop Down - Sends Panel";
-			planPage.verifyAttachDropdownInIssueInSends(testData.get("Reference"), testData.get("Policy"));
+			PlanPage planPage1=new PlanPage();
+			planPage1.clickAttachmentPanelInNewIssuesSends();
+			PlanPage planPage2=new PlanPage();
+			planPage2.verifyAttachDropdownInIssueInSends(testData.get("Reference"), testData.get("Policy"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -284,6 +289,8 @@ public class MAV0213_AttachReceiveSentAttachOption extends TestCase{
 			this.testData.put("ActionsInSendsPanel",oXmlEleMAV0213_AttachReceiveSentAttachOption.getElementsByTagName("actionsInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("NewIssueInReceivesPanel",oXmlEleMAV0213_AttachReceiveSentAttachOption.getElementsByTagName("newIssueInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("NewIssueInSendsPanel",oXmlEleMAV0213_AttachReceiveSentAttachOption.getElementsByTagName("newIssueInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("attachmentPanelInNewIssueSends",oXmlEleMAV0213_AttachReceiveSentAttachOption.getElementsByTagName("attachmentPanelInNewIssueSends").item(0).getChildNodes().item(0).getNodeValue());	
+		 	this.testData.put("attachDropDownInNewIssueSends",oXmlEleMAV0213_AttachReceiveSentAttachOption.getElementsByTagName("attachDropDownInNewIssueSends").item(0).getChildNodes().item(0).getNodeValue());	
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAV0213_AttachReceiveSentAttachOption not found.");

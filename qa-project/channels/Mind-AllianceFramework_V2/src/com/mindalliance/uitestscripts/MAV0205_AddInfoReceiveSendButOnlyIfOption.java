@@ -166,6 +166,7 @@ public class MAV0205_AddInfoReceiveSendButOnlyIfOption extends TestCase{
 					testData.get("SameOrganizationAndLocation"),testData.get("SameOverallOrganization"),testData.get("ToASupervisor"),
 					testData.get("ToSelf"),testData.get("ToSomeOneElse")
 					);
+			planPage.selectOptionFromButOnlyIfDrodownInSendsPanel(testData.get("Unspecified"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -202,6 +203,7 @@ public class MAV0205_AddInfoReceiveSendButOnlyIfOption extends TestCase{
 					testData.get("SameOrganizationAndLocation"),testData.get("SameOverallOrganization"),testData.get("ToASupervisor"),
 					testData.get("ToSelf"),testData.get("ToSomeOneElse")
 					);
+			planPage.selectOptionFromButOnlyIfDrodownInReceivesPanel(testData.get("Unspecified"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -304,6 +306,7 @@ public class MAV0205_AddInfoReceiveSendButOnlyIfOption extends TestCase{
 			this.testData.put("RemoveThisSegment",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			
 			this.testData.put("Unspecified",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("unspecified").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("ChangeButtonInSendsPanel",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("changeButtonInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("DifferentLocations",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("differentLocations").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("DifferentOrganizations",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("differentOrganizations").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("DifferentOverallOrganizations",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("differentOverallOrganizations").item(0).getChildNodes().item(0).getNodeValue());
@@ -313,6 +316,7 @@ public class MAV0205_AddInfoReceiveSendButOnlyIfOption extends TestCase{
 			this.testData.put("SameOrganizationAndLocation",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("sameOrganizationAndLocation").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("SameOverallOrganization",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("sameOverallOrganization").item(0).getChildNodes().item(0).getNodeValue());
 			
+			this.testData.put("ChangeButtonInReceivesPanel",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("changeButtonInReceivesPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ToASupervisor",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("toASupervisor").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ToSelf",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("toSelf").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ToSomeOneElse",oXmlEleMAV0205_AddInfoReceiveSendButOnlyIfOption.getElementsByTagName("toSomeOneElse").item(0).getChildNodes().item(0).getNodeValue());

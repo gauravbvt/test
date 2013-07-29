@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -108,20 +109,39 @@ public class MAP0012_addPhase extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
+ 		    // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Plan Page
 		    stepNo++;
-			description="Collaboration Plan";
+			description="Domain Plan Editor";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
+ 			
+ 			// Click on 'Add New Segment' under 'Actions' pop up menu
+ 			stepNo++;
+			description="Add New Segment";
 			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("AddNewSegment"));
+			planPage.enterSegmentName(testData.get("SegmentForAddPhase"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+			// Close segment window
+ 			stepNo++;
+			description="Closed Segment";
+			planPage.closeSegmentWindow();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -158,7 +178,16 @@ public class MAP0012_addPhase extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 				
+ 		    // Remove This segment
+ 			stepNo++;
+			description="Remove This Segment";
+			planPage.clickPopupMenu(testData.get("Actions"));
+			planPage.clickSubmenu(testData.get("RemoveThisSegment"));
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";

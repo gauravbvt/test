@@ -140,7 +140,7 @@ public class MAV0194_TaskNewIssue extends TestCase{
 			stepNo++;
 			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
-			// Click on 'strench Up forms' icon 
+			// Click on 'stretch Up forms' icon 
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);

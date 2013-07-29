@@ -148,10 +148,22 @@ public class MAV0193_TaskAttachOptions extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 
+ 		    // Check attachment panel  is present
+ 			stepNo++;
+			description="Attachment is Present";
+			
+			// Write log
+	 		LogFunctions.writeLogs(description);
+	 		LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+ 								
+ 		 			
 			// Check attach dropdown list is present
 			stepNo++;
 			description="Attachment is Present";
-			planPage.verifyAttachDropdownInTask(testData.get("Reference"),testData.get("Policy"),testData.get("MandatingPolicy"), testData.get("prohibitingPolicy"));
+			PlanPage planPage1=new PlanPage();
+			planPage1.clickAttachmentLinkInTask();
+			PlanPage planPage2=new PlanPage();
+			planPage2.verifyAttachDropdownInTask(testData.get("Reference"),testData.get("Policy"),testData.get("MandatingPolicy"), testData.get("ProhibitingPolicy"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -235,6 +247,7 @@ public class MAV0193_TaskAttachOptions extends TestCase{
 		 	this.testData.put("Actions",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AddNewSegment",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RemoveThisSegment",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("taskAttachmentLink",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("taskAttachmentLink").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Reference",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("reference").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Policy",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("policy").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("MandatingPolicy",oXmlEleMAV0193_TaskAttachOptions.getElementsByTagName("mandatingPolicy").item(0).getChildNodes().item(0).getNodeValue());

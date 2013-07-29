@@ -99,43 +99,46 @@ public class MAV0215_AddInfoReceiveShowPopUpMenu extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Domain Plans
-			stepNo++;
-			description="Domain Plans";
-			DomainPlanPage domainPlanPage= new DomainPlanPage();
-			domainPlanPage.clickDomainPlans();	
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+ 		    // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
 			// Plan Page
-			stepNo++;
-			description="Navigated to Plan page";
+		    stepNo++;
+			description="Domain Plan Editor";
 			HomePage homePage=new HomePage();
 			homePage.clickDomainPlanEditor();	
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);		
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 						
+			
 			
 			// Add New Segment
  			stepNo++;
 			description="Add New Segment";
-			PlanPage planPage = new PlanPage();
+			PlanPage planPage= new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			// Enter Segment name
-			planPage.enterSegmentName(testData.get("segmentForAddInfoRecieveShowPopUpMenu"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Close segment window
 			stepNo++;
-			description="Close About Plan Segment";
+			description="Close About Plan Segment Window";
 			planPage.closeSegmentWindow();
+			// Click on 'strench Up forms' icon 
+			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			
 			
 			// Click on 'Add' in receives panel
 			stepNo++;
