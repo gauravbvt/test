@@ -7,7 +7,7 @@
 
 <actions>Actions</actions>
 <addNewSegment>Add New Segment</addNewSegment>
-<segmentForAddPhase>Segment For Add Phase Details</segmentForAddPhase>
+<segmentForAddPhaseDetails>Segment For Add Phase Details</segmentForAddPhaseDetails>
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <phase>Phase</phase>
 <phaseDescription>This is phase description</phaseDescription>

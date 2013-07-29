@@ -13,6 +13,8 @@
 <removeThisSegment>Remove This Segment</removeThisSegment>
 
 <unspecified>Unspecified</unspecified>
+<changeButtonInSendsPanel>CHANGE</changeButtonInSendsPanel>
+<changeButtonInReceivesPanel>Change Button In Receives Panel</changeButtonInReceivesPanel>
 <differentLocations>in different locations</differentLocations>
 <differentOrganizations>in different organizations</differentOrganizations>
 <differentOverallOrganizations>in different overall organizations</differentOverallOrganizations>

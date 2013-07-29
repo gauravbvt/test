@@ -16,5 +16,7 @@
 <actionsInReceivesPanel>Actions In Receives Panel</actionsInReceivesPanel>
 <actionsInSendsPanel>Actions In Sends Panel</actionsInSendsPanel>
 <newIssueInReceivesPanel>New Issue In Receives Panel</newIssueInReceivesPanel>
+<attachmentPanelInNewIssueSends>Attachment Panel In New Issue In Sends Panel</attachmentPanelInNewIssueSends>
+<attachDropDownInNewIssueSends>Attach Dropdown In New Issue In Sends Panel</attachDropDownInNewIssueSends>
 <newIssueInSendsPanel>New Issue In Sends Panel</newIssueInSendsPanel>
 </elements>

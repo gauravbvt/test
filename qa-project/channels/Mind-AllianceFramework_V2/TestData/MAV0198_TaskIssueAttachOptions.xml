@@ -10,6 +10,8 @@
 <flag>False</flag>
 <actionsInTask>Actions In Task Panel</actionsInTask>
 <newIssueInTask>Issue In Task Panel</newIssueInTask>
+<attachDropDownInNewIssue>ADD ATTACHMENT</attachDropDownInNewIssue>
+<typeDropDownInAttachment>Type Dropdown In New Issue Text In Task Panel</typeDropDownInAttachment>
 <actions>Actions</actions>
 <addNewSegment>Add New Segment</addNewSegment>
 <removeThisSegment>Remove This Segment</removeThisSegment>
