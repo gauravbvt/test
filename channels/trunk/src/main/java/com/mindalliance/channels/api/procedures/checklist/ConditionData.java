@@ -91,4 +91,8 @@ public abstract class ConditionData implements Serializable {
     public boolean isNeedSatisfiedCondition() {
         return condition.isNeedSatisfiedCondition();
     }
+
+    public boolean isTaskFailedCondition() {
+        return condition.isTaskFailedCondition();
+    }
 }

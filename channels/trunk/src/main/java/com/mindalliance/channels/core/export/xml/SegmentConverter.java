@@ -226,6 +226,7 @@ public class SegmentConverter extends AbstractChannelsConverter {
                     context.convertAnother( segment, Flow.class );
                 } catch ( Exception e ) {
                     System.out.println( "OOPS!");
+                    throw new RuntimeException( e );
                 }
                 // Risks
                 // Issues

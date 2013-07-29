@@ -249,7 +249,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                 AjaxLink<String> deleteIfLink = new AjaxLink<String>( "deleteIf" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        int index = getChecklist().getStepGuards().indexOf( stepGuard );
+                        int index = getChecklist().getImmutableStepGuards().indexOf( stepGuard );
                         if ( index >= 0 ) {
                             Command command = new UpdateSegmentObject( getUsername(),
                                     part,
@@ -266,7 +266,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                     }
                 };
                 addTipTitle( deleteIfLink, "Delete this condition" );
-                deleteIfLink.setVisible( edited );
+                deleteIfLink.setVisible( edited && !getChecklist().isImpliedStepGuard( stepGuard ) );
                 item.add( deleteIfLink );
             }
         };
@@ -320,7 +320,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                 AjaxLink<String> deleteIfLink = new AjaxLink<String>( "deleteUnless" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        int index = getChecklist().getStepGuards().indexOf( stepGuard );
+                        int index = getChecklist().getImmutableStepGuards().indexOf( stepGuard );
                         if ( index >= 0 ) {
                             Command command = new UpdateSegmentObject( getUsername(),
                                     part,

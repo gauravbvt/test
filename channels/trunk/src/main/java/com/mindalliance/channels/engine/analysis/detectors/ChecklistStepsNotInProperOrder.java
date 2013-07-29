@@ -44,7 +44,7 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
         Checklist checklist = part.getEffectiveChecklist();
         // Steps with matching outcome and condition not in expected pre-requisite relationship
         for ( StepOutcome stepOutcome : checklist.getStepOutcomes() ) {
-            for ( StepGuard stepGuard : checklist.getStepGuards() ) {
+            for ( StepGuard stepGuard : checklist.listAllEffectiveStepGuards() ) {
                 if ( stepGuard.isPositive() ) {
                     Condition condition = checklist.deRefCondition( stepGuard.getConditionRef() );
                     Outcome outcome = checklist.deRefOutcome( stepOutcome.getOutcomeRef() );

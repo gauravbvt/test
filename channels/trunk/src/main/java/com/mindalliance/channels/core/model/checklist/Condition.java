@@ -21,6 +21,8 @@ public abstract class Condition extends AbstractChecklistElement {
 
     public abstract boolean isLocalCondition();
 
+    public abstract boolean isTaskFailedCondition();
+
     @Override
     public boolean isCondition() {
         return true;

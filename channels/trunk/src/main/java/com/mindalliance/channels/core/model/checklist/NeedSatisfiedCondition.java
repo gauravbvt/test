@@ -59,6 +59,11 @@ public class NeedSatisfiedCondition extends Condition {
     }
 
     @Override
+    public boolean isTaskFailedCondition() {
+        return false;
+    }
+
+    @Override
     public boolean matches( Outcome outcome ) {
         // meaningful when a step produces info needed needed by another in the same checklist
         if ( outcome.isCapabilityCreatedOutcome() ) {

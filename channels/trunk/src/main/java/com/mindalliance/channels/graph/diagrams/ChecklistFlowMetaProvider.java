@@ -222,6 +222,9 @@ public class ChecklistFlowMetaProvider extends AbstractMetaProvider<ChecklistEle
                         .append( need.getName() )
                         .append( " is satisfied" );
 
+            } else if ( condition.isTaskFailedCondition() ) {
+                sb.append( ifUnless )
+                        .append( "the task failed" );
             } else { //EventTiming condition
                 sb.append( ifUnless )
                         .append( ( (EventTimingCondition) condition ).getEventTiming().getLabel() );

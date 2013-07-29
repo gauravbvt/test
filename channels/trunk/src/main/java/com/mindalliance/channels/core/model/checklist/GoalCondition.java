@@ -44,6 +44,11 @@ public class GoalCondition extends Condition {
     }
 
     @Override
+    public boolean isTaskFailedCondition() {
+        return false;
+    }
+
+    @Override
     public boolean matches( Outcome outcome ) {
         if ( outcome.isGoalAchievedOutcome() ) {
             Goal outcomeGoal = ((GoalAchievedOutcome)outcome).getGoal();

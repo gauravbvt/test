@@ -37,10 +37,11 @@ public class Checklist implements Serializable, Mappable {
     private List<ActionStep> actionSteps = new ArrayList<ActionStep>();
     private List<LocalCondition> localConditions = new ArrayList<LocalCondition>();
     private List<StepOrder> stepOrders = new ArrayList<StepOrder>();
-    private List<StepGuard> stepGuards = new ArrayList<StepGuard>();
+    private List<StepGuard> stepGuards = new ArrayList<StepGuard>(); // explicit conditions on steps
     private List<StepOutcome> stepOutcomes = new ArrayList<StepOutcome>();
     private String confirmationSignature;
     private boolean confirmationPending;
+    private TaskFailedCondition taskFailedCondition = new TaskFailedCondition();
 
     public Checklist() {
     }
@@ -77,6 +78,7 @@ public class Checklist implements Serializable, Mappable {
         conditions.addAll( listEventTimingConditions() );
         conditions.addAll( listGoalConditions() );
         conditions.addAll( listNeedSatisfiedConditions() );
+        conditions.add( taskFailedCondition );
         for ( Condition condition : conditions ) {
             condition.setId( conditions.indexOf( condition ) );
         }
@@ -120,14 +122,30 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
+    @SuppressWarnings("unchecked")
+    public List<StepGuard> listEffectiveStepGuards( final Step step, final boolean positive ) {
+        return (List<StepGuard>) CollectionUtils.select(
+                listEffectiveStepGuards( listEffectiveSteps(), listEffectiveConditions() ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        StepGuard stepGuard = (StepGuard) object;
+                        return stepGuard.isPositive() == positive
+                                && stepGuard.getStepRef().equals( step.getRef() );
+                    }
+                }
+        );
+    }
+
+
     public List<StepGuard> listAllEffectiveStepGuards() {
         return listEffectiveStepGuards( listEffectiveSteps(), listEffectiveConditions() );
     }
 
     @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final List<Step> steps, final List<Condition> conditions ) {
-        return (List<StepGuard>) CollectionUtils.select(
-                getStepGuards(),
+        List<StepGuard> allStepGuards = (List<StepGuard>) CollectionUtils.select(
+                getImmutableStepGuards(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -135,6 +153,26 @@ public class Checklist implements Serializable, Mappable {
                     }
                 }
         );
+        allStepGuards.addAll( listAllImpliedStepGuards() );
+        return allStepGuards;
+    }
+
+    private List<StepGuard> listAllImpliedStepGuards() {
+        List<StepGuard> impliedStepGuards = new ArrayList<StepGuard>();
+        for ( Step step : listEffectiveSteps() ) {
+            if ( step.isCommunicationStep() ) {
+                CommunicationStep communicationStep = (CommunicationStep) step;
+                if ( communicationStep.getSharing().isIfTaskFails() ) {
+                    StepGuard stepGuard = new StepGuard( taskFailedCondition, step, true ); // if task fails
+                    impliedStepGuards.add( stepGuard );
+                }
+            }
+        }
+        return impliedStepGuards;
+    }
+
+    public boolean isImpliedStepGuard( StepGuard stepguard ) {
+        return !getImmutableStepGuards().contains( stepguard );
     }
 
     public List<StepOutcome> listAllEffectiveStepOutcomes() {
@@ -178,6 +216,10 @@ public class Checklist implements Serializable, Mappable {
 
     public List<StepGuard> getStepGuards() {
         return stepGuards;
+    }
+
+    public List<StepGuard> getImmutableStepGuards() {
+        return Collections.unmodifiableList( stepGuards );
     }
 
     public void addStepGuard( StepGuard stepGuarding ) {
@@ -379,6 +421,8 @@ public class Checklist implements Serializable, Mappable {
                 ? findGoalCondition( conditionRef )
                 : NeedSatisfiedCondition.isNeedRef( conditionRef )
                 ? findNeedStatisfiedCondition( conditionRef )
+                : TaskFailedCondition.isTaskFailureCondition( conditionRef )
+                ? findTaskFailedCondition( conditionRef )
                 : findLocalCondition( conditionRef );
     }
 
@@ -429,7 +473,11 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
-    @SuppressWarnings("unchecked")
+    private Condition findTaskFailedCondition( final String conditionRef ) {
+        return taskFailedCondition;
+    }
+
+    @SuppressWarnings( "unchecked" )
     private Condition findLocalCondition( final String conditionRef ) {
         return (Condition) CollectionUtils.find(
                 getLocalConditions(),
@@ -554,7 +602,7 @@ public class Checklist implements Serializable, Mappable {
     public List<Condition> listConditionsFor( Step step ) {
         List<Condition> stepConditions = new ArrayList<Condition>();
         String stepRef = step.getRef();
-        for ( StepGuard stepGuard : getStepGuards() ) {
+        for ( StepGuard stepGuard : listEffectiveStepGuardsFor( step ) ) {
             if ( stepGuard.getStepRef().equals( stepRef ) ) {
                 Condition condition = deRefCondition( stepGuard.getConditionRef() );
                 if ( condition != null )
@@ -580,12 +628,10 @@ public class Checklist implements Serializable, Mappable {
     public List<Condition> listConditionsFor( Step step, boolean positive ) {
         List<Condition> stepConditions = new ArrayList<Condition>();
         String stepRef = step.getRef();
-        for ( StepGuard stepGuard : getStepGuards() ) {
-            if ( stepGuard.isPositive() == positive && stepGuard.getStepRef().equals( stepRef ) ) {
-                Condition condition = deRefCondition( stepGuard.getConditionRef() );
-                if ( condition != null )
-                    stepConditions.add( condition );
-            }
+        for ( StepGuard stepGuard : listEffectiveStepGuardsFor( step, positive ) ) {
+            Condition condition = deRefCondition( stepGuard.getConditionRef() );
+            if ( condition != null )
+                stepConditions.add( condition );
         }
         return stepConditions;
     }
@@ -691,7 +737,7 @@ public class Checklist implements Serializable, Mappable {
     private boolean isReferenced( ActionStep actionStep ) {
         final String ref = actionStep.getRef();
         return CollectionUtils.exists(
-                getStepGuards(),
+                getImmutableStepGuards(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -715,7 +761,7 @@ public class Checklist implements Serializable, Mappable {
     private boolean isReferenced( LocalCondition localCondition ) {
         final String ref = localCondition.getRef();
         return CollectionUtils.exists(
-                getStepGuards(),
+                getImmutableStepGuards(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
@@ -776,7 +822,7 @@ public class Checklist implements Serializable, Mappable {
         map.put( "actionSteps", new MappedList<ActionStep>( getActionSteps() ) );
         map.put( "localConditions", new MappedList<LocalCondition>( getLocalConditions() ) );
         map.put( "stepOrders", new MappedList<StepOrder>( getStepOrders() ) );
-        map.put( "stepGuards", new MappedList<StepGuard>( getStepGuards() ) );
+        map.put( "stepGuards", new MappedList<StepGuard>( getImmutableStepGuards() ) );
     }
 
     @SuppressWarnings("unchecked")
@@ -807,6 +853,19 @@ public class Checklist implements Serializable, Mappable {
         );
     }
 
+    @SuppressWarnings( "unchecked" )
+    public List<StepGuard> listEffectiveStepGuardsFor( Step step ) {
+        final String stepRef = step.getRef();
+        return (List<StepGuard>) CollectionUtils.select(
+                listAllEffectiveStepGuards(),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (StepGuard) object ).getStepRef().equals( stepRef );
+                    }
+                }
+        );
+    }
 
     @SuppressWarnings("unchecked")
     public List<Step> listStepsWithPrerequisite( final Step step ) {

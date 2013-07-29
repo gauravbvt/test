@@ -56,17 +56,16 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
         Checklist checklist = part.getEffectiveChecklist();
         // add step vertices
         List<Step> steps = checklist.listEffectiveSteps();
+        List<Condition> allConditions = checklist.listEffectiveConditions();
+        List<Outcome> allOutcomes = checklist.listEffectiveOutcomes();
         for ( Step step : steps ) {
             ChecklistElementHolder stepHolder = new ChecklistElementHolder( step, steps.indexOf( step ) );
             digraph.addVertex( stepHolder );
         }
 
-
         for ( Step toStep : steps ) {
             List<Step> priors = checklist.listStepsJustBefore( toStep );
-            List<Condition> allConditions = checklist.listEffectiveConditions();
-            List<Condition> stepConditions = checklist.listConditionsFor( toStep );
-            List<Outcome> allOutcomes = checklist.listEffectiveOutcomes();
+             List<Condition> stepConditions = checklist.listConditionsFor( toStep );
             List<Outcome> outcomes = checklist.listOutcomesFor( toStep );
             // add step-step flow edges, condition-flow edges, flow-condition edges, and in-flow condition vertices
             ChecklistElementHolder toStepHolder = new ChecklistElementHolder( toStep, steps.indexOf( toStep ) );
@@ -97,19 +96,6 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
             if ( priors.isEmpty() ) {
                 // add no-pre-req condition-to-flow edges, and no-prereq step conditions
                 chainConditions( stepConditions, toStepHolder, checklist, digraph );
-                for ( Condition condition : stepConditions ) {
-                    ChecklistElementHolder conditionHolder = new ChecklistElementHolder(
-                            condition,
-                            allConditions.indexOf( condition ) );
-                    setContext( conditionHolder, toStepHolder, checklist );
-                    digraph.addVertex( conditionHolder );
-                    if ( !digraph.containsEdge( conditionHolder, toStepHolder ) )
-                        digraph.addEdge(
-                                conditionHolder,
-                                toStepHolder,
-                                new ChecklistElementRelationship( conditionHolder, toStepHolder, checklist )
-                        );
-                }
             }
             // outcomes
             for ( Outcome outcome : outcomes ) {
@@ -155,6 +141,7 @@ public class ChecklistFlowGraphBuilder implements GraphBuilder<ChecklistElement,
             ChecklistElementHolder lastCondition = new ChecklistElementHolder(
                     stepConditions.get( stepConditions.size() - 1 ),
                     idLast );
+            setContext( lastCondition, toStepHolder, checklist );
             digraph.addVertex( lastCondition );
             if ( !digraph.containsEdge( lastCondition, toStepHolder ) )
                 digraph.addEdge(

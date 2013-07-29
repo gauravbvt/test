@@ -58,7 +58,7 @@ public class ChecklistElementHolder implements ChecklistElement {
     }
 
     public String getContext() {
-        return context;
+        return context == null ? "" : context;
     }
 
     public void setContext( String context ) {

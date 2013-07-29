@@ -5,6 +5,7 @@ import com.mindalliance.channels.core.model.checklist.Checklist;
 import com.mindalliance.channels.core.model.checklist.ChecklistElement;
 import com.mindalliance.channels.core.model.checklist.Condition;
 import com.mindalliance.channels.core.model.checklist.Step;
+import com.mindalliance.channels.engine.analysis.graph.ChecklistElementHolder;
 import com.mindalliance.channels.engine.analysis.graph.ChecklistElementRelationship;
 import com.mindalliance.channels.graph.AbstractDOTExporter;
 import com.mindalliance.channels.graph.DOTAttribute;
@@ -52,27 +53,31 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
 
     @Override
     protected void beforeExport( CommunityService communityService, Graph<ChecklistElement, ChecklistElementRelationship> g ) {
-        for ( final Step step : checklist.listEffectiveSteps() ) {
-            if ( checklist.listPrerequisiteStepsFor( step ).isEmpty() ) {
-                List<Condition> conditions = checklist.listConditionsFor( step );
-                if ( conditions.isEmpty() ) {
-                    starters.add( step );
-                } else {
-                    starters.addAll( conditions );
-                }
-            }
-            if ( !CollectionUtils.exists(   // step is not a prerequisite for another step
-                    checklist.listEffectiveSteps(),
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            Step otherStep = (Step) object;
-                            return !step.equals( otherStep )
-                                    && checklist.listPrerequisiteStepsFor( otherStep ).contains( step );
-                        }
+        for ( ChecklistElement cle : g.vertexSet() ) {
+            if ( cle.isStep() ) {
+                final Step step = cle.getStep();
+                if ( checklist.listPrerequisiteStepsFor( step ).isEmpty() ) {
+                    List<Condition> conditions = checklist.listConditionsFor( step );
+                    if ( conditions.isEmpty() ) {
+                        starters.add( cle );
+                    } else {
+                        starters.add( new ChecklistElementHolder( conditions.get( 0 ), 1000 + step.getId() ) ); // todo: remove this dependency on implementation of ChecklistFlowGraphBuilder::populateGraph
                     }
-            ) ) {
-                enders.add( step );
+                }
+                if ( !CollectionUtils.exists(   // step is not a prerequisite for another step
+                        checklist.listEffectiveSteps(),
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                Step otherStep = (Step) object;
+                                return !step.equals( otherStep )
+                                        && checklist.listPrerequisiteStepsFor( otherStep ).contains( step );
+                            }
+                        }
+                ) ) {
+                    enders.add( cle );
+                }
+
             }
         }
     }
@@ -141,7 +146,7 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
                                      PrintWriter out,
                                      Graph<ChecklistElement,
                                              ChecklistElementRelationship> g ) {
-        List<DOTAttribute> attributes = getStartStopAttributes(  );
+        List<DOTAttribute> attributes = getStartStopAttributes();
         for ( ChecklistElement checklistElement : starters ) {
             String autoStarterId = getVertexID( checklistElement );
             out.print( getIndent() + START + getArrow( g ) + autoStarterId );
@@ -156,10 +161,10 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
     private void exportEnderEdges( CommunityService communityService,
                                    PrintWriter out,
                                    Graph<ChecklistElement, ChecklistElementRelationship> g ) {
-        List<DOTAttribute> attributes = getStartStopAttributes(  );
+        List<DOTAttribute> attributes = getStartStopAttributes();
         for ( ChecklistElement checklistElement : enders ) {
             String enderStarterId = getVertexID( checklistElement );
-            out.print( getIndent() + enderStarterId + getArrow( g ) + STOP  );
+            out.print( getIndent() + enderStarterId + getArrow( g ) + STOP );
             out.print( "[" );
             if ( !attributes.isEmpty() ) {
                 out.print( asElementAttributes( attributes ) );
@@ -167,7 +172,7 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
             out.println( "];" );
         }
         if ( g.vertexSet().isEmpty() ) {
-            out.print( getIndent() + START + getArrow( g ) + STOP  );
+            out.print( getIndent() + START + getArrow( g ) + STOP );
             out.print( "[" );
             if ( !attributes.isEmpty() ) {
                 out.print( asElementAttributes( attributes ) );
@@ -177,7 +182,7 @@ public class ChecklistFlowDOTExporter extends AbstractDOTExporter<ChecklistEleme
         }
     }
 
-    private List<DOTAttribute> getStartStopAttributes(  ) {
+    private List<DOTAttribute> getStartStopAttributes() {
         List<DOTAttribute> list = DOTAttribute.emptyList();
         list.add( new DOTAttribute( "color", "gray" ) );
         list.add( new DOTAttribute( "arrowhead", "none" ) );

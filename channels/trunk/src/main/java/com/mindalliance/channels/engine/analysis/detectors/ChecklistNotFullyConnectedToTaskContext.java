@@ -45,7 +45,7 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
         contextConditions.addAll( checklist.listNeedSatisfiedConditions() );
         for ( final Condition condition : contextConditions ) {
             if ( !CollectionUtils.exists(
-                    checklist.getStepGuards(),
+                    checklist.listAllEffectiveStepGuards(),
                     new Predicate() {
                         @Override
                         public boolean evaluate( Object object ) {

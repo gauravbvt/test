@@ -68,15 +68,17 @@ public class ChecklistConverter extends AbstractChannelsConverter {
             writer.endNode();
         }
         for ( StepGuard stepGuard : checklist.listEffectiveStepGuards( effectiveSteps, effectiveConditions ) ) {
-            writer.startNode( "stepGuard" );
-            writer.addAttribute( "positive", Boolean.toString( stepGuard.isPositive() ) );
-            writer.startNode( "conditionRef" );
-            writer.setValue( stepGuard.getConditionRef() );
-            writer.endNode();
-            writer.startNode( "stepRef" );
-            writer.setValue( stepGuard.getStepRef() );
-            writer.endNode();
-            writer.endNode();
+            if ( !checklist.isImpliedStepGuard( stepGuard ) ) {
+                writer.startNode( "stepGuard" );
+                writer.addAttribute( "positive", Boolean.toString( stepGuard.isPositive() ) );
+                writer.startNode( "conditionRef" );
+                writer.setValue( stepGuard.getConditionRef() );
+                writer.endNode();
+                writer.startNode( "stepRef" );
+                writer.setValue( stepGuard.getStepRef() );
+                writer.endNode();
+                writer.endNode();
+            }
         }
         for ( StepOutcome stepOutcome : checklist.listEffectiveStepOutcomes( effectiveSteps, effectiveOutcomes ) ) {
             writer.startNode( "stepOutcome" );

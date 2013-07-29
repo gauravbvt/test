@@ -11,8 +11,6 @@ import com.mindalliance.channels.core.model.checklist.Step;
 import com.mindalliance.channels.core.model.checklist.StepGuard;
 import com.mindalliance.channels.core.model.checklist.StepOrder;
 import com.mindalliance.channels.core.model.checklist.StepOutcome;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -126,17 +124,8 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
         ifsContainer.add( ifListView );
     }
 
-    @SuppressWarnings("unchecked")
     private List<StepGuard> getIfGuards() {
-        return (List<StepGuard>) CollectionUtils.select(
-                getChecklist().getStepGuards(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return ( (StepGuard) object ).isPositive();
-                    }
-                }
-        );
+        return getChecklist().listEffectiveStepGuards( getStep(), true );
     }
 
     private void addUnlessGuards() {
@@ -167,15 +156,7 @@ public class ChecklistStepDataPanel extends AbstractDataPanel {
 
     @SuppressWarnings("unchecked")
     private List<StepGuard> getUnlessGuards() {
-        return (List<StepGuard>) CollectionUtils.select(
-                getChecklist().getStepGuards(),
-                new Predicate() {
-                    @Override
-                    public boolean evaluate( Object object ) {
-                        return !( (StepGuard) object ).isPositive();
-                    }
-                }
-        );
+        return getChecklist().listEffectiveStepGuards( getStep(), false );
     }
 
     private void addPrerequisiteSteps() {
