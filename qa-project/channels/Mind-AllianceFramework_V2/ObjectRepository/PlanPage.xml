@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <elements>
 	  
 	<Element>
@@ -313,7 +312,7 @@
 	</Element>
 	<Element>
 		<GivenName>Remove Expectation</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -498,9 +497,9 @@
 	
 	<Element>
 		<GivenName>Organization Name Textbox In Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/fieldset/input</Xpath>
+		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/fieldset/input</Xpath>
 		<Name>allOrganizations:fp-content:mo:aspect:newInvolvedContainer:newInvolved</Name>
-		<Id>id182</Id>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -508,7 +507,7 @@
 	
 	<Element>
 		<GivenName>Organization Table In Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[16]/div/div[3]/div/div/div[2]/div[2]/table/tbody</Xpath>
+		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/div[2]/div[2]/table/tbody</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -751,7 +750,7 @@
 	</Element>
 	<Element>
 		<GivenName>Task Mover Table</GivenName>
-		<Xpath>/html/body/form/div[19]/div/span/div/div[2]/div/span/table/tbody</Xpath>
+		<Xpath>/html/body/form/div[21]/div/span/div/div[2]/div/span/table/tbody/tr/td[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -886,17 +885,31 @@
 		<Name>segment:part:goals:goals:0:goal:goalChoice</Name>
 	</Element>
 	
+	
 	<Element>
 		<GivenName>Task Attachment Link</GivenName>
-		<Xpath>//div[contains(@class,'segment:part:attachments:container:controls:type')]</Xpath>
-		<Name>segment:part:attachments:container:controls:type</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span/div/div[2]/h2/a</Xpath>
+		<Name></Name>
 	</Element>
+	
+   //<Element>
+	//	<GivenName>Task Attachment Link</GivenName>
+		//<Xpath>//div[contains(@class,'segment:part:attachments:container:controls:type')]</Xpath>
+		<Name>segment:part:attachments:container:controls:type</Name>
+	//</Element>
 	
 	<Element>
 		<GivenName>Attach Dropdown In Task Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:attachments:container:controls:type')]</Xpath>
-		<Name>segment:part:attachments:container:controls:type</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
+		<Name></Name>
 	</Element>
+	
+	//<Element>
+		//<GivenName>Attach Dropdown In Task Panel</GivenName>
+		//<Xpath>//select[contains(@name,'segment:part:attachments:container:controls:type')]</Xpath>
+		//<Name>segment:part:attachments:container:controls:type</Name>
+	//</Element>
+	
 	
 	<Element>
 		<GivenName>Attach Dropdown In Send Panel</GivenName>
@@ -905,7 +918,7 @@
 	</Element>
 	<Element>
 		<GivenName>New Issue In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1975,14 +1988,15 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Issue In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div/span[2]/span[2]/ul/li/ul/li[8]/span/a/span</Xpath>
+	    <Xpath>/html/body/form/span[2]/div/div[3]/div/div/span[2]/span[2]/ul/li/ul/li[9]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>New Issue</LinkText>
-		<ClassName>dropmenu</ClassName>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
 	</Element>
 	
 	<Element>
@@ -2016,7 +2030,7 @@
 	</Element>
 	<Element>
 		<GivenName>Attach Dropdown In New Issue Text In Task Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/select</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/span[2]/div/span/ol/li/span/div/span/div/div[2]/h2/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2116,15 +2130,38 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	<Element>
-		<GivenName>Attach Dropdown In New Issue In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[3]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/select</Xpath>
+		<Element>
+		<GivenName>Attachment Panel In New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span[2]/div/span/ol/li/span/div/span/div/div[2]/h2/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	
+	<Element>
+		<GivenName>Attach Dropdown In New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Change Button In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[8]/td/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
 	<Element>
 		<GivenName>Attach Dropdown In New Issue In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[6]/td/ul/li/span/select</Xpath>
@@ -2147,6 +2184,16 @@
 	<Element>
 		<GivenName>Severity Dropdown In New Issue In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/span/div/span/ol/li/span/div/table/tbody/tr[4]/td/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Change Button In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[8]/td/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2518,7 +2565,7 @@
 	</Element>
 	<Element>
 		<GivenName>But Only If Dropdown In Sends Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[8]/td/select</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[8]/td/div/select</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2641,7 +2688,7 @@
 	
 	<Element>
 		<GivenName>Segment Dropdown On Plan Page</GivenName>
-		<Xpath>/html/body/form/div[29]/div/ul/li[3]/a/span</Xpath>
+		<Xpath>/html/body/form/div[31]/div/ul/li[3]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2672,12 +2719,22 @@
 		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing')]</Xpath>
 		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing</Name>
 	</Element>
+	
 	<Element>
 		<GivenName>Event In About Plan Segment</GivenName>
-		<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:event')]</Xpath>
-		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:event</Name>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr/td/span/a/span</Xpath>
+		<Name></Name>
 	</Element>
-	<Element>
+	
+	
+	//<Element>
+		//<GivenName>Event In About Plan Segment</GivenName>
+		//<Xpath>//input[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:event')]</Xpath>
+		//<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:event</Name>
+	//</Element>
+	
+	
+   <Element>
 		<GivenName>Event Table In About Plan Segment</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table</Xpath>
 		<Name></Name>
@@ -2695,33 +2752,57 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Attachment Panel In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/div[2]/h2/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Attach File Name Textbox In About Plan Segment</GivenName>
 		<Xpath></Xpath>
-		<Name>sg-editor:fp-content:mo:aspect:attachments:container:controls:name</Name>
+		<Name>/html/body/form/div[5]/div/div[3]/div/div/span/div/div[2]/table/tbody/tr[3]/td[2]/input</Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	//<Element>
+		//<GivenName>Attach File Name Textbox In About Plan Segment</GivenName>
+		//<Xpath></Xpath>
+		//<Name>sg-editor:fp-content:mo:aspect:attachments:container:controls:name</Name>
+		//<Id></Id>
+		//<PartialLinkText></PartialLinkText>
+		//<LinkText></LinkText>
+		//<ClassName></ClassName>
+	//</Element>
+	
 	<Element>
 		<GivenName>Attach File Upload Button In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[5]/td/ul/li/span/label/input</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/div[2]/table/tbody/tr[3]/td[2]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Attach File Submit Button In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[5]/td/ul/li/span/input[3]</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/div[2]/table/tbody/tr[4]/td[2]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Delete Event In About Plan Segment</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table/tbody/tr/td[2]/a/img</Xpath>
@@ -2841,9 +2922,16 @@
 	
 	<Element>
 		<GivenName>Event In Event In Scope Text</GivenName>
-		<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input')]</Xpath>
-		<Name>allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input</Name>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr[3]/td/input</Xpath>
+		<Name></Name>
 	</Element>
+	
+	//<Element>
+		//<GivenName>Event In Event In Scope Text</GivenName>
+		//<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input')]</Xpath>
+		//<Name>allEvents:content:events:incidents:eventsDiv:event:1:name-container:name-input</Name>
+	//</Element>
+	
 	<Element>
 		<GivenName>Checkbox Of Event In Event In Scope</GivenName>
 		<Xpath>//input[contains(@name,'allEvents:content:events:incidents:eventsDiv:event:1:confirmed')]</Xpath>
@@ -2865,7 +2953,7 @@
 	</Element>
 	<Element>
 		<GivenName>Table Of Events In Event In Scope</GivenName>
-		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table</Xpath>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
