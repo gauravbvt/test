@@ -370,6 +370,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>This plan segment covers</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/h3</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>unnamed</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Any Event Dropdown In Plan Requirement</GivenName>
 		<Xpath>//select[contains(@name,'requirements:fp-content:mo:aspect:event')]</Xpath>
 		<Name>requirements:fp-content:mo:aspect:event</Name>
@@ -579,6 +589,16 @@
 	<Element>
 		<GivenName>Analytics Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[5]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Scenario Tab</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[2]/div/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -803,20 +823,39 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Usually Completes After Textbox</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-amount')]</Xpath>
-		<Name>segment:part:timingContainer:completion-time:delay-amount</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[4]/span/input</Xpath>
+		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	//<Element>
+		//<GivenName>Usually Completes After Textbox</GivenName>
+		//<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-amount')]</Xpath>
+		//<Name>segment:part:timingContainer:completion-time:delay-amount</Name>
+		//<Id></Id>
+		//<PartialLinkText></PartialLinkText>
+		//<LinkText></LinkText>
+	//	<ClassName></ClassName>
+	//</Element>
+	
 	<Element>
 		<GivenName>Usually Completes After Dropdown</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-unit')]</Xpath>
-		<Name>segment:part:timingContainer:completion-time:delay-unit</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[4]/span/select</Xpath>
+		<Name></Name>
 	</Element>
+	
+	//<Element>
+		//<GivenName>Usually Completes After Dropdown</GivenName>
+		//<Xpath>//select[contains(@name,'segment:part:timingContainer:completion-time:delay-unit')]</Xpath>
+		//<Name>segment:part:timingContainer:completion-time:delay-unit</Name>
+	//</Element>
+	
 	<Element>
 		<GivenName>Repeats Every In Task</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/input</Xpath>
@@ -910,12 +949,25 @@
 		//<Name>segment:part:attachments:container:controls:type</Name>
 	//</Element>
 	
+	<Element>
+		<GivenName>Attachment Panel In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span/div/div[2]/h2/a</Xpath>
+		<Name></Name>
+	</Element>
+	
 	
 	<Element>
 		<GivenName>Attach Dropdown In Send Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
-		<Name>segment:sends:flows-div:flows:0:flow:attachments:container:controls:type</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
+		<Name></Name>
 	</Element>
+	
+	//<Element>
+		//<GivenName>Attach Dropdown In Send Panel</GivenName>
+		//<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
+		//<Name>segment:sends:flows-div:flows:0:flow:attachments:container:controls:type</Name>
+	//</Element>
+	
 	<Element>
 		<GivenName>New Issue In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
@@ -927,10 +979,22 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Attachment Panel In Receives Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/span/div/div[2]/h2/a</Xpath>
+		<Name></Name>
+	</Element>
+	
+	<Element>
 		<GivenName>Attach Dropdown In Receives Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:attachments:container:controls:type</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/span/div/div[2]/table/tbody/tr/td[2]/select</Xpath>
+		<Name></Name>
  	</Element>
+	
+	//<Element>
+		//<GivenName>Attach Dropdown In Receives Panel</GivenName>
+		//<Xpath>//select[contains(@name,'segment:receives:flows-div:flows:0:flow:attachments:container:controls:type')]</Xpath>
+		//<Name>segment:receives:flows-div:flows:0:flow:attachments:container:controls:type</Name>
+ 	//</Element>
 	
 	<Element>
 		<GivenName>Verify Goal Added In Task Panel</GivenName>
@@ -2714,17 +2778,47 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	<Element>
-		<GivenName>Context Dropdown In About Plan Segment</GivenName>
-		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing')]</Xpath>
-		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing</Name>
+
+    <Element>
+		<GivenName>Phase Dropdown In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr/td/select</Xpath>
+		<Name></Name>
 	</Element>
+	
+	
+	 <Element>
+		<GivenName>Occurring Dropdown In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/select</Xpath>
+		<Name></Name>
+		
+	</Element>
+
+
+	//<Element>
+		//<GivenName>Context Dropdown In About Plan Segment</GivenName>
+		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing')]</Xpath>
+		//<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:timing</Name>
+	//</Element>
+	
 	
 	<Element>
 		<GivenName>Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr/td/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[2]/td/input</Xpath>
 		<Name></Name>
 	</Element>
+	
+	<Element>
+		<GivenName>Second Event In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/input</Xpath>
+		<Name></Name>
+	</Element>
+	
+	
+	//<Element>
+		//<GivenName>Event In About Plan Segment</GivenName>
+		//<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr/td/span/a/span</Xpath>
+		//<Name></Name>
+	//</Element>
 	
 	
 	//<Element>
@@ -2736,16 +2830,17 @@
 	
    <Element>
 		<GivenName>Event Table In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
 		<GivenName>Segment Frame In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2805,7 +2900,7 @@
 	
 	<Element>
 		<GivenName>Delete Event In About Plan Segment</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/table/tbody/tr[4]/td/div/div/div/table/tbody/tr/td[2]/a/img</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table/tbody/tr/td[2]/a/img</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2830,11 +2925,26 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
 	<Element>
-		<GivenName>Between Level Dropdown In About Plan Segment</GivenName>
-		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:level')]</Xpath>
-		<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:level</Name>
+		<GivenName>First Rated Dropdown In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[3]/td/select
+		</Xpath>
+		<Name></Name>
 	</Element>
+	
+	<Element>
+		<GivenName>Second Rated Dropdown In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div[2]/select[2]</Xpath>
+		<Name></Name>
+	</Element>
+	
+	
+	//<Element>
+		//<GivenName>Between Level Dropdown In About Plan Segment</GivenName>
+		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:context:container:creationDiv:level')]</Xpath>
+		//<Name>sg-editor:fp-content:mo:aspect:context:container:creationDiv:level</Name>
+	//</Element>
 	
 	<Element>
 		<GivenName>New Issue In Receives Panel</GivenName>
@@ -2922,8 +3032,10 @@
 	
 	<Element>
 		<GivenName>Event In Event In Scope Text</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr[3]/td/input</Xpath>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr[5]/td/input</Xpath>
 		<Name></Name>
+		
+		
 	</Element>
 	
 	//<Element>
