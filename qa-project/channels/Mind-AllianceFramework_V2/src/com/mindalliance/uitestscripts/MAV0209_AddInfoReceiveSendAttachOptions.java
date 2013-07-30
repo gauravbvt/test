@@ -155,6 +155,7 @@ public class MAV0209_AddInfoReceiveSendAttachOptions extends TestCase{
 			// Check attach dropdown list is present
 			stepNo++;
 			description="Attach Drop Down - Sends Panel";
+			planPage.clickAttachmentPanelInSends();
 			planPage.verifyAttachDropdownInSendsPanel(testData.get("Reference"),testData.get("Policy"),testData.get("Picture"),testData.get("MandatingPolicy"), testData.get("ProhibitingPolicy"));
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -173,6 +174,7 @@ public class MAV0209_AddInfoReceiveSendAttachOptions extends TestCase{
 			// Check attach dropdown list is present
 			stepNo++;
 			description="Attach Drop Down - Receives Panel";
+			planPage.clickAttachmentPanelInReceives();
 			planPage.verifyAttachDropdownInReceivesPanel(testData.get("Reference"),testData.get("Policy"),testData.get("Picture"),testData.get("MandatingPolicy"), testData.get("ProhibitingPolicy"));
 			// Write log
  			LogFunctions.writeLogs(description);
