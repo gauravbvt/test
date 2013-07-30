@@ -118,7 +118,7 @@ public class PlanPage {
 		xPath=dataController.getPageDataElements(fileName,"Close Segment Window", "Xpath");
 		UIActions.click(fileName,"Close Segment Window",GlobalVariables.configuration.getAttrSearchList(), "Close Segment Window");
 	
-		// Asertion: Verify segment window is closed
+		// Assertion: Verify segment window is closed
 		try{
 			Thread.sleep(2000);
 		}
@@ -1764,30 +1764,56 @@ public class PlanPage {
 		UIActions.selectByTextAndClick(segmentName);
 	}
 	/**
-	 * Select option from context dropdown
+	 * Select option from Phase dropdown in the About Plan Segment Window
 	 * @param context
 	 * @throws UIAutomationException
 	 */
-	public void selectFromContextDropdown(String context) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Context Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Context Dropdown In About Plan Segment");
-		UIActions.click(fileName,"Context Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Context Dropdown In About Plan Segment");
+	public void selectFromPhaseDropdown(String Responding) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Phase Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Context Dropdown In About Plan Segment");
+		UIActions.click(fileName,"Phase Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Phase Dropdown In About Plan Segment");
 		
-		Select contextDropDownList = new Select(GlobalVariables.configuration.getWebElement());
-		Configuration.getConfigurationObject().setSelect(contextDropDownList);
-		UIActions.selectByTextAndClick(context);
+		Select phaseDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(phaseDropDownList);
+		UIActions.selectByTextAndClick(Responding);
 	}
 	/**
-	 * Select option from between dropdown
+	 * Select option from first Rated dropdown
 	 * @param between
 	 * @throws UIAutomationException
 	 */
-	public void selectFromBetweenDropdown(String between) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Between Level Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Between Level Dropdown In About Plan Segment");
-		UIActions.click(fileName,"Between Level Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Between Level Dropdown In About Plan Segment");
+	public void selectFromFirstRatedDropdown(String Low) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"First Rated Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"First Rated Dropdown In About Plan Segment");
+		UIActions.click(fileName,"First Rated Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"First Rated Dropdown In About Plan Segment");
 		
-		Select contextDropDownList = new Select(GlobalVariables.configuration.getWebElement());
-		Configuration.getConfigurationObject().setSelect(contextDropDownList);
-		UIActions.selectByText(between);
+		Select firstRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(firstRatedDropDownList);
+
+}
+	/**
+	 * Select option from second Rated dropdown
+	 * @param between
+	 * @throws UIAutomationException
+	 */
+	public void selectFromSecondRatedDropdown(String High) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Second Rated Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Second Rated Dropdown In About Plan Segment");
+		UIActions.click(fileName,"Second Rated Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Second Rated Dropdown In About Plan Segment");
+		
+		Select secondRatedDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(secondRatedDropDownList);
+		UIActions.selectByText(High);
+	}
+	/**
+	 * Select option from Occurring dropdown
+	 * @param occuring
+	 * @throws UIAutomationException
+	 */
+	public void selectFromOccurringDropdown(String After) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Occurring Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Occurring Dropdown In About Plan Segment");
+		UIActions.click(fileName,"Occurring Dropdown In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Occurring Dropdown In About Plan Segment");
+		
+		Select occurringDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(occurringDropDownList);
+		UIActions.selectByText(After);
 	}
 	
 	public void selectReceivesFromTaskDropDown(String option) throws UIAutomationException{
@@ -1846,7 +1872,28 @@ public class PlanPage {
 			throw new UIAutomationException("Analytics Tab not selected");
 		}	
 	}
+	
 	/**
+	 * Click Scenario Tab in the About Plan Segment window
+	 * @throws UIAutomationException
+	 */
+	public void clickScenarioTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName, "Scenario Tab", GlobalVariables.configuration.getAttrSearchList(),"Scenario Tab");
+        UIActions.click(fileName, "Scenario Tab", GlobalVariables.configuration.getAttrSearchList(), "Scenario Tab");   	
+	
+        //Assertion: Verify that the Scenario Tab is clicked
+        elementController.requireElementSmart(fileName, "This plan segment covers", GlobalVariables.configuration.getAttrSearchList(), "This plan segment covers");
+	    String scenarioTab=UIActions.getText(fileName, "This plan segment covers", GlobalVariables.configuration.getAttrSearchList(), "This plan segment covers");
+	
+	    if(!scenarioTab.contains(scenarioTab))
+	    {
+	    	throw new UIAutomationException("Scenario Tab not selected");
+	    }
+	}
+	
+	
+	/**
+	
 	 * Enter event in about plan window
 	 * @param eventName
 	 * @throws UIAutomationException
@@ -1854,8 +1901,22 @@ public class PlanPage {
 	public void enterEventInAboutPlanSegment(String eventName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
 		UIActions.click(fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+		UIActions.clearTextBox(fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
 		UIActions.enterValueInTextBox(eventName,fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
 		UIActions.enterKey(Keys.TAB,fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+	}
+	
+/**
+	
+	 * Enter second event in about plan window
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void enterSecondEventInAboutPlanSegment(String eventName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Second Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Second Event In About Plan Segment");
+		UIActions.click(fileName,"Second Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Second Event In About Plan Segment");
+		UIActions.enterValueInTextBox(eventName,fileName,"Second Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Second Event In About Plan Segment");
+		UIActions.enterKey(Keys.TAB,fileName,"Second Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Second Event In About Plan Segment");
 	}
 	/**
 	 * Enter value of Tag in 'Tags' textbox
@@ -2414,7 +2475,7 @@ public class PlanPage {
 		boolean textboxIsEnabled=false;
 		boolean dropdownIsEnabled=false;
 		
-		UIActions.scrollDown();
+		
 		elementController.requireElementSmart(fileName,"Usually Completes After In Task",GlobalVariables.configuration.getAttrSearchList(), "Usually Completes After In Task");
 		UIActions.click(fileName,"Usually Completes After In Task",GlobalVariables.configuration.getAttrSearchList(), "Usually Completes After In Task");
 				
@@ -2428,6 +2489,7 @@ public class PlanPage {
 		
 		if(!(textboxIsEnabled==true) &&(dropdownIsEnabled==true)){
 			throw new UIAutomationException("Usually completes after is not gets clicked.");
+			
 		}
 	}
 	/**
@@ -3467,6 +3529,19 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Click Attachment Panel In the Sends panel
+	 * @throws UIAutomationException
+	 */
+	public void clickAttachmentPanelInSends() throws UIAutomationException{
+		
+		UIActions.scrollDown();
+		elementController.requireElementSmart(fileName,"Attachment Panel In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Attachment Panel In Sends Panel");
+		UIActions.click(fileName,"Attachment Panel In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "Attachment Panel In Sends Panel");
+	
+	}
+	
+	
+	/**
 	 * Click Attachment Panel In New Issues in the Sends panel
 	 * @throws UIAutomationException
 	 */
@@ -3497,6 +3572,19 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Attach Dropdown In New Issue In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In New Issue In Receives Panel");
 		UIActions.click(fileName,"Attach Dropdown In New Issue In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In New Issue In Receives Panel");
 	}
+	
+	/**
+	 * Click Attachment Panel In the Sends panel
+	 * @throws UIAutomationException
+	 */
+	public void clickAttachmentPanelInReceives() throws UIAutomationException{
+		
+		UIActions.scrollDown();
+		elementController.requireElementSmart(fileName,"Attachment Panel In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Attachment Panel In Receives Panel");
+		UIActions.click(fileName,"Attachment Panel In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "Attachment Panel In Receives Panel");
+	
+	}
+	
 	/**
 	 * Verify 'Type' dropdown in issues in sends panel
 	 * @param validity
