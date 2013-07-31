@@ -240,7 +240,8 @@
 	</Element>
 	<Element>
 		<GivenName>Add New Questionnaire</GivenName>
-		<Xpath>//input[contains(@class,'add-new-questionnaire')]</Xpath>
+		//<Xpath>//input[contains(@class,'add-new-questionnaire')]</Xpath>
+		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1151,15 +1152,15 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	<Element>
-		<GivenName>Participations</GivenName>
-		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText>Participations</LinkText>
-		<ClassName></ClassName>
-	</Element>
+	//<Element>
+	//	<GivenName>Participations</GivenName>
+	//	<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
+	//	<Name></Name>
+	//	<Id></Id>
+	//	<PartialLinkText></PartialLinkText>
+	//	<LinkText>Participations</LinkText>
+	//	<ClassName></ClassName>
+	//</Element>
 	
 	<Element>
 		<GivenName>Improving</GivenName>
@@ -1170,6 +1171,18 @@
 		<LinkText>Improving</LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	<Element>
+		<GivenName>Learning</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>Learning</LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
 	
 	<Element>
 		<GivenName>About Plan</GivenName>
@@ -1497,7 +1510,7 @@
  	</Element>
  	<Element>
 		<GivenName>Undo Update Segment</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1533,7 +1546,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Remove This Segment</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1628,15 +1641,15 @@
 		<LinkText>Redo Remove Goal</LinkText>
 		<ClassName></ClassName>
 	</Element>
-	<Element>
-		<GivenName>Undo Remove Flow</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
-		<Name></Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
+	//<Element>
+		//<GivenName>Undo Remove Flow</GivenName>
+		//<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		//<Name></Name>
+		//<Id></Id>
+		//<PartialLinkText></PartialLinkText>
+		//<LinkText></LinkText>
+		//<ClassName></ClassName>
+	//</Element>
 	<Element>
 		<GivenName>Undo Disintermediate</GivenName>
 		<Xpath></Xpath>
@@ -1770,7 +1783,7 @@
 	
 	<Element>
 		<GivenName>Undo Remove Goal</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1790,7 +1803,7 @@
 	
 	<Element>
 		<GivenName>Undo Add New Requirement</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText>Undo add new requirement</PartialLinkText>
@@ -1800,7 +1813,7 @@
 	
 	<Element>
 		<GivenName>Redo Add New Requirement</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText>Redo add new requirement</PartialLinkText>
@@ -1830,7 +1843,7 @@
 	
 	<Element>
 		<GivenName>Undo Remove This Segment</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1840,7 +1853,7 @@
 	
 	<Element>
 		<GivenName>Undo Update Task</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1850,7 +1863,7 @@
 	
 	<Element>
 		<GivenName>Undo Cut Task</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1860,7 +1873,7 @@
 	
 	<Element>
 		<GivenName>Undo Paste Task</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3259,14 +3272,14 @@
 		<GivenName>All Surveys</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>link</Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
+		<LinkText>All surveys</LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>QUESTIONNAIRES</GivenName>
-		<Xpath>/html/body/form/div[25]/div/div[2]/div/span[2]/a/span</Xpath>
+		<Xpath>/html/body/form/div[27]/div/div[2]/div/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -3275,7 +3288,7 @@
 	</Element>
 	<Element>
 		<GivenName>Delete Querstionnaire</GivenName>
-		<Xpath>/html/body/form/div[25]/div/div[3]/div/div/div[3]/a</Xpath>
+		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[3]/a</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
