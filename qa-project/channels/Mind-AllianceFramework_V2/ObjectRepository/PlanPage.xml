@@ -142,7 +142,7 @@
 	
 	<Element>
 		<GivenName>Goals Window Title</GivenName>
-		<Title>GOALS</Title>
+		<Title>GOALS FOR THIS PLAN SEGMENT</Title>
 	</Element>
 	
 	<Element>
@@ -771,7 +771,7 @@
 	</Element>
 	<Element>
 		<GivenName>Task Mover Table</GivenName>
-		<Xpath>/html/body/form/div[21]/div/span/div/div[2]/div/span/table/tbody/tr/td[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[21]/div/span/div/div[2]/div/span/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -859,7 +859,7 @@
 	
 	<Element>
 		<GivenName>Repeats Every In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[5]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -868,7 +868,7 @@
 	</Element>
 	<Element>
 		<GivenName>Repeats Every Textbox</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[5]/span/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[5]/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -877,9 +877,14 @@
 	</Element>
 	<Element>
 		<GivenName>Repeats Every Dropdown</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:timingContainer:repeats-every:delay-unit')]</Xpath>
-		<Name>segment:part:timingContainer:repeats-every:delay-unit</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[5]/span/select</Xpath>
+		<Name></Name>
 	</Element>
+	//<Element>
+		//<GivenName>Repeats Every Dropdown</GivenName>
+		//<Xpath>//select[contains(@name,'segment:part:timingContainer:repeats-every:delay-unit')]</Xpath>
+		//<Name>segment:part:timingContainer:repeats-every:delay-unit</Name>
+	//</Element>
 	
 	<Element>
 		<GivenName>Is ongoing In Task</GivenName>
@@ -913,7 +918,7 @@
 		<GivenName>Goals Link In Task Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/th/a</Xpath>
 		<Name></Name>
-		<Id></Id>
+		<Id>id242</Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
@@ -1026,7 +1031,7 @@
 	</Element>
 	<Element>
 		<GivenName>Can End Event Unnamed Link In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[11]/td/span[3]/span/a[2]/span</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[3]/span/a[2]/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1519,7 +1524,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Duplicate Task</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1717,7 +1722,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Intermediate</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1735,7 +1740,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Intermediate</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1746,7 +1751,7 @@
 	
 	<Element>
 		<GivenName>Intermediate</GivenName>
-		<Xpath></Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[8]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2377,7 +2382,7 @@
 	</Element>
 	<Element>
 		<GivenName>Paste Task</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[4]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2748,10 +2753,17 @@
 	
 	<Element>
 		<GivenName>From Task Name In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/select/option[2]</Xpath>
-		<Name>segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input</Name>
-		<ClassName>node-secondchoice</ClassName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
+		<Name></Name>
+		<ClassName></ClassName>
 	</Element>
+	
+	//<Element>
+		//<GivenName>From Task Name In Receives Panel</GivenName>
+		//<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/select/option[2]</Xpath>
+		//<Name>segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input</Name>
+		//<ClassName>node-secondchoice</ClassName>
+	//</Element>
 	
 	<Element>
 		<GivenName>From DropDown Receives Info</GivenName>
@@ -3045,7 +3057,7 @@
 	
 	<Element>
 		<GivenName>Event In Event In Scope Text</GivenName>
-		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr[5]/td/input</Xpath>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/span/div/table/tbody/tr[2]/td/input</Xpath>
 		<Name></Name>
 		
 		
