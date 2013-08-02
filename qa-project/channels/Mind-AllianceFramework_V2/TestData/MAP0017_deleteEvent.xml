@@ -10,5 +10,7 @@
 <aboutPlanSegment>About Plan Segment</aboutPlanSegment>
 <after>After</after>
 <low>Low</low>
+<high>High</high>
+<event2>Event2</event2>
 <event>Event For Delete Event</event>
 </elements>

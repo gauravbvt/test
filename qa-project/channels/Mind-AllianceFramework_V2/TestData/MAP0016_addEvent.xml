@@ -8,7 +8,10 @@
 <title>Channels - Sign in</title>
 <show>Show</show>
 <aboutPlanSegment>About Plan Segment</aboutPlanSegment>
-<after>After</after>
+<responding>Responding</responding>
 <low>Low</low>
 <event>Event For Add Event</event>
+<after>After</after>
+<event2>Event2</event2>
+<high>High</high>
 </elements>
