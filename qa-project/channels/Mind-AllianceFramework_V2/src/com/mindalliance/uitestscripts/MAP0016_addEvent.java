@@ -152,20 +152,43 @@ public class MAP0016_addEvent extends TestCase{
 			description="Add Event To The Plan Segment";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Select After from context dropdown list
-			planPage.selectFromContextDropdown(testData.get("After"));
+			
+			//Click on Scenario tab in the 'About Plan Segment' window
+			stepNo++;
+			description="Scenario Tab in the About Plan Segment window";
+			planPage.clickScenarioTab();
+			//Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			
+			// Select Responding from Phase dropdown list
+			planPage.selectFromPhaseDropdown(testData.get("Responding"));
+			
 			// Enter event
 			planPage.enterEventInAboutPlanSegment(testData.get("Event"));
-			// Select Low from between dropdown list
-			planPage.selectFromBetweenDropdown(testData.get("Low"));
+			
+			// Select Low from first Rated dropdown list
+			planPage.selectFromFirstRatedDropdown(testData.get("Low"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+ 		    // Select After from Occurring dropdown list
+ 			planPage.selectFromOccurringDropdown(testData.get("After"));
  				
-			// Verify event is added
+ 		    // Enter second event
+ 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
+ 			
+ 	    	// Select High from second Rated dropdown list
+ 		    planPage.selectFromSecondRatedDropdown(testData.get("High"));
+ 			// Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+ 			// Verify event is added
 			stepNo++;
 			description="Event Added To About Plan Segment";
-			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event"));
+			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event2"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -265,9 +288,12 @@ public class MAP0016_addEvent extends TestCase{
 		 	this.testData.put("Show",oXmlEleMAP0016_addEvent.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AboutPlanSegment",oXmlEleMAP0016_addEvent.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
 	        
-	        this.testData.put("After",oXmlEleMAP0016_addEvent.getElementsByTagName("after").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Responding",oXmlEleMAP0016_addEvent.getElementsByTagName("responding").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Low",oXmlEleMAP0016_addEvent.getElementsByTagName("low").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Event",oXmlEleMAP0016_addEvent.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Event2",oXmlEleMAP0016_addEvent.getElementsByTagName("event2").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("After",oXmlEleMAP0016_addEvent.getElementsByTagName("after").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("High",oXmlEleMAP0016_addEvent.getElementsByTagName("high").item(0).getChildNodes().item(0).getNodeValue());
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAP0016_addEvent not found.");

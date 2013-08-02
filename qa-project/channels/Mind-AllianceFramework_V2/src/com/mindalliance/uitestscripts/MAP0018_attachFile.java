@@ -162,7 +162,7 @@ public class MAP0018_attachFile extends TestCase{
 			planPage.clickAttachmentPanelInSegment();
 			
 			// Click on 'Browse' button
-			planPage.clickBrowseInAttachFileInAboutPlanSegment();	
+			//planPage.clickBrowseInAttachFileInAboutPlanSegment();	
 		    
 			planPage.enterFileNameInAttachFileInAboutPlanSegment(testData.get("FileName1"));
 			// Click on 'Submit' button

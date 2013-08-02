@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -109,20 +110,20 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
+ 		   // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+ 			
+			// Plan Page
+		    stepNo++;
+			description="Domain Plan Editor";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -130,7 +131,8 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 			// Click on 'All Surveys' under 'Participations' pop up menu
  			stepNo++;
 			description="All Surveys";
-			planPage.clickPopupMenu(testData.get("Participations"));
+			PlanPage planPage=new PlanPage();
+			planPage.clickPopupMenu(testData.get("Learning"));
 			planPage.clickSubmenu(testData.get("AllSurveys"));
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -247,7 +249,7 @@ public class MAP0029_AddQuestionnaireName extends TestCase {
 	              
 	        Element oXmlEleMAP0029_AddQuestionnaireName = (Element) eleMAP0029_AddQuestionnaireName;
 	    	           
-	        this.testData.put("Participations", oXmlEleMAP0029_AddQuestionnaireName.getElementsByTagName("participations").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Learning", oXmlEleMAP0029_AddQuestionnaireName.getElementsByTagName("learning").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AllSurveys", oXmlEleMAP0029_AddQuestionnaireName.getElementsByTagName("allSurveys").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Questionnaire", oXmlEleMAP0029_AddQuestionnaireName.getElementsByTagName("questionnaire").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL", oXmlEleMAP0029_AddQuestionnaireName.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());

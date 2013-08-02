@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -108,20 +109,20 @@ public class MAP0017_deleteEvent extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
+ 		   // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+ 			
+			// Plan Page
+		    stepNo++;
+			description="Domain Plan Editor";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -129,6 +130,7 @@ public class MAP0017_deleteEvent extends TestCase{
  			// Click on 'Add New Segment' under 'Actions' pop up menu
  			stepNo++;
 			description="Add New Segment";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));			
 			// Enter Segment Name
@@ -142,25 +144,48 @@ public class MAP0017_deleteEvent extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
-			// Click on 'Add Event to The Plan Segment' under 'Show' pop up menu
+ 		    // Click on 'Add Event to The Plan Segment' under 'Show' pop up menu
  			stepNo++;
-			description="Add Event to The Plan Segment";
+			description="Add Event To The Plan Segment";
 			planPage.clickPopupMenu(testData.get("Show"));
 			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Select After from context dropdown list
-			planPage.selectFromContextDropdown(testData.get("After"));
+ 			
+ 			//Click on Scenario tab in the 'About Plan Segment' window
+			stepNo++;
+			description="Scenario Tab in the About Plan Segment window";
+			planPage.clickScenarioTab();
+			//Write log
+			LogFunctions.writeLogs(description);
+			LogFunctions.writeResults(testCaseId,stepNo,description,passed, blank, blank);
+			
+			// Select Responding from Phase dropdown list
+			planPage.selectFromPhaseDropdown(testData.get("Responding"));
+			
 			// Enter event
 			planPage.enterEventInAboutPlanSegment(testData.get("Event"));
-			// Select Low from between dropdown list
-			planPage.selectFromBetweenDropdown(testData.get("Low"));
+			
+			// Select Low from first Rated dropdown list
+			planPage.selectFromFirstRatedDropdown(testData.get("Low"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+ 		    // Select After from Occurring dropdown list
+ 			planPage.selectFromOccurringDropdown(testData.get("After"));
+ 				
+ 		    // Enter second event
+ 			planPage.enterSecondEventInAboutPlanSegment(testData.get("Event2"));
+ 			
+ 	    	// Select High from second Rated dropdown list
+ 		    planPage.selectFromSecondRatedDropdown(testData.get("High"));
+ 			// Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  						
 			// Verify event is added
  			stepNo++;
 			description="Event Is Added to The Plan Segment";
-			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event"));
+			planPage.verifyEventAddedInAboutPlanSegment(testData.get("Event2"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -176,7 +201,7 @@ public class MAP0017_deleteEvent extends TestCase{
 			// Verify event is deleted
  			stepNo++;
 			description="Add Event to The Plan Segment";
-			planPage.verifyEventIsDeleted(testData.get("Event"));
+			planPage.verifyEventIsDeleted(testData.get("Event2"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -279,6 +304,9 @@ public class MAP0017_deleteEvent extends TestCase{
 	        this.testData.put("After",oXmlEleMAP0017_deleteEvent.getElementsByTagName("after").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Low",oXmlEleMAP0017_deleteEvent.getElementsByTagName("low").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Event",oXmlEleMAP0017_deleteEvent.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Event2",oXmlEleMAP0017_deleteEvent.getElementsByTagName("event2").item(0).getChildNodes().item(0).getNodeValue());
+	    //    this.testData.put("After",oXmlEleMAP0017_deleteEvent.getElementsByTagName("after").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("High",oXmlEleMAP0017_deleteEvent.getElementsByTagName("high").item(0).getChildNodes().item(0).getNodeValue());	
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAP0017_deleteEvent not found.");
