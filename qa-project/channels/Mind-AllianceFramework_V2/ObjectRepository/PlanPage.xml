@@ -1610,7 +1610,7 @@
 	</Element>
 	<Element>
     	<GivenName>First XPath </GivenName>
-       	<Xpath>/html/body/form/div[19]/div/span/div/div[2]/div/span/table/tbody/tr[</Xpath>
+       	<Xpath>/html/body/form/div[21]/div/span/div/div[2]/div/span/table/tbody/tr/td/span/input</Xpath>
        	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1620,7 +1620,7 @@
  	
  	<Element>
     	<GivenName>Second XPath</GivenName>
-    	<Xpath>]/td/span/input</Xpath>
+    	<Xpath>/html/body/form/div[21]/div/span/div/div[2]/div/span/table/tbody/tr[2]/td/span/input</Xpath>
        	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
