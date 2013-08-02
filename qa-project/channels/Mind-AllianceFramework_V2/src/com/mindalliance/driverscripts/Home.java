@@ -198,8 +198,8 @@ public class Home {
 ////		suite.addTestSuite(MAP0019_deleteAttachFile.class);
 ////		suite.addTestSuite(MAP0020_addFileToEvent.class);
 ////		suite.addTestSuite(MAP0021_deleteFileOfEvent.class);
-//		suite.addTestSuite(MAP0022_addGoal.class);
-//		suite.addTestSuite(MAP0023_removeGoal.class);	
+		suite.addTestSuite(MAP0022_addGoal.class);
+		suite.addTestSuite(MAP0023_removeGoal.class);	
 ////		suite.addTestSuite(MAP0024_moveTask.class);
 ////		suite.addTestSuite(MAP0025_receiveTask.class);
 ////		suite.addTestSuite(MAP0026_sendTask.class);
@@ -210,16 +210,16 @@ public class Home {
 //		
 ////		Command
 //		
-//		suite.addTestSuite(MAC0001_UndoAddSegment.class);
-//		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
-//		suite.addTestSuite(MAC0003_UndoAddGoal.class);
-//		suite.addTestSuite(MAC0004_UndoRemoveGoal.class);
-//		suite.addTestSuite(MAC0005_UndoAddNewTask.class);	
-//		suite.addTestSuite(MAC0006_UndoCutTask.class);
-//		suite.addTestSuite(MAC0007_UndoPasteTaskUsingCut.class);
-//		suite.addTestSuite(MAC0008_UndoPasteTaskUsingCopy.class);
-//		suite.addTestSuite(MAC0009_UndoDuplicateTask.class);
-////		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
+		suite.addTestSuite(MAC0001_UndoAddSegment.class);
+		suite.addTestSuite(MAC0002_UndoRemoveThisSegment.class);
+		suite.addTestSuite(MAC0003_UndoAddGoal.class);
+		suite.addTestSuite(MAC0004_UndoRemoveGoal.class);
+		suite.addTestSuite(MAC0005_UndoAddNewTask.class);	
+		suite.addTestSuite(MAC0006_UndoCutTask.class);
+		suite.addTestSuite(MAC0007_UndoPasteTaskUsingCut.class);
+		suite.addTestSuite(MAC0008_UndoPasteTaskUsingCopy.class);
+		suite.addTestSuite(MAC0009_UndoDuplicateTask.class);
+		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
 ////		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
 ////		suite.addTestSuite(MAC0012_UndoMoveTask.class);
 ////		suite.addTestSuite(MAC0013_UndoConnectFlow.class);
