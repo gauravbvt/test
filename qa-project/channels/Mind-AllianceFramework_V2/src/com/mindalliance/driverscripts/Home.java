@@ -199,7 +199,7 @@ public class Home {
 ////		suite.addTestSuite(MAP0020_addFileToEvent.class);
 ////		suite.addTestSuite(MAP0021_deleteFileOfEvent.class);
 		suite.addTestSuite(MAP0022_addGoal.class);
-		suite.addTestSuite(MAP0023_removeGoal.class);	
+//		suite.addTestSuite(MAP0023_removeGoal.class);	
 ////		suite.addTestSuite(MAP0024_moveTask.class);
 ////		suite.addTestSuite(MAP0025_receiveTask.class);
 ////		suite.addTestSuite(MAP0026_sendTask.class);
