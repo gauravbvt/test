@@ -2500,7 +2500,7 @@ public class PlanPage {
 	public void clickRepeatsEvery() throws UIAutomationException{
 		boolean textboxIsEnabled=false;
 		boolean dropdownIsEnabled=false;
-		
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Repeats Every In Task",GlobalVariables.configuration.getAttrSearchList(), "Repeats Every In Task");
 		UIActions.click(fileName,"Repeats Every In Task",GlobalVariables.configuration.getAttrSearchList(), "Repeats Every In Task");
 				
