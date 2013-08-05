@@ -133,17 +133,20 @@ public class MAP0010_addRoleJuridiction extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
-//			// Click on 'Add New Segment' under 'Actions' pop up menu
+//			//Click on 'Add New Segment' under 'Actions' pop up menu
+ 			
 // 			stepNo++;
 //			description="Add New Segment";
 //			planPage.clickPopupMenu(testData.get("Actions"));
 //			planPage.clickSubmenu(testData.get("AddNewSegment"));
 //			planPage.enterSegmentName(testData.get("SegmentForAddRoleJurisdiction"));
-//			// Write log
+//			
+ 			// Write log
 // 			LogFunctions.writeLogs(description);
 // 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 // 			
 //			// Close segment window
+ 			
 // 			stepNo++;
 //			description="Closed Segment";
 //			planPage.closeSegmentWindow();
@@ -348,7 +351,6 @@ public class MAP0010_addRoleJuridiction extends TestCase{
 	        this.testData.put("Role",oXmlEleMAP0010_addRoleJuridiction.getElementsByTagName("role").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("TitleInOrg",oXmlEleMAP0010_addRoleJuridiction.getElementsByTagName("titleInOrg").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Jurisdiction",oXmlEleMAP0010_addRoleJuridiction.getElementsByTagName("jurisdiction").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Supervisor",oXmlEleMAP0010_addRoleJuridiction.getElementsByTagName("supervisor").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Supervisor",oXmlEleMAP0010_addRoleJuridiction.getElementsByTagName("supervisor").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAP0010_addRoleJuridiction.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());  
 	    }
