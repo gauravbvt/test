@@ -3102,13 +3102,16 @@ public class PlanPage {
 		Configuration.getConfigurationObject().setSelect(organizationDropDownList);
 		UIActions.selectByTextAndClick(type);
 	
+		elementController.requireElementSmart(fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
+		UIActions.enterValueInTextBox(goalName,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
+		
 		// Enter name in Goal text box
 		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		UIActions.click(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		UIActions.enterValueInTextBox(goalName,fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		
-		// Achive at end
+		// Achieve at end
 		elementController.requireElementSmart(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 		UIActions.click(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 	}
@@ -3251,8 +3254,8 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void verifyGoalRemoved(String goalName) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
-		boolean categryEnabled=UIActions.checkEnable(fileName,"Category in goal",GlobalVariables.configuration.getAttrSearchList(),"Category in goal");
+		elementController.requireElementSmart(fileName,"Frame in goal",GlobalVariables.configuration.getAttrSearchList(),"Frame in goal");
+		boolean categryEnabled=UIActions.checkEnable(fileName,"Frame in goal",GlobalVariables.configuration.getAttrSearchList(),"Frame in goal");
 
 		if(!categryEnabled){
 			throw new UIAutomationException("Goal '"+goalName+"' is not removed.");
