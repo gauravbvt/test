@@ -142,7 +142,7 @@
 	
 	<Element>
 		<GivenName>Goals Window Title</GivenName>
-		<Title>GOALS FOR THIS PLAN SEGMENT</Title>
+		<Title>GOALS</Title>
 	</Element>
 	
 	<Element>
@@ -240,7 +240,6 @@
 	</Element>
 	<Element>
 		<GivenName>Add New Questionnaire</GivenName>
-		//<Xpath>//input[contains(@class,'add-new-questionnaire')]</Xpath>
 		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/input</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -266,9 +265,18 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	//<Element>
+		//<GivenName>Questionnaire Table</GivenName>
+		//<Xpath>//table[contains(@class,'data-table')]</Xpath>
+		//<Name></Name>
+		//<Id></Id>
+		//<PartialLinkText></PartialLinkText>
+		//<LinkText></LinkText>
+		//<ClassName>data-table</ClassName>
+	//</Element>
 	<Element>
 		<GivenName>Questionnaire Table</GivenName>
-		<Xpath>//table[contains(@class,'data-table')]</Xpath>
+		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[2]/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -518,7 +526,7 @@
 	
 	<Element>
 		<GivenName>Organization Table In Organizations In Scope</GivenName>
-		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/div[2]/div[2]/table/tbody</Xpath>
+		<Xpath>/html/body/form/div[18]/div/div[3]/div/div/div[2]/div[2]/table</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1916,20 +1924,53 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Category in goal</GivenName>
-		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category')]</Xpath>
-		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category</Name>
+		<GivenName>Add Goal</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td/select</Xpath>
+		<Name></Name>
 	</Element>
+	
+	<Element>
+		<GivenName>Category in goal</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[2]/select</Xpath>
+		<Name></Name>
+	</Element>
+	
+	<Element>
+		<GivenName>Frame in goal</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table</Xpath>
+		<Name></Name>
+	</Element>
+	
+	//<Element>
+		//<GivenName>Category in goal</GivenName>
+		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category')]</Xpath>
+		//<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:category</Name>
+	//</Element>
 	
 	<Element>
 		<GivenName>Organization in goal dropdown</GivenName>
-		<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType')]</Xpath>
-		<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType</Name>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/select</Xpath>
+		<Name></Name>
 	</Element>
 	
+	//<Element>
+		//<GivenName>Organization in goal dropdown</GivenName>
+		//<Xpath>//select[contains(@name,'sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType')]</Xpath>
+		//<Name>sg-editor:fp-content:mo:aspect:goalsDiv:goal:0:organization:actualOrType</Name>
+	//</Element>
+	
+    <Element>
+		<GivenName>Organization for goal</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Goal Name</GivenName>
-		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[4]/span/input</Xpath>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[2]/select</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1967,6 +2008,8 @@
 		<ClassName></ClassName>
 	</Element>
 	
+	
+
 	<Element>
 		<GivenName>Undo Remove Goal</GivenName>
 		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
@@ -3284,9 +3327,9 @@
 		<GivenName>All Surveys</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[2]/span[4]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
-		<Id>link</Id>
+		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>All surveys</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	<Element>
