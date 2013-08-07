@@ -9,5 +9,5 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord(versionField = "", table = "document_type")
 @RooDbManaged(automaticallyDelete = true)
-public class DocumentType {
+public class DocumentType implements NamedObject {
 }

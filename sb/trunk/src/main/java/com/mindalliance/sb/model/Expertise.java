@@ -7,7 +7,7 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 @RooJavaBean
 @RooDbManaged(automaticallyDelete = true)
 @RooJpaActiveRecord(versionField = "", table = "expertise", finders = { "findExpertisesByNameEquals" })
-public class Expertise {
+public class Expertise implements NamedObject {
 
     @Override
     public String toString() {

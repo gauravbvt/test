@@ -33,7 +33,7 @@
             <menu:item id="i_incidentcapability_list" messageCode="global_menu_list" url="/lists/incidentcapabilitys" z="user-managed"/>
             <menu:item id="i_incidentsystem_list" messageCode="global_menu_list" url="/lists/incidentsystems" z="user-managed"/>
             <menu:item id="i_missionarea_list" messageCode="global_menu_list" url="/lists/missionareas" z="user-managed"/>
-            <menu:item id="i_organization_list" messageCode="global_menu_list" url="/lists/organizations" z="VzRQDbgtwW4VBs1wD1pxCn4IIYw="/>
+            <menu:item id="i_organization_list" messageCode="global_menu_list" url="/lists/organizations" z="user-managed"/>
             <menu:item id="i_organizationcapability_list" messageCode="global_menu_list" url="/lists/organizationcapabilitys" z="user-managed"/>
             <menu:item id="i_organizationincident_list" messageCode="global_menu_list" url="/lists/organizationincidents" z="user-managed"/>
             <menu:item id="i_planfile_list" messageCode="global_menu_list" url="/lists/planfiles" z="user-managed"/>
@@ -43,7 +43,7 @@
             <menu:item id="i_sharingissue_list" messageCode="global_menu_list" url="/lists/sharingissues" z="user-managed"/>
             <menu:item id="i_situationreport_list" messageCode="global_menu_list" url="/lists/situationreports" z="user-managed"/>
             <menu:item id="i_subcommittee_list" messageCode="global_menu_list" url="/lists/subcommittees" z="user-managed"/>
-            <menu:item id="i_subcommitteecapability_list" messageCode="global_menu_list" url="/lists/subcommitteecapabilitys" z="user-managed"/>
+            <!--<menu:item id="i_subcommitteecapability_list" messageCode="global_menu_list" url="/lists/subcommitteecapabilitys" z="user-managed"/>-->
             <menu:item id="i_systemissue_list" messageCode="global_menu_list" url="/lists/systemissues" z="user-managed"/>
         </menu:category>
     </menu:menu>

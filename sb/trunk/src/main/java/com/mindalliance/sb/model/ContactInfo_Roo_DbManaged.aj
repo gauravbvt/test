@@ -3,18 +3,13 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.ContactInfo;
-import com.mindalliance.sb.model.Organization;
-import com.mindalliance.sb.model.Respondent;
-import com.mindalliance.sb.model.Sharing;
-import com.mindalliance.sb.model.SuperbowlPlanner;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 privileged aspect ContactInfo_Roo_DbManaged {
     
@@ -29,15 +24,7 @@ privileged aspect ContactInfo_Roo_DbManaged {
     
     @OneToMany(mappedBy = "contactInfo", cascade = CascadeType.REMOVE)
     private Set<SuperbowlPlanner> ContactInfo.superbowlPlanners;
-    
-    @ManyToOne
-    @JoinColumn(name = "supervisor", referencedColumnName = "id", insertable = false, updatable = false)
-    private ContactInfo ContactInfo.supervisor;
-    
-    @ManyToOne
-    @JoinColumn(name = "organization", referencedColumnName = "id", nullable = false)
-    private Organization ContactInfo.organization;
-    
+
     @Column(name = "prefix", length = 127)
     private String ContactInfo.prefix;
     
@@ -50,18 +37,26 @@ privileged aspect ContactInfo_Roo_DbManaged {
     
     @Column(name = "email", length = 127)
     private String ContactInfo.email;
-    
+
     @Column(name = "title", length = 127)
     private String ContactInfo.title;
-    
+
     @Column(name = "department", length = 127)
     private String ContactInfo.department;
+
+    @ManyToOne
+    @JoinColumn(name = "organization", referencedColumnName = "id", nullable = false)
+    private Organization ContactInfo.organization;
     
     @Column(name = "mobile", length = 127)
     private String ContactInfo.mobile;
     
     @Column(name = "landline", length = 127)
     private String ContactInfo.landline;
+
+    @ManyToOne
+    @JoinColumn(name = "supervisor", referencedColumnName = "id", insertable = false, updatable = true)
+    private ContactInfo ContactInfo.supervisor;
     
     @Column(name = "photo", columnDefinition = "BLOB")
     private byte[] ContactInfo.photo;

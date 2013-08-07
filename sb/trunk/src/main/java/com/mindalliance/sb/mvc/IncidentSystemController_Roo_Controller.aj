@@ -9,10 +9,6 @@ import com.mindalliance.sb.model.Organization;
 import com.mindalliance.sb.model.OrganizationIncident;
 import com.mindalliance.sb.model.SystemInfo;
 import com.mindalliance.sb.model.SystemIssue;
-import com.mindalliance.sb.mvc.IncidentSystemController;
-import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.ui.Model;
@@ -23,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 privileged aspect IncidentSystemController_Roo_Controller {
     

@@ -9,5 +9,5 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord(versionField = "", table = "report_distribution")
 @RooDbManaged(automaticallyDelete = true)
-public class ReportDistribution {
+public class ReportDistribution implements NamedObject {
 }

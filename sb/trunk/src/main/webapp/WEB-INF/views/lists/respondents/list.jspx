@@ -4,6 +4,8 @@
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_com_mindalliance_sb_model_Respondent" items="${respondents}" z="C20/rqYl8aMSc53gEOMHZ1wWH3g=">
         <table:table data="${respondents}" id="l_com_mindalliance_sb_model_Respondent" path="/lists/respondents" z="+5BXdz22Q9Diy/guYSivxhxv4fE=">
+            <table:column id="c_com_mindalliance_sb_model_Respondent_contactInfo" property="contactInfo"/>
+            <table:column id="c_com_mindalliance_sb_model_Respondent_submitted" property="submitted"/>
             <table:column id="c_com_mindalliance_sb_model_Respondent_expertises" property="expertises" z="oMpK2bvBmMZL584LWmiMv0xGCuk="/>
         </table:table>
     </page:list>

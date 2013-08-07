@@ -26,83 +26,42 @@
 
     <c:if test="${empty render or render}">
 
-        <c:set var="columnProperties" scope="request"/>
-        <c:set var="columnLabels" scope="request"/>
-        <c:set var="columnMaxLengths" scope="request"/>
-        <c:set var="columnTypes" scope="request"/>
-        <c:set var="columnDatePatterns" scope="request"/>
-
-        <jsp:doBody/>
-
-        <c:if test="${empty typeIdFieldName}">
-            <c:set var="typeIdFieldName" value="id"/>
-        </c:if>
-
-        <c:if test="${empty update}">
-            <c:set var="update" value="true"/>
-        </c:if>
-
-        <c:if test="${empty delete}">
-            <c:set var="delete" value="true"/>
-        </c:if>
-
-        <spring:message var="typeName"
-                        code="menu_item_${fn:toLowerCase(fn:split(id,'_')[fn:length(fn:split(id,'_')) - 1])}_new_label"
-                        htmlEscape="false"/>
-        <c:set var="lengths" value="${fn:split(columnMaxLengths, '&#9999;')}" scope="request"/>
-        <c:set var="types" value="${fn:split(columnTypes, '&#9999;')}" scope="request"/>
-        <c:set var="patterns" value="${fn:split(columnDatePatterns, '&#9999;')}" scope="request"/>
-        <c:set var="properties" value="${fn:split(columnProperties, '&#9999;')}" scope="request"/>
-
-        <spring:eval var="colCounter" expression="0"/>
+        <c:set var="adapterFactory" scope="application" value="${applicationScope['org.springframework.web.context.WebApplicationContext.ROOT'].getBean('formatAdapterFactoryService')}"/>
+        <c:set var="adapter" scope="request" value="${adapterFactory.getFactoryFromList(data)}"/>
+        
         <c:set var="columns" scope="request">
-            <c:out value="{"/>
-            <c:forTokens items="${columnLabels}" delims="${'&#9999;'}" var="label">
-                <c:out value='${properties[colCounter]}: "${label}",' escapeXml="false"/>
-                <spring:eval var="colCounter" expression="colCounter  + 1" />
-            </c:forTokens>
-            <c:out value="}"/>
+            <c:forEach items="${adapter.propertyNames}" var="p">
+                { field: "<c:out value="${p}"/>",
+                label: "<c:out value="${adapter.getDisplayName(p)}"/>",
+                hidden: <c:out value="${!adapter.isVisible(p)}"/>
+                },
+            </c:forEach>
         </c:set>
 
         <c:set var="rows" scope="request">
-            <c:out value="["/>
-            <c:forEach items="${data}" var="item">
-                <c:out value="{"/>
-                <c:out value="${typeIdFieldName}: '" escapeXml="false"/>
-                <c:out value="${item[typeIdFieldName]}" escapeXml="true"/>
-                <c:out value="', " escapeXml="false"/>
-                <c:forEach items="${properties}" var="column" varStatus="num">
-                    <c:set var="columnMaxLength" value="${lengths[num.count-1]}" />
-                    <c:set var="columnType" value="${types[num.count-1]}" />
-                    <c:set var="columnDatePattern" value="${patterns[num.count-1]}" />
-                    
-                    <c:out value='${column}: "' escapeXml="false"/>
-                    <c:choose>
-                        <c:when test="${columnType eq 'date'}">
-                            <spring:escapeBody>
-                                <fmt:formatDate value="${item[column]}" pattern="${fn:escapeXml(columnDatePattern)}" var="colTxt" />
-                            </spring:escapeBody>
-                        </c:when>
-                        <c:when test="${columnType eq 'calendar'}">
-                            <spring:escapeBody>
-                                <fmt:formatDate value="${item[column].time}" pattern="${fn:escapeXml(columnDatePattern)}" var="colTxt"/>
-                            </spring:escapeBody>
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="colTxt">
-                                <spring:eval expression="item[column]" htmlEscape="false" />
-                            </c:set>
-                        </c:otherwise>
-                    </c:choose>
-                    <spring:escapeBody htmlEscape="false" javaScriptEscape="true">
-                        <c:out value="${colTxt}" escapeXml="false"/>
-                    </spring:escapeBody>
-                    <c:out value='", ' escapeXml="false"/>
-                </c:forEach>
-                <c:out value="}, "/>
+            <c:forEach items="${data}" var="row">
+                { <c:forEach items="${adapter.makeAdapter(row).iterator()}" var="format">
+                    <c:out value="${format.fieldName}"/>: <c:out value="${format.javascriptValue}" escapeXml="false"/>,      
+                </c:forEach>},                       
             </c:forEach>
-            <c:out value="]"/>
         </c:set>
+
+        <div id="${id}">
+            <script type="text/javascript">
+                require(["dojo/_base/declare", "dgrid/Grid", "dgrid/Selection", "dgrid/extensions/ColumnResizer",
+                            "dgrid/extensions/ColumnHider", "dgrid/extensions/ColumnReorder" ],
+                        function(declare, Grid, Selection, ColumnResizer, ColumnHider, ColumnReorder){
+                            var grid = declare([Grid, Selection, ColumnResizer, ColumnHider, ColumnReorder])({
+                                                                                                                 selectionMode: "single",
+                                                                                                                 columns: [ ${columns} ] }, "${id}");
+                            grid.renderArray([ ${rows} ]);
+                            grid.on("dgrid-select", function(event){
+                                var rows = event.rows;
+                                window.location.href = "../${path}/" + rows[0].data.id;
+                            });
+                        });
+            </script>
+        </div>
 
         <div id="icons">
             <ul>
@@ -112,20 +71,6 @@
             </ul>
         </div>
 
-        <div id="${id}">            
-        </div>
-        <script type="text/javascript">
-            require(["dojo/_base/declare", "dgrid/Grid", "dgrid/Selection", "dojo/domReady!"], function(declare, Grid, Selection){
-                var grid = declare([Grid, Selection])({
-                              selectionMode: "single",
-                              columns: ${columns} }, "${id}");
-                grid.renderArray(${rows});
-                grid.on("dgrid-select", function(event){
-                    var rows = event.rows;
-                    window.location.href = "${path}/" + rows[0].data.id;
-                });
-            });
-        </script>
 
     </c:if>
 

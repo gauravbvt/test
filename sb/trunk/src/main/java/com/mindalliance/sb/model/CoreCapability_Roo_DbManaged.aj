@@ -3,13 +3,6 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.CoreCapability;
-import com.mindalliance.sb.model.CriticalTask;
-import com.mindalliance.sb.model.IncidentCapability;
-import com.mindalliance.sb.model.MissionArea;
-import com.mindalliance.sb.model.OrganizationCapability;
-import com.mindalliance.sb.model.SubcommitteeCapability;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -17,9 +10,18 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 privileged aspect CoreCapability_Roo_DbManaged {
-    
+
+
+    @Column(name = "name", length = 127)
+    @NotNull
+    private String CoreCapability.name;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String CoreCapability.description;
+
     @ManyToMany
     @JoinTable(name = "mission_area_core_capability", joinColumns = { @JoinColumn(name = "core_capability", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "mission_area", nullable = false) })
     private Set<MissionArea> CoreCapability.missionAreas;
@@ -35,13 +37,6 @@ privileged aspect CoreCapability_Roo_DbManaged {
     
     @OneToMany(mappedBy = "coreCapability", cascade = CascadeType.REMOVE)
     private Set<SubcommitteeCapability> CoreCapability.subcommitteeCapabilities;
-    
-    @Column(name = "name", length = 127)
-    @NotNull
-    private String CoreCapability.name;
-    
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String CoreCapability.description;
     
     public Set<MissionArea> CoreCapability.getMissionAreas() {
         return missionAreas;

@@ -16,6 +16,9 @@ public abstract class AbstractController<T> {
 
     @Autowired
     private TimeKeeper timeKeeper;
+    
+    @Autowired
+    private FormatAdapterFactoryService factoryService;
 
     @RequestMapping( "/data.csv" )
     public void csv( WebRequest request, HttpServletResponse response ) throws Exception {
@@ -29,8 +32,14 @@ public abstract class AbstractController<T> {
             response.setHeader( "Expires", null );
         }
 
-        else
-            new CsvWriter<T>( getList() ).output( response, getLastPath() + ".csv", lastModified );
+        else {
+            List<T> list = getList();
+            new CsvWriter<T>( list,
+                              (FormatAdapterFactory<T>) factoryService.getFactoryFromList( list ) )
+                         .output( response,
+                                  getLastPath() + ".csv",
+                                  lastModified );
+        }
     }
 
     protected abstract List<T> getList();

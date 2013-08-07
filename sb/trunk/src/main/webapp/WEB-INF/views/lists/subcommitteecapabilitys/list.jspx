@@ -5,7 +5,6 @@
     <page:list id="pl_com_mindalliance_sb_model_SubcommitteeCapability" items="${subcommitteecapabilitys}" z="Er2wCF96E/Faz4BUs894Fts20Ng=">
         <table:table data="${subcommitteecapabilitys}" id="l_com_mindalliance_sb_model_SubcommitteeCapability" path="/lists/subcommitteecapabilitys" z="rvcCNX320mo4YHjG4V/8rLOyI3Y=">
             <table:column id="c_com_mindalliance_sb_model_SubcommitteeCapability_coreCapability" property="coreCapability" z="1Jktfu0WMDOcwWEPldOhxMC+2J4="/>
-            <table:column id="c_com_mindalliance_sb_model_SubcommitteeCapability_respondentSubcommittee" property="respondentSubcommittee" z="Pl3kr5N5f0kVL2+VdYvQEM19dVc="/>
         </table:table>
     </page:list>
 </div>

@@ -1,18 +1,19 @@
 package com.mindalliance.sb.model;
 
-import java.util.Set;
 import org.springframework.roo.addon.dbre.RooDbManaged;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
+import java.util.Set;
+
 @RooJavaBean
 @RooJpaActiveRecord(versionField = "", table = "respondent")
 @RooDbManaged(automaticallyDelete = true)
-public class Respondent {
+public class Respondent implements PrintableObject {
 
     @Override
     public String toString() {
-        return "Respondent{#" + getId() + ": " + getContactInfo() + '}';
+        return getContactInfo().toString();
     }
 
     public void setOrganization(Organization result) {

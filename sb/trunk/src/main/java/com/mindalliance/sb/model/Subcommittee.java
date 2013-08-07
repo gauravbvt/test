@@ -7,7 +7,7 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 @RooJavaBean
 @RooDbManaged(automaticallyDelete = true)
 @RooJpaActiveRecord(versionField = "", table = "subcommittee", finders = { "findSubcommitteesByNameEquals" })
-public class Subcommittee {
+public class Subcommittee implements NamedObject {
 
     @Override
     public String toString() {

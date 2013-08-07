@@ -9,5 +9,5 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord(versionField = "", table = "critical_task")
 @RooDbManaged(automaticallyDelete = true)
-public class CriticalTask {
+public class CriticalTask  implements NamedObject {
 }

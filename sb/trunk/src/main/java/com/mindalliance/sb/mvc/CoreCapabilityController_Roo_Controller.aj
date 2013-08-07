@@ -24,23 +24,6 @@ import org.springframework.web.util.WebUtils;
 
 privileged aspect CoreCapabilityController_Roo_Controller {
     
-    @RequestMapping(method = RequestMethod.POST, produces = "text/html")
-    public String CoreCapabilityController.create(@Valid CoreCapability coreCapability, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        if (bindingResult.hasErrors()) {
-            populateEditForm(uiModel, coreCapability);
-            return "lists/corecapabilitys/create";
-        }
-        uiModel.asMap().clear();
-        coreCapability.persist();
-        return "redirect:/lists/corecapabilitys/" + encodeUrlPathSegment(coreCapability.getId().toString(), httpServletRequest);
-    }
-    
-    @RequestMapping(params = "form", produces = "text/html")
-    public String CoreCapabilityController.createForm(Model uiModel) {
-        populateEditForm(uiModel, new CoreCapability());
-        return "lists/corecapabilitys/create";
-    }
-    
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String CoreCapabilityController.show(@PathVariable("id") Integer id, Model uiModel) {
         uiModel.addAttribute("corecapability", CoreCapability.findCoreCapability(id));
@@ -77,16 +60,6 @@ privileged aspect CoreCapabilityController_Roo_Controller {
     public String CoreCapabilityController.updateForm(@PathVariable("id") Integer id, Model uiModel) {
         populateEditForm(uiModel, CoreCapability.findCoreCapability(id));
         return "lists/corecapabilitys/update";
-    }
-    
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
-    public String CoreCapabilityController.delete(@PathVariable("id") Integer id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        CoreCapability coreCapability = CoreCapability.findCoreCapability(id);
-        coreCapability.remove();
-        uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect:/lists/corecapabilitys";
     }
     
     void CoreCapabilityController.populateEditForm(Model uiModel, CoreCapability coreCapability) {

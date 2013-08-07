@@ -9,5 +9,5 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooDbManaged(automaticallyDelete = true)
 @RooJpaActiveRecord(versionField = "", table = "discipline", finders = { "findDisciplinesByNameEquals" })
-public class Discipline {
+public class Discipline implements NamedObject {
 }

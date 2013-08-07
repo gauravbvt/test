@@ -72,50 +72,50 @@
 
 		<tr>
 			<td>
-				<b>Name:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingName" name="billingname" value=""  size="50" intermediateChanges="true"></div>
+				<b>Name:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingName" fieldName="billingname" value=""  size="50" intermediateChanges="true"></div>
 			</td>
 			<td>
-				<b>Name:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingName" name="shippingname" value="" disabled="true" size="50"></div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>Address 1:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingAddress1" name="billingaddress1" value=""  size="50" intermediateChanges="true"></div>
-			</td>
-			<td>
-				<b>Address 1:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingAddress1" name="shippingaddress1" value="" disabled="true" size="50"></div>
+				<b>Name:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingName" fieldName="shippingname" value="" disabled="true" size="50"></div>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<b>Address 2:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingAddress2" name="billingaddress2" value=""  size="50" intermediateChanges="true"></div>
+				<b>Address 1:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingAddress1" fieldName="billingaddress1" value=""  size="50" intermediateChanges="true"></div>
 			</td>
 			<td>
-				<b>Address 2:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingAddress2" name="shippingaddress2" value="" disabled="true" size="50"></div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>City:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingCity" name="billingcity" value=""  size="50" intermediateChanges="true"></div>
-			</td>
-			<td>
-				<b>City:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingCity" name="shippingcity" value="" disabled="true" size="50"></div>
+				<b>Address 1:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingAddress1" fieldName="shippingaddress1" value="" disabled="true" size="50"></div>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<b>State:</b> <div class="rJustified" dojoType="dijit.form.ComboBox" searchAttr="name" id="BillingState" name="billingstate" value=""   store="statesStore" size="46"></div>
+				<b>Address 2:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingAddress2" fieldName="billingaddress2" value=""  size="50" intermediateChanges="true"></div>
 			</td>
 			<td>
-				<b>State:</b> <div class="rJustified" dojoType="dijit.form.ComboBox" searchAttr="name" id="ShippingState" name="shippingstate" value="" store="statesStore" disabled="true" size="46"></div>
+				<b>Address 2:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingAddress2" fieldName="shippingaddress2" value="" disabled="true" size="50"></div>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<b>Zip code:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingZip" name="billingzip" value=""  size="50" intermediateChanges="true"></div>
+				<b>City:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingCity" fieldName="billingcity" value=""  size="50" intermediateChanges="true"></div>
 			</td>
 			<td>
-				<b>Zip code:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingZip" name="shippingzip" value="" disabled="true" size="50"></div>
+				<b>City:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingCity" fieldName="shippingcity" value="" disabled="true" size="50"></div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>State:</b> <div class="rJustified" dojoType="dijit.form.ComboBox" searchAttr="name" id="BillingState" fieldName="billingstate" value=""   store="statesStore" size="46"></div>
+			</td>
+			<td>
+				<b>State:</b> <div class="rJustified" dojoType="dijit.form.ComboBox" searchAttr="name" id="ShippingState" fieldName="shippingstate" value="" store="statesStore" disabled="true" size="46"></div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>Zip code:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="BillingZip" fieldName="billingzip" value=""  size="50" intermediateChanges="true"></div>
+			</td>
+			<td>
+				<b>Zip code:</b> <div class="rJustified" dojoType="dijit.form.TextBox" id="ShippingZip" fieldName="shippingzip" value="" disabled="true" size="50"></div>
 			</td>
 		</tr>
 	</table>
@@ -130,7 +130,7 @@
 	<div dojoType="dojox.wire.ml.Data"
 		id="attributesMap">
 		<div dojoType="dojox.wire.ml.DataProperty"
-			name="disabled"
+			fieldName="disabled"
 			value="disabled"></div>
 	</div>
 

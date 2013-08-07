@@ -19,7 +19,7 @@ import java.util.List;
 @RooJson
 @JsonFilter("csvFilter")
 @JsonPropertyOrder({ "id", "name", "acronym", "type", "added" })
-public class Organization {
+public class Organization implements PrintableObject {
 
     private static final Logger LOG = LoggerFactory.getLogger(Organization.class);
 

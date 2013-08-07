@@ -207,7 +207,7 @@ a img {
 
 #icons ul {
     list-style: none outside none;
-    margin: 0;
+    margin: 0.5em 0 0;
     padding: 0;
 }
 
@@ -234,4 +234,30 @@ a img {
 #icons li.rss a {
 }
 #icons li.vcard a {
+}
+
+/* table styling */
+.dgrid-hider-menu-row {
+    height: 20px;
+    position: relative;
+}
+.dgrid-hider-menu-check {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+.dgrid-hider-menu-label {
+    display: block;
+    float: none;
+    margin: 0 0 0 17px;
+    position: relative;
+    top: 3px;
+}
+
+.dgrid-column-email {
+    width: 158px;
+}
+
+.dgrid-column-supervisor {
+    width: 196px;
 }

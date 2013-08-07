@@ -8,7 +8,7 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 @RooJavaBean
 @RooDbManaged(automaticallyDelete = true)
 @RooJpaActiveRecord(versionField = "", table = "org_type", finders = { "findOrgTypesByNameEquals" })
-public class OrgType {
+public class OrgType implements NamedObject {
 
     @Override
     @JsonValue

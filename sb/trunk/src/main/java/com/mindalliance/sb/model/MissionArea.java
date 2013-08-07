@@ -13,5 +13,5 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooDbManaged(automaticallyDelete = true)
 @JsonFilter("csvFilter")
 @JsonPropertyOrder({ "name", "description", "coreCapabilities" })
-public class MissionArea {
+public class MissionArea implements NamedObject {
 }

@@ -5,9 +5,9 @@
     <page:list id="pl_com_mindalliance_sb_model_CriticalTask" items="${criticaltasks}" z="pLTQU+bN0LjdrDzxdSmzMQ22FLA=">
         <table:table data="${criticaltasks}" id="l_com_mindalliance_sb_model_CriticalTask" path="/lists/criticaltasks" z="u8Jkln7ox2OOSFHBMRFtQY8ADsQ=">
             <table:column id="c_com_mindalliance_sb_model_CriticalTask_coreCapability" property="coreCapability" z="h8gKmE4a7yUK5olpx5E9j5lbG3Y="/>
-            <table:column id="c_com_mindalliance_sb_model_CriticalTask_parent" property="parent" z="OmIeNDTlZxyicw0SdANjP161A7s="/>
-            <table:column id="c_com_mindalliance_sb_model_CriticalTask_name" property="name" z="iPKbXqmdpoVV/VrrSmv1wLZiiAI="/>
             <table:column id="c_com_mindalliance_sb_model_CriticalTask_type" property="type" z="iJXY81efDle63CiTVzEjdl0dK+o="/>
+            <table:column id="c_com_mindalliance_sb_model_CriticalTask_description" property="description"/>
+
         </table:table>
     </page:list>
 </div>

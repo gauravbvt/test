@@ -7,9 +7,7 @@
 <definition extends="default" name="lists/corecapabilitys/show">
         <put-attribute name="body" value="/WEB-INF/views/lists/corecapabilitys/show.jspx"/>
     </definition>
-<definition extends="default" name="lists/corecapabilitys/create">
-        <put-attribute name="body" value="/WEB-INF/views/lists/corecapabilitys/create.jspx"/>
-    </definition>
+
 <definition extends="default" name="lists/corecapabilitys/update">
         <put-attribute name="body" value="/WEB-INF/views/lists/corecapabilitys/update.jspx"/>
     </definition>

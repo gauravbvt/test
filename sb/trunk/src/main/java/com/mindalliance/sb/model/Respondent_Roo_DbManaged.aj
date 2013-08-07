@@ -3,18 +3,8 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.ContactInfo;
-import com.mindalliance.sb.model.Document;
-import com.mindalliance.sb.model.Eoc;
-import com.mindalliance.sb.model.Expertise;
-import com.mindalliance.sb.model.OrganizationCapability;
-import com.mindalliance.sb.model.OrganizationIncident;
-import com.mindalliance.sb.model.Respondent;
-import com.mindalliance.sb.model.RespondentSubcommittee;
-import com.mindalliance.sb.model.SituationReport;
-import com.mindalliance.sb.model.SuperbowlPlan;
-import java.util.Date;
-import java.util.Set;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -25,10 +15,34 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
+import java.util.Set;
 
 privileged aspect Respondent_Roo_DbManaged {
-    
+
+    @ManyToOne
+    @JoinColumn(name = "contact_info", referencedColumnName = "id", nullable = false)
+    private ContactInfo Respondent.contactInfo;
+
+    @Column(name = "survey_opinion", columnDefinition = "INT")
+    @NotNull
+    private Integer Respondent.surveyOpinion;
+
+    @Column(name = "difficult", columnDefinition = "BIT")
+    private Boolean Respondent.difficult;
+
+    @Column(name = "comments", columnDefinition = "TEXT")
+    private String Respondent.comments;
+
+    @Column(name = "submitted", columnDefinition = "DATE")
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(style = "M-")
+    private Date Respondent.submitted;
+
+    @Column(name = "problems", columnDefinition = "TEXT")
+    private String Respondent.problems;
+
     @ManyToMany
     @JoinTable(name = "respondent_expertise", joinColumns = { @JoinColumn(name = "respondent", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "expertise", nullable = false) })
     private Set<Expertise> Respondent.expertises;
@@ -54,28 +68,6 @@ privileged aspect Respondent_Roo_DbManaged {
     @OneToMany(mappedBy = "respondent", cascade = CascadeType.REMOVE)
     private Set<SuperbowlPlan> Respondent.superbowlPlans;
     
-    @ManyToOne
-    @JoinColumn(name = "contact_info", referencedColumnName = "id", nullable = false)
-    private ContactInfo Respondent.contactInfo;
-    
-    @Column(name = "survey_opinion", columnDefinition = "INT")
-    @NotNull
-    private Integer Respondent.surveyOpinion;
-    
-    @Column(name = "difficult", columnDefinition = "BIT")
-    private Boolean Respondent.difficult;
-    
-    @Column(name = "comments", columnDefinition = "TEXT")
-    private String Respondent.comments;
-    
-    @Column(name = "submitted", columnDefinition = "DATE")
-    @NotNull
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(style = "M-")
-    private Date Respondent.submitted;
-    
-    @Column(name = "problems", columnDefinition = "TEXT")
-    private String Respondent.problems;
     
     public Set<Expertise> Respondent.getExpertises() {
         return expertises;

@@ -5,9 +5,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.text.ParseException;
 
-/**
- * @TODO comment this
- */
 public class SurveyResponseTest {
     
 

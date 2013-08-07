@@ -3,17 +3,8 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.ContactInfo;
-import com.mindalliance.sb.model.Discipline;
-import com.mindalliance.sb.model.IncidentSystem;
-import com.mindalliance.sb.model.OrgType;
-import com.mindalliance.sb.model.Organization;
-import com.mindalliance.sb.model.OrganizationCapability;
-import com.mindalliance.sb.model.OrganizationIncident;
-import com.mindalliance.sb.model.Sharing;
-import com.mindalliance.sb.model.SubcommitteeOrganization;
-import java.util.Calendar;
-import java.util.Set;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -24,10 +15,32 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Calendar;
+import java.util.Set;
 
 privileged aspect Organization_Roo_DbManaged {
-    
+
+    @Column(name = "name", length = 127)
+    @NotNull
+    private String Organization.name;
+
+    @Column(name = "acronym", length = 127)
+    private String Organization.acronym;
+
+    @Column(name = "url", length = 127)
+    private String Organization.url;
+
+    @ManyToOne
+    @JoinColumn(name = "type", referencedColumnName = "id")
+    private OrgType Organization.type;
+
+    @ManyToOne
+    @JoinColumn(name = "parent", referencedColumnName = "id", insertable = false, updatable = false)
+    private Organization Organization.parent;
+
+    @Column(name = "logo", columnDefinition = "BLOB")
+    private byte[] Organization.logo;
+
     @ManyToMany
     @JoinTable(name = "organization_discipline", joinColumns = { @JoinColumn(name = "organization_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "discipline_id", nullable = false) })
     private Set<Discipline> Organization.disciplines;
@@ -52,27 +65,6 @@ privileged aspect Organization_Roo_DbManaged {
     
     @OneToMany(mappedBy = "organization", cascade = CascadeType.REMOVE)
     private Set<SubcommitteeOrganization> Organization.subcommitteeOrganizations;
-    
-    @ManyToOne
-    @JoinColumn(name = "type", referencedColumnName = "id")
-    private OrgType Organization.type;
-    
-    @ManyToOne
-    @JoinColumn(name = "parent", referencedColumnName = "id", insertable = false, updatable = false)
-    private Organization Organization.parent;
-    
-    @Column(name = "name", length = 127)
-    @NotNull
-    private String Organization.name;
-    
-    @Column(name = "logo", columnDefinition = "BLOB")
-    private byte[] Organization.logo;
-    
-    @Column(name = "acronym", length = 127)
-    private String Organization.acronym;
-    
-    @Column(name = "url", length = 127)
-    private String Organization.url;
     
     @Column(name = "added", columnDefinition = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)

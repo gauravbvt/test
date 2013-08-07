@@ -3,9 +3,10 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_com_mindalliance_sb_model_CoreCapability" items="${corecapabilitys}" z="tPI5tm9kxVZawagC80HtqSyucG0=">
-        <table:table data="${corecapabilitys}" id="l_com_mindalliance_sb_model_CoreCapability" path="/lists/corecapabilitys" z="FLHMT30TZxYBqqRjiRRTqugCAwM=">
-            <table:column id="c_com_mindalliance_sb_model_CoreCapability_missionAreas" property="missionAreas" z="TI46G+VGITM6sqv/enFJZadvvAM="/>
+        <table:table data="${corecapabilitys}" delete="false" id="l_com_mindalliance_sb_model_CoreCapability" path="/lists/corecapabilitys" z="Db830V42w8Kzq4rh0L2+xay5+Bs=">
             <table:column id="c_com_mindalliance_sb_model_CoreCapability_name" property="name" z="O9MDHqTCPxu1TG/FmY+L1k9Hkos="/>
+            <table:column id="c_com_mindalliance_sb_model_CoreCapability_description" property="description"/>
+            <table:column id="c_com_mindalliance_sb_model_CoreCapability_missionAreas" property="missionAreas" z="TI46G+VGITM6sqv/enFJZadvvAM="/>
         </table:table>
     </page:list>
 </div>

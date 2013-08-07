@@ -6,8 +6,12 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
-@RooToString
 @RooJpaActiveRecord(identifierType = IncidentSystemPK.class, versionField = "", table = "incident_system")
 @RooDbManaged(automaticallyDelete = true)
-public class IncidentSystem {
+public class IncidentSystem implements PrintableObject {
+
+    @Override
+    public String toString() {
+        return getAcronym();
+    }
 }

@@ -6,8 +6,8 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
 @RooJavaBean
 @RooDbManaged(automaticallyDelete = true)
-@RooJpaActiveRecord(versionField = "", table = "core_capability", finders = { "findCoreCapabilitysByNameEquals" })
-public class CoreCapability {
+@RooJpaActiveRecord(versionField = "", table = "core_capability", finders = { "findCoreCapabilitysByNameEquals" } )
+public class CoreCapability implements NamedObject {
 
     @Override
     public String toString() {

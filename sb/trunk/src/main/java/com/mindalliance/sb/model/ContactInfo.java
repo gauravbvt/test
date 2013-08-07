@@ -1,6 +1,5 @@
 package com.mindalliance.sb.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.roo.addon.dbre.RooDbManaged;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -11,9 +10,8 @@ import java.util.List;
 @RooJavaBean
 @RooDbManaged(automaticallyDelete = true)
 @RooJpaActiveRecord(versionField = "", table = "contact_info", finders = { "findContactInfoesByEmailEquals" })
-@JsonFilter("csvFilter")
 @JsonPropertyOrder({ "prefix", "firstName", "lastName", "email", "landline", "mobile", "organization", "title", "supervisor" })
-public class ContactInfo {
+public class ContactInfo implements PrintableObject {
 
     public static com.mindalliance.sb.model.ContactInfo findOrCreate(String fullName, String title, String email, Organization organization) {
         if (email != null) {
