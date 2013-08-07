@@ -23,7 +23,7 @@ import java.util.Map;
 public abstract class ModelObject
         extends AbstractAttachable
         implements Comparable<ModelObject>, Modelable, Taggable, ChannelsLockable {
-    
+
     public static final List<String> CLASS_LABELS;
 
     public static enum Context {  // order is important: MODEL < COMMUNITY < USER
@@ -74,7 +74,6 @@ public abstract class ModelObject
      * The context for the model object.
      */
     private Context context = Context.MODEL;   // default is model context
-
 
 
     //=============================
@@ -260,7 +259,7 @@ public abstract class ModelObject
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash + 31 *  Long.valueOf( id ).hashCode();
+        hash = hash + 31 * Long.valueOf( id ).hashCode();
         hash = hash + 31 * getContextType().hashCode();
         return hash;
     }
@@ -402,7 +401,7 @@ public abstract class ModelObject
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ( (Attachment)object).getType().equals( attachmentType );
+                        return ( (Attachment) object ).getType().equals( attachmentType );
                     }
                 }
         );
@@ -517,7 +516,7 @@ public abstract class ModelObject
     }
 
     public Map<String, Object> mapState() {
-        Map<String,Object>state = new HashMap<String, Object>(  );
+        Map<String, Object> state = new HashMap<String, Object>();
         state.put( "name", getName() );
         state.put( "description", getDescription() );
         state.put( "tags", Tag.tagsToString( getTags() ) );
@@ -526,24 +525,24 @@ public abstract class ModelObject
         return state;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
-        setName( (String)state.get( "name" ) );
+        setName( (String) state.get( "name" ) );
         setDescription( (String) state.get( "description" ) );
         setTagsAsString( (String) state.get( "tags" ) );
         setAttachments( new ArrayList<Attachment>( (List<Attachment>) state.get( "attachments" ) ) );
-        setWaivedIssueDetections( (ArrayList<String>)state.get( "waivedIssueDetections" ) );
+        setWaivedIssueDetections( (ArrayList<String>) state.get( "waivedIssueDetections" ) );
     }
 
     public static List<String> classLabels() {
-        List<String> typeLabels = new ArrayList<String>(  );
+        List<String> typeLabels = new ArrayList<String>();
         typeLabels.add( Segment.classLabel() );
         typeLabels.add( Requirement.classLabel() );
         typeLabels.add( Part.classLabel() );
         typeLabels.add( Flow.classLabel() );
         typeLabels.addAll( ModelEntity.classLabels() );
         Collections.sort( typeLabels );
-        List<String> results = new ArrayList<String>(  );
+        List<String> results = new ArrayList<String>();
         results.add( Plan.classLabel() );
         results.addAll( typeLabels );
         return results;
@@ -553,14 +552,14 @@ public abstract class ModelObject
         return getTypeName(); // default
     }
 
-    public abstract boolean isSegmentObject();
+     public abstract boolean isSegmentObject();
 
     public static boolean isUnknownModelObject( Identifiable identifiable ) {
-        return identifiable instanceof ModelObject && ((ModelObject)identifiable).isUnknown();
+        return identifiable instanceof ModelObject && ( (ModelObject) identifiable ).isUnknown();
     }
 
     public boolean isTransient() {
-        return !persistent ;
+        return !persistent;
     }
 
     public void makeTransient() {

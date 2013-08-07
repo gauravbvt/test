@@ -269,7 +269,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     private void addParticipatingOrgName() {
         final List<String> choices = getAllAgencyNames();
-        AutoCompleteTextField<String> registereOrgNameField = new AutoCompleteTextField<String>(
+        AutoCompleteTextField<String> registeredOrgNameField = new AutoCompleteTextField<String>(
                 "orgName",
                 new PropertyModel<String>( this, "registeredOrgName" ),
                 getAutoCompleteSettings() ) {
@@ -286,8 +286,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 return candidates.iterator();
             }
         };
-        registereOrgNameField.setOutputMarkupId( true );
-        registereOrgNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        registeredOrgNameField.setOutputMarkupId( true );
+        registeredOrgNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 placeholderChoice.setEnabled( !getRegisteredOrgName().isEmpty() );
                 target.add( placeholderChoice );
@@ -295,7 +295,8 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 target.add( createButton );
             }
         } );
-        registeringContainer.addOrReplace( registereOrgNameField );
+        addInputHint( registeredOrgNameField, "The name of an organization" );
+        registeringContainer.addOrReplace( registeredOrgNameField );
 
     }
 

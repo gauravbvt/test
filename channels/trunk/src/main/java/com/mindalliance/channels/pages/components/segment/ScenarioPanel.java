@@ -175,6 +175,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
             }
         } );
         eventField.setEnabled( isLockedByUserIfNeeded( getSegment() ) );
+        addInputHint( eventField, "The name of an event" );
         add( eventField );
     }
 

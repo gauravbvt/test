@@ -382,6 +382,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             }
         } );
         partDescription.setOutputMarkupId( true );
+        addInputHint( partDescription, "Brief advice" );
         add( partDescription );
     }
 
@@ -585,6 +586,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "task" ) );
             }
         } );
+        addInputHint( taskField, "The task to be done" );
         add( taskField );
     }
 
@@ -610,6 +612,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPart(), "initiatedEvent" ) );
             }
         } );
+        addInputHint( initiatedEventField, "The name of the event the task may trigger" );
         add( initiatedEventField );
     }
 

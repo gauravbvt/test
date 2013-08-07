@@ -132,6 +132,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
             }
         } );
+        addInputHint( nameField, "Enter the name of an event (press enter)" );
         nameContainer.add( nameField );
         EntityLink eventLink = new EntityLink( "event-link", new PropertyModel<Event>( wrapper, "event" ) );
         eventLink.setVisible( !wrapper.isMarkedForCreation() );

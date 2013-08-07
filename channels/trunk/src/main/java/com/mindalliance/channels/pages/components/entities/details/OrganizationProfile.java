@@ -87,6 +87,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getOrganization(), "mission" ) );
             }
         } );
+        addInputHint( missionField, "A brief mission statement" );
         add( missionField );
     }
 
@@ -124,6 +125,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
             }
         } );
         actualParentField.setVisible( getOrganization().isActual() );
+        addInputHint( actualParentField, "The name of an acutal organization" );
         add( actualParentField );
         // If organization is type, parent can be either actual or type.
         EntityReferencePanel<Organization> parentField = new EntityReferencePanel<Organization>(
@@ -165,6 +167,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getModel().getObject(), "location" ) );
             }
         } );
+        addInputHint( locationField, "The name of an actual place" );
         locationContainer.add( locationField );
     }
 

@@ -99,6 +99,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
             }
         } );
         nameField.setEnabled( isLockedByUserIfNeeded( getSegment() ) );
+        addInputHint( nameField, "The name of the segment" );
         add( nameField );
 
         TextArea<String> descField =
@@ -111,6 +112,7 @@ public class SegmentEditDetailsPanel extends AbstractCommandablePanel implements
             }
         } );
         descField.setEnabled( isLockedByUserIfNeeded( getSegment() ) );
+        addInputHint( descField, "A brief overview of the segment" );
         add( descField );
     }
 

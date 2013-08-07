@@ -148,6 +148,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
         } );
         newLanguageField.setOutputMarkupId( true );
         makeVisible( newLanguageField, language.isEmpty() && isLockedByUser( getActor() ) );
+        addInputHint( newLanguageField, "A language spoken and understood" );
         item.add( newLanguageField );
     }
 

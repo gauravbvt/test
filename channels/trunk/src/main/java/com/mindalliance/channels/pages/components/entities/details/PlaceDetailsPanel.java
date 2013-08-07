@@ -143,6 +143,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
         } );
         addIssues( withinField, getPlace(), "within" );
         withinField.setOutputMarkupId( true );
+        addInputHint( withinField, ModelEntity.getNameHint( getEntity().getClass(), getEntity().getKind() ) );
         withinContainer.add( withinField );
         withinContainer.setVisible( getPlace().isActual() );
     }
@@ -204,6 +205,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
         } );
         addIssues( streetAddressField, getPlace(), "streetAddress" );
         streetAddressField.setEnabled( isLockedByUser( getPlace() ) );
+        addInputHint( streetAddressField, "A street address" );
         streetContainer.add( streetAddressField );
     }
 
@@ -227,6 +229,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
         } );
         addIssues( postalCodeField, getPlace(), "postalCode" );
         postalCodeField.setEnabled( isLockedByUser( getPlace() ) );
+        addInputHint( postalCodeField, "A postal code" );
         codeContainer.add( postalCodeField );
     }
 
@@ -264,6 +267,7 @@ public class PlaceDetailsPanel extends EntityDetailsPanel implements Guidable{
         } );
         addIssues( geonameField, getPlace(), "geoname" );
         geonameField.setEnabled( isLockedByUser( getPlace() ) );
+        addInputHint( geonameField, "A geo-name" );
         geonameContainer.add( geonameField );
     }
 

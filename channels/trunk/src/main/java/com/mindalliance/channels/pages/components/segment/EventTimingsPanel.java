@@ -221,6 +221,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
         } );
         eventField.setOutputMarkupId( true );
         eventField.setEnabled( isLockedByUser( getSegment() ) );
+        addInputHint( eventField, "The name of an event" );
         creationContainer.add( eventField );
     }
 

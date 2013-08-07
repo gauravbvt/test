@@ -688,7 +688,7 @@ A step can be either
 
 A step may be required or optional. A step may have identify the completion of other steps as pre-requisites.
 
-A step, to be executable, may also require that some stated conditions (an event phase, a goal having been achieved, an information need having been satisfied) be present or absent.
+A step, to be executable, may also require that some stated conditions (an event phase, a goal having been achieved, an information need having been satisfied, the task having failed) be present or absent.
 
 Channels will raise an issue whenever a condition or outcome from the definition of a task is not referenced by at least one step, for example, when a goal achieved by the task is not associated with a step in its checklist.
 
@@ -1335,6 +1335,8 @@ Action steps (not communication steps) can be marked as "required", else they ar
 Conditions applicable on steps are either:
 * Goals achieved by the task
 * Events triggered or terminated by the task
+* Information needs of the task
+* The task having failed (a non-optional condition for "on-failure notification steps)
 * Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
 
 Outcomes of a steps can be:

@@ -656,7 +656,6 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 target.add( standardizedCheckbox );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
-
         } );
 
         nameField.add( new AjaxFormComponentUpdatingBehavior( "onkeyup" ) {
@@ -666,7 +665,16 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 target.add( otherChoice );
             }
         } );
-
+        addInputHint(
+                nameField,
+                "The name of the info "
+                        + ( getFlow().isNeed()
+                        ? "needed"
+                        : getFlow().isCapability()
+                        ? "that could be shared"
+                        : isSend()
+                        ? "to be sent"
+                        : "to be received" ) );
         addIssuesAnnotation( nameField, getFlow(), nameField.getId() );
         add( nameField );
     }
@@ -717,7 +725,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
         privacyContainer.setOutputMarkupId( true );
         makeVisible( privacyContainer, getFlow().isNeed() || getFlow().isCapability() );
         addOrReplace( privacyContainer );
-        Label needOrCapabilityLabel = new Label("needOrCapability", getFlow().isNeed() ? " need for a" : " capability to share via");
+        Label needOrCapabilityLabel = new Label( "needOrCapability", getFlow().isNeed() ? " need for a" : " capability to share via" );
         needOrCapabilityLabel.setOutputMarkupId( true );
         privacyContainer.addOrReplace( needOrCapabilityLabel );
         privateCheckBox = new AjaxCheckBox(
@@ -928,6 +936,7 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
             }
         } );
         flowDescription.setOutputMarkupId( true );
+        addInputHint( flowDescription, "Brief advice" );
         add( flowDescription );
     }
 

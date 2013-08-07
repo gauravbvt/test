@@ -95,6 +95,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getPlan(), "phases" ) );
             }
         } );
+        addInputHint( nameField, "The name of a phase" );
         nameContainer.add( nameField );
         EntityLink phaseLink = new EntityLink( "phase-link", new PropertyModel<Phase>( wrapper, "phase" ) );
         phaseLink.setVisible( !wrapper.isMarkedForCreation() );

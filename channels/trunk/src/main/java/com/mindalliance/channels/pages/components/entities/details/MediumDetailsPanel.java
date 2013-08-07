@@ -195,6 +195,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
                 update( target, new Change( Change.Type.Updated, getMedium(), "addressPattern" ) );
             }
         } );
+        addInputHint( addressPatternField, "A regular expression" );
         addressPatternContainer.add( addressPatternField );
     }
 
@@ -249,6 +250,7 @@ public class MediumDetailsPanel extends EntityDetailsPanel implements Guidable {
                 update( target, new Change( Change.Type.Updated, getMedium(), "qualification" ) );
             }
         } );
+        addInputHint( qualificationField, "The name of a type of agent" );
         moDetailsDiv.add( qualificationField );
     }
 

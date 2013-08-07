@@ -244,6 +244,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
             }
         } );
         contentText.setEnabled( !isReadOnly() && wrapper.isModifiable() );
+        addInputHint( contentText, "An element of information" );
         item.addOrReplace( contentText );
     }
 
@@ -311,6 +312,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         } );
         makeVisible( descriptionText, !wrapper.isMarkedForCreation() );
         descriptionText.setEnabled( !isReadOnly() && wrapper.isModifiable() );
+        addInputHint( descriptionText, "The question the element answers" );
         descriptionContainer.addOrReplace( descriptionText );
     }
 
@@ -331,6 +333,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
         } );
         makeVisible( specialHandlingText, !wrapper.isMarkedForCreation() );
         specialHandlingText.setEnabled( !isReadOnly() && wrapper.isModifiable() );
+        addInputHint( specialHandlingText, "How to handle the element" );
         handlingContainer.addOrReplace( specialHandlingText );
     }
 

@@ -435,6 +435,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         } );
         titleField.setOutputMarkupId( true );
         titleField.setEnabled( isLockedByUser( getOrganization() ) );
+        addInputHint( titleField, "A job title" );
         item.add( titleField );
     }
 
@@ -870,6 +871,17 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             } );
             entityField.setOutputMarkupId( true );
             entityField.setEnabled( isLockedByUser( getOrganization() ) );
+            addInputHint(
+                    entityField,
+                    ( property.equals( "role" )
+                            ? "A role"
+                            : property.equals( "actor" )
+                            ? "An actual agent"
+                            : property.equals( "jurisdiction")
+                            ? "An actual place"
+                            : "An actual agent" // supervisor
+                    )
+            );
             add( entityField );
             makeVisible( entityField, jobWrapper.isMarkedForCreation() );
         }

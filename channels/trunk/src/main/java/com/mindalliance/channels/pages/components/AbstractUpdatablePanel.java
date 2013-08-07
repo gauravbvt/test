@@ -27,6 +27,7 @@ import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
@@ -51,6 +52,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -768,6 +770,10 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
 
     protected Component makeHelpIcon( String id, final String sectionId, final String topicId ) {
         return makeHelpIcon( id, sectionId, topicId, "images/help_guide.png" );
+    }
+
+    protected void addInputHint( AbstractTextComponent textComponent, String hint ) {
+        textComponent.add( new AttributeModifier( "placeholder", ChannelsUtils.sanitizeAttribute( hint ) ) );
     }
 
 }

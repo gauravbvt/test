@@ -160,6 +160,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel impleme
                 target.add( addInvolvedField );
             }
         } );
+        addInputHint( addInvolvedField, "The name of an actual organization (press enter)" );
         newInvolvedContainer.add( addInvolvedField );
         newInvolvedContainer.setVisible( isLockedByUser( Channels.ALL_ORGANIZATIONS ) );
     }

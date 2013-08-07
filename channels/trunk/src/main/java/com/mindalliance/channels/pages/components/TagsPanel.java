@@ -67,6 +67,8 @@ public class TagsPanel extends AbstractCommandablePanel {
             }
         } );
         tagsField.setEnabled( isLockedByUser( getTaggable() ) );
+        addInputHint( tagsField, "Comma-separated tags" );
+        addTipTitle( tagsField, "Compose tags with ':' and separate them with ','. Example: 'esf:transportation, law enforcement, practiced'" );
         add( tagsField );
     }
 

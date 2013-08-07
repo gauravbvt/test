@@ -362,6 +362,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             }
         } );
         agencyNameTextField.setOutputMarkupId( true );
+        addInputHint( agencyNameTextField, "The name of an organziation" );
         registeringContainer.addOrReplace( agencyNameTextField );
     }
 

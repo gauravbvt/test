@@ -184,6 +184,9 @@ public class EntityReferencePanel<T extends ModelEntity> extends AbstractCommand
         if ( getReferencer() instanceof ModelObject )
             addIssues( nameField, (ModelObject) getReferencer(), property );
         nameField.setEnabled( nameField.isEnabled() && getEntityKind() != null );
+        addInputHint(
+                nameField,
+                ModelEntity.getNameHint( entityClass, getEntityKind() ) );
     }
 
     /**

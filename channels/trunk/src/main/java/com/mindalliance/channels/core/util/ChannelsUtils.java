@@ -57,7 +57,7 @@ public final class ChannelsUtils {
 
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> mergeFlowAttributes(
             Map<String, Object> attributes,
             Map<String, Object> others ) {
@@ -333,7 +333,7 @@ public final class ChannelsUtils {
      * @param object     an object
      * @param attributes attributes
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static void initialize( Object object, Map<String, Object> attributes ) {
         for ( String property : attributes.keySet() ) {
             Object value = attributes.get( property );
@@ -425,7 +425,7 @@ public final class ChannelsUtils {
      * @param flowStates a list of flow states
      * @param flowState  a flow state to merge
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private static void mergeFlowState(
             List<Map<String, Object>> flowStates,
             final Map<String, Object> flowState ) {
@@ -433,7 +433,7 @@ public final class ChannelsUtils {
                 flowStates,
                 new Predicate() {
                     @Override
-                    @SuppressWarnings( "unchecked" )
+                    @SuppressWarnings("unchecked")
                     public boolean evaluate( Object object ) {
                         String name = (String) ( (Map<String, Object>) object ).get( "name" );
                         String otherName = (String) flowState.get( "name" );
@@ -461,7 +461,7 @@ public final class ChannelsUtils {
      * @param part a part
      * @return a map
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> getSendState( Flow flow, Part part ) {
         Map<String, Object> sendState = getFlowConnectionState( flow, part );
         Map<String, Object> attributes = (Map<String, Object>) sendState.get( "attributes" );
@@ -478,7 +478,7 @@ public final class ChannelsUtils {
      * @param part a part
      * @return a map
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> getReceiveState( Flow flow, Part part ) {
         Map<String, Object> receiveState = getFlowConnectionState( flow, part );
         Map<String, Object> attributes = (Map<String, Object>) receiveState.get( "attributes" );
@@ -555,7 +555,7 @@ public final class ChannelsUtils {
         return name.trim()
                 .replaceAll( "[\\n\\t]", " " ) // replace newlines and tabs by spaces
                 .replaceAll( "\\s\\s*", " " )  // trim multiple spaces
-                .replaceAll("[^\\sA-Za-z0-9äëïöüÄËÏÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ\\._\\-\\']", "_"); // replace "special" characters by underscore
+                .replaceAll( "[^\\sA-Za-z0-9äëïöüÄËÏÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ\\._\\-\\']", "_" ); // replace "special" characters by underscore
     }
 
     /**
@@ -568,7 +568,7 @@ public final class ChannelsUtils {
         return name.trim()
                 .replaceAll( "[\\n\\t]", " " ) // replace newlines and tabs by spaces
                 .replaceAll( "\\s\\s*", " " )  // trim multiple spaces
-                .replaceAll("[^\\sA-Za-z0-9äëïöüÄËÏÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ\\._\\-\\'\\?\\!]", "_"); // replace "special" characters by underscore
+                .replaceAll( "[^\\sA-Za-z0-9äëïöüÄËÏÖÜáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôûÂÊÎÔÛçÇñÑ\\._\\-\\'\\?\\!]", "_" ); // replace "special" characters by underscore
     }
 
 
@@ -605,7 +605,7 @@ public final class ChannelsUtils {
         int index = 0;
         try {
             while ( ( c = reader.read() ) != -1 ) {
-                char ch = (char)c;
+                char ch = (char) c;
                 if ( index == 0 ) {
                     sb.append( ch );
                 } else {
@@ -702,22 +702,22 @@ public final class ChannelsUtils {
     }
 
     public static String convertTemplate( String template, Object bean ) {
-       return convertTemplate( template, bean, null );
+        return convertTemplate( template, bean, null );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static String convertTemplate( String template, Object bean, Map<String, Object> extraContext ) {
-        StringWriter writer = new StringWriter(  );
+        StringWriter writer = new StringWriter();
         try {
             Map context = BeanUtils.describe( bean );
             if ( extraContext != null ) {
                 for ( String key : extraContext.keySet() ) {
-                    context.put( key, extraContext.get(  key ) );
+                    context.put( key, extraContext.get( key ) );
                 }
             }
-            Velocity.evaluate( new VelocityContext( context ), writer, "",  template );
+            Velocity.evaluate( new VelocityContext( context ), writer, "", template );
         } catch ( Exception e ) {
-            LOG.warn( "Invalid template: " + template , e );
+            LOG.warn( "Invalid template: " + template, e );
             return template;
         }
         return writer.toString();
@@ -725,7 +725,7 @@ public final class ChannelsUtils {
 
     public static boolean areEqualOrNull( Object object, Object other ) {
         return ( object == null && other == null ) ||
-                (object != null && other != null && object.equals( other ) );
+                ( object != null && other != null && object.equals( other ) );
     }
 
     /**
@@ -735,7 +735,28 @@ public final class ChannelsUtils {
      * @return safe version
      */
     public static String sanitize( String name ) {
-        return name.replaceAll( "\\W", "_" );
+        return sanitize( name, "_" );
+    }
+
+    /**
+     * Return a "directory-safe" equivalent name.
+     *
+     * @param name        original name
+     * @param replacement string replacing non-word characters
+     * @return safe version
+     */
+    public static String sanitize( String name, String replacement ) {
+        return name.replaceAll( "\\W", replacement );
+    }
+
+    /**
+     * Return an "HTML attribute-safe" equivalent name.
+     *
+     * @param name        original name
+     * @return safe version
+     */
+    public static String sanitizeAttribute( String name ) {
+        return name.replaceAll( "\"", " " );
     }
 
 }

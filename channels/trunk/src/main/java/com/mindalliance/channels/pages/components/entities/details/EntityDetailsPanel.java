@@ -139,6 +139,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getEntity(), "name" ) );
             }
         } );
+        addInputHint( nameField, "The name of this " + getEntity().getTypeName() );
         moDetailsDiv.add( nameField );
     }
 
@@ -154,6 +155,7 @@ public class EntityDetailsPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getEntity(), "description" ) );
             }
         } );
+        addInputHint( descriptionField, "A brief description of this " + getEntity().getTypeName() );
         moDetailsDiv.add( descriptionField );
     }
 

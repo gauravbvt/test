@@ -105,6 +105,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         } );
         nameField.setVisible( canBeEdited() );
+        addInputHint( nameField, "The name of an organization" );
         add( nameField );
         //
         Label nameLabel = new Label( "nameLabel", getName() );
@@ -123,6 +124,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         } );
         descriptionField.setVisible( canBeEdited() );
+        addInputHint( descriptionField, "A brief description of the organization" );
         add( descriptionField );
         //
         Label descriptionLabel = new Label( "descriptionLabel", getDescription() );
@@ -141,6 +143,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         } );
         missionField.setVisible( canBeEdited() );
+        addInputHint( missionField, "A brief mission statement" );
         add( missionField );
         //
         Label missionLabel = new Label( "missionLabel", getMission() );
@@ -159,6 +162,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         } );
         addressField.setVisible( canBeEdited() );
+        addInputHint( addressField, "A street address" );
         add( addressField );
         //
         Label addressLabel = new Label( "addressLabel", getAddress() );
@@ -191,6 +195,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         } );
         parentNameField.setVisible( canBeEdited() );
+        addInputHint( parentNameField, "The name of the parent organization" );
         add( parentNameField );
         //
         Label parentLabel = new Label( "parentLabel", getParentName() );

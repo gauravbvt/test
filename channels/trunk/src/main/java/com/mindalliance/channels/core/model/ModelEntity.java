@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.util.ChannelsUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -163,6 +165,24 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         return classLabels;
     }
 
+    public static String getNameHint( Class<? extends ModelEntity> clazz, Kind kind ) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            String label = clazz.newInstance().getKindLabel();
+            sb.append( "The name of " );
+            if ( canBeActualOrType( clazz ) ) {
+                sb.append( kind == Kind.Actual ? "an actual " : "a type of " );
+            } else {
+                sb.append( ChannelsUtils.startsWithVowel( label ) ? "an " : "a " );
+            }
+            sb.append( label );
+            return sb.toString();
+        } catch ( Exception e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+
     @Override
     public boolean isSegmentObject() {
         return false;
@@ -299,7 +319,6 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         return getClass().getSimpleName();
     }
 
-
     /**
      * Whether this entity type is universal (built-in)
      *
@@ -318,7 +337,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
                 || equals( ANY_FUNCTION_TYPE );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static <T extends ModelEntity> T getUniversalTypeFor( Class<T> entityClass ) {
         if ( entityClass == Actor.class ) {
             return (T) ANY_ACTOR_TYPE;
@@ -433,7 +452,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
         if ( equals( other ) )
             return true;
 
-         // Can't compare rotten apples with rotten oranges
+        // Can't compare rotten apples with rotten oranges
         return getClass().isAssignableFrom( other.getClass() )
                 && !isInvalid( locale )
 

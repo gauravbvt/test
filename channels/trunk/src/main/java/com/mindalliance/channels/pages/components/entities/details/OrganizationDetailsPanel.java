@@ -117,6 +117,7 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel implements Guid
             }
         };
         custodianField.setOutputMarkupId( true );
+        addInputHint( custodianField, "The name of an actual agent" );
         participationContainer.add( custodianField );
     }
 

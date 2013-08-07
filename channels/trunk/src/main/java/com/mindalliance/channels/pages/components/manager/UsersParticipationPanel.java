@@ -333,6 +333,7 @@ public class UsersParticipationPanel extends AbstractUpdatablePanel implements N
                 target.add( assignmentContainer );
             }
         } );
+        addInputHint( assignmentUserField, "A user's name or email" );
         assignmentContainer.addOrReplace( assignmentUserField );
     }
 

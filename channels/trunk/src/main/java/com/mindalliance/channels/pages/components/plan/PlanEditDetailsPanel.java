@@ -93,26 +93,30 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
     }
 
     private void addName() {
-        add( new TextField<String>( "name", new PropertyModel<String>( this, "name" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                    @Override
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
-                    }
-                } )
-                .setEnabled( isLockedByUser( getPlan() ) ) );
+        TextField<String> planNameField = new TextField<String>( "name", new PropertyModel<String>( this, "name" ) );
+        planNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPlan(), "name" ) );
+            }
+        } );
+        planNameField.setEnabled( isLockedByUser( getPlan() ) );
+        addInputHint( planNameField, "The name of the plan" );
+        add( planNameField );
     }
 
     private void addDescription() {
-        add( new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                    @Override
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        update( target,
-                                new Change( Change.Type.Updated, getPlan(), "description" ) );
-                    }
-                } )
-                .setEnabled( isLockedByUser( getPlan() ) ) );
+        TextArea<String> planDescriptionField = new TextArea<String>( "description", new PropertyModel<String>( this, "description" ) );
+        planDescriptionField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target,
+                        new Change( Change.Type.Updated, getPlan(), "description" ) );
+            }
+        } );
+        planDescriptionField.setEnabled( isLockedByUser( getPlan() ) );
+        addInputHint( planDescriptionField, "A brief overview of the plan" );
+        add( planDescriptionField );
     }
 
     private void addIsViewableByAll() {
@@ -149,14 +153,16 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
     }
 
     private void addDefaultLanguage() {
-        add( new TextField<String>( "defaultLanguage", new PropertyModel<String>( this, "defaultLanguage" ) )
-                .add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-                    @Override
-                    protected void onUpdate( AjaxRequestTarget target ) {
-                        update( target, new Change( Change.Type.Updated, getPlan(), "defaultLanguage" ) );
-                    }
-                } )
-                .setEnabled( isLockedByUser( getPlan() ) ) );
+        TextField<String> languageField = new TextField<String>( "defaultLanguage", new PropertyModel<String>( this, "defaultLanguage" ) );
+        languageField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                update( target, new Change( Change.Type.Updated, getPlan(), "defaultLanguage" ) );
+            }
+        } );
+        languageField.setEnabled( isLockedByUser( getPlan() ) );
+        addInputHint( languageField, "The default language spoken by agents" );
+        add( languageField );
     }
 
     private void addAttachments() {

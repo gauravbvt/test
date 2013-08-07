@@ -335,6 +335,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     if ( info.getInfoProduct() != null ) {
                         addTipTitle( infoNameField, "Access the info product profile to change its name" );
                     }
+                    addInputHint( infoNameField, "The name of the information" );
                     item.add( infoNameField );
                     // as info product
                     final CheckBox isInfoProductCheckBox = new CheckBox(
@@ -493,6 +494,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     update( target, change );
                 }
             } );
+            addInputHint( newInfoField, "The name of the information" );
             infoContainer.add( newInfoField );
         }
 
@@ -604,6 +606,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                         }
                     } );
                     eoiNameField.setEnabled( local && isLockedByUser( getFunction() ) );
+                    addInputHint( eoiNameField, "An element of information" );
                     item.add( eoiNameField );
                     // question
                     final TextField<String> eoiQuestionField = new TextField<String>(
@@ -619,6 +622,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                         }
                     } );
                     eoiQuestionField.setEnabled( local && isLockedByUser( getFunction() ) );
+                    addInputHint( eoiQuestionField, "The question the element answers" );
                     item.add( eoiQuestionField );
                 }
             };
@@ -713,6 +717,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     update( target, change );
                 }
             } );
+            addInputHint( newEoiField, "An element of information" );
             eoisContainer.add( newEoiField );
         }
 
