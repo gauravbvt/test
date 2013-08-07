@@ -84,7 +84,7 @@ public class CL0001_LoginPage extends TestCase{
 	}
 	
 	/**
-	 * This method verify that login page is displayed after entering th URL of Channels
+	 * This method verify that login page is displayed after entering the URL of Channels
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
