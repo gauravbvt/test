@@ -1480,7 +1480,32 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <next section="concepts" topic="organization"/>
+                <next section="profiling" topic="organization-participation"/>
                 <next section="profiling" topic="profiling-agent"/>
+            </topic>
+            <topic id="organization-participation">
+                <name>Specify organization participation</name>
+                <item>
+                    <description>An actual organization can be declared as a placeholder, meaning that its possibly many real-world identities will be set by communities adopting the plan.
+
+One or more real-life organization in a community can participate as the planned placeholder organization. The participating organization inherits (a copy of) the agents employed by the placeholder.
+
+The custodian of a placeholder organization an the agent authorized to register community organizations as the placeholder. Whoever in a community participates as this agent is an acting custodian. Community planners are by default acting custodians.
+                    </description>
+                    <script>
+                        <action>Open organization participation</action>
+                        <change>
+                            <subjectPath>guide.anyActualOrganization</subjectPath>
+                            <type>Expanded</type>
+                            <property>participation</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="organization"/>
+                <next section="concepts" topic="agent"/>
+                <next section="profiling" topic="organization"/>
+                <next section="profiling" topic="profiling-agent"/>
+                <next section="profiling" topic="agent-participation"/>
             </topic>
             <topic id="profiling-role">
                 <name>Profile a role</name>
@@ -1558,7 +1583,40 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <next section="concepts" topic="agent"/>
+                <next section="profiling" topic="agent-participation"/>
                 <next section="profiling" topic="profiling-organization"/>
+            </topic>
+            <topic id="agent-participation">
+                <name>Participation as an agent</name>
+                <item>
+                    <description>Users in a community participate as (actual) agents that are defined in the plan the community has adopted.
+
+Depending on the participation constrains set for the agent,
+* any number of users can participate as the agent
+* or exactly one user can participate
+* or at most a specified number of users can participate
+
+Furthermore, who can participate as the agent can be set to
+* any user whatsoever (open participation)
+* or users confirmed in their participation by other users participating as the agent's supervisors
+* or users already participating as agents employed by one of the agent's organizations
+
+Participation can be anonymous, in which case the names and contact information of participating users will not appear in the checklists of other users.
+
+                    </description>
+                    <script>
+                        <action>Open agent participation</action>
+                        <change>
+                            <subjectPath>guide.anyActualAgent</subjectPath>
+                            <type>Expanded</type>
+                            <property>participation</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="agent"/>
+                <next section="profiling" topic="agent"/>
+                <next section="profiling" topic="profiling-organization"/>
+                <next section="profiling" topic="organization-participation"/>
             </topic>
             <topic id="profiling-place">
                 <name>Profile a place</name>
