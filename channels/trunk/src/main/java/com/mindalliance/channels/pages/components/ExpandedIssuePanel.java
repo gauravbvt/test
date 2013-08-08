@@ -83,6 +83,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 target.add( summary );
             }
         } );
+        addInputHint( descriptionArea, "Brief description of the issue" );
         add( descriptionArea );
         // Type
         typeChoice = new DropDownChoice<String>(
@@ -131,6 +132,7 @@ public class ExpandedIssuePanel extends AbstractCommandablePanel {
                 target.add( summary );
             }
         } );
+        addInputHint( remediationArea, "Remediation options, each as a separate line" );
         add( remediationArea );
         add( new AttachmentPanel( "attachments", new Model<UserIssue>( (UserIssue) issue ) ) );
         add( new Label( "reported-by",

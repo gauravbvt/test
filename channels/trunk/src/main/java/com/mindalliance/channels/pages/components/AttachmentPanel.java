@@ -316,6 +316,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
+        addInputHint( nameField, "An optional name for the attachment" );
         controlsContainer.addOrReplace( nameField );
     }
 
