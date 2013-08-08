@@ -190,16 +190,16 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         addAttachmentContainer.setOutputMarkupId( true );
         container.addOrReplace( addAttachmentContainer );
         makeVisible( addAttachmentContainer, !readOnly && isLockedByUserIfNeeded( getAttachee() ) );
-        addControlsHeader( );
-        addControls( );
+        addControlsHeader();
+        addControls();
     }
 
-    private void addControlsHeader( ) {
+    private void addControlsHeader() {
         AjaxLink<String> showControlsLink = new AjaxLink<String>( "showControls" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 showingControls = !showingControls;
-                addControls( );
+                addControls();
                 makeVisible( controlsContainer, showingControls );
                 target.add( controlsContainer );
             }
@@ -210,7 +210,7 @@ public class AttachmentPanel extends AbstractCommandablePanel {
         addAttachmentContainer.addOrReplace( showControlsLink );
     }
 
-    private void addControls(  ) {
+    private void addControls() {
         controlsContainer = new WebMarkupContainer( "controls" );
         controlsContainer.setOutputMarkupId( true );
         makeVisible( controlsContainer, showingControls );
@@ -238,9 +238,11 @@ public class AttachmentPanel extends AbstractCommandablePanel {
     private void addSubmit() {
         submit = new AjaxButton( "submit" ) {
             protected void onSubmit( AjaxRequestTarget target, Form<?> form ) {
-                init();
-                refresh( target );
-                update( target, new Change( Change.Type.Unknown, "attachments" ) );
+                if ( uploads != null && !uploads.isEmpty() ) {
+                    init();
+                    refresh( target );
+                    update( target, new Change( Change.Type.Unknown, "attachments" ) );
+                }
             }
 
             @Override

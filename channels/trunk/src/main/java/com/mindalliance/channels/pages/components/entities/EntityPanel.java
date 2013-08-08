@@ -40,6 +40,8 @@ import com.mindalliance.channels.pages.components.entities.details.RoleDetailsPa
 import com.mindalliance.channels.pages.components.entities.issues.EntityIssuesPanel;
 import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMenuPanel;
 import com.mindalliance.channels.pages.components.entities.network.EntityNetworkingPanel;
+import com.mindalliance.channels.pages.components.entities.participation.ActorParticipationPanel;
+import com.mindalliance.channels.pages.components.entities.participation.OrganizationParticipationPanel;
 import com.mindalliance.channels.pages.components.entities.structure.OrganizationStructurePanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -81,12 +83,11 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
 
     public static final String STRUCTURE = "structure";
 
-  //  public static final String AGREEMENTS = "agreements";
-
+    public static final String PARTICIPATION = "participation";
     /**
      * Actionable aspects.
      */
-    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, STRUCTURE};
+    private static final String[] ACTIONABLE_ASPECTS = {DETAILS, STRUCTURE, PARTICIPATION};
 
     /**
      * DOM identifier prefix for resizeble diagrams.
@@ -166,10 +167,8 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
             return getEntityIssuesPanel();
         } else if ( aspect.equals( STRUCTURE ) ) {
             return getEntityStructurePanel();
-/*
-        } else if ( aspect.equals( AGREEMENTS ) ) {
-            return getEntityAgreementsPanel();
-*/
+        } else if ( aspect.equals( PARTICIPATION ) ) {
+            return getEntityParticipationPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -323,6 +322,23 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         }
     }
 
+    private Component getEntityParticipationPanel() {
+        if ( getObject() instanceof Organization ) {
+            return new OrganizationParticipationPanel(
+                    "aspect",
+                    new PropertyModel<Organization>( this, "object" ),
+                    getExpansions() );
+        } else  if ( getObject() instanceof Actor ) {
+            return new ActorParticipationPanel(
+                    "aspect",
+                    new PropertyModel<Actor>( this, "object" ),
+                    getExpansions() );
+        } else {
+            return new Label( "aspect", "Not available" );
+        }
+    }
+
+
     private Component getEntityIssuesPanel() {
         return new EntityIssuesPanel(
                 "aspect",
@@ -340,6 +356,9 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         if ( entity instanceof Organization && entity.isActual() ) {
             allAspects.add( STRUCTURE );
            // allAspects.add( AGREEMENTS );
+        }
+        if ( (entity instanceof Actor || entity instanceof Organization) && entity.isActual() ) {
+            allAspects.add( PARTICIPATION );
         }
         if ( entityHasAnalytics() )
             allAspects.add( ANALYTICS );

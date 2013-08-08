@@ -13,39 +13,7 @@
         </th>
         <td><input id="system" wicket:id="system" type="checkbox"/></td>
     </tr>
-    <tr wicket:id="participationConstraints">
-        <th align="right">
-            <label for="system">Participation:</label>
-        </th>
-        <td>
-            <table>
-                <tr>
-                    <td>
-                        <select wicket:id="cardinalityChoice">
-                            <option>At most one</option>
-                            <option>Any number of</option>
-                            <option>No more than</option>
-                        </select>
-                        <input wicket:id="maxParticipation" type="number"/>
-                        <span wicket:id="participantLabel">participants</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input id="open" wicket:id="isParticipationOpen" type="checkbox"/> Participation is open to all users</td>
-                </tr>
-                <tr>
-                    <td><input id="sameEmployer" wicket:id="hasSameEmployer" type="checkbox"/> Participants must have an employer in common with this agent</td>
-                </tr>
-                <tr>
-                    <td><input id="supervisedParticipation" wicket:id="isSupervised" type="checkbox"/> Participation must be confirmed by a supervisor</td>
-                </tr>
-                <tr>
-                    <td><input id="anonymous" wicket:id="isAnonymous" type="checkbox"/> Participants are anonymous</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr wicket:id="contact">
+     <tr wicket:id="contact">
         <th align="right">
             <label for="contact-info">Contact info:</label>
         </th>
