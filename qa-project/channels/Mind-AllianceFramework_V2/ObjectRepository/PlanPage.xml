@@ -932,12 +932,17 @@
 		<ClassName></ClassName>
 	</Element>
 	
+	//<Element>
+		//<GivenName>Goals Dropdown In Task Panel</GivenName>
+		//<Xpath>//select[contains(@name,'segment:part:goals:goals:0:goal:goalChoice')]</Xpath>
+		//<Name>segment:part:goals:goals:0:goal:goalChoice</Name>
+	//</Element>
+	
 	<Element>
 		<GivenName>Goals Dropdown In Task Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:part:goals:goals:0:goal:goalChoice')]</Xpath>
-		<Name>segment:part:goals:goals:0:goal:goalChoice</Name>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td/span/select</Xpath>
+		<Name></Name>
 	</Element>
-	
 	
 	<Element>
 		<GivenName>Task Attachment Link</GivenName>
@@ -1012,7 +1017,7 @@
 	
 	<Element>
 		<GivenName>Verify Goal Added In Task Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1021,13 +1026,22 @@
 	</Element>
 	<Element>
 		<GivenName>Uncheck Checkbox Of Goal In Task Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td[2]/input</Xpath>
-		<Name>segment:part:goals:goals:0:confirmed</Name>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/div/table/tbody/tr/td[5]/input</Xpath>
+		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+	//<Element>
+		//<GivenName>Uncheck Checkbox Of Goal In Task Panel</GivenName>
+		//<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span/table/tbody/tr/td[2]/input</Xpath>
+		//<Name>segment:part:goals:goals:0:confirmed</Name>
+		//<Id></Id>
+		//<PartialLinkText></PartialLinkText>
+		//<LinkText></LinkText>
+		//<ClassName></ClassName>
+	//</Element>
 	<Element>
 		<GivenName>Doing Unnamed Task</GivenName>
 		<Xpath>/html/body/form/span/div/div[2]/div/span/map/area</Xpath>
@@ -1638,7 +1652,7 @@
 	
 	<Element>
 		<GivenName>Redo Update Segment</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1647,22 +1661,22 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Remove Goal</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText>Redo Remove Goal</LinkText>
 		<ClassName></ClassName>
 	</Element>
-	//<Element>
-		//<GivenName>Undo Remove Flow</GivenName>
-		//<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
-		//<Name></Name>
-		//<Id></Id>
-		//<PartialLinkText></PartialLinkText>
-		//<LinkText></LinkText>
-		//<ClassName></ClassName>
-	//</Element>
+	<Element>
+		<GivenName>Undo Remove Flow</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Undo Disintermediate</GivenName>
 		<Xpath></Xpath>
@@ -1703,7 +1717,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Duplicate Flow</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1721,7 +1735,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Add Information Need</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1768,7 +1782,7 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Add Information Capability</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2796,16 +2810,16 @@
 	
 	<Element>
 		<GivenName>From Task Name In Receives Panel</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
 		<Name></Name>
 		<ClassName></ClassName>
 	</Element>
 	
 	//<Element>
-		//<GivenName>From Task Name In Receives Panel</GivenName>
-		//<Xpath>/html/body/form/span/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/select/option[2]</Xpath>
-		//<Name>segment:receives:flows-div:flows:0:flow:other:secondChoice:secondChoice-input</Name>
-		//<ClassName>node-secondchoice</ClassName>
+		//<GivenName>Sender</GivenName>
+		//<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
+		//<Name></Name>
+		//<ClassName></ClassName>
 	//</Element>
 	
 	<Element>
