@@ -28,12 +28,12 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
     /**
      * Hierarchical object model.
      */
-    private IModel<Hierarchical> hierarchicalModel;
+    private IModel<? extends Hierarchical> hierarchicalModel;
     private final String algo;
 
     public HierarchyDiagramPanel(
             String id,
-            IModel<Hierarchical> hierarchicalModel,
+            IModel<? extends Hierarchical> hierarchicalModel,
             double[] diagramSize,
             String domIdentifier ) {
          this( id, hierarchicalModel, diagramSize, domIdentifier, "dot" );
@@ -41,7 +41,7 @@ public class HierarchyDiagramPanel extends AbstractDiagramPanel {
 
     public HierarchyDiagramPanel(
             String id,
-            IModel<Hierarchical> hierarchicalModel,
+            IModel<? extends Hierarchical> hierarchicalModel,
             double[] diagramSize,
             String domIdentifier,
             String algo) {

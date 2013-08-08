@@ -38,7 +38,7 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
         List<Hierarchical> ranked = roots;
         List<Hierarchical> placed = new ArrayList<Hierarchical>( ranked );
         while ( !ranked.isEmpty() ) {
-            ranked = findAllChildrenOf( ranked, digraph, placed );
+            ranked = findAllChildrenOf( ranked, digraph, placed, communityService );
             placed.addAll(  ranked );
             printoutRankedVertices( communityService, out, ranked );
         }
@@ -61,14 +61,15 @@ public class HierarchyDOTExporter extends AbstractDOTExporter<Hierarchical, Hier
     private List<Hierarchical> findAllChildrenOf(
             final List<Hierarchical> ranked,
             DirectedGraph<Hierarchical, HierarchyRelationship> digraph,
-            final List<Hierarchical> placed ) {
+            final List<Hierarchical> placed,
+            final CommunityService communityService ) {
         return (List<Hierarchical>) CollectionUtils.select(
                 digraph.vertexSet(),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
                         return !placed.contains( object )
-                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) object ).getSuperiors() ).isEmpty();
+                        && !CollectionUtils.intersection( ranked, ( (Hierarchical) object ).getSuperiors( communityService.getPlanService() ) ).isEmpty();
                     }
                 } );
     }

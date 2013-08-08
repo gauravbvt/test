@@ -17,7 +17,7 @@ import java.util.Set;
  * Date: May 27, 2009
  * Time: 2:29:36 PM
  */
-public class OrgChartPanel extends AbstractResizableDiagramPanel {
+public class HierarchyPanel extends AbstractResizableDiagramPanel {
 
     /**
      * Entity network diagram panel
@@ -26,11 +26,11 @@ public class OrgChartPanel extends AbstractResizableDiagramPanel {
     /**
      * Model of a hierarchical object.
      */
-    private IModel<Hierarchical> hierarchicalModel;
+    private IModel<? extends Hierarchical> hierarchicalModel;
 
-    public OrgChartPanel(
+    public HierarchyPanel(
             String id,
-            IModel<Hierarchical> hierarchicalModel,
+            IModel<? extends Hierarchical> hierarchicalModel,
             Set<Long> expansions,
             String prefixDomIdentifier
     ) {

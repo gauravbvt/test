@@ -1108,14 +1108,14 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<Hierarchical>( descendants );
     }
 
-    private static boolean hasAncestor(
+    private  boolean hasAncestor(
             Hierarchical hierarchical, final Hierarchical other, final Set<Hierarchical> visited ) {
 
         if ( visited.contains( hierarchical ) )
             return false;
 
         visited.add( hierarchical );
-        List<? extends Hierarchical> superiors = hierarchical.getSuperiors();
+        List<? extends Hierarchical> superiors = hierarchical.getSuperiors( this );
         Object superior = CollectionUtils.find( superiors, new Predicate() {
             @Override
             public boolean evaluate( Object object ) {
@@ -2411,10 +2411,10 @@ public abstract class DefaultQueryService implements QueryService {
             return Organization.FamilyRelationship.Child;
         if ( ModelObject.areIdentical( fromOrg.getParent(), toOrg.getParent() ) )
             return Organization.FamilyRelationship.Sibling;
-        List<? extends Hierarchical> toOrgSuperiors = toOrg.getSuperiors();
+        List<? extends Hierarchical> toOrgSuperiors = toOrg.getSuperiors( this );
         if ( toOrgSuperiors.contains( fromOrg ) )
             return Organization.FamilyRelationship.Ancestor;
-        List<? extends Hierarchical> fromOrgSuperiors = fromOrg.getSuperiors();
+        List<? extends Hierarchical> fromOrgSuperiors = fromOrg.getSuperiors( this );
         if ( fromOrgSuperiors.contains( toOrg ) )
             return Organization.FamilyRelationship.Descendant;
         if ( !CollectionUtils.intersection( fromOrgSuperiors, toOrgSuperiors ).isEmpty() )
@@ -2617,11 +2617,11 @@ public abstract class DefaultQueryService implements QueryService {
         return new ArrayList<Hierarchical>( roots );
     }
 
-    private static Set<Hierarchical> findRoots( Hierarchical hierarchical, Set<Hierarchical> visited ) {
+    private Set<Hierarchical> findRoots( Hierarchical hierarchical, Set<Hierarchical> visited ) {
         Set<Hierarchical> roots = new HashSet<Hierarchical>();
         if ( !visited.contains( hierarchical ) ) {
             visited.add( hierarchical );
-            List<? extends Hierarchical> superiors = hierarchical.getSuperiors();
+            List<? extends Hierarchical> superiors = hierarchical.getSuperiors( this );
             if ( superiors.isEmpty() ) {
                 roots.add( hierarchical );
             } else {

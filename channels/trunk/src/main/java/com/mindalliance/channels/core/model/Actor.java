@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import com.mindalliance.channels.core.Attachment.Type;
 import com.mindalliance.channels.core.Matcher;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -450,4 +451,16 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
     public boolean isAnyNumberOfParticipants() {
         return maxParticipation == -1;
     }
+
+    @Override
+    public List<? extends Hierarchical> getSuperiors( QueryService queryService ) {
+        if ( isType() ) {
+            return super.getSuperiors( queryService );
+        } else {
+            List<Hierarchical> superiors = new ArrayList<Hierarchical>();
+            superiors.addAll( queryService.findAllSupervisorsOf( this ) );
+            return superiors;
+        }
+    }
+
 }

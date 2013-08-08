@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 
 import java.util.ArrayList;
@@ -618,7 +619,7 @@ public abstract class ModelEntity extends ModelObject implements Hierarchical {
 
 
     @Override
-    public List<? extends Hierarchical> getSuperiors() {
+    public List<? extends Hierarchical> getSuperiors( QueryService queryService ) {
         List<ModelEntity> superiors = new ArrayList<ModelEntity>();
         if ( isType() ) {
             superiors.addAll( getTypes() );

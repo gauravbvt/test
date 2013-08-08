@@ -74,7 +74,7 @@ public class OrganizationStructurePanel extends AbstractCommandablePanel impleme
             } );
             tabs.add( new AbstractTab( new Model<String>( "Chart" ) ) {
                 public Panel getPanel( String id ) {
-                    return new OrgChartPanel(
+                    return new HierarchyPanel(
                             id,
                             new PropertyModel<Hierarchical>( OrganizationStructurePanel.this, "organization" ),
                             getExpansions(),

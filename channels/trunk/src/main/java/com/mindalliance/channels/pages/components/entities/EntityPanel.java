@@ -42,6 +42,7 @@ import com.mindalliance.channels.pages.components.entities.menus.EntityActionsMe
 import com.mindalliance.channels.pages.components.entities.network.EntityNetworkingPanel;
 import com.mindalliance.channels.pages.components.entities.participation.ActorParticipationPanel;
 import com.mindalliance.channels.pages.components.entities.participation.OrganizationParticipationPanel;
+import com.mindalliance.channels.pages.components.entities.structure.HierarchyPanel;
 import com.mindalliance.channels.pages.components.entities.structure.OrganizationStructurePanel;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.commons.collections.CollectionUtils;
@@ -82,6 +83,8 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
     public static final String ISSUES = "issues";
 
     public static final String STRUCTURE = "structure";
+
+    public static final String HIERARCHY = "hierarchy";
 
     public static final String PARTICIPATION = "participation";
     /**
@@ -169,6 +172,8 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
             return getEntityStructurePanel();
         } else if ( aspect.equals( PARTICIPATION ) ) {
             return getEntityParticipationPanel();
+        }  else if ( aspect.equals( HIERARCHY ) ) {
+            return getEntityHierarchyPanel();
         } else {
             // Should never happen
             throw new RuntimeException( "Unknown aspect " + aspect );
@@ -322,6 +327,18 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         }
     }
 
+    private Component getEntityHierarchyPanel() {
+        if ( getObject() instanceof Actor ) {
+            return new HierarchyPanel(
+                    "aspect",
+                    new PropertyModel<Actor>( this, "object" ),
+                    getExpansions(),
+                    PREFIX_DOM_IDENTIFIER );
+        } else {
+            return new Label( "aspect", "Not available" );
+        }
+    }
+
     private Component getEntityParticipationPanel() {
         if ( getObject() instanceof Organization ) {
             return new OrganizationParticipationPanel(
@@ -359,6 +376,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         }
         if ( (entity instanceof Actor || entity instanceof Organization) && entity.isActual() ) {
             allAspects.add( PARTICIPATION );
+            allAspects.add( HIERARCHY );
         }
         if ( entityHasAnalytics() )
             allAspects.add( ANALYTICS );

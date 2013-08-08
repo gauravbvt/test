@@ -1,5 +1,7 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.QueryService;
+
 import java.util.List;
 
 /**
@@ -16,5 +18,5 @@ public interface Hierarchical extends Identifiable {
      *
      * @return a list of hierarchical model objects
      */
-    List<? extends Hierarchical> getSuperiors();
+    List<? extends Hierarchical> getSuperiors( QueryService queryService );
 }

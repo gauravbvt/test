@@ -1,5 +1,6 @@
 package com.mindalliance.channels.core.model;
 
+import com.mindalliance.channels.core.query.QueryService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -394,9 +395,9 @@ public class Organization extends AbstractUnicastChannelable
     }
 
     @Override
-    public List<? extends Hierarchical> getSuperiors() {
+    public List<? extends Hierarchical> getSuperiors( QueryService queryService ) {
         if ( isType() ) {
-            return super.getSuperiors();
+            return super.getSuperiors( queryService );
         } else {
             List<Hierarchical> superiors = new ArrayList<Hierarchical>();
             if ( getParent() != null ) superiors.add( getParent() );

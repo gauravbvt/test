@@ -1,8 +1,8 @@
 package com.mindalliance.channels.engine.analysis.graph;
 
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import com.mindalliance.channels.core.model.Hierarchical;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
@@ -64,7 +64,7 @@ public class HierarchyGraphBuilder implements GraphBuilder<Hierarchical, Hierarc
                                 Hierarchical hierarchical ) {
         if ( !digraph.containsVertex( hierarchical ) ) {
             digraph.addVertex( hierarchical );
-            for ( Hierarchical superior : hierarchical.getSuperiors() ) {
+            for ( Hierarchical superior : hierarchical.getSuperiors( queryService ) ) {
                 populateGraph( digraph, superior );
                 digraph.addEdge( superior, hierarchical, new HierarchyRelationship( superior, hierarchical ) );
             }
