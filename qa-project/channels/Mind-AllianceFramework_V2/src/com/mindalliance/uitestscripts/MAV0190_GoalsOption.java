@@ -285,6 +285,7 @@ public class MAV0190_GoalsOption extends TestCase{
 	        this.testData.put("AddGoal",oXmlEleMAV0190_GoalsOption.getElementsByTagName("addGoal").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Type",oXmlEleMAV0190_GoalsOption.getElementsByTagName("type").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("SelectgoalFromListInTask",oXmlEleMAV0190_GoalsOption.getElementsByTagName("selectgoalFromListInTask").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AcheivedAtTheEnd",oXmlEleMAV0190_GoalsOption.getElementsByTagName("acheivedAtTheEnd").item(0).getChildNodes().item(0).getNodeValue());		
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAV0190_GoalsOption not found.");

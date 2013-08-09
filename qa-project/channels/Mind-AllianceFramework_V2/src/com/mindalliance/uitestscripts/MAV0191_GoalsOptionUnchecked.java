@@ -140,17 +140,16 @@ public class MAV0191_GoalsOptionUnchecked extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Click on 'Goals' link in task panel
-			stepNo++;
-			description="Goal Link in Task";
-			// Strench up form
-			planPage.clickStrenchUpForm();
-			planPage.clickGoalsLinkInTask();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+		
+ 		    // Click on 'Goals' link in task panel
+ 			stepNo++;
+ 			description="Goals Link";
+ 			planPage.clickGoalsLinkInTask();
+ 			// Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Add goal
+ 		 	// Add goal
 			stepNo++;
 			description="Add Goal";
 			planPage.addGoal(testData.get("AddGoal"),testData.get("SelectgoalFromList"),testData.get("Type"));
