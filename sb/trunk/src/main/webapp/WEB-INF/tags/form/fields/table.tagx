@@ -30,10 +30,10 @@
         <c:set var="adapter" scope="request" value="${adapterFactory.getFactoryFromList(data)}"/>
         
         <c:set var="columns" scope="request">
-            <c:forEach items="${adapter.propertyNames}" var="p">
-                { field: "<c:out value="${p}"/>",
+            <c:forEach items="${adapter.propertyNames}" var="p">{ field: "<c:out value="${p}"/>",
                 label: "<c:out value="${adapter.getDisplayName(p)}"/>",
-                hidden: <c:out value="${!adapter.isVisible(p)}"/>
+                hidden: <c:out value="${!adapter.isVisible(p)}"/>,
+                formatter: function(v) { return v; }
                 },
             </c:forEach>
         </c:set>
@@ -41,7 +41,7 @@
         <c:set var="rows" scope="request">
             <c:forEach items="${data}" var="row">
                 { <c:forEach items="${adapter.makeAdapter(row).iterator()}" var="format">
-                    <c:out value="${format.fieldName}"/>: <c:out value="${format.javascriptValue}" escapeXml="false"/>,      
+                    <c:out value="${format.fieldName}"/>: <c:out value="${format.htmlValue}" escapeXml="false"/>,      
                 </c:forEach>},                       
             </c:forEach>
         </c:set>
@@ -52,8 +52,8 @@
                             "dgrid/extensions/ColumnHider", "dgrid/extensions/ColumnReorder" ],
                         function(declare, Grid, Selection, ColumnResizer, ColumnHider, ColumnReorder){
                             var grid = declare([Grid, Selection, ColumnResizer, ColumnHider, ColumnReorder])({
-                                                                                                                 selectionMode: "single",
-                                                                                                                 columns: [ ${columns} ] }, "${id}");
+                                     selectionMode: "single",
+                                     columns: [ ${columns} ] }, "${id}");
                             grid.renderArray([ ${rows} ]);
                             grid.on("dgrid-select", function(event){
                                 var rows = event.rows;

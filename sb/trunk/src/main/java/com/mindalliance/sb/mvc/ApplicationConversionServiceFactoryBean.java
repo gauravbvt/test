@@ -2,7 +2,6 @@ package com.mindalliance.sb.mvc;
 
 import com.mindalliance.sb.model.NamedObject;
 import com.mindalliance.sb.model.PrintableObject;
-import com.mindalliance.sb.model.SuperbowlPlan;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -42,21 +42,17 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
         registry.addConverter( new Converter<Calendar, String>() {
             @Override
             public String convert( Calendar source ) {
-                return new SimpleDateFormat( "M/dd/yyyy HH:mm:ssZ", Locale.getDefault() )
+                return new SimpleDateFormat( "M/dd/yyyy HH:mm:ss",
+                                             Locale.getDefault() )
                     .format( source.getTime() );
             }
         } );
-        registry.addConverter( getSuperbowlPlanToStringConverter() );
-
-
-    }
-
-    public Converter<SuperbowlPlan, String> getSuperbowlPlanToStringConverter() {
-        return new Converter<SuperbowlPlan, String>() {
+        registry.addConverter( new Converter<Date, String>() {
             @Override
-            public String convert(SuperbowlPlan source ) {
-                return source.getRespondent().getOrganization().toString();
+            public String convert( Date source ) {
+                return new SimpleDateFormat( "M/dd/yyyy", Locale.getDefault() )
+                    .format( source );
             }
-        };
+        } );
     }
 }

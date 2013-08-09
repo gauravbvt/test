@@ -52,7 +52,7 @@
             <name>Mike Kelly</name>
             <email>mike@mind-alliance.com</email>
             <roles>
-                <role>Surver editor</role>
+                <role>Survey editor</role>
             </roles>
             <timezone>-4</timezone>
         </contributor>
@@ -365,6 +365,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>1.6</version>
@@ -561,9 +566,9 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.1.4.v20120524</version>
                 <configuration>
-                    <webAppConfig>
+                    <webApp>
                         <contextPath>/${project.name}</contextPath>
-                    </webAppConfig>
+                    </webApp>
                 </configuration>
             </plugin>
         </plugins>

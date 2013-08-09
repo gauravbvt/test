@@ -10,6 +10,7 @@ import org.springframework.roo.addon.json.RooJson;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -37,7 +38,7 @@ public class SurveyResponse {
 
     private final boolean test;
     
-    private final Date dateSubmitted;
+    private final Calendar dateSubmitted;
     
     private final String comment;
 
@@ -52,13 +53,15 @@ public class SurveyResponse {
         id = Integer.parseInt( rawResponse.get( "id" ).toString() );
         status = rawResponse.get( "status" ).toString();
         test = "1".equals( rawResponse.get( "is_test_data" ) );
-        dateSubmitted = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US )
-                                .parse( rawResponse.get( "datesubmitted" ).toString() );
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US )
+                              .parse( rawResponse.get( "datesubmitted" ).toString() ) );
+        dateSubmitted = calendar;
         comment = rawResponse.get( "sResponseComment" ).toString();
 
         // A little unorthodox, but just to make sure we handle everything...
         for ( String key : new String[]{ 
-            "id","status","is_test_data","datesubmitted","contact_id","sResponseComment",
+            "id","responseID","status","is_test_data","datesubmitted","contact_id","sResponseComment",
             "sCustom1","sCustom2","sCustom3","sCustom4","sCustom5","sCustom6","sCustom7","sCustom8","sCustom9","sCustom10", } )
                 rawResponse.remove( key );
 
@@ -132,7 +135,7 @@ public class SurveyResponse {
     }
 
     public Date getDateSubmitted() {
-        return (Date) dateSubmitted.clone();
+        return dateSubmitted.getTime();
     }
 
     public int getId() {

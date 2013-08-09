@@ -10,7 +10,7 @@ import java.util.List;
 @RooJavaBean
 @RooDbManaged(automaticallyDelete = true)
 @RooJpaActiveRecord(versionField = "", table = "contact_info", finders = { "findContactInfoesByEmailEquals" })
-@JsonPropertyOrder({ "prefix", "firstName", "lastName", "email", "landline", "mobile", "organization", "title", "supervisor" })
+@JsonPropertyOrder({ "firstName", "lastName", "organization", "title", "email", "landline" })
 public class ContactInfo implements PrintableObject {
 
     public static com.mindalliance.sb.model.ContactInfo findOrCreate(String fullName, String title, String email, Organization organization) {

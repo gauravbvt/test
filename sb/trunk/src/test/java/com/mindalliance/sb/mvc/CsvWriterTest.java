@@ -22,26 +22,23 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration( locations= "/META-INF/spring/applicationContext-test.xml" )
+@RunWith( SpringJUnit4ClassRunner.class )
+@ContextConfiguration( locations = "/META-INF/spring/applicationContext-test.xml" )
 public class CsvWriterTest {
 
     @Autowired
     private FormatAdapterFactoryService factoryService;
 
-    private static final String HEADER = "Id,Name,Acronym,Type,Added,Url,Parent,Logo,Disciplines,Contacts,Incident Systems,Organizations";
+    private static final String HEADER = "Id,Name,Acronym,Type,Added,Url,Parent,Disciplines,Contacts,Incident Systems,Organizations";
 
     @Test
     public void testEmptyList() throws IOException {
-        compareCsvLines( new ArrayList<Organization>(),
-                         HEADER );
+        compareCsvLines( new ArrayList<Organization>(), HEADER );
     }
 
     @Test
     public void testBlank() throws IOException {
-        compareCsvLines( Arrays.asList( new Organization() ), 
-                         HEADER, 
-                         ",,,,,,,,,,,"  );
+        compareCsvLines( Arrays.asList( new Organization() ), HEADER, ",,,,,,,,,," );
     }
 
     @Test
@@ -54,10 +51,10 @@ public class CsvWriterTest {
         org1.persist();
 
         org1.setContactInfoes( new LinkedHashSet<ContactInfo>( Arrays.asList( 
-            org1.addContact( "John Q. Public", "VP", "jqp@bla.com" ), 
+            org1.addContact( "John Q. Public", "VP", "jqp@bla.com" ),
             org1.addContact( "Jane Doe", "CEO", "jd@bla.com" ) ) ) );
         Calendar calendar = Calendar.getInstance();
-        calendar.set( 2013, Calendar.JULY, 2, 14,30,27 );
+        calendar.set( 2013, Calendar.JULY, 2, 14, 30, 27 );
         org1.setAdded( calendar );
 
         Organization org2 = new Organization();
@@ -68,17 +65,17 @@ public class CsvWriterTest {
         org2.persist();
         org2.setAdded( calendar );
 
-
-        compareCsvLines( Arrays.asList( org1, org2 ), 
-                         HEADER, 
-                         "1,\"Bla Inc\",\"BI\",\"Tribal Government\",7/02/2013 14:30:27-0400,\"http://bla.com\",,,,\"John Q. Public <jqp@bla.com>, Jane Doe <jd@bla.com>\",,",
-                         "2,\"Big \"\"Bad\"\" Corp\",\"BC\",\"Local Government\",7/02/2013 14:30:27-0400,,\"Bla Inc (BI)\",,,,,");
+        compareCsvLines( Arrays.asList( org1, org2 ),
+                         HEADER,
+                         "1,Bla Inc,BI,Tribal Government,7/02/2013 14:30:27,http://bla.com,,,\"John Q. Public <jqp@bla.com>, Jane Doe <jd@bla.com>\",,",
+                         "2,\"Big \"\"Bad\"\" Corp\",BC,Local Government,7/02/2013 14:30:27,,Bla Inc (BI),,,," );
     }
 
     private void compareCsvLines( List<Organization> list, String... lines ) throws IOException {
         StringWriter stringWriter = new StringWriter();
-        new CsvWriter<Organization>( list, factoryService.getFactory( Organization.class ) )
-            .output( new PrintWriter( stringWriter ) );
+        FormatAdapterFactory<Organization> formatterFactory = factoryService.getFactory( Organization.class );
+        final CsvWriter<Organization> csvWriter = new CsvWriter<Organization>( list, formatterFactory );
+        csvWriter.output( new PrintWriter( stringWriter ), formatterFactory );
 
         BufferedReader reader = new BufferedReader( new StringReader( stringWriter.toString() ) );
 

@@ -2,21 +2,26 @@ package com.mindalliance.sb.mvc;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.PluralAttribute;
 import java.beans.PropertyDescriptor;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -81,12 +86,12 @@ public class FormatAdapterFactory<T> {
 
     private boolean isConvertible( PropertyDescriptor descriptor ) {
         Class<?> propertyType = descriptor.getPropertyType();
-        return conversionService.canConvert( 
-            Collection.class.isAssignableFrom( propertyType ) ?
-                ( (PluralAttribute) entityType.getAttribute( descriptor.getName() ) ).getElementType().getJavaType() 
-              : propertyType, 
-            
-            String.class );
+        if ( Collection.class.isAssignableFrom( propertyType ) )
+            propertyType = ( (PluralAttribute) entityType.getAttribute( descriptor.getName() ) )
+                                .getElementType().getJavaType();
+
+        return !( propertyType.isArray() && propertyType.getComponentType().equals( Byte.TYPE ) )
+            && conversionService.canConvert( propertyType, String.class );
     }
 
     /**
@@ -158,6 +163,33 @@ public class FormatAdapterFactory<T> {
 
     public Class<T> getObjectClass() {
         return objectClass;
+    }
+
+    public void outputCsv( PrintWriter out, Iterable<T> objects ) {
+        // Output headers
+        boolean first = true;
+        for ( String propertyName : propertyNames ) {
+            if ( !first )
+                out.print( ',' );
+            first = false;
+            out.print( getDisplayName( propertyName ) );
+        }
+        out.println();
+
+        // Output rows
+        for ( T object : objects ) {
+            first = true;
+            for ( FormattedValue value : makeAdapter( object ) ) {
+                if ( !first )
+                    out.print( ',' );
+                first = false;
+
+                if ( !value.isNull() )
+                    out.print( StringEscapeUtils.escapeCsv( value.getValue() ) );
+            }
+            out.println();
+        }
+        out.flush();
     }
 
     //=================================================
@@ -243,10 +275,19 @@ public class FormatAdapterFactory<T> {
             
             @Override
             public String getValue() {
-                return fieldValue == null ? "" 
-                     : conversionService.convert( fieldValue, String.class );
+                return convertedValue( fieldValue );
             }
-            
+
+            private String convertedValue( Object value ) {
+                if ( value != null ) {
+                    String converted = conversionService.convert( value, String.class );
+                    if ( converted != null )
+                        return converted;
+                }
+
+                return "";
+            }
+
             @Override
             public boolean isNull() {
                 return fieldValue == null;
@@ -259,6 +300,7 @@ public class FormatAdapterFactory<T> {
                 
                 Class<?> aClass = fieldValue.getClass();
                 return Calendar.class.isAssignableFrom( aClass )
+                    || Date.class.isAssignableFrom( aClass )
                     || String.class.isAssignableFrom( aClass )
                     || !BeanUtils.isSimpleProperty( aClass );
             }
@@ -268,22 +310,33 @@ public class FormatAdapterFactory<T> {
                 String chars = getValue();
                 if ( isQuotable() ) {
                     StringBuilder out = new StringBuilder( chars.length() + 2 );
-
-                    // TODO make this more efficient
                     out.append( '"' );
-                    for ( int i = 0; i < chars.length(); i++ ) {
-                        char c = chars.charAt( i );
-                        if ( c == '"' )
-                            out.append( "\\\"" );
-                        else
-                            out.append( c );
-                    }
+                    out.append( StringEscapeUtils.escapeJava( chars ) );
                     out.append( '"' );
 
                     return out.toString();
                 }
                 
                 return chars;
+            }
+            
+            @Override
+            public String getHtmlValue() {
+                if ( fieldValue == null || !Collection.class.isAssignableFrom( fieldValue.getClass() ) )
+                    return getJavascriptValue();
+
+                StringWriter stringWriter = new StringWriter();
+                
+                PrintWriter writer = new PrintWriter( stringWriter );
+                writer.println( "<ul>" );
+                for ( Object o : (Collection<?>) fieldValue ) {
+                    writer.print( "    <li>" ); 
+                    writer.print(  HtmlUtils.htmlEscape( convertedValue( o ) ) );
+                    writer.println( "</li>" );
+                }                
+                writer.println( "</ul>" );
+
+                return '"' + StringEscapeUtils.escapeJava( stringWriter.toString() ) + '"';
             }
             
             @Override

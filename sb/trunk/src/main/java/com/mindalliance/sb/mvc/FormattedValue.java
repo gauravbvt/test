@@ -20,4 +20,6 @@ public interface FormattedValue {
     boolean isQuotable();
 
     String getJavascriptValue();
+
+    String getHtmlValue();
 }

@@ -2,7 +2,6 @@ package com.mindalliance.sb.mvc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -10,11 +9,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * CSV writer for objects of a class annotated with @JsonPropertyOrder. Only the properties specified, in the order
@@ -42,7 +39,7 @@ public class CsvWriter<T> {
 
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            output( new PrintWriter( new OutputStreamWriter( buffer, Charset.forName( "UTF8" ) ) ) );
+            output( new PrintWriter( new OutputStreamWriter( buffer, Charset.forName( "UTF8" ) ) ), formatterFactory );
 
             response.setDateHeader( "Date", System.currentTimeMillis() );
             response.setDateHeader( "Last-Modified", timeInMillis );
@@ -60,55 +57,7 @@ public class CsvWriter<T> {
         }
     }
 
-    public void output( PrintWriter out ) {
-        Set<String> propertyNames = formatterFactory.getPropertyNames();
-
-        // Output headers
-        boolean first = true;
-        for ( String propertyName : propertyNames ) {
-            if ( !first )
-                out.print( ',' );
-            first = false;
-            out.print( formatterFactory.getDisplayName( propertyName ) );
-        }
-        out.println();
-
-        // Output rows
-        for ( T object : objects ) {
-            first = true;
-            for ( FormattedValue value : formatterFactory.makeAdapter( object ) ) {
-                if ( !first )
-                    out.print( ',' );
-                first = false;
-
-                if ( !value.isNull() ) {
-                    if ( isQuotable( value.getFieldValue().getClass() ) )
-                        outputQuoted( out, value.getValue() );
-                    else
-                        out.print( value.getValue() );
-                }
-            }
-            out.println();
-        }
-        out.flush();
-    }
-
-    public static boolean isQuotable( Class<?> aClass ) {
-        return !Calendar.class.isAssignableFrom( aClass )
-            && ( String.class.isAssignableFrom( aClass )
-                 || !BeanUtils.isSimpleProperty( aClass ) );
-    }
-
-    private static void outputQuoted( PrintWriter out, CharSequence chars ) {
-        // TODO make this more efficient
-        out.print( '"' );
-        for ( int i = 0; i < chars.length(); i++ ) {
-            char c = chars.charAt( i );
-            if ( c == '"' )
-                out.print( "\"\"" );
-            else
-                out.print( c );
-        }
-        out.print( '"' );
+    public void output( PrintWriter out, FormatAdapterFactory<T> formatterFactory ) {
+        formatterFactory.outputCsv( out, objects );
     }
 }

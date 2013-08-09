@@ -12,14 +12,10 @@
 			<spring:message code="menu_category_${fn:toLowerCase(fn:substringAfter(id,'_'))}_label" var="label" htmlEscape="false"/>
 		</c:if>
 		
-		<li id="${fn:escapeXml(id)}">
-			<h2>
-				<c:out value="${label}" />
-			</h2>
+		<div data-dojo-type="dijit/layout/ContentPane" title="${label}" id="${fn:escapeXml(id)}">
 			<ul>
 				<jsp:doBody />
 			</ul>
-		</li>
-	
+		</div>
 	</c:if>
 </jsp:root>

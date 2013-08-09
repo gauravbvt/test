@@ -34,7 +34,7 @@ public class FormatAdapterFactoryTest {
 
     private final String[] orgFields = { 
                           "id", "name", "acronym", "type", "added",
-                          "url", "parent", "logo", "disciplines", 
+                          "url", "parent", "disciplines", 
                           "contactInfoes", "incidentSystems", "organizations" };
 
     @Before
