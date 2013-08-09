@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.NumberTextField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class ActorParticipationPanel extends AbstractCommandablePanel implements
     private Label participantLabel;
     private String cardinalityChoice;
 
-    public ActorParticipationPanel( String id, PropertyModel<Actor> actorModel, Set<Long> expansions ) {
+    public ActorParticipationPanel( String id, IModel<Actor> actorModel, Set<Long> expansions ) {
         super( id, actorModel, expansions );
         init();
     }

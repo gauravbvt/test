@@ -14,6 +14,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
     private AjaxCheckBox placeHolderCheckbox;
 
 
-    public OrganizationParticipationPanel( String id, PropertyModel<Organization> organizationModel, Set<Long> expansions ) {
+    public OrganizationParticipationPanel( String id, IModel<Organization> organizationModel, Set<Long> expansions ) {
         super( id, organizationModel, expansions );
         init();
     }

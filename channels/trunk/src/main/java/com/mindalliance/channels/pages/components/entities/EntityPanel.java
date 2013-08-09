@@ -372,10 +372,11 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         }
         if ( entity instanceof Organization && entity.isActual() ) {
             allAspects.add( STRUCTURE );
-           // allAspects.add( AGREEMENTS );
         }
         if ( (entity instanceof Actor || entity instanceof Organization) && entity.isActual() ) {
             allAspects.add( PARTICIPATION );
+        }
+        if ( entity instanceof Actor && entity.isActual() ) {
             allAspects.add( HIERARCHY );
         }
         if ( entityHasAnalytics() )

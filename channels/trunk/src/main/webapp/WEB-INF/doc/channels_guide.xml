@@ -1507,6 +1507,24 @@ The custodian of a placeholder organization an the agent authorized to register 
                 <next section="profiling" topic="profiling-agent"/>
                 <next section="profiling" topic="agent-participation"/>
             </topic>
+            <topic id="organization-chart">
+                <name>Organization chart</name>
+                <item>
+                    <description>This diagram shows how this organizations fits within a hierarchy of parent organizations.
+
+                        Selecting an organization opens its profile. </description>
+                    <script>
+                        <action>Open organization chart</action>
+                        <change>
+                            <subjectPath>guide.anyActualOrganization</subjectPath>
+                            <type>Expanded</type>
+                            <property>hierarchy</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="organization"/>
+                <next section="profiling" topic="profiling-organization"/>
+            </topic>
             <topic id="profiling-role">
                 <name>Profile a role</name>
                 <item>
@@ -1617,6 +1635,26 @@ Participation can be anonymous, in which case the names and contact information 
                 <next section="profiling" topic="agent"/>
                 <next section="profiling" topic="profiling-organization"/>
                 <next section="profiling" topic="organization-participation"/>
+            </topic>
+            <topic id="agent-hierarchy">
+                <name>Agent hierarchy</name>
+                <item>
+                    <description>This diagram shows how this agent fits within a hierarchy of supervisors.
+
+Selecting an agent opens its profile. </description>
+                    <script>
+                        <action>Open agent participation</action>
+                        <change>
+                            <subjectPath>guide.anyActualAgent</subjectPath>
+                            <type>Expanded</type>
+                            <property>hierarchy</property>
+                        </change>
+                    </script>
+                </item>
+                <next section="concepts" topic="agent"/>
+                <next section="profiling" topic="agent"/>
+                <next section="profiling" topic="profiling-agent"/>
+                <next section="profiling" topic="profiling-organization"/>
             </topic>
             <topic id="profiling-place">
                 <name>Profile a place</name>
@@ -1998,7 +2036,7 @@ The meaning of a plan boils down to the task assignments and consequent sharing 
 
 Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the checklists computed from a plan, and thus its meaning.
                 
-Taxonomies are defined implictly by categorizing individual entities. The best way to verify that taxonomies are correct is to visualize them.
+Taxonomies are defined implicitly by categorizing individual entities. The best way to verify that taxonomies are correct is to visualize them.
                 </description>
                     <script>
                         <action>View taxonomies</action>
