@@ -226,9 +226,9 @@ public class Home {
 		suite.addTestSuite(MAC0021_CopyTask.class);
 		suite.addTestSuite(MAC0023_UndoAddInfoNeed.class);
 		suite.addTestSuite(MAC0024_UndoAddInfoCapability.class);
-////		suite.addTestSuite(MAC0025_UndoRemoveFlow.class);
-////		suite.addTestSuite(MAC0026_UndoDuplicateFlow.class);
-//		suite.addTestSuite(MAC0031_RedoAddSegment.class);
+		suite.addTestSuite(MAC0025_UndoRemoveFlow.class);
+		suite.addTestSuite(MAC0026_UndoDuplicateFlow.class);
+		suite.addTestSuite(MAC0031_RedoAddSegment.class);
 //		suite.addTestSuite(MAC0033_RedoAddGoal.class);
 //		suite.addTestSuite(MAC0034_RedoRemoveGoal.class);
 //		suite.addTestSuite(MAC0035_RedoAddNewTask.class);
