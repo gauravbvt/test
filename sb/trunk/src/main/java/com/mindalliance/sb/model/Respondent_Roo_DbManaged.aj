@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 privileged aspect Respondent_Roo_DbManaged {
@@ -36,9 +36,9 @@ privileged aspect Respondent_Roo_DbManaged {
 
     @Column(name = "submitted", columnDefinition = "DATE")
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @DateTimeFormat(style = "MM")
-    private Calendar Respondent.submitted;
+    private Date Respondent.submitted;
 
     @Column(name = "problems", columnDefinition = "TEXT")
     private String Respondent.problems;
@@ -165,11 +165,11 @@ privileged aspect Respondent_Roo_DbManaged {
         this.comments = comments;
     }
     
-    public Calendar Respondent.getSubmitted() {
+    public Date Respondent.getSubmitted() {
         return submitted;
     }
     
-    public void Respondent.setSubmitted(Calendar submitted) {
+    public void Respondent.setSubmitted(Date submitted) {
         this.submitted = submitted;
     }
     

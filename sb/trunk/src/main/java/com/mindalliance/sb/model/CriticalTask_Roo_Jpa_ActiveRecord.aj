@@ -3,11 +3,11 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.CriticalTask;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 privileged aspect CriticalTask_Roo_Jpa_ActiveRecord {
     
@@ -25,7 +25,7 @@ privileged aspect CriticalTask_Roo_Jpa_ActiveRecord {
     }
     
     public static List<CriticalTask> CriticalTask.findAllCriticalTasks() {
-        return entityManager().createQuery("SELECT o FROM CriticalTask o", CriticalTask.class).getResultList();
+        return entityManager().createQuery("SELECT o FROM CriticalTask o ORDER BY o.description", CriticalTask.class).getResultList();
     }
     
     public static CriticalTask CriticalTask.findCriticalTask(Integer id) {

@@ -117,7 +117,7 @@ public class SurveyResponse {
         Respondent result = new Respondent();
         result.setContactInfo( new ContactInfo() );
         result.setId( id );
-        result.setSubmitted( dateSubmitted );
+        result.setSubmitted( dateSubmitted.getTime() );
         result.setComments( comment );
         
         // Set an initial survey opinion of "Just right"

@@ -136,14 +136,9 @@ div#_menu.dijitAccordionContainer {
 }
 
 #menu ul, #menu ol {
-    margin: 0 0 0 0;
-    padding: 0;
-    list-style: none;
-}
-
-#menu ul ul {
     list-style: decimal outside none;
-    margin-left: 18px;
+    margin: 0;
+    padding: 0 0 0 20px;
 }
 
 #menu li {
@@ -367,7 +362,7 @@ td.dgrid-cell ul li {
     width: 32px;
 }
 
-.field-description, .field-criticalTasks { 
+.field-description, .field-criticalTasks, .field-organization, .field-respondents { 
     width: 200%;
 }
 
@@ -376,5 +371,14 @@ td.dgrid-cell ul li {
 }
 
 .field-added, .field-submitted {
-    width: 104px;
+    width: 120px;
 }
+
+.field-landline, .field-mobile {
+    width: 100px;
+}
+
+.field-email {
+    width: 170px;
+}
+

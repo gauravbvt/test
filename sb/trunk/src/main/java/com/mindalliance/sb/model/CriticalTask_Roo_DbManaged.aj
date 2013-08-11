@@ -3,15 +3,12 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.CoreCapability;
-import com.mindalliance.sb.model.CriticalTask;
-import com.mindalliance.sb.model.IncidentTask;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.Set;
 
 privileged aspect CriticalTask_Roo_DbManaged {
     
@@ -28,10 +25,7 @@ privileged aspect CriticalTask_Roo_DbManaged {
     @ManyToOne
     @JoinColumn(name = "parent", referencedColumnName = "id", insertable = false, updatable = false)
     private CriticalTask CriticalTask.parent;
-    
-    @Column(name = "name", length = 127)
-    private String CriticalTask.name;
-    
+        
     @Column(name = "type", length = 127)
     private String CriticalTask.type;
     
@@ -68,14 +62,6 @@ privileged aspect CriticalTask_Roo_DbManaged {
     
     public void CriticalTask.setParent(CriticalTask parent) {
         this.parent = parent;
-    }
-    
-    public String CriticalTask.getName() {
-        return name;
-    }
-    
-    public void CriticalTask.setName(String name) {
-        this.name = name;
     }
     
     public String CriticalTask.getType() {

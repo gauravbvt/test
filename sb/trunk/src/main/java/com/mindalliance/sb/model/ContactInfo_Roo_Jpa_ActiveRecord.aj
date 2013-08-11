@@ -3,11 +3,11 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.ContactInfo;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 privileged aspect ContactInfo_Roo_Jpa_ActiveRecord {
     
@@ -25,7 +25,7 @@ privileged aspect ContactInfo_Roo_Jpa_ActiveRecord {
     }
     
     public static List<ContactInfo> ContactInfo.findAllContactInfoes() {
-        return entityManager().createQuery("SELECT o FROM ContactInfo o", ContactInfo.class).getResultList();
+        return entityManager().createQuery("SELECT o FROM ContactInfo o ORDER BY o.lastName, o.firstName", ContactInfo.class).getResultList();
     }
     
     public static ContactInfo ContactInfo.findContactInfo(Integer id) {

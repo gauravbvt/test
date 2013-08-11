@@ -1,5 +1,6 @@
 package com.mindalliance.sb.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.dbre.RooDbManaged;
@@ -11,6 +12,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJpaActiveRecord(identifierType = RespondentSubcommitteePK.class, versionField = "", table = "respondent_subcommittee")
 @RooDbManaged(automaticallyDelete = true)
+@JsonPropertyOrder({"respondent","subcommittee","inCharge"})
 public class RespondentSubcommittee {
 
     private static final Logger LOG = LoggerFactory.getLogger(RespondentSubcommittee.class);

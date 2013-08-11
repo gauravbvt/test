@@ -322,21 +322,29 @@ public class FormatAdapterFactory<T> {
             
             @Override
             public String getHtmlValue() {
-                if ( fieldValue == null || !Collection.class.isAssignableFrom( fieldValue.getClass() ) )
-                    return getJavascriptValue();
+                String input;
 
-                StringWriter stringWriter = new StringWriter();
+                if ( fieldValue != null 
+                    && Collection.class.isAssignableFrom( fieldValue.getClass() )
+                    && ( (Collection<?>) fieldValue ).size() > 1 ) {
+
+                    StringWriter stringWriter = new StringWriter();
+
+                    PrintWriter writer = new PrintWriter( stringWriter );
+                    writer.println( "<ul>" );
+                    for ( Object o : (Collection<?>) fieldValue ) {
+                        writer.print( "    <li>" );
+                        writer.print( HtmlUtils.htmlEscape( convertedValue( o ) ) );
+                        writer.println( "</li>" );
+                    }
+                    writer.println( "</ul>" );
+
+                    input = stringWriter.toString();
+
+                } else
+                    input = convertedValue( fieldValue );
                 
-                PrintWriter writer = new PrintWriter( stringWriter );
-                writer.println( "<ul>" );
-                for ( Object o : (Collection<?>) fieldValue ) {
-                    writer.print( "    <li>" ); 
-                    writer.print(  HtmlUtils.htmlEscape( convertedValue( o ) ) );
-                    writer.println( "</li>" );
-                }                
-                writer.println( "</ul>" );
-
-                return '"' + StringEscapeUtils.escapeJava( stringWriter.toString() ) + '"';
+                return '"' + StringEscapeUtils.escapeJava( input ) + '"';
             }
             
             @Override

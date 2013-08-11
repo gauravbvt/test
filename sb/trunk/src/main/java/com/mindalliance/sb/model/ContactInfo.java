@@ -1,10 +1,13 @@
 package com.mindalliance.sb.model;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import net.fortuna.ical4j.vcard.Property;
+import net.fortuna.ical4j.vcard.VCard;
 import org.springframework.roo.addon.dbre.RooDbManaged;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RooJavaBean
@@ -58,5 +61,16 @@ public class ContactInfo implements PrintableObject {
                 setLastName(name.substring(end + 1, name.length()));
             } else setLastName(name);
         }
+    }
+
+    /**
+     * Convert to a VCard.
+     * @return a VCard
+     */
+    public VCard asVCard() {
+        List<Property> properties = Arrays.asList(
+        );
+        
+        return new VCard( properties );    
     }
 }

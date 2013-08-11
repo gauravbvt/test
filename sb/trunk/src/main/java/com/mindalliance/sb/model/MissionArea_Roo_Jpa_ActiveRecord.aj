@@ -3,11 +3,11 @@
 
 package com.mindalliance.sb.model;
 
-import com.mindalliance.sb.model.MissionArea;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 privileged aspect MissionArea_Roo_Jpa_ActiveRecord {
     
@@ -25,7 +25,7 @@ privileged aspect MissionArea_Roo_Jpa_ActiveRecord {
     }
     
     public static List<MissionArea> MissionArea.findAllMissionAreas() {
-        return entityManager().createQuery("SELECT o FROM MissionArea o", MissionArea.class).getResultList();
+        return entityManager().createQuery("SELECT o FROM MissionArea o ORDER BY o.name", MissionArea.class).getResultList();
     }
     
     public static MissionArea MissionArea.findMissionArea(Integer id) {

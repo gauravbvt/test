@@ -10,6 +10,7 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RooJavaBean
@@ -23,6 +24,12 @@ import java.util.List;
 public class Organization implements PrintableObject {
 
     private static final Logger LOG = LoggerFactory.getLogger( Organization.class );
+    
+    public static Organization findOrCreate( String orgName, Date submitted ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( submitted );
+        return findOrCreate( orgName, calendar );
+    }
 
     public static Organization findOrCreate( String orgName, Calendar submitted ) {
         if ( orgName == null )
