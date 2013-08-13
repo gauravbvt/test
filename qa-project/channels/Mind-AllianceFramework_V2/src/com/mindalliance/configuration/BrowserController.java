@@ -22,7 +22,10 @@ public class BrowserController{
 	 * @param  browser		Mozilla Firefox / Chrome / Internet Explorer
 	 * @throws UIAutomationException 
 	*/
-	//@SuppressWarnings("deprecation")
+
+	
+
+	
 	public void initializeDriver() throws UIAutomationException	{
 		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
 		try{

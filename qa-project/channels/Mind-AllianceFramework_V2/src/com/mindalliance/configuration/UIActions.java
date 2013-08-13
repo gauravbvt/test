@@ -21,6 +21,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * performed in the UI throughout the application. 
  * @author AFourTech
  */
+
 public class UIActions {
 	
 	public static void scrollDown(){
