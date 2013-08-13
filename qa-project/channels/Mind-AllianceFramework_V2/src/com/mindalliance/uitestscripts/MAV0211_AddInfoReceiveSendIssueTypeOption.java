@@ -32,6 +32,7 @@ import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
 
+
 public class MAV0211_AddInfoReceiveSendIssueTypeOption extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAV0211_AddInfoReceiveSendIssueTypeOption";

@@ -50,7 +50,7 @@ public class MAP0005_DeletePlan extends TestCase {
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -129,7 +129,10 @@ public class MAP0005_DeletePlan extends TestCase {
 			stepNo++;
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
-			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
+			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
+			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
+			channelsAdmin.clickSavePlanButton();
+		
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

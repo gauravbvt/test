@@ -38,6 +38,7 @@ import com.mindalliance.pages.PlanPage;
  * @author afour
  * 
  */
+
 public class MAC0001_UndoAddSegment extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0001_UndoAddSegment";

@@ -32,6 +32,7 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+
 public class MAV0207_AddInfoReceiveSendChannelsOptions extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAV0207_AddInfoReceiveSendChannelsOptions";

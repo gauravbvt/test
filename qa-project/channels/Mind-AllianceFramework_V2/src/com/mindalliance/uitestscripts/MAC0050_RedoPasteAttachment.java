@@ -37,6 +37,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
+
 public class MAC0050_RedoPasteAttachment extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0050_RedoPasteAttachment";

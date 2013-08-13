@@ -37,6 +37,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
+
 public class MAC0037_RedoPasteTaskUsingCut extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0037_RedoPasteTaskUsingCut";

@@ -39,6 +39,7 @@ import com.mindalliance.pages.PlanPage;
  * @author afour
  * 
  */
+
 public class MAC0003_UndoAddGoal extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0003_UndoAddGoal";

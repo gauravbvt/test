@@ -38,6 +38,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
+
 public class MAC0024_UndoAddInfoCapability extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0024_UndoAddInfoCapability";

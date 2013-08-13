@@ -34,6 +34,7 @@ import com.mindalliance.pages.LoginPage;
  * @author Afour
  *
  */
+
 public class CL0009_LogInvalidUserName extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="CL0009_LogInvalidUserName";

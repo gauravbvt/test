@@ -38,6 +38,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
+
 public class MAC0012_UndoMoveTask extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0012_UndoMoveTask";

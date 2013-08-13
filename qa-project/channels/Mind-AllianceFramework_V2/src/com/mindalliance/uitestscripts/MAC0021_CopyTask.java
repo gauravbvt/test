@@ -32,6 +32,7 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+
 public class MAC0021_CopyTask extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0021_CopyTask";

@@ -31,6 +31,7 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+
 public class MAV0253_ViewRequirementDuring extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAV0253_ViewRequirementDuring";

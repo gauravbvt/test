@@ -37,6 +37,7 @@ import com.mindalliance.pages.PlanPage;
  * 	   Summary: Verify that user is able to undo the task which was pasted using cut command
  * @author afour 
  */
+
 public class MAC0007_UndoPasteTaskUsingCut extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0007_UndoPasteTaskUsingCut";

@@ -37,6 +37,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
+
 public class MAC0039_RedoDuplicateTask extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0039_RedoDuplicateTask";

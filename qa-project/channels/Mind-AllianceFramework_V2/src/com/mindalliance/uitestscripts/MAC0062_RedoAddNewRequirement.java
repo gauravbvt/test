@@ -37,6 +37,7 @@ import junit.framework.TestCase;
  * @author AFour
  * 
  */
+
 public class MAC0062_RedoAddNewRequirement extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAC0062_RedoAddNewRequirement";

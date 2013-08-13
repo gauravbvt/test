@@ -32,6 +32,7 @@ import com.mindalliance.pages.PlanPage;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+
 public class MAV0208_AddInfoReceiveSendWithin extends TestCase{
 	public Hashtable<String, String> testData;
 	public String testCaseId="MAV0208_AddInfoReceiveSendWithin";

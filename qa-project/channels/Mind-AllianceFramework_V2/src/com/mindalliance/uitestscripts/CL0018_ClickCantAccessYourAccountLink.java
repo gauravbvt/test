@@ -34,6 +34,7 @@ import com.mindalliance.pages.LoginPage;
  * @author Afour
  *
  */
+
 public class CL0018_ClickCantAccessYourAccountLink extends TestCase {
 
 	public Hashtable<String, String> testData;
