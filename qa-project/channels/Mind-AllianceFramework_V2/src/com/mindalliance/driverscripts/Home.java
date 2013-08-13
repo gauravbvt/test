@@ -177,11 +177,11 @@ public class Home {
 //		
 ////		Plan
 //		
-//		suite.addTestSuite(MAP0001_AddPlan.class);
+		suite.addTestSuite(MAP0001_AddPlan.class);
 //		suite.addTestSuite(MAP0002_AddNameAndLocalizePlan.class);
 //		suite.addTestSuite(MAP0003_AddNewUserToPlan.class);
 //		suite.addTestSuite(MAP0004_DeleteUser.class);
-//		suite.addTestSuite(MAP0005_DeletePlan.class);
+		suite.addTestSuite(MAP0005_DeletePlan.class);
 		suite.addTestSuite(MAP0006_addOrganizations.class);
 		suite.addTestSuite(MAP0007_addOrganizationsDetails.class);
 		suite.addTestSuite(MAP0008_removeExpectation.class);
