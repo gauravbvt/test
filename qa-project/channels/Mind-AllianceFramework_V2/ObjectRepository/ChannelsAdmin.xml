@@ -17,12 +17,22 @@
  	
  	<Element>
  		<GivenName>Owner Name</GivenName>
- 		<Xpath>//input[contains(@name,'newPlanClient')]</Xpath>
- 		<Name>newPlanClient</Name>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr[5]/td[2]/input</Xpath>
+ 		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
-    	<ClassName>big</ClassName>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Save Plan</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div/a[4]</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
  	</Element>
  	
  	<Element>
@@ -34,6 +44,17 @@
     	<LinkText></LinkText>
     	<ClassName>submit</ClassName>
  	</Element>
+ 	
+ 		<Element>
+ 		<GivenName>ADD</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/a</Xpath>
+ 		<Name>ADD</Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
  	
 	<Element>
     	<GivenName>Select Plan</GivenName>
@@ -47,12 +68,12 @@
  	
  	<Element>
     	<GivenName>Delete Plan</GivenName>
-    	<Xpath></Xpath>
+    	<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div/a[2]</Xpath>
     	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
-    	<LinkText>Delete Plan</LinkText>
-    	<ClassName>button</ClassName>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
  	</Element>
  	
  	<Element>
