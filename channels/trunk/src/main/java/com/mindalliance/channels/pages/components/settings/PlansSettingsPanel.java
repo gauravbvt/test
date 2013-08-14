@@ -298,7 +298,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                     }
                 }
         );
-        sb.append( "Put in prodocution the current version" );
+        sb.append( "Put in production the current version" );
         if ( invalid || !plannersOkToProductize ) {
             if ( invalid ) {
                 sb.append( " even though validity issues are unresolved" );

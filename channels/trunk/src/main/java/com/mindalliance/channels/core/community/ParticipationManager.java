@@ -278,7 +278,7 @@ public interface ParticipationManager {
      * Get organization participation given db key.
      *
      * @param uid a db key
-     * @return an organziation participation
+     * @return an organization participation
      */
     OrganizationParticipation getOrganizationParticipation( String uid );
 
