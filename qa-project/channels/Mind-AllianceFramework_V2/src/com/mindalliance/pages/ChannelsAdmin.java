@@ -33,24 +33,7 @@ public class ChannelsAdmin {
 	 * @throws UIAutomationException 
 	 */
 	
-	/*public void enterPlanName(String planName,String authorName) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
-		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		UIActions.enterValueInTextBox(planName,fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
-		
-		//elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		//xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
-		//UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-		//UIActions.enterValueInTextBox(authorName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
-			
-		
-		elementController.requireElementSmart(fileName,"Add",GlobalVariables.configuration.getAttrSearchList(), "Add");
-		xPath=dataController.getPageDataElements(fileName,"Add","Xpath");
-		UIActions.click(fileName,"Add",GlobalVariables.configuration.getAttrSearchList(), "Add");
-	}*/
-	
-	public void enterPlanName(String planName) throws UIAutomationException{
+	public void enterPlanName(String planName,String ownerName) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
 		xPath=dataController.getPageDataElements(fileName,"Plan Name","Xpath");
 		UIActions.click(fileName,"Plan Name",GlobalVariables.configuration.getAttrSearchList(), "Plan Name");
@@ -59,20 +42,25 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "ADD");
 		UIActions.click(fileName,"ADD",GlobalVariables.configuration.getAttrSearchList(), "ADD");
 		
-	}
-	
-	/**
-	 * Enters plan name in 'Plan Owner' text box.
-	 * @throws UIAutomationException 
-	 */
-	public void enterPlanOwnerName(String ownerName)throws UIAutomationException
-	{
 		UIActions.clearTextBox(fileName, "Owner Name", GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 		elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 		xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
 		UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 		UIActions.enterValueInTextBox(ownerName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
 	}
+	
+	/**
+	 * Enters plan name in 'Plan Owner' text box.
+	 * @throws UIAutomationException 
+	 */
+	//public void enterPlanOwnerName(String ownerName)throws UIAutomationException
+	//{
+		//UIActions.clearTextBox(fileName, "Owner Name", GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		//elementController.requireElementSmart(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		//xPath=dataController.getPageDataElements(fileName,"Owner Name","Xpath");
+		//UIActions.click(fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+		//UIActions.enterValueInTextBox(ownerName,fileName,"Owner Name",GlobalVariables.configuration.getAttrSearchList(), "Owner Name");
+	//}
 	
 	
 	/**
