@@ -3106,12 +3106,12 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(goalName,fileName, "Organization for goal", GlobalVariables.configuration.getAttrSearchList(), "Organization for goal");
 		
 		// Enter name in Goal text box
-		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		UIActions.click(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
-		UIActions.enterValueInTextBox(goalName,fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
+		//elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
+		//UIActions.click(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
+		//elementController.requireElementSmart(fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
+		//UIActions.enterValueInTextBox(goalName,fileName, "Goal Name", GlobalVariables.configuration.getAttrSearchList(), "Goal Name");
 		
-		// Achieve at end
+		// Achieved at the end checkbox
 		elementController.requireElementSmart(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 		UIActions.click(fileName,"Acheived at end", GlobalVariables.configuration.getAttrSearchList(), "Acheived at end");
 	}

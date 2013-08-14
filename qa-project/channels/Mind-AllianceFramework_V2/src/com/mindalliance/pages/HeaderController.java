@@ -77,6 +77,23 @@ public class HeaderController {
 	}
 	
 	/**
+	 * 'Sign out Admin' method clicks on 'Sign out' button on 'Communities' page
+	 * @throws UIAutomationException 
+    */
+	public void signOutCommunities() throws UIAutomationException{
+		try{
+			Thread.sleep(6000);	
+			}
+		catch(Exception e){}
+		
+		elementController.requireElementSmart(fileName, "Sign Out Communities", GlobalVariables.configuration.getAttrSearchList(), "Sign Out Communities");
+		UIActions.click(fileName, "Sign Out Communities", GlobalVariables.configuration.getAttrSearchList(), "Sign Out Communities");
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Login Page Title", "Title");
+    	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	/**
 	 * 'Sign out Admin' method clicks on 'Sign out' button on 'Admin' page
 	 * @throws UIAutomationException 
 	 */

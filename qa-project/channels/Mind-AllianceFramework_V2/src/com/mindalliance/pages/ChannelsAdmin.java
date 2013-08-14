@@ -72,6 +72,32 @@ public class ChannelsAdmin {
 		elementController.requireElementSmart(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 		UIActions.click(fileName,"Save Plan",GlobalVariables.configuration.getAttrSearchList(), "Save Plan");
 	}
+	
+	/**
+	 * Click the Productize Plan button
+	 * @throws UIAutomationException 
+	 */
+	public void clickProductizePlanButton() throws UIAutomationException
+	{
+		String headingOfWindowInXML=null;
+		elementController.requireElementSmart(fileName,"Productize Plan",GlobalVariables.configuration.getAttrSearchList(), "Productize Plan");
+		UIActions.click(fileName,"Productize Plan",GlobalVariables.configuration.getAttrSearchList(), "Productize Plan");
+		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Productize Plan", "Title");
+		UIActions.assertAlert(headingOfWindowInXML);
+	}
+	
+	/**
+	 * Click the Home link on Channels Settings page
+	 * @throws UIAutomationException 
+	 */
+	public void clickHomeLink() throws UIAutomationException
+	{
+		//String headingOfWindowInXML=null;
+		elementController.requireElementSmart(fileName,"Home Link",GlobalVariables.configuration.getAttrSearchList(), "Home Link");
+		UIActions.click(fileName,"Home Link",GlobalVariables.configuration.getAttrSearchList(), "Home Link");
+		//headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Productize Plan", "Title");
+		//UIActions.assertAlert(headingOfWindowInXML);
+	}
 	/**
 	 * Selects the plan from the drop down
 	 * @throws UIAutomationException

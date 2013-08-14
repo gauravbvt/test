@@ -1,4 +1,7 @@
 package com.mindalliance.pages;
+import org.openqa.selenium.support.ui.Select;
+
+import com.mindalliance.configuration.Configuration;
 import com.mindalliance.configuration.DataController;
 import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
@@ -55,6 +58,41 @@ public class HomePage {
     	String title=dataController.getPageDataElements(fileName, "Admin Page Title", "Title");
     	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}	
+	
+	/**
+	 * 'clickCommunitiesLink' method clicks on Communities Link
+	 * @throws UIAutomationException 
+	 */
+	public void clickCommunitiesLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Communities",GlobalVariables.configuration.getAttrSearchList(), "Communities");
+		UIActions.click(fileName,"Communities",GlobalVariables.configuration.getAttrSearchList(), "Communities");
+				
+		
+		// Assertion : Check Title of Page
+    	//String title=dataController.getPageDataElements(fileName, "Communities Page Title", "Title");
+       	//UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	/**
+	 * 'selectPlanFromDropDown' method clicks on Plan drop down
+	 * @throws UIAutomationException 
+	 */
+	public void selectPlanFromDropDown(String plan) throws UIAutomationException{
+		// Select Organization
+		
+		elementController.requireElementSmart(fileName,"Plan dropdown",GlobalVariables.configuration.getAttrSearchList(),"Plan dropdown");
+		UIActions.click(fileName,"Plan dropdown",GlobalVariables.configuration.getAttrSearchList(),"Plan dropdown");
+				
+		Select planDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(planDropDownList);
+		
+		UIActions.selectByTextAndClick(plan);
+		
+		// Assertion : Check Title of Page
+    	//String title=dataController.getPageDataElements(fileName, "Communities Page Title", "Title");
+       	//UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
 	/**
 	 * 'clickIssuesReportLink' method clicks on 'Issues Report' Link
 	 * @throws UIAutomationException 
