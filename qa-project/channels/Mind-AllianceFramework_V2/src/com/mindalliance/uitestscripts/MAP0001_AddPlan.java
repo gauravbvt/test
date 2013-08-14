@@ -127,8 +127,8 @@ public class MAP0001_AddPlan extends TestCase {
 			stepNo++;
 			description="Plan Created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
-			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"));
-			channelsAdmin.enterPlanOwnerName(testData.get("AuthorAutomationTestPlan"));
+			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
+			
 			channelsAdmin.clickSavePlanButton();
 		//	channelsAdmin.deletePlan(testData.get("PlanName"));
 			// Write log
