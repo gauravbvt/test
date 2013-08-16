@@ -1,5 +1,5 @@
 #banner {
-    background: url('/back.png')  repeat-x;
+    background: url('../back.png') #67665d repeat-x;
 }
 
 #breadcrumbs, #leftColumn, h2 {

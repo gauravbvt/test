@@ -34,6 +34,16 @@ html, body {
     top: 50%;
 }
 
+#simple {
+    background: none repeat scroll 0 0 #F2F4F5;
+    margin: 10px;
+    padding: 10px;
+}
+
+#simple #icons {
+    position: inherit;
+}
+
 body {
     background: #aca380 url("../images/sb/back.png") repeat;
     text-align: center;
@@ -219,29 +229,10 @@ table.navigation {
     border: 0;
 }
 
-label {
-    width: 100px;
-    float: left;
-    margin-left: 5px;
-    margin-top: 0;
-}
-
-input {
-    height: 20px;
-}
-
-input, textarea, select {
-    border: 1px solid #B3B3B3;
-}
-
 input.image {
     border: none;
     height: auto;
     vertical-align: middle;
-}
-
-submit {
-    height: 25px;
 }
 
 div {
@@ -249,13 +240,6 @@ div {
 }
 
 div .box {
-    display: block;
-    margin-left: 105px;
-}
-
-.errors {
-    color: red;
-    font-weight: bold;
     display: block;
     margin-left: 105px;
 }
@@ -273,6 +257,57 @@ a img {
 .flag {
     height: 11px;
     width: 16px;
+}
+
+/* -------------- Login page */
+.errors, .notice {
+    font-weight: bold;
+    display: block;
+}
+.errors {
+    color: red;
+}
+
+form.login {
+    display: table;
+    table-layout: auto;
+}
+form.login p {
+    display: table-row;
+}
+form.login p label {
+    display: table-cell;
+    padding: 5px 10px 5px 0;
+    text-align: right;
+}
+form.login p input {
+    display: table-cell;
+    width: 95%;
+    padding: 0 2px;
+}
+form.login p.checkbox {
+}
+form.login p.checkbox label {
+}
+form.login p.checkbox input {
+    margin: 0;
+    vertical-align: bottom;
+    display: inline;
+    width: auto;
+}
+form.login p.checkbox span {
+    display: table-cell;
+}
+form.login p.submit {
+}
+form.login p.submit input {
+    display: inline;
+    width: auto;
+    padding: 0 5px;
+}
+form.login p.submit span {
+    display: table-cell;
+    text-align: right;
 }
 
 /* -------------- Icons */
@@ -322,7 +357,7 @@ a img {
 #icons li.vcard a {
 }
 
-/* table styling */
+/* -------------- Table styling */
 .dgrid-hider-menu-row {
     height: 20px;
     position: relative;
@@ -359,7 +394,7 @@ td.dgrid-cell ul li {
 }
 
 .field-id {
-    width: 32px;
+    width: 38px;
 }
 
 .field-description, .field-criticalTasks, .field-organization, .field-respondents { 
@@ -372,6 +407,10 @@ td.dgrid-cell ul li {
 
 .field-added, .field-submitted {
     width: 120px;
+}
+
+.field-submitted {
+    width: 86px;
 }
 
 .field-landline, .field-mobile {

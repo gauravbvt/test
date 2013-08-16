@@ -67,8 +67,8 @@ public class CsvWriterTest {
 
         compareCsvLines( Arrays.asList( org1, org2 ),
                          HEADER,
-                         "1,Bla Inc,BI,Tribal Government,7/02/2013 14:30:27,http://bla.com,,,\"John Q. Public <jqp@bla.com>, Jane Doe <jd@bla.com>\",,",
-                         "2,\"Big \"\"Bad\"\" Corp\",BC,Local Government,7/02/2013 14:30:27,,Bla Inc (BI),,,," );
+                         "4,Bla Inc,BI,Tribal Government,7/02/2013 14:30:27,http://bla.com,,,\"John Q. Public <jqp@bla.com>, Jane Doe <jd@bla.com>\",,",
+                         "5,\"Big \"\"Bad\"\" Corp\",BC,Local Government,7/02/2013 14:30:27,,Bla Inc (BI),,,," );
     }
 
     private void compareCsvLines( List<Organization> list, String... lines ) throws IOException {

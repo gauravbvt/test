@@ -5,10 +5,6 @@ package com.mindalliance.sb.mvc;
 
 import com.mindalliance.sb.model.PlanFile;
 import com.mindalliance.sb.model.SuperbowlPlan;
-import com.mindalliance.sb.mvc.PlanFileController;
-import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 privileged aspect PlanFileController_Roo_Controller {
     
@@ -36,14 +36,7 @@ privileged aspect PlanFileController_Roo_Controller {
         populateEditForm(uiModel, new PlanFile());
         return "lists/planfiles/create";
     }
-    
-    @RequestMapping(value = "/{id}", produces = "text/html")
-    public String PlanFileController.show(@PathVariable("id") Integer id, Model uiModel) {
-        uiModel.addAttribute("planfile", PlanFile.findPlanFile(id));
-        uiModel.addAttribute("itemId", id);
-        return "lists/planfiles/show";
-    }
-    
+        
     @RequestMapping(produces = "text/html")
     public String PlanFileController.list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         if (page != null || size != null) {

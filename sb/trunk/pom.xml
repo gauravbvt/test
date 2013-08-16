@@ -7,6 +7,8 @@
     <packaging>war</packaging>
     <version>0.1.0.BUILD-SNAPSHOT</version>
     <name>sb</name>
+    <inceptionYear>2013</inceptionYear>
+    <url>https://njsp.mind-alliance.com/maven/</url>
     
     <description>Superbowl 2014 Security ISP</description>
     <organization>
@@ -15,7 +17,7 @@
     </organization>
     <ciManagement>
         <system>Jenkins</system>
-        <url>https://dev.mind-alliance.com/jenkins/job/sb</url>
+        <url>https://njsp.mind-alliance.com/jenkins/job/sb</url>
     </ciManagement>
     <developers>
         <developer>

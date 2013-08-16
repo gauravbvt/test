@@ -4,9 +4,9 @@
     <definition extends="default" name="lists/planfiles/list">
         <put-attribute name="body" value="/WEB-INF/views/lists/planfiles/list.jspx"/>
     </definition>
-<definition extends="default" name="lists/planfiles/show">
-        <put-attribute name="body" value="/WEB-INF/views/lists/planfiles/show.jspx"/>
-    </definition>
+<!--<definition extends="default" name="lists/planfiles/show">-->
+        <!--<put-attribute name="body" value="/WEB-INF/views/lists/planfiles/show.jspx"/>-->
+    <!--</definition>-->
 <definition extends="default" name="lists/planfiles/create">
         <put-attribute name="body" value="/WEB-INF/views/lists/planfiles/create.jspx"/>
     </definition>

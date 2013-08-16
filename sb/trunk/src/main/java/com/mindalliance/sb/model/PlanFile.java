@@ -10,4 +10,8 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(versionField = "", table = "plan_file")
 @RooDbManaged(automaticallyDelete = true)
 public class PlanFile implements NamedObject {
+
+    public long getLastModified() {
+        return getSuperbowlPlan().getRespondent().getSubmitted().getTime();
+    }
 }

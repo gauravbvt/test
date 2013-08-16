@@ -31,14 +31,63 @@
         </init-param>
     </filter>
     
-    
-    
     <filter>
         <filter-name>HttpMethodFilter</filter-name>
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
     </filter>
-    
-    
+
+    <filter>
+        <filter-name>pngCache</filter-name>
+        <filter-class>com.samaxes.filter.CacheFilter</filter-class>
+        <init-param>
+            <param-name>static</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>expirationTime</param-name>
+            <param-value>2592000</param-value> <!-- 30 days -->
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>gifCache</filter-name>
+        <filter-class>com.samaxes.filter.CacheFilter</filter-class>
+        <init-param>
+            <param-name>static</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>expirationTime</param-name>
+            <param-value>2592000</param-value> <!-- 30 days -->
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>cssCache</filter-name>
+        <filter-class>com.samaxes.filter.CacheFilter</filter-class>
+        <init-param>
+            <param-name>static</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>expirationTime</param-name>
+            <param-value>604800</param-value> <!-- 1 week -->
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>jsCache</filter-name>
+        <filter-class>com.samaxes.filter.CacheFilter</filter-class>
+        <init-param>
+            <param-name>static</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>private</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>expirationTime</param-name>
+            <param-value>604800</param-value> <!-- 1 week -->
+        </init-param>
+    </filter> 
     
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -57,9 +106,7 @@
         <filter-name>HttpMethodFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
-    
-    
+      
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
@@ -68,7 +115,25 @@
         <filter-name>Spring OpenEntityManagerInViewFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+    <filter-mapping>
+        <filter-name>cssCache</filter-name>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>jsCache</filter-name>
+        <url-pattern>*.js</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>pngCache</filter-name>
+        <url-pattern>*.png</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>gifCache</filter-name>
+        <url-pattern>*.gif</url-pattern>
+    </filter-mapping>
+
     <!-- Creates the Spring Container shared by all Servlets and Filters -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

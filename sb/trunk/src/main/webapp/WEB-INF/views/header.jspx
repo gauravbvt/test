@@ -5,7 +5,7 @@
     <spring:url var="banner" value="/resources/images/sb/logo_njsp-2.png" />
     <spring:url var="sb" value="/resources/images/sb/sb-logo.png" />
     <spring:url var="home" value="/" />
-  <a class="left" href="${home}" name="${fn:escapeXml(home_label)}" title="${fn:escapeXml(home_label)}">
+  <a class="left" href="${home}">
     <img alt="NJSP" src="${banner}" />
   </a>
   <img class="right" alt="Superbowl logo" src="${sb}" />

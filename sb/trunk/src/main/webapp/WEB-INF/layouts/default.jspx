@@ -11,16 +11,18 @@
 			
 		<util:load-scripts/>
         <script>
-            require(["dojo/_base/fx", "dojo/dom", "dojo/on", "dojo/domReady!"],
+            require(["dojo/_base/fx", "dojo/dom", "dojo/on"],
                     function(fx, dom, on){
-                        on(window, "load", function() {
+                        on( window, "load", function() {
                             var node = dom.byId("loadingOverlay");
+                            console.log("Loading...");
                             fx.anim( node, 
                                      { opacity: { start: "1", end: "0" } }, 
                                      500, 
                                      null, 
                                      function(){
-                                         node.style="display: none;";
+                                         console.log("onEnd");
+                                         node.parentNode.removeChild(node);
                                      });
                         });
                     });
