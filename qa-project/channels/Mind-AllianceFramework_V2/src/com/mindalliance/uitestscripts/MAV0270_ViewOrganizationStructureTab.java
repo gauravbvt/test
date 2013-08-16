@@ -45,7 +45,7 @@ public class MAV0270_ViewOrganizationStructureTab  extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
