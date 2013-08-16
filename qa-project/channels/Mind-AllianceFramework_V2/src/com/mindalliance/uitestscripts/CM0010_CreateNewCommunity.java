@@ -31,6 +31,12 @@ import com.mindalliance.pages.CommunitiesPage;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * Testcase ID: CM0010_CreateNewCommunity
+ * 	   Summary: Verify that user is able to create new community
+ * @author Afour
+ *
+ */
 public class CM0010_CreateNewCommunity extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="CM0010_CreateNewCommunity";

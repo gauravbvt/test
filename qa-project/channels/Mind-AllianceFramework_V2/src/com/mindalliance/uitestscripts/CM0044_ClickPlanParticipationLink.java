@@ -32,6 +32,13 @@ import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 
+/**
+ * Testcase ID: CM0044_ClinkPlanParticipationLink
+ * 	   Summary: Verify that plan participation link gets clicked
+ * @author Afour
+ *
+ */
+
 public class CM0044_ClickPlanParticipationLink extends TestCase {
 	public Hashtable<String, String> testData;
 	public String testCaseId="CM0044_ClickPlanParticipationLink";
