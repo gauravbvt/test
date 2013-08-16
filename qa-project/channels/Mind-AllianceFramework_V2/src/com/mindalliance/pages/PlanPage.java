@@ -1665,6 +1665,32 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Click on Agent in Organizations in scope
+	 * @throws UIAutomationException
+	 */
+	public void clickAgentInOrganizationInScope() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Agent name in Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Agent name in Organization In Scope");
+		UIActions.click(fileName,"Agent name in Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Agent name in Organization In Scope");
+	}
+	
+	
+	/**
+	 * Select from dropdownlist in receives panel
+	 * @param contact
+	 * @throws UIAutomationException
+	 */
+	public void selectFromContact(String contact) throws UIAutomationException{
+         
+		elementController.requireElementSmart(fileName,"Contact Info Drop Down For Agent",GlobalVariables.configuration.getAttrSearchList(),"Contact Info Drop Down For Agent");
+		UIActions.click(fileName,"Contact Info Drop Down For Agent",GlobalVariables.configuration.getAttrSearchList(),"Contact Info Drop Down For Agent");
+		
+		Select contactDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(contactDropDownList);
+		UIActions.selectByTextAndClick(contact);
+	}
+	
+	
+	/**
 	 * Enter Task name in segment name textbox
 	 * @param taskName
 	 * @throws UIAutomationException 
@@ -1730,6 +1756,7 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void selectFrom(String other) throws UIAutomationException{
+		
 		elementController.requireElementSmart(fileName,"From Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Receives Panel");
 		UIActions.click(fileName,"From Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Receives Panel");
 		
@@ -1737,6 +1764,47 @@ public class PlanPage {
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
 		UIActions.selectByTextAndClick(other);
 	}
+	
+	/*public void enterOrganizationName(String organizationName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Organization Name Textbox In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Name Textbox In Organizations In Scope");
+		UIActions.click(fileName,"Organization Name Textbox In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Name Textbox In Organizations In Scope");
+		UIActions.enterValueInTextBox(organizationName,fileName,"Organization Name Textbox In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Name Textbox In Organizations In Scope");
+		UIActions.enterKey(Keys.ENTER);
+		
+		// Verify organization is added
+		elementController.requireElementSmart(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
+		String organizationNameInPage=UIActions.getText(fileName,"Organization Table In Organizations In Scope",GlobalVariables.configuration.getAttrSearchList(), "Organization Table In Organizations In Scope");
+		
+		if(!organizationNameInPage.contains(organizationName)){
+			throw new UIAutomationException("Organization is not entered.");
+		}
+		
+	}*/
+	/**
+	 * Enters contact information for Agent
+	 * @param information
+	 * @throws UIAutomationException
+	 */
+	public void enterContactInformationForAgent(String information) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Contact Info For Agent Text Field",GlobalVariables.configuration.getAttrSearchList(), "Contact Info For Agent Text Field");
+		UIActions.click(fileName,"Contact Info For Agent Text Field",GlobalVariables.configuration.getAttrSearchList(), "Contact Info For Agent Text Field");
+		UIActions.enterValueInTextBox(information,fileName,"Contact Info For Agent Text Field",GlobalVariables.configuration.getAttrSearchList(), "Contact Info For Agent Text Field");
+		UIActions.enterKey(Keys.ENTER);
+		
+		try{
+			Thread.sleep(2000);
+		}
+		catch(Exception e){}
+		
+//		// Assertion: verify information is added
+//		elementController.requireElementSmart(fileName,"Add New Receives Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Receives Header");
+//		String informationNameInSendsPanel=UIActions.getText(fileName,"Add New Receives Header",GlobalVariables.configuration.getAttrSearchList(), "Add New Receives Header");
+//		if(!informationNameInSendsPanel.contains(informationName)){
+//			throw new UIAutomationException("Information not entered in receives panel");
+//		}
+	}
+	
+	
 	/**
 	 * Select from dropdownlist in sends panel
 	 * @param other
