@@ -4,7 +4,7 @@
 <title>Channels - Sign in</title>
 <informationInSendsPanel>This Is A Flow</informationInSendsPanel>
 <taskName>Task Sender</taskName>
-<fromTaskNameInSendsPanel>Task Receiver</fromTaskNameInSendsPanel>
+<toTaskNameInSendsPanel>Task Receiver</toTaskNameInSendsPanel>
 <otherTaskName>Other...</otherTaskName>
 <actionsInReceivesPanel>Actions In Receives Panel</actionsInReceivesPanel>
 <duplicateFlowInReceivesPanel>Duplicate Flow In Receives Panel</duplicateFlowInReceivesPanel>
