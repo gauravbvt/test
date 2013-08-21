@@ -66,7 +66,7 @@ public class MAP0005_DeletePlan extends TestCase {
 			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
-			// Loads Test Data
+			// Loads the Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
 			// Write log			

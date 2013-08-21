@@ -64,7 +64,7 @@ public class MAP0001_AddPlan extends TestCase {
 			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
-			// Loads Test Data
+			// Loads the Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
 			// Write log			
@@ -140,6 +140,7 @@ public class MAP0001_AddPlan extends TestCase {
 			description="SignOut Successful";
 			HeaderController headerController=new HeaderController();
 			headerController.signOutAdmin();
+		
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	

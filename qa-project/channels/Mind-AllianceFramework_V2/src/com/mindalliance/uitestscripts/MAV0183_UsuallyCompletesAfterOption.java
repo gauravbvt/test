@@ -159,7 +159,7 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);    
  				
-			// Click on 'Usually Completes After'
+			// Click on 'Usually Completes After'in Task panel
 			stepNo++;
 			description="Click usually completes after";
 			planPage.clickUsuallycompletesAfter();

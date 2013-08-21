@@ -162,7 +162,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
-			// Click on 'Add' button under 'Sends' panel
+			// Click on the 'Add' button under 'Sends' panel
 			stepNo++;
 			description="Add Info Sends";
 			planPage.clickAddInfoSendsPanel();
