@@ -1579,13 +1579,54 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
 		UIActions.click(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
 		
-		// Assertion: Verify if the Structre Tab is clicked
+		// Assertion: Verify if the Analytics Tab is clicked
 		elementController.requireElementSmart(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
 		String networkTab=UIActions.getText(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
 		
 		if(!networkTab.contains(networkTab)){
 			throw new UIAutomationException("Analytics Tab not selected");
 		}
+	}
+	
+	
+	/**
+	 * Click on Participation Tab under Organizations
+	 * @throws UIAutomationException
+	 */
+	public void clickParticipationTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Participation Tab in Organization",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab in Organization");
+		UIActions.click(fileName,"Participation Tab in Organization",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab in Organization");
+		
+		// Assertion: Verify if the Structre Tab is clicked
+		//elementController.requireElementSmart(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
+		//String networkTab=UIActions.getText(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
+		
+		//if(!networkTab.contains(networkTab)){
+		//	throw new UIAutomationException("Analytics Tab not selected");
+		//}
+	}
+	
+	/**
+	 * Check checkbox of Organization in Participation tab in Organizations in scope
+	 * @throws UIAutomationException
+	 */
+	public void checkCheckboxOfOrganizationInOrganizationInScope() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Checkbox of Organization in Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox of Organization in Organization In Scope");
+		UIActions.click(fileName,"Checkbox of Organization in Organization In Scope",GlobalVariables.configuration.getAttrSearchList(), "Checkbox of Organization in Organization In Scope");
+	}
+	
+	
+	/**
+	 * Enter Agent name in the text field in the Participation tab
+	 * @param taskName
+	 * @throws UIAutomationException 
+	*/
+	public void enterAgentName(String agentName) throws UIAutomationException	{
+		elementController.requireElementSmart(fileName,"Agent Textfield in Participation",GlobalVariables.configuration.getAttrSearchList(), "Agent Name");
+		UIActions.click(fileName,"Agent Textfield in Participation",GlobalVariables.configuration.getAttrSearchList(), "Agent Name");
+		UIActions.clearTextBox(fileName,"Agent Textfield in Participation",GlobalVariables.configuration.getAttrSearchList(), "Agent Name");
+		UIActions.enterValueInTextBox(agentName,fileName,"Agent Textfield in Participation",GlobalVariables.configuration.getAttrSearchList(), "Agent Name");
+		UIActions.enterKey(Keys.TAB);
 	}
 	
 	public void clickOrganizationsIssuesTab() throws UIAutomationException{
@@ -1680,7 +1721,8 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void selectFromContact(String contact) throws UIAutomationException{
-         
+        
+		
 		elementController.requireElementSmart(fileName,"Contact Info Drop Down For Agent",GlobalVariables.configuration.getAttrSearchList(),"Contact Info Drop Down For Agent");
 		UIActions.click(fileName,"Contact Info Drop Down For Agent",GlobalVariables.configuration.getAttrSearchList(),"Contact Info Drop Down For Agent");
 		
@@ -2246,7 +2288,20 @@ public class PlanPage {
 		catch(Exception e){}
 		
 	}
-	
+	/**
+	 * Close Actual Agent window
+	 * @throws UIAutomationException
+	 */
+	public void closeActualAgentWindow() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Close Actual Agent Window",GlobalVariables.configuration.getAttrSearchList(), "Close Actual Agent Window");
+		UIActions.click(fileName,"Close Actual Agent Window",GlobalVariables.configuration.getAttrSearchList(), "Close Actual Agent Window");
+		
+		try{
+			Thread.sleep(1000);
+		}
+		catch(Exception e){}
+		
+	}
 	
 	
 	/**
@@ -2540,9 +2595,10 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void clickUsuallycompletesAfter() throws UIAutomationException{
+		
 		boolean textboxIsEnabled=false;
 		boolean dropdownIsEnabled=false;
-		
+		UIActions.scrollDown();
 		
 		elementController.requireElementSmart(fileName,"Usually Completes After In Task",GlobalVariables.configuration.getAttrSearchList(), "Usually Completes After In Task");
 		UIActions.click(fileName,"Usually Completes After In Task",GlobalVariables.configuration.getAttrSearchList(), "Usually Completes After In Task");
@@ -3207,6 +3263,8 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void selectgoalfromDropDownInTask(String selectGoal) throws UIAutomationException{
+		
+		UIActions.scrollDown();
 		elementController.requireElementSmart(fileName,"Goals Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Goals Dropdown In Task Panel");
 		UIActions.click(fileName,"Goals Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Goals Dropdown In Task Panel");
 			
