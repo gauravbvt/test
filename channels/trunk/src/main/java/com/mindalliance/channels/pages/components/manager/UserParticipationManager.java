@@ -403,10 +403,10 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 new Label(
                         "noAgentSelectedLabel",
                         selectedAgency == null
-                                ? "Please select an organization"
+                                ? ""
                                 : "Please select an agent"
                 ) );
-        makeVisible( noAgentSelected, selectedAgent == null );
+        makeVisible( noAgentSelected, selectedAgency != null && selectedAgent == null );
         participantsContainer.addOrReplace( noAgentSelected );
     }
 

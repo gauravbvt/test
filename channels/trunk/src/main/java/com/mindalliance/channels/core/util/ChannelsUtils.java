@@ -746,7 +746,7 @@ public final class ChannelsUtils {
      * @return safe version
      */
     public static String sanitize( String name, String replacement ) {
-        return name.replaceAll( "\\W", replacement );
+        return name == null ? "" : name.replaceAll( "\\W", replacement );
     }
 
     /**

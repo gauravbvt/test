@@ -166,7 +166,7 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
     @Override
     protected Component makeActionMenuOrLabel( String menuId ) {
         Component menu = makeActionMenu( menuId );
-        if ( menu != null && isAspectShownEditable() ) {
+        if ( menu != null && getPlan().isDevelopment() && isAspectShownEditable() ) {
             LockManager lockManager = getLockManager();
             Identifiable identifiable = getObject();
             if ( !lockManager.isLockedByUser( getUser().getUsername(), identifiable.getId() ) ) {

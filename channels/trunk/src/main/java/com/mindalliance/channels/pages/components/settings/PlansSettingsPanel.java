@@ -16,6 +16,7 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -136,7 +137,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         newPlanUriField.setOutputMarkupId( true );
-        addTipTitle( newPlanUriField, "Enter a unique URI (alphanumerics and underscores, no spaces)" );
+        newPlanUriField.add( new AttributeModifier( "placeholder", "a_plan_unique_id" ) );
         settingsContainer.addOrReplace( newPlanUriField );
         // button
         AjaxLink<String> addPlanLink = new AjaxLink<String>( "addPlan" ) {
@@ -153,7 +154,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                     }
                 }
                 if ( !success )
-                    update( target, Change.failed( "Invalid uri; can't add new plan." ) );
+                    update( target, Change.message( "Invalid plan identifier - New plan not added." ) );
             }
         };
         addPlanLink.setOutputMarkupId( true );

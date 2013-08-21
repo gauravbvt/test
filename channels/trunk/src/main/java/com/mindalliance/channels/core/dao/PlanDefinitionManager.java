@@ -408,7 +408,7 @@ public class PlanDefinitionManager implements InitializingBean, Iterable<PlanDef
      * @return a boolean
      */
     public boolean isNewPlanUriValid( String newUri ) {
-        if ( newUri == null || get( newUri ) != null ) return false;
+        if ( newUri == null || newUri.isEmpty() || get( newUri ) != null ) return false;
         for ( PlanDefinition definition : definitions.values() ) {
             if ( ChannelsUtils.sanitize( definition.getUri() )
                     .equals( ChannelsUtils.sanitize( newUri ) ) )
