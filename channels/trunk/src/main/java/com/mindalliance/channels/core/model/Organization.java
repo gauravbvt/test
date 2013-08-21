@@ -540,6 +540,11 @@ public class Organization extends AbstractUnicastChannelable
         return sb.toString();
     }
 
+    @Override
+    public boolean hasAddresses() {
+        return !isPlaceHolder();
+    }
+
     /**
      * Family relationships between organizations.
      */

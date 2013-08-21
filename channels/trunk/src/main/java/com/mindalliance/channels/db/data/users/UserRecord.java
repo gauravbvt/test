@@ -554,5 +554,16 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
     public void removeAllChannels() {
         contactInfoList = new ArrayList<ContactInfo>(  );
     }
+
+    public boolean sameAs( UserRecord other ) {
+        return other != null
+                && ChannelsUtils.areEqualOrNull( name, other.getName() )
+                && ChannelsUtils.areEqualOrNull( email, other.getEmail() )
+                && ChannelsUtils.areEqualOrNull( fullName, other.getFullName() )
+                && ChannelsUtils.areEqualOrNull( photo, other.getPhoto() )
+                && CollectionUtils.isEqualCollection( getAccessList(), other.getAccessList() )
+                && CollectionUtils.isEqualCollection( getContactInfoList(), other.getContactInfoList() );
+    }
+
 }
 

@@ -134,7 +134,7 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param userRecord       a persisted user record
      * @param update           another user info with undigested password
      * @param communityService a community service
-     * @return whether successful
+     * @return whether there was a successful update
      */
     boolean updateUserRecord( UserRecord userRecord, UserRecord update, CommunityService communityService );
 

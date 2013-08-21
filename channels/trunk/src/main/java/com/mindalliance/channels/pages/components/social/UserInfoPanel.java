@@ -449,10 +449,12 @@ public class UserInfoPanel extends AbstractSocialListPanel {
     }
 
     private boolean save() throws IOException {
+        boolean changed =  !getUser().getUserRecord().sameAs( temp.getUserRecord() );
         if ( passwordOk && !newPassword.isEmpty() && isValidNewPassword() ) {
             temp.getUserRecord().setPassword( newPassword );
+            changed = true;
         }
-        if ( canSave() ) {
+        if ( changed && canSave() ) {
             return userInfoService.updateUserRecord(
                     getUser().getUserRecord(),
                     temp.getUserRecord(),

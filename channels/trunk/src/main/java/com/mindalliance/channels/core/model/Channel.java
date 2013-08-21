@@ -67,7 +67,7 @@ public class Channel implements Serializable, Comparable<Channel> {
     }
 
     public String getAddress() {
-        return address;
+        return address == null ? "" : address;
     }
 
     public void setAddress( String address ) {

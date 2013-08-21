@@ -274,7 +274,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                             getUsername(),
                             requirement,
                             getAgentSpecPath( "orgParticipationId" ),
-                            agent.getOrganizationParticipation().getId() ) );
+                            agent.getOrganizationParticipation().getUid() ) );
                 } else {
                     multiCommand.addCommand( new UpdatePlanObject(
                             getUsername(),

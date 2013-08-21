@@ -250,25 +250,29 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         private void doAction( Channelable channelable, UpdateObject.Action action ) {
-            if ( channelable.isModelObject() ) {
-                if ( channelable.isModifiableInProduction() ) {
-                    doUnsafeCommand(
-                            UpdateObject.makeCommand( getUser().getUsername(), channelable,
-                                    "modifiableChannels",
-                                    channel,
-                                    action ) );
+            // Don't add a redundant channel
+            if ( action != UpdateObject.Action.Add
+                    || !channelable.getEffectiveChannels().contains( channel ) ) {
+                if ( channelable.isModelObject() ) {
+                    if ( channelable.isModifiableInProduction() ) {
+                        doUnsafeCommand(
+                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                        "modifiableChannels",
+                                        channel,
+                                        action ) );
+                    } else {
+                        doCommand( channelable,
+                                UpdateObject.makeCommand( getUser().getUsername(), channelable,
+                                        "modifiableChannels",
+                                        channel,
+                                        action ) );
+                    }
                 } else {
-                    doCommand( channelable,
-                            UpdateObject.makeCommand( getUser().getUsername(), channelable,
-                                    "modifiableChannels",
-                                    channel,
-                                    action ) );
+                    if ( action == UpdateObject.Action.Add )
+                        channelable.addChannel( channel );
+                    else if ( action == UpdateObject.Action.Remove )
+                        channelable.removeChannel( channel );
                 }
-            } else {
-                if ( action == UpdateObject.Action.Add )
-                    channelable.addChannel( channel );
-                else if ( action == UpdateObject.Action.Remove )
-                    channelable.removeChannel( channel );
             }
         }
 
@@ -297,7 +301,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                 Channelable channelable = getChannelable();
                 if ( channelable.canSetFormat() ) {
                     InfoFormat format;
-                    if ( value != null && value.equals(  NewInfoFormatType ) ) {
+                    if ( value != null && value.equals( NewInfoFormatType ) ) {
                         format = doSafeFindOrCreateType(
                                 InfoFormat.class,
                                 getQueryService().makeNameForNewEntity( InfoFormat.class ) );
@@ -325,8 +329,9 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
         public void setAddress( String address ) {
-            if ( channel != null ) {
-                Channelable channelable = getChannelable();
+            Channelable channelable = getChannelable();
+            if ( channel != null
+                    &&  !channelable.getEffectiveChannels().contains( new Channel( channel.getMedium(), address ) ) ) {
                 if ( channelable.isModelObject() ) {
                     int index = channelable.getModifiableChannels().indexOf( channel );
                     if ( index >= 0 )
@@ -395,7 +400,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             item.add( createMover( wrapper ) );
         }
 
-         private AjaxLink<?> createMover( final Wrapper wrapper ) {
+        private AjaxLink<?> createMover( final Wrapper wrapper ) {
             AjaxLink<?> result = new AjaxLink( "move-to-top" ) {          // NON-NLS
 
                 @Override
@@ -448,7 +453,6 @@ public class ChannelListPanel extends AbstractCommandablePanel {
         }
 
 
-
         private DropDownChoice<TransmissionMedium> createMediaChoices(
                 final Wrapper wrapper ) {
             final DropDownChoice<TransmissionMedium> mediumDropDownChoice = new DropDownChoice<TransmissionMedium>(
@@ -482,13 +486,13 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             // format link
             Component formatLinkOrLabel =
                     format == null
-                        ? new Label("formatLink", "format")
-                        : findPage() instanceof PlanPage
+                            ? new Label( "formatLink", "format" )
+                            : findPage() instanceof PlanPage
                             ? new ModelObjectLink(
-                                "formatLink",
-                                new Model<InfoFormat>( format ),
-                                new Model<String>( canBeEdited() ? "format" : "format " + format.getName() ) )
-                            : new Label( "formatLink", "format " +  format.getName() );
+                            "formatLink",
+                            new Model<InfoFormat>( format ),
+                            new Model<String>( canBeEdited() ? "format" : "format " + format.getName() ) )
+                            : new Label( "formatLink", "format " + format.getName() );
             formatLinkOrLabel.setVisible( !wrapper.isMarkedForCreation() );
             formatContainer.add( formatLinkOrLabel );
             // format choices
@@ -517,8 +521,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             formatContainer.add( formatDropDownChoice );
             formatContainer.setVisible(
                     getChannelable().canSetFormat()
-                    && !(!canBeEdited() && wrapper.getFormat() == null ) // hide when read only and no format
-                    && !wrapper.isMarkedForCreation()  );
+                            && !( !canBeEdited() && wrapper.getFormat() == null ) // hide when read only and no format
+                            && !wrapper.isMarkedForCreation() );
             return formatContainer;
         }
 
@@ -535,7 +539,8 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     } );
 
             flagIfInvalid( addressField, wrapper );
-            addressField.setVisible( !wrapper.isMarkedForCreation() && getChannelable().hasAddresses() && canBeEdited() );
+            addressField.setVisible( !wrapper.isMarkedForCreation()
+                    && getChannelable().hasAddresses() && canBeEdited() );
             //           addressField.setEnabled( canBeEdited() );
             return addressField;
         }
@@ -553,13 +558,13 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             if ( !wrapper.isMarkedForCreation() ) {
                 Channel channel = wrapper.getChannel();
                 String problem = getChannelable().validate( channel );
-                if ( problem == null ) {
+                /*if ( problem == null ) {
                     for ( Channel c : getChannelable().getModifiableChannels() ) {
                         if ( !c.equals( channel ) && c.getAddress().equals( channel.getAddress() ) ) {
                             problem = "Repeated";
                         }
                     }
-                }
+                }*/
                 if ( problem != null ) {
                     addressField.add(
                             new AttributeModifier(

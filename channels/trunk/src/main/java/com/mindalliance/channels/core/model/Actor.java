@@ -391,6 +391,11 @@ public class Actor extends AbstractUnicastChannelable implements Classifiable, S
         return null;
     }
 
+    @Override
+    public boolean hasAddresses() {
+        return false;    // Only users participating as agents have addresses.
+    }
+
     /**
      * Whether can be associated with at most one user.
      *

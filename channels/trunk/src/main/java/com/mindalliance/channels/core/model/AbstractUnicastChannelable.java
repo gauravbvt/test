@@ -2,6 +2,7 @@ package com.mindalliance.channels.core.model;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +28,30 @@ public abstract class AbstractUnicastChannelable extends ModelEntity implements 
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public List<Channel> getEffectiveChannels() {
-        return getChannels();
+        return (List<Channel>) CollectionUtils.collect(
+                getChannels(),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        Channel channel = (Channel) input;
+                        return hasAddresses()
+                                ? channel
+                                : new Channel( channel.getMedium() );
+                    }
+                } );
     }
 
     @Override
     public List<Channel> getModifiableChannels() {
-        return getEffectiveChannels();
+        return getChannels();
     }
 
     @Override
     public void addChannel( Channel channel ) {
         // assert channel.isUnicast();
+        if ( !hasAddresses() ) channel.setAddress( null );
         if ( !channels.contains( channel ) )
             channels.add( channel );
     }
