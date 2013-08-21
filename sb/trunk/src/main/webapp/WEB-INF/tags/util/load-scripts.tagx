@@ -25,6 +25,8 @@
   <script src="${dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   <script src="${spring_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
   <script src="${spring_dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
-  <script type="text/javascript">dojo.require("dojo.parser");</script>
+  <script type="text/javascript">require(["dojo/parser","dijit/layout/AccordionContainer","dojo/_base/declare",
+                                          "dgrid/Grid", "dgrid/Selection", "dgrid/extensions/ColumnResizer",
+                                          "dgrid/extensions/ColumnHider", "dgrid/extensions/ColumnReorder"]);</script>
 
 </jsp:root>

@@ -13,6 +13,9 @@
     <version position="left"/>
 
     <body>
+        <menu name="Installation">
+            <item name="Getting started" href="installing.html"/>
+        </menu>
         <menu name="Design">
             <item name="Overview" href="design.html"/>
             <item name="Database model" href="db.html"/>

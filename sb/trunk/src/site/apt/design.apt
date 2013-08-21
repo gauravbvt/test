@@ -4,5 +4,33 @@
 
 Design Overview
 
- TBD
+ [[1]] Invited members fill-in a survey from {{{http://www.surveygizmo.com/}SurveyGizmo}}.
+ 
+ [[2]] SurveyGizmo does a REST call to {{{./apidocs/com/mindalliance/sb/TriggerController.html}/trigger}} to notify that 
+       some new surveys were completed. The call must be hooked up to the last question of the survey.
+
+ [[3]] Notifications are queued into the {{{http://www.springsource.org/spring-integration}Spring Integration}} pipeline
+       by the {{{./apidocs/com/mindalliance/sb/TriggerService.html}TriggerService}}. Every 5 seconds, 
+       the {{{./apidocs/com/mindalliance/sb/LookupService.html}LookupService}} processes the notifications by querying 
+       SurveyGizmo to figure out what the new surveys are.
+
+ [[4]] The decyphered surveys are then processed by the {{{./apidocs/com/mindalliance/sb/Integrator.html}Integrator}}, 
+       who updates the database accordingly.
+       
+ [[5]] At this point, Mind-Alliance staff may be notified by email of new integrated responses. 
+       Various {{{http://en.wikipedia.org/wiki/RSS}RSS}} feeds could also be used for monitoring:
+        
+          * New respondents
+          
+          * New organizations
+          
+          * New contacts
+ 
+ []
+ 
+ Deployed at ${deploymentUrl}.
+
+[NJSP_pipeline.png] Overview
+ 
+ 
  

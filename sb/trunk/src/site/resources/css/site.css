@@ -9,3 +9,7 @@
 h2 {
     margin-top: 6px;
 }
+
+#contentBox img {
+    width: 100%;
+}

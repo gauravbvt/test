@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class LookupService {
 
-    // TODO persist last check date
+    // TODO persist last check date for lookups to SG
     private Date lastCheck = new Date( 0L );
 
     @Autowired

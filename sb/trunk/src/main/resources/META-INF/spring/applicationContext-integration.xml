@@ -28,22 +28,22 @@
 
     <!-- Unprocessed survey responses -->
     <int:channel id="responses" datatype="com.mindalliance.sb.SurveyResponse"/>
-    <int:service-activator input-channel="responses" output-channel="nullChannel">
+    <int:service-activator input-channel="responses" output-channel="newRespondents">
         <bean class="com.mindalliance.sb.Integrator"/>
     </int:service-activator>
         
     <!-- Unvalidated, persisted respondents -->
-    <!--<int:channel id="rawRespondents" datatype="com.mindalliance.sb.model.Respondent"/>-->
-        <!---->
-    <!--<int:object-to-string-transformer input-channel="rawRespondents" output-channel="mailContent"/>-->
-    <!--<int:channel id="mailContent"/>-->
-    <!--<int-mail:header-enricher input-channel="mailContent" output-channel="mailMessages">-->
-        <!--<int-mail:subject value="New respondent"/>-->
-        <!--<int-mail:to value="denis@mind-alliance.com"/>        -->
-    <!--</int-mail:header-enricher>-->
+    <int:channel id="newRespondents" datatype="com.mindalliance.sb.model.Respondent"/>
 
-    <!--<int:channel id="mailMessages"/>-->
-    <!--<int-mail:outbound-channel-adapter channel="mailMessages" host="localhost"/>-->
+    <int:object-to-string-transformer input-channel="newRespondents" output-channel="mailContent"/>
+    <int:channel id="mailContent"/>
+    <int-mail:header-enricher input-channel="mailContent" output-channel="mailMessages">
+        <int-mail:subject value="New respondent"/>
+        <int-mail:to value="denis@mind-alliance.com"/>        
+    </int-mail:header-enricher>
+
+    <int:channel id="mailMessages"/>
+    <int-mail:outbound-channel-adapter channel="mailMessages" host="localhost"/>
 
 
 </beans>

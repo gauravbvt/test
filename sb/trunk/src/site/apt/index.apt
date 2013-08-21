@@ -7,3 +7,14 @@ About this site
  This site contains all the development's internals for this project. 
  It is automatically rebuilt on demand and reflects the current state of the code.
  
+ A few useful links:
+ 
+     * {{{./..}Production version}}.  This is the current live version of this project.
+       It is also rebuilt automatically every on code changes by developers.
+     
+     * {{{https://wush.net/trac/mindalliance/query?status=new&status=assigned&status=reopened&group=milestone&component=sb&order=priority}Current bugs, issues or enhancement requests}}.
+     
+     * Use {{{https://wush.net/trac/mindalliance/newticket?type=defect&component=sb}this form}} to enter a new bug.
+ 
+ See the {{{installing.html}Getting started}} section to do a new installation.
+ 
