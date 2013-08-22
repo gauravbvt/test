@@ -90,7 +90,7 @@ public class MAP0011_addEventToPlan extends TestCase{
 	}
 	
 	/**
-	 * This method adds event to the plan and verify if the event is added
+	 * This method adds event to the plan and verify if the event gets added
 	 * @throws UIAutomationException
 	 * @throws IOException 
 	 */
