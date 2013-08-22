@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 /**
  * TestCase Id: MAV0183_UsuallyCompletesAfterOption 
  * Summary: Verify option gets selected when clicked on 'Usually completes after'
- * @author afour
+ * @author afour 
  *
  */
 public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
@@ -67,7 +67,7 @@ public class MAV0183_UsuallyCompletesAfterOption extends TestCase{
 			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
-			// Loads Test Data
+			// Loads the Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
 			// Write log			
