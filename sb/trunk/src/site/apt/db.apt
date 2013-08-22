@@ -4,4 +4,21 @@
 
 Database model
 
- TBD 
+ This whole application was derived from a model created with 
+ {{{http://www.mysql.com/products/workbench/}MySql Workbench}}. 
+ The model was initially exported to a MySql database, 
+ which was then reversed-engineered using {{{http://www.springsource.org/spring-roo}Spring Roo}}.
+  
+ At that point, the generated application was customized and completed manually.
+ 
+* Current model walk-through
+
+
+ 
+* Changing the model
+ 
+ Editing the model and updating the application accordingly is done as follow:
+ 
+  [[1]] Edit the model file.
+  
+ 

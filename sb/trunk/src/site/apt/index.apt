@@ -16,5 +16,5 @@ About this site
      
      * Use {{{https://wush.net/trac/mindalliance/newticket?type=defect&component=sb}this form}} to enter a new bug.
  
- See the {{{installing.html}Getting started}} section to do a new installation.
+ See the {{{./installing.html}Getting started}} section to do a new installation.
  
