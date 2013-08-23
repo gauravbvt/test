@@ -4,6 +4,11 @@
 		<GivenName>Alert Window Title Of Delete Plan</GivenName>
 		<Title>Delete the selected plan?</Title>
 	</Element>
+	
+	<Element>
+ 		<GivenName>Alert Window Title Of Productize Plan</GivenName>
+ 		<Title>Put in prodocution the current version even though validity issues are unresolved and even though not all planners have voted to move into production?</Title>
+ 	</Element>
  	
  	<Element>
  		<GivenName>Plan Name</GivenName>
@@ -77,6 +82,16 @@
  	</Element>
  	
  	<Element>
+    	<GivenName>Productize Plan</GivenName>
+    	<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div/a</Xpath>
+    	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
     	<GivenName>User Name</GivenName>
     	<Xpath>/html/body/div/div[2]/div/form/table[5]/tbody/tr/td[2]/input</Xpath>
     	<Name>new</Name>
@@ -139,6 +154,16 @@
  	<Element>
     	<GivenName>Second XPath</GivenName>
     	<Xpath>]/td[12]/input</Xpath>
+       	<Name></Name>
+    	<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+    	<GivenName>Home Link</GivenName>
+    	<Xpath>/html/body/form/div[2]/div[2]/div/ul/li/a/span</Xpath>
        	<Name></Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>
