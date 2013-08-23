@@ -14,8 +14,8 @@
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <segmentForRedoDisintermediateTask>Segment For Redo Disintermediate Task</segmentForRedoDisintermediateTask>
 <intermediate>Intermediate</intermediate>
-<undoDisIntermediate>Undo Disintermediate</undoDisIntermediate>
-<redoDisIntermediate>Redo Disintermediate</redoDisIntermediate>
+<undoAddInformationCapability>Undo Add Information Capability</undoAddInformationCapability>
+<redoAddInformationCapability>Redo Add Information Capability</redoAddInformationCapability>
 <actionsInSendsPanel>Actions In Sends Panel</actionsInSendsPanel>
 <redoDisIntermediate>Redo DisIntermediate</redoDisIntermediate>
 

@@ -13,7 +13,9 @@
 <addNewSegment>Add New Segment</addNewSegment>
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <segmentForRedoDisintermediateTask>Segment For Redo Disintermediate Task</segmentForRedoDisintermediateTask>
-<intermediate>Intermediate</intermediate>
+<newIssueInSendsPanel>New Issue In Sends Panel</newIssueInSendsPanel>
+<undoNewIssueInSendsPanel>Undo New Issue In Sends Panel</undoNewIssueInSendsPanel>
+<redoNewIssueInSendsPanel>Redo New Issue In Sends Panel</redoNewIssueInSendsPanel>
 <undoDisIntermediate>Undo Disintermediate</undoDisIntermediate>
 <redoDisIntermediate>Redo Disintermediate</redoDisIntermediate>
 <actionsInSendsPanel>Actions In Sends Panel</actionsInSendsPanel>
