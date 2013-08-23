@@ -94,6 +94,15 @@
     	<ClassName></ClassName>
  	</Element>
  	<Element>
+ 		<GivenName>Sign Out Communities</GivenName>
+ 		<Xpath>/html/body/form/div[2]/div/div/div/a</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	<Element>
  		<GivenName>Home Image Link</GivenName>
  		<Xpath>/html/body/form/div[2]/div/a/img</Xpath>
  		<Name></Name>
