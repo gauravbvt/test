@@ -385,7 +385,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
     private String getRFIsLabel( ChannelsUser user, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "Planning surveys" );
+        sb.append( "Surveys" );
         int lateCount = surveysDAO.countLate( communityService, user );
         if ( lateCount > 0 ) {
             sb.append( " (" )
