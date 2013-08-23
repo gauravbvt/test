@@ -112,7 +112,7 @@ public class MAC0033_RedoAddGoal extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
- 		// Domain Plans
+ 		    // Domain Plans
  		    stepNo++;
  			description="Domain Plans";
  			DomainPlanPage domainPlanPage= new DomainPlanPage();

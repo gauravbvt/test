@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -49,7 +50,7 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -110,20 +111,20 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
+ 			 // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+ 			
+			// Plan Page
+		    stepNo++;
+			description="Domain Plan Editor";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -131,6 +132,7 @@ public class MAC0064_RedoRemoveRequirement extends TestCase {
  			// Click on 'Plan Requirements' under 'Scoping' pop up menu
  			stepNo++;
 			description="Plan Requirement";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("Planrequirement"));
 			// Write log

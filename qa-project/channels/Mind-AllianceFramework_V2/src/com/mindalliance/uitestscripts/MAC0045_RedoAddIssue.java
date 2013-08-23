@@ -166,104 +166,31 @@ public class MAC0045_RedoAddIssue extends TestCase {
 			stepNo++;
 			description="Add Info Sends";
 			planPage.clickAddInfoSendsPanel();
-			// Enter Information Name
-			planPage.enterInformationNameInSendsPanel(testData.get("InformationInSendsPanel"));
-			// Select 'Other..' option form 'From Task:' dropdown list
-			planPage.selectFromInSends(testData.get("OtherTaskName"));
-			// Enter From Task name
-			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
+			
 			// Click on Strench up form
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Click on 'Intermediate' under 'Actions' pop up menu in sends panel
+			// Click on 'New Issue' under 'Actions' pop up menu in sends panel
 			stepNo++;
 			description="Intermediate Task Successfully";
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
-			planPage.clickSubmenu(testData.get("Intermediate"));
-			// Verify intermediate task should gets added to the segment
-			// Click on 'About Plan segment' under 'Show' pop up menu
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Open Task Mover
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Verify Task is added
-			planPage.verifyTaskNameInTaskMover(testData.get("IntermediateTaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			planPage.clickSubmenu(testData.get("NewIssueInSendsPanel"));
 			
-			// Close Task Mover window
-			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment";
-			planPage.closeAboutPlanSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on intermediate Task
-			stepNo++;
-			description="Intermediate Task";
-			planPage.clickOnIntermediateTask(testData.get("IntermediateTaskName"));
-			// Click on Stretch up form
-			planPage.clickStrenchUpForm();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'details' under' show' pop up menu in task panel
-			stepNo++;
-			description="Details of Task";
-			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
-			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'Disintermediate' under 'Actions' pop up of 'Task' panel
-			stepNo++;
-			description="Disintermediate Task";
-			planPage.clickPopupMenu(testData.get("ActionsInTaskPanel"));
-			planPage.clickSubmenu(testData.get("Disintermediate"));
-			// Verify task is disintermediated
-			planPage.verifyDisintermediate(testData.get("UndoDisIntermediate"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'Undo Disintermediate' under 'Actions' pop up menu
+			// Click on 'Undo New Issue' under 'Actions' pop up menu
 			stepNo++;
 			description="Undo Disintermediate";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("UndoDisIntermediate"));					
-			// Verify added disintermediate task should be undone
-			planPage.verifyUndoDisintermediate(testData.get("RedoDisIntermediate"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
+			planPage.clickSubmenu(testData.get("UndoNewIssueInSendsPanel"));
 			
-			// Click on 'Redo Disintermediate Task' under 'Actions' pop up menu
+			// Click on 'Redo New Issue' under 'Actions' pop up menu
 			stepNo++;
-			description="Redo Disintermediate Task";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RedoDisIntermediate"));
-			// Verify undone disintermediate task should be added
-			planPage.verifyRedoDisintermediate(testData.get("UndoDisIntermediate"));			
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
+			description="Undo Disintermediate";
+			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
+			planPage.clickSubmenu(testData.get("RedoNewIssueInSendsPanel"));
+		
 			//Click on Remove this segment
  			stepNo++;
 			description="Remove This Segment";
@@ -346,29 +273,22 @@ public class MAC0045_RedoAddIssue extends TestCase {
 	        this.testData.put("ChannelsURL",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("InformationInSendsPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("informationInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("FromTaskNameInSendsPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("fromTaskNameInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("OtherTaskName",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("otherTaskName").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Intermediate",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("intermediate").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Disintermediate",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("disintermediate").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("NewIssueInSendsPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("newIssueInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());		
 		 	
 			this.testData.put("Actions",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("ActionsInSendsPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("actionsInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("AddNewSegment",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("SegmentForRedoDisintermediateTask",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("segmentForRedoDisintermediateTask").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("UndoDisIntermediate",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("undoDisIntermediate").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("RedoDisIntermediate",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("redoDisIntermediate").item(0).getChildNodes().item(0).getNodeValue());
-			
-			this.testData.put("ActionsInSegment",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("actionsInSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("MoveTasksInSegment",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("moveTasksInSegment").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("UndoNewIssueInSendsPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("undoNewIssueInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RedoNewIssueInSendsPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("redoNewIssueInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
+
 			this.testData.put("Show",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("show").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("AboutPlanSegment",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("IntermediateTaskName",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("intermediateTaskName").item(0).getChildNodes().item(0).getNodeValue());
+//			this.testData.put("IntermediateTaskName",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("intermediateTaskName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("TaskName",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("taskName").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("ShowInTaskPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("showInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
+		    this.testData.put("ShowInTaskPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("showInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("DetailsInTaskPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("detailsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("ActionsInTaskPanel",oXmlEleMAC0045_RedoAddIssue.getElementsByTagName("actionsInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());
-			
+//			
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAC0045_RedoAddIssue not found.");

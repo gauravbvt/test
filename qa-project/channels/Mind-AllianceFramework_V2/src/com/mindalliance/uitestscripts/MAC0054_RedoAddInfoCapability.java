@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -50,7 +51,7 @@ public class MAC0054_RedoAddInfoCapability extends TestCase {
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -102,165 +103,75 @@ public class MAC0054_RedoAddInfoCapability extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
-			// Login page
-			stepNo++;
-			description="Login Successful";
-			LoginPage loginPage = new LoginPage();
-		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
-		    // Write log
+ 	    	// Login page
+ 			stepNo++;
+ 			description="Login Successful";
+ 			LoginPage loginPage = new LoginPage();
+ 			loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
+ 		    // Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 		 							
+ 		     // Domain Plans
+ 		    stepNo++;
+  			description="Domain Plans";
+  			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 		 	domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
+  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 		 			
+  			// Plan Page
+ 		    stepNo++;
+ 			description="Domain Plan Editor";
+ 			HomePage homePage=new HomePage();
+ 			homePage.clickDomainPlanEditor();	
+			// Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 					
+ 			// Click Actions pop up menu and Add New Segment
+ 		 	stepNo++;
+ 			description="Add New Segment";
+ 			PlanPage planPage=new PlanPage();
+ 			planPage.clickPopupMenu(testData.get("Actions"));
+ 			planPage.clickSubmenu(testData.get("AddNewSegment"));
+ 			// Enter Segment Name
+ 			planPage.enterSegmentName(testData.get("SegmentForRedoDisintermediateTask"));
+ 			// Write log
+			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click Actions pop up menu and Add New Segment
+ 			// Close Segment window
  			stepNo++;
-			description="Add New Segment";
-			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("AddNewSegment"));
-			// Enter Segment Name
-			planPage.enterSegmentName(testData.get("SegmentForRedoDisintermediateTask"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-					
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment";
-			planPage.closeSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			description="Close About Plan Segment";
+ 			planPage.closeSegmentWindow();
+ 			// Write log
+ 		 	LogFunctions.writeLogs(description);
+ 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Click on default task 
-			stepNo++;
-			description="Default Task";
-			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
-			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
-			planPage.enterTaskName(testData.get("TaskName"));
-			// click on 'strench up forms' icon
-			planPage.clickStrenchUpForm();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Click on 'Add' button under 'Sends' panel
+			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Add Info Sends";
 			planPage.clickAddInfoSendsPanel();
-			// Enter Information Name
-			planPage.enterInformationNameInSendsPanel(testData.get("InformationInSendsPanel"));
-			// Select 'Other..' option form 'From Task:' dropdown list
-			planPage.selectFromInSends(testData.get("OtherTaskName"));
-			// Enter From Task name
-			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
-			// Click on Strench up form
+			// Click on Stretch up forms
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
-			// Click on 'Intermediate' under 'Actions' pop up menu in sends panel
+			// Click on 'Undo Add Info need' under 'Actions' pop up menu in Receives panel
 			stepNo++;
-			description="Intermediate Task Successfully";
-			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
-			planPage.clickSubmenu(testData.get("Intermediate"));
-			// Verify intermediate task should gets added to the segment
-			// Click on 'About Plan segment' under 'Show' pop up menu
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlanSegment"));
-			// Open Task Mover
-			planPage.clickPopupMenu(testData.get("ActionsInSegment"));
-			planPage.clickSubmenu(testData.get("MoveTasksInSegment"));	
-			// Verify Task is added
-			planPage.verifyTaskNameInTaskMover(testData.get("IntermediateTaskName"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close Task Mover window
-			stepNo++;
-			description="Close Task Mover";
-			planPage.closeTaskMoverWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Close Segment window
-			stepNo++;
-			description="Close About Plan Segment";
-			planPage.closeAboutPlanSegmentWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on intermediate Task
-			stepNo++;
-			description="Intermediate Task";
-			planPage.clickOnIntermediateTask(testData.get("IntermediateTaskName"));
-			// Click on Strench up form
-			planPage.clickStrenchUpForm();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'details' under' show' pop up menu in task panel
-			stepNo++;
-			description="Details of Task";
-			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
-			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'Disintermediate' under 'Actions' pop up of 'Task' panel
-			stepNo++;
-			description="Disintermediate Task";
-			planPage.clickPopupMenu(testData.get("ActionsInTaskPanel"));
-			planPage.clickSubmenu(testData.get("Disintermediate"));
-			// Verify task is disintermediated
-			planPage.verifyDisintermediate(testData.get("UndoDisIntermediate"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'Undo Disintermediate' under 'Actions' pop up menu
-			stepNo++;
-			description="Undo Disintermediate";
+			description="Undo Add Info need";
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("UndoDisIntermediate"));					
-			// Verify added disintermediate task should be undone
-			planPage.verifyUndoDisintermediate(testData.get("RedoDisIntermediate"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			planPage.clickSubmenu(testData.get("UndoAddInformationCapability"));
 			
-			// Click on 'Redo Disintermediate Task' under 'Actions' pop up menu
+			// Click on 'Redo Add Info need' under 'Actions' pop up menu in Receives panel
 			stepNo++;
-			description="Redo Disintermediate Task";
+			description="Undo Add Info need";
 			planPage.clickPopupMenu(testData.get("Actions"));
-			planPage.clickSubmenu(testData.get("RedoDisIntermediate"));
-			// Verify undone disintermediate task should be added
-			planPage.verifyRedoDisintermediate(testData.get("UndoDisIntermediate"));			
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			planPage.clickSubmenu(testData.get("RedoAddInformationCapability"));
 			
 			//Click on Remove this segment
  			stepNo++;
@@ -306,6 +217,7 @@ public class MAC0054_RedoAddInfoCapability extends TestCase {
 			Assert.fail(ue.getErrorMessage());		
 		}
 	}
+	
 	
 	/*
 	 * This method will perform cleanup actions
@@ -354,8 +266,8 @@ public class MAC0054_RedoAddInfoCapability extends TestCase {
 			this.testData.put("AddNewSegment",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("SegmentForRedoDisintermediateTask",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("segmentForRedoDisintermediateTask").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("UndoDisIntermediate",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("undoDisIntermediate").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("RedoDisIntermediate",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("redoDisIntermediate").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("UndoAddInformationCapability",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("undoAddInformationCapability").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("RedoAddInformationCapability",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("redoAddInformationCapability").item(0).getChildNodes().item(0).getNodeValue());
 			
 			this.testData.put("ActionsInSegment",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("actionsInSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("MoveTasksInSegment",oXmlEleMAC0054_RedoAddInfoCapability.getElementsByTagName("moveTasksInSegment").item(0).getChildNodes().item(0).getNodeValue());

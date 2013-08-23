@@ -155,7 +155,7 @@ public class MAC0025_UndoRemoveFlow extends TestCase{
 			// Select 'Other..' option form 'From Task:' dropdown list
 			planPage.selectFrom(testData.get("OtherTaskName"));
 			// Enter From Task name
-			planPage.enterFromTaskName(testData.get("FromTaskNameInRecevesPanel"));
+			planPage.enterFromTaskNameInReceives(testData.get("FromTaskNameInRecevesPanel"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
