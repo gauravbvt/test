@@ -245,7 +245,7 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>add-new-questionnaire</ClassName>
+		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Questionnaire Name Textbox</GivenName>
@@ -265,15 +265,7 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	//<Element>
-		//<GivenName>Questionnaire Table</GivenName>
-		//<Xpath>//table[contains(@class,'data-table')]</Xpath>
-		//<Name></Name>
-		//<Id></Id>
-		//<PartialLinkText></PartialLinkText>
-		//<LinkText></LinkText>
-		//<ClassName>data-table</ClassName>
-	//</Element>
+	
 	<Element>
 		<GivenName>Questionnaire Table</GivenName>
 		<Xpath>/html/body/form/div[27]/div/div[3]/div/div/div[2]/table</Xpath>
@@ -281,7 +273,7 @@
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
-		<ClassName>data-table</ClassName>
+		<ClassName></ClassName>
 	</Element>
 	<Element>
 		<GivenName>Presence</GivenName>
@@ -368,6 +360,30 @@
 		<LinkText>unnamed</LinkText>
 		<ClassName></ClassName>
 	</Element>
+	
+	
+	<Element>
+		<GivenName>Participation Tab in Organization</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[4]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Checkbox of Organization in Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
 	
 	<Element>
 		<GivenName>Where this event is referenced</GivenName>
@@ -657,6 +673,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Agent name in Organization In Scope</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/div/div[2]/div/table/tbody/tr/td[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Title In Organization In Scope</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/div/div[2]/div/table/tbody/tr/td[3]/input</Xpath>
 		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:title</Name>
@@ -693,16 +719,44 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
+//	<Element>
+//		<GivenName>Checkbox Of Agent  Organization In Scope</GivenName>
+//		<Xpath></Xpath>
+//		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed</Name>
+//		<Id></Id>
+//		<PartialLinkText></PartialLinkText>
+//		<LinkText></LinkText>
+//		<ClassName></ClassName>
+//	</Element>
 	<Element>
-		<GivenName>Checkbox Of Agent  Organization In Scope</GivenName>
-		<Xpath></Xpath>
-		<Name>entity:fp-content:mo:aspect:tabContainer:tabs:panel:jobsDiv:jobs:0:confirmed</Name>
+		<GivenName>Contact Info Drop Down For Agent</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[7]/td/ol/li/select</Xpath>
+		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
+	<Element>
+		<GivenName>Contact Info For Agent Text Field</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/div/table/tbody/tr[7]/td/ol/li/input[2]</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+
+	<Element>
+		<GivenName>Agent Textfield in Participation</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/span/div/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Show All Activities</GivenName>
 		<Xpath>/html/body/form/span/span/div/div/div[2]/div/div/a/span</Xpath>
@@ -991,7 +1045,6 @@
 	<Element>
 		<GivenName>New Issue In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[5]/span/a/span</Xpath>
-		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
@@ -1283,7 +1336,6 @@
 	</Element>
 	
 	
-	<Element>
 		<GivenName>New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
 		<Name></Name>
@@ -1451,6 +1503,16 @@
  	<Element>
  		<GivenName>Close User As Agent Window</GivenName>
  		<Xpath>/html/body/form/div[24]/div/div/div[3]/a/img</Xpath>
+ 		<Name></Name>
+ 		<Id></Id>
+    	<PartialLinkText></PartialLinkText>
+    	<LinkText></LinkText>
+    	<ClassName></ClassName>
+ 	</Element>
+ 	
+ 	<Element>
+ 		<GivenName>Close Actual Agent Window</GivenName>
+ 		<Xpath>/html/body/form/div[3]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -1802,6 +1864,25 @@
 	<Element>
 		<GivenName>Undo Add New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Redo New Issue In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div/span/span[2]/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -2611,15 +2692,15 @@
 		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
-	<Element>
-		<GivenName>From Dropdown In Sends Panel</GivenName>
-		<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:other:firstChoice')]</Xpath>
-		<Name>segment:sends:flows-div:flows:0:flow:other:firstChoice</Name>
-		<Id></Id>
-		<PartialLinkText></PartialLinkText>
-		<LinkText></LinkText>
-		<ClassName></ClassName>
-	</Element>
+	//<Element>
+		//<GivenName>From Dropdown In Sends Panel</GivenName>
+		//<Xpath>//select[contains(@name,'segment:sends:flows-div:flows:0:flow:other:firstChoice')]</Xpath>
+		//<Name>segment:sends:flows-div:flows:0:flow:other:firstChoice</Name>
+		//<Id></Id>
+		//<PartialLinkText></PartialLinkText>
+		//<LinkText></LinkText>
+		//<ClassName></ClassName>
+	//</Element>
 	
 	<Element>
 		<GivenName>Intent Dropdown In Receives Panel</GivenName>
@@ -2807,6 +2888,20 @@
 		<PartialLinkText></PartialLinkText>
 		<LinkText></LinkText>
 		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>From Dropdown In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/select</Xpath>
+		<Name></Name>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>From Task Name In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
+		<ClassName></ClassName>
+		<Id></Id>
 	</Element>
 	
 	<Element>
