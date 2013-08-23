@@ -83,6 +83,7 @@ public class UsersSettingsPanel extends AbstractUpdatablePanel {
         } );
         newUserField.setOutputMarkupId( true );
         addTipTitle( newUserField, "Enter a new username (alphanumerics, no spaces)" );
+        addInputHint( newUserField, "username" );
         addOrReplace( newUserField );
         // add user button
         addUserLink = new AjaxLink<String>( "addUser" ) {

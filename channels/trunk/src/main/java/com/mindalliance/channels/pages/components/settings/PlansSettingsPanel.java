@@ -16,7 +16,6 @@ import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -137,7 +136,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         newPlanUriField.setOutputMarkupId( true );
-        newPlanUriField.add( new AttributeModifier( "placeholder", "a_model_unique_id" ) );
+        addInputHint( newPlanUriField, "a_unique_model_id" );
         settingsContainer.addOrReplace( newPlanUriField );
         // button
         AjaxLink<String> addPlanLink = new AjaxLink<String>( "addPlan" ) {
@@ -211,6 +210,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         planNameField.setOutputMarkupId( true );
+        addInputHint( planNameField, "One or more words");
         planPropertiesContainer.addOrReplace( planNameField );
         // owner
         TextField<String> planOwnerField = new TextField<String>(
@@ -222,6 +222,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
+        addInputHint( planOwnerField, "Who owns this model" );
         planOwnerField.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( planOwnerField );
         // planner support email
@@ -234,6 +235,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
+        addInputHint( plannerSupportField, "An email address" );
         plannerSupportField.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( plannerSupportField );
         // participant support email
@@ -246,6 +248,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
+        addInputHint( participantSupportField, "An email address" );
         participantSupportField.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( participantSupportField );
     }

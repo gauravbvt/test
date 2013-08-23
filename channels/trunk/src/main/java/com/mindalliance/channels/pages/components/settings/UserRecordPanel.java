@@ -154,13 +154,18 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply2" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
-                resetUserRecord();
-                addUserRecord();
-                target.add( userRecordContainer );
-                Change change = new Change( Change.Type.NeedsRefresh );
-                change.setMessage( "Settings changed for " + userRecord.getUsername() );
-                update( target, change );
+                if ( !userRecord.sameAs( userRecordUpdate ) ) {
+                    userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
+                    resetUserRecord();
+                    addUserRecord();
+                    target.add( userRecordContainer );
+                    Change change = new Change( Change.Type.NeedsRefresh );
+                    change.setMessage( "Settings changed for " + userRecord.getUsername() );
+                    update( target, change );
+                } else {
+                    Change change = Change.message( "Settings not changed" );
+                    update( target, change );
+                }
             }
         };
         applyLink.setOutputMarkupId( true );
@@ -309,13 +314,18 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
+                if ( !userRecord.sameAs( userRecordUpdate ) ) {
+                    userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
                 resetUserRecord();
                 addUserRecord();
                 target.add( userRecordContainer );
                 Change change = new Change( Change.Type.NeedsRefresh );
                 change.setMessage( "Settings changed for " + userRecord.getUsername() );
                 update( target, change );
+                } else {
+                    Change change = Change.message( "Settings not changed" );
+                    update( target, change );
+                }
             }
         };
         applyLink.setOutputMarkupId( true );
