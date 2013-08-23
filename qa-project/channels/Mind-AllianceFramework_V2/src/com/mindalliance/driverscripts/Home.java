@@ -232,7 +232,7 @@ public class Home {
 		suite.addTestSuite(MAC0025_UndoRemoveFlow.class);
 		suite.addTestSuite(MAC0026_UndoDuplicateFlow.class);
 		suite.addTestSuite(MAC0031_RedoAddSegment.class);
-//		suite.addTestSuite(MAC0033_RedoAddGoal.class);
+		suite.addTestSuite(MAC0033_RedoAddGoal.class);
 //		suite.addTestSuite(MAC0034_RedoRemoveGoal.class);
 //		suite.addTestSuite(MAC0035_RedoAddNewTask.class);
 //		suite.addTestSuite(MAC0036_RedoCutTask.class);
@@ -243,13 +243,13 @@ public class Home {
 ////		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 ////		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 ////		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
-////		suite.addTestSuite(MAC0045_RedoAddIssue.class);
+    		suite.addTestSuite(MAC0045_RedoAddIssue.class);
 ////		suite.addTestSuite(MAC0046_RedoRemoveIssue.class);
 ////		suite.addTestSuite(MAC0047_RedoAttachDocument.class);
 ////		suite.addTestSuite(MAC0050_RedoPasteAttachment.class);
 ////		suite.addTestSuite(MAC0052_RedoSetTaskFromCopy.class);
-////		suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
-////		suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
+    		suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
+    		suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
 ////		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
 ////		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
 ////		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
