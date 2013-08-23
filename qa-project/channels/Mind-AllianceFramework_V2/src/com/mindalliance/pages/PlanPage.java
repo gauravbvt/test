@@ -1797,14 +1797,14 @@ public class PlanPage {
 	 * @param other
 	 * @throws UIAutomationException
 	 */
-	public void selectFrom(String other) throws UIAutomationException{
+	public void selectFrom(String Other) throws UIAutomationException{
 		
 		elementController.requireElementSmart(fileName,"From Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Receives Panel");
 		UIActions.click(fileName,"From Dropdown In Receives Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Receives Panel");
 		
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
-		UIActions.selectByTextAndClick(other);
+		UIActions.selectByTextAndClick(Other);
 	}
 	
 	/*public void enterOrganizationName(String organizationName) throws UIAutomationException{
@@ -1936,20 +1936,35 @@ public class PlanPage {
 	}
 	
 	/**
+	 * Enter value in 'From' textbox in sends panel
+	 * @param fromTaskName
+	 * @throws UIAutomationException
+	 */
+	public void enterFromTaskName(String fromTaskNameInSends) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends Panel");
+		UIActions.click(fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends Panel");
+	    UIActions.enterValueInTextBox(fromTaskNameInSends,fileName,"From Task Name In Sends",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends");
+		UIActions.enterKey(Keys.TAB);
+	}
+	
+	
+	/**
 	 * Enter value in 'From' textbox in receives panel
 	 * @param fromTaskName
 	 * @throws UIAutomationException
 	 */
-	public void enterFromTaskName(String toTaskName) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"To Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "To Task Name In Sends Panel");
-		UIActions.click(fileName,"To Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "To Task Name In Sends Panel");
+	public void enterFromTaskNameInReceives(String FromTaskNameInRecevesPanel) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"From Task Name In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receives Panel");
+		UIActions.click(fileName,"From Task Name In Receives Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receives Panel");
 		
 		for (int i = 0; i <= 17; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
 		}
-		UIActions.enterValueInTextBox(toTaskName,fileName,"To Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "To Task Name In Sends Panel");
+		UIActions.enterValueInTextBox(FromTaskNameInRecevesPanel,fileName,"From Task Name In Receves Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Receves Panel");
 		UIActions.enterKey(Keys.TAB);
 	}
+	
+	
 	
 	/**
 	 * Click Default event UNNAMED
