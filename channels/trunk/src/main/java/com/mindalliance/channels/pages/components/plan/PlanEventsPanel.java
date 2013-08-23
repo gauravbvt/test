@@ -45,9 +45,9 @@ public class PlanEventsPanel extends AbstractCommandablePanel {
         List<? extends GeoLocatable> geoLocatables = getQueryService().listReferencedEntities( Event.class );
         GeomapLinkPanel eventsMapLink = new GeomapLinkPanel(
                 "geomapLink",
-                new Model<String>( "All events in plan with known locations" ),
+                new Model<String>( "All events n the model with known locations" ),
                 geoLocatables,
-                new Model<String>( "Show events in plan" ) );
+                new Model<String>( "Show events in the model" ) );
         eventsMapLink.setOutputMarkupId( true );
         addOrReplace( eventsMapLink );
     }

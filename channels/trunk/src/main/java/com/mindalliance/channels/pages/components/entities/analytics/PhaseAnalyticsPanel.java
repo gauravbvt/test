@@ -90,7 +90,7 @@ public class PhaseAnalyticsPanel extends AbstractUpdatablePanel implements Guida
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeLinkColumn(
-                    "Plan segment",
+                    "Segment",
                     "",
                     "name",
                     EMPTY ) );

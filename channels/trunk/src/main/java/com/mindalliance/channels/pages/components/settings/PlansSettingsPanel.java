@@ -137,7 +137,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         newPlanUriField.setOutputMarkupId( true );
-        newPlanUriField.add( new AttributeModifier( "placeholder", "a_plan_unique_id" ) );
+        newPlanUriField.add( new AttributeModifier( "placeholder", "a_model_unique_id" ) );
         settingsContainer.addOrReplace( newPlanUriField );
         // button
         AjaxLink<String> addPlanLink = new AjaxLink<String>( "addPlan" ) {
@@ -154,7 +154,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                     }
                 }
                 if ( !success )
-                    update( target, Change.message( "Invalid plan identifier - New plan not added." ) );
+                    update( target, Change.message( "Invalid plan identifier - New model not added." ) );
             }
         };
         addPlanLink.setOutputMarkupId( true );
@@ -164,14 +164,14 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     private boolean addPlanWithUri( String planUri ) {
         if ( planUri != null && !planUri.trim().isEmpty() ) {
             try {
-                String newPlanName = "New Unnamed Plan";
+                String newPlanName = "New Unnamed Model";
                 PlanDefinition newPlanDefinition = planDefinitionManager.getOrCreate( planUri, newPlanName, "Unnamed" );
                 getPlanManager().assignPlans();
                 selectedPlan = planManager.getPlan( newPlanDefinition.getUri(),
                         newPlanDefinition.getDevelopmentVersion().getNumber() );
                 return selectedPlan != null;
             } catch ( IOException e ) {
-                LOG.error( "Unable to create plan", e );
+                LOG.error( "Unable to create collaboration model", e );
                 return false;
             }
         } else {
@@ -270,7 +270,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         // delete
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "deletePlan",
-                "Delete the selected plan?" ) {
+                "Delete the selected model?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 List<Plan> plans = getPlanManager().getDevelopmentPlans();
@@ -344,7 +344,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 initSettings();
                 target.add( settingsContainer );
                 Change change = new Change( Change.Type.NeedsRefresh );
-                change.setMessage( "Settings changed for plan " + getPlan().getUri() );
+                change.setMessage( "Settings changed for model " + getPlan().getUri() );
                 update( target, change );
 
             }
@@ -355,7 +355,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
 
     private void updatePlan() {
         setPlan( getSelectedPlan() );
-        MultiCommand multiCommand = new MultiCommand( getUsername(), "Update plan settings" );
+        MultiCommand multiCommand = new MultiCommand( getUsername(), "Update model settings" );
         multiCommand.setChange( new Change( Change.Type.Updated, getSelectedPlan() ) );
         multiCommand.makeUndoable( false );
         if ( !getPlanName().equals( getSelectedPlan().getName() ) ) {

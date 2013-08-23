@@ -155,7 +155,7 @@ public class PlanDao extends AbstractModelObjectDao {
 
         newSegment.setName( Segment.DEFAULT_NAME );
         newSegment.setDescription( Segment.DEFAULT_DESCRIPTION );
-        // Make sure a plan segment responds to an event.
+        // Make sure a segment responds to an event.
         newSegment.setEvent( plan.getDefaultEvent() );
         newSegment.setPhase( plan.getDefaultPhase() );
         createPart( newSegment, defaultPartId );

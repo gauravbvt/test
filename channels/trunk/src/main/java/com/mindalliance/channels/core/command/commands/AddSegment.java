@@ -15,7 +15,7 @@ import com.mindalliance.channels.core.command.Commander;
 import com.mindalliance.channels.core.model.Segment;
 
 /**
- * Command to add a plan segment.
+ * Command to add a segment.
  */
 public class AddSegment extends AbstractCommand {
 

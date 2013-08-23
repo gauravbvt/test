@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -8,6 +7,7 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class SegmentNeverEnds extends AbstractIssueDetector {
             String remediation;
             if ( segment.getPhase().isConcurrent() ) {
                 remediation = "Have event \"" + segment.getEvent().getName() + "\" end on its own"
-                        + "\nor have at least one task in the plan segment terminate it.";
+                        + "\nor have at least one task in the segment terminate it.";
             } else if (segment.getPhase().isPreEvent() ) {
                   remediation = "Make event \"" 
                           + segment.getEvent().getName()

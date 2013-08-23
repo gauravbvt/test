@@ -6,7 +6,6 @@
 
 package com.mindalliance.channels.pages.components;
 
-import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Identifiable;
@@ -16,6 +15,7 @@ import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.engine.analysis.graph.EntityRelationship;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
@@ -388,7 +388,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         @SuppressWarnings( "unchecked" )
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-            columns.add( makeFilterableLinkColumn( "In plan segment", "segment", "segment.name", EMPTY, filterable ) );
+            columns.add( makeFilterableLinkColumn( "In segment", "segment", "segment.name", EMPTY, filterable ) );
             columns.add( makeFilterableLinkColumn( "Role", "source.role", "source.role.name", EMPTY, filterable ) );
             columns.add( makeLinkColumn( "Doing", "source", "source.task", EMPTY ) );
             columns.add( makeFilterableLinkColumn( "In",
@@ -439,7 +439,7 @@ public class FilterableEntityFlowsPanel<T extends ModelEntity> extends AbstractU
         @SuppressWarnings( "unchecked" )
         private void init() {
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
-            columns.add( makeFilterableLinkColumn( "In plan segment",
+            columns.add( makeFilterableLinkColumn( "In segment",
                                                    "flow.segment",
                                                    "flow.segment.name",
                                                    EMPTY,

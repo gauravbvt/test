@@ -33,7 +33,7 @@ public class RestoreSegment extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "restore plan segment";
+        return "restore segment";
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RestoreSegment extends AbstractCommand {
                 queryService.remove( defaultSegment );
             return new Change( Change.Type.Added, segment );
         } else {
-            throw new CommandException( "Can't restore plan segment." );
+            throw new CommandException( "Can't restore segment." );
         }
     }
 

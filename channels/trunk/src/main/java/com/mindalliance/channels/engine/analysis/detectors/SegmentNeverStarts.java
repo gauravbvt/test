@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class SegmentNeverStarts extends AbstractIssueDetector {
         if ( !canStart ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
             String eventName = segment.getEvent().getName();
-            String description = "The plan segment may never start";
+            String description = "The segment may never start";
             String remediation = "";
             if ( !isIncident && phase.isConcurrent() ) {
                 description += " because it is not in response to an incident " +

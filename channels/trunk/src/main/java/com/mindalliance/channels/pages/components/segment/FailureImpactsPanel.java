@@ -412,7 +412,7 @@ public class FailureImpactsPanel extends AbstractFloatingCommandablePanel {
             }
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             columns.add( makeLinkColumn( "Necessary task", "part", "part.task", EMPTY ) );
-            columns.add( makeLinkColumn( "Plan segment", "part.segment", "part.segment.name", EMPTY ) );
+            columns.add( makeLinkColumn( "Segment", "part.segment", "part.segment.name", EMPTY ) );
             columns.add( makeColumn( "Risk/opportunity", "goal.categoryLabel", "goal.categoryLabel", EMPTY ) );
             columns.add( makeColumn( "Impact", "impact", "impact", EMPTY ) );
             columns.add( makeColumn( "Severity", "goal.severityLabel", null, EMPTY, null, "goal.level" ) );

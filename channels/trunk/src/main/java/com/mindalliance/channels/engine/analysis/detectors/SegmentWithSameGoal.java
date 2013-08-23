@@ -1,13 +1,13 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Goal;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -60,7 +60,7 @@ public class SegmentWithSameGoal extends AbstractIssueDetector {
                 }
                 for ( Goal sharedGoal : sharedGoals ) {
                     DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, segment );
-                    issue.setDescription( "This plan segment is for the same event phase as \""
+                    issue.setDescription( "This segment is for the same event phase as \""
                             + other.getName()
                             + "\" and both have a common goal: \"" + sharedGoal.getLabel()
                             + "\" by "

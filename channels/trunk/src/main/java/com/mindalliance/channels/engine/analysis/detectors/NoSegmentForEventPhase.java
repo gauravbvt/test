@@ -1,6 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -9,6 +8,7 @@ import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -50,11 +50,11 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                     );
                     if ( !exists ) {
                         Issue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );
-                        issue.setDescription( "No plan segment for phase "
+                        issue.setDescription( "No segment for phase "
                                 + phase.getName()
                                 + " of event "
                                 + event.getName() );
-                        issue.setRemediation( "Add a plan segment for phase "
+                        issue.setRemediation( "Add a segment for phase "
                                 + phase.getName()
                                 + " of event "
                                 + event.getName()
@@ -92,7 +92,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "No plan segment for event phase";
+        return "No segment for event phase";
     }
 
     /**

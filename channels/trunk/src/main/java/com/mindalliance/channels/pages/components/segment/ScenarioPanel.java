@@ -13,6 +13,7 @@ import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -61,7 +62,7 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
     /**
      * Event timings panel.
      */
-    private EventTimingsPanel eventTimingsPanel;
+    private WebMarkupContainer contextContainer;
 
 
     public ScenarioPanel( String id, IModel<Segment> model, Set<Long> expansions ) {
@@ -188,8 +189,11 @@ public class ScenarioPanel  extends AbstractCommandablePanel implements Guidable
     }
 
     private void addEventTimingsPanel() {
-        eventTimingsPanel = new EventTimingsPanel( "context", new PropertyModel<Segment>( this, "segment" ) );
-        add( eventTimingsPanel );
+        contextContainer = new WebMarkupContainer( "contextContainer" );
+        add( contextContainer );
+        contextContainer.setVisible( getPlan().isDevelopment() || !getSegment().getContext().isEmpty() );
+        EventTimingsPanel eventTimingsPanel = new EventTimingsPanel( "context", new PropertyModel<Segment>( this, "segment" ) );
+        contextContainer.add( eventTimingsPanel );
     }
 
     /**

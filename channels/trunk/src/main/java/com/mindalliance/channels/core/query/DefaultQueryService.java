@@ -1962,7 +1962,7 @@ public abstract class DefaultQueryService implements QueryService {
             result.add( new ResourceSpec( organization ) );
             result.addAll( organization.jobResourceSpecs() );
         }
-        // Specs from plan segment parts
+        // Specs from segment parts
         for ( Segment segment : list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {

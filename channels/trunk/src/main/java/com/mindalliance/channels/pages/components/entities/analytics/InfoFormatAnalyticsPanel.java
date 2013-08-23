@@ -163,7 +163,7 @@ public class InfoFormatAnalyticsPanel extends AbstractUpdatablePanel implements 
             final List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( makeFilterableLinkColumn(
-                    "Plan segment",
+                    "Segment",
                     "segment",
                     "segment.name",
                     EMPTY,

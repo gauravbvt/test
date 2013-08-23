@@ -1,7 +1,5 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.DetectedIssue;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -9,6 +7,8 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.DetectedIssue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,8 +43,8 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
             }
             if ( !responded ) {
                 DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, plan );
-                issue.setDescription( "No plan segment responds to incident \"" + incident.getName() + "\"." );
-                issue.setRemediation( "Define a plan segment that responds to it\n"
+                issue.setDescription( "No segment responds to incident \"" + incident.getName() + "\"." );
+                issue.setRemediation( "Define a segment that responds to it\n"
                         + "remove the event's incident status." );
                 issue.setSeverity( ( Level.High ) );
                 issues.add( issue );
@@ -71,6 +71,6 @@ public class NoSegmentRespondsToIncident extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "No plan segment for incident";
+        return "No segment for incident";
     }
 }

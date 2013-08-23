@@ -46,7 +46,7 @@ public class SettingsPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "Plans" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "Collaboration models" ) ) {
             public Panel getPanel( String id ) {
                 return new PlansSettingsPanel( id );
             }

@@ -1,8 +1,8 @@
 package com.mindalliance.channels.pages.components.segment;
 
 import com.mindalliance.channels.core.model.ExternalFlow;
-import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import com.mindalliance.channels.core.util.SortableBeanProvider;
+import com.mindalliance.channels.pages.components.AbstractTablePanel;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -41,12 +41,12 @@ public class ExternalFlowsPanel extends AbstractTablePanel<ExternalFlow> {
         List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
         columns.add( makeLinkColumn( "Task", "externalPart", "externalPart.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( " in plan segment" ),
+                new Model<String>( " in segment" ),
                 "externalPart.segment.name", "externalPart.segment.name" ) );
         columns.add( makeColumn( "produces info", "name", "@kind", "?", "description" ) );
         columns.add( makeLinkColumn( "consumed by task", "part", "part.title", EMPTY ) );
         columns.add( new PropertyColumn<String>(
-                new Model<String>( "in plan segment" ),
+                new Model<String>( "in segment" ),
                 "segment.name", "segment.name" ) );
         columns.add( makeGeomapLinkColumn(
                 "",

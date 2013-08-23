@@ -716,4 +716,10 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
             return getName().compareTo( other.getName() );
         }
     }
+
+    @Override
+    public String getKindLabel() {
+        return "Model";
+    }
+
 }

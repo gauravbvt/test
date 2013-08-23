@@ -44,7 +44,7 @@ public class PlanEvaluationFloatingPanel extends AbstractFloatingCommandablePane
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Plan evaluation" ) );
+                "Collaboration model evaluation" ) );
     }
 
     private void addPlanEvaluationPanel() {
@@ -63,7 +63,7 @@ public class PlanEvaluationFloatingPanel extends AbstractFloatingCommandablePane
 
     @Override
     protected String getTitle() {
-        return "Plan evaluation";
+        return "Collaboration model evaluation";
     }
 
 }

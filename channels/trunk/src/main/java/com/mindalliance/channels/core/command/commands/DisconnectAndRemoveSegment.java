@@ -66,7 +66,7 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
     }
 
     private MultiCommand makeSubCommands( Segment segment, Commander commander ) {
-        MultiCommand multi = new MultiCommand( getUserName(), "remove plan segment - extra" );
+        MultiCommand multi = new MultiCommand( getUserName(), "remove segment - extra" );
         for ( Flow externalFlow : segment.listExternalFlows() )
             multi.addCommand( commander.makeRemoveFlowCommand( getUserName(), externalFlow ) );
         QueryService queryService = commander.getQueryService();
@@ -85,7 +85,7 @@ public class DisconnectAndRemoveSegment extends AbstractCommand {
 
     @Override
     protected Command makeUndoCommand( Commander commander ) throws CommandException {
-        MultiCommand multi = new MultiCommand( getUserName(), "restore plan segment" );
+        MultiCommand multi = new MultiCommand( getUserName(), "restore segment" );
         MultiCommand subCommands = (MultiCommand) get( "subCommands" );
         subCommands.setMemorable( false );
         multi.addCommand( subCommands.getUndoCommand( commander ) );

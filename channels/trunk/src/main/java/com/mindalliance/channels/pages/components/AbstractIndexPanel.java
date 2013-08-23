@@ -987,7 +987,7 @@ public abstract class AbstractIndexPanel extends AbstractCommandablePanel implem
                     : ( mo instanceof Flow )
                     ? ( "Flow \"" + mo.getName() + "\"" )
                     : ( mo instanceof Segment )
-                    ? "Plan segment"
+                    ? "Segment"
                     : ( !mo.isEntity() )
                     ? mo.getClass().getSimpleName()
                     : ( mo instanceof Actor && ( (Actor) mo ).isActual() )

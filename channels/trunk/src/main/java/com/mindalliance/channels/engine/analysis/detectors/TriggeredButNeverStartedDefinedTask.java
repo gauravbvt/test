@@ -44,8 +44,8 @@ public class TriggeredButNeverStartedDefinedTask extends AbstractIssueDetector {
                 boolean started = queryService.findIfSegmentStarted( part.getSegment() );
                 if ( part.isStartsWithSegment() && !started ) {
                     Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
-                    issue.setDescription( "This task starts with the plan segment but no task"
-                            + " is ever started that causes the plan segment to happen.");
+                    issue.setDescription( "This task starts with the segment but no task"
+                            + " is ever started that causes the segment to happen.");
                     issue.setRemediation( "Make sure the event phase of the segment can start " +
                             "(it is a co-event phase of an incident " +
                             "or the phase is started by a task that itself can start)" );

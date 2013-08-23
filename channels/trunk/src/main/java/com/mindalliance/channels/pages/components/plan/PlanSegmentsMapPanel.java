@@ -284,12 +284,12 @@ public class PlanSegmentsMapPanel extends AbstractUpdatablePanel {
     public String getCausesTitle() {
         if ( selectedGroup != null ) {
             if ( groupByPhase ) {
-                return "Causations for plan segments in phase \"" + selectedGroup.getName() + "\"";
+                return "Causations for segments in phase \"" + selectedGroup.getName() + "\"";
             } else {
-                return "Causations for plan segments about event \"" + selectedGroup.getName() + "\"";
+                return "Causations for segments about event \"" + selectedGroup.getName() + "\"";
             }
         } else if ( selectedSegment != null ) {
-            return "Causations for plan segment \"" + selectedSegment.getName() + "\"";
+            return "Causations for segment \"" + selectedSegment.getName() + "\"";
         } else if ( selectedSgRel != null ) {
             Segment fromSegment = selectedSgRel.getFromSegment( getQueryService() );
             Segment toSegment = selectedSgRel.getToSegment( getQueryService() );

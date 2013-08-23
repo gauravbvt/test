@@ -101,7 +101,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
             }
         } );
         planNameField.setEnabled( isLockedByUser( getPlan() ) );
-        addInputHint( planNameField, "The name of the plan" );
+        addInputHint( planNameField, "The name of the model" );
         add( planNameField );
     }
 
@@ -115,7 +115,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
             }
         } );
         planDescriptionField.setEnabled( isLockedByUser( getPlan() ) );
-        addInputHint( planDescriptionField, "A brief overview of the plan" );
+        addInputHint( planDescriptionField, "A brief overview of the model" );
         add( planDescriptionField );
     }
 

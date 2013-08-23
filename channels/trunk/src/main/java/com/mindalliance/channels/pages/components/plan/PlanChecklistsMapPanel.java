@@ -130,7 +130,7 @@ public class PlanChecklistsMapPanel extends AbstractUpdatablePanel {
                     @Override
                     public Object getDisplayValue( Segment seg ) {
                         if ( seg.getName().isEmpty() ) {
-                            return "the entire plan";
+                            return "the entire model";
                         } else {
                             return seg.getName();
                         }

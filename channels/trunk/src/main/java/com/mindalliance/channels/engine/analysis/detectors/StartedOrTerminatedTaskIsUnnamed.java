@@ -29,7 +29,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
             if ( part.isAutoStarted() || part.isTriggered() ) {
                 DetectedIssue issue = makeIssue( queryService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task is started during the plan segment but is unnamed." );
+                issue.setDescription( "The task is started during the segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
@@ -37,7 +37,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
             if ( part.isTerminatesEventPhase() ) {
                 DetectedIssue issue = makeIssue( queryService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task can terminate the plan segment but is unnamed." );
+                issue.setDescription( "The task can terminate the segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );
@@ -45,7 +45,7 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
             if ( part.isTerminated() ) {
                 DetectedIssue issue = makeIssue( queryService,
                                                  DetectedIssue.VALIDITY, modelObject, getTestedProperty() );
-                issue.setDescription( "The task is terminated during plan segment but is unnamed." );
+                issue.setDescription( "The task is terminated during segment but is unnamed." );
                 issue.setRemediation( "Name the task." );
                 issue.setSeverity( Level.Low );
                 issues.add( issue );

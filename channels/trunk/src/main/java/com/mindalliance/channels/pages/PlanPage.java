@@ -666,7 +666,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         };
         allSegmentsButton.setOutputMarkupId( true );
-        addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this plan" );
+        addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this model" );
         form.addOrReplace( allSegmentsButton );
     }
 
@@ -821,7 +821,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             geoLocatables.add( parts.next() );
         geomapLinkPanel = new GeomapLinkPanel( "geomapLink",
                 new Model<String>(
-                        "Tasks with known locations in plan segment "
+                        "Tasks with known locations in segment "
                                 + segment.getName() ),
                 geoLocatables,
                 new Model<String>( "Show tasks in map" ) );
@@ -883,7 +883,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
             addTipTitle( selectedPlanNameLabel, planName );
         } else {
-            addTipTitle( selectedPlanNameLabel, "Click to edit the plan's details" );
+            addTipTitle( selectedPlanNameLabel, "Click to edit the model's details" );
         }
         selectedPlanLink.add( selectedPlanNameLabel );
         return selectedPlanLink;

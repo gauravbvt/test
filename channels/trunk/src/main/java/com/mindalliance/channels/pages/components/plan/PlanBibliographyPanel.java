@@ -339,7 +339,7 @@ public class PlanBibliographyPanel extends AbstractCommandablePanel implements F
                     EMPTY,
                     PlanBibliographyPanel.this ) );
             columns.add( makeFilterableLinkColumn(
-                    "Plan segment",
+                    "Segment",
                     "segment",
                     "segment.name",
                     EMPTY,

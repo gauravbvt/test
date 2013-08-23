@@ -44,7 +44,7 @@ public class RemoveSegment extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "delete plan segment";
+        return "delete segment";
     }
 
     @Override
@@ -93,7 +93,7 @@ public class RemoveSegment extends AbstractCommand {
             multi.addCommand( restoreSegment );
             return multi;
         } else {
-            throw new CommandException( "Can not restore plan segment." );
+            throw new CommandException( "Can not restore segment." );
         }
     }
 

@@ -132,7 +132,7 @@ public interface Command extends JournalCommand {
     boolean isAuthorized();
 
     /**
-     * Whether the command modifies the contents of a plan segment.
+     * Whether the command modifies the contents of a segment.
      *
      * @return a boolean
      */

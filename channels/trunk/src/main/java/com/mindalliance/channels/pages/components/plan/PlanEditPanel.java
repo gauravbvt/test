@@ -59,7 +59,7 @@ public class PlanEditPanel extends AbstractFloatingMultiAspectPanel {
 
     @Override
     protected String getMapTitle() {
-        return "The locale of the plan";
+        return "The locale of the model";
     }
 
     @Override

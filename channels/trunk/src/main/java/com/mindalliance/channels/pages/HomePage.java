@@ -101,7 +101,7 @@ public class HomePage extends AbstractChannelsBasicPage {
         BookmarkablePageLink gotoAdminLink = newTargetedLink( "gotoAdmin", SettingsPage.class );
         addTipTitle(
                 gotoAdminLink,
-                "Configure Channels, add users, change access privileges, and create, configure, release, or delete collaboration plans" );
+                "Configure Channels, add users, change access privileges, and create, configure, release, or delete collaboration models" );
 
         // gotos
         gotoIconsContainer.add(
@@ -131,7 +131,7 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoModelsDescription() {
-        return "The domain collaboration plans you are developing or maintaining"; // todo show metrics
+        return "The collaboration models you are developing or maintaining"; // todo show metrics
     }
 
     private String getGotoCommunitiesDescription() {

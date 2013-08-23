@@ -87,7 +87,7 @@ public class Segment extends ModelObject {
 
     @Override
     public String getKindLabel() {
-        return "Plan segment";
+        return "Model segment";
     }
 
     public Event getEvent() {
@@ -763,7 +763,7 @@ public class Segment extends ModelObject {
 
 
     public static String classLabel() {
-        return "plan segments";
+        return "model segments";
     }
 
     @Override

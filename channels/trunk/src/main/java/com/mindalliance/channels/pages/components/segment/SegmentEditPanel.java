@@ -66,7 +66,7 @@ public class SegmentEditPanel extends AbstractFloatingMultiAspectPanel {
 
     @Override
     protected String getMapTitle() {
-        return "Tasks with known locations in plan segment " + getSegment().getName();
+        return "Tasks with known locations in segment " + getSegment().getName();
     }
 
     @Override

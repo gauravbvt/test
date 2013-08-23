@@ -20,7 +20,7 @@ import com.mindalliance.channels.core.model.Segment;
 import java.util.Map;
 
 /**
- * Command to add a new part to a plan segment.
+ * Command to add a new part to a segment.
  */
 public class AddPart extends AbstractCommand {
 

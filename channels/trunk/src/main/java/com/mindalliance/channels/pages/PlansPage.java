@@ -238,7 +238,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     private String getRFIsLabel( ChannelsUser user, CommunityService communityService ) {
         StringBuilder sb = new StringBuilder();
-        sb.append( "Planning surveys" );
+        sb.append( "Surveys" );
         int lateCount = surveysDAO.countLate( communityService, user );
         if ( lateCount > 0 ) {
             sb.append( " (" )
@@ -319,9 +319,9 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
         return user.isPlannerOrAdmin( plan.getUri() ) && getPlan().isDevelopment()
-                ? "Build or modify the domain collaboration plan.\n" +
+                ? "Build or modify the collaboration model.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
-                : "View the collaboration plan.\n" +
+                : "View the collaboration model.\n" +
                 "  (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)";
     }
 
