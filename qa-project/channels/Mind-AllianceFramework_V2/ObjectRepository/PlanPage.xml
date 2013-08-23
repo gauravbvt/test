@@ -2,7 +2,7 @@
 	  
 	<Element>
 		<GivenName>About Plan Window Title</GivenName>
-		<Title>About Plan:</Title>
+		<Title>About Model: </Title>
 	</Element>
 	<Element>
 		<GivenName>Delete Phase Window Title</GivenName>
@@ -60,7 +60,7 @@
 	</Element>
 	<Element>
 		<GivenName>About Plan Segment Window Title</GivenName>
-		<Title>About Plan Segment:</Title>
+		<Title>About Model Segment:</Title>
 	</Element>
 	
 	<Element>
@@ -1335,7 +1335,7 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	
+	<Element>
 		<GivenName>New Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[7]/span/a/span</Xpath>
 		<Name></Name>
@@ -1846,6 +1846,15 @@
 	<Element>
 		<GivenName>Undo Add Information Capability</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Add Information Capability</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>

@@ -26,6 +26,10 @@
 		<Title>Channels - Collaboration Planning</Title>
 	</Element>
 	<Element>
+		<GivenName>Communities Page Title</GivenName>
+		<Title></Title>
+	</Element>
+	<Element>
 		<GivenName>Show Received Text</GivenName>
 		<Name>show received</Name>
 	</Element>
@@ -38,7 +42,15 @@
 		<GivenName>Show All Messages Name</GivenName>
 		<Name>show all messages</Name>
 	</Element>
-	
+	<Element>
+		<GivenName>Communities</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/div[2]/div/a/img</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText>COLLABORATION MODEL</LinkText>
+		<ClassName></ClassName>
+	</Element>
 	<Element>
 		<GivenName>Collaboration Plan</GivenName>
 		<Xpath></Xpath>
@@ -142,7 +154,15 @@
 	</Element>
 	
  	
-	
+	<Element>
+		<GivenName>Plan dropdown</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
  	
  	<ImplicitWaitTimeMilliSecs>5000</ImplicitWaitTimeMilliSecs> 	
  	<LoginPageLoadTimeoutSeconds>50</LoginPageLoadTimeoutSeconds> 	
