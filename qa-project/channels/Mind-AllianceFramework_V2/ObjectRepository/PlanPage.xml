@@ -1051,6 +1051,26 @@
 		<ClassName></ClassName>
 	</Element>
 	
+	
+	<Element>
+		<GivenName>Menu In Flow Issues In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span[2]/div/span/ol/li/span/span/span/ul/li/a/span</Xpath>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	
+	<Element>
+		<GivenName>Remove Issue Flow Issues In Sends Panel</GivenName>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/span[2]/div/span/ol/li/span/span/span/ul/li/li[4]/span/a/span</Xpath>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
 	<Element>
 		<GivenName>Attachment Panel In Receives Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[2]/div[2]/div/div/div/span/div/div[2]/h2/a</Xpath>
@@ -1733,6 +1753,24 @@
 	</Element>
 	<Element>
 		<GivenName>Undo Remove Flow</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Undo Remove Issue</GivenName>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	<Element>
+		<GivenName>Redo Remove Issue</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[2]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -2909,6 +2947,7 @@
 	<Element>
 		<GivenName>From Task Name In Sends Panel</GivenName>
 		<Xpath>/html/body/form/span[2]/div/div[3]/div[3]/div[2]/div/div/div/table/tbody/tr[6]/td/span[2]/div/input</Xpath>
+	    <Name></Name>
 		<ClassName></ClassName>
 		<Id></Id>
 	</Element>
