@@ -50,7 +50,7 @@ public class MAP0028_AddQuestionnaire extends TestCase {
 	public String browser="";
 
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -244,8 +244,7 @@ public class MAP0028_AddQuestionnaire extends TestCase {
 			Document docMAP0028_AddQuestionnaire=db.parse(MAP0028_AddQuestionnaire);
 			Element eleMAP0028_AddQuestionnaire=docMAP0028_AddQuestionnaire.getDocumentElement();
 	              
-	        Element oXmlEleMAP0028_AddQuestionnaire = (Element) eleMAP0028_AddQuestionnaire;
-	    	           
+	        Element oXmlEleMAP0028_AddQuestionnaire = (Element) eleMAP0028_AddQuestionnaire;           
 	        
 	        this.testData.put("ChannelsURL", oXmlEleMAP0028_AddQuestionnaire.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleMAP0028_AddQuestionnaire.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());

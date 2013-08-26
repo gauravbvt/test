@@ -171,7 +171,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			// Select 'Other..' option form 'From Task:' dropdown list
 			planPage.selectFromInSends(testData.get("OtherTaskName"));
 			// Enter From Task name
-			planPage.enterFromTaskName(testData.get("From Task Name In Sends"));
+			planPage.enterFromTaskName(testData.get("From Task Name In Sends Panel"));
 			// Click on Strench up form
 			planPage.clickStrenchUpForm();
 			// Write log
@@ -304,7 +304,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 	        this.testData.put("ChannelsURL",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 		 	this.testData.put("Title",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("InformationInSendsPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("informationInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("FromTaskNameInSends",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("fromTaskNameInSends").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("FromTaskNameInSendsPanel",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("fromTaskNameInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("OtherTaskName",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("otherTaskName").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Intermediate",oXmlEleMAC0010_UndoIntermediateTask.getElementsByTagName("intermediate").item(0).getChildNodes().item(0).getNodeValue());
 		 	
