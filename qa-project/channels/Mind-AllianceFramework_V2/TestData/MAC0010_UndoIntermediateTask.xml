@@ -5,7 +5,7 @@
 <informationInSendsPanel>This Is A Flow</informationInSendsPanel>
 <taskName>Task Sender</taskName>
 <otherTaskName>Other...</otherTaskName>
-<fromTaskNameInSends>Task Receiver</fromTaskNameInSends>
+<fromTaskNameInSendsPanel>Task Receiver</fromTaskNameInSendsPanel>
 
 <actionsInReceivesPanel>Actions In Receives Panel</actionsInReceivesPanel>
 <duplicateFlowInReceivesPanel>Duplicate Flow In Receives Panel</duplicateFlowInReceivesPanel>
