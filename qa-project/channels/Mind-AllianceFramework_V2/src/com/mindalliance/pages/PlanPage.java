@@ -489,6 +489,16 @@ public class PlanPage {
 				Actions builder5 = new Actions(GlobalVariables.configuration.getWebDriver());
 				builder5.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
 				break;
+				
+			case "Learning":
+				elementController.requireElementSmart(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
+				xPathForPopup=dataController.getPageDataElements(fileName, popUpName, "Xpath");
+				UIActions.click(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
+				
+				Actions builder25 = new Actions(GlobalVariables.configuration.getWebDriver());
+				builder25.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
+				break;
+				
 			case "Participations":
 				elementController.requireElementSmart(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
 				xPathForPopup=dataController.getPageDataElements(fileName, popUpName, "Xpath");
@@ -562,6 +572,16 @@ public class PlanPage {
 				
 				Actions builder11 = new Actions(GlobalVariables.configuration.getWebDriver());
 				builder11.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
+				break;
+			
+			
+			case "	Menu In Flow Issues In Sends Panel":
+				elementController.requireElementSmart(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
+				xPathForPopup=dataController.getPageDataElements(fileName, popUpName, "Xpath");
+				UIActions.click(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
+				
+				Actions builder26 = new Actions(GlobalVariables.configuration.getWebDriver());
+				builder26.moveToElement(GlobalVariables.configuration.getWebDriver().findElement(By.xpath(xPathForPopup))).build().perform();
 				break;
 			default:
 				break;
@@ -786,6 +806,8 @@ public class PlanPage {
 		}
 		break;	
 		
+	
+		
 	case "All Surveys":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -836,6 +858,27 @@ public class PlanPage {
 //			throw new UIAutomationException("Issue with name '"+newIssueTextInXML+"' not found");
 //		}
 		break;	
+	//'Undo Remove Issue' in Actions menu	
+	case "Undo Remove Issue":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		try{
+			Thread.sleep(1000);
+		}
+		catch (Exception e) {}
+		
+		break;	
+		
+		//'Undo Remove Issue' in Actions menu	
+		case "Redo Remove Issue":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);			UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		try{
+			Thread.sleep(1000);
+		}
+		catch (Exception e) {}
+			
+		break;	
+		
 	case "Undo Update Segment":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1221,6 +1264,12 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;
+		
+	case "Remove Issue Flow Issues In Sends Panel":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;
+		
 		
 	default:
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -1940,10 +1989,10 @@ public class PlanPage {
 	 * @param fromTaskName
 	 * @throws UIAutomationException
 	 */
-	public void enterFromTaskName(String fromTaskNameInSends) throws UIAutomationException{
+	public void enterFromTaskName(String fromTaskNameInSendsPanel) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends Panel");
 		UIActions.click(fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends Panel");
-	    UIActions.enterValueInTextBox(fromTaskNameInSends,fileName,"From Task Name In Sends",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends");
+	    UIActions.enterValueInTextBox(fromTaskNameInSendsPanel,fileName,"From Task Name In Sends Panel",GlobalVariables.configuration.getAttrSearchList(), "From Task Name In Sends");
 		UIActions.enterKey(Keys.TAB);
 	}
 	
@@ -3083,13 +3132,16 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void enterQuestionnaireName(String questionnaireName) throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+				elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		UIActions.click(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		
 		for (int i = 0; i <= 7; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
 		}
+		
 		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+	//	UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
+
 		UIActions.enterValueInTextBox(questionnaireName,fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		UIActions.enterKey(Keys.ENTER);
 	}
