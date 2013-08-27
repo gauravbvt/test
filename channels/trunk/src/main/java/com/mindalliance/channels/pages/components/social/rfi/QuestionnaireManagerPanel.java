@@ -235,10 +235,12 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
     }
 
     public void setQuestionnaireName( String name ) {
-        String safeName = ChannelsUtils.cleanUpPhrase( name );
-        Questionnaire questionnaire = getQuestionnaire();
-        questionnaire.setName( safeName );
-        questionnaireService.save( questionnaire );
+        if ( name != null && !name.isEmpty() ) {
+            String safeName = ChannelsUtils.cleanUpPhrase( name );
+            Questionnaire questionnaire = getQuestionnaire();
+            questionnaire.setName( safeName );
+            questionnaireService.save( questionnaire );
+        }
     }
 
     public String getAbout() {
@@ -256,7 +258,7 @@ public class QuestionnaireManagerPanel extends AbstractUpdatablePanel {
         return questionnaireService.refresh( questionnaire );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private Question getQuestion() {
 /*
         if ( selectedQuestion != null )
