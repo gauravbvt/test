@@ -227,7 +227,7 @@ public class Information implements Serializable {
     public boolean equals( Object object ) {
         if ( object instanceof Information ) {
             Information other = (Information) object;
-            return Matcher.same( getName(), other.getName() )
+            return Matcher.sameOrEmpty( getName(), other.getName() )
                     && getEOIsString( ",", "," ).equals( other.getEOIsString( ",", "," ) );
         } else {
             return false;

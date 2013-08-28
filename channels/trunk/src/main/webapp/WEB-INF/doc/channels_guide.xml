@@ -645,7 +645,7 @@ Only useful tasks are considered when doing failure impact analysis. A useless t
                 <next section="concepts" topic="goal"/>
             </topic>
             <topic id="survey">
-                <name>Ssurvey</name>
+                <name>Survey</name>
                 <item>
                     <description>Planners can define surveys for various kinds of model elements (surveys about tasks, about events, about the collaboration model as a whole etc.).
                     

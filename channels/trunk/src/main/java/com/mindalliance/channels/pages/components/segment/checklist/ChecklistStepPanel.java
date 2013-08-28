@@ -215,7 +215,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
 
     private void addOutcomes() {
         outcomesContainer = new WebMarkupContainer( "outcomesContainer" );
-        outcomesContainer.setVisible( edited || getChecklist().hasOutcomes( step ) );
+        outcomesContainer.setVisible( edited && !getOutcomeCandidates().isEmpty() || getChecklist().hasOutcomes( step ) );
         stepContainer.add( outcomesContainer );
         addStepOutcomes();
     }
@@ -529,12 +529,13 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
     }
 
     private void addNewStepOutcome() {
+        List<Outcome> outcomeCandidates = getOutcomeCandidates();
         WebMarkupContainer addOutcomeContainer = new WebMarkupContainer( "addOutcomeContainer" );
-        addOutcomeContainer.setVisible( edited );
+        addOutcomeContainer.setVisible( edited && !outcomeCandidates.isEmpty() );
         DropDownChoice<Outcome> outcomeChoices = new DropDownChoice<Outcome>(
                 "outcomeChoices",
                 new PropertyModel<Outcome>( this, "addedOutcome" ),
-                getOutcomeChoices(),
+                outcomeCandidates,
                 new IChoiceRenderer<Outcome>() {
                     @Override
                     public Object getDisplayValue( Outcome outcome ) {
@@ -559,7 +560,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
         outcomesContainer.add( addOutcomeContainer );
     }
 
-    private List<Outcome> getOutcomeChoices() {
+    private List<Outcome> getOutcomeCandidates() {
         List<Outcome> outcomes = getChecklist().listEffectiveOutcomes();
         outcomes.removeAll( getChecklist().listOutcomesFor( step ) );
         Collections.sort( outcomes, new Comparator<Outcome>() {

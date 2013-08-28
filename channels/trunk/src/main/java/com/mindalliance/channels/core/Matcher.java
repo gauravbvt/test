@@ -21,11 +21,11 @@ public final class Matcher {
      * Words that should be ignored when matching.
      */
     private static final List<String> NOISE_WORDS = Arrays.asList( "a", "an", "the", "it", "they", "we", "and", "or",
-                                                                   "so", "then", "of", "by", "from", "at", "in", "out",
-                                                                   "into", "off", "to", "on", "any", "all", "some",
-                                                                   "most", "many", "few", "both", "for", "if", "then",
-                                                                   "after", "before", "during", "first", "last", "I",
-                                                                   "you", "they", "us", "your", "my", "them" );
+            "so", "then", "of", "by", "from", "at", "in", "out",
+            "into", "off", "to", "on", "any", "all", "some",
+            "most", "many", "few", "both", "for", "if", "then",
+            "after", "before", "during", "first", "last", "I",
+            "you", "they", "us", "your", "my", "them" );
 
     /**
      * A comparator.
@@ -35,6 +35,7 @@ public final class Matcher {
     private static final String SEPARATORS = " .,:;?!/\\|+-'\"()[]@";
 
     //-------------------------------
+
     /**
      * Don't allow instantiations.
      */
@@ -45,7 +46,7 @@ public final class Matcher {
      * Whether any in a list of strings matches a given string.
      *
      * @param list a list of strings
-     * @param s a string
+     * @param s    a string
      * @return a boolean
      */
     public static boolean contains( List<String> list, final String s ) {
@@ -71,7 +72,7 @@ public final class Matcher {
      * Whether two string seem semantically related.
      *
      * @param string a String
-     * @param other a String
+     * @param other  a String
      * @return a boolean
      */
     public static boolean matches( String string, String other ) {
@@ -106,7 +107,7 @@ public final class Matcher {
     /**
      * Whether the string contains all of the matching strings contains (case insensitive).
      *
-     * @param string a string
+     * @param string       a string
      * @param otherStrings a list of strings
      * @return a boolean
      */
@@ -122,7 +123,7 @@ public final class Matcher {
     /**
      * Remove from list all matching strings from other list.
      *
-     * @param list list of strings
+     * @param list     list of strings
      * @param toRemove list of strings to remove
      */
     public static void removeAll( Set<String> list, List<String> toRemove ) {
@@ -135,7 +136,7 @@ public final class Matcher {
     /**
      * Returns whether strings are non-empty and equivalent (after trimming blanks and ignoring case).
      *
-     * @param string -- a string
+     * @param string      -- a string
      * @param otherString -- another string
      * @return -- whether they are similar
      */
@@ -146,8 +147,21 @@ public final class Matcher {
     }
 
     /**
+     * Returns whether strings are empty or equivalent (after trimming blanks and ignoring case).
+     *
+     * @param string      -- a string
+     * @param otherString -- another string
+     * @return -- whether they are similar
+     */
+    public static boolean sameOrEmpty( String string, String otherString ) {
+        return string.isEmpty() && otherString.isEmpty() || same( string, otherString );
+    }
+
+
+    /**
      * Return whether two possible composed tags match.
-     * @param tag a tag
+     *
+     * @param tag   a tag
      * @param other a tag
      * @return a boolean
      */
@@ -170,8 +184,9 @@ public final class Matcher {
 
     /**
      * Return whether all given tags are matched by other tags.
-     * @param tags a list of tags
-     * @param others  a list of tags
+     *
+     * @param tags   a list of tags
+     * @param others a list of tags
      * @return a boolean
      */
     public static boolean matchesAll( List<Tag> tags, final List<Tag> others ) {
@@ -181,13 +196,13 @@ public final class Matcher {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        final Tag tag = (Tag)object;
+                        final Tag tag = (Tag) object;
                         return !CollectionUtils.exists(
                                 others,
                                 new Predicate() {
                                     @Override
                                     public boolean evaluate( Object object ) {
-                                        return matches( tag, (Tag)object );
+                                        return matches( tag, (Tag) object );
                                     }
                                 }
                         );
@@ -198,7 +213,8 @@ public final class Matcher {
 
     /**
      * Whether a given text contains a given phrase, irrespective of case or punctuation etc.
-     * @param text a string
+     *
+     * @param text   a string
      * @param phrase a string
      * @return a boolean
      */
