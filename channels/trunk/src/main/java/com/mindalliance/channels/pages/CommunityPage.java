@@ -277,8 +277,8 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         PlanCommunity planCommunity = communityService.getPlanCommunity();
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String planUri = plan.getUri();
-        boolean planner = user.isPlannerOrAdmin( planUri );
-        boolean communityLeader = communityService.isCommunityPlanner( user );
+        boolean modelerOrAdmin = user.isPlannerOrAdmin( planUri );
+        boolean communityPlanner = communityService.isCommunityPlanner( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
@@ -348,13 +348,13 @@ public class CommunityPage extends AbstractChannelsBasicPage {
                 // Goto model
                 new WebMarkupContainer( "model" )
                         .add( gotoModelLink )
-                        .setVisible( planner || plan.isVisibleToUsers() )
+                        .setVisible( modelerOrAdmin || communityPlanner || plan.isVisibleToUsers() )
                         .setOutputMarkupId( true ),
 
                 // Goto protocols
                 new WebMarkupContainer( "protocols" )
                         .add( gotoProtocolsLink )
-                        .setVisible( planner || !participations.isEmpty() )
+                        .setVisible( modelerOrAdmin || !participations.isEmpty() )
                         .setOutputMarkupId( true ),
 
                 // Goto surveys
@@ -370,7 +370,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
                 // Goto requirements
                 new WebMarkupContainer( "requirements" )
                         .add( gotoRequirementsLink )
-                        .setVisible( communityLeader )
+                        .setVisible( communityPlanner )
                         .setOutputMarkupId( true )
         );
 

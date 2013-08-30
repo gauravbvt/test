@@ -250,7 +250,7 @@ public class ChannelsUser implements UserDetails {
      * @return a boolean
      */
     public boolean isParticipant( String uri ) {
-        return userRecord.isParticipant( uri );
+        return userRecord.isParticipant( uri ); // is guest
     }
 
     /**

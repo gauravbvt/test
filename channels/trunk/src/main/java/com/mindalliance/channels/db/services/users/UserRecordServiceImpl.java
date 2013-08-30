@@ -438,6 +438,7 @@ public class UserRecordServiceImpl
                     && !authorizedUser.isCommunityPlanner( uri ) ) {
                 UserRecord userRecord = authorizedUser.getUserRecord();
                 userRecord.makePlannerOf( communityService.getPlanCommunity().getUri() );
+                userRecord.makeParticipantOf( communityService.getPlanCommunity().getPlanUri() );
                 save( userRecord );
                 communityService.clearCache();
                 return userRecord;
@@ -476,6 +477,7 @@ public class UserRecordServiceImpl
             assert planners.isEmpty(); // Make sure founder is first planner
             UserRecord userRecord = founder.getUserRecord();
             userRecord.makePlannerOf( planCommunity.getUri() );
+            userRecord.makeParticipantOf( planCommunity.getPlanUri() );
             save( userRecord );
             CommunityService communityService = communityServiceFactory.getService( planCommunity );
             communityService.clearCache();

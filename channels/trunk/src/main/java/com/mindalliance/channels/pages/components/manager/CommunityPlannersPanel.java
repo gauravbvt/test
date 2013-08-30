@@ -168,8 +168,8 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
             if ( openParIndex >= 0 && openParIndex < val.length() - 2 ) {
                 int closedParIndex = val.indexOf( ")", openParIndex );
                 email = ( closedParIndex > -1
-                        ? val.substring( openParIndex + 1 )
-                        : val.substring( openParIndex + 1, closedParIndex ) ).trim();
+                        ? val.substring( openParIndex + 1, closedParIndex )
+                        : val.substring( openParIndex + 1 ) ).trim();
             }
             UserRecordService userDao = getCommunityService().getUserRecordService();
             if ( email != null )
