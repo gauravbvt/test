@@ -197,19 +197,19 @@ public class Home {
 		suite.addTestSuite(MAP0015_removeSegment.class);
 		suite.addTestSuite(MAP0016_addEvent.class);
 		suite.addTestSuite(MAP0017_deleteEvent.class);
-////		suite.addTestSuite(MAP0018_attachFile.class);
-////		suite.addTestSuite(MAP0019_deleteAttachFile.class);
-////		suite.addTestSuite(MAP0020_addFileToEvent.class);
-////		suite.addTestSuite(MAP0021_deleteFileOfEvent.class);
+    	suite.addTestSuite(MAP0018_attachFile.class);
+////	suite.addTestSuite(MAP0019_deleteAttachFile.class);
+////	suite.addTestSuite(MAP0020_addFileToEvent.class);
+////	suite.addTestSuite(MAP0021_deleteFileOfEvent.class);
 		suite.addTestSuite(MAP0022_addGoal.class);
 //		suite.addTestSuite(MAP0023_removeGoal.class);	
-////		suite.addTestSuite(MAP0024_moveTask.class);
-////		suite.addTestSuite(MAP0025_receiveTask.class);
-////		suite.addTestSuite(MAP0026_sendTask.class);
-////		suite.addTestSuite(MAP0027_AttachFileToRequirement.class);
+////	suite.addTestSuite(MAP0024_moveTask.class);
+////	suite.addTestSuite(MAP0025_receiveTask.class);
+////	suite.addTestSuite(MAP0026_sendTask.class);
+////	suite.addTestSuite(MAP0027_AttachFileToRequirement.class);
 		suite.addTestSuite(MAP0028_AddQuestionnaire.class);
-//		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
-////		suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
+		suite.addTestSuite(MAP0029_AddQuestionnaireName.class);
+    	suite.addTestSuite(MAP0030_AddQuestionnaireRFIAsThisPlan.class);
 //		
 ////		Command
 //		
@@ -223,9 +223,9 @@ public class Home {
 		suite.addTestSuite(MAC0008_UndoPasteTaskUsingCopy.class);
 		suite.addTestSuite(MAC0009_UndoDuplicateTask.class);
 		suite.addTestSuite(MAC0010_UndoIntermediateTask.class);
-////		suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
-////		suite.addTestSuite(MAC0012_UndoMoveTask.class);
-////		suite.addTestSuite(MAC0013_UndoConnectFlow.class);
+////	suite.addTestSuite(MAC0011_UndoDisintermediateTask.class);
+////	suite.addTestSuite(MAC0012_UndoMoveTask.class);
+////	suite.addTestSuite(MAC0013_UndoConnectFlow.class);
 		suite.addTestSuite(MAC0021_CopyTask.class);
 		suite.addTestSuite(MAC0023_UndoAddInfoNeed.class);
 		suite.addTestSuite(MAC0024_UndoAddInfoCapability.class);
@@ -239,7 +239,7 @@ public class Home {
 //		suite.addTestSuite(MAC0037_RedoPasteTaskUsingCut.class);
 //		suite.addTestSuite(MAC0038_RedoPasteTaskUsingCopy.class);
 //		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
-////		suite.addTestSuite(MAC0040_RedoIntermediateTask.class);
+////	suite.addTestSuite(MAC0040_RedoIntermediateTask.class);
 ////		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 ////		suite.addTestSuite(MAC0042_RedoMoveTask.class);
 ////		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
