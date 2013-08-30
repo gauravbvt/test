@@ -181,7 +181,7 @@ public class Configuration {
 	}
 
 	/**
-	 * Registers the Select object to provide helper methods to select and de select options from the drop down list.
+	 * Registers the Select object to provide helper methods to select and de-select options from the drop down list.
 	 * @param select the select object to set
 	 */
 	public void setSelect(Select select){

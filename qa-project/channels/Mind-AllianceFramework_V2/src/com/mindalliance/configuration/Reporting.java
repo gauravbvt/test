@@ -449,7 +449,6 @@ public class Reporting extends TakeScreenshot {
 
 	/**
 	 * Read Result Csv File
-	 * 
 	 * @throws UIAutomationException
 	 * @throws IOException
 	 */
@@ -658,7 +657,7 @@ public class Reporting extends TakeScreenshot {
 	}
 
 	/**
-	 * Genearate failure report
+	 * Generate failure report
 	 * 
 	 * @throws UIAutomationException
 	 */
@@ -731,7 +730,6 @@ public class Reporting extends TakeScreenshot {
 			xml.writeEndElement();
 			xml.writeEndElement();
 			xml.writeEndDocument();
-
 			xml.writeStartDocument();
 			xml.writeStartElement("html");
 			xml.writeDefaultNamespace("http://www.w3.org/1999/xhtml");
