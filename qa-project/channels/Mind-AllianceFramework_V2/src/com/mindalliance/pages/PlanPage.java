@@ -16,6 +16,9 @@ import com.mindalliance.configuration.ElementController;
 import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.UIActions;
 import com.mindalliance.configuration.UIAutomationException;
+
+
+
 /**
  * PlanPage.java class contains all the methods for components on Information Sharing Page.
  * Example "About plan window", "Collaboration panel"
@@ -575,7 +578,7 @@ public class PlanPage {
 				break;
 			
 			
-			case "	Menu In Flow Issues In Sends Panel":
+			case "Menu In Flow Issues In Sends Panel":
 				elementController.requireElementSmart(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
 				xPathForPopup=dataController.getPageDataElements(fileName, popUpName, "Xpath");
 				UIActions.click(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
@@ -1223,6 +1226,16 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		break;	
+	
+	case "Redo New Issue":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;		
+	
+	case "Undo New Issue":
+		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
+		break;
 		
 	case "Undo Add Information Need":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
@@ -3132,16 +3145,16 @@ public class PlanPage {
 	 * @throws UIAutomationException
 	 */
 	public void enterQuestionnaireName(String questionnaireName) throws UIAutomationException{
-				elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
+		UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
 		UIActions.click(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		
-		for (int i = 0; i <= 7; i++){
+		/*for (int i = 0; i <= 7; i++){
 			UIActions.enterKey(Keys.BACK_SPACE);
-		}
+		}*/
 		
 		elementController.requireElementSmart(fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
-	//	UIActions.clearTextBox(fileName, "Questionnaire Name Textbox", GlobalVariables.configuration.getAttrSearchList(),"Questionnaire Name Textbox");
-
+		
 		UIActions.enterValueInTextBox(questionnaireName,fileName,"Questionnaire Name Textbox",GlobalVariables.configuration.getAttrSearchList(), "Questionnaire Name Textbox");
 		UIActions.enterKey(Keys.ENTER);
 	}
@@ -3408,6 +3421,14 @@ public class PlanPage {
 		UIActions.click(fileName,"Attach Dropdown In Task Panel",GlobalVariables.configuration.getAttrSearchList(),"Attach Dropdown In Task Panel");
 		
 	}
+	
+	/*public void attachFiles() throws UIAutomationException
+	{
+		// assuming driver is a healthy WebDriver instance
+					WebElement fileInput = driver.findElement(By.name("uploadfile"));
+					fileInput.sendKeys("C:/path/to/file.jpg");
+	}*/
+	
 	
 	/**
 	 * Verify segment is added
@@ -4354,6 +4375,17 @@ public void enterFileNameInAttachFileInAboutPlanSegment(String fileName) throws 
 		UIActions.click(fileName,"Attach File Submit Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Submit Button In About Plan Segment");
 		
 	}
+	
+	/**
+	 * Click on 'Submit' in attach button
+	 * @throws UIAutomationException
+	 */
+	public void clickDeleteInAttachFileInAboutPlanSegment() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Attach File Delete Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Delete Button In About Plan Segment");
+		UIActions.click(fileName,"Attach File Delete Button In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(),"Attach File Delete Button In About Plan Segment");
+		
+	}
+	
 	/**
 	 * Verify by clicking on 'Elements' link 'EOI' window opens
 	 * @throws UIAutomationException
