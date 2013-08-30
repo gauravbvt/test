@@ -8,6 +8,6 @@
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
 <copyTaskInActionsInTaskPanel>Copy Task</copyTaskInActionsInTaskPanel>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 </elements>

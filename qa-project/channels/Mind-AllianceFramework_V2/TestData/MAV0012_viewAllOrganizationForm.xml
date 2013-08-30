@@ -2,6 +2,6 @@
 <elements>
 <scoping>Scoping</scoping>
 <organizationsInScope>Organizations In Scope</organizationsInScope>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 </elements>

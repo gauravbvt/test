@@ -2,7 +2,7 @@
 <elements>
 <participations>Participations</participations>
 <allSurveys>All Surveys</allSurveys>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <questionnaire>QUESTIONNAIRES</questionnaire>
 <questionnaire1>Questionnaire 1</questionnaire1>

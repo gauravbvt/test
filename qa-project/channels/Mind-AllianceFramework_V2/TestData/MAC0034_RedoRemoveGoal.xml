@@ -10,7 +10,7 @@
 <undoRemoveGoal>Undo Remove Goal</undoRemoveGoal>
 <removeThisSegment>Remove This Segment</removeThisSegment>
 <redoRemoveGoal>Redo Remove Goal</redoRemoveGoal>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <selectgoalFromList>Financial - Asset devaluation</selectgoalFromList>
 <type>Actual</type>

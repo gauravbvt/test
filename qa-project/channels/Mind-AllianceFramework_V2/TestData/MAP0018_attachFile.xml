@@ -4,9 +4,9 @@
 <addNewSegment>Add New Segment</addNewSegment>
 <segmentForAttachFile>Segment For Attach File</segmentForAttachFile>
 <removeThisSegment>Remove This Segment</removeThisSegment>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <show>Show</show>
 <aboutPlanSegment>About Plan Segment</aboutPlanSegment>
-<fileName1>File 1</fileName1>
+<fileName1>C:\abc.txt</fileName1>
 </elements>

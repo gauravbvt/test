@@ -6,6 +6,6 @@
 <redoUpdateSegment>Redo Update Segment</redoUpdateSegment>
 <segmentForRedoAddSegment>Segment For Redo Add Segment</segmentForRedoAddSegment>
 <removeThisSegment>Remove This Segment</removeThisSegment>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 </elements>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <elements>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <informationInSendsPanel>This Is A Flow</informationInSendsPanel>
 <taskName>Task Sender</taskName>
@@ -12,13 +12,15 @@
 <actions>Actions</actions>
 <addNewSegment>Add New Segment</addNewSegment>
 <removeThisSegment>Remove This Segment</removeThisSegment>
-<segmentForRedoDisintermediateTask>Segment For Redo Disintermediate Task</segmentForRedoDisintermediateTask>
+
+<segmentForRedoRemoveIssue>Segment For Redo Remove Issue</segmentForRedoRemoveIssue>
 <intermediate>Intermediate</intermediate>
 <newIssueInSendsPanel>New Issue In Sends Panel</newIssueInSendsPanel>
 <menuInFlowIssuesInSendsPanel>Menu In Flow Issues In Sends Panel</menuInFlowIssuesInSendsPanel>
 <removeIssueFlowIssuesInSendsPanel>Remove Issue Flow Issues In Sends Panel</removeIssueFlowIssuesInSendsPanel>
 <actionsInSendsPanel>Actions In Sends Panel</actionsInSendsPanel>
 <redoRemoveIssue>Redo Remove Issue</redoRemoveIssue>
+<undoRemoveIssue>Undo Remove Issue</undoRemoveIssue>
 <redoDisIntermediate>Redo DisIntermediate</redoDisIntermediate>
 
 

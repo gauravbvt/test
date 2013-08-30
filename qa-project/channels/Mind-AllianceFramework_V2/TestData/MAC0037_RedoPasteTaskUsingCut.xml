@@ -10,7 +10,7 @@
 <actionsInTaskPanel>Actions In Task Panel</actionsInTaskPanel>
 <cutTaskInActionsInTaskPanel>Cut Task</cutTaskInActionsInTaskPanel>
 <otherSegmentForRedoPasteTask>Other Segment For Redo Paste Task</otherSegmentForRedoPasteTask>
-<channelsURL>http://192.168.4.126:8080/channels/login.html</channelsURL>
+<channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <pasteTask>Paste Task</pasteTask>
 <undoPasteTask>Undo Paste Task</undoPasteTask>
