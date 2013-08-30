@@ -137,7 +137,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewSegment"));
 			// Enter Segment Name
-			planPage.enterSegmentName(testData.get("SegmentForRedoDisintermediateTask"));
+			planPage.enterSegmentName(testData.get("SegmentForRedoRemoveIssue"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -156,7 +156,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
 			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
 			planPage.enterTaskName(testData.get("TaskName"));
-			// click on 'strench up forms' icon
+			// click on 'stretch up forms' icon
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -293,7 +293,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			this.testData.put("ActionsInSendsPanel",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("actionsInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("AddNewSegment",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("SegmentForRedoDisintermediateTask",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("segmentForRedoDisintermediateTask").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("SegmentForRedoRemoveIssue",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("segmentForRedoRemoveIssue").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("NewIssueInSendsPanel",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("newIssueInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("MenuInFlowIssuesInSendsPanel",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("menuInFlowIssuesInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			
@@ -303,6 +303,7 @@ public class MAC0046_RedoRemoveIssue extends TestCase {
 			this.testData.put("AboutPlanSegment",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("aboutPlanSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveIssueFlowIssuesInSendsPanel",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("removeIssueFlowIssuesInSendsPanel").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("TaskName",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("taskName").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("UndoRemoveIssue",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("undoRemoveIssue").item(0).getChildNodes().item(0).getNodeValue());	
 			this.testData.put("RedoRemoveIssue",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("redoRemoveIssue").item(0).getChildNodes().item(0).getNodeValue());
 			
 			this.testData.put("ShowInTaskPanel",oXmlEleMAC0046_RedoRemoveIssue.getElementsByTagName("showInTaskPanel").item(0).getChildNodes().item(0).getNodeValue());

@@ -175,13 +175,13 @@ public class MAC0045_RedoAddIssue extends TestCase {
 			
 			// Click on 'New Issue' under 'Actions' pop up menu in sends panel
 			stepNo++;
-			description="Intermediate Task Successfully";
+			description="New issue added successfully";
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("NewIssueInSendsPanel"));
 			
 			// Click on 'Undo New Issue' under 'Actions' pop up menu
 			stepNo++;
-			description="Undo Disintermediate";
+			description="Undo new issue";
 			planPage.clickPopupMenu(testData.get("ActionsInSendsPanel"));
 			planPage.clickSubmenu(testData.get("UndoNewIssueInSendsPanel"));
 			

@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -23,6 +24,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+
 import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
@@ -49,7 +51,7 @@ public class MAP0018_attachFile extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -162,9 +164,9 @@ public class MAP0018_attachFile extends TestCase{
 			planPage.clickAttachmentPanelInSegment();
 			
 			// Click on 'Browse' button
-			//planPage.clickBrowseInAttachFileInAboutPlanSegment();	
-		    
+			planPage.clickBrowseInAttachFileInAboutPlanSegment();	
 			planPage.enterFileNameInAttachFileInAboutPlanSegment(testData.get("FileName1"));
+			
 			// Click on 'Submit' button
 			planPage.clickSubmitInAttachFileInAboutPlanSegment();
 			// Write log
@@ -187,7 +189,12 @@ public class MAP0018_attachFile extends TestCase{
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 								
+ 			
+ 			
+ 			
+ 			
+ 			
+ 			
 			//Sign Out from 'Plan' page
  			stepNo++;
 			description="SignOut Successful";
