@@ -1,6 +1,7 @@
 package com.mindalliance.channels.db.services.users;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -248,8 +249,8 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * Add a first planner to a plan community.
      *
      * @param founder          a Channels user
-     * @param communityService a community service
+     * @param planCommunity a plan community
      */
-    void addFounder( ChannelsUser founder, CommunityService communityService );
+    void addFounder( ChannelsUser founder, PlanCommunity planCommunity );
 
 }

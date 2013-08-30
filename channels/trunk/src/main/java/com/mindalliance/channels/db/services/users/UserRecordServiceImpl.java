@@ -1,6 +1,7 @@
 package com.mindalliance.channels.db.services.users;
 
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.DuplicateKeyException;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -49,6 +50,9 @@ public class UserRecordServiceImpl
 
     @Autowired
     private UserRecordRepository repository;
+
+    @Autowired
+    private CommunityServiceFactory communityServiceFactory;
 
     public UserRecordServiceImpl() {
     }
@@ -243,6 +247,11 @@ public class UserRecordServiceImpl
         for ( ChannelsUser user : userList )
             if ( user.isCommunityPlanner( communityUri ) )
                 result.add( user );
+        if ( result.isEmpty() ) { // if none and current user is admin, make current user a temporary community planner
+            if ( ChannelsUser.current().isAdmin() ) {
+                result.add( ChannelsUser.current() );
+            }
+        }
         return result;
     }
 
@@ -461,14 +470,14 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    public void addFounder( ChannelsUser founder, CommunityService communityService ) {
-        PlanCommunity planCommunity = communityService.getPlanCommunity();
+    public void addFounder( ChannelsUser founder, PlanCommunity planCommunity ) {
         synchronized ( planCommunity ) {
             List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
             assert planners.isEmpty(); // Make sure founder is first planner
             UserRecord userRecord = founder.getUserRecord();
             userRecord.makePlannerOf( planCommunity.getUri() );
             save( userRecord );
+            CommunityService communityService = communityServiceFactory.getService( planCommunity );
             communityService.clearCache();
         }
     }

@@ -60,7 +60,7 @@ public class PlanShowMenuPanel extends MenuPanel {
 
             menuItems.addAll(
                     Arrays.asList(
-                            collapsible( Channels.SOCIAL_ID, "Hide planners", "Planners" ),
+                            collapsible( Channels.SOCIAL_ID, "Hide modelers", "Modelers" ),
                             collapsible( plan, "Hide about model", "About model" ),
                             collapsible( getSegment(), "Hide about model segment", "About model segment" ),
                             collapsible( Channels.GALLERY_ID, "Gallery", "Gallery", "planner" ) ) );

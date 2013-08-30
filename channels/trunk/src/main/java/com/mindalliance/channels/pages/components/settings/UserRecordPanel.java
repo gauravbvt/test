@@ -265,7 +265,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
     private List<String> getUserRoleChoices() {
         List<String> roleChoices = new ArrayList<String>();
         roleChoices.add( GUEST );
-        roleChoices.add( UserAccess.UserRole.Planner.name() );
+        roleChoices.add( UserAccess.UserRole.Planner.getLabel() );
         roleChoices.add( NOT_AUTHORIZED );
         return roleChoices;
     }
@@ -277,7 +277,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 ? NOT_AUTHORIZED
                 : userAccess.getUserRole() == UserAccess.UserRole.Participant
                 ? GUEST
-                : userAccess.getUserRole().name();
+                : userAccess.getUserRole().getLabel();
     }
 
     public void setUserRoleName( String val ) {
@@ -288,7 +288,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             else if ( val.equals( GUEST ) )
                 userRole = UserAccess.UserRole.Participant;
             else
-                userRole = UserAccess.UserRole.valueOf( val );
+                userRole = UserAccess.UserRole.fromLabel( val );
             if ( selectedPlan != null ) {
                 userRecordUpdate.setUserAccessForContext( selectedPlan.getUri(), userRole );
             } else if ( userRole == UserAccess.UserRole.Disabled || userRole == UserAccess.UserRole.Admin ) {
@@ -314,7 +314,8 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                if ( !userRecord.sameAs( userRecordUpdate ) ) {
+                if ( !userRecord.getPassword().equals( userRecordUpdate.getPassword() )
+                        || !userRecord.sameAs( userRecordUpdate ) ) {
                     userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
                 resetUserRecord();
                 addUserRecord();
@@ -418,7 +419,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
             UserAccess userAccess = userRecordUpdate.getUserAccessForContext( plan.getUri() );
             return userAccess == null
                     ? NOT_AUTHORIZED
-                    : userAccess.getUserRole().name();
+                    : userAccess.getUserRole().getLabel();
         }
 
         public void setUserRoleName( String val ) {
@@ -429,7 +430,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                     UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.Participant );
                     userRecordUpdate.addUserAccess( userAccess );
                 } else {
-                    UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.valueOf( val ) );
+                    UserAccess userAccess = new UserAccess( plan.getUri(), UserAccess.UserRole.fromLabel( val ) );
                     userRecordUpdate.addUserAccess( userAccess );
                 }
             }

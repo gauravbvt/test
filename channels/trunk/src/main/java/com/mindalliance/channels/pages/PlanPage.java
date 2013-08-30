@@ -871,7 +871,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
         AjaxLink<String> selectedPlanLink = new AjaxLink<String>( Breadcrumbable.PAGE_ITEM_LINK_ID ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.Expanded, getPlan() ) );
+                setResponsePage( PlansPage.class, makePlanParameters() );
+                // update( target, new Change( Change.Type.Expanded, getPlan() ) );
             }
         };
         // planPath.add( selectedSegmentLink );
@@ -882,9 +883,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
         );
         if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
             addTipTitle( selectedPlanNameLabel, planName );
-        } else {
+        }/* else {
             addTipTitle( selectedPlanNameLabel, "Click to edit the model's details" );
-        }
+        }*/
         selectedPlanLink.add( selectedPlanNameLabel );
         return selectedPlanLink;
     }

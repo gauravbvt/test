@@ -352,7 +352,7 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
                 plan.getUri(),
                 plan.getVersion() );
         PlanCommunity planCommunity = getPlanCommunity( communityDefinition.getUri() );
-        userRecordService.addFounder( founder, communityService );
+        userRecordService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
         planCommunity.setDateCreated( new Date() );
         return planCommunity;

@@ -59,7 +59,7 @@ public class CommunitiesPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "Communities";
+        return "All communities";
     }
 
     @Override

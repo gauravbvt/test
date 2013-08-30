@@ -129,13 +129,7 @@
     <div class="pathway-cont">
         <div wicket:id="contextPath" class="pathway">[breadcrumbs panel </div>
         <div class="icon-menu">
-            <div class="group"><!--
-                <a wicket:id="goForward" class="button-icon" title="Go forward">
-                    <img src="images/p-arrow-right.png" alt="forward"/>
-                </a>
-                <a wicket:id="goBack" class="button-icon" title="Go back">
-                    <img src="images/p-arrow-right.png" alt="back"/>
-                </a>-->
+            <div class="group">
                 <a wicket:id="segmentIssuesLink" class="button-icon">
                     <img src="images/warning.png" alt="issues"/>
                 </a>
@@ -148,37 +142,6 @@
             </div>
         </div>
     </div>
-
-    <!--
-            <h1><span wicket:id="header">Title</span></h1>
-            <span class="menubar">
-                <span wicket:id="geomapLink">[geomap link panel]</span>
-
-                <span class="menuitem" wicket:id="planShowMenu">[show menu]</span><span class="menuitem"
-                                                                                        wicket:id="planActionsMenu">[action menu]</span>
-                <input wicket:id="refresh-needed" type="button" value="Please refresh now"/>
-                <a wicket:id="help-link" href="#"><img class="help-icon" src="images/help_blue_small.png" alt="Help"
-                                                       title="Channels help and feedback"/></a>
-                <span wicket:id="spinner" id="spinner" class="spinner"><img src="images/ajax-loader.gif"></span>
-            </span>
-
-            <p class="caption" wicket:id="sg-desc">A description.</p>
-        </div>
-        <div id="history">
-            <img wicket:id="goBack" class="navigation" src="images/go_back.png" title="Go back" alt="Go back">
-            <img wicket:id="goForward" class="navigation" src="images/go_forward.png" title="Go forward" alt="Go forward">
-        </div>
-        <div id="controls">
-            <ul id="sg-sel">
-                <li><strong><span wicket:id="planName" class="pointer">Plan name</span></strong></li>
-                <li wicket:id="select-segment"><label>Select plan segment:
-                    <select wicket:id="sg-sel" name="segment">
-                        <option>Some segment</option>
-                    </select></label>
-                </li>
-            </ul>
-        </div>
-    -->
     <span wicket:id="segment">[segment panel] </span>
 
 
@@ -190,7 +153,6 @@
 </form>
 <div id="notifier" wicket:id="notifier">
     <div id="basic-template">
-        <!--<a class="ui-notify-cross ui-notify-close" href="#">x</a>-->
         <h1>#{title}</h1>
 
         <p>#{text}</p>

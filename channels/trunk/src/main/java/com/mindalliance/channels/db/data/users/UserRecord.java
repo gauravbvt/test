@@ -434,7 +434,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
                     .append( ":\n\n" );
             for ( UserAccess userAccessChange : getAccessChangesToNotify( planCommunity.getUri() ) ) {
                 sb.append( "to " )
-                        .append( userAccessChange.getUserRole().name() )
+                        .append( userAccessChange.getUserRole().getLabel() )
                         .append( " on " )
                         .append( new SimpleDateFormat( DATE_FORMAT_STRING ).format( userAccessChange.getDate() ) )
                         .append( "\n" );

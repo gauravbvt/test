@@ -204,11 +204,13 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
         if ( topic.equals( VALIDATION_REQUESTED ) ) {
             return "As supervisor, you are requested to confirm "
                     + asString( communityService )
-                    + "\n\nThank you!\n";
+                    + " in community " + communityService.getPlanCommunity().getName()
+                    + ".\n\nThank you!\n";
         } else if ( topic.equals( ACCEPTANCE_REQUESTED ) ) {
             return "You are requested to participate as "
                     + getAgent( communityService ).getName()
-                    + ". It is up to you to accept or not."
+                    + " in community " + communityService.getPlanCommunity().getName()
+                    + ". You are invited to either accept or reject the request."
                     + "\n\nThank you!\n";
         } else {
             throw new RuntimeException( "Unknown topic " + topic );

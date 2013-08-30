@@ -161,7 +161,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         );
         WebMarkupContainer newParticipationControls = new WebMarkupContainer( "newParticipation" );
         newParticipationControls.setOutputMarkupId( true );
-        newParticipationContainer.add(  newParticipationControls );
+        newParticipationContainer.add( newParticipationControls );
         addPartipationAgencyChoice( newParticipationControls, participationWrappers );
         addParticipationAgentChoice( newParticipationControls, participationWrappers );
         newParticipationContainer.add( makeHelpIcon( "helpNewParticipation", "what-i-do", "adding-participation", "images/help_guide_gray.png" ) );
@@ -212,14 +212,14 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                             getUser(),
                             agent,
                             getCommunityService() ) )
-                    participations.add( new UserParticipation( getUsername(), getUser(), agent, planCommunity ) );
+                        participations.add( new UserParticipation( getUsername(), getUser(), agent, planCommunity ) );
                 }
             }
         }
         return new ArrayList<UserParticipation>( participations );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> unsupervisedParticipations() {
         return (List<UserParticipation>) CollectionUtils.select(
                 getCommunityService().getUserParticipationService().getUserParticipations(
@@ -233,7 +233,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 } );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> confirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService
                 = getCommunityService().getUserParticipationConfirmationService();
@@ -254,19 +254,19 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private String getUserRole() {
         String userRole = null;
-        if ( user.isAdmin() )
-            userRole = "administrator";
-        else {
-            PlanCommunity planCommunity = getPlanCommunity();
-            if ( planCommunity.isDomainCommunity() ) { // context is a plan
+        PlanCommunity planCommunity = getPlanCommunity();
+        if ( planCommunity.isDomainCommunity() ) { // context is a plan
+            if ( user.isAdmin() )
+                userRole = "administrator";
+            else {
                 userRole = user.isPlannerOrAdmin( getPlan().getUri() )
                         ? "model planner"
                         : "model viewer";
-            } else { // context is a plan community
-                userRole = getCommunityService().isCommunityPlanner( user )
-                        ? "community planner"
-                        : "participant";
             }
+        } else { // context is a plan community
+            userRole = getCommunityService().isCommunityPlanner( user )
+                    ? "community planner"
+                    : "participant";
         }
         return ( ChannelsUtils.startsWithVowel( userRole ) ? " an " : " a " ) + userRole + ".";
     }
@@ -414,7 +414,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return agents;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<Agency> agenciesWithAvailableParticipation(
             final List<ParticipationWrapper> participationWrappers ) {
         List<Agency> agencies = (List<Agency>) CollectionUtils.select(
@@ -474,7 +474,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return wrappers;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<UserParticipation> unconfirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService =
                 getCommunityService().getUserParticipationConfirmationService();

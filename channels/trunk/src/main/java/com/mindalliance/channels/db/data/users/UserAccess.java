@@ -22,7 +22,20 @@ public class UserAccess implements Serializable {
         Disabled,
         Admin,
         Planner,
-        Participant
+        Participant;
+
+        public String getLabel() {
+            return this == Planner
+                    ? "Modeler"
+                    : this.name();
+        }
+
+        public static UserRole fromLabel( String label ) {
+            return label.equals( "Modeler")
+                    ? Planner
+                    : valueOf( label );
+        }
+
     }
 
     public UserAccess() {

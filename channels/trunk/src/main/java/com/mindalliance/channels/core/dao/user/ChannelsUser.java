@@ -27,7 +27,7 @@ import java.util.List;
 public class ChannelsUser implements UserDetails {
 
     public static final String ADMIN = "Admin";
-    public static final String PLANNER = "Planner";
+    public static final String PLANNER = "Modeler";
     public static final String PARTICIPANT = "Participant";
     public static final String UNAUTHORIZED = "Unauthorized";
     
@@ -270,7 +270,7 @@ public class ChannelsUser implements UserDetails {
      * @return a boolean
      */
     public boolean isCommunityPlanner( String communityUri ) {
-        return isAdmin() || userRecord.isCommunityPlanner( communityUri );
+        return /*isAdmin() || */userRecord.isCommunityPlanner( communityUri );
     }
 
 

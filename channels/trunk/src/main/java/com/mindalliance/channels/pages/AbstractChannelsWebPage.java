@@ -847,12 +847,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             intermediates.add( new PagePathItem(
                     CommunitiesPage.class,
                     new PageParameters(),
-                    "Communities" ) );
+                    "All communities" ) );
         } else if ( isInCommunityContext() ) {
             intermediates.add( new PagePathItem(
                     CommunitiesPage.class,
                     new PageParameters(),
-                    "Communities" ) );
+                    "All communities" ) );
             PlanCommunity planCommunity = getCommunityInContext();
             intermediates.add( new PagePathItem(
                     CommunityPage.class,
