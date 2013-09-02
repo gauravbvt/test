@@ -3128,6 +3128,16 @@
 	</Element>
 	
 	<Element>
+		<GivenName>Attach File Delete Button In About Plan Segment</GivenName>
+		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/div/div/ul/li/ul/li/a</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
 		<GivenName>Delete Event In About Plan Segment</GivenName>
 		<Xpath>/html/body/form/div[5]/div/div[3]/div/div/span/table/tbody/tr[4]/td/span/div/div/table/tbody/tr/td[2]/a/img</Xpath>
 		<Name></Name>
