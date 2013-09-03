@@ -314,7 +314,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         AjaxLink<String> applyLink = new AjaxLink<String>( "apply1" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                if ( !userRecord.getPassword().equals( userRecordUpdate.getPassword() )
+                if ( userRecordUpdate.getPassword() != null
                         || !userRecord.sameAs( userRecordUpdate ) ) {
                     userRecordService.updateUserRecord( userRecord, userRecordUpdate, getCommunityService() );
                 resetUserRecord();
