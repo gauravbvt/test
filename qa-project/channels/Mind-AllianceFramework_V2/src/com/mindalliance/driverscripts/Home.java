@@ -234,35 +234,32 @@ public class Home {
 		suite.addTestSuite(MAC0031_RedoAddSegment.class);
 		suite.addTestSuite(MAC0033_RedoAddGoal.class);
 //		suite.addTestSuite(MAC0034_RedoRemoveGoal.class);
-//		suite.addTestSuite(MAC0035_RedoAddNewTask.class);
+		suite.addTestSuite(MAC0035_RedoAddNewTask.class);
 //		suite.addTestSuite(MAC0036_RedoCutTask.class);
-//		suite.addTestSuite(MAC0037_RedoPasteTaskUsingCut.class);
-//		suite.addTestSuite(MAC0038_RedoPasteTaskUsingCopy.class);
+		suite.addTestSuite(MAC0037_RedoPasteTaskUsingCut.class);
+		suite.addTestSuite(MAC0038_RedoPasteTaskUsingCopy.class);
 //		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
 ////	suite.addTestSuite(MAC0040_RedoIntermediateTask.class);
-////		suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
-////		suite.addTestSuite(MAC0042_RedoMoveTask.class);
-////		suite.addTestSuite(MAC0043_RedoConnectFlow.class);
-    		suite.addTestSuite(MAC0045_RedoAddIssue.class);
-////		suite.addTestSuite(MAC0046_RedoRemoveIssue.class);
-////		suite.addTestSuite(MAC0047_RedoAttachDocument.class);
-////		suite.addTestSuite(MAC0050_RedoPasteAttachment.class);
-////		suite.addTestSuite(MAC0052_RedoSetTaskFromCopy.class);
-    		suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
-    		suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
-////		suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
-////		suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
-////		suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
-////		suite.addTestSuite(MAC0059_RedoTransferJobs.class);
+////	suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
+////	suite.addTestSuite(MAC0042_RedoMoveTask.class);
+////	suite.addTestSuite(MAC0043_RedoConnectFlow.class);
+    	suite.addTestSuite(MAC0045_RedoAddIssue.class);
+////	suite.addTestSuite(MAC0046_RedoRemoveIssue.class);
+////	suite.addTestSuite(MAC0047_RedoAttachDocument.class);
+////	suite.addTestSuite(MAC0050_RedoPasteAttachment.class);
+////	suite.addTestSuite(MAC0052_RedoSetTaskFromCopy.class);
+    	suite.addTestSuite(MAC0053_RedoAddInfoNeed.class);
+    	suite.addTestSuite(MAC0054_RedoAddInfoCapability.class);
+////	suite.addTestSuite(MAC0055_RedoRemoveFlow.class);
+////	suite.addTestSuite(MAC0056_RedoDuplicateFlow.class);
+////	suite.addTestSuite(MAC0057_RedoBreakUpFlow.class);
+////	suite.addTestSuite(MAC0059_RedoTransferJobs.class);
 //		suite.addTestSuite(MAC0061_UndoAddNewRequirement.class);
-////		suite.addTestSuite(MAC0062_RedoAddNewRequirement.class);
+////	suite.addTestSuite(MAC0062_RedoAddNewRequirement.class);
 //		suite.addTestSuite(MAC0063_UndoRemoveRequirement.class);
 //		suite.addTestSuite(MAC0064_RedoRemoveRequirement.class);
 //		
-		
-		
-		
-				
+    	
 		return suite;
 	}
 }
