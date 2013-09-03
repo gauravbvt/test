@@ -1674,7 +1674,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Paste Task</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -1683,7 +1683,7 @@
 	</Element>
 	<Element>
 		<GivenName>Redo Cut Task</GivenName>
-		<Xpath>/html/body/form/div[28]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[30]/div/div[3]/span[2]/span/ul/li/ul/li[3]/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
