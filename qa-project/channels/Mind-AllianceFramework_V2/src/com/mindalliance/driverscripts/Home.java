@@ -157,7 +157,7 @@ public class Home {
 		suite.addTestSuite(MAV0223_AddInfoSentCopyCapability.class);
 		suite.addTestSuite(MAV0224_AddInfoReceiveCopyNeed.class);
 		suite.addTestSuite(MAV0225_AddInfoReceiveRemoveInfoNeeds.class);
-//		suite.addTestSuite(MAV0226_AddInfoSentRemoveSharingCapability.class);
+    	suite.addTestSuite(MAV0226_AddInfoSentRemoveSharingCapability.class);
 //		suite.addTestSuite(MAV0243_ShowRequirements.class);
 //		suite.addTestSuite(MAV0245_ShowRequirementDefinition.class);
 //		suite.addTestSuite(MAV0246_ShowRequirementNetwork.class);
@@ -238,7 +238,7 @@ public class Home {
 //		suite.addTestSuite(MAC0036_RedoCutTask.class);
 		suite.addTestSuite(MAC0037_RedoPasteTaskUsingCut.class);
 		suite.addTestSuite(MAC0038_RedoPasteTaskUsingCopy.class);
-//		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
+		suite.addTestSuite(MAC0039_RedoDuplicateTask.class);
 ////	suite.addTestSuite(MAC0040_RedoIntermediateTask.class);
 ////	suite.addTestSuite(MAC0041_RedoDisintermediateTask.class);
 ////	suite.addTestSuite(MAC0042_RedoMoveTask.class);
