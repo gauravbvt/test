@@ -52,6 +52,6 @@ public class OrganizationHasPlaceholderParent extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Organization has placeholder parent";
+        return "Organization has a placeholder as a parent";
     }
 }

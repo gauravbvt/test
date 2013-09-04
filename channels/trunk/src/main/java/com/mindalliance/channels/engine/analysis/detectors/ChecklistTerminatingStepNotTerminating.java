@@ -75,6 +75,6 @@ public class ChecklistTerminatingStepNotTerminating extends AbstractIssueDetecto
 
     @Override
     protected String getKindLabel() {
-        return "Terminating step in checklist is prerequisite to another";
+        return "Terminating step in checklist is prerequisite to another step";
     }
 }

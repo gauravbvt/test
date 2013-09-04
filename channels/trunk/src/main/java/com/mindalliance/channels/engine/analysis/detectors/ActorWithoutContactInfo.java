@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ActorWithoutContactInfo extends AbstractIssueDetector {
         Actor actor = (Actor) modelObject;
         if ( actor.isActual() && !actor.isUnknown() && actor.getEffectiveChannels().isEmpty() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, actor );
-            issue.setDescription( actor.getName() + " has no contact info." );
+            issue.setDescription( actor.getName() + " has no contact channel." );
             issue.setRemediation( "Add a channel via which to contact " + actor.getName() );
             issue.setSeverity( Level.High );
             issues.add( issue );
@@ -57,7 +57,7 @@ public class ActorWithoutContactInfo extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Agent without contact info";
+        return "Agent has no contact channel";
     }
 
     /**

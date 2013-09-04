@@ -1,9 +1,6 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
 import com.mindalliance.channels.core.Matcher;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.engine.analysis.GraphBuilder;
-import com.mindalliance.channels.engine.analysis.graph.FlowMapGraphBuilder;
 import com.mindalliance.channels.core.model.Flow;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
@@ -11,6 +8,9 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Node;
 import com.mindalliance.channels.core.model.Segment;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
+import com.mindalliance.channels.engine.analysis.GraphBuilder;
+import com.mindalliance.channels.engine.analysis.graph.FlowMapGraphBuilder;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.jgrapht.DirectedGraph;
@@ -48,7 +48,7 @@ public class PotentialDeadlock extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Potential task deadlock";
+        return "Potential task deadlock (task waiting on itself)";
     }
 
     /**

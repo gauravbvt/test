@@ -260,8 +260,8 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 userRole = "administrator";
             else {
                 userRole = user.isPlannerOrAdmin( getPlan().getUri() )
-                        ? "model planner"
-                        : "model viewer";
+                        ? "template developer"
+                        : "template guest";
             }
         } else { // context is a plan community
             userRole = getCommunityService().isCommunityPlanner( user )

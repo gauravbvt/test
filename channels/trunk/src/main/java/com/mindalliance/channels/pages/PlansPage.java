@@ -319,9 +319,9 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
         return user.isPlannerOrAdmin( plan.getUri() ) && getPlan().isDevelopment()
-                ? "Build or modify the collaboration model.\n" +
+                ? "Build or modify the collaboration template.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
-                : "View the collaboration model.\n" +
+                : "View the collaboration template.\n" +
                 "  (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)";
     }
 

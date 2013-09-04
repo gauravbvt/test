@@ -53,6 +53,6 @@ public class PlaceholderOrganizationWithoutCustodian extends AbstractIssueDetect
 
     @Override
     protected String getKindLabel() {
-        return "Placeholder organization without custodian";
+        return "Placeholder organization has no custodian agent";
     }
 }

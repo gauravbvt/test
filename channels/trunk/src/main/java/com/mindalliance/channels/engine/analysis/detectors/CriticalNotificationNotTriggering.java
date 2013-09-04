@@ -56,7 +56,7 @@ public class CriticalNotificationNotTriggering extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Critical notification not triggering";
+        return "Critical notification is not triggering a task";
     }
 
     @Override

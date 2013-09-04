@@ -49,6 +49,6 @@ public class PartIsOngoingAndStartsWithSegment extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Task is both ongoing and starting with the segment";
+        return "Task is ongoing and yet also starts with the segment";
     }
 }

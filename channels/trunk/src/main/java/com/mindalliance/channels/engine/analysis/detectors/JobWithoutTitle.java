@@ -59,6 +59,6 @@ public class JobWithoutTitle extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Agent employed without title";
+        return "Agent employed without a title";
     }
 }

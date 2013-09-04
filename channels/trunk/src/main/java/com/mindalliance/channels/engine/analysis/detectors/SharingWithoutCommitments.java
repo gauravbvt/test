@@ -109,7 +109,7 @@ public class SharingWithoutCommitments extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Sharing flow implies no commitments";
+        return "Information flow specifies no sharing commitments between agents";
     }
 
     @Override

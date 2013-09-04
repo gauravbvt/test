@@ -92,7 +92,7 @@ public class ChecklistNotFullyConnectedToTaskContext extends AbstractIssueDetect
 
     @Override
     protected String getKindLabel() {
-        return "Checklist not fully connected to task context";
+        return "Checklist does not reference some conditions or outcomes of the task";
     }
 
     @Override

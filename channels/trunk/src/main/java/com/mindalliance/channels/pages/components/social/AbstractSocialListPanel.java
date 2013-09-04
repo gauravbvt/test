@@ -31,7 +31,7 @@ abstract public class AbstractSocialListPanel extends AbstractUpdatablePanel imp
         AjaxLink hideSocialLink = new AjaxLink( "hideAll" ) {
             public void onClick( AjaxRequestTarget target ) {
                 Change change = new Change( Change.Type.Collapsed, Channels.SOCIAL_ID );
-                change.setMessage( "To re-open, select Modelers in the top Show menu." );
+                change.setMessage( "To re-open, select Presence in the top Show menu." );
                 update( target, change );
             }
         };

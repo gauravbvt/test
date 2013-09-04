@@ -77,7 +77,7 @@ public class UntimelyDissemination extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Untimely dissemination";
+        return "Untimely dissemination of information";
     }
 
     @Override

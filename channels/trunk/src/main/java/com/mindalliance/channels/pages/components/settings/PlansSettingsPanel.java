@@ -136,7 +136,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         newPlanUriField.setOutputMarkupId( true );
-        addInputHint( newPlanUriField, "a_unique_model_id" );
+        addInputHint( newPlanUriField, "a_unique_template_id" );
         settingsContainer.addOrReplace( newPlanUriField );
         // button
         AjaxLink<String> addPlanLink = new AjaxLink<String>( "addPlan" ) {
@@ -153,7 +153,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                     }
                 }
                 if ( !success )
-                    update( target, Change.message( "Invalid plan identifier - New model not added." ) );
+                    update( target, Change.message( "Invalid template identifier - New collaboration template not added." ) );
             }
         };
         addPlanLink.setOutputMarkupId( true );
@@ -163,14 +163,14 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     private boolean addPlanWithUri( String planUri ) {
         if ( planUri != null && !planUri.trim().isEmpty() ) {
             try {
-                String newPlanName = "New Unnamed Model";
+                String newPlanName = "New Unnamed Template";
                 PlanDefinition newPlanDefinition = planDefinitionManager.getOrCreate( planUri, newPlanName, "Unnamed" );
                 getPlanManager().assignPlans();
                 selectedPlan = planManager.getPlan( newPlanDefinition.getUri(),
                         newPlanDefinition.getDevelopmentVersion().getNumber() );
                 return selectedPlan != null;
             } catch ( IOException e ) {
-                LOG.error( "Unable to create collaboration model", e );
+                LOG.error( "Unable to create collaboration template", e );
                 return false;
             }
         } else {
@@ -222,7 +222,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 // do nothing
             }
         } );
-        addInputHint( planOwnerField, "Who owns this model" );
+        addInputHint( planOwnerField, "Who owns this collaboration template" );
         planOwnerField.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( planOwnerField );
         // planner support email
@@ -273,7 +273,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         // delete
         ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
                 "deletePlan",
-                "Delete the selected model?" ) {
+                "Delete the selected collaboration template?" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 List<Plan> plans = getPlanManager().getDevelopmentPlans();
@@ -309,7 +309,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
             if ( !plannersOkToProductize ) {
                 if ( invalid ) sb.append( " and" );
-                sb.append( " even though not all planners have voted to move into production" );
+                sb.append( " even though not all developers have voted to move into production" );
             }
         }
         sb.append( "?" );
@@ -347,7 +347,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                 initSettings();
                 target.add( settingsContainer );
                 Change change = new Change( Change.Type.NeedsRefresh );
-                change.setMessage( "Settings changed for model " + getPlan().getUri() );
+                change.setMessage( "Settings changed for template " + getPlan().getUri() );
                 update( target, change );
 
             }
@@ -358,7 +358,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
 
     private void updatePlan() {
         setPlan( getSelectedPlan() );
-        MultiCommand multiCommand = new MultiCommand( getUsername(), "Update model settings" );
+        MultiCommand multiCommand = new MultiCommand( getUsername(), "Update template settings" );
         multiCommand.setChange( new Change( Change.Type.Updated, getSelectedPlan() ) );
         multiCommand.makeUndoable( false );
         if ( !getPlanName().equals( getSelectedPlan().getName() ) ) {

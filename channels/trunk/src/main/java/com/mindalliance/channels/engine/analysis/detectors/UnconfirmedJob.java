@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Unconfirmed job of agent in organization";
+        return "The job of the agent is not confirmed";
     }
 
     /**
@@ -53,7 +53,7 @@ public class UnconfirmedJob extends AbstractIssueDetector {
         Organization org = (Organization) modelObject;
         for ( Job job : queryService.findUnconfirmedJobs( org ) ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, org );
-            issue.setDescription( "Job " + job + " is implied from the plan and not confirmed." );
+            issue.setDescription( "Job " + job + " is implied but is not confirmed." );
             issue.setRemediation( "Confirm the job in the profile of " + org.getName() + "." );
             issue.setSeverity( Level.Low );
             issues.add( issue );

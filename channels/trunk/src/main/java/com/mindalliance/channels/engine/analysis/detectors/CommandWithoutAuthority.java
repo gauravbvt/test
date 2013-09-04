@@ -113,7 +113,7 @@ public class CommandWithoutAuthority extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Command without proper authority";
+        return "Command flow not from supervisor";
     }
 
     @Override

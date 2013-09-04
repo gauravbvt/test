@@ -136,6 +136,6 @@ public class SharingContradictsCapability extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Sharing contradicts explicit capability";
+        return "Information sharing inconsistent with definition of related capability";
     }
 }

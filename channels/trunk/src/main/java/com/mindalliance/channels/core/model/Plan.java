@@ -61,7 +61,7 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     }
 
     public static String classLabel() {
-        return "this plan";
+        return "this template";
     }
 
     /**
@@ -719,7 +719,7 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
 
     @Override
     public String getKindLabel() {
-        return "Model";
+        return "Template";
     }
 
 }

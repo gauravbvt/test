@@ -30,7 +30,7 @@ public class FromUser extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "User defined";
+        return "Issue reported by template developer";
     }
 
     @Override

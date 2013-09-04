@@ -126,6 +126,6 @@ public class AgentUnqualifiedForMedium extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Agent in sharing commitment not qualified to use transmission medium";
+        return "Agent with sharing commitment is not qualified to use a transmission medium";
     }
 }

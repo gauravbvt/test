@@ -71,7 +71,7 @@ public class SingleAssignmentToImportantTask extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Important task has only one assignment";
+        return "Important task assigned to only one single-user agent";
     }
 
     /**

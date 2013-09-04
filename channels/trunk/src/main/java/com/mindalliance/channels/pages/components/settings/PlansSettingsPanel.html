@@ -10,7 +10,7 @@
     <div class="manage-plan admin" wicket:id="settingsContainer">
 		<div class="plan-left-col">
 			<div class="select-plan">
-				<h3>Models</h3>
+				<h3>Collaboration templates</h3>
 				<div>
 		            <select wicket:id="plan-sel" name="plan">
 		                <option>Some model</option>
@@ -18,7 +18,7 @@
 				</div>
 			</div>
 	    	<div class="new-plan">
-				<h3>New Model</h3>
+				<h3>New template</h3>
 				<div>
 		    		<input wicket:id="newPlanUri" type="text"/>
 		    		<a wicket:id="addPlan" class="button">Add</a>
@@ -31,13 +31,13 @@
 		    	<h3>Details</h3>
         		<table wicket:id="planProperties" width="100%" border="0" cellspacing="0" cellpadding="0">
             		 <tr class="even">
-                		<td class="label">Model URI:</td>
+                		<td class="label">Template URI:</td>
                 		<td style="text-align: right;">
                 		    <span wicket:id="planUri">uri</span>
                			</td>
             		</tr>
                     <tr class="odd">
-                        <td class="label">Model Name:</td>
+                        <td class="label">Template Name:</td>
                         <td>
                             <input type="text" wicket:id="planName"/>
                         </td>
@@ -55,7 +55,7 @@
                 		</td>
             		</tr>
             		<tr class="even">
-               			<td class="label">Model Owner:</td>
+               			<td class="label">Template Owner:</td>
                 		<td>
                     		<input type="text" wicket:id="planOwner"/>
                 		</td>
@@ -75,7 +75,7 @@
         		</table>
         		<div class="button-bar">
 	           		<a wicket:id="productize" class="button">Productize</a>
-	       		    <a wicket:id="deletePlan" class="button">Delete Model</a>
+	       		    <a wicket:id="deletePlan" class="button">Delete Template</a>
 	        		<a class="button" wicket:id="reset">Reset</a>
 	        		<a class="button" wicket:id="apply">Apply</a>
         		</div>

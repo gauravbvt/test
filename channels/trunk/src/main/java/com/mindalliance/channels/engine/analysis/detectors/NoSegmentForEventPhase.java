@@ -60,10 +60,10 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
                                 + event.getName()
                                 + "\nor remove "
                                 + event.getName()
-                                + " from the plan scope"
+                                + " from the template scope"
                                 + "\nor remove "
                                 + phase.getName()
-                                + " from the plan scope."
+                                + " from the template scope."
                         );
                         issue.setSeverity( Level.Low );
                         issues.add( issue );
@@ -92,7 +92,7 @@ public class NoSegmentForEventPhase extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "No segment for event phase";
+        return "No segment covers a scenario in scope";
     }
 
     /**

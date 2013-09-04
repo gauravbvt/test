@@ -35,12 +35,12 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
                 Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
-                issue.setDescription( "The plan's locale ("
+                issue.setDescription( "The template's locale ("
                         + locale.getName()
                         + ") is defined in terms of another place that contains it. It must not." );
                 issue.setRemediation( "Remove the containment constraint from the definition of " + locale.getName()
-                        + "\nor use another place as the plan's locale"
-                        + "\nor leave the plan's locale unnamed."
+                        + "\nor use another place as the template's locale"
+                        + "\nor leave the template's locale unnamed."
                 );
                 issues.add( issue );
             }
@@ -48,12 +48,12 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
             if ( ref != null && ref.getReferencedPlace( locale ) != null ) {
                 Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                 issue.setSeverity( Level.High );
-                issue.setDescription( "The plan's locale ("
+                issue.setDescription( "The template's locale ("
                         + locale.getName()
                         + ") is defined in terms of another place that it contains. It must not." );
                 issue.setRemediation( "Remove the containment constraint from the definition of " + locale.getName()
-                        + "\nor use another place as the plan's locale"
-                        + "\nor leave the plan's locale unnamed."
+                        + "\nor use another place as the template's locale"
+                        + "\nor leave the template's locale unnamed."
                 );
                 issues.add( issue );
             }
@@ -62,7 +62,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
                 if ( !within.isAbsolute( locale ) ) {
                     Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
-                    issue.setDescription( "The plan's locale ("
+                    issue.setDescription( "The template's locale ("
                             + locale.getName()
                             + ") is within "
                             + within.getName()
@@ -70,8 +70,8 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
                     issue.setRemediation( "Change the definition of "
                             + within.getName()
                             + " so that it is not relative"
-                            + "\nor use another place as the plan's locale"
-                            + "\nor leave the plan's locale unnamed."
+                            + "\nor use another place as the template's locale"
+                            + "\nor leave the template's locale unnamed."
                     );
                     issues.add( issue );
                 }
@@ -81,7 +81,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
                 if ( !placeType.isAbsolute( locale ) ) {
                     Issue issue = makeIssue( queryService, Issue.VALIDITY, plan );
                     issue.setSeverity( Level.High );
-                    issue.setDescription( "The plan's locale ("
+                    issue.setDescription( "The template's locale ("
                             + locale.getName()
                             + ") is categorized with "
                             + placeType.getName()
@@ -89,8 +89,8 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
                     issue.setRemediation( "Change the definition of "
                             + placeType.getName()
                             + " so that it is not relative"
-                            + "\nor use another place as the plan's locale"
-                            + "\nor leave the plan's locale unnamed."
+                            + "\nor use another place as the template's locale"
+                            + "\nor leave the template's locale unnamed."
                     );
                     issues.add( issue );
                 }
@@ -108,7 +108,7 @@ public class PlanLocaleIsRelative extends AbstractIssueDetector {
     }
 
     protected String getKindLabel() {
-        return "Plan locale is relative";
+        return "Collaboration template as a relative locale";
     }
 
 }

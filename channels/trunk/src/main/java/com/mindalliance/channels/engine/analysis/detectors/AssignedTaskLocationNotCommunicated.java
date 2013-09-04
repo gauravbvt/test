@@ -84,6 +84,6 @@ public class AssignedTaskLocationNotCommunicated extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Location of assigned task not communicated";
+        return "Location of assigned task is not communicated";
     }
 }

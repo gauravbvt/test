@@ -15,9 +15,9 @@ import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Organization.FamilyRelationship;
 import com.mindalliance.channels.core.model.Part.Category;
+import com.mindalliance.channels.core.query.QueryService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
-import com.mindalliance.channels.core.query.QueryService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -258,7 +258,7 @@ public class OrganizationMissingExpectedCommitment extends AbstractIssueDetector
 
     @Override
     protected String getKindLabel() {
-        return "Expected sharing commitments missing";
+        return "Expected information sharing commitments is missing";
     }
 
     @Override

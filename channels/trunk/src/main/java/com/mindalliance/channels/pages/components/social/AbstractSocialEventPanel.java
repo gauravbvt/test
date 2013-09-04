@@ -186,7 +186,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
             if ( poUserName == null ) {
                 return "?";
             } else if ( poUserName.equals( UserRecord.PLANNERS ) ) {
-                return "All modelers";
+                return "All template developers";
             } else if ( poUserName.equals( UserRecord.USERS ) ) {
                 return "Everyone";
             } else {
@@ -198,7 +198,7 @@ public abstract class AbstractSocialEventPanel extends AbstractUpdatablePanel {
                     return name
                             + (
                             userRole.equals( ChannelsUser.PLANNER )
-                                    ? " (modeler)"
+                                    ? " (template developer)"
                                     : userRole.equals( ChannelsUser.ADMIN )
                                     ? " (admin)"
                                     : ""

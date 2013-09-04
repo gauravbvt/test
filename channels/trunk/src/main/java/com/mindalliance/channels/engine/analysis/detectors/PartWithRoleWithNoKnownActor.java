@@ -1,12 +1,12 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "No known agent in task's named role";
+        return "No known agent has task's assignable role";
     }
 
     /**
@@ -64,7 +64,7 @@ public class PartWithRoleWithNoKnownActor extends AbstractIssueDetector {
                 Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
                 issue.setDescription( "There is no known agent playing this role." );
                 issue.setRemediation( "Name an agent assigned to the task" +
-                        "\nor add a participating agent to the plan's scope with this role." );
+                        "\nor add a participating agent to the collaboration template's scope with this role." );
                 issue.setSeverity( Level.Medium );
                 issues.add( issue );
             }

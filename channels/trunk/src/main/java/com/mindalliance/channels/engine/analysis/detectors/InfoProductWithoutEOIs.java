@@ -52,6 +52,6 @@ public class InfoProductWithoutEOIs extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Info product without EOIs";
+        return "Information product is defined without elements of information";
     }
 }

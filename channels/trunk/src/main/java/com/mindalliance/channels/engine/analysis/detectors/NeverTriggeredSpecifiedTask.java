@@ -30,9 +30,9 @@ public class NeverTriggeredSpecifiedTask extends AbstractIssueDetector {
         if ( !part.hasDefaultTask() && !part.isAutoStarted() && !part.isTriggered() ) {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
             issue.setDescription(
-                "This task may never start; it does not start with the plan segment, is not ongoing, and it is never triggered." );
+                "This task may never start; it does not start with the segment, is not ongoing, and it is never triggered." );
             issue.setRemediation(
-                "Start this task with the plan segment" + "\nor make it ongoing"
+                "Start this task with the segment" + "\nor make it ongoing"
                 + "\nor have an incoming sharing flow trigger it" );
             issue.setSeverity( queryService.computePartPriority( part ) );
             issues.add( issue );

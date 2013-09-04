@@ -114,7 +114,7 @@ public class UserIssueConverter extends AbstractChannelsConverter {
                 }
                 idMap.put( issueId, issue.getId() );
             } else {
-                LOG.debug( "Model object issue " + issueId + " is about is not found" );
+                LOG.debug( "Template object issue " + issueId + " is about is not found" );
             }
         } catch ( NotFoundException e ) {
             LOG.debug( "Obsolete issue", e );

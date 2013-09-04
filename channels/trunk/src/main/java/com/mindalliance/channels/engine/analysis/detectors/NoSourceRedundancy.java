@@ -46,7 +46,7 @@ public class NoSourceRedundancy extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Only one source of critical information";
+        return "A task has only one source for critical information it needs";
     }
 
     /**

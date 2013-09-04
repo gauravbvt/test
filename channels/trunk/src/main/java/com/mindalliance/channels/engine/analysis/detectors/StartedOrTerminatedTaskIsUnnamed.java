@@ -66,6 +66,6 @@ public class StartedOrTerminatedTaskIsUnnamed extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Unnamed task started or terminated";
+        return "Task started or terminated has no name";
     }
 }

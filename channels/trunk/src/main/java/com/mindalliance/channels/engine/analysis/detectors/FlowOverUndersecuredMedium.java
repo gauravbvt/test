@@ -92,7 +92,7 @@ public class FlowOverUndersecuredMedium extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Flow over unsecure medium";
+        return "Information shared over an insufficiently secure medium";
     }
 
     @Override

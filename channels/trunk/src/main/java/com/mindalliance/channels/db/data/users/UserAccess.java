@@ -26,12 +26,12 @@ public class UserAccess implements Serializable {
 
         public String getLabel() {
             return this == Planner
-                    ? "Modeler"
+                    ? "Template developer"
                     : this.name();
         }
 
         public static UserRole fromLabel( String label ) {
-            return label.equals( "Modeler")
+            return label.equals( "Template developer")
                     ? Planner
                     : valueOf( label );
         }

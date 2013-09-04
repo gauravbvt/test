@@ -45,7 +45,7 @@ public class PlanVersionsFloatingPanel extends AbstractFloatingCommandablePanel 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "Collaboration model versions" ) );
+                "Collaboration template versions" ) );
     }
 
     private void addPlanVersionsPanel() {
@@ -64,7 +64,7 @@ public class PlanVersionsFloatingPanel extends AbstractFloatingCommandablePanel 
 
     @Override
     protected String getTitle() {
-        return "Collaboration model versions";
+        return "Collaboration template versions";
     }
 
 }

@@ -54,6 +54,6 @@ public class SupervisedParticipationActorWithoutSupervisors extends AbstractIssu
 
     @Override
     protected String getKindLabel() {
-        return "Actor set for supervised participation but has no supervisor";
+        return "Agent with supervised participation has no supervisor";
     }
 }

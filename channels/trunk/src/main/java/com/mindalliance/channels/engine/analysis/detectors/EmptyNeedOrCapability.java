@@ -63,7 +63,7 @@ public class EmptyNeedOrCapability extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Empty information need";
+        return "Undefined information need";
     }
 
     /**

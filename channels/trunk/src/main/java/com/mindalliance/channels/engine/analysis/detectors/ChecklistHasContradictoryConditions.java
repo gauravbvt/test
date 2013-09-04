@@ -90,6 +90,6 @@ public class ChecklistHasContradictoryConditions extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Checklist has contradictory conditions";
+        return "Checklist step has contradictory conditions";
     }
 }

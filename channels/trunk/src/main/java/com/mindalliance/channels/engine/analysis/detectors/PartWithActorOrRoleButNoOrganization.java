@@ -1,11 +1,11 @@
 package com.mindalliance.channels.engine.analysis.detectors;
 
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Level;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +69,6 @@ public class PartWithActorOrRoleButNoOrganization extends AbstractIssueDetector 
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Task's agent or role is named but not the organization";
+        return "Task's assignable agent or role is named but the organization is unspecified";
     }
 }

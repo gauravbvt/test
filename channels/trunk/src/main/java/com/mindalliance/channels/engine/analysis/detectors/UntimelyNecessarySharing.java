@@ -104,7 +104,7 @@ public class UntimelyNecessarySharing extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Untimely necessary sharing flow";
+        return "Untimely flow of important information";
     }
 
     /**

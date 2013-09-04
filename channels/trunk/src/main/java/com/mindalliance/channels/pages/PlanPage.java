@@ -666,7 +666,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         };
         allSegmentsButton.setOutputMarkupId( true );
-        addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this model" );
+        addTipTitle( allSegmentsButton, "Opens (or closes) a map of all segments in this template" );
         form.addOrReplace( allSegmentsButton );
     }
 
@@ -884,7 +884,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( planName.length() > PLAN_NAME_MAX_LENGTH ) {
             addTipTitle( selectedPlanNameLabel, planName );
         }/* else {
-            addTipTitle( selectedPlanNameLabel, "Click to edit the model's details" );
+            addTipTitle( selectedPlanNameLabel, "Click to edit the template's details" );
         }*/
         selectedPlanLink.add( selectedPlanNameLabel );
         return selectedPlanLink;
@@ -1877,7 +1877,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
                         tryAcquiringLock( new Change( Change.Type.NeedsRefresh, expanded ) );
                     // getCommander().requestLockOn( expanded );
                 } catch ( NotFoundException e ) {
-                    LOG.info( "Expanded model object not found at: " + id );
+                    LOG.info( "Expanded template object not found at: " + id );
                 }
             } else {
                 tryAcquiringLock( new Change( Change.Type.NeedsRefresh, id ) );

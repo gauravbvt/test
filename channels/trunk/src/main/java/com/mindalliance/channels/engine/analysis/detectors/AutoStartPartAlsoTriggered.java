@@ -32,11 +32,11 @@ public class AutoStartPartAlsoTriggered extends AbstractIssueDetector {
             Issue issue = makeIssue( queryService, Issue.COMPLETENESS, part );
             issue.setDescription( "This task is unnecessarily triggered"
                     + " since it "
-                    + ( part.isStartsWithSegment() ? " starts with the plan segment." : " is ongoing." ) );
+                    + ( part.isStartsWithSegment() ? " starts with the segment." : " is ongoing." ) );
             issue.setRemediation( "Have no flow trigger this task\n"
                     + "or have the task not "
-                    + ( part.isStartsWithSegment() ? " start with the plan segment." : " be ongoing." )
-                    + " start with the plan segment." );
+                    + ( part.isStartsWithSegment() ? " start with the segment." : " be ongoing." )
+                    + " start with the segment." );
             issue.setSeverity( Level.Low );
             issues.add( issue );
         }

@@ -120,6 +120,6 @@ public class IncorrectMediumDelegation extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Communication medium delegates to inappropriate medium";
+        return "Communication medium delegates transmissions to an inappropriate medium";
     }
 }

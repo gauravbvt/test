@@ -43,7 +43,7 @@ public class UnconnectedConnector extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Ignored information need or capability";
+        return "Information need or capability not taken into account";
     }
 
     /**

@@ -71,7 +71,7 @@ public class InvalidChannel extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Incorrect channel";
+        return "Invalid channel definition";
     }
 
     @Override

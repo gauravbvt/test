@@ -6,8 +6,8 @@ import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.Part;
 import com.mindalliance.channels.core.model.TimePeriod;
-import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import com.mindalliance.channels.core.query.QueryService;
+import com.mindalliance.channels.engine.analysis.AbstractIssueDetector;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 
@@ -101,7 +101,7 @@ public class AvailabilityGapInTaskAssignments extends AbstractIssueDetector {
     }
 
     protected String getKindLabel() {
-        return "Availability gap in assignments";
+        return "Availability gap in task assignments";
     }
    /** {@inheritDoc} */
     public boolean canBeWaived() {

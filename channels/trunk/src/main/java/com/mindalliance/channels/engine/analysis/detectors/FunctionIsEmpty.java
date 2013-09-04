@@ -53,6 +53,6 @@ public class FunctionIsEmpty extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Function is empty";
+        return "Function is undefined";
     }
 }

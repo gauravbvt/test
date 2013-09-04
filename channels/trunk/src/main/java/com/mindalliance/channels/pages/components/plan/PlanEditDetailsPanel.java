@@ -115,7 +115,7 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
             }
         } );
         planDescriptionField.setEnabled( isLockedByUser( getPlan() ) );
-        addInputHint( planDescriptionField, "A brief overview of the model" );
+        addInputHint( planDescriptionField, "A brief overview of the template" );
         add( planDescriptionField );
     }
 

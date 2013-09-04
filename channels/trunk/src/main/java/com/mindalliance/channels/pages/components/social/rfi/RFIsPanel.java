@@ -59,7 +59,7 @@ import java.util.Map;
 public class RFIsPanel extends AbstractUpdatablePanel implements Filterable {
 
     private static final String ALL = "everyone";
-    private static final String ADOPTERS = "plan adopters only"; // in communities having adopted the plan
+    private static final String ADOPTERS = "template adopters only"; // in communities having adopted the plan
     private static final int MAX_ROWS = 10;
     private String deadline = null;
 

@@ -40,7 +40,7 @@ public class UselessPart extends AbstractIssueDetector {
      * {@inheritDoc}
      */
     protected String getKindLabel() {
-        return "Apparently useless task";
+        return "Task does not directly or indirectly achieve any goal";
     }
 
     /**

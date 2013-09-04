@@ -76,7 +76,7 @@ public class ExternalSupervisor extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "External supervisor";
+        return "An agent's supervisor is from another organization";
     }
 
     @Override
