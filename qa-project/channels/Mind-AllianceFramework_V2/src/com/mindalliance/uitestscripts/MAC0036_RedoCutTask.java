@@ -155,7 +155,7 @@ public class MAC0036_RedoCutTask extends TestCase {
 			description="Add New Task";
 			planPage.clickPopupMenu(testData.get("Actions"));
 			planPage.clickSubmenu(testData.get("AddNewTask"));
-			// strench up forms
+			// stretch up forms
 			planPage.clickStrenchUpForm();
 			// Enter Task Name
 			planPage.enterTaskName(testData.get("TaskName"));

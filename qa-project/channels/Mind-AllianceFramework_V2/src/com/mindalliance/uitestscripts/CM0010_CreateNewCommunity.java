@@ -134,8 +134,7 @@ public class CM0010_CreateNewCommunity extends TestCase {
 			
 			channelsAdmin.clickSavePlanButton();
 			channelsAdmin.clickProductizePlanButton();
-			channelsAdmin.clickHomeLink();
-			
+			channelsAdmin.clickHomeLink();			
 			
 			// Write log
 			LogFunctions.writeLogs(description);

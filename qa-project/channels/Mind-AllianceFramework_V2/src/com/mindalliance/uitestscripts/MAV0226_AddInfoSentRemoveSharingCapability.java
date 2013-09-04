@@ -61,7 +61,7 @@ public class MAV0226_AddInfoSentRemoveSharingCapability extends TestCase{
 			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
-			// Loads Test Data
+			// Loads  the Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
 			// Write log			
