@@ -67,8 +67,8 @@ public class CM0044_ClickPlanParticipationLink extends TestCase {
 			}
 			DataController dataController= new DataController();
 			dataController.createResultFiles();
-			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
+			
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
@@ -138,7 +138,6 @@ public class CM0044_ClickPlanParticipationLink extends TestCase {
 			channelsAdmin.clickProductizePlanButton();
 			channelsAdmin.clickHomeLink();
 			
-			
 			// Write log
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
@@ -149,8 +148,8 @@ public class CM0044_ClickPlanParticipationLink extends TestCase {
 		    // Write log
 		    LogFunctions.writeLogs(description);
 		 	LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
-		
 		    CommunitiesPage communitiesPage=new CommunitiesPage();
+		    
 		    //Click Start it button
 		    communitiesPage.clickStartItButton();
 		    //Click Go button
@@ -171,8 +170,7 @@ public class CM0044_ClickPlanParticipationLink extends TestCase {
 			reporting.generateAutomationReport();
 		
 		}
-		catch (UIAutomationException ue) {
-			
+		catch (UIAutomationException ue) {		
 			
 			// Write log
 			LogFunctions.writeLogs(ue.getErrorMessage());
