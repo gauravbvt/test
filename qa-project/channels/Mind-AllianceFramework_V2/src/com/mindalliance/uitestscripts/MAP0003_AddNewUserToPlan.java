@@ -50,7 +50,7 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -125,12 +125,18 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 	
+ 			//Click Users tab
+ 			stepNo++;
+ 			ChannelsAdmin ca=new ChannelsAdmin();
+ 			ca.clickUsersTab();
+ 			
 			// Add user
 			stepNo++;
 			description="User created";
 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
 			channelsAdmin.addUser(testData.get("User"));
-			channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
+			channelsAdmin.addUserDetails(testData.get("Email"),testData.get("Password"), testData.get("isAdministrator"),testData.get("isDisabled"));
+			//channelsAdmin.deleteUser(testData.get("User"),testData.get("AddEmailOfUser"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -212,6 +218,11 @@ public class MAP0003_AddNewUserToPlan extends TestCase{
 	        this.testData.put("ChannelsURL",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("AddEmailOfUser",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("addEmailOfUser").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Email",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("email").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("Password",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("IsAdministrator",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("isAdministrator").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("IsDisabled",oXmlEleMAP0003_AddNewUserToPlan.getElementsByTagName("isDisabled").item(0).getChildNodes().item(0).getNodeValue());
+		
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAP0003_AddNewUserToPlan not found.");

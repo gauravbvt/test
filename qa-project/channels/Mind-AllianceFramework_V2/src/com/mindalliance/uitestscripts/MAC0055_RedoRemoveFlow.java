@@ -112,7 +112,7 @@ public class MAC0055_RedoRemoveFlow extends TestCase {
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
- 		// Domain Plans
+ 		    // Domain Plans
  		    stepNo++;
   			description="Domain Plans";
   			DomainPlanPage domainPlanPage= new DomainPlanPage();
@@ -156,7 +156,7 @@ public class MAC0055_RedoRemoveFlow extends TestCase {
 			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
 			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
 			planPage.enterTaskName(testData.get("TaskName"));
-			// click on 'strench up forms' icon
+			// click on 'stretch up forms' icon
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -172,7 +172,7 @@ public class MAC0055_RedoRemoveFlow extends TestCase {
 			planPage.selectFromInSends(testData.get("OtherTaskName"));
 			// Enter From Task name
 			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
-			// Click on Strench up form
+			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
