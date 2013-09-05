@@ -40,16 +40,67 @@
     	<ClassName></ClassName>
  	</Element>
  	
+ 	//Add user
  	<Element>
  		<GivenName>Submit</GivenName>
- 		<Xpath>//input[contains(@name,'Submit')]</Xpath>
- 		<Name>Submit</Name>
+ 		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/a</Xpath>
+ 		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
     	<LinkText></LinkText>
-    	<ClassName>submit</ClassName>
+    	<ClassName></ClassName>
  	</Element>
  	
+ 	<Element>
+		<GivenName>Users Tab</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+ 	
+ 		<Element>
+		<GivenName>Email</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[2]/td[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+		<Element>
+		<GivenName>Password</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[3]/td[2]/input</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>IsAdministrator</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[4]/td[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>IsDisabled</GivenName>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/span/div/div/div/table/tbody/tr[5]/td[2]/select</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
  		<Element>
  		<GivenName>ADD</GivenName>
  		<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/a</Xpath>
@@ -93,7 +144,7 @@
  	
  	<Element>
     	<GivenName>User Name</GivenName>
-    	<Xpath>/html/body/div/div[2]/div/form/table[5]/tbody/tr/td[2]/input</Xpath>
+    	<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div/div[2]/div/input</Xpath>
     	<Name>new</Name>
     	<Id></Id>
     	<PartialLinkText></PartialLinkText>

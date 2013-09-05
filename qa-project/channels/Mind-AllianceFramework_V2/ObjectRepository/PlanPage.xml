@@ -2,7 +2,7 @@
 	  
 	<Element>
 		<GivenName>About Plan Window Title</GivenName>
-		<Title>About Model: </Title>
+		<Title>About Template: </Title>
 	</Element>
 	<Element>
 		<GivenName>Delete Phase Window Title</GivenName>
@@ -60,7 +60,7 @@
 	</Element>
 	<Element>
 		<GivenName>About Plan Segment Window Title</GivenName>
-		<Title>About Model Segment:</Title>
+		<Title>About Template Segment:</Title>
 	</Element>
 	
 	<Element>
