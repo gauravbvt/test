@@ -126,6 +126,23 @@ public class ChannelsAdmin {
 	}
 	
 	/**
+	 * Click Users Tab on Channels settings page
+	 * @throws UIAutomationException
+	 */
+	public void clickUsersTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Users Tab",GlobalVariables.configuration.getAttrSearchList(), "Users Tab");
+		UIActions.click(fileName,"Users Tab",GlobalVariables.configuration.getAttrSearchList(), "Users Tab");
+		
+		// Assertion: Verify if the Default Event is clicked
+		//elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		//String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		
+		//if(!networkTab.contains(networkTab)){
+		//	throw new UIAutomationException("Users Tab not selected");
+		//}	
+	}
+		
+	/**
 	 * Add user to plan
 	 * @param userName
 	 * @throws UIAutomationException
@@ -140,6 +157,37 @@ public class ChannelsAdmin {
 			
 		// Assertion: Verify that "User 1" is added
 	}
+	
+	/**
+	 * Add user to plan
+	 * @param userName
+	 * @throws UIAutomationException
+	 */
+	public void addUserDetails(String email,String password,String isAdministrator,String isDisabled) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
+		UIActions.click(fileName,"Email",GlobalVariables.configuration.getAttrSearchList(), "Email");
+		
+		elementController.requireElementSmart(fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password");
+		UIActions.click(fileName,"Password",GlobalVariables.configuration.getAttrSearchList(), "Password");
+		
+		elementController.requireElementSmart(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
+		UIActions.click(fileName,"IsAdministrator",GlobalVariables.configuration.getAttrSearchList(),"IsAdministrator");
+		Select adminDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(adminDropDownList);
+		UIActions.selectByTextAndClick(isAdministrator);
+		
+		elementController.requireElementSmart(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
+		UIActions.click(fileName,"IsDisabled",GlobalVariables.configuration.getAttrSearchList(),"IsDisabled");
+		Select disabledDropDownList = new Select(GlobalVariables.configuration.getWebElement());
+		Configuration.getConfigurationObject().setSelect(disabledDropDownList);
+		UIActions.selectByTextAndClick(isDisabled);
+		
+	//	elementController.requireElementSmart(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
+	//	UIActions.click(fileName,"Submit",GlobalVariables.configuration.getAttrSearchList(), "Submit");
+			
+		// Assertion: Verify that "User 1" is added
+	}
+	
 	
 	/**
 	 * Delete user from plan
