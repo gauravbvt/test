@@ -197,7 +197,7 @@ public class Home {
 		suite.addTestSuite(MAP0015_removeSegment.class);
 		suite.addTestSuite(MAP0016_addEvent.class);
 		suite.addTestSuite(MAP0017_deleteEvent.class);
-    	suite.addTestSuite(MAP0018_attachFile.class);
+  //  	suite.addTestSuite(MAP0018_attachFile.class);
 ////	suite.addTestSuite(MAP0019_deleteAttachFile.class);
 ////	suite.addTestSuite(MAP0020_addFileToEvent.class);
 ////	suite.addTestSuite(MAP0021_deleteFileOfEvent.class);
