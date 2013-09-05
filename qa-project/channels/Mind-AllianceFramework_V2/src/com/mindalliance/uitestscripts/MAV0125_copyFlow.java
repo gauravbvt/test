@@ -23,6 +23,7 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -66,6 +67,7 @@ public class MAV0125_copyFlow extends TestCase{
 			dc.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
+			
 			// Loads Test Data
 			description = "Testcase: " + testCaseId + " execution started";
 			loadTestData();
@@ -115,27 +117,28 @@ public class MAV0125_copyFlow extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 		 			 
-			// Plan Page.
+ 		    // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			
+			// Plan Page
 		    stepNo++;
- 	 		description="Navigated to plan page";
+			description="Domain Plan Editor";
 			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-						 
-			// Close Plan Map window
-			stepNo++;
-			description="Plan Map window closed";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
-			// Write log			
-			LogFunctions.writeLogs(description);
-			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+			homePage.clickDomainPlanEditor();	
+			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						 
 			// Click on 'Add' button under 'Receives' panel
 			stepNo++;
 			description="Info sharing need is added";
+			PlanPage planPage=new PlanPage();
 			planPage.clickAddInfoReceivesPanel();
 			// Write log			
 			LogFunctions.writeLogs(description);
