@@ -1,12 +1,10 @@
 package com.mindalliance.channels.pages.components.manager;
 
-import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.core.util.NameRange;
@@ -27,14 +25,12 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -51,7 +47,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * // todo - OBSOLETE - REMOVE
  * Organizations participation panel.
  * Copyright (C) 2008-2012 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
@@ -59,11 +54,11 @@ import java.util.List;
  * Date: 12/4/12
  * Time: 11:16 AM
  */
-public class OrganizationsParticipationPanel extends AbstractUpdatablePanel implements NameRangeable {
+public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implements NameRangeable {
 
     private static final String ALL_AGENCIES = "All organizations";
-    private static final String FIXED_AGENCIES = "Plan organizations";
-    private static final String REGISTERED_AGENCIES = "Community organizations";
+    private static final String FIXED_AGENCIES = "Template-defined organizations";
+    private static final String REGISTERED_AGENCIES = "Community-registered organizations";
     private static final String[] AGENCY_FILTER_CHOICES = {ALL_AGENCIES, FIXED_AGENCIES, REGISTERED_AGENCIES};
 
     @SpringBean
@@ -86,15 +81,9 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
 
     private String registeredOrgName;
 
-    private Organization registeringPlaceholder;
-
-    private OrganizationParticipation addedRegistration;
-
     private Agency profiledAgency;
 
-    private OrganizationParticipationTable organizationParticipationTable;
-
-    private boolean showingPlaceholders = false;
+    private OrganizationRegistryTable organizationRegistryTable;
 
     /**
      * Maximum number of rows shown in table at a time.
@@ -103,18 +92,16 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     private List<AgencyParticipationWrapper> agencyParticipationWrappers;
     private WebMarkupContainer registeringContainer;
     private ModalWindow profileDialog;
-    private DropDownChoice<Organization> placeholderChoice;
     private AjaxLink<String> createButton;
 
-    public OrganizationsParticipationPanel( String id, IModel<? extends Identifiable> model ) {
-        super( id, model );
+    public OrganizationsRegistryPanel( String id ) {
+        super( id );
         init();
     }
 
     private void init() {
         resetOrganizationParticipationWrappers();
         addAgenciesDropDown();
-        addShowingPlaceholders();
         addNameRangePanel();
         addOrganizationParticipationTable();
         addRegistering();
@@ -134,31 +121,21 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         agenciesFilterChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                updateFields( target );
+                updateContents( target );
             }
         } );
         add( agenciesFilterChoice );
     }
 
-    private void addShowingPlaceholders() {
-        AjaxCheckBox showPlaceholdersCheckBox = new AjaxCheckBox(
-                "placeholders",
-                new PropertyModel<Boolean>( this, "showingPlaceholders" )
-        ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                updateFields( target );
-            }
-        };
-        add( showPlaceholdersCheckBox );
-    }
-
-    private void updateFields( AjaxRequestTarget target ) {
+    private void updateContents( AjaxRequestTarget target ) {
         resetOrganizationParticipationWrappers();
         nameRange = new NameRange();
         addNameRangePanel();
+        target.add( nameRangePanel );
         addOrganizationParticipationTable();
-        target.add( organizationParticipationTable );
+        target.add( organizationRegistryTable );
+        addRegistering();
+        target.add( registeringContainer );
     }
 
     private void addNameRangePanel() {
@@ -174,11 +151,11 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     }
 
     private void addOrganizationParticipationTable() {
-        organizationParticipationTable = new OrganizationParticipationTable(
+        organizationRegistryTable = new OrganizationRegistryTable(
                 "agenciesTable",
                 new PropertyModel<List<AgencyParticipationWrapper>>( this, "agencyParticipationWrappers" )
         );
-        addOrReplace( organizationParticipationTable );
+        addOrReplace( organizationRegistryTable );
     }
 
     /**
@@ -192,7 +169,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         nameRangePanel.setSelected( target, range );
         resetOrganizationParticipationWrappers();
         addOrganizationParticipationTable();
-        target.add( organizationParticipationTable );
+        target.add( organizationRegistryTable );
     }
 
     public String getAgenciesFilter() {
@@ -230,9 +207,9 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 RegisteredOrganization registeredAgency = registeredOrganizationService.find( agency.getName(), communityService );
                 if ( registeredAgency != null ) {
                     boolean participating = false;
-                    for ( OrganizationParticipation registration
+                    for ( OrganizationParticipation orgParticipation
                             : organizationParticipationService.findAllParticipationBy( registeredAgency, communityService ) ) {
-                        agencyParticipationWrappers.add( new AgencyParticipationWrapper( registration ) );
+                        agencyParticipationWrappers.add( new AgencyParticipationWrapper( orgParticipation ) );
                         participating = true;
                     }
                     if ( !participating ) {
@@ -243,27 +220,19 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 }
             }
         }
-        if ( showingPlaceholders ) {
-            for ( Organization placeholder
-                    : communityService.getParticipationManager().findAllUnassignedPlaceholders( communityService ) ) {
-                agencyParticipationWrappers.add( new AgencyParticipationWrapper( placeholder ) );
-            }
-        }
     }
 
     private boolean isFilteredOut( Agency agency ) {
-        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity( );
-        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity( );
+        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity();
+        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity();
     }
 
     private void addRegistering() {
-        List<Organization> managedPlaceholders = getManagedPlaceHolders();
         registeringContainer = new WebMarkupContainer( "registeringContainer" );
         registeringContainer.setOutputMarkupId( true );
-        makeVisible( registeringContainer, !managedPlaceholders.isEmpty() );
+        registeringContainer.setVisible( getCommunityService().isCommunityPlanner( getUser() ) );
         addOrReplace( registeringContainer );
         addParticipatingOrgName();
-        addPlaceholder();
         addRegisterButton();
     }
 
@@ -278,7 +247,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                 List<String> candidates = new ArrayList<String>();
                 if ( choices != null ) {
                     for ( String choice : choices ) {
-                        if ( Matcher.matches( choice, input ) )
+                        if ( getQueryService().likelyRelated( input, choice ) )
                             candidates.add( choice );
                     }
                     Collections.sort( candidates );
@@ -289,8 +258,6 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         registeredOrgNameField.setOutputMarkupId( true );
         registeredOrgNameField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
-                placeholderChoice.setEnabled( !getRegisteredOrgName().isEmpty() );
-                target.add( placeholderChoice );
                 createButton.setEnabled( canRegister() );
                 target.add( createButton );
             }
@@ -315,67 +282,20 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         return agencyNames;
     }
 
-    private void addPlaceholder() {
-        WebMarkupContainer container = new WebMarkupContainer( "placeholdersContainer" );
-        container.setOutputMarkupId( true );
-        List<Organization> placeholderOrgs = getManagedPlaceHolders();
-        placeholderChoice = new DropDownChoice<Organization>(
-                "placeholders",
-                new PropertyModel<Organization>( this, "registeringPlaceholder" ),
-                placeholderOrgs,
-                new ChoiceRenderer<Organization>() {
-                    @Override
-                    public Object getDisplayValue( Organization placeholder ) {
-                        return placeholder.getName();
-                    }
-
-                    @Override
-                    public String getIdValue( Organization object, int index ) {
-                        return Integer.toString( index );
-                    }
-                } );
-        placeholderChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
-                createButton.setEnabled( canRegister() );
-                target.add( createButton );
-            }
-        } );
-        placeholderChoice.setEnabled( !getRegisteredOrgName().isEmpty() );
-        container.add( placeholderChoice );
-        container.setVisible( !placeholderOrgs.isEmpty() );
-        registeringContainer.addOrReplace( container );
-    }
-
-    private List<Organization> getManagedPlaceHolders() {
-        CommunityService communityService = getCommunityService();
-        List<Organization> managedPlaceholders = new ArrayList<Organization>();
-        ChannelsUser user = getUser();
-        for ( Organization org : communityService.getPlanService().listActualEntities( Organization.class, true ) ) {
-            if ( communityService.isCustodianOf( user, org ) ) {
-                managedPlaceholders.add( org );
-            }
-        }
-        return managedPlaceholders;
-    }
-
     private void addRegisterButton() {
         createButton = new AjaxLink<String>( "register" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                registerAsPlaceholder(); // do it
-                resetOrganizationParticipationWrappers();
-                addOrganizationParticipationTable();
-                target.add( organizationParticipationTable );
-                addRegistering();
-                target.add( registeringContainer );
-                update( target, Change.message(
-                        addedRegistration != null
-                                ? addedRegistration.asString( getCommunityService() )
-                                : "Failed to register organization"
-                ) );
-                registeredOrgName = null;
-                addedRegistration = null;
+                RegisteredOrganization registration = registerOrgByName(); // do it
+                if ( registration != null ) {
+                    updateContents( target );
+                    update( target, Change.message(
+                            registration.asString( getCommunityService() )
+                    ) );
+                    registeredOrgName = null;
+                } else {
+                    update( target, Change.message("Failed to register organization" ));
+                }
             }
         };
         createButton.setOutputMarkupId( true );
@@ -396,36 +316,17 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         }
     }
 
-    public Organization getRegisteringPlaceholder() {
-        return null;
-    }
-
-    public void setRegisteringPlaceholder( Organization placeholder ) {
-        registeringPlaceholder = placeholder;
-    }
-
-    public void registerAsPlaceholder() {
-        if ( canRegister() ) {
-            CommunityService communityService = getCommunityService();
-            RegisteredOrganization registeredOrganization = registerOrgByName();
-            if ( registeredOrganization != null && communityService.isCustodianOf( getUser(), registeringPlaceholder ) ) {
-                addedRegistration = organizationParticipationService.assignOrganizationAs(
-                        getUser(),
-                        registeredOrganization,
-                        registeringPlaceholder,
-                        communityService
-                );
-            }
-        }
-    }
-
     private boolean canRegister() {
-        return !getRegisteredOrgName().isEmpty() && registeringPlaceholder != null;
+        return registeredOrgName != null
+                && !getRegisteredOrgName().isEmpty()
+                && getCommunityService().isCommunityPlanner( getUser() );
     }
 
 
     private RegisteredOrganization registerOrgByName() {
-        if ( registeredOrgName != null && !registeredOrgName.isEmpty() ) {
+        if ( registeredOrgName != null
+                && !registeredOrgName.isEmpty()
+                && getCommunityService().isCommunityPlanner( getUser() ) ) {
             return registeredOrganizationService.findOrAdd( getUser(), registeredOrgName, getCommunityService() );
         } else {
             return null;
@@ -439,7 +340,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         profileDialog.setCookieName( "channels-agency-profile" );
         profileDialog.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
             public void onClose( AjaxRequestTarget target ) {
-                target.add( OrganizationsParticipationPanel.this );
+                target.add( OrganizationsRegistryPanel.this );
             }
         } );
         // profileDialog.setCssClassName(  );
@@ -458,14 +359,10 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
     public void update( AjaxRequestTarget target, Object object, String action ) {
         if ( object instanceof AgencyParticipationWrapper ) {
             AgencyParticipationWrapper wrapper = (AgencyParticipationWrapper) object;
-             if ( action.equals( "remove" ) ) {
+            if ( action.equals( "remove" ) ) {
                 String orgParticipationString = wrapper.toString();
                 boolean success = wrapper.remove();
-                resetOrganizationParticipationWrappers();
-                addOrganizationParticipationTable();
-                target.add( organizationParticipationTable );
-                addRegistering();
-                target.add( registeringContainer );
+                updateContents( target );
                 profiledAgency = null;
                 update( target, Change.message(
                         success ? "Removed " + orgParticipationString
@@ -494,7 +391,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
             resetOrganizationParticipationWrappers();
             addOrganizationParticipationTable();
             addRegistering();
-            target.add( organizationParticipationTable );
+            target.add( organizationRegistryTable );
             target.add( registeringContainer );
         }
         super.updateWith( target, change, updatables );
@@ -536,26 +433,26 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         public String getStatus() {
             if ( agency == null ) {
                 return null;
-            } else if ( agency.isRegisteredByCommunity( ) ) {
+            } else if ( agency.isRegisteredByCommunity() ) {
                 return "Community";
             } else {
                 if ( agency.getFixedOrganization().isPlaceHolder() )
-                    return "Plan as placeholder";
+                    return "Template as placeholder";
                 else
-                    return "Plan";
+                    return "Template";
             }
         }
 
         private boolean isNonParticipatingCommunityRegistered() {
             return agency != null && organizationParticipation == null
-                    && agency.isRegisteredByCommunity( );
+                    && agency.isRegisteredByCommunity();
         }
 
         public String getDefaultParticipateAsText() {
             if ( agency != null && agency.isParticipatingAsSelf() ) {
-                return "itself";
+                return "Itself";
             } else {
-                return OrganizationParticipationTable.EMPTY;
+                return OrganizationRegistryTable.EMPTY;
             }
         }
 
@@ -583,10 +480,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         }
 
         private boolean canBeRemoved() {
-            return agency != null
-                    && ( organizationParticipation == null
-                    || getCommunityService().getUserParticipationService()
-                    .listUserParticipationIn( organizationParticipation, getCommunityService() ).isEmpty() );
+            return agency != null && organizationParticipation == null;
         }
 
         public boolean isUserCustodian() {
@@ -634,17 +528,17 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
         }
     }
 
-    private class OrganizationParticipationTable extends AbstractFilterableTablePanel {
+    private class OrganizationRegistryTable extends AbstractFilterableTablePanel {
 
-        private IModel<List<AgencyParticipationWrapper>> orgParticipationModel;
+        private IModel<List<AgencyParticipationWrapper>> orgRegistryModel;
 
-        private OrganizationParticipationTable( String id, IModel<List<AgencyParticipationWrapper>> orgParticipationModel ) {
+        private OrganizationRegistryTable( String id, IModel<List<AgencyParticipationWrapper>> orgRegistryModel ) {
             super( id, MAX_ROWS );
-            this.orgParticipationModel = orgParticipationModel;
+            this.orgRegistryModel = orgRegistryModel;
             initTable();
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         private void initTable() {
             final List<IColumn<AgencyParticipationWrapper>> columns = new ArrayList<IColumn<AgencyParticipationWrapper>>();
             columns.add( makeFilterableColumn(
@@ -653,7 +547,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                     "agency.name",
                     EMPTY,
                     null,
-                    OrganizationParticipationTable.this ) );
+                    OrganizationRegistryTable.this ) );
             columns.add( makeColumn( "Set by", "status", EMPTY ) );
             columns.add( makeFilterableColumn(
                     "Participates as",
@@ -661,7 +555,7 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                     "placeholder.name",
                     "@defaultParticipateAsText",
                     "placeholderDescription",
-                    OrganizationParticipationTable.this ) );
+                    OrganizationRegistryTable.this ) );
             columns.add( makeColumn( "As of", "whenRegistered", EMPTY ) );
             columns.add( makeColumn( "Via custodian", "registrarName", EMPTY ) );
             columns.add( makeActionLinkColumn( "",
@@ -669,14 +563,14 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                     "showProfile",
                     "agency",
                     "more",
-                    OrganizationsParticipationPanel.this ) );
+                    OrganizationsRegistryPanel.this ) );
             columns.add( makeActionLinkColumn( "",
                     "Remove",
                     "remove",
                     "Remove participation by organization?",
                     "userIfCanRemove",
                     "more",
-                    OrganizationsParticipationPanel.this ) );
+                    OrganizationsRegistryPanel.this ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable<AgencyParticipationWrapper>(
                     "organizationParticipationTable",
@@ -687,10 +581,10 @@ public class OrganizationsParticipationPanel extends AbstractUpdatablePanel impl
                     getPageSize() ) );
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         private List<AgencyParticipationWrapper> getFilteredOrganizationParticipations() {
             return (List<AgencyParticipationWrapper>) CollectionUtils.select(
-                    orgParticipationModel.getObject(),
+                    orgRegistryModel.getObject(),
                     new Predicate() {
                         public boolean evaluate( Object obj ) {
                             return !isFilteredOut( obj );

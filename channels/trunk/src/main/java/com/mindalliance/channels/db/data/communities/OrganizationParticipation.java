@@ -120,7 +120,7 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
         RegisteredOrganization registeredOrganization = getRegisteredOrganization( communityService );
         if ( registeredOrganization != null ) {
             StringBuilder sb = new StringBuilder();
-            sb.append( getRegisteredOrganization( communityService ).getName( communityService ) );
+            sb.append( getRegisteredOrganization( communityService ).asString( communityService ) );
             sb.append( " registered as " );
             sb.append( getPlaceholderOrganization( communityService ).getName() );
             return sb.toString();

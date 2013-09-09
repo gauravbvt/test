@@ -59,13 +59,17 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
-        tabs.add( new AbstractTab( new Model<String>( "Organizations" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "By organizations" ) ) {
             public Panel getPanel( String id ) {
-                // return new OrganizationsParticipationPanel( id, getModel() );
+                return new OrganizationsRegistryPanel( id );
+            }
+        } );
+        tabs.add( new AbstractTab( new Model<String>( "As placeholders" ) ) {
+            public Panel getPanel( String id ) {
                 return new OrgParticipationManager( id );
             }
         } );
-        tabs.add( new AbstractTab( new Model<String>( "Users" ) ) {
+        tabs.add( new AbstractTab( new Model<String>( "By users" ) ) {
             public Panel getPanel( String id ) {
                 return new UserParticipationManager( id );
             }
@@ -97,7 +101,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
 
     public String getIssuesTitle() {
         int issuesCount = participationAnalyst.detectAllIssues( getCommunityService() ).size();
-        return "Participation issues (" + issuesCount +")";
+        return "Issues (" + issuesCount +")";
     }
 
 

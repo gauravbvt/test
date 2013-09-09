@@ -26,7 +26,7 @@ import java.util.List;
  * Date: 6/19/13
  * Time: 1:11 PM
  */
-@Document( collection = "communities" )
+@Document(collection = "communities")
 public class RegisteredOrganization extends AbstractChannelsDocument {
 
     /**
@@ -47,7 +47,7 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
     private String address;
     private String parentUid;
 
-    private List<ContactInfo> contactInfoList = new ArrayList<ContactInfo>(  );
+    private List<ContactInfo> contactInfoList = new ArrayList<ContactInfo>();
 
     public RegisteredOrganization() {
     }
@@ -167,8 +167,8 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
 
     public RegisteredOrganization getParent( CommunityService communityService ) {
         return parentUid == null
-                    ? null
-                    : communityService.getParticipationManager().getRegisteredOrganization( parentUid );
+                ? null
+                : communityService.getParticipationManager().getRegisteredOrganization( parentUid );
     }
 
     public void setParent( RegisteredOrganization parent ) {
@@ -277,4 +277,7 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
         return address;
     }
 
+    public String asString( CommunityService communityService ) {
+        return getName( communityService );
+    }
 }

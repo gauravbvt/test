@@ -40,16 +40,11 @@
         	<h3>
         	Organizations
          	</h3>
-            <div wicket:id="registering" class="add-new-org">
-                <input wicket:id="newAgencyName" type="text"/>
-                <input wicket:id="registerIt" type="button" value="Add"/>
-            </div>
-            <div class="participation-table-cont">
+             <div class="participation-table-cont">
                 <table class="org">
                     <tr wicket:id="agencies"> <!-- repeated -->
                         <td class="check"><input wicket:id="participating" type="checkbox"/></td>
                         <td class="name"><span wicket:id="agency">agency name</span></td>
-                        <td class="remove"><a wicket:id="remove" class="more">Remove</a></td>
                         <td class="profile"><a wicket:id="profile" class="more">Profile</a></td>
                     </tr>
                     <tr wicket:id="noPlaceholderSelected">

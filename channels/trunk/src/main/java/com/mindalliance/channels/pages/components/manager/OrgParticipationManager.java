@@ -11,7 +11,6 @@ import com.mindalliance.channels.db.services.communities.RegisteredOrganizationS
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractUpdatablePanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
-import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.wicket.AttributeModifier;
@@ -20,7 +19,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,7 +34,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -72,11 +69,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
 
     private List<Agency> addedParticipation = new ArrayList<Agency>();
     private List<Agency> removedParticipation = new ArrayList<Agency>();
-    private Set<Agency> registeredAgencies = new HashSet<Agency>();
-    private Set<Agency> unregisteredAgencies = new HashSet<Agency>();
     private ChannelsModalWindow profileDialog;
-    private WebMarkupContainer registeringContainer;
-    private String newAgencyName;
     private Label summaryLabel;
 
     public OrgParticipationManager( String id ) {
@@ -195,7 +188,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         if ( selectedPlaceholder != null && selectedPlaceholder.equals( placeholder ) ) {
             agencies.addAll( addedParticipation );
             agencies.removeAll( removedParticipation );
-            agencies.removeAll( unregisteredAgencies );
         }
         return new ArrayList<Agency>( agencies );
     }
@@ -205,12 +197,12 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         participationContainer.setOutputMarkupId( true );
         addOrReplace( participationContainer );
         // makeVisible( participationContainer, selectedPlaceholder != null );
-        participationContainer.add( new Label(
+ /*       participationContainer.add( new Label(
                 "placeholderName",
                 selectedPlaceholder == null ? "..." : selectedPlaceholder.getName() ) );
+*/
         addOrganizationParticipationList();
         addNoPlaceholderSelected();
-        addRegisterNewAgency();
     }
 
     private void addOrganizationParticipationList() {
@@ -235,6 +227,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         target.add( summaryLabel );
                     }
                 };
+                participatingAsCheckBox.setEnabled( canManageAnAgency() );
                 item.add( participatingAsCheckBox );
                 // name
                 item.add( new Label( "agency", agency.getName() ) );
@@ -247,26 +240,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                     }
                 };
                 item.add( profileLink );
-                // remove button
-                ConfirmedAjaxFallbackLink<String> removeOrUnassignLink = new ConfirmedAjaxFallbackLink<String>(
-                        "remove",
-                        "Remove " + agency.getName() + "?" ) {
-                    @Override
-                    public void onClick( AjaxRequestTarget target ) {
-                        boolean success = removeAgency( agency );
-                        addAgencyParticipation();
-                        target.add( participationContainer );
-                        addSummary();
-                        target.add( summaryLabel );
-                        update( target, Change.message(
-                                success ? agency.getName() + " will be removed on submit"
-                                        : "Failed to remove "
-                                        + agency.getName()
-                        ) );
-                    }
-                };
-                makeVisible( removeOrUnassignLink, canBeRemoved( agency ) );
-                item.add( removeOrUnassignLink );
             }
         };
         participatingAgencyList.setOutputMarkupId( true );
@@ -278,24 +251,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         noPlaceholderSelected.setOutputMarkupId( true );
         makeVisible( noPlaceholderSelected, selectedPlaceholder == null );
         participationContainer.addOrReplace( noPlaceholderSelected );
-    }
-
-
-    private boolean canBeRemoved( Agency agency ) {
-        return getCommunityService().isCommunityPlanner( getUser() )
-                && !agency.isFixedOrganization()
-                && !participates( agency );
-    }
-
-    private boolean removeAgency( Agency agency ) {
-        boolean success = false;
-        if ( agency != null ) {
-            if ( canBeRemoved( agency ) ) {
-                unregisteredAgencies.add( agency );
-                success = true;
-            }
-        }
-        return success;
     }
 
     boolean participates( Agency agency ) {
@@ -316,89 +271,13 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         }
     }
 
-    private void addRegisterNewAgency() {
-        registeringContainer = new WebMarkupContainer( "registering" );
-        registeringContainer.setOutputMarkupId( true );
-        makeVisible( registeringContainer, canManageAnAgency() );
-        participationContainer.addOrReplace( registeringContainer );
- /*       registeringContainer.add(
-                new Label(
-                        "phName",
-                        selectedPlaceholder == null ? "" : selectedPlaceholder.getName() ) );
-*/        addRegisterAgencyNameField();
-        addRegisterAgencyButton();
-    }
-
-    private boolean canManageAnAgency() {
+     private boolean canManageAnAgency() {
         return selectedPlaceholder != null
                 && getCommunityService().isCustodianOf( getUser(), selectedPlaceholder );
     }
 
-    private void addRegisterAgencyNameField() {
-        final List<String> choices = getAgencyNames();
-        AutoCompleteTextField<String> agencyNameTextField = new AutoCompleteTextField<String>(
-                "newAgencyName",
-                new PropertyModel<String>( this, "newAgencyName" ),
-                getAutoCompleteSettings()
-        ) {
-            @Override
-            protected Iterator<String> getChoices( String s ) {
-                List<String> candidates = new ArrayList<String>();
-                if ( choices != null ) {
-                    for ( String choice : choices ) {
-                        if ( getQueryService().likelyRelated( s, choice ) )
-                            candidates.add( choice );
-                    }
-                    Collections.sort( candidates );
-                }
-                return candidates.iterator();
-            }
-        };
-        agencyNameTextField.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
-            @Override
-            protected void onUpdate( AjaxRequestTarget target ) {
 
-                // do nothing
-            }
-        } );
-        agencyNameTextField.setOutputMarkupId( true );
-        addInputHint( agencyNameTextField, "The name of an organization" );
-        registeringContainer.addOrReplace( agencyNameTextField );
-    }
 
-    private void addRegisterAgencyButton() {
-        AjaxLink<String> registerAgencyButton = new AjaxLink<String>(
-                "registerIt"
-        ) {
-            @Override
-            public void onClick( AjaxRequestTarget target ) {
-                if ( newAgencyName != null
-                        && !newAgencyName.isEmpty()
-                        && selectedPlaceholder != null ) {
-                    registerNewAgencyAndParticipation();
-                    String newName = getNewAgencyName();
-                    newAgencyName = null;
-                    addRegisterNewAgency();
-                    addAgencyParticipation();
-                    target.add( participationContainer );
-                    update( target, Change.message(
-                            "Added "
-                                    + newName
-                                    + " participating as "
-                                    + selectedPlaceholder.getName() ) );
-
-                }
-            }
-        };
-        registeringContainer.add( registerAgencyButton );
-    }
-
-    private boolean canRegisterNewNamedAgency() {
-        return selectedPlaceholder != null
-                && newAgencyName != null
-                && !newAgencyName.trim().isEmpty()
-                && !getAgencyNames().contains( newAgencyName );
-    }
 
     @SuppressWarnings("unchecked")
     private List<String> getAgencyNames() {
@@ -413,22 +292,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         );
         Collections.sort( agencyNames );
         return agencyNames;
-    }
-
-    public String getNewAgencyName() {
-        return newAgencyName;
-    }
-
-    public void setNewAgencyName( String newAgencyName ) {
-        this.newAgencyName = newAgencyName;
-    }
-
-    private void registerNewAgencyAndParticipation() {  // transient - submit will make it permanent
-        if ( canRegisterNewNamedAgency() ) {
-            Agency agency = new Agency( newAgencyName );
-            registeredAgencies.add( agency );
-            addedParticipation.add( agency );
-        }
     }
 
     private void addSummary() {
@@ -458,7 +321,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                     else if ( i < size - 1 )
                         sb.append( ", " );
                 }
-                sb.append( " already" );
+                sb.append( " currently" );
                 if ( size > 1 )
                     sb.append( " participate as" );
                 else
@@ -468,7 +331,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         .append( "." );
                 // new participation
                 List<Agency> added = new ArrayList<Agency>( addedParticipation );
-                added.addAll( registeredAgencies );
                 added.removeAll( removedParticipation );
                 if ( !added.isEmpty() ) {
                     sb.append( " " );
@@ -503,20 +365,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                     sb.append( " will no longer participate as " )
                             .append( selectedPlaceholder.getName() )
                             .append( "." );
-                }
-
-                List<Agency> unregistered = new ArrayList<Agency>( unregisteredAgencies );
-                if ( !unregistered.isEmpty() ) {
-                    sb.append( " " );
-                    size = unregistered.size();
-                    for ( int i = 1; i <= unregistered.size(); i++ ) {
-                        sb.append( unregistered.get( i - 1 ).getName() );
-                        if ( i == size - 2 )
-                            sb.append( " and " );
-                        else if ( i < size - 2 )
-                            sb.append( ", " );
-                    }
-                    sb.append( " will be removed from the community altogether." );
                 }
             }
             return sb.toString();
@@ -574,12 +422,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
 
     private void executePendingParticipationChanges() {
         CommunityService communityService = getCommunityService();
-        for ( Agency agency : unregisteredAgencies ) {
-            registeredOrganizationService.removeIfUnused( getUser(), agency.getName(), communityService );
-        }
-        for ( Agency agency : registeredAgencies ) {
-            registeredOrganizationService.findOrAdd( getUser(), agency.getName(), communityService );
-        }
         // add participation
         for ( Agency agency : addedParticipation ) {
             RegisteredOrganization registeredOrg = registeredOrganizationService.findOrAdd(
@@ -615,11 +457,8 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
     }
 
     private void resetPendingParticipationChanges() {
-        newAgencyName = null;
         addedParticipation = new ArrayList<Agency>();
         removedParticipation = new ArrayList<Agency>();
-        registeredAgencies = new HashSet<Agency>();
-        unregisteredAgencies = new HashSet<Agency>();
     }
 
     private void addAgencyProfile( Agency agency ) {
@@ -665,7 +504,6 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 if ( !agencies.contains( agency ) )
                     agencies.add( agency );
             }
-            agencies.removeAll( unregisteredAgencies );
             Collections.sort( agencies, new Comparator<Agency>() {
                 @Override
                 public int compare( Agency a1, Agency a2 ) {
