@@ -19,12 +19,9 @@ public class BrowserController{
 				
 	/**
 	 * Initialize the browser by passing parameter (browser)
-	 * @param  browser		Mozilla Firefox / Chrome / Internet Explorer
+	 * @param  browser	Mozilla Firefox / Chrome / Internet Explorer
 	 * @throws UIAutomationException 
 	*/
-
-	
-
 	
 	public void initializeDriver() throws UIAutomationException	{
 		String browser=GlobalVariables.configuration.getConfigData().get("Browser");
