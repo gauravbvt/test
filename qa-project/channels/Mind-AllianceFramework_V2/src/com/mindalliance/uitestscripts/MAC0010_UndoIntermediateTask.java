@@ -156,7 +156,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
 			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
 			planPage.enterTaskName(testData.get("TaskName"));
-			// click on 'strench up forms' icon
+			// click on 'stretch up forms' icon
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -172,7 +172,7 @@ public class MAC0010_UndoIntermediateTask extends TestCase {
 			planPage.selectFromInSends(testData.get("OtherTaskName"));
 			// Enter From Task name
 			planPage.enterFromTaskName(testData.get("From Task Name In Sends Panel"));
-			// Click on Strench up form
+			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);

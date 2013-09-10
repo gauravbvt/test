@@ -72,7 +72,7 @@ public class MAP0005_DeletePlan extends TestCase {
 			// Write log			
 			LogFunctions.writeLogs(description);
 						
-			// Creates Browser instance
+			// Creates the Browser instance
 			BrowserController browserController= new BrowserController();
 			browserController.initializeDriver();		
 			// Write log

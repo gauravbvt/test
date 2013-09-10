@@ -157,7 +157,7 @@ public class MAC0011_UndoDisintermediateTask extends TestCase{
 			planPage.clickPopupMenu(testData.get("ShowInTaskPanel"));
 			planPage.clickSubmenu(testData.get("DetailsInTaskPanel"));
 			planPage.enterTaskName(testData.get("TaskName"));
-			// click on 'strench up forms' icon
+			// click on 'stretch up forms' icon
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -173,7 +173,7 @@ public class MAC0011_UndoDisintermediateTask extends TestCase{
 			planPage.selectFromInSends(testData.get("OtherTaskName"));
 			// Enter From Task name
 			planPage.enterFromTaskName(testData.get("FromTaskNameInSendsPanel"));
-			// Click on Strench up form
+			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
@@ -205,7 +205,7 @@ public class MAC0011_UndoDisintermediateTask extends TestCase{
 			planPage.closeAboutPlanSegmentWindow();
 			// Click on intermediate Task
 			planPage.clickOnIntermediateTask(testData.get("IntermediateTaskName"));
-			// Click on Strench up form
+			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
