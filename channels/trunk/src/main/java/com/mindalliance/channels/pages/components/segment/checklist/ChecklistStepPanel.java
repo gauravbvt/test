@@ -216,7 +216,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
     private void addOutcomes() {
         outcomesContainer = new WebMarkupContainer( "outcomesContainer" );
         outcomesContainer.setVisible( edited && !getOutcomeCandidates().isEmpty() || getChecklist().hasOutcomes( step ) );
-        stepContainer.add( outcomesContainer );
+        constraintsContainer.add( outcomesContainer );
         addStepOutcomes();
     }
 
@@ -482,6 +482,10 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
 
     private void addStepOutcomes() {
         List<StepOutcome> stepOutcomes = getStepOutcomes();
+        Label expectedOutcomesLabel = new Label(
+                "expectedOutcomes",
+                stepOutcomes.size() > 1 ? "Expected outcomes" : "Expected outcome" );
+        outcomesContainer.add( expectedOutcomesLabel );
         ListView<StepOutcome> stepOutcomeListView = new ListView<StepOutcome>(
                 "outcomes",
                 stepOutcomes

@@ -548,7 +548,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                     EMPTY,
                     null,
                     OrganizationRegistryTable.this ) );
-            columns.add( makeColumn( "Set by", "status", EMPTY ) );
+            columns.add( makeColumn( "Registered in", "status", EMPTY ) );
             columns.add( makeFilterableColumn(
                     "Participates as",
                     "placeholder",
@@ -557,7 +557,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                     "placeholderDescription",
                     OrganizationRegistryTable.this ) );
             columns.add( makeColumn( "As of", "whenRegistered", EMPTY ) );
-            columns.add( makeColumn( "Via custodian", "registrarName", EMPTY ) );
+            columns.add( makeColumn( "Per custodian", "registrarName", EMPTY ) );
             columns.add( makeActionLinkColumn( "",
                     "Profile",
                     "showProfile",

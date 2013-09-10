@@ -754,9 +754,9 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     @Override
     public PagePathItem getCurrentContextPagePathItem() {
         String currentContextName = isPlanContext()
-                ? getPlan().toString()
+                ? getPlan().toString() + " template"
                 : isCommunityContext()
-                ? getPlanCommunity().toString()
+                ? getPlanCommunity().toString() + " community"
                 : "";
         PageParameters params = null;
         if ( isPlanContext() ) {
@@ -795,13 +795,13 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
                     addFromCommunityParameters( params, getCommunityInContext() );
                 }
                 pageClass = PlansPage.class;
-                pageName = plan.getVersionedName();
+                pageName = plan.getVersionedName() + " template";
                 pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
             } else if ( isCommunityContext() ) {
                 PlanCommunity planCommunity = (PlanCommunity) modelObjectContext;
                 params = makeCommunityParameters( planCommunity );
                 pageClass = CommunityPage.class;
-                pageName = planCommunity.getName();
+                pageName = planCommunity.getName() + " community";
                 pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
             }
         }
@@ -857,7 +857,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             intermediates.add( new PagePathItem(
                     CommunityPage.class,
                     makeCommunityParameters( planCommunity ),
-                    planCommunity.getName()
+                    planCommunity.getName() + " community"
             ) ); // from community
         }
         return intermediates;

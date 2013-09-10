@@ -25,7 +25,7 @@ import java.io.Serializable;
 */
 public class PagePathItem implements Serializable {
 
-    private static final int MAX_NAME_LENGTH = 40;
+    private static final int MAX_NAME_LENGTH = 60;
 
     private Class<? extends Page> pageClass;
     private PageParameters pageParameters;

@@ -143,7 +143,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
     /**
      * Length a plan name is abbreviated to.
      */
-    private static final int PLAN_NAME_MAX_LENGTH = 50;
+    private static final int PLAN_NAME_MAX_LENGTH = 60;
 
     /**
      * Length a segment title is abbreviated to.
@@ -876,7 +876,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             }
         };
         // planPath.add( selectedSegmentLink );
-        String planName = getPlan().getVersionedName();
+        String planName = getPlan().getVersionedName() + " template";
         Label selectedPlanNameLabel = new Label(
                 Breadcrumbable.PAGE_ITEM_LINK_NAME,
                 StringUtils.abbreviate( planName, PLAN_NAME_MAX_LENGTH )
