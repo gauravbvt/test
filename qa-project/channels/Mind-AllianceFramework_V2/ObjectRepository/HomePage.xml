@@ -145,7 +145,7 @@
 	
 	<Element>
 		<GivenName>Issues Report Heading</GivenName>
-		<Xpath>//div[contains(@class,'issues-contents')]</Xpath>
+		<Xpath>/html/body/form/div[2]/div[3]/div/div/h1</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>

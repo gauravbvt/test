@@ -2,7 +2,7 @@
 <elements>
  	<Element>
 		<GivenName>Alert Window Title Of Delete Plan</GivenName>
-		<Title>Delete the selected plan?</Title>
+		<Title>Delete the selected collaboration template?</Title>
 	</Element>
 	
 	<Element>
