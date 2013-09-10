@@ -1607,7 +1607,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
 		UIActions.click(fileName,"Structure Tab",GlobalVariables.configuration.getAttrSearchList(), "Structure Tab");
 		
-		// Assertion: Verify if the Structre Tab is clicked
+		// Assertion: Verify if the Structure Tab is clicked
 		elementController.requireElementSmart(fileName,"Jobs",GlobalVariables.configuration.getAttrSearchList(), "Jobs");
 		String networkTab=UIActions.getText(fileName,"Jobs",GlobalVariables.configuration.getAttrSearchList(), "Jobs");
 		
@@ -1659,7 +1659,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Participation Tab in Organization",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab in Organization");
 		UIActions.click(fileName,"Participation Tab in Organization",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab in Organization");
 		
-		// Assertion: Verify if the Structre Tab is clicked
+		// Assertion: Verify if the Structure Tab is clicked
 		//elementController.requireElementSmart(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
 		//String networkTab=UIActions.getText(fileName,"Task assignments",GlobalVariables.configuration.getAttrSearchList(), "Task assignments");
 		
