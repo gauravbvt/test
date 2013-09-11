@@ -134,12 +134,12 @@ public class MAV0021_viewAllEvaluationForm extends TestCase{
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					
 				
-			// Click on 'Plan Evaluation' under 'Improving' pop up menu
+			// Click on 'Template Evaluation' under 'Improving' pop up menu
 			stepNo++;
 			description="Plan Evaluation window opened";
 			PlanPage planPage = new PlanPage();
 			planPage.clickPopupMenu(testData.get("Improving"));
-			planPage.clickSubmenu(testData.get("PlanEvaluation"));
+			planPage.clickSubmenu(testData.get("TemplateEvaluation"));
 			// Write log			
 			LogFunctions.writeLogs(description);
 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);						
@@ -220,7 +220,7 @@ public class MAV0021_viewAllEvaluationForm extends TestCase{
 	        Element oXmlEleMAV0021_viewAllEvaluationForm = (Element) eleMAV0021_viewAllEvaluationForm;
 	    	           
 	        this.testData.put("Improving", oXmlEleMAV0021_viewAllEvaluationForm.getElementsByTagName("improving").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("PlanEvaluation", oXmlEleMAV0021_viewAllEvaluationForm.getElementsByTagName("planEvaluation").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("TemplateEvaluation", oXmlEleMAV0021_viewAllEvaluationForm.getElementsByTagName("templateEvaluation").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL", oXmlEleMAV0021_viewAllEvaluationForm.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleMAV0021_viewAllEvaluationForm.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 		}
