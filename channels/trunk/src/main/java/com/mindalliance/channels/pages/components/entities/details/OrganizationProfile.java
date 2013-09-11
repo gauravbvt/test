@@ -125,7 +125,7 @@ public class OrganizationProfile extends AbstractCommandablePanel {
             }
         } );
         actualParentField.setVisible( getOrganization().isActual() );
-        addInputHint( actualParentField, "The name of an acutal organization" );
+        addInputHint( actualParentField, "The name of an actual organization" );
         add( actualParentField );
         // If organization is type, parent can be either actual or type.
         EntityReferencePanel<Organization> parentField = new EntityReferencePanel<Organization>(
@@ -335,7 +335,8 @@ private void adjustFields() {
             allOrganizations.remove( organization );
             Collection<Organization> candidates = CollectionUtils.subtract( allOrganizations, ancestors );
             for ( Organization candidate : candidates ) {
-                if ( !candidate.ancestors().contains( organization ) )
+                if ( !candidate.ancestors().contains( organization )
+                        && ( !candidate.isPlaceHolder() || organization.isPlaceHolder() ) ) // a non-placeholder can not have a placeholder parent
                     candidateNames.add( candidate.getName() );
             }
             if ( organization.getParent() != null )

@@ -6,7 +6,6 @@ import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.pages.components.guide.Guidable;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -56,15 +55,9 @@ public class OrganizationDetailsPanel extends EntityDetailsPanel implements Guid
 
 
     private void addProfile() {
-        if ( getOrganization().isPlaceHolder() ) {
-            organizationProfile = new Label("profile", "");
-            organizationProfile.setVisible( false );
-            organizationProfile.setOutputMarkupId( true );
-        } else {
         organizationProfile = new OrganizationProfile(
                 "profile",
                 new PropertyModel<Identifiable>( this, "organization" ) );
-        }
         moDetailsDiv.addOrReplace( organizationProfile );
     }
 
