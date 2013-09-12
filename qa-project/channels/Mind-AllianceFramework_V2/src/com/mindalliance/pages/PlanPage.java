@@ -275,18 +275,18 @@ public class PlanPage {
 	 * @throws UIAutomationException 
 	 */
 	public void closePlanEvaluationWindow() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Close Plan Evaluation Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan Evaluation Window");
-		UIActions.click(fileName,"Close Plan Evaluation Window",GlobalVariables.configuration.getAttrSearchList(), "Close Plan Evaluation Window");
+		elementController.requireElementSmart(fileName,"Close Template Evaluation Window",GlobalVariables.configuration.getAttrSearchList(), "Close Template Evaluation Window");
+		UIActions.click(fileName,"Close Template Evaluation Window",GlobalVariables.configuration.getAttrSearchList(), "Close Template Evaluation Window");
 		
 		// Assertion: Verify Plan Evaluation window is closed
 		try{
 			Thread.sleep(1000);
 		}
 		catch(Exception e){}
-		xPath=dataController.getPageDataElements(fileName,"Close Plan Evaluation Window", "Xpath");
+		xPath=dataController.getPageDataElements(fileName,"Close Template Evaluation Window", "Xpath");
 		List<WebElement> webElemets=UIActions.getElements(xPath);
 		if(!webElemets.isEmpty()){
-			throw new UIAutomationException("Plan Evaluation window can not be closed.");
+			throw new UIAutomationException("Template Evaluation window can not be closed.");
 		}
 	}
 	
@@ -796,17 +796,17 @@ public class PlanPage {
 		}
 		break;
 		
-	case "Plan Evaluation":
+	case "Template Evaluation":
 		elementController.requireElementSmart(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 		UIActions.click(fileName,subMenu, GlobalVariables.configuration.getAttrSearchList(), subMenu);
 				
 		// Assertion : Verify 'Plan Evaluation' window is present 
-		elementController.requireElementSmart(fileName, "Plan Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Plan Evaluation Title");
-		headingOfWindowInPage=UIActions.getText(fileName, "Plan Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Plan Evaluation Title");
-		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Plan Evaluation Window Title", "Title");
-		if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
-			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
-		}
+		//elementController.requireElementSmart(fileName, "Plan Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Plan Evaluation Title");
+		//headingOfWindowInPage=UIActions.getText(fileName, "Plan Evaluation Title", GlobalVariables.configuration.getAttrSearchList(),"Plan Evaluation Title");
+		//headingOfWindowInXML=dataController.getPageDataElements(fileName, "Plan Evaluation Window Title", "Title");
+		//if(!headingOfWindowInPage.equals(headingOfWindowInXML)){
+		//	throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+		//}
 		break;	
 		
 	
