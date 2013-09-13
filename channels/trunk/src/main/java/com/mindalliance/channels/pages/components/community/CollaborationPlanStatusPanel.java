@@ -16,11 +16,11 @@ import org.apache.wicket.markup.html.basic.Label;
  * Date: 2/14/13
  * Time: 1:09 PM
  */
-public class CommunityStatusPanel extends AbstractCommandablePanel {
+public class CollaborationPlanStatusPanel extends AbstractCommandablePanel {
 
     private WebMarkupContainer statusContainer;
 
-    public CommunityStatusPanel( String id ) {
+    public CollaborationPlanStatusPanel( String id ) {
         super( id );
         init();
     }
@@ -31,19 +31,19 @@ public class CommunityStatusPanel extends AbstractCommandablePanel {
         Label statusLabel = new Label(
                 "status",
                 getPlanCommunity().isClosed()
-                        ? "This community is closed to participation"
-                        : "This community is open for participation"
+                        ? "This plan is closed to participation"
+                        : "This plan is open for participation"
         );
         statusContainer.add( statusLabel );
         ConfirmedAjaxFallbackLink<String> toggleLink = new ConfirmedAjaxFallbackLink<String>(
                 "toggle",
                 getPlanCommunity().isClosed()
-                        ? "Open this community for participation?"
-                        : "Close this community to participation?"
+                        ? "Open this plan for participation?"
+                        : "Close this plan to participation?"
         ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                toggleCommunityStatus();
+                toggleCollaborationPlanStatus();
                 init();
                 target.add( statusContainer );
             }
@@ -60,7 +60,7 @@ public class CommunityStatusPanel extends AbstractCommandablePanel {
 
     }
 
-    private void toggleCommunityStatus() {
+    private void toggleCollaborationPlanStatus() {
         Command command = new UpdatePlanObject(
                 getUser().getUsername(),
                 getPlanCommunity(),

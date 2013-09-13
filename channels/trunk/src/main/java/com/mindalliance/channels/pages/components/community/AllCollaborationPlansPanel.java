@@ -34,7 +34,7 @@ import java.util.List;
  * Date: 2/11/13
  * Time: 12:39 PM
  */
-public class AllCommunitiesPanel extends AbstractCommandablePanel {
+public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
 
     private static final int MAX_ROWS = 10;
 
@@ -43,30 +43,30 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
     @SpringBean
     private UserParticipationService userParticipationManager;
 
-    private AllCommunitiesTable communitiesTable;
-    private Plan selectedProductionPlan;
-    private AjaxLink<String> newCommunityButton;
+    private AllCollaborationPlansTable collaborationPlansTable;
+    private Plan selectedProductionTemplate;
+    private AjaxLink<String> newCollaborationPlanButton;
 
-    public AllCommunitiesPanel( String id ) {
+    public AllCollaborationPlansPanel( String id ) {
         super( id );
         init();
     }
 
     private void init() {
-        addCommunitiesTable();
-        addStartCommunity();
+        addCollaborationPlansTable();
+        addStartCollaborationPlan();
     }
 
-    private void addStartCommunity() {
-        addProductionPlanChoice();
+    private void addStartCollaborationPlan() {
+        addProductionTemplateChoice();
         addCreateButton();
     }
 
-    private void addProductionPlanChoice() {
-        DropDownChoice<Plan> plansChoice = new DropDownChoice<Plan>(
+    private void addProductionTemplateChoice() {
+        DropDownChoice<Plan> templatesChoice = new DropDownChoice<Plan>(
                 "productionPlans",
-                new PropertyModel<Plan>( this, "selectedProductionPlan" ),
-                new PropertyModel<List<Plan>>( this, "productionPlans" ),
+                new PropertyModel<Plan>( this, "selectedProductionTemplate" ),
+                new PropertyModel<List<Plan>>( this, "productionTemplates" ),
                 new IChoiceRenderer<Plan>() {
                     @Override
                     public Object getDisplayValue( Plan plan ) {
@@ -79,18 +79,18 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
                     }
                 }
         );
-        plansChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+        templatesChoice.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                newCommunityButton.setEnabled( selectedProductionPlan != null );
-                target.add( newCommunityButton );
+                newCollaborationPlanButton.setEnabled( selectedProductionTemplate != null );
+                target.add( newCollaborationPlanButton );
             }
         } );
-        plansChoice.setOutputMarkupId( true );
-        addOrReplace( plansChoice );
+        templatesChoice.setOutputMarkupId( true );
+        addOrReplace( templatesChoice );
     }
 
-    public List<Plan> getProductionPlans() {
+    public List<Plan> getProductionTemplates() {
         List<Plan> productionPlans = getPlanManager().getProductionPlans();
         Collections.sort( productionPlans, new Comparator<Plan>() {
             @Override
@@ -101,96 +101,96 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
         return productionPlans;
     }
 
-    public Plan getSelectedProductionPlan() {
-        return selectedProductionPlan;
+    public Plan getSelectedProductionTemplate() {
+        return selectedProductionTemplate;
     }
 
-    public void setSelectedProductionPlan( Plan selectedProductionPlan ) {
-        this.selectedProductionPlan = selectedProductionPlan;
+    public void setSelectedProductionTemplate( Plan selectedProductionTemplate ) {
+        this.selectedProductionTemplate = selectedProductionTemplate;
     }
 
     private void addCreateButton() {
-        newCommunityButton = new AjaxLink<String>( "newCommunity" ) {
+        newCollaborationPlanButton = new AjaxLink<String>( "newCollaborationPlan" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                startNewCommunity();
-                addCommunitiesTable();
-                target.add( communitiesTable );
+                startNewCollaborationPlan();
+                addCollaborationPlansTable();
+                target.add( collaborationPlansTable );
             }
         };
-        newCommunityButton.setOutputMarkupId( true );
-        add( newCommunityButton );
-        newCommunityButton.setEnabled( selectedProductionPlan != null );
+        newCollaborationPlanButton.setOutputMarkupId( true );
+        add( newCollaborationPlanButton );
+        newCollaborationPlanButton.setEnabled( selectedProductionTemplate != null );
     }
 
-    private void startNewCommunity() {
-        planCommunityManager.createNewCommunityFor( selectedProductionPlan, getUser(), getCommunityService() );
+    private void startNewCollaborationPlan() {
+        planCommunityManager.createNewCommunityFor( selectedProductionTemplate, getUser(), getCommunityService() );
     }
 
     public void updateContent( AjaxRequestTarget target ) {
-        addCommunitiesTable();
-        target.add( communitiesTable );
+        addCollaborationPlansTable();
+        target.add( collaborationPlansTable );
     }
 
-    private void addCommunitiesTable() {
-        communitiesTable = new AllCommunitiesTable(
-                "allCommunitiesTable",
-                new PropertyModel<List<CommunityWrapper>>( this, "communityWrappers" ) );
-        addOrReplace( communitiesTable );
+    private void addCollaborationPlansTable() {
+        collaborationPlansTable = new AllCollaborationPlansTable(
+                "allCollaborationPlansTable",
+                new PropertyModel<List<CollaborationPlanWrapper>>( this, "collaborationPlanWrappers" ) );
+        addOrReplace( collaborationPlansTable );
     }
 
-    public List<CommunityWrapper> getCommunityWrappers() {
-        List<CommunityWrapper> wrappers = new ArrayList<CommunityWrapper>();
+    public List<CollaborationPlanWrapper> getCollaborationPlanWrappers() {
+        List<CollaborationPlanWrapper> wrappers = new ArrayList<CollaborationPlanWrapper>();
         for ( PlanCommunity planCommunity : planCommunityManager.getPlanCommunities() ) {
             if ( !planCommunity.isDomainCommunity()
-                    && ( !planCommunity.isClosed() || isCommunityPlanner( getUser(), planCommunity ) ) ) {
-                wrappers.add( new CommunityWrapper( planCommunity ) );
+                    && ( !planCommunity.isClosed() || isCollaborationPlanner( getUser(), planCommunity ) ) ) {
+                wrappers.add( new CollaborationPlanWrapper( planCommunity ) );
             }
         }
         Collections.sort( wrappers );
         return wrappers;
     }
 
-    private boolean isCommunityPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
+    private boolean isCollaborationPlanner( ChannelsUser user, PlanCommunity planCommunity ) {
         return user.isCommunityPlanner( planCommunity.getUri() );
     }
 
-    public class CommunityWrapper implements Identifiable, Comparable<CommunityWrapper> {
+    public class CollaborationPlanWrapper implements Identifiable, Comparable<CollaborationPlanWrapper> {
 
-        private PlanCommunity planCommunity;
+        private PlanCommunity collaborationPlan;
 
-        public CommunityWrapper( PlanCommunity planCommunity ) {
-            this.planCommunity = planCommunity;
+        public CollaborationPlanWrapper( PlanCommunity CollaborationPlan ) {
+            this.collaborationPlan = CollaborationPlan;
         }
 
-        public PlanCommunity getPlanCommunity() {
-            return planCommunity;
+        public PlanCommunity getCollaborationPlan() {
+            return collaborationPlan;
         }
 
         public Place getLocale() {
-            return planCommunity.getCommunityLocale() == null
-                    ? getPlan().getLocale()
-                    : planCommunity.getCommunityLocale();
+            return collaborationPlan.getCommunityLocale() == null
+                    ? getTemplate().getLocale()
+                    : collaborationPlan.getCommunityLocale();
         }
 
-        public Plan getPlan() {
-            return getPlanManager().getPlan( planCommunity.getPlanUri(), planCommunity.getPlanVersion() );
+        public Plan getTemplate() {
+            return getPlanManager().getPlan( collaborationPlan.getPlanUri(), collaborationPlan.getPlanVersion() );
         }
 
         public String getUserParticipates() {
             return userParticipationManager.getUserParticipations(
                     getUser(),
-                    getCommunityService( planCommunity ) ).isEmpty()
+                    getCommunityService( collaborationPlan ) ).isEmpty()
                     ? "No"
                     : "Yes";
         }
 
-        public String getCommunityUrl() {
-            return makeCommunityPageUrl( planCommunity );
+        public String getCollaborationPlanUrl() {
+            return makeCommunityPageUrl( collaborationPlan );
         }
 
         public String getStatus() {
-            return planCommunity.isClosed()
+            return collaborationPlan.isClosed()
                     ? "Closed"
                     : "Open";
         }
@@ -202,41 +202,41 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
 
         @Override
         public long getId() {
-            return planCommunity.getId();
+            return collaborationPlan.getId();
         }
 
         @Override
         public String getDescription() {
-            return planCommunity.getDescription();
+            return collaborationPlan.getDescription();
         }
 
         @Override
         public String getTypeName() {
-            return planCommunity.getTypeName();
+            return collaborationPlan.getTypeName();
         }
 
         @Override
         public boolean isModifiableInProduction() {
-            return planCommunity.isModifiableInProduction();
+            return collaborationPlan.isModifiableInProduction();
         }
 
         @Override
         public String getName() {
-            return planCommunity.getName();
+            return collaborationPlan.getName();
         }
 
         @Override
-        public int compareTo( CommunityWrapper other ) {
+        public int compareTo( CollaborationPlanWrapper other ) {
             return getName().compareTo( other.getName() );
         }
     }
 
-    public class AllCommunitiesTable extends AbstractTablePanel<CommunityWrapper> {
-        private IModel<List<CommunityWrapper>> communitiesModel;
+    public class AllCollaborationPlansTable extends AbstractTablePanel<CollaborationPlanWrapper> {
+        private IModel<List<CollaborationPlanWrapper>> collaborationPlansModel;
 
-        public AllCommunitiesTable( String s, IModel<List<CommunityWrapper>> communitiesModel ) {
+        public AllCollaborationPlansTable( String s, IModel<List<CollaborationPlanWrapper>> collaborationPlansModel ) {
             super( s );
-            this.communitiesModel = communitiesModel;
+            this.collaborationPlansModel = collaborationPlansModel;
             initialize();
         }
 
@@ -246,21 +246,21 @@ public class AllCommunitiesPanel extends AbstractCommandablePanel {
             // Columns
             columns.add( makeColumn( "Name", "name", null, EMPTY, "description" ) );
             columns.add( makeColumn( "Locale", "locale.name", null, EMPTY, "locale.description" ) );
-            columns.add( makeColumn( "Collaboration template", "plan.name", null, EMPTY, "plan.description" ) );
-            columns.add( makeColumn( "Template URI", "plan.versionUri", null, EMPTY, "plan.versionUri" ) );
+            columns.add( makeColumn( "Collaboration template", "template.name", null, EMPTY, "template.description" ) );
+            columns.add( makeColumn( "Template URI", "template.versionUri", null, EMPTY, "template.versionUri" ) );
             columns.add( makeColumn( "I participate", "userParticipates", EMPTY ) );
             columns.add( makeColumn( "Status", "status", EMPTY ) );
             columns.add( makeExternalLinkColumn(
                     "",
-                    "communityUrl",
+                    "collaborationPlanUrl",
                     null,
                     "Go",
                     false   // stay on same page
             ) );
             // Provider and table
-            add( new AjaxFallbackDefaultDataTable( "allCommunities",
+            add( new AjaxFallbackDefaultDataTable( "allCollaborationPlans",
                     columns,
-                    new SortableBeanProvider<CommunityWrapper>( communitiesModel.getObject(),
+                    new SortableBeanProvider<CollaborationPlanWrapper>( collaborationPlansModel.getObject(),
                             "name" ),
                     MAX_ROWS ) );
         }

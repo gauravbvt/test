@@ -265,7 +265,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
             }
         } else { // context is a plan community
             userRole = getCommunityService().isCommunityPlanner( user )
-                    ? "community planner"
+                    ? "collaboration planner"
                     : "participant";
         }
         return ( ChannelsUtils.startsWithVowel( userRole ) ? " an " : " a " ) + userRole + ".";

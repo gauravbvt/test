@@ -637,7 +637,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
         Plan plan = communityService.getPlan();
         String homePageUrl = getServerUrl()
                 + "home?"
-                + AbstractChannelsWebPage.PLAN_PARM
+                + AbstractChannelsWebPage.TEMPLATE_PARM
                 + "="
                 + planCommunity.getUri();
         sb.append( "\n\n------------------- \n\n" )

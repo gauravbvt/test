@@ -88,13 +88,13 @@ public class HomePage extends AbstractChannelsBasicPage {
         getContainer().addOrReplace( gotoIconsContainer );
 
         // Communities link
-        BookmarkablePageLink<? extends WebPage> gotoCommunitiesLink =
-                newTargetedLink( "gotoCommunities", CommunitiesPage.class );
-        addTipTitle( gotoCommunitiesLink, new Model<String>( getGotoCommunitiesDescription() ) );
+        BookmarkablePageLink<? extends WebPage> gotoCollaborationPlansLink =
+                newTargetedLink( "gotoCollaborationPlans", CollaborationPlansPage.class );
+        addTipTitle( gotoCollaborationPlansLink, new Model<String>( getGotoCollaborationPlansDescription() ) );
         // Models link
-        BookmarkablePageLink gotoModelsLink = newTargetedLink( "gotoModels", PlansPage.class );
-        addTipTitle( gotoModelsLink,
-                new Model<String>( getGotoModelsDescription() )
+        BookmarkablePageLink gotoTemplatesLink = newTargetedLink( "gotoTemplates", PlansPage.class );
+        addTipTitle( gotoTemplatesLink,
+                new Model<String>( getGotoTemplatesDescription() )
         );
 
         // Settings
@@ -111,15 +111,15 @@ public class HomePage extends AbstractChannelsBasicPage {
                         .setVisible( user.isAdmin() )
                         .setOutputMarkupId( true ),
 
-                // Goto model
-                new WebMarkupContainer( "models" )
-                        .add( gotoModelsLink )
+                // Goto templates
+                new WebMarkupContainer( "templates" )
+                        .add( gotoTemplatesLink )
                         .setVisible( hasAccessToPlans() )
                         .setOutputMarkupId( true ),
 
                 // Goto protocols
-                new WebMarkupContainer( "communities" )
-                        .add( gotoCommunitiesLink )
+                new WebMarkupContainer( "collaborationPlans" )
+                        .add( gotoCollaborationPlansLink )
                         .setOutputMarkupId( true ) );
 
     }
@@ -130,12 +130,12 @@ public class HomePage extends AbstractChannelsBasicPage {
         getContainer().add( socialPanel );
     }
 
-    private String getGotoModelsDescription() {
+    private String getGotoTemplatesDescription() {
         return "The collaboration templates you are developing or maintaining"; // todo show metrics
     }
 
-    private String getGotoCommunitiesDescription() {
-        return "The collaboration communities you participate or could participate in"; // todo show metrics
+    private String getGotoCollaborationPlansDescription() {
+        return "The collaboration plans you participate or could participate in"; // todo show metrics
     }
 
     private boolean hasAccessToPlans() {

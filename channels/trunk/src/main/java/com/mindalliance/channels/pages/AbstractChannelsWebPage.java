@@ -84,13 +84,13 @@ import java.util.Set;
  */
 public abstract class AbstractChannelsWebPage extends WebPage implements Updatable, Modalable, Breadcrumbable {
 
-    // PLAN_PARM and COMMUNITY_PARM page parameters can not be both set.
+    // TEMPLATE_PARM and COMMUNITY_PARM page parameters can not be both set.
 
     // Implied domain plan community (for the plan planners)
-    public static final String PLAN_PARM = "plan";
+    public static final String TEMPLATE_PARM = "template";
 
     // Explicit plan community (for a community of adopters of a plan)
-    public static final String COMMUNITY_PARM = "community";
+    public static final String COLLAB_PLAN_PARM = "collab_plan";
 
     public static final String AGENT = "agent";
 
@@ -106,7 +106,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static final String VERSION_PARM = "v";
 
-    public static final String FROM_COMMUNITY = "from_community";
+    public static final String FROM_COLLAB_PLAN = "from_collab_plan";
 
     public static final int GALLERY_WIDTH = 775;
 
@@ -169,7 +169,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     private ModalWindow dialogWindow;
     private ModalWindow galleryWindow;
 
-    protected static String[] CONTEXT_PARAMS = {COMMUNITY_PARM, PLAN_PARM, VERSION_PARM};
+    protected static String[] CONTEXT_PARAMS = {COLLAB_PLAN_PARM, TEMPLATE_PARM, VERSION_PARM};
 
 
     //-------------------------------
@@ -301,7 +301,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     //-------------------------------
     public static void addPlanParameters( BookmarkablePageLink link, Plan plan ) {
         try {
-            link.getPageParameters().set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( TEMPLATE_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -311,7 +311,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static void addPlanCommunityParameter( BookmarkablePageLink link, PlanCommunity planCommunity ) {
         try {
-            link.getPageParameters().set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( COLLAB_PLAN_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -320,7 +320,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     public static void addInCommunityContextParameter( BookmarkablePageLink link, PlanCommunity planCommunity ) {
         try {
-            link.getPageParameters().set( FROM_COMMUNITY, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            link.getPageParameters().set( FROM_COLLAB_PLAN, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -334,22 +334,22 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     @Override
     public boolean isCommunityContext() {
-        return getPageParameters().getNamedKeys().contains( COMMUNITY_PARM );
+        return getPageParameters().getNamedKeys().contains( COLLAB_PLAN_PARM );
     }
 
     @Override
     public boolean isPlanContext() {
-        return getPageParameters().getNamedKeys().contains( PLAN_PARM );
+        return getPageParameters().getNamedKeys().contains( TEMPLATE_PARM );
     }
 
     @Override
     public boolean isInCommunityContext() {
-        return getPageParameters().getNamedKeys().contains( FROM_COMMUNITY );
+        return getPageParameters().getNamedKeys().contains( FROM_COLLAB_PLAN );
     }
 
     @Override
     public PlanCommunity getCommunityInContext() {
-        return getPlanCommunityFromParameter( getPageParameters(), FROM_COMMUNITY );
+        return getPlanCommunityFromParameter( getPageParameters(), FROM_COLLAB_PLAN );
     }
 
     @Override
@@ -379,7 +379,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 */
     public static PageParameters createParameters( Specable profile, PlanCommunity planCommunity ) {
         PageParameters result = new PageParameters();
-        result.set( AbstractChannelsWebPage.COMMUNITY_PARM, planCommunity.getUri() );
+        result.set( AbstractChannelsWebPage.COLLAB_PLAN_PARM, planCommunity.getUri() );
         if ( profile != null ) {
             if ( profile.getActor() != null )
                 result.set( "agent", profile.getActor().getId() );
@@ -433,7 +433,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         return getCommunityService().getPlanService();
     }
 
-    protected BookmarkablePageLink<? extends WebPage> getProtocolsLink(
+    protected BookmarkablePageLink<? extends WebPage> getChecklistsLink(
             String id,
             PlanCommunity planCommunity,
             ChannelsUser user,
@@ -558,12 +558,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         PageParameters result = new PageParameters();
         try {
             if ( getPlan() != null ) {
-                result.set( PLAN_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
+                result.set( TEMPLATE_PARM, URLEncoder.encode( getPlan().getUri(), "UTF-8" ) );
                 result.set( VERSION_PARM, Integer.toString( getPlan().getVersion() ) );
             }
             PlanCommunity planCommunity = getPlanCommunity();
             if ( planCommunity != null ) {
-                result.set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+                result.set( COLLAB_PLAN_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
             }
         } catch ( UnsupportedEncodingException e ) {
             LOG.error( "Failed to url-encode", e );
@@ -615,7 +615,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
      *
      * @return a list of plan communities
      */
-    public final List<PlanCommunity> getVisiblePlanCommunities() {
+    public final List<PlanCommunity> getVisibleCollaborationPlans() {
         List<PlanCommunity> result = new ArrayList<PlanCommunity>();
         for ( PlanCommunity p : planCommunityManager.getPlanCommunities() ) {
             if ( !p.isDomainCommunity() ) {
@@ -676,7 +676,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PageParameters makePlanParameters( Plan plan ) {
         PageParameters params = new PageParameters();
         try {
-            params.set( PLAN_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
+            params.set( TEMPLATE_PARM, URLEncoder.encode( plan.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -690,7 +690,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PageParameters makeCommunityParameters() {
         PageParameters params = new PageParameters();
         try {
-            params.set( COMMUNITY_PARM, URLEncoder.encode( getPlanCommunityUri(), "UTF-8" ) );
+            params.set( COLLAB_PLAN_PARM, URLEncoder.encode( getPlanCommunityUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -702,7 +702,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public PageParameters makeCommunityParameters( PlanCommunity planCommunity ) {
         PageParameters params = new PageParameters();
         try {
-            params.set( COMMUNITY_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            params.set( COLLAB_PLAN_PARM, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -712,7 +712,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     protected PageParameters makeAgentParameters( String username, Agent agent ) {
         PageParameters parameters = new PageParameters();
-        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+        parameters.set( COLLAB_PLAN_PARM, getPlanCommunityUri() );
         parameters.set( USER, username );
         parameters.set( AGENT, agent.getId() );
         if ( agent.getOrganizationParticipation() != null )
@@ -724,7 +724,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     @Override
     public PageParameters addFromCommunityParameters( PageParameters params, PlanCommunity planCommunity ) {
         try {
-            params.set( FROM_COMMUNITY, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
+            params.set( FROM_COLLAB_PLAN, URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             // should never happen
             LOG.error( "Failed to encode uri", e );
@@ -757,7 +757,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         String currentContextName = isPlanContext()
                 ? getPlan().toString() + " template"
                 : isCommunityContext()
-                ? getPlanCommunity().toString() + " community"
+                ? getPlanCommunity().toString() + " plan"
                 : "";
         PageParameters params = null;
         if ( isPlanContext() ) {
@@ -771,7 +771,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         Class<? extends Page> pageClass = isPlanContext()
                 ? PlansPage.class
                 : isCommunityContext()
-                ? CommunityPage.class
+                ? CollaborationPlanPage.class
                 : HomePage.class;
         return new PagePathItem( pageClass, params, currentContextName );
     }
@@ -801,8 +801,8 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             } else if ( isCommunityContext() ) {
                 PlanCommunity planCommunity = (PlanCommunity) modelObjectContext;
                 params = makeCommunityParameters( planCommunity );
-                pageClass = CommunityPage.class;
-                pageName = planCommunity.getName() + " community";
+                pageClass = CollaborationPlanPage.class;
+                pageName = planCommunity.getName() + " plan";
                 pagePathItems.add( new PagePathItem( pageClass, params, pageName ) );
             }
         }
@@ -830,7 +830,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
 
     @Override
     public List<PlanCommunity> getOtherPlanCommunities() {
-        List<PlanCommunity> otherPlanCommunities = new ArrayList<PlanCommunity>( getVisiblePlanCommunities() );
+        List<PlanCommunity> otherPlanCommunities = new ArrayList<PlanCommunity>( getVisibleCollaborationPlans() );
         otherPlanCommunities.remove( getPlanCommunity() );
         Collections.sort( otherPlanCommunities, new Comparator<PlanCommunity>() {
             @Override
@@ -846,19 +846,19 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         List<PagePathItem> intermediates = new ArrayList<PagePathItem>();
         if ( isCommunityContext() ) {
             intermediates.add( new PagePathItem(
-                    CommunitiesPage.class,
+                    CollaborationPlansPage.class,
                     new PageParameters(),
-                    "All communities" ) );
+                    "All collaboration plans" ) );
         } else if ( isInCommunityContext() ) {
             intermediates.add( new PagePathItem(
-                    CommunitiesPage.class,
+                    CollaborationPlansPage.class,
                     new PageParameters(),
-                    "All communities" ) );
+                    "All collaboration plans" ) );
             PlanCommunity planCommunity = getCommunityInContext();
             intermediates.add( new PagePathItem(
-                    CommunityPage.class,
+                    CollaborationPlanPage.class,
                     makeCommunityParameters( planCommunity ),
-                    planCommunity.getName() + " community"
+                    planCommunity.getName() + " plan"
             ) ); // from community
         }
         return intermediates;
@@ -934,12 +934,12 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         query.append( "&" );
         try {
             if ( ChannelsUser.current().getPlanCommunityUri() != null ) {
-                query.append( COMMUNITY_PARM )
+                query.append( COLLAB_PLAN_PARM )
                         .append( "=" )
                         .append( ChannelsUser.current().getPlanCommunityUri() );
             } else {
                 Plan p = ChannelsUser.current().getPlan();
-                query.append( PLAN_PARM )
+                query.append( TEMPLATE_PARM )
                         .append( "=" )
                         .append( URLEncoder.encode( p.getUri(), "UTF-8" ) )
                         .append( "&" )
@@ -956,7 +956,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     public static PageParameters planParameters( Plan p ) {
         PageParameters parameters = new PageParameters();
         try {
-            parameters.set( PLAN_PARM, URLEncoder.encode( p.getUri(), "UTF-8" ) );
+            parameters.set( TEMPLATE_PARM, URLEncoder.encode( p.getUri(), "UTF-8" ) );
             parameters.set( VERSION_PARM, p.getVersion() );
         } catch ( UnsupportedEncodingException e ) {
             LOG.error( "Failed to encode plan uri", e );
@@ -1000,7 +1000,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     }
 
     public PlanCommunity getPlanCommunityFromParameters( PageParameters pageParameters ) {
-        return getPlanCommunityFromParameter( pageParameters, COMMUNITY_PARM );
+        return getPlanCommunityFromParameter( pageParameters, COLLAB_PLAN_PARM );
     }
 
     private PlanCommunity getPlanCommunityFromParameter( PageParameters pageParameters, String parameterName ) {
@@ -1037,7 +1037,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
             final ChannelsUser user,
             PageParameters parameters ) {
         Plan plan = null;
-        String encodedPlanUri = parameters.get( PLAN_PARM ).toString( null );
+        String encodedPlanUri = parameters.get( TEMPLATE_PARM ).toString( null );
         if ( encodedPlanUri == null ) {
             // assert parameters.get( COMMUNITY_PARM ) == null;
             String userPlanUri = user.getPlanUri() == null ? "" : user.getPlanUri();

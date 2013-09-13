@@ -64,7 +64,7 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
                         new Label( 
                                 "participationNote",
                                 isPlanner
-                                        ? "(Users who participate as agents in this plan and thus have their protocols)"
+                                        ? "(Users who participate as agents in this plan and thus have their checklists)"
                                         : "(Your participation in this plan)"
                                 ),
                         new ListView<UserParticipation>( "participatingUsers", getParticipations() ) {
@@ -127,7 +127,7 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
     private PageParameters makeUserParameters( String username ) {
         PageParameters parameters = new PageParameters();
-        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+        parameters.set( COLLAB_PLAN_PARM, getPlanCommunityUri() );
         parameters.set( "user", username );
         return parameters;
     }

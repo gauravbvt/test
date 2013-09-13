@@ -58,7 +58,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
 
     private static final String ALL_AGENCIES = "All organizations";
     private static final String FIXED_AGENCIES = "Template-defined organizations";
-    private static final String REGISTERED_AGENCIES = "Community-registered organizations";
+    private static final String REGISTERED_AGENCIES = "Plan-registered organizations";
     private static final String[] AGENCY_FILTER_CHOICES = {ALL_AGENCIES, FIXED_AGENCIES, REGISTERED_AGENCIES};
 
     @SpringBean
@@ -434,7 +434,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
             if ( agency == null ) {
                 return null;
             } else if ( agency.isRegisteredByCommunity() ) {
-                return "Community";
+                return "Plan";
             } else {
                 if ( agency.getFixedOrganization().isPlaceHolder() )
                     return "Template as placeholder";

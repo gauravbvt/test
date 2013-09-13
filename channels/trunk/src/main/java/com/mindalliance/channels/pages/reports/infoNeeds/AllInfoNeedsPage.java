@@ -63,7 +63,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                     protected void populateItem( ListItem<UserParticipation> item ) {
                         PageParameters parameters = new PageParameters();
                         UserParticipation p = item.getModelObject();
-                        parameters.set( COMMUNITY_PARM, getPlanCommunityUri() );
+                        parameters.set( COLLAB_PLAN_PARM, getPlanCommunityUri() );
                         parameters.set( VERSION_PARM, getPlanVersion() );
                         Actor actor = p.getAgent(getCommunityService()).getActor();
                         parameters.set( "agent", actor.getId() );

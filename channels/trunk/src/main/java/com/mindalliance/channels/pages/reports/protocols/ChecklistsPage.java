@@ -91,7 +91,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     public static PageParameters createParameters( Agent agent, String communityUri ) {
 
         PageParameters result = new PageParameters();
-        result.set( AbstractAllParticipantsPage.COMMUNITY_PARM, communityUri );
+        result.set( AbstractAllParticipantsPage.COLLAB_PLAN_PARM, communityUri );
         result.set( AbstractAllParticipantsPage.AGENT, agent.getId() );
         if ( agent.getOrganizationParticipation() != null )
             result.set( AbstractAllParticipantsPage.ORG, agent.getOrganizationParticipation().getUid() );

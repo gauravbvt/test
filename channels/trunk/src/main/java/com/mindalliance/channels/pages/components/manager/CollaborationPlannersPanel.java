@@ -34,7 +34,7 @@ import java.util.List;
  * Date: 2/19/13
  * Time: 9:47 AM
  */
-public class CommunityPlannersPanel extends AbstractUpdatablePanel {
+public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
 
     private static final int MAX_ROWS = 10;
 
@@ -44,28 +44,28 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
     @SpringBean
     private UserRecordService userInfoService;
 
-    private CommunityPlannersTable communityPlannersTable;
+    private CollaborationPlannersTable collaborationPlannersTable;
 
     private ChannelsUser authorizedUser;
     private WebMarkupContainer authorizationContainer;
     private ConfirmedAjaxFallbackLink<String> authorizeButton;
 
-    public CommunityPlannersPanel( String id ) {
+    public CollaborationPlannersPanel( String id ) {
         super( id );
         init();
     }
 
     private void init() {
-        addCommunityPlannersTable();
+        addCollaborationPlannersTable();
         addPlannerAuthorization();
     }
 
-    private void addCommunityPlannersTable() {
-        communityPlannersTable = new CommunityPlannersTable(
+    private void addCollaborationPlannersTable() {
+        collaborationPlannersTable = new CollaborationPlannersTable(
                 "plannersTable",
-                new PropertyModel<List<CommunityPlannerWrapper>>( this, "communityPlannerWrappers" )
+                new PropertyModel<List<CollaborationPlannerWrapper>>( this, "collaborationPlannerWrappers" )
         );
-        addOrReplace( communityPlannersTable );
+        addOrReplace( collaborationPlannersTable );
     }
 
     private void addPlannerAuthorization() {
@@ -110,7 +110,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
         authorizeButton = new ConfirmedAjaxFallbackLink<String>(
                 "authorize",
                 authorizedUser != null
-                        ? "Authorize " + authorizedUser.getFullName() + " as community planner?"
+                        ? "Authorize " + authorizedUser.getFullName() + " as collaboration planner?"
                         : "Please identify a user to be authorized as planner."
         ) {
             @Override
@@ -122,14 +122,14 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
                             authorizedUser,
                             getCommunityService() );
                     if ( planner != null ) {
-                        addCommunityPlannersTable();
+                        addCollaborationPlannersTable();
                         addPlannerAuthorization();
-                        target.add( communityPlannersTable );
+                        target.add( collaborationPlannersTable );
                         target.add( authorizationContainer );
                         change = new Change( Change.Type.Updated, getPlanCommunity(), "participation" );
                     } else {
                         change = new Change( Change.Type.None );
-                        change.setMessage( "Failed to authorize " + authorizedUser.getFullName() + " as community planner" );
+                        change.setMessage( "Failed to authorize " + authorizedUser.getFullName() + " as collaboration planner" );
                     }
                     authorizedUser = null;
                     update( target, change );
@@ -188,21 +188,21 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
     }
 
 
-    public List<CommunityPlannerWrapper> getCommunityPlannerWrappers() {
-        List<CommunityPlannerWrapper> wrappers = new ArrayList<CommunityPlannerWrapper>();
+    public List<CollaborationPlannerWrapper> getCollaborationPlannerWrappers() {
+        List<CollaborationPlannerWrapper> wrappers = new ArrayList<CollaborationPlannerWrapper>();
         for ( ChannelsUser communityPlanner : userRecordService.getCommunityPlanners( getCommunityService().getPlanCommunity().getUri() ) ) {
-            wrappers.add( new CommunityPlannerWrapper( communityPlanner.getUserRecord() ) );
+            wrappers.add( new CollaborationPlannerWrapper( communityPlanner.getUserRecord() ) );
         }
         return wrappers;
     }
 
     public void update( AjaxRequestTarget target, Object object, String action ) {
-        if ( object instanceof CommunityPlannerWrapper ) {
-            CommunityPlannerWrapper wrapper = (CommunityPlannerWrapper) object;
+        if ( object instanceof CollaborationPlannerWrapper ) {
+            CollaborationPlannerWrapper wrapper = (CollaborationPlannerWrapper) object;
             if ( action.equals( "resign" ) ) {
                 boolean success = wrapper.resign();
-                addCommunityPlannersTable();
-                target.add( communityPlannersTable );
+                addCollaborationPlannersTable();
+                target.add( collaborationPlannersTable );
                 Change change = new Change( Change.Type.Updated, getPlanCommunity(), "participation" );
                 change.setMessage( success
                         ? "Resignation refused"
@@ -213,12 +213,12 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
         }
     }
 
-    public class CommunityPlannerWrapper implements Serializable {
+    public class CollaborationPlannerWrapper implements Serializable {
 
-        private UserRecord communityPlanner;
+        private UserRecord collaborationPlanner;
 
-        public CommunityPlannerWrapper( UserRecord communityPlanner ) {
-            this.communityPlanner = communityPlanner;
+        public CollaborationPlannerWrapper( UserRecord collaborationPlanner ) {
+            this.collaborationPlanner = collaborationPlanner;
         }
 
         public String getNormalizedFullName() {
@@ -227,20 +227,20 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
         }
 
         public String getEmail() {
-            return communityPlanner.getEmail();
+            return collaborationPlanner.getEmail();
         }
 
         public String getAuthorizedBy() {
-            ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( communityPlanner.getUsername() );
+            ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( collaborationPlanner.getUsername() );
             return authorizedBy != null
-                    ? authorizedBy.getUserRecord().equals( communityPlanner )
+                    ? authorizedBy.getUserRecord().equals( collaborationPlanner )
                     ? "(Founder)"
                     : authorizedBy.getNormalizedFullName()
                     : null;
         }
 
         public String getAuthorizationDate() {
-            return getDateFormat().format( communityPlanner.getCreated() );
+            return getDateFormat().format( collaborationPlanner.getCreated() );
         }
 
         public boolean resign() {
@@ -248,25 +248,25 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
             return userRecordService.resignAsCommunityPlanner( getUsername(), planner, getCommunityService() );
         }
 
-        public UserRecord getCommunityPlannerIfCanResign() {
+        public UserRecord getCollaborationPlannerIfCanResign() {
             ChannelsUser planner = getPlannerUser();
             if ( ( getUser().isAdmin() || ( planner != null && planner.equals( getUser() ) ) )
                     && userRecordService.getCommunityPlanners( getCommunityService().getPlanCommunity().getUri() ).size() > 1 )
-                return communityPlanner;
+                return collaborationPlanner;
             else
                 return null;
         }
 
         private ChannelsUser getPlannerUser() {
-            return userInfoService.getUserWithIdentity( communityPlanner.getUsername() );
+            return userInfoService.getUserWithIdentity( collaborationPlanner.getUsername() );
         }
     }
 
-    private class CommunityPlannersTable extends AbstractTablePanel<CommunityPlannerWrapper> {
+    private class CollaborationPlannersTable extends AbstractTablePanel<CollaborationPlannerWrapper> {
 
-        private IModel<List<CommunityPlannerWrapper>> wrappers;
+        private IModel<List<CollaborationPlannerWrapper>> wrappers;
 
-        private CommunityPlannersTable( String s, IModel<List<CommunityPlannerWrapper>> wrappers ) {
+        private CollaborationPlannersTable( String s, IModel<List<CollaborationPlannerWrapper>> wrappers ) {
             super( s );
             this.wrappers = wrappers;
             initTable();
@@ -274,7 +274,7 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
 
         @SuppressWarnings( "unchecked" )
         private void initTable() {
-            final List<IColumn<CommunityPlannerWrapper>> columns = new ArrayList<IColumn<CommunityPlannerWrapper>>();
+            final List<IColumn<CollaborationPlannerWrapper>> columns = new ArrayList<IColumn<CollaborationPlannerWrapper>>();
             columns.add( makeColumn( "Name", "normalizedFullName", EMPTY ) );
             columns.add( makeColumn( "Email", "email", EMPTY ) );
             columns.add( makeColumn( "Authorized by", "authorizedBy", EMPTY ) );
@@ -284,15 +284,15 @@ public class CommunityPlannersPanel extends AbstractUpdatablePanel {
                     "resign",
                     "resign",
                     "Resign as planner?",
-                    "communityPlannerIfCanResign",
+                    "collaborationPlannerIfCanResign",
                     "more",
-                    CommunityPlannersPanel.this
+                    CollaborationPlannersPanel.this
             ) );
             // provider and table
-            addOrReplace( new AjaxFallbackDefaultDataTable<CommunityPlannerWrapper>(
-                    "communityPlannersTable",
+            addOrReplace( new AjaxFallbackDefaultDataTable<CollaborationPlannerWrapper>(
+                    "collaborationPlannersTable",
                     columns,
-                    new SortableBeanProvider<CommunityPlannerWrapper>(
+                    new SortableBeanProvider<CollaborationPlannerWrapper>(
                             wrappers.getObject(),
                             "normalizedFullName" ),
                     MAX_ROWS ) );

@@ -16,15 +16,15 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * Date: 12/4/12
  * Time: 10:18 AM
  */
-public class ParticipationManagerPage extends AbstractChannelsBasicPage {
+public class PlanParticipationPage extends AbstractChannelsBasicPage {
 
     private ParticipationManagerPanel participationManagerPanel;
 
-    public ParticipationManagerPage() {
+    public PlanParticipationPage() {
         this( new PageParameters() );
     }
 
-    public ParticipationManagerPage( PageParameters parameters ) {
+    public PlanParticipationPage( PageParameters parameters ) {
         super( parameters );
     }
 
@@ -62,7 +62,7 @@ public class ParticipationManagerPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "Community participation";
+        return "Plan participation";
     }
 
     @Override

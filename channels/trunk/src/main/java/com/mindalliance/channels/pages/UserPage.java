@@ -175,7 +175,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
         // Protocols link
         BookmarkablePageLink<? extends WebPage> gotoProtocolsLink =
-                getProtocolsLink( "gotoProtocols", getPlanCommunity(), user, true );
+                getChecklistsLink( "gotoProtocols", getPlanCommunity(), user, true );
         addTipTitle( gotoProtocolsLink, new Model<String>( getGotoProtocolsDescription( user, plan ) ) );
         // info needs link
 /*
@@ -219,7 +219,7 @@ public class UserPage extends AbstractChannelsBasicPage {
         BookmarkablePageLink participationManagerLink = newTargetedLink(
                 "gotoParticipationManager",
                 "",
-                ParticipationManagerPage.class,
+                PlanParticipationPage.class,
                 null,
                 planCommunity );
         int toConfirmCount = userParticipationService

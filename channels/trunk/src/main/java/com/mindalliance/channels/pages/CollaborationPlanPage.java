@@ -20,8 +20,8 @@ import com.mindalliance.channels.db.services.surveys.SurveysDAO;
 import com.mindalliance.channels.pages.components.AttachmentPanel;
 import com.mindalliance.channels.pages.components.ChannelsModalWindow;
 import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
-import com.mindalliance.channels.pages.components.community.CommunityDetailsPanel;
-import com.mindalliance.channels.pages.components.community.CommunityStatusPanel;
+import com.mindalliance.channels.pages.components.community.CollaborationPlanDetailsPanel;
+import com.mindalliance.channels.pages.components.community.CollaborationPlanStatusPanel;
 import com.mindalliance.channels.pages.components.social.SocialPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -43,19 +43,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Plan community page.
+ * COllaboration plan page.
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 2/11/13
  * Time: 2:59 PM
  */
-public class CommunityPage extends AbstractChannelsBasicPage {
+public class CollaborationPlanPage extends AbstractChannelsBasicPage {
 
     /**
      * Class logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger( CommunityPage.class );
+    private static final Logger LOG = LoggerFactory.getLogger( CollaborationPlanPage.class );
 
 
     @SpringBean
@@ -87,11 +87,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     private ModalWindow detailsDialog;
     private WebMarkupContainer detailsContainer;
 
-    public CommunityPage() {
+    public CollaborationPlanPage() {
         this( new PageParameters() );
     }
 
-    public CommunityPage( PageParameters parameters ) {
+    public CollaborationPlanPage( PageParameters parameters ) {
         super( parameters );
         if ( getPlanCommunity().isClosed() && !getCommunityService().isCommunityPlanner( getUser() ) ) {
             throw new AbortWithHttpErrorCodeException( HttpServletResponse.SC_UNAUTHORIZED, "Not authorized" );
@@ -111,33 +111,33 @@ public class CommunityPage extends AbstractChannelsBasicPage {
 
     @Override
     protected void addContent() {
-        addCommunityDetails();
-        addCommunityDetailsDialog();
+        addCollaborationPlanDetails();
+        addCollaborationPlanDetailsDialog();
         addAttachments();
         addGotoLinks( getCommunityService(), getUser() );
         addSocial();
     }
 
-    private void addCommunityDetailsDialog() {
+    private void addCollaborationPlanDetailsDialog() {
         detailsDialog = new ChannelsModalWindow( "detailsDialog" );
         detailsDialog.setTitle( "Community details" );
         detailsDialog.setCookieName( "channels-community-details" );
         detailsDialog.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
             public void onClose( AjaxRequestTarget target ) {
-                addCommunityDetails();
+                addCollaborationPlanDetails();
                 target.add( detailsContainer );
                 detailsDialog = null;
             }
         } );
-        CommunityDetailsPanel communityEditPanel = new CommunityDetailsPanel(
+        CollaborationPlanDetailsPanel collaborationPlanEditPanel = new CollaborationPlanDetailsPanel(
                 detailsDialog.getContentId(),
                 new PropertyModel<PlanCommunity>( this, "planCommunity" )
         );
-        detailsDialog.setContent( communityEditPanel );
+        detailsDialog.setContent( collaborationPlanEditPanel );
         getContainer().addOrReplace( detailsDialog );
     }
 
-    private void addCommunityDetails() {
+    private void addCollaborationPlanDetails() {
         detailsContainer = new WebMarkupContainer( "details" );
         detailsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( detailsContainer );
@@ -148,10 +148,10 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private void addDetailLabels() {
-        addCommunityName();
+        addCollaborationPlanName();
         addPlanVersion();
-        addCommunityDescription();
-        addCommunityLocale();
+        addCollaborationPlanDescription();
+        addCollaborationPlanLocale();
     }
 
 
@@ -172,19 +172,19 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
 
-    private void addCommunityName() {
+    private void addCollaborationPlanName() {
         Label label = new Label( "name", getPlanCommunity().getName() );
         label.setOutputMarkupId( true );
         detailsContainer.addOrReplace( label );
     }
 
-    private void addCommunityDescription() {
+    private void addCollaborationPlanDescription() {
         Label label = new Label( "description", getPlanCommunity().getDescription() );
         label.setOutputMarkupId( true );
         detailsContainer.addOrReplace( label );
     }
 
-    private void addCommunityLocale() {
+    private void addCollaborationPlanLocale() {
         Place locale = getPlanCommunity().getLocale( getCommunityService() );
         String localeName = locale == null ? "Anywhere" : "In " + locale.getName();
         Label label = new Label( "locale", localeName );
@@ -193,7 +193,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private void addPlanVersion() {
-        Label label = new Label( "planVersion", "Based on " + getPlan().getSimpleVersionedName() );
+        Label label = new Label( "templateVersion", "Based on " + getPlan().getSimpleVersionedName() );
         label.setOutputMarkupId( true );
         detailsContainer.addOrReplace( label );
 
@@ -208,11 +208,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         AjaxLink<String> editButton = new AjaxLink<String>( "edit" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                addCommunityDetailsDialog();
+                addCollaborationPlanDetailsDialog();
                 detailsDialog.show( target );
             }
         };
-        editButton.setVisible( isCommunityPlanner() );
+        editButton.setVisible( isCollaborationPlanner() );
         addTipTitle( editButton, "Edit the name, description and locale of the community" );
         detailsContainer.add( editButton );
     }
@@ -228,7 +228,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
             public void onClick( AjaxRequestTarget target ) {
                 try {
                     planCommunityManager.updateToPlanVersion( getPlanCommunity(), latestProdVersion );
-                    setResponsePage( CommunityPage.class, getPageParameters() );
+                    setResponsePage( CollaborationPlanPage.class, getPageParameters() );
                 } catch ( Exception e ) {
                     updateWith(
                             target,
@@ -240,11 +240,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         updateVersionButton.setOutputMarkupId( true );
         Label updateVersionLabel = new Label( "updateVersionLabel", "Update to version " + latestProdVersion );
         updateVersionButton.add( updateVersionLabel );
-        makeVisible( updateVersionButton, planVersion != latestProdVersion && isCommunityPlanner() );
+        makeVisible( updateVersionButton, planVersion != latestProdVersion && isCollaborationPlanner() );
         detailsContainer.addOrReplace( updateVersionButton );
     }
 
-    private boolean isCommunityPlanner() {
+    private boolean isCollaborationPlanner() {
         return getCommunityService().isCommunityPlanner( getUser() );
     }
 
@@ -263,11 +263,11 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private boolean isAttachmentsReadOnly() {
-        return !isCommunityPlanner();
+        return !isCollaborationPlanner();
     }
 
     private void addStatusPanel() {
-        CommunityStatusPanel statusPanel = new CommunityStatusPanel( "status" );
+        CollaborationPlanStatusPanel statusPanel = new CollaborationPlanStatusPanel( "status" );
         statusPanel.setVisible( getCommunityService().isCommunityPlanner( getUser() ) );
         detailsContainer.add( statusPanel );
     }
@@ -278,15 +278,15 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         List<UserParticipation> participations = getUserParticipations( planCommunity, user );
         String planUri = plan.getUri();
         boolean modelerOrAdmin = user.isPlannerOrAdmin( planUri );
-        boolean communityPlanner = communityService.isCommunityPlanner( user );
+        boolean collaborationPlanner = communityService.isCommunityPlanner( user );
         gotoIconsContainer = new WebMarkupContainer( "goto-icons" );
         gotoIconsContainer.setOutputMarkupId( true );
         getContainer().addOrReplace( gotoIconsContainer );
 
-        // Protocols link
-        BookmarkablePageLink<? extends WebPage> gotoProtocolsLink =
-                getProtocolsLink( "gotoProtocols", getPlanCommunity(), user, true );
-        addTipTitle( gotoProtocolsLink, new Model<String>( getGotoProtocolsDescription( user, plan ) ) );
+        // Checklists link
+        BookmarkablePageLink<? extends WebPage> gotoChecklistsLink =
+                getChecklistsLink( "gotoChecklists", getPlanCommunity(), user, true );
+        addTipTitle( gotoChecklistsLink, new Model<String>( getGotoChecklistsDescription( user, plan ) ) );
         // Surveys
         BookmarkablePageLink<? extends WebPage> gotoRFIsLink =
                 getRFIsLink( "gotoRFIs", getPlanCommunity(), true );
@@ -305,18 +305,18 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         );
         gotoFeedbackLink.add( gotoFeedbackLabel );
 
-        // Model editor link
-        BookmarkablePageLink gotoModelLink = newTargetedLink( "gotoModel", "", PlansPage.class, null, plan );
-        addInCommunityContextParameter( gotoModelLink, getPlanCommunity() );
-        addTipTitle( gotoModelLink,
-                new Model<String>( getGotoModelDescription( user, plan ) )
+        // Template editor link
+        BookmarkablePageLink gotoTemplateLink = newTargetedLink( "gotoTemplate", "", PlansPage.class, null, plan );
+        addInCommunityContextParameter( gotoTemplateLink, getPlanCommunity() );
+        addTipTitle( gotoTemplateLink,
+                new Model<String>( getGotoTemplateDescription( user, plan ) )
         );
 
         // Participation
         BookmarkablePageLink participationManagerLink = newTargetedLink(
                 "gotoParticipationManager",
                 "",
-                ParticipationManagerPage.class,
+                PlanParticipationPage.class,
                 null,
                 planCommunity );
         int toConfirmCount = userParticipationService
@@ -345,15 +345,15 @@ public class CommunityPage extends AbstractChannelsBasicPage {
                         .add( participationManagerLink )
                         .setOutputMarkupId( true ),
 
-                // Goto model
-                new WebMarkupContainer( "model" )
-                        .add( gotoModelLink )
-                        .setVisible( modelerOrAdmin || communityPlanner || plan.isVisibleToUsers() )
+                // Goto template
+                new WebMarkupContainer( "template" )
+                        .add( gotoTemplateLink )
+                        .setVisible( modelerOrAdmin || collaborationPlanner || plan.isVisibleToUsers() )
                         .setOutputMarkupId( true ),
 
-                // Goto protocols
-                new WebMarkupContainer( "protocols" )
-                        .add( gotoProtocolsLink )
+                // Goto checklists
+                new WebMarkupContainer( "checklists" )
+                        .add( gotoChecklistsLink )
                         .setVisible( modelerOrAdmin || !participations.isEmpty() )
                         .setOutputMarkupId( true ),
 
@@ -370,13 +370,13 @@ public class CommunityPage extends AbstractChannelsBasicPage {
                 // Goto requirements
                 new WebMarkupContainer( "requirements" )
                         .add( gotoRequirementsLink )
-                        .setVisible( communityPlanner )
+                        .setVisible( collaborationPlanner )
                         .setOutputMarkupId( true )
         );
 
     }
 
-    private String getGotoProtocolsDescription( ChannelsUser user, Plan plan ) {
+    private String getGotoChecklistsDescription( ChannelsUser user, Plan plan ) {
         return user.isPlannerOrAdmin( plan.getUri() )
                 ? "Set how users participate in the plan and view their collaboration checklists."
                 : "View all tasks and related communications assigned to me according to my participation in this plan.";
@@ -465,7 +465,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
         return sb.toString();
     }
 
-    private String getGotoModelDescription( ChannelsUser user, Plan plan ) {
+    private String getGotoTemplateDescription( ChannelsUser user, Plan plan ) {
         return user.isPlannerOrAdmin( plan.getUri() ) && getPlan().isDevelopment()
                 ? "Build or modify the " + plan.getName() + " plan.\n" +
                 " (Requires a modern, standards-compliant browser (Internet Explorer 8 or earlier is not supported)"
@@ -474,7 +474,7 @@ public class CommunityPage extends AbstractChannelsBasicPage {
     }
 
     private void addSocial() {
-        String[] tabsShown = {/*SocialPanel.CALENDAR,*/ SocialPanel.MESSAGES, SocialPanel.PARTICIPATION};
+        String[] tabsShown = {SocialPanel.MESSAGES, SocialPanel.PARTICIPATION};
         socialPanel = new SocialPanel( "social", false, tabsShown, false );
         getContainer().add( socialPanel );
     }

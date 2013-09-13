@@ -87,7 +87,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
         tabs.add( new AbstractTab( new Model<String>( "Planners" ) ) {
                 @Override
                 public Panel getPanel( String id ) {
-                    return new CommunityPlannersPanel( id );
+                    return new CollaborationPlannersPanel( id );
                 }
             } );
         return tabs;

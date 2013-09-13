@@ -1,7 +1,7 @@
 package com.mindalliance.channels.pages;
 
 import com.mindalliance.channels.db.data.messages.Feedback;
-import com.mindalliance.channels.pages.components.community.AllCommunitiesPanel;
+import com.mindalliance.channels.pages.components.community.AllCollaborationPlansPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -13,15 +13,15 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * Date: 2/11/13
  * Time: 11:22 AM
  */
-public class CommunitiesPage extends AbstractChannelsBasicPage {
+public class CollaborationPlansPage extends AbstractChannelsBasicPage {
 
-    private AllCommunitiesPanel allCommunitiesPanel;
+    private AllCollaborationPlansPanel allCollaborationPlansPanel;
 
-    public CommunitiesPage() {
+    public CollaborationPlansPage() {
         this( new PageParameters() );
     }
 
-    public CommunitiesPage( PageParameters parameters ) {
+    public CollaborationPlansPage( PageParameters parameters ) {
         super( parameters );
     }
 
@@ -38,12 +38,12 @@ public class CommunitiesPage extends AbstractChannelsBasicPage {
 
     @Override
     protected void addContent() {
-        addAllCommunitiesPanel();
+        addAllCollaborationPlansPanel();
     }
 
     @Override
     protected void updateContent( AjaxRequestTarget target ) {
-        allCommunitiesPanel.updateContent( target );
+        allCollaborationPlansPanel.updateContent( target );
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CommunitiesPage extends AbstractChannelsBasicPage {
 
     @Override
     public String getPageName() {
-        return "All communities";
+        return "All Collaboration plans";
     }
 
     @Override
@@ -67,9 +67,9 @@ public class CommunitiesPage extends AbstractChannelsBasicPage {
         return Feedback.CHANNELS;
     }
 
-    private void addAllCommunitiesPanel() {
-        allCommunitiesPanel = new AllCommunitiesPanel( "allCommunities" );
-        getContainer().add( allCommunitiesPanel );
+    private void addAllCollaborationPlansPanel() {
+        allCollaborationPlansPanel = new AllCollaborationPlansPanel( "allCollaborationPlans" );
+        getContainer().add( allCollaborationPlansPanel );
     }
 
 }

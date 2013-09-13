@@ -31,7 +31,7 @@ import java.util.List;
  * Date: 2/12/13
  * Time: 10:15 AM
  */
-public class CommunityDetailsPanel extends AbstractCommandablePanel {
+public class CollaborationPlanDetailsPanel extends AbstractCommandablePanel {
 
     private String name;
     private String description;
@@ -40,7 +40,7 @@ public class CommunityDetailsPanel extends AbstractCommandablePanel {
     private AjaxLink<String> cancelButton;
     private AjaxLink<String> acceptButton;
 
-    public CommunityDetailsPanel( String id, IModel<? extends Identifiable> iModel ) {
+    public CollaborationPlanDetailsPanel( String id, IModel<? extends Identifiable> iModel ) {
         super( id, iModel );
         init();
     }

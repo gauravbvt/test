@@ -105,9 +105,9 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
 
     public PlanCommunity getPlanCommunity( PageParameters parameters ) {
         ChannelsUser user = ChannelsUser.current( getUserRecordService() );
-        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COMMUNITY_PARM ) ) {
+        if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.COLLAB_PLAN_PARM ) ) {
             try {
-                String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COMMUNITY_PARM ).toString(), "UTF-8" );
+                String communityUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.COLLAB_PLAN_PARM ).toString(), "UTF-8" );
                 PlanCommunity planCommunity = planCommunityManager.getPlanCommunity( communityUri );
                 if ( planCommunity != null ) {
                     return planCommunity;
@@ -118,9 +118,9 @@ public abstract class ChannelsDynamicImageResource extends DynamicImageResource 
                 LOG.error( "Failed to decode community uri", e );
                 return null;
             }
-        } else if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.PLAN_PARM ) ) {
+        } else if ( parameters.getNamedKeys().contains( AbstractChannelsWebPage.TEMPLATE_PARM ) ) {
             try {
-                String planUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.PLAN_PARM ).toString(), "UTF-8" );
+                String planUri = URLDecoder.decode( parameters.get( AbstractChannelsWebPage.TEMPLATE_PARM ).toString(), "UTF-8" );
                 int planVersion = parameters.get( AbstractChannelsWebPage.VERSION_PARM ).toInt();
                 Plan plan = planManager.getPlan( planUri, planVersion );
                 if ( !user.isParticipant( planUri ) )

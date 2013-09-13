@@ -643,7 +643,7 @@ public class SurveysDAOImpl implements SurveysDAO {
                 + ( serverUrl.endsWith( "/" ) ? "" : "/" )
                 + RFIsPage.SURVEYS
                 + "?"
-                + AbstractChannelsWebPage.COMMUNITY_PARM
+                + AbstractChannelsWebPage.COLLAB_PLAN_PARM
                 + "="
                 + planCommunity.getUri()
                 + "&"

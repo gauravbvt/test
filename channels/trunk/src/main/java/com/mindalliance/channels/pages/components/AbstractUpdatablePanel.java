@@ -35,7 +35,7 @@ import com.mindalliance.channels.engine.analysis.Analyst;
 import com.mindalliance.channels.graph.DiagramFactory;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.Channels;
-import com.mindalliance.channels.pages.CommunityPage;
+import com.mindalliance.channels.pages.CollaborationPlanPage;
 import com.mindalliance.channels.pages.Modalable;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
@@ -710,9 +710,9 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         try {
             PageParameters parameters = new PageParameters();
             parameters.set(
-                    AbstractChannelsBasicPage.COMMUNITY_PARM,
+                    AbstractChannelsBasicPage.COLLAB_PLAN_PARM,
                     URLEncoder.encode( planCommunity.getUri(), "UTF-8" ) );
-            return urlFor( CommunityPage.class, parameters ).toString();
+            return urlFor( CollaborationPlanPage.class, parameters ).toString();
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }

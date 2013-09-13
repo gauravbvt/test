@@ -10,9 +10,9 @@
             <div class="about-plan">
                 <input wicket:id="edit" type="button" value="Edit"/>
                 <!--<img wicket:id="planImage" class="plan-image" src="#" width="48" height="48"/>-->
-                <h4 class="community">Community</h4>
-                <span wicket:id="name" class="plan-name">Community name</span>
-                <span wicket:id="planVersion" class="plan-client">Plan version</span>
+                <h4 class="community">Collaboration Plan</h4>
+                <span wicket:id="name" class="plan-name">Plan name</span>
+                <span wicket:id="templateVersion" class="plan-client">Template version</span>
                 <a wicket:id="updateVersion" href="#">
                     <span wicket:id="updateVersionLabel">Update to version X</span>
                 </a>
@@ -26,7 +26,7 @@
                 </span>
                 <span class="status">
                     <strong>Status:</strong>
-                    <div wicket:id="status">[community status panel]</div>
+                    <div wicket:id="status">[collaboration plan status panel]</div>
                 </span>
             </div>
         </span>
@@ -36,12 +36,12 @@
                 <a wicket:id="gotoParticipationManager" href="#">
                     <img class="icon" src="images/qi.participation.png" width="32" height="32"
                          alt="Participation manager"/>
-                    <span>Community<br/>Participation</span>
+                    <span>Plan<br/>Participation</span>
                 </a>
             </div>
 
-            <div wicket:id="protocols" class="goto">
-                <a wicket:id="gotoProtocols" href="#">
+            <div wicket:id="checklists" class="goto">
+                <a wicket:id="gotoChecklists" href="#">
                     <img class="icon" src="images/qi.checklists.png" width="32" height="32" alt="Collaboration checklists"/>
                     <span>Collaboration<br/>checklists</span>
                 </a>
@@ -69,8 +69,8 @@
                 </a>
             </div>
 
-            <div wicket:id="model" class="goto model">
-                <a wicket:id="gotoModel" href="#">
+            <div wicket:id="template" class="goto model">
+                <a wicket:id="gotoTemplate" href="#">
                     <img class="icon" src="images/qi.things_digital.png" width="32" height="32"
                          alt="Collaboration template"/>
                     <span>Collaboration<br />Template</span>
@@ -79,7 +79,7 @@
 
          </div>
 
-        <h2 class="attachment-panel-title" wicket:id="attachmentsLabel">Community documents</h2>
+        <h2 class="attachment-panel-title" wicket:id="attachmentsLabel">Plan documents</h2>
         <span wicket:id="attachments">[attachments panel]</span>
     </div>
 

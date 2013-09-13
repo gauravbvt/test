@@ -232,11 +232,11 @@ public class Channels extends WebApplication
 
         getMarkupSettings().setStripWicketTags( true );
 
-        mountPage( "allProtocols", AllChecklistsPage.class );
+        mountPage( "allChecklists", AllChecklistsPage.class );
         mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
-        mountPage( "protocols", ChecklistsPage.class );
+        mountPage( "checklists", ChecklistsPage.class );
         mountPage( "infoNeeds", InfoNeedsPage.class );
-        mountPage( "plan", PlanPage.class );
+        mountPage( "template", PlanPage.class );
         mountPage( "admin", SettingsPage.class );
         mountPage( "nosops.html", NoAccessPage.class );
         mountPage( "login.html", LoginPage.class );
@@ -244,13 +244,13 @@ public class Channels extends WebApplication
         mountPage( "segment.xml", ExportPage.class );
         mountPage( "geomap", GeoMapPage.class );
         mountPage( "home", HomePage.class );
-        mountPage( "communities", CommunitiesPage.class );
-        mountPage( "community", CommunityPage.class );
-        mountPage( "plans", PlansPage.class );
+        mountPage( "collabPlans", CollaborationPlansPage.class );
+        mountPage( "collabPlan", CollaborationPlanPage.class );
+        mountPage( "templates", PlansPage.class );
         mountPage( "feedback", FeedbackPage.class );
         mountPage( RFIsPage.SURVEYS, RFIsPage.class );
         mountPage( "requirements", RequirementsPage.class );
-        mountPage(  "participation", ParticipationManagerPage.class );
+        mountPage(  "participation", PlanParticipationPage.class );
         mountPage( "help", HelpPage.class );
 
         mountResource( "uploads/${name}", new UploadedReference(  ) );
