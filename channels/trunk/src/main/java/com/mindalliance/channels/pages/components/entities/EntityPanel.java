@@ -10,6 +10,7 @@ import com.mindalliance.channels.core.model.InfoFormat;
 import com.mindalliance.channels.core.model.InfoProduct;
 import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.ModelEntity;
+import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Phase;
 import com.mindalliance.channels.core.model.Place;
@@ -44,13 +45,16 @@ import com.mindalliance.channels.pages.components.entities.participation.ActorPa
 import com.mindalliance.channels.pages.components.entities.participation.OrganizationParticipationPanel;
 import com.mindalliance.channels.pages.components.entities.structure.HierarchyPanel;
 import com.mindalliance.channels.pages.components.entities.structure.OrganizationStructurePanel;
+import com.mindalliance.channels.pages.components.menus.LinkMenuItem;
 import com.mindalliance.channels.pages.components.menus.MenuPanel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
@@ -96,6 +100,10 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
      * DOM identifier prefix for resizeble diagrams.
      */
     private static final String PREFIX_DOM_IDENTIFIER = ".entity";
+    private static final String BACK = "back";
+
+    private List<Long> entityHistory;
+
 
     public EntityPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions ) {
         this( id, model, expansions, DETAILS );
@@ -103,6 +111,29 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
 
     public EntityPanel( String id, IModel<? extends ModelEntity> model, Set<Long> expansions, String aspect ) {
         super( id, model, expansions, aspect );
+    }
+
+    public void displayEntity( ModelEntity modelEntity,
+                               Set<Long> expansions ) {
+        displayEntity( modelEntity, expansions, null, null, null );
+    }
+
+    public void displayEntity( ModelEntity entity,
+                               Set<Long> expansions,
+                               String aspect,
+                               AjaxRequestTarget target,
+                               Change change ) {
+        ModelEntity previous = getEntity();
+        if ( previous != null && !change.hasQualifier( BACK ) )
+            getEntityHistory().add( previous.getId() );
+        setModel( new Model<ModelEntity>( entity ) );
+        setExpansions( expansions );
+        if ( target != null ) {
+            refresh( target, change, aspect );
+            showAspect( aspect, change, target );
+        }
+        else
+            setAspectShown( aspect );
     }
 
     @Override
@@ -151,10 +182,38 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
      * {@inheritDoc}
      */
     protected MenuPanel makeActionMenu( String menuId ) {
-        return new EntityActionsMenuPanel(
+        MenuPanel actionMenu = new EntityActionsMenuPanel(
                 menuId,
                 new PropertyModel<ModelEntity>( this, "object" ) );
+        actionMenu.addMenuItems( getExtraMenuItems() );
+        return actionMenu;
     }
+
+    public List<LinkMenuItem> getExtraMenuItems() {
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
+        if ( !getEntityHistory().isEmpty() ) {
+            menuItems.add( new LinkMenuItem(
+                    "menuItem",
+                    new Model<String>( "Go back" ),
+                    new AjaxLink( "link" ) {
+                        @Override
+                        public void onClick( AjaxRequestTarget target ) {
+                            Long previousId = getEntityHistory().remove( getEntityHistory().size() - 1 );
+                            try {
+                                ModelEntity previous = getQueryService().find( ModelEntity.class, previousId );
+                                Change change = new Change( Change.Type.Expanded, previous );
+                                change.addQualifier( BACK, true );
+                                update( target, change );
+                            } catch ( NotFoundException e ) {
+                                // do nothing
+                            }
+                        }
+                    } )
+            );
+        }
+        return menuItems;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -172,7 +231,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
             return getEntityStructurePanel();
         } else if ( aspect.equals( PARTICIPATION ) ) {
             return getEntityParticipationPanel();
-        }  else if ( aspect.equals( HIERARCHY ) ) {
+        } else if ( aspect.equals( HIERARCHY ) ) {
             return getEntityHierarchyPanel();
         } else {
             // Should never happen
@@ -345,7 +404,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
                     "aspect",
                     new PropertyModel<Organization>( this, "object" ),
                     getExpansions() );
-        } else  if ( getObject() instanceof Actor ) {
+        } else if ( getObject() instanceof Actor ) {
             return new ActorParticipationPanel(
                     "aspect",
                     new PropertyModel<Actor>( this, "object" ),
@@ -373,7 +432,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         if ( entity instanceof Organization && entity.isActual() ) {
             allAspects.add( STRUCTURE );
         }
-        if ( (entity instanceof Actor || entity instanceof Organization) && entity.isActual() ) {
+        if ( ( entity instanceof Actor || entity instanceof Organization ) && entity.isActual() ) {
             allAspects.add( PARTICIPATION );
         }
         if ( entity instanceof Actor && entity.isActual() ) {
@@ -389,7 +448,7 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         ModelEntity entity = (ModelEntity) getObject();
         return !(
                 entity.isType()
-                && ( entity instanceof Actor || entity instanceof Organization || entity instanceof Function )
+                        && ( entity instanceof Actor || entity instanceof Organization || entity instanceof Function )
         );
     }
 
@@ -442,6 +501,17 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         return (ModelEntity) getModel().getObject();
     }
 
+    protected void clearEntityHistory() {
+        getEntityHistory().clear();
+    }
+
+    protected List<Long> getEntityHistory() {
+        if ( entityHistory == null ) {
+            entityHistory = new ArrayList<Long>();
+        }
+        return entityHistory;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -460,4 +530,5 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
         }
         super.updateWith( target, change, updated );
     }
+
 }

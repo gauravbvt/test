@@ -271,7 +271,7 @@ div.pathway {
     font-size: 11px;
     font-weight: bold;
     padding: 0 10px;
-    width: 753px;
+    /*width: 753px;*/ /* too restrictive - better it seems that there be no width constraint */
     height: 27px;
 }
 
@@ -1169,7 +1169,8 @@ div.types ul li a {
 div.phases ul li a.phase-delete,
 div.types ul li a.type-delete,
 a.medium-delete,
-a.move-to-top {
+a.move-to-top,
+event-delete {
     font-size: 9px;
     text-transform: uppercase;
     font-weight: normal;
@@ -1192,7 +1193,8 @@ a.move-to-top {
 div.phases ul li a.phase-delete:hover,
 div.types ul li a.type-delete:hover,
 a.medium-delete:hover,
-a.move-to-top:hover {
+a.move-to-top:hover,
+event-delete:hover{
     color: #e8e8e8;
 }
 

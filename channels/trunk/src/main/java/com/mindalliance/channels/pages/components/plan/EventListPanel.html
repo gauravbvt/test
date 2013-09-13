@@ -13,6 +13,7 @@
                 <tr class="headers">
                     <td>Event name</td>
                     <td title="An incident is an event not caused by planned tasks">Is incident</td>
+                    <td>&nbsp;</td>
                 </tr>
             </thead>
             <tr wicket:id="event">
@@ -20,7 +21,8 @@
                     <input wicket:id="name-input" type="text" size="25"/>
                     <span wicket:id="event-link">[event link]</span>
                 </td>
-                <td><input wicket:id="confirmed" type="checkbox"/></td>
+                <td><input wicket:id="incident" type="checkbox"/></td>
+                <td><a wicket:id="delete" class="event-delete" href="#">Delete</a></td>
             </tr>
         </table>
     </div>

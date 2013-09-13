@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class EntityActionsMenuPanel extends ActionMenuPanel {
 
+    private List<Long> entityHistory = new ArrayList<Long>(  );
+
     public EntityActionsMenuPanel( String id, IModel<? extends Identifiable> model ) {
         super( id, model, null );
     }
@@ -57,5 +59,6 @@ public class EntityActionsMenuPanel extends ActionMenuPanel {
     private ModelEntity getEntity() {
         return (ModelEntity) getModel().getObject();
     }
+
 
 }

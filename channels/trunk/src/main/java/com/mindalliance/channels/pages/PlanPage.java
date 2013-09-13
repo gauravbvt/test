@@ -48,7 +48,7 @@ import com.mindalliance.channels.pages.components.plan.floating.AllIssuesFloatin
 import com.mindalliance.channels.pages.components.plan.floating.ChecklistsMapFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanClassificationsFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanEvaluationFloatingPanel;
-import com.mindalliance.channels.pages.components.plan.floating.PlanEventsFloatingPanel;
+import com.mindalliance.channels.pages.components.plan.floating.PlanEventsAndPhasesFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanOrganizationsPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSearchingFloatingPanel;
 import com.mindalliance.channels.pages.components.plan.floating.PlanSegmentsFloatingPanel;
@@ -145,10 +145,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      */
     private static final int PLAN_NAME_MAX_LENGTH = 60;
 
-    /**
-     * Length a segment title is abbreviated to.
-     */
-    private static final int SEGMENT_DESCRIPTION_MAX_LENGTH = 94;
     /**
      * IE7 compatibility script.
      */
@@ -263,11 +259,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
     private Component planEditPanel;
 
     /**
-     * The surveys panel.
-     */
-    //   private Component surveysPanel;
-
-    /**
      * Failure impacts panel.
      */
     private Component failureImpactsPanel;
@@ -302,10 +293,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * All surveys panel
      */
     private Component allSurveyPanel;
-    /**
-     * All requirements panel.
-     */
-    // private Component planRequirementsPanel;
+
     private Component allEventsPanel;
     private Component allOrganizationsPanel;
     private Component allSegmentsPanel;
@@ -339,8 +327,6 @@ public final class PlanPage extends AbstractChannelsWebPage {
      * Segment issues link.
      */
     private AjaxLink<String> segmentIssuesLink;
-
-    // private WebMarkupContainer planPath;
 
     private BreadcrumbsPanel breadCrumbs;
 
@@ -619,7 +605,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
 
 
     private void addFloatingPanels() {
-        addEntityPanel();
+        updateEntityPanel( null, null );
         addAssignmentsPanel();
         addChecklistPanel();
         addChecklistFlowPanel( null );
@@ -1066,7 +1052,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
             allEventsPanel.setOutputMarkupId( true );
             makeVisible( allEventsPanel, false );
         } else {
-            allEventsPanel = new PlanEventsFloatingPanel(
+            allEventsPanel = new PlanEventsAndPhasesFloatingPanel(
                     "allEvents",
                     new Model<Event>( Event.UNKNOWN ) );
         }
@@ -1381,17 +1367,26 @@ public final class PlanPage extends AbstractChannelsWebPage {
         return editables;
     }
 
-    private void addEntityPanel() {
+    private void updateEntityPanel( AjaxRequestTarget target, Change change ) {
         ModelEntity entity = findExpandedEntity();
         if ( entity == null ) {
             entityPanel = new Label( "entity", "" );
             entityPanel.setOutputMarkupId( true );
             makeVisible( entityPanel, false );
         } else {
-            entityPanel = new EntityPanel( "entity",
-                    new Model<ModelEntity>( entity ),
-                    getReadOnlyExpansions(),
-                    getAspectShown( entity ) );
+            if ( entityPanel instanceof EntityPanel ) {
+                ( (EntityPanel) entityPanel ).displayEntity(
+                        entity,
+                        getReadOnlyExpansions(),
+                        getAspectShown( entity ),
+                        target,
+                        change );
+            } else {
+                entityPanel = new EntityPanel( "entity",
+                        new Model<ModelEntity>( entity ),
+                        getReadOnlyExpansions(),
+                        getAspectShown( entity ) );
+            }
         }
         form.addOrReplace( entityPanel );
     }
@@ -2112,9 +2107,9 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 segment = getPlan().getDefaultSegment();
                 setPart( null );
             }
-        } else if ( change.isCollapsed() || change.isRemoved() )
+        } else if ( change.isCollapsed() || change.isRemoved() ) {
             collapse( change );
-        else if ( change.isExpanded() || change.isAdded() ) {
+        } else if ( change.isExpanded() || change.isAdded() ) {
             if ( change.isForInstanceOf( Flow.class ) )
                 expandFlow( change );
             else
@@ -2578,7 +2573,7 @@ public final class PlanPage extends AbstractChannelsWebPage {
         if ( entity == null ||
                 change.isDisplay()
                         && change.isForInstanceOf( ModelEntity.class ) ) {
-            addEntityPanel();
+            updateEntityPanel( target, change );
             target.add( entityPanel );
         } else if ( entityPanel instanceof EntityPanel ) {
             ( (EntityPanel) entityPanel ).refresh( target,
@@ -2747,8 +2742,8 @@ public final class PlanPage extends AbstractChannelsWebPage {
                 && change.isDisplay() ) {
             addAllEventsPanel();
             target.add( allEventsPanel );
-        } else if ( allEventsPanel instanceof PlanEventsFloatingPanel ) {
-            ( (PlanEventsFloatingPanel) allEventsPanel ).refresh( target,
+        } else if ( allEventsPanel instanceof PlanEventsAndPhasesFloatingPanel ) {
+            ( (PlanEventsAndPhasesFloatingPanel) allEventsPanel ).refresh( target,
                     change,
                     updated );
         }

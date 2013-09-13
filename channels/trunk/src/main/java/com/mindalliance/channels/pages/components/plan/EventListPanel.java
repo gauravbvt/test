@@ -4,13 +4,13 @@ import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.command.commands.UpdateObject;
 import com.mindalliance.channels.core.command.commands.UpdatePlanObject;
 import com.mindalliance.channels.core.dao.PlanManager;
-import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Event;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.pages.Channels;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
 import com.mindalliance.channels.pages.components.entities.EntityLink;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -85,7 +85,8 @@ public class EventListPanel extends AbstractCommandablePanel {
             /** {@inheritDoc} */
             protected void populateItem( ListItem<EventWrapper> item ) {
                 addEventCell( item, eventWrappers.size() );
-                addConfirmedCell( item );
+                addIncidentCell( item );
+                addDeleteCell( item );
             }
         };
     }
@@ -132,7 +133,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
             }
         } );
-        addInputHint( nameField, "Enter the name of an event (press enter)" );
+        addInputHint( nameField, "Enter the name of a new event (then press enter)" );
         nameContainer.add( nameField );
         EntityLink eventLink = new EntityLink( "event-link", new PropertyModel<Event>( wrapper, "event" ) );
         eventLink.setVisible( !wrapper.isMarkedForCreation() );
@@ -148,14 +149,15 @@ public class EventListPanel extends AbstractCommandablePanel {
         return classes;
     }
 
-    private void addConfirmedCell( ListItem<EventWrapper> item ) {
+    private void addIncidentCell( ListItem<EventWrapper> item ) {
         final EventWrapper wrapper = item.getModel().getObject();
-        final CheckBox confirmedCheckBox = new CheckBox(
-                "confirmed",
-                new PropertyModel<Boolean>( wrapper, "confirmed" ) );
-        makeVisible( confirmedCheckBox, wrapper.canBeConfirmed() );
-        item.addOrReplace( confirmedCheckBox );
-        confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+        final CheckBox incidentCheckBox = new CheckBox(
+                "incident",
+                new PropertyModel<Boolean>( wrapper, "incident" ) );
+        makeVisible( incidentCheckBox, wrapper.canBeConfirmed() );
+        incidentCheckBox.setOutputMarkupId( true );
+        item.addOrReplace( incidentCheckBox );
+        incidentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 eventsDiv.addOrReplace( makeEventsTable() );
                 target.add( eventsDiv );
@@ -166,9 +168,35 @@ public class EventListPanel extends AbstractCommandablePanel {
                 ) );
             }
         } );
-        confirmedCheckBox.setEnabled(
-                isLockedByUser( Channels.ALL_EVENTS ) && ( wrapper.isMarkedForCreation()
-                        || !( wrapper.isConfirmed() && getPlan().getIncidents().size() == 1 ) ) );
+        boolean mustBeIncident = !wrapper.isMarkedForCreation() && wrapper.isIncident() && !getQueryService().isEventCausedByATask( wrapper.getEvent() );
+        incidentCheckBox.setEnabled(
+                isLockedByUser( Channels.ALL_EVENTS )
+                        && !mustBeIncident
+                        && ( wrapper.isMarkedForCreation()
+                        || !( wrapper.isIncident() && getPlan().getIncidents().size() == 1 ) ) );
+    }
+
+    private void addDeleteCell( ListItem<EventWrapper> item ) {
+        final EventWrapper wrapper = item.getModel().getObject();
+        ConfirmedAjaxFallbackLink deleteLink = new ConfirmedAjaxFallbackLink(
+                "delete",
+                "Delete event?"
+        ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                wrapper.removeIncident();
+                eventsDiv.addOrReplace( makeEventsTable() );
+                target.add( eventsDiv );
+                update( target, new Change(
+                        Change.Type.Updated,
+                        getPlan(),
+                        "incidents"
+                ) );
+            }
+        };
+        makeVisible( deleteLink, wrapper.canBeRemoved() );
+        deleteLink.setOutputMarkupId( true );
+        item.addOrReplace( deleteLink );
     }
 
     /**
@@ -211,12 +239,12 @@ public class EventListPanel extends AbstractCommandablePanel {
         /**
          * Whether confirmed.
          */
-        private boolean confirmed;
+        private boolean incident;
 
-        protected EventWrapper( Event event, boolean confirmed ) {
+        protected EventWrapper( Event event, boolean incident ) {
             this.event = event;
             markedForCreation = false;
-            this.confirmed = confirmed;
+            this.incident = incident;
         }
 
         public Event getEvent() {
@@ -235,16 +263,18 @@ public class EventListPanel extends AbstractCommandablePanel {
             this.markedForCreation = markedForCreation;
         }
 
-        public boolean isConfirmed() {
-            return confirmed;
+        public boolean isIncident() {
+            return incident;
         }
 
-        public void setConfirmed( boolean confirmed ) {
-            this.confirmed = confirmed;
-            Plan plan = ChannelsUser.plan();
-            if ( confirmed ) {
+        public void setIncident( boolean incident ) {
+            this.incident = incident;
+            Plan plan = getPlan();
+            if ( incident ) {
                 Event confirmedEvent = doSafeFindOrCreateType( Event.class, getName() );
-                doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
+                doCommand( new UpdatePlanObject(
+                        getUser().getUsername(),
+                        plan,
                         "incidents",
                         confirmedEvent,
                         UpdateObject.Action.Add ) );
@@ -252,16 +282,35 @@ public class EventListPanel extends AbstractCommandablePanel {
             } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
                 try {
                     Event confirmedEvent = getCommunityService().find( Event.class, getEvent().getId() );
-                    doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
+                    doCommand( new UpdatePlanObject(
+                            getUser().getUsername(),
+                            plan,
                             "incidents",
                             confirmedEvent,
                             UpdateObject.Action.Remove ) );
                     getCommander().cleanup( Event.class, getName() );
                 } catch ( NotFoundException e ) {
-                    LOG.warn( "event not found with id " + getEvent().getId() );
+                    LOG.warn( "Event not found with id " + getEvent().getId() );
                 }
             }
         }
+
+        public void removeIncident() {
+            if ( canBeRemoved() ) {
+                try {
+                    Event confirmedEvent = getCommunityService().find( Event.class, getEvent().getId() );
+                    doCommand( new UpdatePlanObject(
+                            getUser().getUsername(),
+                            getPlan(),
+                            "incidents",
+                            confirmedEvent,
+                            UpdateObject.Action.Remove ) );
+                } catch ( NotFoundException e ) {
+                    LOG.warn( "Event not found with id " + getEvent().getId() );
+                }
+            }
+        }
+
 
         /**
          * Get event name.
@@ -280,7 +329,7 @@ public class EventListPanel extends AbstractCommandablePanel {
         public void setName( String value ) {
             if ( value != null && !value.trim().isEmpty() ) {
                 event.setName( value );
-                setConfirmed( true );
+                setIncident( true );
             }
         }
 
@@ -291,6 +340,10 @@ public class EventListPanel extends AbstractCommandablePanel {
          */
         public boolean canBeConfirmed() {
             return !event.getName().isEmpty();
+        }
+
+        public boolean canBeRemoved() {
+            return isIncident() && getQueryService().countReferences( event ) == 1;
         }
 
     }

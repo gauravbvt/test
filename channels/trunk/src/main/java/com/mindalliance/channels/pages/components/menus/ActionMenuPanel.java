@@ -25,8 +25,8 @@ public abstract class ActionMenuPanel extends MenuPanel {
      */
     @Override
     public List<LinkMenuItem> getMenuItems() {
+        List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>( );
         synchronized ( getCommander() ) {
-            List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>( );
             menuItems.add(  getSendMessageMenuItem( "menuItem" ) );
             if ( getPlan().isDevelopment() ) {
                 menuItems.add( getUndoMenuItem( "menuItem" ) );
@@ -34,8 +34,8 @@ public abstract class ActionMenuPanel extends MenuPanel {
             }
             // Commands
             menuItems.addAll( getCommandMenuItems( "menuItem", getCommandWrappers() ) );
-            return menuItems;
-        }
+         }
+        return menuItems;
     }
 
     /**

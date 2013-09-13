@@ -164,7 +164,7 @@ public class PlanClassificationSystemsPanel extends AbstractCommandablePanel {
                 target.add( classificationSystemField );
             }
         } );
-        addInputHint( classificationSystemField, "Name a new classification system (press enter)" );
+        addInputHint( classificationSystemField, "Enter the name a new classification system (then press enter)" );
         newSystemContainer.add( classificationSystemField );
         newSystemContainer.setVisible( canBeEdited );
     }

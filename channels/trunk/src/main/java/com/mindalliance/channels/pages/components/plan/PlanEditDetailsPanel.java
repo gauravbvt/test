@@ -62,15 +62,14 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
 
         super( id, model, expansions );
 
-        init( getPlan() );
+        init( );
     }
 
-    private void init( final Plan plan ) {
+    private void init(  ) {
         addUri();
         addName();
         addDescription();
         addIsViewableByAll();
-        addPhases();
         addLocale();
         addDefaultLanguage();
         addAttachments();
@@ -129,10 +128,6 @@ public class PlanEditDetailsPanel extends AbstractCommandablePanel implements Gu
                 update( target, new Change( Change.Type.Updated, plan ) );
             }
         }.setEnabled( isLockedByUser( plan ) ) );
-    }
-
-    private void addPhases() {
-        add( new PhaseListPanel( "phases" ) );
     }
 
     private void addLocale() {

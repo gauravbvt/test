@@ -248,12 +248,16 @@ public abstract class AbstractFloatingMultiAspectPanel extends AbstractFloatingT
      * @param aspect the name of the aspect
      */
     public void setAspectShown( AjaxRequestTarget target, String aspect ) {
+        setAspectShown( aspect );
+        update( target, new Change( Change.Type.AspectReplaced, getObject(), aspect ) );
+    }
+
+    protected void setAspectShown( String aspect ) {
         releaseAspectShown();
         aspectShown = aspect;
         if ( getActionableAspects().contains( aspectShown ) ) {
             requestLockOn( getObject() );
         }
-        update( target, new Change( Change.Type.AspectReplaced, getObject(), aspect ) );
     }
 
     @Override

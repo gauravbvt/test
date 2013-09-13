@@ -1466,6 +1466,10 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
         return infoCapabilities;
     }
 
+    public boolean isInitiatiorOfEvent( Event event ) {
+        return initiatedEvent != null && initiatedEvent.equals( event );
+    }
+
 
     /**
      * Category of tasks.

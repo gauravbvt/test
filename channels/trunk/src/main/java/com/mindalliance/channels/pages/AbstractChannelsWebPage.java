@@ -163,7 +163,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
     private CommunityServiceFactory communityServiceFactory;
 
     /**
-     * Subsituted update target.
+     * Substituted update target.
      */
     private Updatable updateTarget;
     private ModalWindow dialogWindow;
@@ -227,6 +227,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         }
         addExpansion( change.getId() );
     }
+
 
     private ModelObject findExpanded( ModelObject subject ) {
         Class clazz = subject instanceof ModelEntity

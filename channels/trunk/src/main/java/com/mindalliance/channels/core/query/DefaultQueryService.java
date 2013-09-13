@@ -3492,5 +3492,18 @@ public abstract class DefaultQueryService implements QueryService {
 
     }
 
+    @Override
+    public Boolean isEventCausedByATask( final Event event ) {
+        return CollectionUtils.exists(
+                list( Part.class ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Part)object).isInitiatiorOfEvent( event );
+                    }
+                }
+        );
+    }
+
 }
 

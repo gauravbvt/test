@@ -1630,4 +1630,10 @@ public interface QueryService {
      */
     boolean exists( Class<? extends ModelObject> clazz, Long id, Date dateOfRecord );
 
+    /**
+     * Is an event caused by some task.
+     * @param event an event
+     * @return whether caused by a task
+     */
+    Boolean isEventCausedByATask( Event event );
 }

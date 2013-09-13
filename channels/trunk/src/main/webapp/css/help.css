@@ -41,8 +41,8 @@ div#quick-help {
     right: 0;
     text-align: left;
     top: 25px;
-    width: 205px;
-    z-index: 10000;
+    width: 500px;
+    z-index: 100000;
 }
 
 a.quick-help-title {

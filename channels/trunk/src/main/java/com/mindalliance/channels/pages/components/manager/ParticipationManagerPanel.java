@@ -109,6 +109,7 @@ public class ParticipationManagerPanel extends AbstractUpdatablePanel {
         // do nothing
     }
 
+    @Override
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {
         if ( change.isUpdated() ) {
             int selection = tabbedPanel.getSelectedTab();

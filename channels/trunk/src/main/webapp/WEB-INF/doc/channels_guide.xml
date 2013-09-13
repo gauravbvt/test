@@ -1000,13 +1000,21 @@ The issue metrics are broken down by Robustness issues, Completeness issues and 
         </section>
         <section id="scoping">
             <name>Scoping the template</name>
-            <topic id="events">
-                <name>Name all events</name>
+            <topic id="eventsAndPhases">
+                <name>Name all events and phases in scope</name>
                 <item>
-                    <description><![CDATA[Name the '''events''' within the scope of the template and identify those that are ''incidents''  &ndash; <small>events that are not caused by planned tasks.</small> &ndash;]]>
-            </description>
+                    <description>The scope of the collaboration template is determined in part by the planning scenarios it addresses. A planning scenario is defined in terms of the phase (before, during or after) of an event and by the event itself. For examples, planning scenarios could be responding during an earthquake (the event), or recovering after an earthquake.
+
+The list of all events and phases within the scope of a template thus determines what planning scenarios are within the scope of the collaboration template.
+
+The ''All events and phases'' panel allows you to see all events and phases referenced the template and to directly add new ones, as well as delete any not yet referenced.
+
+The ''Events'' tab gives access to the list of all events in scope. A new event event can be added by naming it. Since the event is not referenced anywhere else (yet) in the template, it is considered an ''incident'', that is, an external event not caused by a planned task. Its ''incident'' status can only be changed once there is a task that causes it. Events referenced in the plan, other than in this panel,can not be removed from the list.
+
+The ''Phases'' tab gives access to the list of all event phases in scope. A new phase can be added by naming it. A phase not yet referenced anywhere else in the template can be deleted.
+                    </description>
                     <script>
-                        <action>Open all events</action>
+                        <action>Open all events and phases</action>
                         <change>
                             <subjectId>-3</subjectId>
                             <type>Expanded</type>
@@ -1414,7 +1422,7 @@ Note that all profile attributes are optional.]]>
                 <next section="concepts" topic="event"/>
                 <next section="profiling" topic="profiling-phase"/>
                 <next section="profiling" topic="profiling-place"/>
-                <next section="scoping" topic="events"/>
+                <next section="scoping" topic="eventsAndPhases"/>
             </topic>
             <topic id="profiling-phase">
                 <name>Profile a event phase</name>
@@ -1458,7 +1466,7 @@ Note that all profile attributes are optional.]]>
                 </item>
                 <next section="concepts" topic="phase"/>
                 <next section="profiling" topic="profiling-phase"/>
-                <next section="scoping" topic="events"/>
+                <next section="scoping" topic="eventsAndPhases"/>
             </topic>
             <topic id="profiling-organization">
                 <name>Profile an organization</name>

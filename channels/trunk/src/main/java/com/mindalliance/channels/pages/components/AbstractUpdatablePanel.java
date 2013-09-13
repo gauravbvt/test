@@ -261,6 +261,14 @@ public class AbstractUpdatablePanel extends Panel implements Updatable {
         return once;
     }
 
+    protected void setModel( IModel<? extends ModelObject> aModel ) {
+        model = aModel;
+    }
+
+    protected void setExpansions( Set<Long> exp ) {
+        expansions = exp;
+    }
+
 
     /**
      * Set and update a component's visibility.

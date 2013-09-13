@@ -135,7 +135,7 @@ public class TypesPanel extends AbstractCommandablePanel {
                 update( target, new Change( Change.Type.Updated, getEntity(), "types" ) );
             }
         } );
-        addInputHint( nameField, "The name of a type of " + getEntity().getTypeName() + " (press enter)");
+        addInputHint( nameField, "Enter the name of a type of " + getEntity().getTypeName() + " (then press enter)");
         nameContainer.add( nameField );
         // Link to entity type
         EntityLink entityLink = new EntityLink( "typeLink", new PropertyModel<Event>( wrapper, "type" ) );

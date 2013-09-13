@@ -29,7 +29,10 @@ import java.util.Set;
  */
 public class PlanActionsMenuPanel extends ActionMenuPanel {
 
-    public PlanActionsMenuPanel( String s, IModel<? extends Segment> model, Set<Long> expansions ) {
+
+    public PlanActionsMenuPanel( String s,
+                                 IModel<? extends Segment> model,
+                                 Set<Long> expansions ) {
         super( s, model, expansions );
     }
 
@@ -73,4 +76,5 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
     private Segment getSegment() {
         return (Segment) getModel().getObject();
     }
-}
+
+ }

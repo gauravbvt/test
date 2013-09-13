@@ -190,7 +190,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             }
         } );
         makeVisible( newClassificationField, canBeEdited );
-        addInputHint( newClassificationField,"Name of a new classification level (press enter)" );
+        addInputHint( newClassificationField,"Enter the name of a new classification level (then press enter)" );
         newClassificationContainer.add( newClassificationField );
     }
 

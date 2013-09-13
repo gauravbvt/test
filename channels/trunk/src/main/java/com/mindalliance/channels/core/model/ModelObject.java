@@ -26,7 +26,7 @@ public abstract class ModelObject
 
     public static final List<String> CLASS_LABELS;
 
-    public static enum Context {  // order is important: MODEL < COMMUNITY < USER
+     public static enum Context {  // order is important: MODEL < COMMUNITY < USER
         MODEL,
         COMMUNITY,
         USER

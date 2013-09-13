@@ -99,6 +99,14 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
     public abstract List<LinkMenuItem> getMenuItems() throws CommandException;
 
     /**
+     * Add extra menu items.
+     * @param extraMenuItems a list of link menu items
+     */
+    public void addMenuItems( List<LinkMenuItem> extraMenuItems ) {
+        menuItems.addAll( extraMenuItems );
+    }
+
+    /**
      * Whether the menu is empty.
      *
      * @return a boolean
