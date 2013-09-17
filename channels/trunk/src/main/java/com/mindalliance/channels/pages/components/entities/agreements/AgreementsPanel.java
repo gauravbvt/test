@@ -273,7 +273,7 @@ public class AgreementsPanel extends AbstractCommandablePanel {
                 doCommand( new UpdatePlanObject( getUser().getUsername(), organization,
                         "agreements",
                         agreement,
-                        UpdateObject.Action.Add ) );
+                        UpdateObject.Action.AddUnique ) );
             } else {
                 doCommand( new UpdatePlanObject( getUser().getUsername(), organization,
                         "agreements",

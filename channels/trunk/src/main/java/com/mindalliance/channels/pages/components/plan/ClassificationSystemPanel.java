@@ -217,7 +217,7 @@ public class ClassificationSystemPanel extends AbstractCommandablePanel {
             doCommand( new UpdatePlanObject( getUser().getUsername(), getPlan(),
                     "classifications",
                     classification,
-                    UpdateObject.Action.Add ) );
+                    UpdateObject.Action.AddUnique ) );
         }
         return classification;
     }

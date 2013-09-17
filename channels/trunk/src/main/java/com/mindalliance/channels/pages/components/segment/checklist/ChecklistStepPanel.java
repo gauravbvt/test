@@ -476,7 +476,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                 part,
                 "checklist.stepOrders",
                 stepOrder,
-                UpdateObject.Action.Add );
+                UpdateObject.Action.AddUnique );
         command.makeUndoable( false );
         doCommand( command ); // add step order
 
@@ -585,7 +585,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
                 part,
                 "checklist.stepOutcomes",
                 stepOutcome,
-                UpdateObject.Action.Add
+                UpdateObject.Action.AddUnique
         );
         command.makeUndoable( false );
         doCommand( command );

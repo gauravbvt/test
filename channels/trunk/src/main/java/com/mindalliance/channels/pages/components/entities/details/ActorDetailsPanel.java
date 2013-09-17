@@ -182,7 +182,7 @@ public class ActorDetailsPanel extends EntityDetailsPanel implements Guidable {
             doCommand( new UpdatePlanObject( getUser().getUsername(), getActor(),
                     "languages",
                     name.toLowerCase(),
-                    UpdateObject.Action.Add ) );
+                    UpdateObject.Action.AddUnique ) );
         }
     }
 

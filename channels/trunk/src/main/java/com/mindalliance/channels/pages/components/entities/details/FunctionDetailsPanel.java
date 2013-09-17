@@ -239,7 +239,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                     getFunction(),
                     "objectives",
                     objective,
-                    UpdateObject.Action.Add
+                    UpdateObject.Action.AddUnique
             );
             this.doCommand( command );
         }
@@ -510,7 +510,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                         getFunction(),
                         property,
                         newInfo,
-                        UpdateObject.Action.Add
+                        UpdateObject.Action.AddUnique
                 );
                 doCommand( command );
             }
@@ -734,7 +734,7 @@ public class FunctionDetailsPanel extends EntityDetailsPanel implements Guidable
                             getFunction(),
                             property + "[" + index + "].eois",
                             newEoi,
-                            UpdateObject.Action.Add
+                            UpdateObject.Action.AddUnique
                     );
                     doCommand( command );
                 }

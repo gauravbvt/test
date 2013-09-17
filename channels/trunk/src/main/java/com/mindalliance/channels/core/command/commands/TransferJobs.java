@@ -85,7 +85,7 @@ public class TransferJobs extends AbstractCommand {
             subCommands.addCommand( new UpdatePlanObject( getUserName(), toOrg,
                                                           "jobs",
                                                           copying ? new Job( job ) : job,
-                                                          UpdateObject.Action.Add ) );
+                                                          UpdateObject.Action.AddUnique ) );
         }
         return subCommands;
     }

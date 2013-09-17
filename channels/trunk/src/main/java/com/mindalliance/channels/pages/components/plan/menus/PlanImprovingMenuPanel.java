@@ -32,7 +32,7 @@ public class PlanImprovingMenuPanel extends MenuPanel {
     public List<LinkMenuItem> getMenuItems() throws CommandException {
         List<LinkMenuItem> menuItems = new ArrayList<LinkMenuItem>();
         menuItems.add( collapsible( Channels.ALL_CHECKLISTS, "Hide all checklists", "All checklists" ) );
-        menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Task mover" ) );
+        if ( isPlanner() ) menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Task mover" ) );
         menuItems.add( collapsible( Channels.CHECKLISTS_MAP, "Hide checklists map", "Checklists map" ) );
         menuItems.add( collapsible( Channels.PLAN_EVALUATION, "Hide model evaluation", "Template evaluation" ) );
         menuItems.add( collapsible( Channels.ALL_ISSUES, "Hide all issues", "All issues" ) );

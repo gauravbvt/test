@@ -39,7 +39,8 @@ public class SegmentActionsMenuPanel extends ActionMenuPanel {
     public List<LinkMenuItem> getMenuItems() {
         List<LinkMenuItem> menuItems = super.getMenuItems();
         // Task mover
-        menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Move tasks..." ) );
+        if ( isPlanner() )
+            menuItems.add( collapsible( Channels.TASK_MOVER, "Hide task mover", "Move tasks..." ) );
         // Locked
         Segment segment = getSegment();
         if ( !isLockedByUser( segment ) && getLockOwner( segment ) != null ) {

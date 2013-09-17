@@ -41,7 +41,6 @@ public class Checklist implements Serializable, Mappable {
     private List<StepOutcome> stepOutcomes = new ArrayList<StepOutcome>();
     private String confirmationSignature;
     private boolean confirmationPending;
-    private TaskFailedCondition taskFailedCondition = new TaskFailedCondition();
 
     public Checklist() {
     }
@@ -78,7 +77,7 @@ public class Checklist implements Serializable, Mappable {
         conditions.addAll( listEventTimingConditions() );
         conditions.addAll( listGoalConditions() );
         conditions.addAll( listNeedSatisfiedConditions() );
-        conditions.add( taskFailedCondition );
+        conditions.add( new TaskFailedCondition() );
         for ( Condition condition : conditions ) {
             condition.setId( conditions.indexOf( condition ) );
         }
@@ -144,7 +143,14 @@ public class Checklist implements Serializable, Mappable {
 
     @SuppressWarnings("unchecked")
     public List<StepGuard> listEffectiveStepGuards( final List<Step> steps, final List<Condition> conditions ) {
-        List<StepGuard> allStepGuards = (List<StepGuard>) CollectionUtils.select(
+        List<StepGuard> allStepGuards = listEffectiveAndExplicitStepGuards( steps, conditions );
+        allStepGuards.addAll( listAllImpliedStepGuards() );
+        return allStepGuards;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<StepGuard> listEffectiveAndExplicitStepGuards( final List<Step> steps, final List<Condition> conditions ) {
+        return (List<StepGuard>) CollectionUtils.select(
                 getImmutableStepGuards(),
                 new Predicate() {
                     @Override
@@ -153,9 +159,8 @@ public class Checklist implements Serializable, Mappable {
                     }
                 }
         );
-        allStepGuards.addAll( listAllImpliedStepGuards() );
-        return allStepGuards;
     }
+
 
     private List<StepGuard> listAllImpliedStepGuards() {
         List<StepGuard> impliedStepGuards = new ArrayList<StepGuard>();
@@ -163,7 +168,7 @@ public class Checklist implements Serializable, Mappable {
             if ( step.isCommunicationStep() ) {
                 CommunicationStep communicationStep = (CommunicationStep) step;
                 if ( communicationStep.getSharing().isIfTaskFails() ) {
-                    StepGuard stepGuard = new StepGuard( taskFailedCondition, step, true ); // if task fails
+                    StepGuard stepGuard = new StepGuard( new TaskFailedCondition(), step, true ); // if task fails
                     impliedStepGuards.add( stepGuard );
                 }
             }
@@ -172,7 +177,7 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public boolean isImpliedStepGuard( StepGuard stepguard ) {
-        return !getImmutableStepGuards().contains( stepguard );
+        return TaskFailedCondition.isTaskFailureCondition( stepguard.getConditionRef() ); // only kind of implied condition
     }
 
     public List<StepOutcome> listAllEffectiveStepOutcomes() {
@@ -223,8 +228,10 @@ public class Checklist implements Serializable, Mappable {
     }
 
     public void addStepGuard( StepGuard stepGuarding ) {
-        confirmationSignature = null;
-        stepGuards.add( stepGuarding );
+        if ( !stepGuards.contains( stepGuarding)  && !isImpliedStepGuard( stepGuarding ) ) {
+            confirmationSignature = null;
+            stepGuards.add( stepGuarding );
+        }
     }
 
     public List<StepOutcome> getStepOutcomes() {
@@ -474,7 +481,8 @@ public class Checklist implements Serializable, Mappable {
     }
 
     private Condition findTaskFailedCondition( final String conditionRef ) {
-        return taskFailedCondition;
+        return TaskFailedCondition.REF_PREFIX.equals( conditionRef ) ? new TaskFailedCondition() : null;
+
     }
 
     @SuppressWarnings( "unchecked" )

@@ -163,7 +163,7 @@ public class RestrictionsPanel extends AbstractCommandablePanel {
                             getFlow(),
                             "restrictions",
                             restriction,
-                            UpdateObject.Action.Add ) );
+                            UpdateObject.Action.AddUnique ) );
     }
 
     private Flow getFlow() {

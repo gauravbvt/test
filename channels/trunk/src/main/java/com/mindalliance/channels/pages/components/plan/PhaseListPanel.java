@@ -199,7 +199,7 @@ public class PhaseListPanel extends AbstractCommandablePanel {
                     doCommand( new UpdatePlanObject( getUser().getUsername(), plan,
                             "phases",
                             phase,
-                            UpdateObject.Action.Add ) );
+                            UpdateObject.Action.AddUnique ) );
                 }
             }
         }

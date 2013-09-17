@@ -542,7 +542,7 @@ public class Organization extends AbstractUnicastChannelable
 
     @Override
     public boolean hasAddresses() {
-        return !isPlaceHolder();
+        return !isType() && !isPlaceHolder();
     }
 
     /**

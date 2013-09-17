@@ -217,7 +217,7 @@ public class DelegatedToMediaPanel extends AbstractCommandablePanel {
                 doCommand( new UpdatePlanObject( getUser().getUsername(), getModeledMedium(),
                         "delegatedToMedia",
                         val,
-                        UpdateObject.Action.Add ) );
+                        UpdateObject.Action.AddUnique ) );
             }
             medium = val;
         }

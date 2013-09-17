@@ -264,7 +264,7 @@ public class TransformationPanel extends AbstractCommandablePanel {
                         UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
                                 "eois[" + getEoiIndex() + "].transformation.subjects",
                                 subject,
-                                UpdateObject.Action.Add )
+                                UpdateObject.Action.AddUnique )
                 );
         }
 

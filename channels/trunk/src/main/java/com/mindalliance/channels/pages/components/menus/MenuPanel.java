@@ -234,7 +234,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
             try {
                 final Command command = commandWrapper.getCommand();
                 String label = command.getLabel( commander );
-                final boolean enabled = commander.canDo( command );
+                final boolean enabled = getUser().isPlannerOrAdmin( getPlan().getUri() ) && commander.canDo( command );
                 LinkMenuItem linkMenuItem = new LinkMenuItem(
                         id,
                         new Model<String>( label ),

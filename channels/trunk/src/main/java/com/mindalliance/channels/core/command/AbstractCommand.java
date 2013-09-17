@@ -130,6 +130,20 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
+     * Add a unique value to a list at a given object's property.
+     *
+     * @param obj target object
+     * @param property list property name
+     * @param value value to add
+     */
+    @SuppressWarnings( "unchecked" )
+    protected void addUniqueToProperty( Object obj, String property, Object value ) {
+        List list = (List) getProperty( obj, property );
+        if ( !list.contains( value) )
+            list.add( value );
+    }
+
+    /**
      * Add a value to a list at a given object's property.
      *
      * @param obj target object
@@ -141,6 +155,7 @@ public abstract class AbstractCommand implements Command {
         List list = (List) getProperty( obj, property );
         list.add( value );
     }
+
 
     @Override
     public boolean canDo( Commander commander ) {

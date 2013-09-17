@@ -277,7 +277,7 @@ public class EventListPanel extends AbstractCommandablePanel {
                         plan,
                         "incidents",
                         confirmedEvent,
-                        UpdateObject.Action.Add ) );
+                        UpdateObject.Action.AddUnique ) );
 
             } else if ( !markedForCreation && getPlan().getIncidents().size() > 1 ) {
                 try {

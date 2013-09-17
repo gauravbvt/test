@@ -46,22 +46,22 @@ public class PlanActionsMenuPanel extends ActionMenuPanel {
         final Segment segment = getSegment();
 
         String userName = getUser().getUsername();
-        List<CommandWrapper> menuItems = new ArrayList<CommandWrapper>();
-        menuItems.addAll( Arrays.asList(
+        List<CommandWrapper> commandWrappers = new ArrayList<CommandWrapper>();
+        commandWrappers.addAll( Arrays.asList(
                 newWrapper( new PastePart( getUser().getUsername(), segment ) ),
                 newWrapper( new PasteAttachment( userName, segment ) ),
                 newWrapper( new AddPart( userName, segment ) ),
                 newWrapper( new AddUserIssue( userName, segment ) ),
                 newWrapper( new AddSegment( userName ) ) ) );
         if ( getLockManager().isLockableByUser( getUser().getUsername(), segment ) ) {
-            menuItems.add( new CommandWrapper( new DisconnectAndRemoveSegment( getUser().getUsername(), segment ), CONFIRM ) {
+            commandWrappers.add( new CommandWrapper( new DisconnectAndRemoveSegment( getUser().getUsername(), segment ), CONFIRM ) {
                 @Override
                 public void onExecuted( AjaxRequestTarget target, Change change ) {
                     update( target, change );
                 }
             } );
         }
-        return menuItems;
+        return commandWrappers;
     }
 
     private CommandWrapper newWrapper( final Command command ) {

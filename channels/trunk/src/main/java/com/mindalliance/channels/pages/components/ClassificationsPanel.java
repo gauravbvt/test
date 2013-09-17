@@ -266,7 +266,7 @@ public class ClassificationsPanel extends AbstractCommandablePanel {
                 doCommand( UpdateObject.makeCommand( getUser().getUsername(), getClassified(),
                         getClassifiableProperty(),
                         classification,
-                        UpdateObject.Action.Add ) );
+                        UpdateObject.Action.AddUnique ) );
         }
 
         public void setSystem( String val ) {

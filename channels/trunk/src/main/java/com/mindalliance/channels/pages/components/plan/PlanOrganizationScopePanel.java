@@ -283,7 +283,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel impleme
                         new UpdatePlanObject( getUser().getUsername(), getPlan(),
                                 "organizations",
                                 selectedOrganization,
-                                UpdateObject.Action.Add ) );
+                                UpdateObject.Action.AddUnique ) );
             }
         }
     }
@@ -298,7 +298,7 @@ public class PlanOrganizationScopePanel extends AbstractCommandablePanel impleme
                     new UpdatePlanObject( getUser().getUsername(), getPlan(),
                             "organizations",
                             organization,
-                            UpdateObject.Action.Add ) );
+                            UpdateObject.Action.AddUnique ) );
         }
     }
 

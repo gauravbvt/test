@@ -259,7 +259,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     }
 
     public Delay getCompletionTime() {
-        return completionTime;
+        return isOngoing() ? new Delay() : completionTime;
     }
 
     public void setCompletionTime( Delay completionTime ) {
@@ -267,7 +267,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     }
 
     public Delay getRepeatsEvery() {
-        return repeatsEvery;
+        return isOngoing() ? new Delay() : repeatsEvery;
     }
 
     public void setRepeatsEvery( Delay repeatsEvery ) {
@@ -339,7 +339,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @return a boolean
      */
     public boolean isRepeating() {
-        return repeating;
+        return repeating && !isOngoing();
     }
 
     /**
@@ -361,7 +361,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
      * @return a boolean
      */
     public boolean isSelfTerminating() {
-        return selfTerminating;
+        return !isOngoing() && selfTerminating;
     }
 
     /**
@@ -378,7 +378,7 @@ public class Part extends Node implements GeoLocatable, Specable, Prohibitable {
     }
 
     public boolean isStartsWithSegment() {
-        return startsWithSegment;
+        return !isOngoing() && startsWithSegment;
     }
 
     public void setStartsWithSegment( boolean startsWithSegment ) {

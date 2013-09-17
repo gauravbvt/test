@@ -74,7 +74,7 @@ public class ImplementFunction extends AbstractCommand {
                                 part,
                                 "goals",
                                 goal,
-                                UpdateObject.Action.Add
+                                UpdateObject.Action.AddUnique
                         ) );
                     }
                 }

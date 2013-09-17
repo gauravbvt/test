@@ -274,7 +274,7 @@ public class TypesPanel extends AbstractCommandablePanel {
                     doCommand( new UpdatePlanObject( getUser().getUsername(), getEntity(),
                             "types",
                             type,
-                            UpdateObject.Action.Add ) );
+                            UpdateObject.Action.AddUnique ) );
                 }
             }
         }

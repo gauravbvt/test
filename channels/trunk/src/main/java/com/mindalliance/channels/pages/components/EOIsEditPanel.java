@@ -847,7 +847,7 @@ public class EOIsEditPanel extends AbstractCommandablePanel {
                         doCommand( UpdateObject.makeCommand( getUser().getUsername(), getEOIHolder(),
                                 "localEois",
                                 eoi,
-                                UpdateObject.Action.Add ) );
+                                UpdateObject.Action.AddUnique ) );
                     }
                 }
             }

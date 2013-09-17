@@ -294,7 +294,7 @@ public class EventTimingsPanel extends AbstractCommandablePanel {
                 doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
                         "context",
                         newEventTiming,
-                        UpdateObject.Action.Add ) );
+                        UpdateObject.Action.AddUnique ) );
             }
         }
     }

@@ -343,7 +343,7 @@ div.pathway ul li ul {
     padding: 0;
     position: absolute;
     text-align: left;
-    z-index: 10000;
+    z-index: 1000000;
 }
 
 div.pathway ul li:hover ul {

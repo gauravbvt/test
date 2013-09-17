@@ -91,31 +91,36 @@
             </th>
             <td><input type="text" size="40" id="initiatedEvent" wicket:id="initiatedEvent" value=""></td>
         </tr>
-        <tr wicket:id="timingContainer">
+        <tr wicket:id="terminatesEventPhaseContainer">
+            <th>&nbsp;</th>
+            <td>
+               <span class="timing">
+                    <input type="checkbox" wicket:id="terminatesEventPhase"/>Can
+                    <span wicket:id="phase-ending">end phase
+                        <a wicket:id="end-phase-link" href="#">phase</a>
+                    </span>
+                    <span wicket:id="event-ending">
+                        <span wicket:id="end-event-effect">of event</span>
+                        <a wicket:id="end-event-link" href="#">event</a>
+                    </span>
+                </span>
+            </td>
+        </tr>
+         <tr wicket:id="timingContainer">
             <th class="area" align="right"><label>Timing:</label></th>
             <td>
              <span class="timing">
+                <input type="checkbox" wicket:id="ongoing"/>Is ongoing
+             </span>
+            <span class="timing">
                 <input type="checkbox" wicket:id="startsWithSegment"/>Triggered by witnessing the
                 <span wicket:id="event-timing" href="#">beginning</span>
                 of event
                 <a wicket:id="event-link" href="#">event</a>
              </span>
             <span class="timing">
-                <input type="checkbox" wicket:id="ongoing"/>Is ongoing
-             </span>
-            <span class="timing">
-                <input type="checkbox" wicket:id="terminatesEventPhase"/>Can
-                <span wicket:id="phase-ending">end phase
-                    <a wicket:id="end-phase-link" href="#">phase</a>
-                </span>
-                <span wicket:id="event-ending">
-                    <span wicket:id="end-event-effect">of event</span>
-                    <a wicket:id="end-event-link" href="#">event</a>
-                </span>
-            </span>
-           <span class="timing">
                 <input type="checkbox" wicket:id="self-terminating"/>Usually completes after <span
-                   wicket:id="completion-time">[Delay panel]</span>
+                    wicket:id="completion-time">[Delay panel]</span>
             </span>
             <span class="timing">
                 <input type="checkbox" wicket:id="repeating"/>Repeats every <span

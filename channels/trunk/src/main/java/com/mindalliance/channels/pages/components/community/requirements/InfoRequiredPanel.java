@@ -177,7 +177,7 @@ public class InfoRequiredPanel extends AbstractCommandablePanel {
                     getRequirement(),
                     "eois",
                     name.trim(),
-                    UpdateObject.Action.Add ) );
+                    UpdateObject.Action.AddUnique ) );
         }
     }
 

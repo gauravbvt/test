@@ -186,7 +186,7 @@ public class SegmentPanel extends AbstractFlowMapContainingPanel {
     private void addPartActionsMenu() {
         if ( isCollapsed( getPart() ) ) {
             partActionsMenu = new Label( "partActionsMenu", new Model<String>( "" ) );
-        } else if ( isLockedByUser( getPart() ) ) {
+        } else if ( isLockedByUser( getPart() ) || getUser().isParticipant( getPlan().getUri() ) ) {
             partActionsMenu = new PartActionsMenuPanel( "partActionsMenu", partModel, getExpansions() );
         } else if ( getCommander().isTimedOut( getUser().getUsername() ) || getLockOwner( getPart() ) == null ) {
             partActionsMenu = timeOutLabel( "partActionsMenu" );

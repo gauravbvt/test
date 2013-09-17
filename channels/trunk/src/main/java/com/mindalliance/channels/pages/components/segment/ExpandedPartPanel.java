@@ -247,6 +247,10 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
      * Timing field container.
      */
     private WebMarkupContainer timingContainer;
+    /**
+     * Terminates sgement container.
+     */
+    private WebMarkupContainer terminatesEventPhaseContainer;
 
     /**
      * Location link.
@@ -278,6 +282,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addEntityFields();
         addEventInitiation();
         addExecution();
+        addTerminatesSegmentFields();
         addTimingFields();
         addGoalsLink();
         addGoals();
@@ -317,7 +322,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         AjaxLink tagsLink = new AjaxLink( "tagsLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
-                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS) );
+                update( target, new Change( Change.Type.AspectViewed, Channels.PLAN_SEARCHING, PlanSearchingFloatingPanel.TAGS ) );
             }
         };
         tagsLink.add( new AttributeModifier( "class", new Model<String>( "model-object-link" ) ) );
@@ -482,9 +487,9 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
             entityReferencePanel.enable( lockedByUser );
         repeatsEveryPanel.enable( part.isRepeating() && lockedByUser );
         completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
-        selfTerminatingCheckBox.setEnabled( lockedByUser );
-        repeatingCheckBox.setEnabled( lockedByUser );
-        startWithSegmentCheckBox.setEnabled( lockedByUser );
+        selfTerminatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
+        repeatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
+        startWithSegmentCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
         ongoingCheckBox.setEnabled( lockedByUser );
         asTeamCheckBox.setEnabled( lockedByUser );
         terminatesSegmentCheckBox.setEnabled( lockedByUser );
@@ -552,7 +557,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         addOrReplace( field );
     }
 
-    private ModelObjectLink addLocationLink(  ) {
+    private ModelObjectLink addLocationLink() {
         Part part = getPart();
         locationLink = new ModelObjectLink( "location-link",
                 new PropertyModel<ModelEntity>( part, "knownLocation" ),
@@ -641,7 +646,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         timingContainer = new WebMarkupContainer( "timingContainer" );
         timingContainer.setOutputMarkupId( true );
         makeVisible( timingContainer, !isShowSimpleForm() );
-        add( timingContainer );
+        addOrReplace( timingContainer );
         repeatsEveryPanel =
                 new DelayPanel( "repeats-every", new PropertyModel<ModelObject>( this, "part" ), "repeatsEvery" );
         repeatsEveryPanel.setOutputMarkupId( true );
@@ -683,20 +688,39 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
         timingContainer.add( new ModelObjectLink( "event-link",
                 new PropertyModel<Event>( this, "part.segment.event" ),
                 new PropertyModel<String>( this, "part.segment.event.name" ) ) );
-        timingContainer.add( new Label( "event-timing", new PropertyModel<String>( this, "eventTiming"  ) ) );
+        timingContainer.add( new Label( "event-timing", new PropertyModel<String>( this, "eventTiming" ) ) );
         ongoingCheckBox =
                 new CheckBox( "ongoing", new PropertyModel<Boolean>( this, "ongoing" ) );
         timingContainer.add( ongoingCheckBox );
         ongoingCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
+                Part part = getPart();
+                boolean lockedByUser = isLockedByUser( part );
+                startWithSegmentCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
+                repeatsEveryPanel.enable( part.isRepeating() && lockedByUser );
+                completionTimePanel.enable( part.isSelfTerminating() && lockedByUser );
+                selfTerminatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
+                repeatingCheckBox.setEnabled( lockedByUser && !part.isOngoing() );
+                target.add(
+                        startWithSegmentCheckBox,
+                        repeatingCheckBox,
+                        repeatsEveryPanel,
+                        selfTerminatingCheckBox,
+                        completionTimePanel );
                 update( target, new Change( Change.Type.Updated, getPart(), "ongoing" ) );
             }
         } );
 
+    }
+
+    private void addTerminatesSegmentFields() {
+        terminatesEventPhaseContainer = new WebMarkupContainer( "terminatesEventPhaseContainer" );
+        terminatesEventPhaseContainer.setOutputMarkupId( true );
+        addOrReplace( terminatesEventPhaseContainer );
         terminatesSegmentCheckBox =
                 new CheckBox( "terminatesEventPhase", new PropertyModel<Boolean>( this, "terminatesEventPhase" ) );
-        timingContainer.add( terminatesSegmentCheckBox );
+        terminatesEventPhaseContainer.add( terminatesSegmentCheckBox );
         terminatesSegmentCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
@@ -708,13 +732,13 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 new PropertyModel<Event>( this, "part.segment.phase" ),
                 new PropertyModel<String>( this, "part.segment.phase.name" ) ) );
         phaseEnding.setVisible( getPart().getSegment().getPhase().isPostEvent() );
-        timingContainer.add( phaseEnding );
+        terminatesEventPhaseContainer.add( phaseEnding );
         WebMarkupContainer eventEnding = new WebMarkupContainer( "event-ending" );
         eventEnding.add( new Label( "end-event-effect", getEventEndingEffect() ) );
         eventEnding.add( new ModelObjectLink( "end-event-link",
                 new PropertyModel<Event>( this, "part.segment.event" ),
                 new PropertyModel<String>( this, "part.segment.event.name" ) ) );
-        timingContainer.add( eventEnding );
+        terminatesEventPhaseContainer.add( eventEnding );
     }
 
     private Phase getPhase() {
@@ -726,7 +750,7 @@ public class ExpandedPartPanel extends AbstractCommandablePanel {
                 ? "possibility"
                 : getPhase().isConcurrent()
                 ? "start"
-                :"end";
+                : "end";
     }
 
     private String getEventEndingEffect() {

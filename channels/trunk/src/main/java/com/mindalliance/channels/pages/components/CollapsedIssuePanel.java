@@ -194,7 +194,7 @@ public class CollapsedIssuePanel extends AbstractCommandablePanel {
         Command command = UpdateObject.makeCommand( getUser().getUsername(), getIssue().getAbout(),
                 "waivedIssueDetections",
                 getIssue().getKind(),
-                waive ? UpdateObject.Action.Add : UpdateObject.Action.Remove );
+                waive ? UpdateObject.Action.AddUnique : UpdateObject.Action.Remove );
         doCommand( command );
     }
 }

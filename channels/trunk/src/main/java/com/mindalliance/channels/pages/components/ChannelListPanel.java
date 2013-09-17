@@ -238,7 +238,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
             this.included = included;
             if ( !markedForCreation ) {
                 if ( included ) {
-                    doAction( getChannelable(), UpdateObject.Action.Add );
+                    doAction( getChannelable(), UpdateObject.Action.AddUnique );
                 } else {
                     TransmissionMedium medium = getMedium();
                     doAction( getChannelable(), UpdateObject.Action.Remove );
@@ -251,7 +251,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
 
         private void doAction( Channelable channelable, UpdateObject.Action action ) {
             // Don't add a redundant channel
-            if ( action != UpdateObject.Action.Add
+            if ( action != UpdateObject.Action.AddUnique
                     || !channelable.getEffectiveChannels().contains( channel ) ) {
                 if ( channelable.isModelObject() ) {
                     if ( channelable.isModifiableInProduction() ) {
@@ -268,7 +268,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                                         action ) );
                     }
                 } else {
-                    if ( action == UpdateObject.Action.Add )
+                    if ( action == UpdateObject.Action.AddUnique )
                         channelable.addChannel( channel );
                     else if ( action == UpdateObject.Action.Remove )
                         channelable.removeChannel( channel );
@@ -292,7 +292,7 @@ public class ChannelListPanel extends AbstractCommandablePanel {
                     medium = value;
                 }
                 channel.setMedium( medium );
-                doAction( channelable, UpdateObject.Action.Add );
+                doAction( channelable, UpdateObject.Action.AddUnique );
             }
         }
 

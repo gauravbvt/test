@@ -544,7 +544,7 @@ public class GoalListPanel extends AbstractCommandablePanel implements Guidable 
                     doCommand( new UpdatePlanObject( getUser().getUsername(), getSegment(),
                             "goals",
                             goal,
-                            UpdateObject.Action.Add ) );
+                            UpdateObject.Action.AddUnique ) );
                 }
             }
         }

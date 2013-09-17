@@ -654,6 +654,8 @@ public abstract class ExpandedFlowPanel extends AbstractFlowPanel {
                 target.add( infoLinkOrLabel );
                 addStandardizedField();
                 target.add( standardizedCheckbox );
+                addOtherChoice();
+                target.add( otherChoice );
                 update( target, new Change( Change.Type.Updated, getFlow(), "name" ) );
             }
         } );

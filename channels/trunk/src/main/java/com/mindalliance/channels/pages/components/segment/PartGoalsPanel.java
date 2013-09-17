@@ -151,7 +151,7 @@ public class PartGoalsPanel extends AbstractCommandablePanel {
                     doCommand( new UpdateSegmentObject( getUser().getUsername(), getPart(),
                             "goals",
                             goal,
-                            UpdateObject.Action.Add ) );
+                            UpdateObject.Action.AddUnique ) );
                 }
             } else {
                 if ( getPart().getGoals().contains( goal ) ) {

@@ -118,7 +118,7 @@ public class StepGuardPanel extends AbstractCommandablePanel {
                     part,
                     "checklist.stepGuards",
                     stepGuard,
-                    UpdateObject.Action.Add
+                    UpdateObject.Action.AddUnique
             );
             command.makeUndoable( false );
             doCommand( command );
@@ -163,7 +163,7 @@ public class StepGuardPanel extends AbstractCommandablePanel {
                         part,
                         "checklist.localConditions",
                         localCondition,
-                        UpdateObject.Action.Add
+                        UpdateObject.Action.AddUnique
                 );
                 addLocalCondition.makeUndoable( false );
                 doCommand( addLocalCondition );
@@ -174,7 +174,7 @@ public class StepGuardPanel extends AbstractCommandablePanel {
                         part,
                         "checklist.stepGuards",
                         stepGuard,
-                        UpdateObject.Action.Add
+                        UpdateObject.Action.AddUnique
                 );
                 addStepGuard.makeUndoable( false );
                 doCommand( addStepGuard );

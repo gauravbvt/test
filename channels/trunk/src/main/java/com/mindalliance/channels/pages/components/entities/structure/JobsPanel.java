@@ -599,7 +599,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 doCommand( new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "jobs",
                         job,
-                        UpdateObject.Action.Add ) );
+                        UpdateObject.Action.AddUnique ) );
                 selectedJob = job;
             } else if ( !markedForCreation ) {
                 unconfirmedJob = job;

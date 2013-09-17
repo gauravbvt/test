@@ -32,7 +32,11 @@ public abstract class UpdateObject extends AbstractCommand {
          */
         Set,
         /**
-         * Add value to list.
+         * Add unique value to list.
+         */
+        AddUnique,
+        /**
+         * Add value to list - allow repetition.
          */
         Add,
         /**
@@ -83,9 +87,9 @@ public abstract class UpdateObject extends AbstractCommand {
      * Create undo command instance.
      *
      * @param identifiable an identifiable
-     * @param property the name of a property
-     * @param value an object
-     * @param action either Set, Add or Remove
+     * @param property     the name of a property
+     * @param value        an object
+     * @param action       either Set, Add or Remove
      * @return a command
      */
     protected abstract UpdateObject createUndoCommand( Identifiable identifiable, String property, Object value,
@@ -96,23 +100,26 @@ public abstract class UpdateObject extends AbstractCommand {
         CommunityService communityService = commander.getCommunityService();
         Identifiable identifiable = getIdentifiable( commander );
         switch ( action() ) {
-        case Set:
-            setProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
-            break;
-        case Add:
-            addToProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
-            break;
-        case Remove:
-            removeFromProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
-            break;
-        case RemoveExceptLast:
-            removeExceptLastFromProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
-            break;
-        case Move:
-            moveInProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
-            break;
-        default:
-            throw new IllegalArgumentException( "Unknown action " + action() );
+            case Set:
+                setProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
+                break;
+            case AddUnique:
+                addUniqueToProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
+                break;
+            case Add:
+                addToProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
+                break;
+            case Remove:
+                removeFromProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
+                break;
+            case RemoveExceptLast:
+                removeExceptLastFromProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
+                break;
+            case Move:
+                moveInProperty( identifiable, (String) get( "property" ), get( "value", commander ) );
+                break;
+            default:
+                throw new IllegalArgumentException( "Unknown action " + action() );
         }
         if ( identifiable instanceof ModelObject ) {
             ModelObject mo = (ModelObject) identifiable;
@@ -128,11 +135,11 @@ public abstract class UpdateObject extends AbstractCommand {
      * Move given element within list as property value of identifiable. By default move to top.
      *
      * @param identifiable an identifiable
-     * @param property a property path
-     * @param element an object
+     * @param property     a property path
+     * @param element      an object
      * @throws CommandException if fails
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private void moveInProperty( Identifiable identifiable, String property, Object element ) throws CommandException {
         List list = (List) getProperty( identifiable, property );
         int currentIndex = list.indexOf( element );
@@ -182,18 +189,18 @@ public abstract class UpdateObject extends AbstractCommand {
     /**
      * Create the appropriate UpdateObject command.
      *
-     * @param userName the user updating the object
+     * @param userName     the user updating the object
      * @param identifiable an identifiable
-     * @param property a string
-     * @param value an object
-     * @param action Set, Add or Remove
+     * @param property     a string
+     * @param value        an object
+     * @param action       Set, Add or Remove
      * @return an UpdateObject command
      */
     public static UpdateObject makeCommand( String userName, Identifiable identifiable, String property, Object value,
                                             Action action ) {
         return identifiable instanceof SegmentObject ?
-               new UpdateSegmentObject( userName, identifiable, property, value, action ) :
-               new UpdatePlanObject( userName, identifiable, property, value, action );
+                new UpdateSegmentObject( userName, identifiable, property, value, action ) :
+                new UpdatePlanObject( userName, identifiable, property, value, action );
     }
 
     @Override
@@ -202,25 +209,25 @@ public abstract class UpdateObject extends AbstractCommand {
         String property = (String) get( "property" );
         Object value;
         switch ( action() ) {
-        case Set:
-            Object oldValue = get( "old", commander );
-            return createUndoCommand( identifiable, property, oldValue, Action.Set );
-        case Add:
-            value = get( "value", commander );
-            return createUndoCommand( identifiable, property, value, Action.Remove );
-        case Remove:
-        case RemoveExceptLast:
-            value = get( "value", commander );
-            return createUndoCommand( identifiable, property, value, Action.Add );
-        case Move:
-            value = get( "value", commander );
-            Command command = createUndoCommand( identifiable, property, value, Action.Move );
-            Integer oldIndex = (Integer) get( "oldIndex" );
-            if ( oldIndex != null )
-                command.set( "index", oldIndex );
-            return command;
-        default:
-            throw new RuntimeException( "Unknown action " + action() );
+            case Set:
+                Object oldValue = get( "old", commander );
+                return createUndoCommand( identifiable, property, oldValue, Action.Set );
+            case AddUnique:
+                value = get( "value", commander );
+                return createUndoCommand( identifiable, property, value, Action.Remove );
+            case Remove:
+            case RemoveExceptLast:
+                value = get( "value", commander );
+                return createUndoCommand( identifiable, property, value, Action.AddUnique );
+            case Move:
+                value = get( "value", commander );
+                Command command = createUndoCommand( identifiable, property, value, Action.Move );
+                Integer oldIndex = (Integer) get( "oldIndex" );
+                if ( oldIndex != null )
+                    command.set( "index", oldIndex );
+                return command;
+            default:
+                throw new RuntimeException( "Unknown action " + action() );
         }
     }
 }
