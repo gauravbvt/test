@@ -18,6 +18,7 @@ import java.util.List;
 public class AbstractContactLinkPanel extends AbstractDataPanel {
 
     private ContactData contactData;
+    private boolean showBypassContacts;
     private List<ChannelData> workAddresses;
     private List<ChannelData> personalAddresses;
 
@@ -39,6 +40,17 @@ public class AbstractContactLinkPanel extends AbstractDataPanel {
         super( id, finder );
         this.contactData = contactData;
         init();
+    }
+
+    public AbstractContactLinkPanel( String id, ContactData contactData, ProtocolsFinder finder, boolean showBypassContacts ) {
+        super( id, finder );
+        this.contactData = contactData;
+        this.showBypassContacts = showBypassContacts;
+        init();
+    }
+
+    protected boolean isShowBypassContacts() {
+        return showBypassContacts;
     }
 
     protected void init() {

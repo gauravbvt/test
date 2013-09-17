@@ -51,7 +51,7 @@ public class AnswerStepData extends CommunicationStepData {
                 true,
                 getChecklist().getAssignment(),
                 user );
-        setFlowData( new NotificationData(
+        setFlowData( new NotificationData( // todo - should use an AnswerData object
                 serverUrl,
                 communityService,
                 request.getSharing(),

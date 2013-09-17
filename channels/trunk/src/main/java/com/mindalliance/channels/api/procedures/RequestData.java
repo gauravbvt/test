@@ -246,11 +246,6 @@ public class RequestData extends AbstractFlowData {
         return super.getId();
     }
 
-    @Override
-    public boolean isNotification() {
-        return false;
-    }
-
     public AssignmentData getAssignmentData() {
         return assignmentData;
     }

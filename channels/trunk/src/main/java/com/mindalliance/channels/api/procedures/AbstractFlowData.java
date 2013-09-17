@@ -264,7 +264,9 @@ public abstract class AbstractFlowData extends AbstractProcedureElementData {
     }
 
 
-    public abstract boolean isNotification();
+    public boolean isNotification() {
+        return flow.isNotification();
+    }
 
 
     public Flow getSharing() {

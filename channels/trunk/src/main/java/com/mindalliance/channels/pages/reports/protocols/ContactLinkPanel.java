@@ -27,6 +27,11 @@ public class ContactLinkPanel extends AbstractContactLinkPanel {
         super( id, contactData, finder );
     }
 
+    public ContactLinkPanel( String id, ContactData contactData, ProtocolsFinder finder, boolean showBypassContacts ) {
+        super( id, contactData, finder, showBypassContacts );
+    }
+
+
     public ContactLinkPanel(
             String id,
             ContactData contactData,
@@ -42,8 +47,8 @@ public class ContactLinkPanel extends AbstractContactLinkPanel {
     }
 
     private void addBypassContacts() {
-        List<ContactData> bypassContacts = getContactData().getBypassContacts();
         WebMarkupContainer bypassContactsContainer = new WebMarkupContainer( "bypassContactsContainer" );
+        List<ContactData> bypassContacts = getContactData().getBypassContacts();
         bypassContactsContainer.setVisible( !bypassContacts.isEmpty() );
         add( bypassContactsContainer );
         Label bypassLabel = new Label(
@@ -68,6 +73,7 @@ public class ContactLinkPanel extends AbstractContactLinkPanel {
             }
         };
         bypassContactsContainer.add( bypassContactsListView );
+        bypassContactsContainer.setVisible( isShowBypassContacts() );
         add(  bypassContactsContainer );
     }
 

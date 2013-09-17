@@ -91,7 +91,7 @@ public class CommunicationStepDataPanel extends AbstractDataPanel {
         ) {
             @Override
             protected void populateItem( ListItem<ContactData> item ) {
-                item.add( new ContactLinkPanel( "contact", item.getModelObject(), getFinder() ) );
+                item.add( new ContactLinkPanel( "contact", item.getModelObject(), getFinder(), false ) );
                 item.add( new Label( "sep", ( item.getIndex() != lastIndex ) ? "," : "" ) );
             }
         };

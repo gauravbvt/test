@@ -69,12 +69,12 @@ public class CommitmentDataPanel extends AbstractDataPanel {
     private String getModeText() {
         if ( received ) {
             return flowData.isNotification()
-                    ? "I expect to be notified of"
-                    : "I can ask for";
+                    ? "When notified of"
+                    : "When asking for";
         } else {
             return flowData.isNotification()
-                    ? "I send notification of"
-                    : "When asked, I provide";
+                    ? "When notifying of"
+                    : "When answering with";
         }
     }
 
@@ -83,18 +83,22 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         if ( !received && flowData.isNotification() ) {
             NotificationData notificationData = (NotificationData) flowData;
             StringBuilder sb = new StringBuilder();
-            sb.append( "(it will " );
-            String impactOnConsuming = notificationData.getImpactOnConsumingTask();
-            if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
-                sb.append( "trigger" );
-            else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
-                sb.append( "terminate" );
-            else if ( impactOnConsuming.equalsIgnoreCase( "critical" ) )
-                sb.append( "make possible the" );
-            else sb.append( "help the" );
-            sb.append( " execution of task \"" );
-            sb.append( notificationData.getConsumingTask().getLabel() );
-            sb.append( "\")" );
+            if ( notificationData.getConsumingTask() != null ) {
+                String impactOnConsuming = notificationData.getImpactOnConsumingTask();
+                if ( impactOnConsuming != null ) {
+                    sb.append( "(it will " );
+                    if ( impactOnConsuming.equalsIgnoreCase( "triggers" ) )
+                        sb.append( "trigger" );
+                    else if ( impactOnConsuming.equalsIgnoreCase( "terminates" ) )
+                        sb.append( "terminate" );
+                    else if ( impactOnConsuming.equalsIgnoreCase( "critical" ) )
+                        sb.append( "make possible the" );
+                    else sb.append( "help the" );
+                    sb.append( " execution of task \"" );
+                    sb.append( notificationData.getConsumingTask().getLabel() );
+                    sb.append( "\")" );
+                }
+            }
             return sb.toString();
         } else {
             return "";
@@ -164,7 +168,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
                 String formatName = channelData.getFormat();
                 Label formatLabel = new Label(
                         "usingFormat",
-                        formatName == null ? "" : ("using " + formatName) );
+                        formatName == null ? "" : ( "using " + formatName ) );
                 item.add( formatLabel );
             }
         };
@@ -302,7 +306,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         impactContainer.add( severityLabel );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<ChannelData> getWorkChannels( ContactData contactData ) {
         final List<Long> mediumIds = flowData.getMediumIds();
         return (List<ChannelData>) CollectionUtils.select(
@@ -316,7 +320,7 @@ public class CommitmentDataPanel extends AbstractDataPanel {
         );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<ChannelData> getPersonalChannels( ContactData contactData ) {
         final List<Long> mediumIds = flowData.getMediumIds();
         return (List<ChannelData>) CollectionUtils.select(
