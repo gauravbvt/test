@@ -33,6 +33,8 @@ public class SocialPanel extends AbstractUpdatablePanel {
     @SpringBean
     private UserMessageService userMessageService;
 
+    public static final String ABOUT_ME = "About me";
+    public static final String WHAT_I_DO = "What I do";
     public static final String PRESENCE = "Presence";
     public static final String ACTIVITIES = "Activities";
     public static final String MESSAGES = "Messages";
@@ -100,7 +102,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     private List<ITab> getTabs() {
         List<ITab> tabs = new ArrayList<ITab>();
         if ( showTabs.contains( USER ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "About Me" ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( ABOUT_ME ) ) {
                 public Panel getPanel( String id ) {
                     userProfilePanel = new UserInfoPanel( id, SocialPanel.this, collapsible );
                     return userProfilePanel;
@@ -109,7 +111,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
             tabs.add( tab );
         }
         if ( showTabs.contains( PARTICIPATION ) ) {
-            AbstractTab tab = new AbstractTab( new Model<String>( "What I do" ) ) {
+            AbstractTab tab = new AbstractTab( new Model<String>( WHAT_I_DO ) ) {
                 public Panel getPanel( String id ) {
                     userParticipationPanel = new UserParticipationPanel( id, SocialPanel.this, collapsible );
                     return userParticipationPanel;
@@ -118,28 +120,28 @@ public class SocialPanel extends AbstractUpdatablePanel {
             tabs.add( tab );
         }
         if ( showTabs.contains( PRESENCE ) )
-            tabs.add( new AbstractTab( new Model<String>( "Presence" ) ) {
+            tabs.add( new AbstractTab( new Model<String>( PRESENCE ) ) {
                 public Panel getPanel( String id ) {
                     plannerPresenceListPanel = new UserPresenceListPanel( id, SocialPanel.this, collapsible, showProfile );
                     return plannerPresenceListPanel;
                 }
             } );
         if ( showTabs.contains( ACTIVITIES ) )
-            tabs.add( new AbstractTab( new Model<String>( "Activities" ) ) {
+            tabs.add( new AbstractTab( new Model<String>( ACTIVITIES ) ) {
                 public Panel getPanel( String id ) {
                     commandEventListPanel = new ExecutedCommandsListPanel( id, SocialPanel.this, collapsible, showProfile );
                     return commandEventListPanel;
                 }
             } );
         if ( showTabs.contains( MESSAGES ) )
-            tabs.add( new AbstractTab( new Model<String>( "Messages" ) ) {
+            tabs.add( new AbstractTab( new Model<String>( MESSAGES ) ) {
                 public Panel getPanel( String id ) {
                     userMessageListPanel = new UserMessageListPanel( id, SocialPanel.this, collapsible, showProfile );
                     return userMessageListPanel;
                 }
             } );
         if ( showTabs.contains( CALENDAR ) )
-            tabs.add( new AbstractTab( new Model<String>( "Calendar" ) ) {
+            tabs.add( new AbstractTab( new Model<String>( CALENDAR ) ) {
                 public Panel getPanel( String id ) {
                     calendarPanel = new CalendarPanel( id, collapsible );
                     return calendarPanel;
@@ -149,7 +151,7 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     private String getMessagesTabTitle() {
-        return isPlanner() ? "Messages" : "News";
+        return MESSAGES;
     }
 
     private String getSelectedTabTitle() {
@@ -157,10 +159,10 @@ public class SocialPanel extends AbstractUpdatablePanel {
     }
 
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
-        if ( plannerPresenceListPanel != null && getSelectedTabTitle().equals( "Presence" ) ) {
+        if ( plannerPresenceListPanel != null && getSelectedTabTitle().equals( PRESENCE ) ) {
             plannerPresenceListPanel.refresh( target, change );
         }
-        if ( commandEventListPanel != null && getSelectedTabTitle().equals( "Activities" ) ) {
+        if ( commandEventListPanel != null && getSelectedTabTitle().equals( ACTIVITIES ) ) {
             commandEventListPanel.refresh( target, change );
         }
         if ( userMessageListPanel != null && getSelectedTabTitle().equals( getMessagesTabTitle() ) ) {

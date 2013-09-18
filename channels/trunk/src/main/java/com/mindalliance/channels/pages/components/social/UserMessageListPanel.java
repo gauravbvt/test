@@ -61,7 +61,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private static final int A_FEW = 5;
     private static final int MORE = 5;
 
-    private static final ChannelsUser ALL_PLANNERS;
+    private static final ChannelsUser ALL_DEVELOPERS;
     private static final ChannelsUser ALL_USERS;
     private int numberToShow = A_FEW;
     private boolean privateOnly = false;
@@ -84,7 +84,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private Date whenLastRefreshed;
 
     static {
-        ALL_PLANNERS = new ChannelsUser( new UserRecord( "_channels_" , UserRecord.PLANNERS ) );
+        ALL_DEVELOPERS = new ChannelsUser( new UserRecord( "_channels_" , UserRecord.PLANNERS ) );
         ALL_USERS = new ChannelsUser( new UserRecord( "_channels_", UserRecord.USERS ) );
     }
 
@@ -92,7 +92,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
         super( id, collapsible );
         this.updatable = updatable;
         this.showProfile = showProfile;
-        newMessageRecipient = ALL_PLANNERS;
+        newMessageRecipient = ALL_DEVELOPERS;
         init();
     }
 
@@ -258,8 +258,8 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
                 getCandidateRecipients(),
                 new ChoiceRenderer<ChannelsUser>() {
                     public Object getDisplayValue( ChannelsUser user ) {
-                        return user == ALL_PLANNERS
-                                ? "All planners"
+                        return user == ALL_DEVELOPERS
+                                ? "All developers"
                                 : user == ALL_USERS
                                 ? "Everyone"
                                 : user.getFullName() + " (" + user.getUsername() + ")";
@@ -293,7 +293,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
             }
         } );
         recipients.add( ALL_USERS );
-        recipients.add( ALL_PLANNERS );
+        recipients.add( ALL_DEVELOPERS );
         Collections.reverse( recipients );
         return recipients;
     }
@@ -392,7 +392,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     private void resetNewMessage( AjaxRequestTarget target ) {
         newMessageText = "";
         newMessageAbout = null;
-        newMessageRecipient = ALL_PLANNERS;
+        newMessageRecipient = ALL_DEVELOPERS;
         addNewMessage();
         target.add( newMessageContainer );
     }
@@ -497,7 +497,7 @@ public class UserMessageListPanel extends AbstractSocialListPanel {
     }
 
     public ChannelsUser getNewMessageRecipient() {
-        return newMessageRecipient == null ? ALL_PLANNERS : newMessageRecipient;
+        return newMessageRecipient == null ? ALL_DEVELOPERS : newMessageRecipient;
     }
 
     public void setNewMessageRecipient( ChannelsUser newMessageRecipient ) {

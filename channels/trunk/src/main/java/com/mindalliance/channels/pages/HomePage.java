@@ -131,7 +131,7 @@ public class HomePage extends AbstractChannelsBasicPage {
     }
 
     private String getGotoTemplatesDescription() {
-        return "The collaboration templates you are developing or maintaining"; // todo show metrics
+        return "The collaboration templates you are authorized to see or modify"; // todo show metrics
     }
 
     private String getGotoCollaborationPlansDescription() {

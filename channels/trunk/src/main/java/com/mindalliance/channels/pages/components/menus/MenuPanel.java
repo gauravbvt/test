@@ -100,6 +100,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
 
     /**
      * Add extra menu items.
+     *
      * @param extraMenuItems a list of link menu items
      */
     public void addMenuItems( List<LinkMenuItem> extraMenuItems ) {
@@ -206,8 +207,10 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
                 new AjaxLink( "link" ) {
                     @Override
                     public void onClick( AjaxRequestTarget target ) {
-                        if ( enabled ) update( target,
-                                new Change( Change.Type.Communicated, identifiable ) );
+                        if ( enabled )
+                            update(
+                                    target,
+                                    new Change( Change.Type.Communicated, identifiable ) );
                     }
                 } );
 
@@ -350,7 +353,7 @@ public abstract class MenuPanel extends AbstractCommandablePanel implements Guid
                 update( target, Change.guide( userRoleId, sectionId, topicId ) );
             }
         };
-        return new LinkMenuItem( "menuItem", new Model<String>("Help"), helpLink );
+        return new LinkMenuItem( "menuItem", new Model<String>( "Help" ), helpLink );
     }
 
     @Override
