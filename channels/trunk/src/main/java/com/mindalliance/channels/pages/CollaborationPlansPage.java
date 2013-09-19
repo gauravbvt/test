@@ -27,12 +27,12 @@ public class CollaborationPlansPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getHelpSectionId() {
-        return "communities-page";
+        return "collaboration-plans-page";
     }
 
     @Override
     protected String getHelpTopicId() {
-        return "about-communities-page";
+        return "about-collaboration-plans-page";
     }
 
 

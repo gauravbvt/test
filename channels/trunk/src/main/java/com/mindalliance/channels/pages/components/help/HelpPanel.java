@@ -48,7 +48,10 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -134,14 +137,15 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         glossaryLink = new AjaxLink<String>( "glossary" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
+                UserRole userRole = getUserRole();
                 rememberState();
                 addBack();
                 target.add( backLink );
-                selectTopicInSection( getUserRoleId(), "concepts", "glossary", target );
+                selectTopicInSection( getUserRoleId(), userRole.getGlossarySection(), userRole.getGlossaryTopic(), target );
             }
         };
         glossaryLink.setOutputMarkupId( true );
-        makeVisible( glossaryLink, getUserRole().getId().equals( "planner" ) );
+        makeVisible( glossaryLink, getUserRole().hasGlossary() );
         addOrReplace( glossaryLink );
     }
 
@@ -375,16 +379,16 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         Object bean;
         if ( subjectPath.startsWith( HelpScriptable.GUIDE + "." ) ) {
             subjectPath = subjectPath.substring( HelpScriptable.GUIDE.length() + 1 );
-            bean = (HelpScriptable)this;
+            bean = (HelpScriptable) this;
         } else {
             bean = guide.getContext();
         }
         try {
-        return (Identifiable) ChannelsUtils.getProperty(
-                bean,
-                subjectPath,
-                null );
-        } catch (Exception e) {
+            return (Identifiable) ChannelsUtils.getProperty(
+                    bean,
+                    subjectPath,
+                    null );
+        } catch ( Exception e ) {
             LOG.warn( "Help subject not found: " + scriptChange.getSubjectPath() );
             return null;
         }
@@ -396,12 +400,33 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
         return label;
     }
 
-    private String wikimediaToHtml( String content ) {
+    private String wikimediaToHtml( String string ) {
+        String content = trimAllLines( string );
         WikiModel wikiModel = new WikiModel( "", "" );
         String html = wikiModel.render( content );
         html = html.replaceAll( "<a ", "<a target='_blank' " );
         return html;
+    }
 
+    private String trimAllLines( String string ) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader( new StringReader( string ) );
+        try {
+            String line;
+            while ( ( line = reader.readLine() ) != null ) {
+                sb.append( line.trim() );
+                sb.append( '\n' );
+            }
+        } catch ( IOException e ) {
+            // do nothing
+        } finally {
+            try {
+                reader.close();
+            } catch ( IOException e ) {
+                // do nothing
+            }
+        }
+        return sb.toString();
     }
 
 
@@ -485,7 +510,7 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
 
     @Override
     public Actor getAnyActualAgent() {
-       return chooseOne( getQueryService().listActualEntities( Actor.class ) );
+        return chooseOne( getQueryService().listActualEntities( Actor.class ) );
     }
 
     @Override
@@ -536,12 +561,12 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
     @Override
     @SuppressWarnings( "unchecked" )
     public Flow getAnySharingFlow() {
-        return chooseOne( (List<Flow>)CollectionUtils.select(
+        return chooseOne( (List<Flow>) CollectionUtils.select(
                 getQueryService().list( Flow.class ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Flow)object).isSharing();
+                        return ( (Flow) object ).isSharing();
                     }
                 }
         ) );

@@ -46,9 +46,9 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
     @SpringBean
     private ParticipationManager participationManager;
 
-    private List<UserParticipation> participations;
+    private List<UserParticipation> visibleParticipations;
 
-    private List<Agent> agents;
+    private List<Agent> knownAgents;
 
     public AbstractAllParticipantsPage( PageParameters parameters ) {
         super( parameters );
@@ -69,22 +69,25 @@ public abstract class AbstractAllParticipantsPage extends AbstractChannelsBasicP
         return getPlanCommunity().getPlanVersion();
     }
 
-    protected List<UserParticipation> getParticipations() {
-        return participations;
+    protected List<UserParticipation> getVisibleParticipations() {
+        return visibleParticipations;
     }
 
-    protected List<Agent> getAgents() {
-        return agents;
+    protected List<Agent> getKnownAgents() {
+        return knownAgents;
     }
 
     protected void addContent(  ) {
         CommunityService communityService = getCommunityService();
         QueryService queryService = getQueryService();
         boolean isPlanner = getUser().isPlannerOrAdmin( communityService.getPlan().getUri() );
-        participations = isPlanner
-                            ? userParticipationService.getAllActiveParticipations( communityService )
-                            : userParticipationService.getActiveUserParticipations( getUser(), communityService );
-        agents = findAssignedAgents();
+        if ( isPlanner ) {
+            visibleParticipations = userParticipationService.getAllActiveParticipations( communityService );
+        } else {
+            visibleParticipations = userParticipationService.getActiveUserParticipations( getUser(), communityService );
+            visibleParticipations.addAll( userParticipationService.getActiveSupervisedParticipations( getUser(), communityService ) );
+        }
+        knownAgents = findAssignedAgents();
         initComponents( queryService, communityService );
     }
 

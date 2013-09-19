@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <guide xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="guide.xsd">
+       xsi:noNamespaceSchemaLocation="guide.xsd">
     <name>Channels Guide</name>
     <description>A guide for users of Channels</description>
     <role id="user">
@@ -10,13 +10,15 @@
             <topic id="intro">
                 <name>About Channels</name>
                 <item>
-                    <description>Channels is an online collaboration planning service. 
-                        
-It enables
-* analysts to build templates for information sharing-enabled collaboration,
-* communities of organizations to adopt these collaboration templates,
-* user to get collaboration checklists derived from participation in these communities,
-* and administrators to manage the Channels service.</description>
+                    <description>Channels is an online collaboration planning service.
+
+                        It enables
+                        * analysts to build best-practice templates for information sharing-enabled collaboration,
+                        * planners to setup localized collaboration plans based on these collaboration templates,
+                        * users to participate in collaboration plans and get collaboration checklists derived from
+                        their participation,
+                        * and administrators to manage the Channels service.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -25,28 +27,34 @@ It enables
             <topic id="my-identity">
                 <name>My identity</name>
                 <item>
-                    <description>You can 
-* change the spelling of your name,
-* edit the email address Channels will use to communicate with you
-* upload a photo of yourself
+                    <description>You can
+                        * change the spelling of your name,
+                        * edit the email address Channels will use to communicate with you
+                        * upload a photo of yourself
 
-Make sure you press the Apply button for the changes to take effect.</description>
+                        Make sure you press the Apply button for the changes to take effect.
+                    </description>
                 </item>
             </topic>
             <topic id="my-contact-info">
                 <name>My contact info</name>
                 <item>
-                    <description>This allows you to provide different ways for your collaborators and supervisors to contact you.
-         
-         You can select means of communication (email, cell, pager, etc.) and, for each one, give your contact info (an email address, a phone number etc.).</description>
+                    <description>This allows you to provide the different ways by which your collaborators and
+                        supervisors can contact you.
+
+                        You can select means of communication (email, cell, pager, etc.) and, for each one, give your
+                        contact info (an email address, a phone number etc.).
+                    </description>
                 </item>
             </topic>
             <topic id="my-password">
-                <name> My password</name>
+                <name>My password</name>
                 <item>
-                    <description>You can change your password by first entering your current one and then entering (twice) an acceptably secure new password.
-                    
-Don't forget to press the Apply button for the password change to be effected.</description>
+                    <description>You can change your password by first entering your current one and then entering
+                        (twice) an acceptably secure new password.
+
+                        Don't forget to press the Apply button for the password change to be effected.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -55,9 +63,12 @@ Don't forget to press the Apply button for the password change to be effected.</
             <topic id="add-attachment">
                 <name>Add attachment</name>
                 <item>
-                    <description>Click on the bar to expand the attachment controls. Use the controls to upload a file or enter a URL and then attach it to the current context.
-                    
-Assign a type to the attachment, the default being "Reference", to indicate your intent. Attachments of type "Picture" will typically be used as an icon.</description>
+                    <description>Click on the bar to expand the attachment controls. Use the controls to upload a file
+                        or enter a URL and then attach it to the current context.
+
+                        Assign a type to the attachment, the default being "Reference", to indicate your intent.
+                        Attachments of type "Picture" will typically be used as an icon.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -66,13 +77,16 @@ Assign a type to the attachment, the default being "Reference", to indicate your
             <topic id="about-surveys-page">
                 <name>Surveys</name>
                 <item>
-                    <description>As a participant in a community, you may be asked by collaboration template developers to answer surveys in order to help improve a collaboration template.
-                        
-You can 
-                        
-* see the surveys you need to complete (and optionally complete them or forward them),
-* see those you completed (and revise you answers),
-* and see those you declined (and perhaps change your mind).</description>
+                    <description>As a participant in a collaboration plan, you may be asked by collaboration template developers
+                        to answer surveys in order to help improve a collaboration template.
+
+                        You can
+
+                        * see the surveys you need to complete (and optionally complete them, decline them or forward
+                        them),
+                        * see those you completed (and revise you answers if you wish),
+                        * and see those you declined (and perhaps change your mind).
+                    </description>
                 </item>
             </topic>
         </section>
@@ -82,73 +96,275 @@ You can
                 <name>My feedback</name>
                 <item>
                     <description>You can
-                        
-* browse and filter the list of all feedback messages you sent to the domain planners for the collaboration template your community has adopted,
-* expand the conversation with domain planners spawned from feedback,
-* and add a comment to the conversation.
-                        
-You can mark feedback as "resolved" once you consider that you have achieved your intended objective.</description>
+
+                        * browse and filter the list of all feedback messages you sent to the domain planners for the
+                        collaboration template your collaboration plan has adopted,
+                        * expand the conversation with domain planners spawned from feedback,
+                        * and add a comment to the conversation.
+
+                        You can mark feedback as "resolved" once you consider that you have achieved your intended
+                        objective.
+                    </description>
                 </item>
             </topic>
         </section>
     </role>
-    <role id="participant">
-        <name>For participants in collaboration communities</name>
-        <section id="communities-page">
-            <name>User interface</name>
-            <topic id="about-communities-page">
-                <name>All communities</name>
+    <role id="participant" glossarySection="plan-glossary" glossaryTopic="plan-glossary-items">
+        <name>For participants in collaboration plans</name>
+        <section id="plan-glossary">
+            <name>Key concepts</name>
+            <topic id="plan-glossary-items">
+                <name>Glossary</name>
                 <item>
-                    <description>Organization and their members form collaboration communities, each based on a collaboration template (a production version).
-                    
-You can:
+                    <description>A glossary of collaboration planning terms</description>
+                </item>
+                <definition section="plan-concepts" topic="collaboration-plan"/>
+                <definition section="plan-concepts" topic="plan-template"/>
+                <definition section="plan-concepts" topic="plan-organization"/>
+                <definition section="plan-concepts" topic="plan-placeholder"/>
+                <definition section="plan-concepts" topic="plan-agent"/>
+                <definition section="plan-concepts" topic="plan-participant"/>
+                <definition section="plan-concepts" topic="plan-planner"/>
+                <definition section="plan-concepts" topic="plan-custodian"/>
+                <definition section="plan-concepts" topic="plan-participation"/>
+                <definition section="plan-concepts" topic="plan-checklist"/>
+                <definition section="plan-concepts" topic="plan-planning-scenario"/>
+            </topic>
+        </section>
+        <section id="plan-concepts">
+            <name>Plan concepts</name>
+            <topic id="collaboration-plan">
+                <name>Collaboration plan</name>
+                <item>
+                    <description>A collaboration plan prescribes how known organizations and relevant individuals within them are expected to collaborate in one or more planning scenarios.
 
-* create a new community by first selecting the collaboration template on which it is based and by pressing the "Start it" button - you will be the founding planner for this community,
-* view an existing community (select the Go button next to its name in the list of communities).</description>
+                        The collaboration is to be realized via the execution of tasks assigned to individuals and coordinated through communications and information sharing.
+
+                        Checklists document how to execute each assigned task, including which communications to make, when how and to who.
+
+                        A collaboration plan is based on a collaboration template.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-template">
+                <name>Collaboration template</name>
+                <item>
+                    <description>A collaboration template defines a best-practice collaboration between and within organizations in terms of
+
+                        * tasks required to achieve objectives in identified planning scenarios,
+                        * the communications that coordinate and inform these tasks,
+                        * how to assign tasks to agents within organizations
+                        * checklists detailing how to execute each task and how to coordinate and inform their execution via communication and information sharing
+
+                    A template identifies the organizations it involves either as ''known organizations'' - real-life organizations - or as ''placeholder'' - organizations which real identities are to be given in the collaboration plans that adopt the template.
+
+                        A template also identifies the agents (aka organizational roles) that make up the collaborating organizations. Users participate in the collaboration plans based on the template by being assigned to one or more agents defined in the template.
+
+                        A collaboration template has versions. The most current version is the development version, accessible only to its developers and to guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-organization">
+                <name>Plan organization</name>
+                <item>
+                    <description>A collaboration plan involves organizations and their agents (organizational roles) to which users are assigned.
+
+                        The organizations known to a plan consist of:
+
+                        * All known organizations (as opposed to ''placeholder'' organizations) that are identified in the collaboration template adopted by the plan
+                        * All (known) organizations registered in the plan
+                        * All (known) organizations registered in all plans hosted by the Channels service
+
+                        An organization lists the agents relevant to the collaboration to which it has given roles of responsibility.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-placeholder">
+                <name>Organization placeholder</name>
+                <item>
+                    <description>The collaboration template upon which a collaboration plan is based identifies all the organizations that are involved in the collaboration it defines. Since not all organizations are known to template developers or because each collaboration plan may involve its own, local, organizations, developers will often keep the identity of organizations ''open ended' by making them ''placeholder'' organizations.
+
+                        A placeholder organization, for example "The Municipal Police Department", can be associated to one or more organization known to a collaboration plan based on the template. For example it might be associated to "Gotham Police Department".
+
+                        The collaboration template may identify one of the template's agents as a ''custodian'' for the placeholder organization. If so, any user participating in a plan as this agent is authorized to associate an organization known to the plan with the template' placeholder organization, in effect, involving the known organization in the collaboration defined for the placeholder organization by the template. Note that a planner can act as a custodian for all placeholder organizations.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-agent">
+                <name>Agent</name>
+                <item>
+                    <description>An agent represents one or more functionally indistinguishable individuals in a collaboration. An agent is usually given a role of responsibility (and a title) in one organization. It is however possible for an agent to be member of multiple organizations.
+
+                        Users participate in a collaboration plan by being assigned to one or more agents defined in the collaboration template on which the plan is based.
+
+                        How many and which users can be assigned to an agent (and by who) depends on how the agent was defined by the developers of the template. Some agents allow unrestricted self-assignment by users, others require confirmation by supervisors or planners, yet others require some prior, confirmed employment. An agent might allow only one user being assigned to it, another might allow any number.
+
+                        The collaboration checklists a user receives are those of the agents to which it is assigned, personalized with the contact names and information of other users participating as the agents this user collaborates with according to the plan.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-participant">
+                <name>Plan participant</name>
+                <item>
+                    <description>A plan participant is any user who has accepted assignation to at least one agent in a collaboration plan, with supervisor confirmation if required.</description>
+                </item>
+            </topic>
+            <topic id="plan-planner">
+                <name>Collaboration planner</name>
+                <item>
+                    <description>A planner in a collaboration plan is either the user who created the plan or an other user who has been authorized as planner by another planner.
+
+                        A user can resign as planner (or be resigned by a Channels administrator) if he or she is not the only planner for the plan.</description>
+                </item>
+            </topic>
+            <topic id="plan-custodian">
+                <name>Placeholder organization custodian</name>
+                <item>
+                    <description>A user who is the custodian of a placeholder organization in a collaboration plan is authorized to manage the association of any number of known organizations to that placeholder.
+
+                    A user is the custodian of a placeholder organization if he/she is a planner or is assigned to the agent (or copy of) identified as custodian by the developers of the template where the placeholder organization is defined.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-participation">
+                <name>Plan participation</name>
+                <item>
+                    <description>Organizations and users participate in a collaboration plan.
+
+                        A known organization defined in the collaboration template upon which the collaboration plan is based automatically participates (as itself) in the plan.
+
+                        When an organization is registered in a plan, it does not yet participate in the collaboration defined by the template on which the plan is based. Participation by an organization registered in a plan is established by associating the organization with a placeholder in the template.
+
+                        When a registered organization is associated with a placeholder organization in the template, the registered organization gets a ''copy'' of all the agents employed by the placeholder organization, and the copies agents get the task assignments of the placeholder agents in the template.
+
+                        Users participate in a plan by assigning themselves or by being assigned to one or more agents of participating organizations. When assigned to an agent by someone else, a user must accept the assignment before it becomes active. Assignment to an agent may require confirmation by all users participating as agents that supervise the agent in question.
+
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-checklist">
+                <name>Collaboration checklist</name>
+                <item>
+                    <description>Each task in a collaboration has an associated checklist that details how to execute the task. The checklist is defined in the collaboration template of the plan and is given and personalized (with contact names and information) for each user who participates as an agent assigned to the task associated with the checklist.
+
+                    A checklist is defined by what triggers the task it represents and by the steps by which the task is best executed.
+
+                        The triggers can be
+
+                        * nothing (if the task is ongoing),
+                        * information self-acquired (observation of an event, for example),
+                        * information researched to carry out another task,
+                        * information sent by another user (a notification)
+                        * or information requested by another user (a query).
+
+                        The steps of a checklist can be communications (queries, notifications) or actions (other than communications).
+
+                        A step can be required or optional. It might depend on another having been completed or on some other condition being present or absent.
+
+                        The checklist is a document, not an interactive to-do list.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-planning-scenario">
+                <name>Planning scenario</name>
+                <item>
+                    <description>A planning scenario is circumstance that introduces risks an opportunities to organizations who must collaborate to mitigate those risks and/or seize those opportunities.
+
+                    A planning scenario is defined by an event that might happen, is happening or has happened, possibly in the context of other event that are happening or have happened.
+
+                        A collaboration plan might address more than one related planning scenarios.
+                    </description>
                 </item>
             </topic>
         </section>
-        <section id="community-page">
-            <name>Collaboration community</name>
-            <topic id="about-community-page">
-                <name>Collaboration community</name>
+        <section id="collaboration-plans-page">
+            <name>User interface</name>
+            <topic id="about-collaboration-plans-page">
+                <name>All collaboration plans</name>
                 <item>
-                    <description>Authorized participants in a collaboration community can register organizations into the community and assign organizational roles (jobs) to themselves or other users.
-                    
-If you are a community planner, you can name the community, localize it, update it to a new version of the collaboration template, and set collaboration requirements for it. If you are an authorized domain planner, you can access the community's collaboration template that was adopted by the community as a basis for its collaboration plan.
-                    
-As a participant, you can access your collaboration checklists, the surveys you take part in, and replies to feedback you provide.</description>
+                    <description>The ''All Collaboration Plans'' page list all collaboration plans visible to you, namely, all plans you can participate in and all those for which you are planner, whether or not they are open for participation.
+
+                        You can:
+
+                        * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is
+                        to be based and then pressing the "Start it" button - you will be the founding planner for this plan,
+                        * access an existing collaboration plan (select the Go button next to its name in the list of
+                        plans).
+                    </description>
+                </item>
+            </topic>
+        </section>
+        <section id="collaboration-plan-page">
+            <name>Collaboration plan</name>
+            <topic id="about-collaboration-plan-page">
+                <name>Collaboration plan</name>
+                <item>
+                    <description>As a user you can see and all collaboration plans that have been opened for
+                        participation by their planners.
+
+                        As a user, you can decide to participate as agents (roughly, organizational roles) that are open
+                        to participation by all.
+
+                        If you created the collaboration plan, you are the initial collaboration planner for this plan.
+                        As such, you can authorize other users as planners and, even, resign your planner privileges.
+
+                        As a planner, you can name the plan, localize it, update it to a new version of the
+                        collaboration template, and set collaboration requirements for it. If you are also a developer
+                        of the adopted collaboration template, you can access the template.
+
+                        As a planner, you can register organizations for potential participation into the plan (or in
+                        all plans), in addition to the known organizations defined by the plan's template. You can also
+                        assign users to any agent (generic individuals) defined in the plan.
+
+                        If, as a participant, you are assigned to an agent that supervises other agents, you can assign
+                        users to these agents, subject to some constraints, and subject to they accepting the
+                        assignment.
+
+                        As a participant, you can access your collaboration checklists, the surveys you take part in,
+                        and replies to feedback you provide.
+                    </description>
                 </item>
             </topic>
         </section>
         <section id="what-i-do">
-            <name> What I do</name>
+            <name>What I do</name>
             <topic id="my-privileges">
                 <name>My user privileges</name>
                 <item>
-                    <description>Your Channels user role which is either participant, community planner or administrator.</description>
+                    <description>Your Channels user role which is either a (potential) participant, a collaboration
+                        planner or administrator.
+                    </description>
                 </item>
             </topic>
             <topic id="my-participation">
                 <name>I participate as...</name>
                 <item>
-                    <description>You can accept to participate in roles that are open to "all" or in roles that have been assigned to you by authorized users.
-                    
-By check a box next to a role, you accept the role. By unchecking an already checked box, you turn down the role.</description>
+                    <description>You can accept to participate as agents that are open to "all" or as agents that have
+                        been assigned to you by authorized users.
+
+                        By check a box next to an agent (e.g. "A Metropolis bus driver"), you accept to participate as
+                        this agent. By unchecking an already checked box, you turn down the assignment.
+                    </description>
                 </item>
             </topic>
             <topic id="adding-participation">
                 <name>I also participate in...</name>
                 <item>
-                     <description>Based on your user privileges or current participation, other roles in the community's organization may be available to you.
-                         
-First select an organization where there are such roles and then select the role. Your selection may be subject to supervisory confirmation.</description>
+                    <description>Based on your user privileges or current participation, other assignments in the
+                        collaboration plan's organization may be available to you.
+
+                        First select an organization where the desired agent would be listed and then select the agent.
+                        Your selection may be subject to confirmation by users participating as agents that supervise
+                        the agent you selected to participate as.
+                    </description>
                 </item>
             </topic>
             <topic id="my-to-be-confirmed">
                 <name>I await confirmation to be...</name>
                 <item>
-                    <description>This a list of roles in which your participation awaits confirmation by supervisors. You can withdraw your request by unchecking the box next to the role.</description>
+                    <description>This a list of agents in which your participation awaits confirmation by supervisors.
+                        You can withdraw your request by unchecking the box next to the agent.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -157,28 +373,36 @@ First select an organization where there are such roles and then select the role
             <topic id="about-requirements-page">
                 <name>Collaboration requirements</name>
                 <item>
-                    <description>As a community planner you can define information sharing requirements between organizations.
-                        
-You can then examine to what extent each requirement can be satisfied by the applicable pairs of organizations, should they follow the adopted collaboration template.
-                    
-You can add a new requirement definition by pressing the New button in the Definitions tab.
-                    
-To edit a requirement definition, press on the Edit button next to it in the list of requirements.</description>
+                    <description>As a collaboration planner you can define information sharing requirements between
+                        organizations.
+
+                        You can then examine to what extent each requirement can be satisfied by the applicable pairs of
+                        organizations, should they follow the adopted collaboration template.
+
+                        You can add a new requirement definition by pressing the New button in the Definitions tab.
+
+                        To edit a requirement definition, press on the Edit button next to it in the list of
+                        requirements.
+                    </description>
                 </item>
             </topic>
         </section>
         <section id="participation-page">
-            <name>Community participation page</name>
+            <name>Plan participation page</name>
             <topic id="about-participation-page">
-                <name>Community participation</name>
+                <name>Plan participation</name>
                 <item>
                     <description>If so authorized, you can
-                    
-* register organizations into the community as placeholder organizations defined in the collaboration template,
-* assign users to template-defined agents who are assigned roles in organizations,
-* confirm the participation of users into roles you supervise,
-* review participation issues detected by Channels,
-* resign your status as community planner or bestow it on another user.</description>
+
+                        * browse a registry of all organizations participating or eligible to participate in the plan,
+                        * register organizations for participation into the plan (or all plans) as placeholder
+                        organizations defined in the collaboration template adopted by the plan,
+                        * assign users to template-defined agents who are assigned agents in organizations,
+                        * confirm the participation of users into agents you supervise,
+                        * review participation issues detected by Channels,
+                        * resign your status as collaboration planner (if you are not the only one) and bestow your
+                        authority on another user.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -187,52 +411,67 @@ To edit a requirement definition, press on the Edit button next to it in the lis
             <topic id="about-all-protocols-page">
                 <name>All collaboration checklists</name>
                 <item>
-                    <description>If you are a domain planner, you can access the collaboration checklists of all participants; otherwise, you only have access to your own.
-                    
-By clicking on a participation role, you access the checklists for the role. By clicking on a participant's name, you access the combined checklists for all the roles played by the participant in the community.</description>
+                    <description>If you are a planner, you can access the collaboration checklists of all participants
+                        and all agents, assigned or not, in the collaboration plan; otherwise, you only have access to
+                        your own checklists and to those of the people you supervise in the plan.
+
+                        By clicking on an agent, you access the checklists for that agent. By clicking on a
+                        participant's name, you access the combined checklists for all the agents assigned to the
+                        participant in the plan.
+                    </description>
                 </item>
-            </topic>    
+            </topic>
         </section>
         <section id="protocols-page">
             <name>Collaboration checklists page</name>
             <topic id="about-protocols-page">
                 <name>Collaboration checklists</name>
                 <item>
-                    <description>The report lists the collaboration checklists from participation in a template-based community.
-                    
-The checklists describe
+                    <description>The report lists the collaboration checklists from participation in a template-based
+                        collaboration plan.
 
-* expected tasks
-* what events or communications trigger them (if any)
-* the steps, with or without constraints, by which tasks are executed, including
-** actions to be taken
-** queries to be made
-** self-assigned "research" sub-tasks
-** self-assigned follow up tasks
-                    
-A contacts directory concludes the report.</description>
+                        The checklists describe
+
+                        * expected tasks
+                        * what events or communications trigger them (if any)
+                        * the steps, with or without constraints, by which tasks are executed, including
+                        ** actions to be taken
+                        ** queries, notifications and receipt confirmations to be made
+                        ** self-assigned "research" sub-tasks
+                        ** self-assigned follow up tasks
+
+                        A contacts directory concludes the report.
+                    </description>
                 </item>
                 <next section="concepts" topic="checklist"/>
             </topic>
         </section>
     </role>
-    <role id="planner">
+    <role id="planner" glossarySection="concepts" glossaryTopic="glossary">
         <name>For developers of collaboration templates</name>
         <section id="about-channels-planner">
             <name>About Channels</name>
             <topic id="channels-planner">
                 <name>Building collaboration templates</name>
                 <item>
-                    <description>As a planner, you use Channels to design and build collaboration templates from which robust collaboration checklists are generated.
-                    
-A collaboration template sets how various types of organizations share or ought to share information to collaboratively prevent, respond to, or recover from a number of anticipated events that test their missions.
-                    
-Channels continuously examines collaboration templates for gaps and brittleness, and suggests options for remediation.
-                    
-Channels produces visualizations, analytics and reports that help planners and stakeholders understand and improve complex collaboration templates.
-                
-Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of information. It is used to capture and improve the collaboration ''practices'' of organizations and to adaptively produce collaboration checklists.
-                </description>
+                    <description>As a template developer, you use Channels to design and build collaboration templates
+                        from which robust collaboration checklists are generated in the collaboration plans that adopt
+                        these templates.
+
+                        A collaboration template sets how various types of organizations share or ought to share
+                        information to collaboratively prevent, respond to, or recover from a number of anticipated
+                        events that test their missions.
+
+                        Channels continuously examines collaboration templates for gaps and brittleness, and suggests
+                        options for remediation.
+
+                        Channels produces visualizations, analytics and reports that help planners and stakeholders
+                        understand and improve complex collaboration templates.
+
+                        Channels is a ''planning'' tool. It does not manage the ''actual'' sharing of information. It is
+                        used to capture and improve the collaboration ''practices'' of organizations and to adaptively
+                        produce collaboration checklists.
+                    </description>
                 </item>
                 <next section="about-channels-planner" topic="protocols"/>
                 <next section="about-channels-planner" topic="development-team"/>
@@ -241,51 +480,53 @@ Channels is a ''planning'' tool.  It does not manage the ''actual'' sharing of i
             <topic id="protocols">
                 <name>Generating collaboration checklists</name>
                 <item>
-                    <description>Channels computes personalized collaboration checklists from a collaboration template and provides them to community participants on demand.
-                    
-As a user's participation in a plan changes, even as events unfold, Channels automatically adapts and updates the user's checklists.
-                </description>
+                    <description>Channels computes personalized collaboration checklists from a collaboration template
+                        and provides them to the plan participants on demand.
+
+                        As a user's participation in a plan changes, even as events unfold, Channels automatically
+                        adapts and updates the user's checklists.
+                    </description>
                 </item>
             </topic>
             <topic id="development-team">
                 <name>Development team</name>
                 <item>
                     <description>
-* Jean-François Cloutier
-* Denis Ranger
-* Romit Chatterjee
-* Priyanka Gurav (AFourTech)
-* Mahesh Kulkarni (AFourTech)
-                </description>
+                        * Jean-François Cloutier
+                        * Denis Ranger
+                        * Romit Chatterjee
+                        * Priyanka Gurav (AFourTech)
+                        * Mahesh Kulkarni (AFourTech)
+                    </description>
                 </item>
             </topic>
             <topic id="attributions">
                 <name>Attributions</name>
                 <item>
                     <description>Channels is built using these open source code libraries:
-                    
-* AOPAlliance [http://aopalliance.sourceforge.net/]
-* Apache Commons [http://commons.apache.org/]
-* Apache Lucene [http://lucene.apache.org/core/]
-* Apache Velocity [http://velocity.apache.org/]
-* Apache Wicket [http://wicket.apache.org/]
-* AspectJ [http://www.eclipse.org/aspectj/]
-* Bliki wiki [http://code.google.com/p/gwtwiki/]
-* EhCache [http://ehcache.org/]
-* Enunciate [http://enunciate.codehaus.org/]
-* Geonames [http://www.geonames.org/]
-* GraphViz [http://www.graphviz.org/]
-* MongoDB [http://www.mongodb.org/]
-* Jamon [http://jamonapi.sourceforge.net/]
-* JWNL [http://sourceforge.net/projects/jwordnet/]
-* SLF4J [http://www.slf4j.org/]
-* JQWicket [http://code.google.com/p/jqwicket/]
-* Spring Framework [http://www.springsource.org/spring-framework/]
-* WordNet [http://wordnet.princeton.edu/]
-* XStream [http://xstream.codehaus.org/]
 
-Our thanks and admiration to all who contributed to these libraires.
-                </description>
+                        * AOPAlliance [http://aopalliance.sourceforge.net/]
+                        * Apache Commons [http://commons.apache.org/]
+                        * Apache Lucene [http://lucene.apache.org/core/]
+                        * Apache Velocity [http://velocity.apache.org/]
+                        * Apache Wicket [http://wicket.apache.org/]
+                        * AspectJ [http://www.eclipse.org/aspectj/]
+                        * Bliki wiki [http://code.google.com/p/gwtwiki/]
+                        * EhCache [http://ehcache.org/]
+                        * Enunciate [http://enunciate.codehaus.org/]
+                        * Geonames [http://www.geonames.org/]
+                        * GraphViz [http://www.graphviz.org/]
+                        * MongoDB [http://www.mongodb.org/]
+                        * Jamon [http://jamonapi.sourceforge.net/]
+                        * JWNL [http://sourceforge.net/projects/jwordnet/]
+                        * SLF4J [http://www.slf4j.org/]
+                        * JQWicket [http://code.google.com/p/jqwicket/]
+                        * Spring Framework [http://www.springsource.org/spring-framework/]
+                        * WordNet [http://wordnet.princeton.edu/]
+                        * XStream [http://xstream.codehaus.org/]
+
+                        Our thanks and admiration to all who contributed to these libraires.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -334,21 +575,30 @@ Our thanks and admiration to all who contributed to these libraires.
                 <name>Collaboration template</name>
                 <item>
                     <description>A collaboration template is defined by
-* the planning scenarios that cause organizations to collaborate and share information
-* the organizations and agents (stand-ins for people or systems) employed by them that involved in the collaborations
-* assignable tasks, connected by information flows, that achieve organizational goals in planning scenarios
+                        * the planning scenarios that cause organizations to collaborate and share information
+                        * the organizations and agents (stand-ins for people or systems) employed by them that involved
+                        in the collaborations
+                        * assignable tasks, connected by information flows, that achieve organizational goals in
+                        planning scenarios
 
-Applying a scope to a collaboration template produces visualizations, analytics, diagnostics, reports and, crucially, collaboration checklists.
+                        Applying a scope to a collaboration template produces visualizations, analytics, diagnostics,
+                        reports and, crucially, collaboration checklists.
 
-A collaboration template has one editable development version, zero or one production version (read-only) and any number of retired versions (also read-only).
+                        A collaboration template has one editable development version, zero or one production version
+                        (read-only) and any number of retired versions (also read-only).
 
-The development version is released by an administrator. Upon releasing a new version of the template, a copy of the development version becomes the new production version and the prior production version is retired. Finally, the development version number is incrementd by one.</description>
+                        The development version is released by an administrator. Upon releasing a new version of the
+                        template, a copy of the development version becomes the new production version and the prior
+                        production version is retired. Finally, the development version number is incrementd by one.
+                    </description>
                 </item>
             </topic>
             <topic id="plan-element">
                 <name>Template element</name>
                 <item>
-                    <description> Anything that contributes to the definition of a collaboration template, be it a segment, a task, a flow, an entity, information etc. is considered a template element.</description>
+                    <description>Anything that contributes to the definition of a collaboration template, be it a
+                        segment, a task, a flow, an entity, information etc. is considered a template element.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
                 <next section="concepts" topic="segment"/>
@@ -359,11 +609,15 @@ The development version is released by an administrator. Upon releasing a new ve
             <topic id="event">
                 <name>Event</name>
                 <item>
-                    <description>An event is an entity representing a transient change in the world that introduces risks and/or opportunities for organizations. 
+                    <description>An event is an entity representing a transient change in the world that introduces
+                        risks and/or opportunities for organizations.
 
-Risks and events should not be confused. An event can introduce risks to one organization while creating opportunities for another. 
+                        Risks and events should not be confused. An event can introduce risks to one organization while
+                        creating opportunities for another.
 
-From the point of view of the template, an event is considered an ''incident'' if its occurrence is not planned (an 'outside' event).</description>
+                        From the point of view of the template, an event is considered an ''incident'' if its occurrence
+                        is not planned (an 'outside' event).
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
                 <next section="concepts" topic="checklist-trigger"/>
@@ -371,53 +625,65 @@ From the point of view of the template, an event is considered an ''incident'' i
             <topic id="phase">
                 <name>Phase</name>
                 <item>
-                    <description>A phase is an entity representing a time period relative to the occurrence of events. A phase is either the time before, during or after events.
+                    <description>A phase is an entity representing a time period relative to the occurrence of events. A
+                        phase is either the time before, during or after events.
 
-A collaboration template can address what happens before, during or after of events, or a combination thereof.
-                </description>
+                        A collaboration template can address what happens before, during or after of events, or a
+                        combination thereof.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="scenario">
                 <name>Planning scenario</name>
                 <item>
-                    <description>The term ''planning scenario'' is used in collaboration planning to mean a phase of an event being planned for, possibly occurring in the context of other past or current events.
-                </description>
+                    <description>The term ''planning scenario'' is used in collaboration planning to mean a phase of an
+                        event being planned for, possibly occurring in the context of other past or current events.
+                    </description>
                 </item>
             </topic>
             <topic id="goal">
                 <name>Goal</name>
                 <item>
-                    <description>In Channels, a goal is understood as a ''mission-level'' goal of one or more of the organizations to be involved in the template. A goal is either a risk to be mitigated or an opportunity to be seized due to the onset or conclusion of an event.
-                    
-Goals are achieved by successfully carrying out tasks, or they are automatically achieved when an event terminates.
+                    <description>In Channels, a goal is understood as a ''mission-level'' goal of one or more of the
+                        organizations to be involved in the template. A goal is either a risk to be mitigated or an
+                        opportunity to be seized due to the onset or conclusion of an event.
 
-Mission-level goals are not to be confused with the implied and unstated goals of successfully executing a task or sharing information.
-                </description>
+                        Goals are achieved by successfully carrying out tasks, or they are automatically achieved when
+                        an event terminates.
+
+                        Mission-level goals are not to be confused with the implied and unstated goals of successfully
+                        executing a task or sharing information.
+                    </description>
                 </item>
             </topic>
             <topic id="segment">
                 <name>Segment</name>
                 <item>
-                    <description>Collaboration templates are composed of one or more or more segments. Each segment addresses a list of organizational goals in one planning scenario.
+                    <description>Collaboration templates are composed of one or more or more segments. Each segment
+                        addresses a list of organizational goals in one planning scenario.
 
-No two segments should address identical goals in identical planning scenarios.
+                        No two segments should address identical goals in identical planning scenarios.
 
-Two segments are connected by the flows that span them and by how a task in one segment can start or end an events, thus initiating the other segment.
-                </description>
+                        Two segments are connected by the flows that span them and by how a task in one segment can
+                        start or end an events, thus initiating the other segment.
+                    </description>
                 </item>
             </topic>
             <topic id="information">
                 <name>Information</name>
                 <item>
-                    <description>Information is shared by collaborating agents (people or systems) via communication channels.
-                    
-Information is named and can be described by a list of its essential elements.
+                    <description>Information is shared by collaborating agents (people or systems) via communication
+                        channels.
 
-Information can be constrained to compliance with a named information product that defines a standard list of elements of information.
+                        Information is named and can be described by a list of its essential elements.
 
-Each element of information has a name, can be accompanied by handling instructions and be given a secrecy classification.
-                </description>
+                        Information can be constrained to compliance with a named information product that defines a
+                        standard list of elements of information.
+
+                        Each element of information has a name, can be accompanied by handling instructions and be given
+                        a secrecy classification.
+                    </description>
                 </item>
                 <next section="concepts" topic="info-product"/>
                 <next section="profiling" topic="profiling-info-product"/>
@@ -425,89 +691,113 @@ Each element of information has a name, can be accompanied by handling instructi
             <topic id="task">
                 <name>Task</name>
                 <item>
-                    <description>A task is an action or decision taken, individually or as a team, by assigned agents (people or systems) in order to achieve goals and/or acquire information to share.</description>
+                    <description>A task is an action or decision taken, individually or as a team, by assigned agents
+                        (people or systems) in order to achieve goals and/or acquire information to share.
+                    </description>
                 </item>
             </topic>
             <topic id="need">
                 <name>Information need</name>
                 <item>
-                    <description>Specification of information needed to execute a task, plus requirements on its manner of delivery.
-                    
-Delivery requirements include
-* timeliness
-* transmission media
-* information format
-                         </description>
+                    <description>Specification of information needed to execute a task, plus requirements on its manner
+                        of delivery.
+
+                        Delivery requirements include
+                        * timeliness
+                        * transmission media
+                        * information format
+                    </description>
                 </item>
             </topic>
             <topic id="capability">
                 <name>Information capability</name>
                 <item>
-                    <description>Specification of information acquired by or for the execution of a task that could be shared with "quality of service" commitments.
+                    <description>Specification of information acquired by or for the execution of a task that could be
+                        shared with "quality of service" commitments.
 
-Quality of service commitments include
-* timeliness
-* transmission media
-* information format
+                        Quality of service commitments include
+                        * timeliness
+                        * transmission media
+                        * information format
                     </description>
                 </item>
             </topic>
             <topic id="flow">
                 <name>Information sharing flow (or, simply, flow)</name>
                 <item>
-                    <description>How agents who carry out a task that ''produces'' information would commit to share that information with agents carrying out a task that ''consumes'' it.</description>
+                    <description>How agents who carry out a task that ''produces'' information would commit to share
+                        that information with agents carrying out a task that ''consumes'' it.
+                    </description>
                 </item>
             </topic>
             <topic id="assignment">
                 <name>Task assignment</name>
                 <item>
-                    <description>The list of agents assigned to a task because their profiles match the definition of the task.</description>
+                    <description>The list of agents assigned to a task because their profiles match the definition of
+                        the task.
+                    </description>
                 </item>
             </topic>
             <topic id="commitment">
                 <name>Information sharing commitment</name>
                 <item>
-                    <description>The commitment by one agent to share information acquired doing a task with another agent who needs it to successfully do some other task.</description>
+                    <description>The commitment by one agent to share information acquired doing a task with another
+                        agent who needs it to successfully do some other task.
+                    </description>
                 </item>
             </topic>
             <topic id="issue">
                 <name>Issue</name>
                 <item>
-                    <description>A problem with the template that is either detected automatically by Channels or, upon review, by planners. An issue is either one of
-* validity (something is inherently wrong in the template)
-* completeness (something is obviously missing from the template)
-* robustness (something is making a plan based on the template likely to fail)</description>
+                    <description>A problem with the template that is either detected automatically by Channels or, upon
+                        review, by planners. An issue is either one of
+                        * validity (something is inherently wrong in the template)
+                        * completeness (something is obviously missing from the template)
+                        * robustness (something is making a plan based on the template likely to fail)
+                    </description>
                 </item>
             </topic>
             <topic id="attachment">
                 <name>Attachment</name>
                 <item>
-                    <description>You can attach uploaded or linked resources to a collaboration template or community as a whole, or to any element of a collaboration template.
-Attachments can be documents, graphics, videos etc. They can be named and categorized, typically as reference, picture or policy.</description>
+                    <description>You can attach uploaded or linked resources to a collaboration template or plan as
+                        a whole, or to any element of a collaboration template.
+                        Attachments can be documents, graphics, videos etc. They can be named and categorized, typically
+                        as reference, picture or policy.
+                    </description>
                 </item>
             </topic>
             <topic id="info-product">
                 <name>Information product</name>
                 <item>
-                    <description>An information product is an entity representing a standard bundle of elements of information. 
-                        
-An information product be defined as an extension of another information product to which it adds elements of information.
-                    
-It is recommended that info needs, capabilities and flows be defined in terms of information products.</description>
+                    <description>An information product is an entity representing a standard bundle of elements of
+                        information.
+
+                        An information product be defined as an extension of another information product to which it
+                        adds elements of information.
+
+                        It is recommended that info needs, capabilities and flows be defined in terms of information
+                        products.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="info-format">
                 <name>Information format</name>
                 <item>
-                    <description>An information format is an entity representing a standard format in which information is to be communicated.</description>
+                    <description>An information format is an entity representing a standard format in which information
+                        is to be communicated.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="organization">
                 <name>Organization</name>
                 <item>
-                    <description>An organization is an entity representing an administrative unit (a corporation, an agency, a department, a project team etc.) with a name, a mission, (and possibly a parent organization) and that employs agents in roles of responsibility.</description>
+                    <description>An organization is an entity representing an administrative unit (a corporation, an
+                        agency, a department, a project team etc.) with a name, a mission, (and possibly a parent
+                        organization) and that employs agents in roles of responsibility.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
                 <next section="concepts" topic="role"/>
@@ -516,46 +806,60 @@ It is recommended that info needs, capabilities and flows be defined in terms of
             <topic id="role">
                 <name>Role</name>
                 <item>
-                    <description>A role is an eneity representing a standard set of responsibilities that one or more organizations can assign to some of its members. A role, such as Manager, is different from a job title, such as Senior VP Sales.</description>
+                    <description>A role is an eneity representing a standard set of responsibilities that one or more
+                        organizations can assign to some of its members. A role, such as Manager, is different from a
+                        job title, such as Senior VP Sales.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="agent">
                 <name>Agent</name>
                 <item>
-                    <description>An agent is an entity representing a person or system, or a completely interchangeable group of persons or systems. 
-                        
-An agent can be employed by one or more organizations in titled positions, each specified by a role.
-                    
-Agent ''types'' are not to be confused with ''roles''. Agent types are used to categorize agents independently of their roles. Examples of agent types are "adult", "trained in CPR", "licensed diver" etc.</description>
+                    <description>An agent is an entity representing a person or system, or a completely interchangeable
+                        group of persons or systems.
+
+                        An agent can be employed by one or more organizations in titled positions, each specified by a
+                        role.
+
+                        Agent ''types'' are not to be confused with ''roles''. Agent types are used to categorize agents
+                        independently of their roles. Examples of agent types are "adult", "trained in CPR", "licensed
+                        diver" etc.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="place">
                 <name>Place</name>
                 <item>
-                    <description>A place is an entity used to delimit jurisdictions of agents employed by organizations, to locate where tasks are to be executed, where events are of significance, and where a template is meant to apply.</description>
+                    <description>A place is an entity used to delimit jurisdictions of agents employed by organizations,
+                        to locate where tasks are to be executed, where events are of significance, and where a template
+                        is meant to apply.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="medium">
                 <name>Transmission medium</name>
                 <item>
-                    <description>A transmission medium is an entity representing the means, technological or not, by which agents communicate.
-                        
-A transmission medium can be meant for broadcasting (to all), multicasting (to many) or narrowcasting (to one).</description>
+                    <description>A transmission medium is an entity representing the means, technological or not, by
+                        which agents communicate.
+
+                        A transmission medium can be meant for broadcasting (to all), multicasting (to many) or
+                        narrowcasting (to one).
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="classification">
                 <name>Secrecy classification</name>
                 <item>
-                    <description>A classification system names secrecy classification levels. 
-                        
-Secrecy classifications are used to specify
-* the clearances of agents
-* the secrecy of elements of information
-* the security level of transmission media
+                    <description>A classification system names secrecy classification levels.
+
+                        Secrecy classifications are used to specify
+                        * the clearances of agents
+                        * the secrecy of elements of information
+                        * the security level of transmission media
                     </description>
                 </item>
                 <next section="concepts" topic="agent"/>
@@ -565,22 +869,26 @@ Secrecy classifications are used to specify
             <topic id="overriding">
                 <name>Overriding tasks</name>
                 <item>
-                    <description>A task with the same name as another task overrides it if it assigns a subset of the agents the other task assigns.
-                        
-An agent is assigned to the overriding task (the more exclusive one), not the overridden task.</description>
+                    <description>A task with the same name as another task overrides it if it assigns a subset of the
+                        agents the other task assigns.
+
+                        An agent is assigned to the overriding task (the more exclusive one), not the overridden task.
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
             </topic>
             <topic id="checklist-trigger">
                 <name>Checklist trigger</name>
                 <item>
-                    <description>A collaboration checklist is a task assigned to an agent, with attendant activity and information sharing steps detailing its execution.
-                    
-Checklists are triggered by
-* observation of events,
-* notifications (from others or from self), 
-* by requests for information (from others or from self),
-* or by nothing (ongoing tasks)</description>
+                    <description>A collaboration checklist is a task assigned to an agent, with attendant activity and
+                        information sharing steps detailing its execution.
+
+                        Checklists are triggered by
+                        * observation of events,
+                        * notifications (from others or from self),
+                        * by requests for information (from others or from self),
+                        * or by nothing (ongoing tasks)
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="checklist"/>
@@ -591,25 +899,30 @@ Checklists are triggered by
                 <name>Entity</name>
                 <item>
                     <description>An entity is a grab bag term for "timeless things and concepts". Entities include
-* agents
-* events
-* information formats
-* information products
-* organizations
-* phases
-* places
-* roles
-* transmission media
+                        * agents
+                        * events
+                        * information formats
+                        * information products
+                        * organizations
+                        * phases
+                        * places
+                        * roles
+                        * transmission media
 
-Channels distinguishes between "actual" entities and "types" (or categories) of entities. For example, IBM is an organization whereas "Corporation" is a type of organization.
+                        Channels distinguishes between "actual" entities and "types" (or categories) of entities. For
+                        example, IBM is an organization whereas "Corporation" is a type of organization.
 
-Entities are automatically created when they are first named in the definition of some template element. No two entities of the same kind can have the same name in a template.
+                        Entities are automatically created when they are first named in the definition of some template
+                        element. No two entities of the same kind can have the same name in a template.
 
-Entities can be categorized by entity types of the same kind (IBM - an actual organization - is a Corporation -a type of organization - but it can not be a Manager - a role). 
+                        Entities can be categorized by entity types of the same kind (IBM - an actual organization - is
+                        a Corporation -a type of organization - but it can not be a Manager - a role).
 
-Categorized entity types form taxonomies (a Police Chief is a Manager is an Employee).
+                        Categorized entity types form taxonomies (a Police Chief is a Manager is an Employee).
 
-Events, information formats, information products, phases, roles and transmission media are always types in Channels.</description>
+                        Events, information formats, information products, phases, roles and transmission media are
+                        always types in Channels.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
                 <next section="concepts" topic="agent"/>
@@ -626,21 +939,25 @@ Events, information formats, information products, phases, roles and transmissio
                 <name>Impact of sharing</name>
                 <item>
                     <description>Sharing information can impact the execution of tasks in different ways. It can
-* trigger the task
-* terminate the task
-* be critical (crucial) to the task's success
-* be useful
+                        * trigger the task
+                        * terminate the task
+                        * be critical (crucial) to the task's success
+                        * be useful
 
-When doing failure impact analysis, only flows that trigger, terminate or are crucial to the task's success are considered.
+                        When doing failure impact analysis, only flows that trigger, terminate or are crucial to the
+                        task's success are considered.
                     </description>
                 </item>
             </topic>
             <topic id="usefulness">
                 <name>Useful tasks</name>
                 <item>
-                    <description>A task is considered useful if it directly achieves a goal or if its failure would prevent another task from achieving a goal.
-                    
-Only useful tasks are considered when doing failure impact analysis. A useless task is considered an issue by Channels.</description>
+                    <description>A task is considered useful if it directly achieves a goal or if its failure would
+                        prevent another task from achieving a goal.
+
+                        Only useful tasks are considered when doing failure impact analysis. A useless task is
+                        considered an issue by Channels.
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="goal"/>
@@ -648,69 +965,92 @@ Only useful tasks are considered when doing failure impact analysis. A useless t
             <topic id="survey">
                 <name>Survey</name>
                 <item>
-                    <description>Planners can define surveys for various kinds of template elements (surveys about tasks, about events, about the collaboration template as a whole etc.).
-                    
-A survey is a questionnaire composed of required and optional questions. Questions can have single or multiple answers and they may allow free commentary.
-                    
-A survey is applied to one or more template elements of the appropriate kind (a task survey can be applied to many tasks) and is then sent to one or more users with an optional deadline.
-                    
-Recipients of surveys can accept and answer the survey and revise their answers at any time. Recipients can decline a survey or forward it to their contacts, who are then automatically registered as Channels users.</description>
+                    <description>Planners can define surveys for various kinds of template elements (surveys about
+                        tasks, about events, about the collaboration template as a whole etc.).
+
+                        A survey is a questionnaire composed of required and optional questions. Questions can have
+                        single or multiple answers and they may allow free commentary.
+
+                        A survey is applied to one or more template elements of the appropriate kind (a task survey can
+                        be applied to many tasks) and is then sent to one or more users with an optional deadline.
+
+                        Recipients of surveys can accept and answer the survey and revise their answers at any time.
+                        Recipients can decline a survey or forward it to their contacts, who are then automatically
+                        registered as Channels users.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
             </topic>
             <topic id="tag">
                 <name>Tag</name>
                 <item>
-                    <description>A tag is a word or phrase used to tag template elements in order to informally classify them.
-                        
-Tags can belong to tag domains. For example, ''esf:transportation'' is the tag ''transportation'' in the tag domain ''esf''.
-                    
-Tag domains can optionally be predefined by attaching specially formatted text ''tag'' text files to the template.
-                    
-A given tag can be applied without constraints to template elements of different kinds.
-                    
-One use of tags is to specify information in collaboration requirements.</description>
+                    <description>A tag is a word or phrase used to tag template elements in order to informally classify
+                        them.
+
+                        Tags can belong to tag domains. For example, ''esf:transportation'' is the tag
+                        ''transportation'' in the tag domain ''esf''.
+
+                        Tag domains can optionally be predefined by attaching specially formatted text ''tag'' text
+                        files to the template.
+
+                        A given tag can be applied without constraints to template elements of different kinds.
+
+                        One use of tags is to specify information in collaboration requirements.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
             </topic>
             <topic id="checklist">
                 <name>Checklist</name>
                 <item>
-                    <description>A collaboration checklist lists the steps required to successfully execute a task. 
-                        
-A step can be either
+                    <description>A collaboration checklist lists the steps required to successfully execute a task.
 
-* some stated activity (other than communicating)
-* an information request to make,
-* a notification to send,
-* sending confirmation of information received,
-* a self-assigned research sub-task
-* a self-assigned follow up sub-task
+                        A step can be either
 
-A step may be required or optional. A step may have identify the completion of other steps as pre-requisites.
+                        * some stated activity (other than communicating)
+                        * an information request to make,
+                        * a notification to send,
+                        * sending confirmation of information received,
+                        * a self-assigned research sub-task
+                        * a self-assigned follow up sub-task
 
-A step, to be executable, may also require that some stated conditions (an event phase, a goal having been achieved, an information need having been satisfied, the task having failed) be present or absent.
+                        A step may be required or optional. A step may have identify the completion of other steps as
+                        pre-requisites.
 
-Channels will raise an issue whenever a condition or outcome from the definition of a task is not referenced by at least one step, for example, when a goal achieved by the task is not associated with a step in its checklist.
+                        A step, to be executable, may also require that some stated conditions (an event phase, a goal
+                        having been achieved, an information need having been satisfied, the task having failed) be
+                        present or absent.
 
-The communication steps of a checklist are implied by the flows in and out of a task, to and from other agents(requested info to be received and notifications to be sent). 
+                        Channels will raise an issue whenever a condition or outcome from the definition of a task is
+                        not referenced by at least one step, for example, when a goal achieved by the task is not
+                        associated with a step in its checklist.
 
-The sub-task steps are implied by flows to self - research sub-tasks are triggering requests to self and followup sub-tasks are triggering notifications to self.
+                        The communication steps of a checklist are implied by the flows in and out of a task, to and
+                        from other agents(requested info to be received and notifications to be sent).
 
-The conditions on executing steps can be the goals achieved and events triggered by the task, or other stated conditions.
+                        The sub-task steps are implied by flows to self - research sub-tasks are triggering requests to
+                        self and followup sub-tasks are triggering notifications to self.
 
-The outcomes of a task (events caused or terminated, goals achieved, sharing capabilities acquired) can be associated with the execution of individual steps.
+                        The conditions on executing steps can be the goals achieved and events triggered by the task, or
+                        other stated conditions.
+
+                        The outcomes of a task (events caused or terminated, goals achieved, sharing capabilities
+                        acquired) can be associated with the execution of individual steps.
                     </description>
                 </item>
             </topic>
             <topic id="function">
                 <name>Function</name>
                 <item>
-                    <description>A function specifies the goals to be achieved, the information needed and the information to be acquired by any task implementing the function.
-                    
-Functions are "entities" and so they can be categorized by other functions. Functions are always entity "types"; there is no such thing as an "actual" function.
+                    <description>A function specifies the goals to be achieved, the information needed and the
+                        information to be acquired by any task implementing the function.
 
-A task may or may not declare that it implements a function. If it does, it is expected to conform to the specifications of the function. Issues are raised if the task does not fully do so.
+                        Functions are "entities" and so they can be categorized by other functions. Functions are always
+                        entity "types"; there is no such thing as an "actual" function.
+
+                        A task may or may not declare that it implements a function. If it does, it is expected to
+                        conform to the specifications of the function. Issues are raised if the task does not fully do
+                        so.
                     </description>
                     <script>
                         <action>Open a function profile</action>
@@ -730,13 +1070,20 @@ A task may or may not declare that it implements a function. If it does, it is e
             <topic id="about-plans-page">
                 <name>Collaboration template</name>
                 <item>
-                    <description>As a domain planner, you can access collaboration template editor and a summary report on all issues found in the template.
+                    <description>As a domain planner, you can access collaboration template editor and a summary report
+                        on all issues found in the template.
 
-As a planner or authorized user you can access the planning surveys you participate in and the feedback you provided.
-                    
-Documents that have been attached to the template are directly accessible. New ones can be added.
-                    
-You can switch to another template - or another version of this template - by mousing over the name of the template in the "breadcrumbs" at the top of the page. A drop-down menu of templates will appear. If this page was accessed from a community, only the versions of the community-adopted collaboration template are accessible.</description>
+                        As a planner or authorized user you can access the planning surveys you participate in and the
+                        feedback you provided.
+
+                        Documents that have been attached to the template are directly accessible. New ones can be
+                        added.
+
+                        You can switch to another template - or another version of this template - by mousing over the
+                        name of the template in the "breadcrumbs" at the top of the page. A drop-down menu of templates
+                        will appear. If this page was accessed from a collaboration plan, only the versions of the
+                        plan-adopted collaboration template are accessible.
+                    </description>
                 </item>
                 <next section="about-channels-planner" topic="channels-planner"/>
                 <next section="plan-editor" topic="about-plan-editor"/>
@@ -748,202 +1095,239 @@ You can switch to another template - or another version of this template - by mo
                 <name>Collaboration template editor</name>
                 <item>
                     <description>As a collaboration planner, you use the template editor to
-                    
-* define the scope of the template in terms of risk/opportunity-causing events and of the organizations involved,
-* compose the template from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
-* define for each segment the information sharing and tasks required to deal with these risks and opportunities
-* profile the "entities" (events, phases, organizations, roles etc.) referenced in the collaboration template
-* report issues in addition to those automatically detected by Channels
-* view analytics to better understand the consequences, strengths and weaknesses of the template
+
+                        * define the scope of the template in terms of risk/opportunity-causing events and of the
+                        organizations involved,
+                        * compose the template from segments, each one addressing one phase (before, during, after) of
+                        one event, and some of the attendant risks/opportunities
+                        * define for each segment the information sharing and tasks required to deal with these risks
+                        and opportunities
+                        * profile the "entities" (events, phases, organizations, roles etc.) referenced in the
+                        collaboration template
+                        * report issues in addition to those automatically detected by Channels
+                        * view analytics to better understand the consequences, strengths and weaknesses of the template
                     </description>
                 </item>
                 <next section="about-channels-planner" topic="channels-planner"/>
             </topic>
-         </section>
+        </section>
         <section id="menus">
             <name>Menus</name>
             <topic id="show-plan">
                 <name>Template editor show menu</name>
                 <item>
                     <description>The options are
-* Planners/Hide planners - Hide or show the planners presence, activities and messages panel
-* About Collaboration Template - Open the template details panel
-* About Segment - Open the segment details panel</description>
+                        * Planners/Hide planners - Hide or show the planners presence, activities and messages panel
+                        * About Collaboration Template - Open the template details panel
+                        * About Segment - Open the segment details panel
+                    </description>
                 </item>
             </topic>
             <topic id="actions-plan">
                 <name>Template editor actions menu</name>
                 <item>
                     <description>The options are
-* Send message - Send a message to planners about this template as a whole
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Paste task - Insert the copied task, if any, into the current segment
-* Paste attachment - Add the copied attachment, if any, to this template as a whole
-* Add new task - Add a new task to the current segment
-* New issue - Report a new issue about this template as a whole
-* Add new segment - Add a new segment to this template
-* Remove this segment - Remove the current segment from this template </description>
+                        * Send message - Send a message to planners about this template as a whole
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Paste task - Insert the copied task, if any, into the current segment
+                        * Paste attachment - Add the copied attachment, if any, to this template as a whole
+                        * Add new task - Add a new task to the current segment
+                        * New issue - Report a new issue about this template as a whole
+                        * Add new segment - Add a new segment to this template
+                        * Remove this segment - Remove the current segment from this template
+                    </description>
                 </item>
             </topic>
             <topic id="searching-menu">
                 <name>Searching menu</name>
                 <item>
                     <description>The options are
-* Index - Open the index of all named elements in this template
-* Tags - Open the panel with all the tags used in this template
-* Taxonomies - Open the panel showing all entity taxonomies defined in this template
-* Who's who - Open the panel listing all agents (people and systems) represented in this template
-* All attachments - Open the panel listing all file and Web page attachments in this template</description>
+                        * Index - Open the index of all named elements in this template
+                        * Tags - Open the panel with all the tags used in this template
+                        * Taxonomies - Open the panel showing all entity taxonomies defined in this template
+                        * Who's who - Open the panel listing all agents (people and systems) represented in this
+                        template
+                        * All attachments - Open the panel listing all file and Web page attachments in this template
+                    </description>
                 </item>
             </topic>
             <topic id="scoping-menu">
                 <name>Scoping menu</name>
                 <item>
                     <description>The options are
-* Events in Scope - Open the panel with the editable list of all events in the scope of this template
-* Goals in Scope - Open the panel showing all goals defined in this template
-* Organizations in Scope - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this template
-* Classification Systems - Open the panel used to define the security classifications used in this template</description>
+                        * Events in Scope - Open the panel with the editable list of all events in the scope of this
+                        template
+                        * Goals in Scope - Open the panel showing all goals defined in this template
+                        * Organizations in Scope - Open the panel used to name the organizations (real or placeholders)
+                        that are expected to be assigned tasks in this template
+                        * Classification Systems - Open the panel used to define the security classifications used in
+                        this template
+                    </description>
                 </item>
             </topic>
             <topic id="improving-menu">
                 <name>Improving menu</name>
                 <item>
                     <description>The options are
-* Task Mover - Open the panel used to easily move tasks from the current segment to another
-* Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and committed to share information (as reflected in their task checklists)
-* Template Evaluation - Open a panel containing metrics of all issues found in this template
-* All Issues - Open a panel listing all the issues found in this template
-* Template versions - Open a panel identifying the current version of this template and allowing planners to vote on moving it to production</description>
+                        * Task Mover - Open the panel used to easily move tasks from the current segment to another
+                        * Checklists Map - Open a visualization of how agents and organizations are being assigned to
+                        tasks and committed to share information (as reflected in their task checklists)
+                        * Template Evaluation - Open a panel containing metrics of all issues found in this template
+                        * All Issues - Open a panel listing all the issues found in this template
+                        * Template versions - Open a panel identifying the current version of this template and allowing
+                        planners to vote on moving it to production
+                    </description>
                 </item>
             </topic>
             <topic id="learning-menu">
                 <name>Learning menu</name>
                 <item>
                     <description>The options are
-* All feedback - Open a panel where all feedback sent about this template is listed and can be responded to
-* All surveys - Open a panel from where surveys can be defined, launched and managed</description>
+                        * All feedback - Open a panel where all feedback sent about this template is listed and can be
+                        responded to
+                        * All surveys - Open a panel from where surveys can be defined, launched and managed
+                    </description>
                 </item>
             </topic>
             <topic id="actions-segment">
                 <name>Segment actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  Send a message to planners about this segment
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Paste attachment - Add the copied attachment, if any, to this segment
-* New issue - Report a new issue about this segment
-* Move tasks - Open the panel used to easily move tasks from this segment to another</description>
+                        * Send message - Send a message to planners about this segment
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Paste attachment - Add the copied attachment, if any, to this segment
+                        * New issue - Report a new issue about this segment
+                        * Move tasks - Open the panel used to easily move tasks from this segment to another
+                    </description>
                 </item>
             </topic>
             <topic id="show-task">
                 <name>Task show menu</name>
                 <item>
                     <description>The options are
-* Details/Hide details - Show or hide the task definition form
-* Assignments - Show the list of agents in scope that are assignable to the task given its definition
-* Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
-* Failure impacts - Open a panel showing the potential impacts of this task failing
-* Dissemination - Open a panel showing how elements of informations acquired for this tasks disseminate to other tasks
-* Surveys - Open a panel to launch or access surveys about this task
-* Agent - Open the profile panel for the agent referenced by the task (hidden if N/A)
-* Role - Open the profile panel for the role referenced by the task (hidden if N/A)
-* Organization - Open the profile panel for the organization referenced by the task (hidden if N/A)
-* Jurisdiction - Open the profile panel for the jurisdiction ( a place) referenced by the task (hidden if N/A)
-* Location - Open the profile panel for the location (a place) referenced by the task (hidden if N/A)
-* Event - Open the profile panel for the event referenced by the task (hidden if N/A)</description>
+                        * Details/Hide details - Show or hide the task definition form
+                        * Assignments - Show the list of agents in scope that are assignable to the task given its
+                        definition
+                        * Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
+                        * Failure impacts - Open a panel showing the potential impacts of this task failing
+                        * Dissemination - Open a panel showing how elements of informations acquired for this tasks
+                        disseminate to other tasks
+                        * Surveys - Open a panel to launch or access surveys about this task
+                        * Agent - Open the profile panel for the agent referenced by the task (hidden if N/A)
+                        * Role - Open the profile panel for the role referenced by the task (hidden if N/A)
+                        * Organization - Open the profile panel for the organization referenced by the task (hidden if
+                        N/A)
+                        * Jurisdiction - Open the profile panel for the jurisdiction ( a place) referenced by the task
+                        (hidden if N/A)
+                        * Location - Open the profile panel for the location (a place) referenced by the task (hidden if
+                        N/A)
+                        * Event - Open the profile panel for the event referenced by the task (hidden if N/A)
+                    </description>
                 </item>
             </topic>
             <topic id="actions-task">
                 <name>Task actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  Send a message to planners about this task
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Copy task - Copy this task
-* Cut task - Copy and remove this task
-* Set task from copy - Set the definition of this task from the last copied task
-* Paste attachment - Add the copied attachment, if any, to this task
-* Paste flow - Add copied info need or capability to this task 
-* New issue - Report a new issue about this task
-* Implement function - Add goals, information needs and capabilities to implement the task's function
-* Duplicate task - Add new task as a copy of this one
-* Satisfy info needs - Create all possible flows that satify this task's info needs, based on existing info capabilities
-* Disintermediate - Disconnect this task from all flows where it acts as an intermediary</description>
+                        * Send message - Send a message to planners about this task
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Copy task - Copy this task
+                        * Cut task - Copy and remove this task
+                        * Set task from copy - Set the definition of this task from the last copied task
+                        * Paste attachment - Add the copied attachment, if any, to this task
+                        * Paste flow - Add copied info need or capability to this task
+                        * New issue - Report a new issue about this task
+                        * Implement function - Add goals, information needs and capabilities to implement the task's
+                        function
+                        * Duplicate task - Add new task as a copy of this one
+                        * Satisfy info needs - Create all possible flows that satify this task's info needs, based on
+                        existing info capabilities
+                        * Disintermediate - Disconnect this task from all flows where it acts as an intermediary
+                    </description>
                 </item>
             </topic>
             <topic id="show-flow">
                 <name>Need/Capability/Flow show menu</name>
                 <item>
                     <description>The options are
-* Details / Hide details - Open or close the definition form 
-* Info product - Open the profile panel for the referenced info product (hidden if N/A)
-* Elements - Open the elements of information edit panel (hidden if definition form is closed)
-* Commitments - Open a panel with all computed info sharing commitments (hidden if N/A)
-* Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A) 
-* Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
-* Surveys - Open a panel to launch or access surveys about this info need/capability/flow
-* Send message - Send a message to planners about this info need/capability/flow</description>
+                        * Details / Hide details - Open or close the definition form
+                        * Info product - Open the profile panel for the referenced info product (hidden if N/A)
+                        * Elements - Open the elements of information edit panel (hidden if definition form is closed)
+                        * Commitments - Open a panel with all computed info sharing commitments (hidden if N/A)
+                        * Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A)
+                        * Dissemination - Open a panel showing how elements of informations in this flow disseminate to
+                        tasks (hidden if N/A)
+                        * Surveys - Open a panel to launch or access surveys about this info need/capability/flow
+                        * Send message - Send a message to planners about this info need/capability/flow
+                    </description>
                 </item>
             </topic>
             <topic id="actions-flow">
                 <name>Need/capability/flow actions menu</name>
                 <item>
                     <description>The options are
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Copy need/capability/flow - Take a copy
-* Duplicate need/capability/flow - Add a duplicate need/capability to the task
-* Remove need/capability/flow - Remove from the task
-* New issue - Report a new issue about this info need/capability/flow
-* Paste attachment - Add the copied attachment, if any, to this info need/capability/flow
-* Intermediate flow - Add a "middle man task" between the flow's source and target (hidden if N/A)
-* Breakup flow - Disconnect the source and target, adding capability and need if implied by the flow (hidden if N/A)</description>
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Copy need/capability/flow - Take a copy
+                        * Duplicate need/capability/flow - Add a duplicate need/capability to the task
+                        * Remove need/capability/flow - Remove from the task
+                        * New issue - Report a new issue about this info need/capability/flow
+                        * Paste attachment - Add the copied attachment, if any, to this info need/capability/flow
+                        * Intermediate flow - Add a "middle man task" between the flow's source and target (hidden if
+                        N/A)
+                        * Breakup flow - Disconnect the source and target, adding capability and need if implied by the
+                        flow (hidden if N/A)
+                    </description>
                 </item>
             </topic>
             <topic id="issue-menu">
                 <name>Issue menu</name>
                 <item>
                     <description>The options are
-* Show/Hide details - Show or hide the details of this issue reported by a planner
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Remove issue - Remove this issue (hidden if details not shown)
-* Paste attachment - Add the copied attachment, if any, to this reported issue (hidden if details not shown)</description>
+                        * Show/Hide details - Show or hide the details of this issue reported by a planner
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Remove issue - Remove this issue (hidden if details not shown)
+                        * Paste attachment - Add the copied attachment, if any, to this reported issue (hidden if
+                        details not shown)
+                    </description>
                 </item>
             </topic>
             <topic id="actions-plan-details">
                 <name>Template details actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  Send a message to planners about this template as a whole
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Paste attachment - Add the copied attachment, if any, to this plan
-* New issue - Report a new issue about this template as a whole</description>
+                        * Send message - Send a message to planners about this template as a whole
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Paste attachment - Add the copied attachment, if any, to this plan
+                        * New issue - Report a new issue about this template as a whole
+                    </description>
                 </item>
             </topic>
             <topic id="actions-entity">
                 <name>Entity actions menu</name>
                 <item>
                     <description>The options are
-* Send message -  Send a message to planners about this entity
-* Undo ... - Undo the last change made anywhere in this template
-* Redo ... - Redo the last undone change
-* Paste attachment - Add the copied attachment, if any, to this entity
-* New issue - Report a new issue about this entity</description>
+                        * Send message - Send a message to planners about this entity
+                        * Undo ... - Undo the last change made anywhere in this template
+                        * Redo ... - Redo the last undone change
+                        * Paste attachment - Add the copied attachment, if any, to this entity
+                        * New issue - Report a new issue about this entity
+                    </description>
                 </item>
             </topic>
             <topic id="messaging-menu">
                 <name>Messaging menu</name>
                 <item>
                     <description>The options are
-* Send message -  Send a message
-* Delete this message - Delete this message I sent (hidden if message was also emailed)
-* Email this message / Resend email (hidden if message can not be emailed)</description>
+                        * Send message - Send a message
+                        * Delete this message - Delete this message I sent (hidden if message was also emailed)
+                        * Email this message / Resend email (hidden if message can not be emailed)
+                    </description>
                 </item>
             </topic>
         </section>
@@ -952,17 +1336,21 @@ You can switch to another template - or another version of this template - by mo
             <topic id="my-messages">
                 <name>My messages</name>
                 <item>
-                    <description>You can see the messages you sent to fellow collaboration planners and the messages they sent you.
-                    
-You can filter out the messages you broadcasted to all planners</description>
+                    <description>You can see the messages you sent to fellow collaboration planners and the messages
+                        they sent you.
+
+                        You can filter out the messages you broadcasted to all planners
+                    </description>
                 </item>
             </topic>
             <topic id="new-message">
                 <name>Sending a message</name>
                 <item>
                     <description>You can send a message to one planner or broadcast it to all planners.
-                    
-The message can be sent internally within Channels or it can also be sent by email. Note that messages sent only internally can be later deleted by the sender.</description>
+
+                        The message can be sent internally within Channels or it can also be sent by email. Note that
+                        messages sent only internally can be later deleted by the sender.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -971,17 +1359,22 @@ The message can be sent internally within Channels or it can also be sent by ema
             <topic id="presence">
                 <name>Presence</name>
                 <item>
-                    <description>This shows the list of all domain planners currently working on this collaboration template.
-                    
-You can also see the list of all authorized planners for this template, whether they are online or not.</description>
+                    <description>This shows the list of all domain planners currently working on this collaboration
+                        template.
+
+                        You can also see the list of all authorized planners for this template, whether they are online
+                        or not.
+                    </description>
                 </item>
             </topic>
             <topic id="activities">
                 <name>Activities</name>
                 <item>
-                    <description>This gives you the list of the most recent changes made to the template by yourself and other planners. You can hide your own activities.
-                        
-You can click on the name of the template element that was changed to quickly navigate to it.</description>
+                    <description>This gives you the list of the most recent changes made to the template by yourself and
+                        other planners. You can hide your own activities.
+
+                        You can click on the name of the template element that was changed to quickly navigate to it.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
             </topic>
@@ -991,9 +1384,11 @@ You can click on the name of the template element that was changed to quickly na
             <topic id="about-issues-page">
                 <name>Issues summary report</name>
                 <item>
-                    <description>The issues summary report provides metrics on all the issues found in a collaboration template.
-                    
-The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.</description>
+                    <description>The issues summary report provides metrics on all the issues found in a collaboration
+                        template.
+
+                        The issue metrics are broken down by Robustness issues, Completeness issues and Validity issues.
+                    </description>
                 </item>
                 <next section="concepts" topic="issue"/>
             </topic>
@@ -1003,15 +1398,25 @@ The issue metrics are broken down by Robustness issues, Completeness issues and 
             <topic id="eventsAndPhases">
                 <name>Name all events and phases in scope</name>
                 <item>
-                    <description>The scope of the collaboration template is determined in part by the planning scenarios it addresses. A planning scenario is defined in terms of the phase (before, during or after) of an event and by the event itself. For examples, planning scenarios could be responding during an earthquake (the event), or recovering after an earthquake.
+                    <description>The scope of the collaboration template is determined in part by the planning scenarios
+                        it addresses. A planning scenario is defined in terms of the phase (before, during or after) of
+                        an event and by the event itself. For examples, planning scenarios could be responding during an
+                        earthquake (the event), or recovering after an earthquake.
 
-The list of all events and phases within the scope of a template thus determines what planning scenarios are within the scope of the collaboration template.
+                        The list of all events and phases within the scope of a template thus determines what planning
+                        scenarios are within the scope of the collaboration template.
 
-The ''All events and phases'' panel allows you to see all events and phases referenced the template and to directly add new ones, as well as delete any not yet referenced.
+                        The ''All events and phases'' panel allows you to see all events and phases referenced the
+                        template and to directly add new ones, as well as delete any not yet referenced.
 
-The ''Events'' tab gives access to the list of all events in scope. A new event event can be added by naming it. Since the event is not referenced anywhere else (yet) in the template, it is considered an ''incident'', that is, an external event not caused by a planned task. Its ''incident'' status can only be changed once there is a task that causes it. Events referenced in the plan, other than in this panel,can not be removed from the list.
+                        The ''Events'' tab gives access to the list of all events in scope. A new event event can be
+                        added by naming it. Since the event is not referenced anywhere else (yet) in the template, it is
+                        considered an ''incident'', that is, an external event not caused by a planned task. Its
+                        ''incident'' status can only be changed once there is a task that causes it. Events referenced
+                        in the plan, other than in this panel,can not be removed from the list.
 
-The ''Phases'' tab gives access to the list of all event phases in scope. A new phase can be added by naming it. A phase not yet referenced anywhere else in the template can be deleted.
+                        The ''Phases'' tab gives access to the list of all event phases in scope. A new phase can be
+                        added by naming it. A phase not yet referenced anywhere else in the template can be deleted.
                     </description>
                     <script>
                         <action>Open all events and phases</action>
@@ -1022,7 +1427,9 @@ The ''Phases'' tab gives access to the list of all event phases in scope. A new 
                     </script>
                 </item>
                 <item>
-                    <description>Note that events can also be named anywhere they are used to define another template element. When they are, they are automatically added to the scope of the template.</description>
+                    <description>Note that events can also be named anywhere they are used to define another template
+                        element. When they are, they are automatically added to the scope of the template.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
                 <next section="concepts" topic="event"/>
@@ -1051,7 +1458,8 @@ The list is part of the template's ''details''.]]></description>
             <topic id="organizations">
                 <name>Identify participating organizations</name>
                 <item>
-                    <description><![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents they employ assigned to tasks</small>. &ndash; .]]></description>
+                    <description>
+                        <![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents they employ assigned to tasks</small>. &ndash; .]]></description>
                     <script>
                         <action>Edit the list of participating organizations</action>
                         <change>
@@ -1067,18 +1475,23 @@ The list is part of the template's ''details''.]]></description>
             <topic id="all-segments">
                 <name>All segments</name>
                 <item>
-                    <description>All segments in the template are grouped either by event or by phase. They are connected by cross-segment flows and by causation links.
-                    
-A cross-segment flow is a flow from a task in one segment to a task in another. A causation link is an event caused or terminated by a task in one segment that sets the conditions for another segment.
-   
-You can drill down on the cross-segment flows and on the causation links.</description>
+                    <description>All segments in the template are grouped either by event or by phase. They are
+                        connected by cross-segment flows and by causation links.
+
+                        A cross-segment flow is a flow from a task in one segment to a task in another. A causation link
+                        is an event caused or terminated by a task in one segment that sets the conditions for another
+                        segment.
+
+                        You can drill down on the cross-segment flows and on the causation links.
+                    </description>
                 </item>
                 <next section="concepts" topic="segment"/>
             </topic>
             <topic id="add-define-segment">
                 <name>Add and define a segment</name>
                 <item>
-                    <description><![CDATA[From the top action menu, add new segment, then name it and identify the ''planning scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
+                    <description>
+                        <![CDATA[From the top action menu, add new segment, then name it and identify the ''planning scenario' it addresses &ndash;<small>the phase of one event, possibly in the context of past or current events</small>.&ndash;]]></description>
                     <script>
                         <action>Define a segment</action>
                         <change>
@@ -1088,7 +1501,7 @@ You can drill down on the cross-segment flows and on the causation links.</descr
                         </change>
                     </script>
                 </item>
-                <next section="concepts" topic="segment"/>                
+                <next section="concepts" topic="segment"/>
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-scenario"/>
                 <next section="scoping" topic="segment-goals"/>
@@ -1097,13 +1510,14 @@ You can drill down on the cross-segment flows and on the causation links.</descr
                 <name>Segment details</name>
                 <item>
                     <description>You can:
-* name or rename the segment
-* give it a description
-* give it tags
-* attach documents to it
-* add a new issue</description>
+                        * name or rename the segment
+                        * give it a description
+                        * give it tags
+                        * attach documents to it
+                        * add a new issue
+                    </description>
                 </item>
-                <next section="concepts" topic="segment"/>        
+                <next section="concepts" topic="segment"/>
                 <next section="scoping" topic="segment-scenario"/>
                 <next section="scoping" topic="segment-goals"/>
             </topic>
@@ -1111,14 +1525,14 @@ You can drill down on the cross-segment flows and on the causation links.</descr
                 <name>Define a segment's planning scenario</name>
                 <item>
                     <description>You can:
-* identify the phase of the event
-* identify the event
-* rate the event severity that qualifies an event for this planning scenario
-* specify a context in terms of other events occurring or having occurred
+                        * identify the phase of the event
+                        * identify the event
+                        * rate the event severity that qualifies an event for this planning scenario
+                        * specify a context in terms of other events occurring or having occurred
                     </description>
                 </item>
-                <next section="concepts" topic="segment"/>        
-                <next section="concepts" topic="scenario"/>        
+                <next section="concepts" topic="segment"/>
+                <next section="concepts" topic="scenario"/>
                 <next section="scoping" topic="segment-details"/>
                 <next section="scoping" topic="segment-goals"/>
             </topic>
@@ -1140,12 +1554,14 @@ Naming the goal is optional.]]></description>
                     </script>
                 </item>
                 <next section="concepts" topic="goal"/>
-                <next section="concepts" topic="segment"/>               
+                <next section="concepts" topic="segment"/>
             </topic>
             <topic id="all-goals">
                 <name>All goals</name>
                 <item>
-                    <description>All goals defined in all segments of the template are presented in a table that can be sorted, filtered and paged.</description>
+                    <description>All goals defined in all segments of the template are presented in a table that can be
+                        sorted, filtered and paged.
+                    </description>
                 </item>
                 <next section="concepts" topic="goal"/>
                 <next section="concepts" topic="segment"/>
@@ -1174,29 +1590,35 @@ Naming the goal is optional.]]></description>
             <topic id="flow-map">
                 <name>Information flow maps</name>
                 <item>
-                    <description>Information flow maps depict how information is consumed and produced by tasks and to what effects.
-                    
-Represented in a flow map are
-* Events which initiations or terminations trigger tasks
-* Event initiated or terminated by tasks
-* Goals (risks or opportunities) achieved by tasks
-* Tasks
-* The information needs and capabilities of tasks
-* Information sharing flows connecting tasks
+                    <description>Information flow maps depict how information is consumed and produced by tasks and to
+                        what effects.
 
-Flow maps can be maximized, reduced-to-fit, and simplified by hiding goals, and info needs and capabilities.
-                    
-A task is brought into focus for editing by clicking on it in the flow map. Flows can also be opened for editing by clicking on them in the flow map.</description>
+                        Represented in a flow map are
+                        * Events which initiations or terminations trigger tasks
+                        * Event initiated or terminated by tasks
+                        * Goals (risks or opportunities) achieved by tasks
+                        * Tasks
+                        * The information needs and capabilities of tasks
+                        * Information sharing flows connecting tasks
+
+                        Flow maps can be maximized, reduced-to-fit, and simplified by hiding goals, and info needs and
+                        capabilities.
+
+                        A task is brought into focus for editing by clicking on it in the flow map. Flows can also be
+                        opened for editing by clicking on them in the flow map.
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="flow"/>
-                <next section="concepts" topic="information"/>                
+                <next section="concepts" topic="information"/>
             </topic>
             <topic id="add-task">
                 <name>Add a task</name>
                 <item>
-                    <description>Add new task to a segment by clicking ''ADD'' in the  Task panel or by selecting ''add new task'' from the top Actions menu.
-The newly created task is intially empty and presented as ''someone doing something''.</description>
+                    <description>Add new task to a segment by clicking ''ADD'' in the Task panel or by selecting ''add
+                        new task'' from the top Actions menu.
+                        The newly created task is intially empty and presented as ''someone doing something''.
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="info-sharing" topic="define-task"/>
@@ -1205,14 +1627,14 @@ The newly created task is intially empty and presented as ''someone doing someth
                 <name>Define a task</name>
                 <item>
                     <description>Define a task by
-* naming it
-* identifying the function it implements
-* identifying where it is to be executed
-* profiling who is to be assigned to it
-* what goals it directly achieves
-* and more
-Note that as little and as much as wanted can be put into a task's definition.
-                </description>
+                        * naming it
+                        * identifying the function it implements
+                        * identifying where it is to be executed
+                        * profiling who is to be assigned to it
+                        * what goals it directly achieves
+                        * and more
+                        Note that as little and as much as wanted can be put into a task's definition.
+                    </description>
                     <script>
                         <action>Open the task form</action>
                         <change>
@@ -1230,12 +1652,14 @@ Note that as little and as much as wanted can be put into a task's definition.
             <topic id="add-need">
                 <name>Add info need to task</name>
                 <item>
-                    <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the Receives panel. An info need specifies information that agents assigned to the task need to receive to
-* trigger the task
-* enable it to succeed (critical)
-* terminate the task (useful)
-* or improve its execution
-                </description>
+                    <description>Add an '''information need''' to a task by clicking on the ''ADD'' button in the
+                        Receives panel. An info need specifies information that agents assigned to the task need to
+                        receive to
+                        * trigger the task
+                        * enable it to succeed (critical)
+                        * terminate the task (useful)
+                        * or improve its execution
+                    </description>
                 </item>
                 <next section="concepts" topic="need"/>
                 <next section="info-sharing" topic="add-capability"/>
@@ -1245,7 +1669,10 @@ Note that as little and as much as wanted can be put into a task's definition.
             <topic id="add-capability">
                 <name>Add info capability to task</name>
                 <item>
-                    <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the Sends panel. An info capability specifies info agents assigned to a task expect to acquire and be able to share with others.</description>
+                    <description>Add an ''informatio capability'' to a task by clicking on the ''ADD'' button in the
+                        Sends panel. An info capability specifies info agents assigned to a task expect to acquire and
+                        be able to share with others.
+                    </description>
                 </item>
                 <next section="concepts" topic="capability"/>
                 <next section="info-sharing" topic="add-need"/>
@@ -1256,16 +1683,19 @@ Note that as little and as much as wanted can be put into a task's definition.
                 <name>Define a send or receive</name>
                 <item>
                     <description>Specify an information need, capability or sharing by
-* naming the information
-* requiring the information to be compliant with a named information product
-* listing its elements
-* indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
-* whether the need, capability or sharing is private or can be made known to parties other than those who need, can share, share or receive the information.
-* setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets
-* the communication channels to use, each including transmission medium and, optionally, a required format
-* timeliness constraints
-* and more
-                </description>
+                        * naming the information
+                        * requiring the information to be compliant with a named information product
+                        * listing its elements
+                        * indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
+                        * whether the need, capability or sharing is private or can be made known to parties other than
+                        those who need, can share, share or receive the information.
+                        * setting restrictions based on the relationships (employment, location, authority, identity)
+                        between sources and targets
+                        * the communication channels to use, each including transmission medium and, optionally, a
+                        required format
+                        * timeliness constraints
+                        * and more
+                    </description>
                     <script>
                         <action>Open the send/receive form</action>
                         <change>
@@ -1283,28 +1713,33 @@ Note that as little and as much as wanted can be put into a task's definition.
             <topic id="eois">
                 <name>Elements of information</name>
                 <item>
-                    <description>You can list the essential elements of information of an information need, capability or flow, and set their properties.
+                    <description>You can list the essential elements of information of an information need, capability
+                        or flow, and set their properties.
 
-The properties of an element of information are
-* its name
-* the question it answers
-* its security classification
-* its handling instructions
-* if produced, how it transforms , if at all, received elements
-* if defining an info need, whether its delivery is subject to timeliness constraints
-                </description>
+                        The properties of an element of information are
+                        * its name
+                        * the question it answers
+                        * its security classification
+                        * its handling instructions
+                        * if produced, how it transforms , if at all, received elements
+                        * if defining an info need, whether its delivery is subject to timeliness constraints
+                    </description>
                 </item>
                 <next section="concepts" topic="information"/>
             </topic>
             <topic id="connect-with-flow">
                 <name>Connect tasks with info sharing</name>
                 <item>
-                    <description>An information sharing flow connect a tasks that ''produces'' information with a tasks that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info need of another.
+                    <description>An information sharing flow connect a tasks that ''produces'' information with a tasks
+                        that ''consumes'' it. It is equivalent to connecting an info capability of a task with the info
+                        need of another.
 
-A sharing flow is created by connecting an info need or a capability to a task. The flow appears in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
+                        A sharing flow is created by connecting an info need or a capability to a task. The flow appears
+                        in the ''Receives'' of the consuming task and in the ''Sends'' of the producing task.
 
-Tasks in different segments can only be connected via their respective, defined info need and info capability.
-                </description>
+                        Tasks in different segments can only be connected via their respective, defined info need and
+                        info capability.
+                    </description>
                     <script>
                         <action>Open the send/receive form</action>
                         <change>
@@ -1329,33 +1764,41 @@ Tasks in different segments can only be connected via their respective, defined 
             <topic id="edit-checklist">
                 <name>Editing a checklist</name>
                 <item>
-                    <description>A checklist comes pre-populated with steps representing the requested information to be received, the notifications to be sent, the research and follow-up sub-tasks that are defined for the task as flows. 
-                        
-These communication steps can not be removed from the checklist. Action steps, representing simple activities requiring no communication or new information, can be added and removed.
+                    <description>A checklist comes pre-populated with steps representing the requested information to be
+                        received, the notifications to be sent, the research and follow-up sub-tasks that are defined
+                        for the task as flows.
 
-A step can be given:
-* Prerequisite steps  - steps the step must come "after"
-* Conditions that must be present for the step to be taken ("if")
-* Conditions that must be absent for the step to be taken ("unless")
-* Outcomes from the execution of a step
+                        These communication steps can not be removed from the checklist. Action steps, representing
+                        simple activities requiring no communication or new information, can be added and removed.
 
-Action steps (not communication steps) can be marked as "required", else they are optional. Communication and sub-task steps are marked as required if they are notifications or follow-ups.
+                        A step can be given:
+                        * Prerequisite steps - steps the step must come "after"
+                        * Conditions that must be present for the step to be taken ("if")
+                        * Conditions that must be absent for the step to be taken ("unless")
+                        * Outcomes from the execution of a step
 
-Conditions applicable on steps are either:
-* Goals achieved by the task
-* Events triggered or terminated by the task
-* Information needs of the task
-* The task having failed (a non-optional condition for "on-failure notification steps)
-* Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
+                        Action steps (not communication steps) can be marked as "required", else they are optional.
+                        Communication and sub-task steps are marked as required if they are notifications or follow-ups.
 
-Outcomes of a steps can be:
-* Goals, if any, achieved by the task
-* Events, if any,  caused or terminated by the task
-* Sharing capabilities acquired for or from successfully executing the task
+                        Conditions applicable on steps are either:
+                        * Goals achieved by the task
+                        * Events triggered or terminated by the task
+                        * Information needs of the task
+                        * The task having failed (a non-optional condition for "on-failure notification steps)
+                        * Conditions ''local'' to the execution of the task added to the checklist - they can also be
+                        removed
 
-A checklist must be confirmed to be deployed to participants as such. Any change to the implied communication steps or to the action steps requires a re-confirmation.
-                    
-A process flow describing the execution of the checklist is accessed by clicking on the flow icon next to the name of the task.</description>
+                        Outcomes of a steps can be:
+                        * Goals, if any, achieved by the task
+                        * Events, if any, caused or terminated by the task
+                        * Sharing capabilities acquired for or from successfully executing the task
+
+                        A checklist must be confirmed to be deployed to participants as such. Any change to the implied
+                        communication steps or to the action steps requires a re-confirmation.
+
+                        A process flow describing the execution of the checklist is accessed by clicking on the flow
+                        icon next to the name of the task.
+                    </description>
                 </item>
                 <next section="concepts" topic="checklist"/>
                 <next section="info-sharing" topic="checklist-flow"/>
@@ -1366,13 +1809,18 @@ A process flow describing the execution of the checklist is accessed by clicking
                 <item>
                     <description>The checklist flow diagram depicts how the steps in the checklist are to be executed.
 
-The green dot represents start of execution and the red dot its end. Execution is from left to right. 
+                        The green dot represents start of execution and the red dot its end. Execution is from left to
+                        right.
 
-Steps that can be executed in parallel are depicted in parallel. Steps that must precede one another are depicted in sequences.
+                        Steps that can be executed in parallel are depicted in parallel. Steps that must precede one
+                        another are depicted in sequences.
 
-Steps that are executed conditionally are preceded by ''if'' and/or ''unless'' conditions. If there is more than one condition constraining a step, the conditions precede the step in a sequence.
+                        Steps that are executed conditionally are preceded by ''if'' and/or ''unless'' conditions. If
+                        there is more than one condition constraining a step, the conditions precede the step in a
+                        sequence.
 
-The outcomes of steps are shown linked to the steps.</description>
+                        The outcomes of steps are shown linked to the steps.
+                    </description>
                 </item>
             </topic>
         </section>
@@ -1388,7 +1836,7 @@ The outcomes of steps are shown linked to the steps.</description>
 * stating whether the event can terminate on its own
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open an event profile</action>
                         <change>
@@ -1399,7 +1847,7 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <item>
-                    <description>All events are listed in '''All events''' </description>
+                    <description>All events are listed in '''All events'''</description>
                     <script>
                         <action>Open all events</action>
                         <change>
@@ -1432,7 +1880,7 @@ Note that all profile attributes are optional.]]>
 * specifying if it is a pre-, co- or post-event phase
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open a phase profile</action>
                         <change>
@@ -1443,7 +1891,7 @@ Note that all profile attributes are optional.]]>
                     </script>
                 </item>
                 <item>
-                    <description>All phases are listed in the template's '''details'''. </description>
+                    <description>All phases are listed in the template's '''details'''.</description>
                     <script>
                         <action>Open template details</action>
                         <change>
@@ -1478,7 +1926,7 @@ Note that all profile attributes are optional.]]>
 ** naming the parent organization
 ** listing the agents it employs, with titles and roles, and optionally jurisdictions and supervisors
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open an organization profile</action>
                         <change>
@@ -1495,11 +1943,16 @@ Note that all profile attributes are optional.]]>
             <topic id="organization-participation">
                 <name>Specify organization participation</name>
                 <item>
-                    <description>An actual organization can be declared as a placeholder, meaning that its possibly many real-world identities will be set by communities adopting the template.
+                    <description>An actual organization can be declared as a placeholder, meaning that its possibly many
+                        real-world identities will be set by communities adopting the template.
 
-One or more real-life organization in a community can participate as the planned placeholder organization. The participating organization inherits (a copy of) the agents employed by the placeholder.
+                        One or more known organizations in a collaboration plan can participate as the planned placeholder
+                        organization. The participating organization inherits (a copy of) the agents employed by the
+                        placeholder.
 
-The custodian of a placeholder organization an the agent authorized to register community organizations as the placeholder. Whoever in a community participates as this agent is an acting custodian. Community planners are by default acting custodians.
+                        The custodian of a placeholder organization an the agent authorized to register known
+                        organizations as the placeholder. Whoever in a plan participates as this agent is an acting
+                        custodian. Collaboration planners are by default acting custodians.
                     </description>
                     <script>
                         <action>Open organization participation</action>
@@ -1519,9 +1972,11 @@ The custodian of a placeholder organization an the agent authorized to register 
             <topic id="organization-chart">
                 <name>Organization chart</name>
                 <item>
-                    <description>This diagram shows how this organizations fits within a hierarchy of parent organizations.
+                    <description>This diagram shows how this organizations fits within a hierarchy of parent
+                        organizations.
 
-                        Selecting an organization opens its profile. </description>
+                        Selecting an organization opens its profile.
+                    </description>
                     <script>
                         <action>Open organization chart</action>
                         <change>
@@ -1542,7 +1997,7 @@ The custodian of a placeholder organization an the agent authorized to register 
 * categorizing it
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open a role profile</action>
                         <change>
@@ -1577,7 +2032,7 @@ Note that all profile attributes are optional.]]>
 ** setting constraints on users participating as this agent
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open an agent profile</action>
                         <change>
@@ -1616,19 +2071,22 @@ Note that all profile attributes are optional.]]>
             <topic id="agent-participation">
                 <name>Participation as an agent</name>
                 <item>
-                    <description>Users in a community participate as (actual) agents that are defined in the collaboration template the community has adopted.
+                    <description>Users in a collaboration plan participate as (actual) agents that are defined in the
+                        collaboration template the plan has adopted.
 
-Depending on the participation constrains set for the agent,
-* any number of users can participate as the agent
-* or exactly one user can participate
-* or at most a specified number of users can participate
+                        Depending on the participation constrains set for the agent,
+                        * any number of users can participate as the agent
+                        * or exactly one user can participate
+                        * or at most a specified number of users can participate
 
-Furthermore, who can participate as the agent can be set to
-* any user whatsoever (open participation)
-* or users confirmed in their participation by other users participating as the agent's supervisors
-* or users already participating as agents employed by one of the agent's organizations
+                        Furthermore, who can participate as the agent can be set to
+                        * any user whatsoever (open participation)
+                        * or users confirmed in their participation by other users participating as the agent's
+                        supervisors
+                        * or users already participating as agents employed by one of the agent's organizations
 
-Participation can be anonymous, in which case the names and contact information of participating users will not appear in the checklists of other users.
+                        Participation can be anonymous, in which case the names and contact information of participating
+                        users will not appear in the checklists of other users.
 
                     </description>
                     <script>
@@ -1650,7 +2108,8 @@ Participation can be anonymous, in which case the names and contact information 
                 <item>
                     <description>This diagram shows how this agent fits within a hierarchy of supervisors.
 
-Selecting an agent opens its profile. </description>
+                        Selecting an agent opens its profile.
+                    </description>
                     <script>
                         <action>Open agent participation</action>
                         <change>
@@ -1680,7 +2139,7 @@ Selecting an agent opens its profile. </description>
 ** the place it must contain
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open a place profile</action>
                         <change>
@@ -1715,7 +2174,7 @@ Note that all profile attributes are optional.]]>
 * giving the pattern the media's ''addresses'' must conform to
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open a transmission medium profile</action>
                         <change>
@@ -1747,7 +2206,7 @@ Note that all profile attributes are optional.]]>
 * defining the elements of information flows standardized to this information product require
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open an information product profile</action>
                         <change>
@@ -1778,7 +2237,7 @@ Note that all profile attributes are optional.]]>
 * categorizing it
 * and more
 Note that all profile attributes are optional.]]>
-                </description>
+                    </description>
                     <script>
                         <action>Open an information format profile</action>
                         <change>
@@ -1805,19 +2264,24 @@ Note that all profile attributes are optional.]]>
                 <name>Profiling a function</name>
                 <item>
                     <description>Define a function that tasks can implement.
-                    
-A function can be:
-* named
-* described
-* categorized by other (more generic) functions
 
-A function defines the kinds of goals, if any, a task implementing it is expected to achieve, as well as the information needs and information capabilities that such a task is expected to have in order to conform to the function.
+                        A function can be:
+                        * named
+                        * described
+                        * categorized by other (more generic) functions
 
-The goals specified by a function are goal categories plus whether they are risks to be mitigated or gaines to be made.
+                        A function defines the kinds of goals, if any, a task implementing it is expected to achieve, as
+                        well as the information needs and information capabilities that such a task is expected to have
+                        in order to conform to the function.
 
-The information needs and capabilities specified by the function are named, optionally point to an information product, and define function-specific elements of information.
+                        The goals specified by a function are goal categories plus whether they are risks to be
+                        mitigated or gaines to be made.
 
-When a function is categorized by other functions, it adds to the goals, information needs and capabilitites that the categorizing functions define.
+                        The information needs and capabilities specified by the function are named, optionally point to
+                        an information product, and define function-specific elements of information.
+
+                        When a function is categorized by other functions, it adds to the goals, information needs and
+                        capabilitites that the categorizing functions define.
                     </description>
                 </item>
                 <item>
@@ -1832,7 +2296,7 @@ When a function is categorized by other functions, it adds to the goals, informa
                     </script>
                 </item>
                 <next section="concepts" topic="function"/>
-                
+
             </topic>
         </section>
         <section id="analyzing">
@@ -1840,12 +2304,15 @@ When a function is categorized by other functions, it adds to the goals, informa
             <topic id="entity-network">
                 <name>Info sharing commitment networks</name>
                 <item>
-                    <description>A collaboration template determines how agents must commit to share information with one another.
+                    <description>A collaboration template determines how agents must commit to share information with
+                        one another.
 
-Commitment networks depict these info sharing commitment relationships between agents either directly or aggregated by role or organization.
+                        Commitment networks depict these info sharing commitment relationships between agents either
+                        directly or aggregated by role or organization.
 
-You can drill down on each commitment relationship to see the info sharing commitments it summarizes. 
-                </description>
+                        You can drill down on each commitment relationship to see the info sharing commitments it
+                        summarizes.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
                 <next section="concepts" topic="commitment"/>
@@ -1853,7 +2320,9 @@ You can drill down on each commitment relationship to see the info sharing commi
             <topic id="segment-organizations">
                 <name>Organizations in a segment</name>
                 <item>
-                    <description>You can see what organizations have agents assigned to a segment's task and how these organizations are linked by info sharing commitments.</description>
+                    <description>You can see what organizations have agents assigned to a segment's task and how these
+                        organizations are linked by info sharing commitments.
+                    </description>
                 </item>
                 <next section="concepts" topic="segment"/>
                 <next section="concepts" topic="organization"/>
@@ -1861,18 +2330,24 @@ You can drill down on each commitment relationship to see the info sharing commi
             <topic id="entity-analytics">
                 <name>Entity analytics</name>
                 <item>
-                    <description>You can see the different ways in which this entity is involved in the template, and then drill down.</description>
+                    <description>You can see the different ways in which this entity is involved in the template, and
+                        then drill down.
+                    </description>
                 </item>
                 <next section="concepts" topic="entity"/>
             </topic>
             <topic id="entity-issues">
                 <name>Entity issues</name>
                 <item>
-                    <description>Issues may have been detected or reported about this entity's profile. You can include issues about other template elements that relate to the entity. You can also filter out issues that have been waived by planners (the default).
-                    
-You can browse a paginated table of these issues, filter them, sort them and drill down on them.
-                    
-To create or view an existing survey about the resolution of this issue, click on the survey icon.</description>
+                    <description>Issues may have been detected or reported about this entity's profile. You can include
+                        issues about other template elements that relate to the entity. You can also filter out issues
+                        that have been waived by planners (the default).
+
+                        You can browse a paginated table of these issues, filter them, sort them and drill down on them.
+
+                        To create or view an existing survey about the resolution of this issue, click on the survey
+                        icon.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan-element"/>
                 <next section="concepts" topic="entity"/>
@@ -1881,7 +2356,10 @@ To create or view an existing survey about the resolution of this issue, click o
             <topic id="dissemination">
                 <name>Info dissemination</name>
                 <item>
-                    <description>You can visualize where, according to template, individual elements of informations comsumed by a task would come from, and where elements of information produced by a task would end up.</description>
+                    <description>You can visualize where, according to template, individual elements of informations
+                        comsumed by a task would come from, and where elements of information produced by a task would
+                        end up.
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="flow"/>
@@ -1890,9 +2368,11 @@ To create or view an existing survey about the resolution of this issue, click o
             <topic id="failure-impact">
                 <name>Failure impact</name>
                 <item>
-                    <description>You can visualize how the failure of a task or of a flow can cause the cascading failures of useful tasks, thus jeopardizing the achiement of organizational goals.
-                    
-Only useful tasks and critical flows are considered when doing failure impact analysis.</description>
+                    <description>You can visualize how the failure of a task or of a flow can cause the cascading
+                        failures of useful tasks, thus jeopardizing the achiement of organizational goals.
+
+                        Only useful tasks and critical flows are considered when doing failure impact analysis.
+                    </description>
                 </item>
                 <next section="concepts" topic="task"/>
                 <next section="concepts" topic="flow"/>
@@ -1905,15 +2385,21 @@ Only useful tasks and critical flows are considered when doing failure impact an
             <topic id="issues">
                 <name>Issues</name>
                 <item>
-                    <description>Channels automatically detected issues about this template element. You or other planners may also have reported issues about it.
+                    <description>Channels automatically detected issues about this template element. You or other
+                        planners may also have reported issues about it.
 
-All issues about the template element are listed. The planner-reported issues can be opened up to edit their names, description, severity and remediation options. When editing remediation options, start each one on a new line.
+                        All issues about the template element are listed. The planner-reported issues can be opened up
+                        to edit their names, description, severity and remediation options. When editing remediation
+                        options, start each one on a new line.
 
-Some issues detected by Channels can be waived (marked as false positives).
+                        Some issues detected by Channels can be waived (marked as false positives).
 
-You can report a new issue by pressing the New button and then editing the issue. When describing remediation options, start each one on a new line.
+                        You can report a new issue by pressing the New button and then editing the issue. When
+                        describing remediation options, start each one on a new line.
 
-You can automatically create a survey about remediating an issue by pressing on the ''Create survey'' button. If a survey was already created, you can view it by pressing the the ''View survey'' button.
+                        You can automatically create a survey about remediating an issue by pressing on the ''Create
+                        survey'' button. If a survey was already created, you can view it by pressing the the ''View
+                        survey'' button.
                     </description>
                 </item>
                 <next section="concepts" topic="issue"/>
@@ -1924,27 +2410,32 @@ You can automatically create a survey about remediating an issue by pressing on 
                 <item>
                     <description>The current production and development versions for this template are identified.
 
-You can vote to move the current development version of this in production if you believe it is ready. You can see the votes of other planners and send them messages. Note that only an administrator can actually put the current development version into production.</description>
+                        You can vote to move the current development version of this in production if you believe it is
+                        ready. You can see the votes of other planners and send them messages. Note that only an
+                        administrator can actually put the current development version into production.
+                    </description>
                 </item>
                 <next section="concepts" topic="plan"/>
             </topic>
             <topic id="plan-evaluation">
                 <name>Template evaluation</name>
                 <item>
-                    <description>The template evaluation gives an accounting of the issues found in this template. The metrics are expressed in terms of
-* the three main types of issues (robustness, completeness, validity)
-* their severity
-* whether they were waived or not
-* and how many different kinds of issues were found
+                    <description>The template evaluation gives an accounting of the issues found in this template. The
+                        metrics are expressed in terms of
+                        * the three main types of issues (robustness, completeness, validity)
+                        * their severity
+                        * whether they were waived or not
+                        * and how many different kinds of issues were found
                     </description>
                 </item>
-               <next section="concepts" topic="issue"/>
+                <next section="concepts" topic="issue"/>
                 <next section="improving" topic="all-issues"/>
             </topic>
             <topic id="all-issues">
                 <name>All issues</name>
                 <item>
-                    <description>All issues found in the template are listed in a paged table. You can sort them, filter them, search on their names and drill down on them.
+                    <description>All issues found in the template are listed in a paged table. You can sort them, filter
+                        them, search on their names and drill down on them.
                     </description>
                 </item>
                 <next section="concepts" topic="issue"/>
@@ -1953,7 +2444,10 @@ You can vote to move the current development version of this in production if yo
             <topic id="resolving-issues">
                 <name>Resolve issues</name>
                 <item>
-                    <description>An obvious way of improving a collaboration template is to resolve issues detected by Channels and by planners. The 'All issues" table aggregates all individual issues found in a template.</description>
+                    <description>An obvious way of improving a collaboration template is to resolve issues detected by
+                        Channels and by planners. The 'All issues" table aggregates all individual issues found in a
+                        template.
+                    </description>
                     <script>
                         <action>Open the All Issues table</action>
                         <change>
@@ -1963,7 +2457,9 @@ You can vote to move the current development version of this in production if yo
                     </script>
                 </item>
                 <item>
-                    <description>Metrics on all issues found in a template provide a sense of the current quality of the collaboration template.</description>
+                    <description>Metrics on all issues found in a template provide a sense of the current quality of the
+                        collaboration template.
+                    </description>
                     <script>
                         <action>See template evaluation</action>
                         <change>
@@ -1973,7 +2469,9 @@ You can vote to move the current development version of this in production if yo
                     </script>
                 </item>
                 <item>
-                    <description>If the resolution of an issue is not self-evident and requires input from stakeholders, a survey (with questionnaire) can be created about resolving the issue.</description>
+                    <description>If the resolution of an issue is not self-evident and requires input from stakeholders,
+                        a survey (with questionnaire) can be created about resolving the issue.
+                    </description>
                 </item>
                 <next section="concepts" topic="issue"/>
                 <next section="learning" topic="launch-remediation-survey"/>
@@ -1981,7 +2479,9 @@ You can vote to move the current development version of this in production if yo
             <topic id="moving-tasks">
                 <name>Move tasks across segments</name>
                 <item>
-                    <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To shrink a bloated segment, a new segment is usually created and tasks are moved to it.</description>
+                    <description>When too many tasks are added to a segment, the segment becomes difficult to manage. To
+                        shrink a bloated segment, a new segment is usually created and tasks are moved to it.
+                    </description>
                     <script>
                         <action>Transfer tasks</action>
                         <change>
@@ -1996,16 +2496,19 @@ You can vote to move the current development version of this in production if yo
             <topic id="tune-task-flow-definition">
                 <name>Adjust assignments and commitments</name>
                 <item>
-                    <description>Collaboration checklists are computed by assigning agents to tasks and by deriving information sharing commitments from the flows connecting assigned tasks.
-                    
-A key concern is making sure that the right agents get assigned to the right tasks, and that only the right agents that are assigned to the tasks on each side of a flow become parties to sharing commitments.
-                
-Which agents are assigned to a task is determined by
-* how a task specifies the agents assignable to it
-* what agents are in the template's environments and how they are profiled
-* how the agents are employed (role, jurisdiction, organization)
-* how the taxonomies of role, agent, organization etc. are defined
-</description>
+                    <description>Collaboration checklists are computed by assigning agents to tasks and by deriving
+                        information sharing commitments from the flows connecting assigned tasks.
+
+                        A key concern is making sure that the right agents get assigned to the right tasks, and that
+                        only the right agents that are assigned to the tasks on each side of a flow become parties to
+                        sharing commitments.
+
+                        Which agents are assigned to a task is determined by
+                        * how a task specifies the agents assignable to it
+                        * what agents are in the template's environments and how they are profiled
+                        * how the agents are employed (role, jurisdiction, organization)
+                        * how the taxonomies of role, agent, organization etc. are defined
+                    </description>
                     <script>
                         <action>See a task's assignments</action>
                         <change>
@@ -2017,10 +2520,11 @@ Which agents are assigned to a task is determined by
                 </item>
                 <item>
                     <description>Exactly what sharing commitments are generated for a flow depends on
-* what agents are assigned to the producing task and consuming task connected by the flow
-* what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
-* whether an overriding flow prohibits a pairing of agents
-</description>
+                        * what agents are assigned to the producing task and consuming task connected by the flow
+                        * what restrictions are put on pairing agents into commitments (the committer and beneficiary
+                        must be in the same organization etc.)
+                        * whether an overriding flow prohibits a pairing of agents
+                    </description>
                     <script>
                         <action>See a flow's sharing commitments</action>
                         <change>
@@ -2037,16 +2541,22 @@ Which agents are assigned to a task is determined by
             <topic id="verify-taxonomy">
                 <name>Verify an entity taxonomy</name>
                 <item>
-                    <description> Entities (i.e. roles, agents, organizations, places, events etc.) can be categorized. Agents are categorized by agent types, organization by organization types, events by other events (events are always types) etc.
+                    <description>Entities (i.e. roles, agents, organizations, places, events etc.) can be categorized.
+                        Agents are categorized by agent types, organization by organization types, events by other
+                        events (events are always types) etc.
 
-How entities are categorized largely determine the meaning of the tasks, flows, employments etc. that are defined in terms of these entities.
+                        How entities are categorized largely determine the meaning of the tasks, flows, employments etc.
+                        that are defined in terms of these entities.
 
-The meaning of a template boils down to the task assignments and consequent sharing commitments (checklists) that are implied by the collaboration template.
+                        The meaning of a template boils down to the task assignments and consequent sharing commitments
+                        (checklists) that are implied by the collaboration template.
 
-Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause widespread changes to the checklists computed from a template, and thus its meaning.
-                
-Taxonomies are defined implicitly by categorizing individual entities. The best way to verify that taxonomies are correct is to visualize them.
-                </description>
+                        Even a small change to the taxonomy (a.k.a. typology) or roles, for example, can cause
+                        widespread changes to the checklists computed from a template, and thus its meaning.
+
+                        Taxonomies are defined implicitly by categorizing individual entities. The best way to verify
+                        that taxonomies are correct is to visualize them.
+                    </description>
                     <script>
                         <action>View taxonomies</action>
                         <change>
@@ -2062,13 +2572,18 @@ Taxonomies are defined implicitly by categorizing individual entities. The best 
             <topic id="verify-checklists">
                 <name>Checklists map</name>
                 <item>
-                    <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially large number of sharing commitments. The ''checklists map'' makes it easy to see if the sharing commitments generated from the template are the intended ones.
-                
-The map is focused on one agent or one organization (as an aggregate of agents). It shows the commitments that involved that egent or organizations.
+                    <description>A ''flow map'' shows tasks connected by flows where each flow can imply a potentially
+                        large number of sharing commitments. The ''checklists map'' makes it easy to see if the sharing
+                        commitments generated from the template are the intended ones.
 
-The other parties to the commitments can be aggregated by role, organization type or not at all.
+                        The map is focused on one agent or one organization (as an aggregate of agents). It shows the
+                        commitments that involved that egent or organizations.
 
-Clicking on an assigned task navigates to the task's definition and opens the checklist flow diagram for this task.</description>
+                        The other parties to the commitments can be aggregated by role, organization type or not at all.
+
+                        Clicking on an assigned task navigates to the task's definition and opens the checklist flow
+                        diagram for this task.
+                    </description>
                     <script>
                         <action>See checklists map</action>
                         <change>
@@ -2085,11 +2600,13 @@ Clicking on an assigned task navigates to the task's definition and opens the ch
             <topic id="all-checklists">
                 <name>All checklists</name>
                 <item>
-                    <description>All the checklists (one for each task in the template) are listed, to be sorted on the task names, segment names and their confirmation status.
-                    
-Checklists can be filtered to see only the ones confirmed or not confirmed, or to see only the checklists in a given segment.
+                    <description>All the checklists (one for each task in the template) are listed, to be sorted on the
+                        task names, segment names and their confirmation status.
 
-Clicking on the name of a tasks or a segment, takes you to it.
+                        Checklists can be filtered to see only the ones confirmed or not confirmed, or to see only the
+                        checklists in a given segment.
+
+                        Clicking on the name of a tasks or a segment, takes you to it.
                     </description>
                 </item>
                 <next section="concepts" topic="checklist"/>
@@ -2101,14 +2618,18 @@ Clicking on the name of a tasks or a segment, takes you to it.
             <topic id="compose-questionnaire">
                 <name>Compose a survey questionnaire</name>
                 <item>
-                    <description>You can enlist the help of stakeholders via surveys. A survey is a questionnaire about elements of the template or the template as a whole.
+                    <description>You can enlist the help of stakeholders via surveys. A survey is a questionnaire about
+                        elements of the template or the template as a whole.
 
-You compose questionnaires by adding, ordering, editing etc. statements and questions. Questions can be marked as required or optional.
+                        You compose questionnaires by adding, ordering, editing etc. statements and questions. Questions
+                        can be marked as required or optional.
 
-A questionnaire applies to the template as a whole or to one kind of template element (template questionnaire, task questionnaires, event questionnaires etc.)
+                        A questionnaire applies to the template as a whole or to one kind of template element (template
+                        questionnaire, task questionnaires, event questionnaires etc.)
 
-Questionnaires can be activated and deactivated. They can be extended while they are being used in surveys. 
-</description>
+                        Questionnaires can be activated and deactivated. They can be extended while they are being used
+                        in surveys.
+                    </description>
                     <script>
                         <action>See the questionnaires</action>
                         <change>
@@ -2128,7 +2649,8 @@ Questionnaires can be activated and deactivated. They can be extended while they
             <topic id="launch-survey">
                 <name>Launch a survey</name>
                 <item>
-                    <description>A survey is launched on the template or on a template element by applying a questionnaire to it.
+                    <description>A survey is launched on the template or on a template element by applying a
+                        questionnaire to it.
                     </description>
                     <script>
                         <action>View launched and launch-able surveys on a task</action>
@@ -2141,11 +2663,11 @@ Questionnaires can be activated and deactivated. They can be extended while they
                 </item>
                 <item>
                     <description>Once a survey is launched, it can be managed by
-* inviting users to participate
-* looking at the answers from survey participants
-* deactivating or reactivating the survey
-* editing the survey's questionnaire
-                </description>
+                        * inviting users to participate
+                        * looking at the answers from survey participants
+                        * deactivating or reactivating the survey
+                        * editing the survey's questionnaire
+                    </description>
                     <script>
                         <action>See all launched surveys</action>
                         <change>
@@ -2166,14 +2688,16 @@ Questionnaires can be activated and deactivated. They can be extended while they
             <topic id="launch-remediation-survey">
                 <name>Launch an issue remediation survey</name>
                 <item>
-                    <description>Surveys can be launched on an issue that was detected. The questionnaire is automatically generated based on the remediation options. 
+                    <description>Surveys can be launched on an issue that was detected. The questionnaire is
+                        automatically generated based on the remediation options.
 
-The questionnaire can be modified and extended while the survey is ongoing. 
+                        The questionnaire can be modified and extended while the survey is ongoing.
 
-An issue remediation survey is automatically deactivated when the issue disappears.
+                        An issue remediation survey is automatically deactivated when the issue disappears.
 
-Note that the issue remediation questionnaires are by default not shown in the list of all questionnaires; a checkbox must be checked to see them.
-                </description>
+                        Note that the issue remediation questionnaires are by default not shown in the list of all
+                        questionnaires; a checkbox must be checked to see them.
+                    </description>
                     <script>
                         <action>See all remediation questionnaires</action>
                         <change>
@@ -2193,17 +2717,20 @@ Note that the issue remediation questionnaires are by default not shown in the l
             <topic id="add-survey-participants">
                 <name>Invite participation to a survey</name>
                 <item>
-                    <description>Once a survey is launched, users can be invited to participate in it. Users can be given a deadline to answer all of the survey's required questions. 
-                        
-After the deadline has passed, the survey is considered late. Late participants can be ''nagged'' (nags are sent by email).
+                    <description>Once a survey is launched, users can be invited to participate in it. Users can be
+                        given a deadline to answer all of the survey's required questions.
 
-A participant can
-*accept the invitation by answering questions, 
-*decline the invitation
-*forward the survey to others (if it was marked as forwardable by planners).
+                        After the deadline has passed, the survey is considered late. Late participants can be
+                        ''nagged'' (nags are sent by email).
 
-Note that anyone who is forwarded a survey and who is not yet a user of Channels is automatically given a login, password and limited access to the template as a participant.
-                </description>
+                        A participant can
+                        *accept the invitation by answering questions,
+                        *decline the invitation
+                        *forward the survey to others (if it was marked as forwardable by planners).
+
+                        Note that anyone who is forwarded a survey and who is not yet a user of Channels is
+                        automatically given a login, password and limited access to the template as a participant.
+                    </description>
                     <script>
                         <action>See all launched surveys</action>
                         <change>
@@ -2222,9 +2749,11 @@ Note that anyone who is forwarded a survey and who is not yet a user of Channels
             <topic id="survey-results">
                 <name>Lookup the results of a survey</name>
                 <item>
-                    <description>As participants in a survey answer the questionnaire, results are compiled and made available to all planners.
+                    <description>As participants in a survey answer the questionnaire, results are compiled and made
+                        available to all planners.
 
-Results can be viewed by opening the survey and selecting the Results tabs.</description>
+                        Results can be viewed by opening the survey and selecting the Results tabs.
+                    </description>
                     <script>
                         <action>See all launched surveys</action>
                         <change>
@@ -2243,10 +2772,12 @@ Results can be viewed by opening the survey and selecting the Results tabs.</des
             <topic id="feedback">
                 <name>Manage user feedback</name>
                 <item>
-                    <description>Users can ask questions, report problems and make suggestions via a feedback widget that appears in their home page, their checklists etc.
+                    <description>Users can ask questions, report problems and make suggestions via a feedback widget
+                        that appears in their home page, their checklists etc.
 
-You can see this feedback and reply to it. The user can then reply back etc. or mark the question, problem or suggestion as resolved.              
-                </description>
+                        You can see this feedback and reply to it. The user can then reply back etc. or mark the
+                        question, problem or suggestion as resolved.
+                    </description>
                     <script>
                         <action>Open feedback manager</action>
                         <change>
@@ -2263,8 +2794,10 @@ You can see this feedback and reply to it. The user can then reply back etc. or 
                 <name>Search anything by name</name>
                 <item>
                     <description>Every element of a template that has a name can be found from the index.
-                    
-The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial name.</description>
+
+                        The index can be filtered by kind of element (role, agent, event etc.), by tags, and by partial
+                        name.
+                    </description>
                     <script>
                         <action>Open the index</action>
                         <change>
@@ -2282,7 +2815,9 @@ The index can be filtered by kind of element (role, agent, event etc.), by tags,
                 <item>
                     <description>Every employement of every agent is aggregated in the ''who's who'' table.
 
-The table can be indexed by the name of the agent or by attributes of employment (organization, role, location of employer).</description>
+                        The table can be indexed by the name of the agent or by attributes of employment (organization,
+                        role, location of employer).
+                    </description>
                     <script>
                         <action>Open the template's who's who</action>
                         <change>
@@ -2297,9 +2832,11 @@ The table can be indexed by the name of the agent or by attributes of employment
             <topic id="documents">
                 <name>Search for attachements</name>
                 <item>
-                    <description>Documents and Web pages of various types (policy, reference, picture etc.) can be attached to the template and any element in it.
-                    
-A table with all attachments in the template can be found in the template's ''attachments''.</description>
+                    <description>Documents and Web pages of various types (policy, reference, picture etc.) can be
+                        attached to the template and any element in it.
+
+                        A table with all attachments in the template can be found in the template's ''attachments''.
+                    </description>
                     <script>
                         <action>Open the template's attachments</action>
                         <change>
@@ -2315,8 +2852,10 @@ A table with all attachments in the template can be found in the template's ''at
                 <name>Search by tags</name>
                 <item>
                     <description>The template and every element in it can be tagged.
-                    
-The list of all tags used in the template can be looked up to see what has been marked by any given tag.</description>
+
+                        The list of all tags used in the template can be looked up to see what has been marked by any
+                        given tag.
+                    </description>
                     <script>
                         <action>Open the tag index</action>
                         <change>
@@ -2331,11 +2870,14 @@ The list of all tags used in the template can be looked up to see what has been 
             <topic id="taxonomies">
                 <name>Looking up a taxonomy</name>
                 <item>
-                    <description> The entity types used to categorize roles, agents, organizations, places, events etc. (entities) can themselves be categorized to create taxonomies.
-                    
-Changes to a taxonomy can have profound impacts on the collaboration checklists that are generated by the template.
-                   
-Taxonomies can be visualized to verify that they are correct.</description>
+                    <description>The entity types used to categorize roles, agents, organizations, places, events etc.
+                        (entities) can themselves be categorized to create taxonomies.
+
+                        Changes to a taxonomy can have profound impacts on the collaboration checklists that are
+                        generated by the template.
+
+                        Taxonomies can be visualized to verify that they are correct.
+                    </description>
                     <script>
                         <action>View taxonomies</action>
                         <change>
@@ -2351,11 +2893,15 @@ Taxonomies can be visualized to verify that they are correct.</description>
             <topic id="references">
                 <name>Cross-referencing template elements</name>
                 <item>
-                    <description>Whenever a template element is referenced by name in the definition of another, there will also be a link to get to the referenced element's definition.
-                    
-Also, most forms used to define an element of the template contain a table listing and linking to all other elements that reference it in their definitions.
+                    <description>Whenever a template element is referenced by name in the definition of another, there
+                        will also be a link to get to the referenced element's definition.
 
-For example, at the bottom of in the profile of a role is an index of all other template elements that reference the role or that match the role.</description>
+                        Also, most forms used to define an element of the template contain a table listing and linking
+                        to all other elements that reference it in their definitions.
+
+                        For example, at the bottom of in the profile of a role is an index of all other template
+                        elements that reference the role or that match the role.
+                    </description>
                     <script>
                         <action>Open the a role profile to see its references</action>
                         <change>
@@ -2374,11 +2920,12 @@ For example, at the bottom of in the profile of a role is an index of all other 
                 <name>Reporting an issue</name>
                 <item>
                     <description>You can report an issue about the current context by pressing the New button, and then
-* providing a brief description of the issue
-* giving the type of issue (validity, completeness or robustness)
-* optionally tagging the issue
-* rating the severity of the issue
-* giving options for its remediation (start each option on a new line)</description>
+                        * providing a brief description of the issue
+                        * giving the type of issue (validity, completeness or robustness)
+                        * optionally tagging the issue
+                        * rating the severity of the issue
+                        * giving options for its remediation (start each option on a new line)
+                    </description>
                 </item>
                 <next section="concepts" topic="issue"/>
             </topic>
@@ -2393,23 +2940,24 @@ For example, at the bottom of in the profile of a role is an index of all other 
                 <item>
                     <description>As an administrator, you manage templates and users for a Channels server.
 
-Template management consists of:
+                        Template management consists of:
 
-* Creating a new template with a unique resource identifier (URI)
-* Deleting a template - permitted only if not yet adopted by a community
-* Putting the current development version of a template into production
-* Naming the owner of the template
-* Changing the default email addresses at which participant or planner feedback is sent
+                        * Creating a new template with a unique resource identifier (URI)
+                        * Deleting a template - permitted only if not yet adopted by a collaboration plan
+                        * Putting the current development version of a template into production
+                        * Naming the owner of the template
+                        * Changing the default email addresses at which participant or planner feedback is sent
 
-User management consists of:
+                        User management consists of:
 
-* Adding a new user with a unique username - be aware that users can not be deleted, only disabled
-* Giving a user a full name, email address and password - the user can later modify all of these
-* Making the user as an admin
-* Disabling the user - this can be later reversed
-* Giving the user planner vs guest (view-only) status for specific templates.
+                        * Adding a new user with a unique username - be aware that users can not be deleted, only
+                        disabled
+                        * Giving a user a full name, email address and password - the user can later modify all of these
+                        * Making the user as an admin
+                        * Disabling the user - this can be later reversed
+                        * Giving the user planner vs guest (view-only) status for specific templates.
 
-Make sure to press the Apply button for changes to take effect.
+                        Make sure to press the Apply button for changes to take effect.
                     </description>
                 </item>
             </topic>

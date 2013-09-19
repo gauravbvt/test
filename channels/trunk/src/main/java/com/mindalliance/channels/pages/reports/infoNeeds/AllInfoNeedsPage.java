@@ -58,7 +58,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                                     ? "(Users who participate as agents in this plan and thus have info needs)"
                                     : "(Your participation in this plan)"
                     ),
-               new ListView<UserParticipation>( "participatingUsers", getParticipations() ) {
+               new ListView<UserParticipation>( "participatingUsers", getVisibleParticipations() ) {
                     @Override
                     protected void populateItem( ListItem<UserParticipation> item ) {
                         PageParameters parameters = new PageParameters();
@@ -84,11 +84,11 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                                                              new Model<String>( "last" ), " " ) );
                     }
                 }
-            ).setVisible( !getParticipations().isEmpty() ),
+            ).setVisible( !getVisibleParticipations().isEmpty() ),
 
             new WebMarkupContainer( "agentsDiv" ).add(
                     isPlanner() ?
-               new ListView<Agent>( "agents", getAgents() ) {
+               new ListView<Agent>( "agents", getKnownAgents() ) {
                     @Override
                     protected void populateItem( ListItem<Agent> item ) {
                         final Agent agent = item.getModelObject();
@@ -112,7 +112,7 @@ public class AllInfoNeedsPage extends AbstractAllParticipantsPage {
                     }
                 }
                             : new Label( "agents", "" )
-          ).setVisible( !getAgents().isEmpty() && isPlanner )
+          ).setVisible( !getKnownAgents().isEmpty() && isPlanner )
 
         );
     }

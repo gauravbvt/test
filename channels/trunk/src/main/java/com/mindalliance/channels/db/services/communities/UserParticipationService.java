@@ -28,6 +28,8 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     List<UserParticipation> getActiveUserParticipations( ChannelsUser user, CommunityService communityService );
 
+    List<UserParticipation> getActiveSupervisedParticipations( ChannelsUser user, CommunityService communityService );
+
     List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService );
 
     UserParticipation getParticipation( ChannelsUser user, Agent agent, CommunityService communityService );

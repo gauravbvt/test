@@ -150,6 +150,20 @@ public class UserParticipationServiceImpl
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    public List<UserParticipation> getActiveSupervisedParticipations( ChannelsUser user, final CommunityService communityService ) {
+        return (List<UserParticipation>) CollectionUtils.select(
+                getParticipationsSupervisedByUser( user, communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return isActive( (UserParticipation) object, communityService );
+                    }
+                }
+        );
+    }
+
+    @Override
     public Boolean isActive( UserParticipation userParticipation, CommunityService communityService ) {
         Agent agent = userParticipation.getAgent( communityService );
         if ( agent == null || !userParticipation.isAccepted() ) return false;

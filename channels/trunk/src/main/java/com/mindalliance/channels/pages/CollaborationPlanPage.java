@@ -100,12 +100,12 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getHelpSectionId() {
-        return "community-page";
+        return "collaboration-plan-page";
     }
 
     @Override
     protected String getHelpTopicId() {
-        return "about-community-page";
+        return "about-collaboration-plan-page";
     }
 
 
@@ -120,8 +120,8 @@ public class CollaborationPlanPage extends AbstractChannelsBasicPage {
 
     private void addCollaborationPlanDetailsDialog() {
         detailsDialog = new ChannelsModalWindow( "detailsDialog" );
-        detailsDialog.setTitle( "Community details" );
-        detailsDialog.setCookieName( "channels-community-details" );
+        detailsDialog.setTitle( "Plan details" );
+        detailsDialog.setCookieName( "channels-plan-details" );
         detailsDialog.setWindowClosedCallback( new ModalWindow.WindowClosedCallback() {
             public void onClose( AjaxRequestTarget target ) {
                 addCollaborationPlanDetails();

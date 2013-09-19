@@ -27,6 +27,11 @@ public class UserRole implements Serializable {
 
     @XStreamAsAttribute
     private String id;
+    @XStreamAsAttribute
+    private String glossarySection;
+    @XStreamAsAttribute
+    private String glossaryTopic;
+
 
     private String name;
 
@@ -42,6 +47,22 @@ public class UserRole implements Serializable {
 
     public void setId( String id ) {
         this.id = id;
+    }
+
+    public String getGlossarySection() {
+        return glossarySection;
+    }
+
+    public void setGlossarySection( String glossarySection ) {
+        this.glossarySection = glossarySection;
+    }
+
+    public String getGlossaryTopic() {
+        return glossaryTopic;
+    }
+
+    public void setGlossaryTopic( String glossaryTopic ) {
+        this.glossaryTopic = glossaryTopic;
     }
 
     public String getName() {
@@ -91,5 +112,9 @@ public class UserRole implements Serializable {
         return section != null
                 ? section.findTopic( topicRef.getTopicId() )
                 : null;
+    }
+
+    public boolean hasGlossary() {
+        return getGlossarySection() != null && getGlossaryTopic() != null;
     }
 }
