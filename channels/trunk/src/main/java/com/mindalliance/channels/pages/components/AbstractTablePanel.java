@@ -1062,23 +1062,32 @@ public abstract class AbstractTablePanel<T> extends AbstractCommandablePanel {
             super( id );
             AjaxLink link;
             if ( confirmationMessage != null ) {
-                link = new ConfirmedAjaxFallbackLink<String>( "link", confirmationMessage ) {
+                link = new ConfirmedAjaxFallbackLink<String>( "link", resolveString( confirmationMessage, bean ) ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        updatable.update( target, bean, action );
+                        updatable.update( target, bean, resolveString( action, bean ) );
                     }
                 };
             } else {
                 link = new AjaxLink<String>( "link" ) {
                     public void onClick( AjaxRequestTarget target ) {
-                        updatable.update( target, bean, action );
+                        updatable.update( target, bean, resolveString( action, bean ) );
                     }
                 };
             }
             if ( cssClasses != null ) {
-                link.add( new AttributeModifier( "class", new Model<String>( cssClasses ) ) );
+                link.add( new AttributeModifier( "class", new Model<String>( resolveString( cssClasses, bean ) ) ) );
             }
             add( link );
-            link.add( new Label( "label", new Model<String>( label ) ) );
+            link.add( new Label( "label", new Model<String>( resolveString( label, bean ) ) ) );
+        }
+    }
+
+    private String resolveString( String string, T bean ) {
+        if ( string.startsWith( "@" ) ) {
+            String actualString = string.substring( 1 );
+            return (String)ChannelsUtils.getProperty( bean, actualString, actualString );
+        } else {
+            return string;
         }
     }
 

@@ -405,7 +405,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                 addAgencyProfile();
                 profileDialog.show( target );
             } else if ( action.equals( "makeGlobal" ) ) {
-                if ( wrapper.getOrganizationIfCanBecomeGlobal() != null ) {
+                if ( wrapper.isCanBeMadeGlobal() ) {
                     getCommunityService().getRegisteredOrganizationService().makeGlobal(
                             wrapper.getAgency().getRegisteredOrganization(),
                             getCommunityService() );
@@ -414,7 +414,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                             Change.message( wrapper.toString() + " is now registered in all plans" ) );
                 }
             } else if ( action.equals( "makeLocal" ) ) {
-                if ( wrapper.getOrganizationIfCanBecomeLocal() != null ) {
+                if ( wrapper.isCanBeMadeLocal() ) {
                     getCommunityService().getRegisteredOrganizationService().makeLocal(
                             wrapper.getAgency().getRegisteredOrganization(),
                             getCommunityService() );
@@ -453,6 +453,8 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         private Organization placeholder;
         private ChannelsUser registrar;
         private Date registrationDate;
+        private Boolean canBeMadeGlobal;
+        private Boolean canBeMadeLocal;
 
         public AgencyParticipationWrapper( OrganizationParticipation organizationParticipation ) {
             CommunityService communityService = getCommunityService();
@@ -524,21 +526,54 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                     : null;
         }
 
-        public RegisteredOrganization getOrganizationIfCanBecomeGlobal() {
-            return agency != null
-                    && getCommunityService().getParticipationManager().canBeMadeGlobal( agency, getCommunityService() )
+        public String getScopeChangeLabel() {
+            if ( isCanBeMadeLocal() ) {
+                return "Make it this plan only";
+            } else if ( isCanBeMadeGlobal() ) {
+                return "Make it all plans";
+            } else
+                return "";
+        }
+
+        public String getScopeChangeAction() {
+            if ( isCanBeMadeLocal() ) {
+                return "makeLocal";
+            } else if ( isCanBeMadeGlobal() ) {
+                return "makeGlobal";
+            } else
+                return "";
+        }
+
+        public String getScopeChangeConfirmation() {
+            if ( isCanBeMadeLocal() ) {
+                return "Make organization visible in this plan only?";
+            } else if ( isCanBeMadeGlobal() ) {
+                return "Make organization visible in all plans?";
+            } else
+                return "";
+        }
+
+        public RegisteredOrganization getOrganizationIfCanChangeScope() {
+            return isCanBeMadeGlobal() || isCanBeMadeLocal()
                     ? agency.getRegisteredOrganization()
                     : null;
         }
 
-        public RegisteredOrganization getOrganizationIfCanBecomeLocal() {
-            return agency != null
-                    && getCommunityService().getParticipationManager().canBeMadeLocal( agency, getCommunityService() )
-                    ? agency.getRegisteredOrganization()
-                    : null;
+        private boolean isCanBeMadeGlobal() {
+            if ( canBeMadeGlobal == null )
+                canBeMadeGlobal = agency != null
+                        && getCommunityService().getParticipationManager().canBeMadeGlobal( agency, getCommunityService() );
+            return canBeMadeGlobal;
         }
 
-        private boolean canBeRemoved() {
+        private boolean isCanBeMadeLocal() {
+            if ( canBeMadeLocal == null )
+                canBeMadeLocal = agency != null
+                        && getCommunityService().getParticipationManager().canBeMadeLocal( agency, getCommunityService() );
+            return canBeMadeLocal;
+        }
+
+         private boolean canBeRemoved() {
             return agency != null
                     && !getCommunityService().getParticipationManager().isAgencyReferenced( agency, getCommunityService() );
         }
@@ -596,17 +631,10 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                     OrganizationRegistryTable.this ) );
             columns.add( makeColumn( "Registered in", "status", EMPTY ) );
             columns.add( makeActionLinkColumn( "",
-                    "Make it all plans",
-                    "makeGlobal",
-                    "Make organization visible in all plans?",
-                    "organizationIfCanBecomeGlobal",
-                    "more",
-                    OrganizationsRegistryPanel.this ) );
-            columns.add( makeActionLinkColumn( "",
-                    "Make it this plan only",
-                    "makeLocal",
-                    "Make organization visible in this plan only?",
-                    "organizationIfCanBecomeLocal",
+                    "@scopeChangeLabel", // "Make it this plan only" vs "Make it all plans"
+                    "@scopeChangeAction", // "makeLocal" vs. "makeGlobal",
+                    "@scopeChangeConfirmation", // "Make organization visible in this plan only?" vs "Make organization visible in all plans?"
+                    "organizationIfCanChangeScope",
                     "more",
                     OrganizationsRegistryPanel.this ) );
             columns.add( makeFilterableColumn(
