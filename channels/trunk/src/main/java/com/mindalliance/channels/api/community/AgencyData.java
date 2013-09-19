@@ -25,7 +25,7 @@ import java.util.Set;
  * Date: 4/5/13
  * Time: 9:14 AM
  */
-@XmlType(propOrder = {"name", "registeredByCommunity", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationIds", "documentation"})
+@XmlType(propOrder = {"name", "registeredByCommunity", "registeredGlobally", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationIds", "documentation"})
 public class AgencyData implements Serializable {
 
     private Agency agency;
@@ -35,6 +35,7 @@ public class AgencyData implements Serializable {
     private List<Long> planOrganizationIds;
     private AgencyData parentData;
     private boolean registeredByCommunity;
+    private boolean registeredGlobally;
     private DocumentationData documentationData;
 
     public AgencyData() {
@@ -96,6 +97,11 @@ public class AgencyData implements Serializable {
     @XmlElement
     public boolean getRegisteredByCommunity() {
         return registeredByCommunity;
+    }
+
+    @XmlElement
+    public boolean getRegisteredGlobally() {
+        return registeredGlobally;
     }
 
     @XmlElement

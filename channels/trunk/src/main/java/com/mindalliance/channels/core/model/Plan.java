@@ -28,6 +28,8 @@ import java.util.Set;
  */
 public class Plan extends ModelObject implements ModelObjectContext, Comparable<ModelObject> {
 
+    public static final String ANY_URI = "__ANY__";
+
     /** Logger. */
     // private static final Logger LOG = LoggerFactory.getLogger( Plan.class );
 

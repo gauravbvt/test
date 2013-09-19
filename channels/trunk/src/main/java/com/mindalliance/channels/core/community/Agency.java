@@ -32,7 +32,7 @@ import java.util.Set;
 public class Agency extends AbstractUnicastChannelable implements Nameable, Identifiable {
 
     public static final Agency UNKNOWN = new Agency();
-    // Only one of fixedOrganization or organizationParticipation or registeredOrganization must be set.
+    // Only one of fixedOrganization or registeredOrganization must be set.
     private Organization fixedOrganization;
     private RegisteredOrganization registeredOrganization; // registered into community, not from plan
 
@@ -230,8 +230,12 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return fixedOrganization != null;
     }
 
-    public boolean isRegisteredByCommunity(  ) {
+    public boolean isRegistered() {
         return !isFixedOrganization();
+    }
+
+    public boolean isRegisteredByCommunity(  ) {
+        return isRegistered() && isLocal();
     }
 
     public List<Agent> getAgents( CommunityService communityService ) {
@@ -290,7 +294,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public List<Agency> ancestors( CommunityService communityService ) {
         List<Agency> ancestors = new ArrayList<Agency>();
-        if ( isRegisteredByCommunity(  ) ) {
+        if ( isRegistered() ) {
             for ( RegisteredOrganization registered
                     : communityService.getParticipationManager().ancestorsOf( getRegistration(), communityService ) ) {
                 ancestors.add( new Agency( registered, communityService ) );
@@ -485,6 +489,15 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public boolean isParticipatingAsAPlaceholder() {
         return !getOrganizationParticipationList().isEmpty();
+    }
+
+    // Agency represents an organization only visible to the plan community.
+    public boolean isLocal() {
+        return isFixedOrganization() || getRegisteredOrganization().isLocal();
+    }
+
+    public boolean isGlobal() {
+        return !isFixedOrganization() && !getRegisteredOrganization().isLocal();
     }
 }
 

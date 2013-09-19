@@ -1106,7 +1106,7 @@ public class Requirement extends ModelObject implements Countable {
         public void makeApplyToAgencyIfPossible( Agency agency ) {
             if ( agency.isFixedOrganization() && fixedOrgId == null && registeredOrgId == null ) {
                 setFixedOrgId( agency.getFixedOrganization().getId() );
-            } else if ( registeredOrgId == null && agency.isRegisteredByCommunity(  ) ) {
+            } else if ( registeredOrgId == null && agency.isRegistered(  ) ) {
                 setRegisteredOrgId( agency.getRegisteredOrganization().getUid() );
             }
         }

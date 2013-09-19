@@ -8,6 +8,7 @@ import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Place;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.AbstractChannelsDocument;
 import com.mindalliance.channels.db.data.ContactInfo;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ import java.util.List;
  * Date: 6/19/13
  * Time: 1:11 PM
  */
-@Document(collection = "communities")
+@Document( collection = "communities" )
 public class RegisteredOrganization extends AbstractChannelsDocument {
 
     /**
@@ -52,9 +53,31 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
     public RegisteredOrganization() {
     }
 
+    /**
+     * Organization registered across collaboration plans.
+     *
+     * @param username the username of who is doing the registration
+     * @param name     the unique name of the organization
+     */
+    public RegisteredOrganization( String username, String name ) {
+        super( PlanCommunity.ANY_URI, Plan.ANY_URI, 0, username );
+        this.name = name;
+    }
+
     public RegisteredOrganization( String username, String name, PlanCommunity planCommunity ) {
         super( planCommunity.getUri(), planCommunity.getPlanUri(), planCommunity.getPlanVersion(), username );
         this.name = name;
+    }
+
+    /**
+     * Organization registered across collaboration plans.
+     *
+     * @param username            the username of who is doing the registration
+     * @param fixedOrganizationId the unique id of the fixed organization
+     */
+    public RegisteredOrganization( String username, long fixedOrganizationId ) {
+        super( PlanCommunity.ANY_URI, Plan.ANY_URI, 0, username );
+        this.fixedOrganizationId = fixedOrganizationId;
     }
 
     public RegisteredOrganization( String username, long fixedOrganizationId, PlanCommunity planCommunity ) {
@@ -183,10 +206,11 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
     public boolean equals( Object object ) {
         if ( object instanceof RegisteredOrganization ) {
             RegisteredOrganization other = (RegisteredOrganization) object;
-            if ( isCommunityDefined() ) {
-                return name.equals( other.getCommunityGivenName() );
-            } else {
+            if ( isFixedOrganization() ) {
                 return fixedOrganizationId == other.getFixedOrganizationId();
+            } else {
+                return getCommunityUri().equals( other.getCommunityUri() )
+                        && name.equals( other.getCommunityGivenName() );
             }
         } else {
             return false;
@@ -196,10 +220,11 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
     @Override
     public int hashCode() {
         int hash = 1;
-        if ( isCommunityDefined() ) {
-            hash = hash * 31 + name.hashCode();
-        } else {
+        if ( isFixedOrganization() ) {
             hash = hash * 31 + Long.valueOf( fixedOrganizationId ).hashCode();
+        } else {
+            hash = hash * 31 + name.hashCode();
+            hash = hash * 31 + getCommunityUri().hashCode();
         }
         return hash;
     }
@@ -280,4 +305,9 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
     public String asString( CommunityService communityService ) {
         return getName( communityService );
     }
+
+    public boolean isLocal() {
+        return isFixedOrganization() || !getCommunityUri().equals( PlanCommunity.ANY_URI );
+    }
+
 }

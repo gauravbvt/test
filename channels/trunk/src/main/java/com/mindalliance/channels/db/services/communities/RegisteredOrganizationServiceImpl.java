@@ -2,9 +2,11 @@ package com.mindalliance.channels.db.services.communities;
 
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.Organization;
+import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.data.ContactInfo;
 import com.mindalliance.channels.db.data.communities.QRegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
@@ -75,7 +77,8 @@ public class RegisteredOrganizationServiceImpl
                 toList(
                         repository.findAll(
                                 qRegisteredOrganization.classLabel.eq( RegisteredOrganization.class.getSimpleName() )
-                                        .and( qRegisteredOrganization.communityUri.eq( communityService.getPlanCommunity().getUri() ) ),
+                                        .and( qRegisteredOrganization.communityUri.eq( communityService.getPlanCommunity().getUri() )
+                                                .or( qRegisteredOrganization.communityUri.eq( PlanCommunity.ANY_URI ) ) ),
                                 qRegisteredOrganization.created.desc()
                         )
                 ),
@@ -83,7 +86,7 @@ public class RegisteredOrganizationServiceImpl
     }
 
     @Override
-    public RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, CommunityService communityService ) {
+    public RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, Boolean local, CommunityService communityService ) {
         synchronized ( communityService.getPlanCommunity() ) {
             RegisteredOrganization registered = find( orgName, communityService );
             if ( registered == null ) {
@@ -95,11 +98,9 @@ public class RegisteredOrganizationServiceImpl
                             communityService.getPlanCommunity()
                     );
                 } else {
-                    registered = new RegisteredOrganization(
-                            user.getUsername(),
-                            orgName,
-                            communityService.getPlanCommunity()
-                    );
+                    registered = local
+                            ? new RegisteredOrganization( user.getUsername(), orgName, communityService.getPlanCommunity() )
+                            : new RegisteredOrganization( user.getUsername(), orgName );
                 }
                 save( registered );
                 communityService.clearCache();
@@ -218,7 +219,7 @@ public class RegisteredOrganizationServiceImpl
                 && ( registeredOrg.getParent( communityService ) == null || isValid( registeredOrg.getParent( communityService ), communityService ) );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<RegisteredOrganization> validate(
             List<RegisteredOrganization> registeredOrganizations,
             final CommunityService communityService ) {
@@ -255,6 +256,28 @@ public class RegisteredOrganizationServiceImpl
     @Override
     public Boolean isValid( ContactInfo orgContactInfo, CommunityService communityService ) {
         return orgContactInfo.isValid( communityService );
+    }
+
+    @Override
+    public void makeGlobal( RegisteredOrganization registeredOrganization, CommunityService communityService ) {
+        if ( registeredOrganization != null ) {
+            registeredOrganization.setCommunityUri( PlanCommunity.ANY_URI );
+            registeredOrganization.setPlanUri( communityService.getPlan().getUri() );
+            registeredOrganization.setPlanVersion( communityService.getPlan().getVersion() );
+            save( registeredOrganization );
+            communityService.clearCache();
+        }
+    }
+
+    @Override
+    public void makeLocal( RegisteredOrganization registeredOrganization, CommunityService communityService ) {
+        if ( registeredOrganization != null ) {
+            registeredOrganization.setCommunityUri( communityService.getPlanCommunity().getUri() );
+            registeredOrganization.setPlanUri( Plan.ANY_URI );
+            registeredOrganization.setPlanVersion( 0 );
+            save( registeredOrganization );
+            communityService.clearCache();
+        }
     }
 
 }

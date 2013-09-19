@@ -21,6 +21,8 @@ import java.util.Map;
  */
 public class PlanCommunity extends ModelObject implements ModelObjectContext {
 
+    public static final String ANY_URI = "__ANY__";
+
     private static final String UNNAMED = "UNNAMED";
 
     private long id = -1;

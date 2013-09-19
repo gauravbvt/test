@@ -199,6 +199,18 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
+    public List<OrganizationParticipation> findAllParticipationByGlobal( RegisteredOrganization registeredOrganization ) {
+        assert !registeredOrganization.isLocal();
+        QOrganizationParticipation qOrganizationParticipation = QOrganizationParticipation.organizationParticipation;
+        return toList(
+                repository.findAll(
+                        qOrganizationParticipation.classLabel.eq( OrganizationParticipation.class.getSimpleName() )
+                                .and( qOrganizationParticipation.registeredOrganizationUid.eq( registeredOrganization.getUid() ) )
+                )
+        );
+    }
+
+    @Override
     public List<OrganizationParticipation> findAllParticipationBy( RegisteredOrganization registeredOrganization,
                                                                    CommunityService communityService ) {
         QOrganizationParticipation qOrganizationParticipation = QOrganizationParticipation.organizationParticipation;
@@ -227,10 +239,10 @@ public class OrganizationParticipationServiceImpl
 
     @SuppressWarnings( "unchecked" )
     private List<OrganizationParticipation> validate(
-            List<OrganizationParticipation> organizationRegistrations,
+            List<OrganizationParticipation> organizationParticipationList,
             final CommunityService communityService ) {
         return (List<OrganizationParticipation>) CollectionUtils.select(
-                organizationRegistrations,
+                organizationParticipationList,
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {

@@ -427,6 +427,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             RegisteredOrganization registeredOrg = registeredOrganizationService.findOrAdd(
                     getUser(),
                     agency.getName(),
+                    agency.isLocal(),
                     communityService );
             if ( registeredOrg != null
                     && selectedPlaceholder != null
@@ -443,6 +444,7 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
             RegisteredOrganization registeredOrg = registeredOrganizationService.findOrAdd(
                     getUser(),
                     agency.getName(),
+                    agency.isLocal(),
                     communityService );
             if ( registeredOrg != null
                     && selectedPlaceholder != null

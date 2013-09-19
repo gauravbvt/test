@@ -182,33 +182,37 @@ public class CommunityServiceImpl implements CommunityService {
         Agency agency = getParticipationManager().findAgencyNamed( name, this );
         Agency parentAgency = getParticipationManager().findAgencyNamed( parentName, this );
         if ( agency == null || parentAgency == null ) return false; // should not happen
-        List<Organization> agencyPlaceholders = agency.getPlaceholders( this );
-        // If the agency participates as placeholders, the parent agency is considered if, for all fo the agency's placeholders,:
-        // 1. the agency's placeholder has no parent, or
-        // 2. the agency's placeholder has the same parent as one of the parent agency candidate's placeholders
-        if ( !agencyPlaceholders.isEmpty() ) {
-            final List<Organization> parentAgencyPlaceholders = parentAgency.getPlaceholders( this );
-            return !CollectionUtils.exists(
-                    agencyPlaceholders,
-                    new Predicate() {
-                        @Override
-                        public boolean evaluate( Object object ) {
-                            final Organization agencyPlaceholder = (Organization) object;
-                            return agencyPlaceholder.getParent() != null
-                                    &&
-                                    !CollectionUtils.exists(
-                                            parentAgencyPlaceholders,
-                                            new Predicate() {
-                                                @Override
-                                                public boolean evaluate( Object object ) {
-                                                    Organization parentAgencyPlaceholder = (Organization) object;
-                                                    return  agencyPlaceholder.getParent().equals( parentAgencyPlaceholder );
+        if ( agency.isLocal() && parentAgency.isLocal() ) { // if both local to plan, then parentage is constrained by existing participation
+            List<Organization> agencyPlaceholders = agency.getPlaceholders( this );
+            // If the agency participates as placeholders, the parent agency is considered if, for all fo the agency's placeholders,:
+            // 1. the agency's placeholder has no parent, or
+            // 2. the agency's placeholder has the same parent as one of the parent agency candidate's placeholders
+            if ( !agencyPlaceholders.isEmpty() ) {
+                final List<Organization> parentAgencyPlaceholders = parentAgency.getPlaceholders( this );
+                return !CollectionUtils.exists(
+                        agencyPlaceholders,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                final Organization agencyPlaceholder = (Organization) object;
+                                return agencyPlaceholder.getParent() != null
+                                        &&
+                                        !CollectionUtils.exists(
+                                                parentAgencyPlaceholders,
+                                                new Predicate() {
+                                                    @Override
+                                                    public boolean evaluate( Object object ) {
+                                                        Organization parentAgencyPlaceholder = (Organization) object;
+                                                        return agencyPlaceholder.getParent().equals( parentAgencyPlaceholder );
+                                                    }
                                                 }
-                                            }
-                                    );
+                                        );
+                            }
                         }
-                    }
-            );
+                );
+            }
+        } else if ( !agency.isLocal() && parentAgency.isLocal() ) { // global agency can't have local parent
+            return false;
         }
         return true;
     }
@@ -331,7 +335,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Issue> listUserIssues( final ModelObject modelObject ) {
         return (List<Issue>) CollectionUtils.select(
                 list( UserIssue.class ),
@@ -431,7 +435,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
     public CommunityCommitments findAllBypassCommitments( final Flow flow ) {
         assert flow.isSharing();

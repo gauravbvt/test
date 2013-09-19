@@ -96,7 +96,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return( (Agency) object ).participatesAsPlaceholder( placeholder );
+                        return ( (Agency) object ).participatesAsPlaceholder( placeholder );
                     }
                 }
         );
@@ -149,7 +149,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
         }
         // Registered agents
         for ( Agency agency : organizationParticipationService.listParticipatingAgencies( communityService ) ) {
-            if ( agency.isRegisteredByCommunity( ) )
+            if ( agency.isRegistered() )
                 agents.addAll( agency.getAgents( communityService ) );
         }
         return new ArrayList<Agent>( agents );
@@ -330,7 +330,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     public List<CommunityEmployment> findAllEmploymentsBy( Agency agency, CommunityService communityService ) {
         List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
         Organization fixedOrganization = agency.getFixedOrganization();
-        if ( fixedOrganization!= null ) {
+        if ( fixedOrganization != null ) {
             for ( Job job : agency.getFixedJobs( communityService ) ) {
                 Employment employment = new Employment( fixedOrganization, job );
                 Agent agent = new Agent( job.getActor() );
@@ -344,7 +344,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
             }
         }
         for ( OrganizationParticipation organizationParticipation : agency.getOrganizationParticipationList() ) {
-             for ( Job job : agency.getPlaceholderJobs( organizationParticipation, communityService ) ) {
+            for ( Job job : agency.getPlaceholderJobs( organizationParticipation, communityService ) ) {
                 Agent agent = new Agent( job.getActor(), organizationParticipation, communityService );
                 Organization organization = organizationParticipation.getPlaceholderOrganization( communityService );
                 Employment employment = new Employment( organization, job );
@@ -565,4 +565,47 @@ public class ParticipationManagerImpl implements ParticipationManager {
     public UserParticipation getUserParticipation( String uid ) {
         return userParticipationService.load( uid );
     }
+
+    @Override
+    public boolean isAgencyReferenced( final Agency agency, final CommunityService communityService ) {
+        if ( agency.isFixedOrganization() ) return true;
+        boolean participates = agency.isLocal()
+                ? !organizationParticipationService.findAllParticipationBy( agency.getRegisteredOrganization(), communityService ).isEmpty()
+                : !organizationParticipationService.findAllParticipationByGlobal( agency.getRegisteredOrganization() ).isEmpty();
+        return participates
+                || CollectionUtils.exists(
+                getAllKnownAgencies( communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        Agency parentAgency = ( (Agency) object ).getParent( communityService );
+                        return parentAgency != null && parentAgency.equals( agency );
+                    }
+                }
+        );
+    }
+
+    @Override
+    public Boolean canBeMadeGlobal( Agency agency, CommunityService communityService ) {
+        if ( agency.isFixedOrganization() || agency.isGlobal() ) return false;
+        Agency parentAgency =  agency.getParent( communityService );
+        return parentAgency == null || parentAgency.isGlobal();
+    }
+
+    @Override
+    public Boolean canBeMadeLocal( Agency agency, CommunityService communityService ) {
+        if ( agency.isFixedOrganization() || agency.isLocal() ) return false;
+        final String uri = communityService.getPlanCommunity().getUri();
+        return !CollectionUtils.exists(
+                organizationParticipationService.findAllParticipationByGlobal( agency.getRegisteredOrganization() ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        OrganizationParticipation participation = (OrganizationParticipation) object;
+                        return !participation.getCommunityUri().equals( uri );
+                    }
+                }
+        );
+    }
+
 }

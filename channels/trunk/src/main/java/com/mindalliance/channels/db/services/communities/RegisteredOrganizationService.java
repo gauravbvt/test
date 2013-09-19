@@ -19,11 +19,16 @@ import java.util.List;
  */
 public interface RegisteredOrganizationService extends DataService<RegisteredOrganization> {
 
+    /**
+     * Get all registered organziations visible to a community.
+     * @param communityService a community service
+     * @return a list of registrations
+     */
     List<RegisteredOrganization> getAllRegisteredOrganizations( CommunityService communityService );
 
     RegisteredOrganization find( String orgName, CommunityService communityService );
 
-    RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, CommunityService communityService );
+    RegisteredOrganization findOrAdd( ChannelsUser user, String orgName, Boolean local, CommunityService communityService );
 
     Boolean removeIfUnused( ChannelsUser user, String orgName, CommunityService communityService );
 
@@ -50,4 +55,7 @@ public interface RegisteredOrganizationService extends DataService<RegisteredOrg
 
     Boolean isValid( ContactInfo orgContactInfo, CommunityService communityService );
 
+    void makeGlobal( RegisteredOrganization registeredOrganization, CommunityService communityService );
+
+    void makeLocal( RegisteredOrganization registeredOrganization, CommunityService communityService );
 }

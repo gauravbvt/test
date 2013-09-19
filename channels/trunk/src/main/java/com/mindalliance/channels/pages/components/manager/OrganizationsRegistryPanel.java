@@ -25,6 +25,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -80,6 +81,8 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy/MM/dd H:mm z" );
 
     private String registeredOrgName;
+
+    private boolean registeredGlobal = true;
 
     private Agency profiledAgency;
 
@@ -223,8 +226,8 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
     }
 
     private boolean isFilteredOut( Agency agency ) {
-        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegisteredByCommunity();
-        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegisteredByCommunity();
+        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegistered();
+        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegistered();
     }
 
     private void addRegistering() {
@@ -233,6 +236,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         registeringContainer.setVisible( getCommunityService().isCommunityPlanner( getUser() ) );
         addOrReplace( registeringContainer );
         addParticipatingOrgName();
+        addLocalOrGlobal();
         addRegisterButton();
     }
 
@@ -264,7 +268,19 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         } );
         addInputHint( registeredOrgNameField, "The name of an organization" );
         registeringContainer.addOrReplace( registeredOrgNameField );
+    }
 
+    private void addLocalOrGlobal() {
+        AjaxCheckBox globalCheckBox = new AjaxCheckBox(
+                "global",
+                new PropertyModel<Boolean>( this, "registeredGlobal" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                // Do nothing
+            }
+        };
+        globalCheckBox.setOutputMarkupId( true );
+        registeringContainer.addOrReplace( globalCheckBox );
     }
 
     private List<String> getAllAgencyNames() {
@@ -290,11 +306,12 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                 if ( registration != null ) {
                     updateContents( target );
                     update( target, Change.message(
-                            registration.asString( getCommunityService() )
+                            registration.asString( getCommunityService() ) + " is registered"
                     ) );
                     registeredOrgName = null;
+                    setRegisteredGlobal( true );
                 } else {
-                    update( target, Change.message("Failed to register organization" ));
+                    update( target, Change.message( "Failed to register organization" ) );
                 }
             }
         };
@@ -316,6 +333,14 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         }
     }
 
+    public boolean isRegisteredGlobal() {
+        return registeredGlobal;
+    }
+
+    public void setRegisteredGlobal( boolean val ) {
+        registeredGlobal = val;
+    }
+
     private boolean canRegister() {
         return registeredOrgName != null
                 && !getRegisteredOrgName().isEmpty()
@@ -327,7 +352,11 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         if ( registeredOrgName != null
                 && !registeredOrgName.isEmpty()
                 && getCommunityService().isCommunityPlanner( getUser() ) ) {
-            return registeredOrganizationService.findOrAdd( getUser(), registeredOrgName, getCommunityService() );
+            return registeredOrganizationService.findOrAdd(
+                    getUser(),
+                    registeredOrgName,
+                    !isRegisteredGlobal(), // true if local
+                    getCommunityService() );
         } else {
             return null;
         }
@@ -360,19 +389,39 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         if ( object instanceof AgencyParticipationWrapper ) {
             AgencyParticipationWrapper wrapper = (AgencyParticipationWrapper) object;
             if ( action.equals( "remove" ) ) {
-                String orgParticipationString = wrapper.toString();
-                boolean success = wrapper.remove();
-                updateContents( target );
-                profiledAgency = null;
-                update( target, Change.message(
-                        success ? "Removed " + orgParticipationString
-                                : "Failed to remove "
-                                + orgParticipationString
-                ) );
+                if ( wrapper.getUserIfCanRemove() != null ) {
+                    String orgParticipationString = wrapper.toString();
+                    boolean success = wrapper.remove();
+                    updateContents( target );
+                    profiledAgency = null;
+                    update( target, Change.message(
+                            success ? "Removed " + orgParticipationString
+                                    : "Failed to remove "
+                                    + orgParticipationString
+                    ) );
+                }
             } else if ( action.equals( "showProfile" ) ) {
                 profiledAgency = wrapper.getAgency();
                 addAgencyProfile();
                 profileDialog.show( target );
+            } else if ( action.equals( "makeGlobal" ) ) {
+                if ( wrapper.getOrganizationIfCanBecomeGlobal() != null ) {
+                    getCommunityService().getRegisteredOrganizationService().makeGlobal(
+                            wrapper.getAgency().getRegisteredOrganization(),
+                            getCommunityService() );
+                    updateContents( target );
+                    update( target,
+                            Change.message( wrapper.toString() + " is now registered in all plans" ) );
+                }
+            } else if ( action.equals( "makeLocal" ) ) {
+                if ( wrapper.getOrganizationIfCanBecomeLocal() != null ) {
+                    getCommunityService().getRegisteredOrganizationService().makeLocal(
+                            wrapper.getAgency().getRegisteredOrganization(),
+                            getCommunityService() );
+                    updateContents( target );
+                    update( target,
+                            Change.message( wrapper.toString() + " is now registered in this plan only" ) );
+                }
             }
         }
     }
@@ -434,18 +483,15 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
             if ( agency == null ) {
                 return null;
             } else if ( agency.isRegisteredByCommunity() ) {
-                return "Plan";
+                return "This plan only";
+            } else if ( agency.isGlobal() ) {
+                return "All plans";
             } else {
                 if ( agency.getFixedOrganization().isPlaceHolder() )
-                    return "Template as placeholder";
+                    return "The template, as placeholder";
                 else
-                    return "Template";
+                    return "The template";
             }
-        }
-
-        private boolean isNonParticipatingCommunityRegistered() {
-            return agency != null && organizationParticipation == null
-                    && agency.isRegisteredByCommunity();
         }
 
         public String getDefaultParticipateAsText() {
@@ -473,14 +519,28 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         }
 
         public ChannelsUser getUserIfCanRemove() {
-            return isUserCustodian() && canBeRemoved()
-                    || isNonParticipatingCommunityRegistered() && getCommunityService().isCommunityPlanner( getUser() )
+            return ( getCommunityService().isCommunityPlanner( getUser() ) || isUserCustodian() ) && canBeRemoved()
                     ? getUser()
                     : null;
         }
 
+        public RegisteredOrganization getOrganizationIfCanBecomeGlobal() {
+            return agency != null
+                    && getCommunityService().getParticipationManager().canBeMadeGlobal( agency, getCommunityService() )
+                    ? agency.getRegisteredOrganization()
+                    : null;
+        }
+
+        public RegisteredOrganization getOrganizationIfCanBecomeLocal() {
+            return agency != null
+                    && getCommunityService().getParticipationManager().canBeMadeLocal( agency, getCommunityService() )
+                    ? agency.getRegisteredOrganization()
+                    : null;
+        }
+
         private boolean canBeRemoved() {
-            return agency != null && organizationParticipation == null;
+            return agency != null
+                    && !getCommunityService().getParticipationManager().isAgencyReferenced( agency, getCommunityService() );
         }
 
         public boolean isUserCustodian() {
@@ -490,22 +550,8 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         }
 
         public boolean remove() {
-            boolean success = false;
-            if ( agency != null ) {
-                if ( organizationParticipation != null && getPlaceholder() != null && canBeRemoved() ) {
-                    RegisteredOrganization registeredOrganization
-                            = organizationParticipation.getRegisteredOrganization( getCommunityService() );
-                    success = organizationParticipationService.unassignOrganizationAs(
-                            getUser(),
-                            registeredOrganization,
-                            getPlaceholder(),
-                            getCommunityService() );
-                } else if ( isNonParticipatingCommunityRegistered()
-                        && getCommunityService().isCommunityPlanner( getUser() ) ) {
-                    success = registeredOrganizationService.removeIfUnused( getUser(), getAgency().getName(), getCommunityService() );
-                }
-            }
-            return success;
+            return canBeRemoved()
+                    && registeredOrganizationService.removeIfUnused( getUser(), getAgency().getName(), getCommunityService() );
         }
 
         public String toString() {
@@ -549,6 +595,20 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
                     null,
                     OrganizationRegistryTable.this ) );
             columns.add( makeColumn( "Registered in", "status", EMPTY ) );
+            columns.add( makeActionLinkColumn( "",
+                    "Make it all plans",
+                    "makeGlobal",
+                    "Make organization visible in all plans?",
+                    "organizationIfCanBecomeGlobal",
+                    "more",
+                    OrganizationsRegistryPanel.this ) );
+            columns.add( makeActionLinkColumn( "",
+                    "Make it this plan only",
+                    "makeLocal",
+                    "Make organization visible in this plan only?",
+                    "organizationIfCanBecomeLocal",
+                    "more",
+                    OrganizationsRegistryPanel.this ) );
             columns.add( makeFilterableColumn(
                     "Participates as",
                     "placeholder",
@@ -567,7 +627,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
             columns.add( makeActionLinkColumn( "",
                     "Remove",
                     "remove",
-                    "Remove participation by organization?",
+                    "Remove the organization?",
                     "userIfCanRemove",
                     "more",
                     OrganizationsRegistryPanel.this ) );

@@ -473,8 +473,7 @@ public class UserRecordServiceImpl
     @Override
     public void addFounder( ChannelsUser founder, PlanCommunity planCommunity ) {
         synchronized ( planCommunity ) {
-            List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
-            assert planners.isEmpty(); // Make sure founder is first planner
+            // List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
             UserRecord userRecord = founder.getUserRecord();
             userRecord.makePlannerOf( planCommunity.getUri() );
             userRecord.makeParticipantOf( planCommunity.getPlanUri() );

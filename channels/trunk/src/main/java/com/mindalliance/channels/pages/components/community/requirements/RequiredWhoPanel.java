@@ -312,7 +312,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                             getAgentSpecPath( "fixedOrgId" ),
                             agency.getFixedOrganization().getId()
                     ) );
-                } else if ( agency.isRegisteredByCommunity() ) {
+                } else if ( agency.isRegistered() ) {
                     doCommand( new UpdatePlanObject(
                             getUsername(),
                             requirement,

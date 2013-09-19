@@ -3188,3 +3188,11 @@ div.user-priviledges table select {
 div.manage-plan.admin div.select-plan select {
 	width: 178px;
 }
+
+.ui-notify {
+    width: 350px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000000;  /* added */
+}

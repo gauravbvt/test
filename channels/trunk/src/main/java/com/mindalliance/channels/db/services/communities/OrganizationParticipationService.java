@@ -45,9 +45,12 @@ public interface OrganizationParticipationService extends DataService<Organizati
             Organization placeholder,
             CommunityService communityService );
 
+    List<OrganizationParticipation> findAllParticipationByGlobal(
+            RegisteredOrganization registeredOrganization ); // anywhere
+
     List<OrganizationParticipation> findAllParticipationBy(
             RegisteredOrganization registeredOrganization,
-            CommunityService communityService );
+            CommunityService communityService ); // in community
 
     List<OrganizationParticipation> findAllParticipationBy(
             Organization fixedOrganization,

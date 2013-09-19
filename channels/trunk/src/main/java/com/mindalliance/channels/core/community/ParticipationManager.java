@@ -30,7 +30,7 @@ public interface ParticipationManager {
     ParticipationAnalyst getParticipationAnalyst();
 
     /**
-     * Get the list of all known agencies (all fixed and registered organizations).
+     * Get the list of all known agencies (all fixed and registered organizations) to a community.
      *
      * @param communityService a community service
      * @return a list of agencies
@@ -269,7 +269,7 @@ public interface ParticipationManager {
     /**
      * Get registered parent organization.
      *
-     * @param uid        a db key
+     * @param uid a db key
      * @return a registered organization
      */
     RegisteredOrganization getRegisteredOrganization( String uid );
@@ -285,8 +285,31 @@ public interface ParticipationManager {
     /**
      * Get user participation given db key.
      *
-     * @param uid a db key
+     * @param uid              a db key
      * @return a user participation
      */
     UserParticipation getUserParticipation( String uid );
+
+    /**
+     * Whether the agency is referenced anywhere (in template, in participation, as parent).
+     *
+     * @param agency an agency
+     * @param communityService a community service
+     * @return a boolean
+     */
+    boolean isAgencyReferenced( Agency agency, CommunityService communityService );
+
+    /**
+     * Can an agency that is not local be made local?
+     * @param agency an agency
+     * @return a boolean
+     */
+    Boolean canBeMadeGlobal( Agency agency, CommunityService communityService );
+
+    /**
+     * Can an agency that is not global be made global?
+     * @param agency an agency
+     * @return a boolean
+     */
+    Boolean canBeMadeLocal( Agency agency, CommunityService communityService );
 }
