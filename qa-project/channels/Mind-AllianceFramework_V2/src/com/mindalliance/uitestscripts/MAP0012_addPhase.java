@@ -146,39 +146,26 @@ public class MAP0012_addPhase extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
-			// Click on 'About Plan' under 'Show' pop up menu
+ 		    // Click on 'Events In Scope' under 'Scoping' pop up menu
+ 			//'Events in Scope' has been renamed to 'All Events and phases'
  			stepNo++;
-			description="About Plan";
-			planPage.clickPopupMenu(testData.get("Show"));
-			planPage.clickSubmenu(testData.get("AboutPlan"));
+			description="All Events and Phases";
+			planPage.clickPopupMenu(testData.get("Scoping"));
+			planPage.clickSubmenu(testData.get("EventsInScope"));
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
-			// Add phase
-			stepNo++;
-			description="Add Phase";
-			planPage.enterValueInPhaseInAboutPlan(testData.get("Phase"));
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Delete phase
+ 			//Click on Phases tab in the 'All Events and Phases' window	
  			stepNo++;
-			description="Delete Phase";
-			planPage.deletePhase();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 			
-			// Close About Plan Window
- 			stepNo++;
-			description="Close About Plan Window";
-			planPage.closeAboutPlanWindow();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 				
+			description="All Events and Phases";
+		    planPage.clickEventPhasesTab();
+		    
+		    //Add Phase
+		    stepNo++;
+			description="All Events and Phases";
+		    planPage.enterPhaseInAllEventsAndPhases(testData.get("PhaseName"));
+		    
  		    // Remove This segment
  			stepNo++;
 			description="Remove This Segment";
@@ -267,8 +254,11 @@ public class MAP0012_addPhase extends TestCase{
 	        this.testData.put("AddNewSegment",oXmlEleMAP0012_addPhase.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("SegmentForAddPhase",oXmlEleMAP0012_addPhase.getElementsByTagName("segmentForAddPhase").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("RemoveThisSegment",oXmlEleMAP0012_addPhase.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("Phase",oXmlEleMAP0012_addPhase.getElementsByTagName("phase").item(0).getChildNodes().item(0).getNodeValue());
-		
+			//this.testData.put("PhaseName",oXmlEleMAP0012_addPhase.getElementsByTagName("phaseName").item(0).getChildNodes().item(0).getNodeValue());
+			//this.testData.put("",oXmlEleMAP0012_addPhase.getElementsByTagName("phaseName").item(0).getChildNodes().item(0).getNodeValue());
+			this.testData.put("Scoping", oXmlEleMAP0012_addPhase.getElementsByTagName("scoping").item(0).getChildNodes().item(0).getNodeValue());
+		    this.testData.put("EventsInScope",oXmlEleMAP0012_addPhase.getElementsByTagName("eventsInScope").item(0).getChildNodes().item(0).getNodeValue());
+		    this.testData.put("PhaseName",oXmlEleMAP0012_addPhase.getElementsByTagName("phaseName").item(0).getChildNodes().item(0).getNodeValue());	
 		}
 		catch(SAXException se){
 			throw new UIAutomationException("File MAP0012_addPhase.xml not found.");
