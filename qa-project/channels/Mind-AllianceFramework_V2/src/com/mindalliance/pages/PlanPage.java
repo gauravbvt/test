@@ -159,14 +159,14 @@ public class PlanPage {
 	 */
 	public void closeUnamedEventsWindow() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Close Unnamed Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Unnamed Events Window");
-		UIActions.click(fileName,"Close Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Unnamed Events Window");
+		UIActions.click(fileName,"Close Unnamed Events Window",GlobalVariables.configuration.getAttrSearchList(), "Close Unnamed Events Window");
 		
 		// Assertion: Verify Event window is closed
-		xPath=dataController.getPageDataElements(fileName,"Close Unnamed Events Window", "Xpath");
-		List<WebElement> webElemets=UIActions.getElements(xPath);
-		if(!webElemets.isEmpty()){
-			throw new UIAutomationException("Unamed Events window can not be closed.");
-		}
+	//	xPath=dataController.getPageDataElements(fileName,"Close Unnamed Events Window", "Xpath");
+	//	List<WebElement> webElemets=UIActions.getElements(xPath);
+	//	if(!webElemets.isEmpty()){
+	//		throw new UIAutomationException("Unamed Events window can not be closed.");
+	//	}
 		
 	}
 	
@@ -1617,20 +1617,20 @@ public class PlanPage {
 	}
 	
 	/**
-	 * Click on Agreements Tab under Organizations
+	 * Click on Participation Tab under Organizations
 	 * @throws UIAutomationException
 	 */
-	public void clickOrganizationsAgreementTab() throws UIAutomationException{
-		elementController.requireElementSmart(fileName,"Agreements Tab",GlobalVariables.configuration.getAttrSearchList(), "Agreements Tab");
-		UIActions.click(fileName,"Agreements Tab",GlobalVariables.configuration.getAttrSearchList(), "Agreements Tab");
+	public void clickOrganizationsParticipationTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Participation Tab",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab");
+		UIActions.click(fileName,"Participation Tab",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab");
 		
 		// Assertion: Verify if the Agreements Tab is clicked
-		elementController.requireElementSmart(fileName,"Information sharing agreements",GlobalVariables.configuration.getAttrSearchList(), "Information sharing agreements");
-		String networkTab=UIActions.getText(fileName,"Information sharing agreements",GlobalVariables.configuration.getAttrSearchList(), "Information sharing agreements");
+		//elementController.requireElementSmart(fileName,"Information sharing agreements",GlobalVariables.configuration.getAttrSearchList(), "Information sharing agreements");
+		//String networkTab=UIActions.getText(fileName,"Information sharing agreements",GlobalVariables.configuration.getAttrSearchList(), "Information sharing agreements");
 		
-		if(!networkTab.contains(networkTab)){
-			throw new UIAutomationException("Agreements Tab not selected");
-		}
+		//if(!networkTab.contains(networkTab)){
+	//		throw new UIAutomationException("Agreements Tab not selected");
+//		}
 	}
 	
 	/**
@@ -1914,13 +1914,13 @@ public class PlanPage {
 	 * @param other
 	 * @throws UIAutomationException
 	 */
-	public void selectFromInSends(String otherTaskName) throws UIAutomationException{
+	public void selectFromInSends(String Other) throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"From Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Sends Panel");
 		UIActions.click(fileName,"From Dropdown In Sends Panel",GlobalVariables.configuration.getAttrSearchList(),"From Dropdown In Sends Panel");
 		
 		Select fromDropDownList = new Select(GlobalVariables.configuration.getWebElement());
 		Configuration.getConfigurationObject().setSelect(fromDropDownList);
-		UIActions.selectByTextAndClick(otherTaskName);
+		UIActions.selectByTextAndClick(Other);
 	}
 	/**
 	 * Select segment from dropdown list in task mover
@@ -2036,12 +2036,12 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Default Event",GlobalVariables.configuration.getAttrSearchList(), "Default Event");
 		UIActions.click(fileName,"Default Event",GlobalVariables.configuration.getAttrSearchList(), "Default Event");
 		// Assertion : Verify 'About Event' window is present		
-		elementController.requireElementSmart(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
-		String headingOfWindowInPage=UIActions.getText(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
-		String headingOfWindowInXML=dataController.getPageDataElements(fileName, "About Event Unnamed Title Actual Text", "Title");
-		if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
-			throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
-		}
+	//	elementController.requireElementSmart(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
+	//	String headingOfWindowInPage=UIActions.getText(fileName, "About Event Unnamed Title", GlobalVariables.configuration.getAttrSearchList(),"About Event Unnamed Title");
+	//	String headingOfWindowInXML=dataController.getPageDataElements(fileName, "About Event Unnamed Title Actual Text", "Title");
+	//	if(!headingOfWindowInPage.contains(headingOfWindowInXML)){
+	//		throw new UIAutomationException("Window with Title '"+headingOfWindowInXML+"' not found");
+	//	}
 	}
 	
 	/**
@@ -2051,13 +2051,32 @@ public class PlanPage {
 	public void clickAnalyticsTab() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
 		UIActions.click(fileName,"Analytics Tab",GlobalVariables.configuration.getAttrSearchList(), "Analytics Tab");
-		// Assertion: Verify if the Default Event is clicked
-		elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
-		String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+	//	 Assertion: Verify if the Default Event is clicked
+	//	elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+	//	String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
 		
-		if(!networkTab.contains(networkTab)){
-			throw new UIAutomationException("Analytics Tab not selected");
-		}	
+//		if(!networkTab.contains(networkTab)){
+//			throw new UIAutomationException("Analytics Tab not selected");
+//		}	
+	}
+	
+	
+	public void clickIssuesTabForEvent() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Issues Tab For Event",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab For Event");
+		UIActions.click(fileName,"Issues Tab For Event",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab For Event");
+	//	 Assertion: Verify if the Default Event is clicked
+	//	elementController.requireElementSmart(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+	//	String networkTab=UIActions.getText(fileName,"Where this event is referenced",GlobalVariables.configuration.getAttrSearchList(), "Where this event is referenced");
+		
+//		if(!networkTab.contains(networkTab)){
+//			throw new UIAutomationException("Analytics Tab not selected");
+//		}	
+	}
+	
+	public void clickEventPhasesTab() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Event Phases Tab",GlobalVariables.configuration.getAttrSearchList(), "Event Phases Tab");
+		UIActions.click(fileName,"Event Phases Tab",GlobalVariables.configuration.getAttrSearchList(), "Event Phases Tab");
+	
 	}
 	
 	/**
@@ -2092,6 +2111,21 @@ public class PlanPage {
 		UIActions.enterValueInTextBox(eventName,fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
 		UIActions.enterKey(Keys.TAB,fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
 	}
+	
+/**
+	
+	 * Enter phase in All Events and Phases window
+	 * @param eventName
+	 * @throws UIAutomationException
+	 */
+	public void enterPhaseInAllEventsAndPhases(String phaseName) throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Phase In All Events And Phases",GlobalVariables.configuration.getAttrSearchList(), "Phase In All Events And Phases");
+		UIActions.click(fileName,"Phase In All Events And Phases",GlobalVariables.configuration.getAttrSearchList(), "Phase In All Events And Phases");
+	//	UIActions.clearTextBox(fileName,"Event In About Plan Segment",GlobalVariables.configuration.getAttrSearchList(), "Event In About Plan Segment");
+		UIActions.enterValueInTextBox(phaseName,fileName,"Phase In All Events And Phases",GlobalVariables.configuration.getAttrSearchList(), "Phase In All Events And Phases");
+		UIActions.enterKey(Keys.TAB,fileName,"Phase In All Events And Phases",GlobalVariables.configuration.getAttrSearchList(), "Phase In All Events And Phases");
+	}
+	
 	
 /**
 	
