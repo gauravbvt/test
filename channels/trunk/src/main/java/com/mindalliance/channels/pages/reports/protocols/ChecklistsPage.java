@@ -100,12 +100,12 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getHelpSectionId() {
-        return "protocols-page";
+        return "checklists-page";
     }
 
     @Override
     protected String getHelpTopicId() {
-        return "about-protocols-page";
+        return "about-checklists-page";
     }
 
 
@@ -158,7 +158,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         intermediates.add( new PagePathItem(
                 AllChecklistsPage.class,
                 getParameters(),
-                "All Participants' Checklists" ) );
+                "All Checklists" ) );
         return intermediates;
     }
 

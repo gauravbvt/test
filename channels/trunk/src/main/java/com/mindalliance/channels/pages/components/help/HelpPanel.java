@@ -275,11 +275,15 @@ public class HelpPanel extends AbstractUpdatablePanel implements IGuidePanel, He
                         openOn( nextSection, nextTopic, target );
                     }
                 };
+/*
                 String sectionPrefix = ( nextSection == null || nextSection.equals( getSection() )
                         ? ""
                         : "(" + nextSection.getName() + ") " );
+
                 String labelString = sectionPrefix
                         + ( nextTopic == null ? "???" : nextTopic.getName() );
+*/
+                String labelString = nextTopic == null ? "???" : nextTopic.getName();
                 Label doNextLabel = new Label( "doNextText", labelString );
                 nextLink.add( doNextLabel );
                 item.add( nextLink );

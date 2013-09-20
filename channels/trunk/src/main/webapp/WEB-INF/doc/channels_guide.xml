@@ -13,13 +13,17 @@
                     <description>Channels is an online collaboration planning service.
 
                         It enables
-                        * analysts to build best-practice templates for information sharing-enabled collaboration,
-                        * planners to setup localized collaboration plans based on these collaboration templates,
-                        * users to participate in collaboration plans and get collaboration checklists derived from
+                        * analysts to develop best-practice templates for information sharing-enabled collaboration,
+                        * planners to setup localized collaboration plans based on collaboration templates,
+                        * users to participate in collaboration plans and get collaboration checklists instructing
                         their participation,
-                        * and administrators to manage the Channels service.
+                        * administrators to manage the Channels service.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="plan-concepts" topic="plan-template"/>
+                <next section="plan-concepts" topic="plan-checklist"/>
+                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
         </section>
         <section id="about-me">
@@ -66,8 +70,7 @@
                     <description>Click on the bar to expand the attachment controls. Use the controls to upload a file
                         or enter a URL and then attach it to the current context.
 
-                        Assign a type to the attachment, the default being "Reference", to indicate your intent.
-                        Attachments of type "Picture" will typically be used as an icon.
+                        Assign a type to the attachment, the default being "Reference", to indicate your intent. Attachments of type "Picture" will typically be used as an icon.
                     </description>
                 </item>
             </topic>
@@ -77,15 +80,18 @@
             <topic id="about-surveys-page">
                 <name>Surveys</name>
                 <item>
-                    <description>As a participant in a collaboration plan, you may be asked by collaboration template developers
+                    <description>As a participant or potential participant in a collaboration plan, you may be asked by collaboration template developers
                         to answer surveys in order to help improve a collaboration template.
 
                         You can
 
-                        * see the surveys you need to complete (and optionally complete them, decline them or forward
-                        them),
-                        * see those you completed (and revise you answers if you wish),
-                        * and see those you declined (and perhaps change your mind).
+                        * see the surveys you need to complete
+                        ** and optionally complete them, decline them or forward
+                        them,
+                        * see those you completed
+                        ** and revise you answers if you so wish,
+                        * and see those you declined
+                        ** and perhaps change your mind about that.
                     </description>
                 </item>
             </topic>
@@ -97,12 +103,12 @@
                 <item>
                     <description>You can
 
-                        * browse and filter the list of all feedback messages you sent to the domain planners for the
+                        * browse and filter the list of all feedback messages you sent to the developers of the
                         collaboration template your collaboration plan has adopted,
-                        * expand the conversation with domain planners spawned from feedback,
+                        * expand the conversation with developers initiated by your feedback,
                         * and add a comment to the conversation.
 
-                        You can mark feedback as "resolved" once you consider that you have achieved your intended
+                        You can mark feedback as "resolved", once you consider that your feedback has achieved your intended
                         objective.
                     </description>
                 </item>
@@ -129,20 +135,21 @@
                 <definition section="plan-concepts" topic="plan-participation"/>
                 <definition section="plan-concepts" topic="plan-checklist"/>
                 <definition section="plan-concepts" topic="plan-planning-scenario"/>
+                <definition section="plan-concepts" topic="plan-requirement"/>
             </topic>
         </section>
         <section id="plan-concepts">
-            <name>Plan concepts</name>
+            <name>Concepts</name>
             <topic id="collaboration-plan">
                 <name>Collaboration plan</name>
                 <item>
-                    <description>A collaboration plan prescribes how known organizations and relevant individuals within them are expected to collaborate in one or more planning scenarios.
+                    <description>A collaboration plan prescribes how organizations and individuals working for them are expected to collaborate in one or more planning scenarios.
 
-                        The collaboration is to be realized via the execution of tasks assigned to individuals and coordinated through communications and information sharing.
+                        The collaboration is to be realized via the execution of tasks assigned to individuals, based on their organizational roles, and coordinated through communications and information sharing.
 
-                        Checklists document how to execute each assigned task, including which communications to make, when how and to who.
+                        Checklists document how to execute each assigned task, including which which communications to make, when how and to who.
 
-                        A collaboration plan is based on a collaboration template.
+                        A collaboration plan is based on a collaboration template that defines the planning scenarios, the kinds of collaborators, the tasks, the communications that coordinate them, and the checklists for executing the collaboration.
                     </description>
                 </item>
             </topic>
@@ -158,9 +165,9 @@
 
                     A template identifies the organizations it involves either as ''known organizations'' - real-life organizations - or as ''placeholder'' - organizations which real identities are to be given in the collaboration plans that adopt the template.
 
-                        A template also identifies the agents (aka organizational roles) that make up the collaborating organizations. Users participate in the collaboration plans based on the template by being assigned to one or more agents defined in the template.
+                        A template also identifies the agents (aka organizational roles) that make up the collaborating organizations. Users participate in the collaboration plans based on a template by being assigned to one or more agents defined in the template.
 
-                        A collaboration template has versions. The most current version is the development version, accessible only to its developers and to guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
+                        A collaboration template has versions. The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
                     </description>
                 </item>
             </topic>
@@ -171,42 +178,42 @@
 
                         The organizations known to a plan consist of:
 
-                        * All known organizations (as opposed to ''placeholder'' organizations) that are identified in the collaboration template adopted by the plan
-                        * All (known) organizations registered in the plan
+                        * All the known organizations (as opposed to ''placeholder'' organizations) that are identified in the collaboration template adopted by the plan
+                        * All (known) organizations registered in the plan only
                         * All (known) organizations registered in all plans hosted by the Channels service
 
-                        An organization lists the agents relevant to the collaboration to which it has given roles of responsibility.
+                        An organization lists the agents that are relevant to the collaboration and to which it has given roles of responsibility.
                     </description>
                 </item>
             </topic>
             <topic id="plan-placeholder">
                 <name>Organization placeholder</name>
                 <item>
-                    <description>The collaboration template upon which a collaboration plan is based identifies all the organizations that are involved in the collaboration it defines. Since not all organizations are known to template developers or because each collaboration plan may involve its own, local, organizations, developers will often keep the identity of organizations ''open ended' by making them ''placeholder'' organizations.
+                    <description>The collaboration template upon which a collaboration plan is based identifies all the organizations that are involved in the collaboration it defines. Because each collaboration plan may involve its own, local organizations, template developers will often keep the identity of organizations ''to be determined'' by making them ''placeholder'' organizations.
 
-                        A placeholder organization, for example "The Municipal Police Department", can be associated to one or more organization known to a collaboration plan based on the template. For example it might be associated to "Gotham Police Department".
+                        A placeholder organization from a collaboration template, for example "The Municipal Police Department", can be associated to one or more organizations known to a collaboration plan, for example, "Gotham Police Department".
 
-                        The collaboration template may identify one of the template's agents as a ''custodian'' for the placeholder organization. If so, any user participating in a plan as this agent is authorized to associate an organization known to the plan with the template' placeholder organization, in effect, involving the known organization in the collaboration defined for the placeholder organization by the template. Note that a planner can act as a custodian for all placeholder organizations.
+                        A collaboration template may identify one of the template's agents as a ''custodian'' for a placeholder organization. If so, any user participating in a plan as this agent is authorized to associate an organization known to the plan with the template' placeholder organization, in effect, involving the known organization in the collaboration defined for the placeholder organization by the template. Note that a planner can act as a custodian for all placeholder organizations.
                     </description>
                 </item>
             </topic>
             <topic id="plan-agent">
                 <name>Agent</name>
                 <item>
-                    <description>An agent represents one or more functionally indistinguishable individuals in a collaboration. An agent is usually given a role of responsibility (and a title) in one organization. It is however possible for an agent to be member of multiple organizations.
+                    <description>An agent represents one or more functionally indistinguishable individuals in a collaboration. An agent is usually given a role of responsibility (and a title) in one organization. While an agent usually has one primary employer organization, it is possible for an agent to be member of multiple organizations.
 
                         Users participate in a collaboration plan by being assigned to one or more agents defined in the collaboration template on which the plan is based.
 
                         How many and which users can be assigned to an agent (and by who) depends on how the agent was defined by the developers of the template. Some agents allow unrestricted self-assignment by users, others require confirmation by supervisors or planners, yet others require some prior, confirmed employment. An agent might allow only one user being assigned to it, another might allow any number.
 
-                        The collaboration checklists a user receives are those of the agents to which it is assigned, personalized with the contact names and information of other users participating as the agents this user collaborates with according to the plan.
+                        The collaboration checklists a user receives are those assigned in the collaboration template to the agents to which the user is assigned. The checklists assigned to the user are personalized with the contact names and information of other users participating as the agents this user collaborates with according to the plan.
                     </description>
                 </item>
             </topic>
             <topic id="plan-participant">
                 <name>Plan participant</name>
                 <item>
-                    <description>A plan participant is any user who has accepted assignation to at least one agent in a collaboration plan, with supervisor confirmation if required.</description>
+                    <description>A plan participant is any user who has accepted to be assigned to to at least one agent in a collaboration plan, with supervisor confirmation if required.</description>
                 </item>
             </topic>
             <topic id="plan-planner">
@@ -214,15 +221,15 @@
                 <item>
                     <description>A planner in a collaboration plan is either the user who created the plan or an other user who has been authorized as planner by another planner.
 
-                        A user can resign as planner (or be resigned by a Channels administrator) if he or she is not the only planner for the plan.</description>
+                        A user can resign as planner (or be resigned by a Channels administrator) but only if he or she is not the sole planner.</description>
                 </item>
-            </topic>
+             </topic>
             <topic id="plan-custodian">
-                <name>Placeholder organization custodian</name>
+                <name>Placeholder custodian</name>
                 <item>
-                    <description>A user who is the custodian of a placeholder organization in a collaboration plan is authorized to manage the association of any number of known organizations to that placeholder.
+                    <description>If a user is the custodian of a placeholder organization in a collaboration plan, he or she is authorized to manage the association of any number of known organizations to that placeholder.
 
-                    A user is the custodian of a placeholder organization if he/she is a planner or is assigned to the agent (or copy of) identified as custodian by the developers of the template where the placeholder organization is defined.
+                    A user is the custodian of a placeholder organization if he or she is a planner or is assigned to the agent (or copy thereof) that is identified as the custodian by the developers of the template where the placeholder organization is defined.
                     </description>
                 </item>
             </topic>
@@ -233,11 +240,13 @@
 
                         A known organization defined in the collaboration template upon which the collaboration plan is based automatically participates (as itself) in the plan.
 
-                        When an organization is registered in a plan, it does not yet participate in the collaboration defined by the template on which the plan is based. Participation by an organization registered in a plan is established by associating the organization with a placeholder in the template.
+                        When an organization is registered in a plan, it does not yet participate in the collaboration defined by the template on which the plan is based. Participation by an organization registered in a plan is realized by associating the organization with a placeholder in the template.
 
-                        When a registered organization is associated with a placeholder organization in the template, the registered organization gets a ''copy'' of all the agents employed by the placeholder organization, and the copies agents get the task assignments of the placeholder agents in the template.
+                        When a registered organization is associated with a placeholder organization in the template, the registered organization gets a ''copy'' of all the agents employed by the placeholder organization, and the copied agents get the task assignments of the placeholder agents in the template.
 
-                        Users participate in a plan by assigning themselves or by being assigned to one or more agents of participating organizations. When assigned to an agent by someone else, a user must accept the assignment before it becomes active. Assignment to an agent may require confirmation by all users participating as agents that supervise the agent in question.
+                        For example, when "Gotham Police Department" in the plan is associated with "Municipal Police department" in the template, the agent "Chief at Gotham Police Department" is created as a copy of the template agent "Chief of Municipal Police Department" working with title of Chief for the "Municipal Police Department" placeholder also in the template.
+
+                        Users participate in a plan by assigning themselves or by being assigned to one or more agents working for participating organizations. When assigned to an agent by someone else, a user must accept the assignment before it becomes active. Assignment to an agent may require confirmation by all users participating as the agents that supervise the agent being assigned to.
 
                     </description>
                 </item>
@@ -245,83 +254,108 @@
             <topic id="plan-checklist">
                 <name>Collaboration checklist</name>
                 <item>
-                    <description>Each task in a collaboration has an associated checklist that details how to execute the task. The checklist is defined in the collaboration template of the plan and is given and personalized (with contact names and information) for each user who participates as an agent assigned to the task associated with the checklist.
+                    <description>Each task in a collaboration has an associated checklist that details how to execute the task. The checklist is defined in the collaboration template of the plan based on the nature of the task, its context and impacts and the communications in and out of the task.
 
-                    A checklist is defined by what triggers the task it represents and by the steps by which the task is best executed.
+                        When a user receives checklists from being assigned to agents assigned to tasks, the checklists are personalized with contact names and information of other users who participate as agents the user collaborates with.
+
+                    A checklist is defined by the nature of the task, what triggers it and by the steps by which the task is best executed.
 
                         The triggers can be
 
                         * nothing (if the task is ongoing),
                         * information self-acquired (observation of an event, for example),
-                        * information researched to carry out another task,
+                        * information to be researched to carry out another task also assigned to the user,
                         * information sent by another user (a notification)
                         * or information requested by another user (a query).
 
-                        The steps of a checklist can be communications (queries, notifications) or actions (other than communications).
+                        The steps of a checklist can be communications (queries, notifications) or actions (other than communications) taken in executing the task.
 
-                        A step can be required or optional. It might depend on another having been completed or on some other condition being present or absent.
+                        A step can be required or optional. It might also depend on another having been completed and on some other conditions being present or absent, such as an information need being satisfied or the task having failed. A step can produce outcomes such as events or new information becoming shareable.
 
-                        The checklist is a document, not an interactive to-do list.
+                        Keep in mind that the checklist is only a document; it is not an interactive to-do list (at least, not yet).
                     </description>
                 </item>
             </topic>
             <topic id="plan-planning-scenario">
                 <name>Planning scenario</name>
                 <item>
-                    <description>A planning scenario is circumstance that introduces risks an opportunities to organizations who must collaborate to mitigate those risks and/or seize those opportunities.
+                    <description>A planning scenario describes anticipated circumstances that would introduce risks an opportunities to organizations who must then collaborate to mitigate those risks and/or seize those opportunities.
 
-                    A planning scenario is defined by an event that might happen, is happening or has happened, possibly in the context of other event that are happening or have happened.
+                        A planning scenario is defined as an event of significance (a change that matters somewhere in the world) that might happen, or is happening or has happened, possibly in the context of other event that are happening or have happened.
 
-                        A collaboration plan might address more than one related planning scenarios.
+                        A collaboration plan might address more than one, presumably related, planning scenarios.
+                    </description>
+                </item>
+            </topic>
+            <topic id="plan-requirement">
+                <name>Collaboration requirement</name>
+                <item>
+                    <description>A collaboration requirement specifies expected communication between two organizations in a plan.
+
+                        The requirement specifies in more or less generic terms:
+                        * the ''source'' and ''sink'' organizations,
+                        * the information to be communicated
+                        * the planning scenario in which this communication is to happen
+                        * the number of agents in each organization sending and receiving the information
+                        * the number of alternate source-agents for each sink-agent
+
+                        A collaboration requirement may or may not apply to a pair of organizations in the plan. If it does then, whether or not it can be realized according to the template-defined collaboration is examined and reported.
                     </description>
                 </item>
             </topic>
         </section>
         <section id="collaboration-plans-page">
-            <name>User interface</name>
+            <name>All Collaboration Plans page</name>
             <topic id="about-collaboration-plans-page">
-                <name>All collaboration plans</name>
+                <name>All Collaboration Plans page</name>
                 <item>
-                    <description>The ''All Collaboration Plans'' page list all collaboration plans visible to you, namely, all plans you can participate in and all those for which you are planner, whether or not they are open for participation.
+                    <description>The ''All Collaboration Plans'' page list all the collaboration plans visible to you,
+                        namely, all plans you can participate in and all those, whether or not they are open for participation,
+                        for which you are a planner.
 
                         You can:
-
-                        * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is to be based and then pressing the "Start it" button - you will be the founding planner for this plan,
-                        * access an existing collaboration plan (select the Go button next to its name in the list of plans).
+                        * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is to be based, and then pressing the "Start it" button - you will be the founding planner for this plan,
+                        * access a collaboration plan visible to you (select the Go button next to its name in the list of plans).
                     </description>
                 </item>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="plan-concepts" topic="plan-template"/>
             </topic>
         </section>
         <section id="collaboration-plan-page">
-            <name>Collaboration plan</name>
+            <name>Collaboration Plan page</name>
             <topic id="about-collaboration-plan-page">
-                <name>Collaboration plan</name>
+                <name>Collaboration plan page</name>
                 <item>
-                    <description>As a user you can see and all collaboration plans that have been opened for
+                    <description>As a user you can see and all collaboration plans in which you are a planner or that have been opened for
                         participation by their planners.
 
-                        As a user, you can decide to participate as agents (roughly, organizational roles) that are open
-                        to participation by all.
+                        As a user, you can decide to participate as agents (roughly, organizational roles) that are open to participation by all.
 
                         If you created the collaboration plan, you are the initial collaboration planner for this plan.
-                        As such, you can authorize other users as planners and, even, resign your planner privileges.
+                        As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
 
-                        As a planner, you can name the plan, localize it, update it to a new version of the
-                        collaboration template, and set collaboration requirements for it. If you are also a developer
-                        of the adopted collaboration template, you can access the template.
+                        As a planner, you can name the plan, localize it, update it to a new version of the collaboration template, and set collaboration requirements for it.
+
+                        As a planner, you are automatically a guest of the adopted collaboration template. If you are a guest or a developer of the collaboration template upon which the plan is based, you can access it.
 
                         As a planner, you can register organizations for potential participation into the plan (or in
-                        all plans), in addition to the known organizations defined by the plan's template. You can also
-                        assign users to any agent (generic individuals) defined in the plan.
+                        all plans), in addition to the known organizations defined by the plan's template (they automatically participate). You can also
+                        assign users to agents (roughly, generic individuals or organizational roles) known to the plan.
 
                         If, as a participant, you are assigned to an agent that supervises other agents, you can assign
                         users to these agents, subject to some constraints, and subject to they accepting the
-                        assignment.
+                        assignment. You are also responsible for confirming these assignments in order to activate them.
 
                         As a participant, you can access your collaboration checklists, the surveys you take part in,
-                        and replies to feedback you provide.
+                        and the replies to feedback you have provided.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="plan-concepts" topic="plan-template"/>
+                <next section="plan-concepts" topic="plan-checklist"/>
+                <next section="plan-concepts" topic="plan-participation"/>
+                <next section="plan-concepts" topic="plan-planner"/>
             </topic>
         </section>
         <section id="what-i-do">
@@ -329,21 +363,23 @@
             <topic id="my-privileges">
                 <name>My user privileges</name>
                 <item>
-                    <description>Your Channels user role which is either a (potential) participant, a collaboration
-                        planner or administrator.
+                    <description>You user privileges which are either a (potential) participant, a collaboration
+                        planner or a Channels administrator.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-planner"/>
             </topic>
             <topic id="my-participation">
                 <name>I participate as...</name>
                 <item>
-                    <description>You can accept to participate as agents that are open to "all" or as agents that have
-                        been assigned to you by authorized users.
+                    <description>You can accept to participate as agents that are open to all users or as agents that have
+                        been assigned to you by authorized users (planners or your supervisors).
 
                         By check a box next to an agent (e.g. "A Metropolis bus driver"), you accept to participate as
-                        this agent. By unchecking an already checked box, you turn down the assignment.
+                        this agent. By un-checking an already checked box, you unilaterally resign the assignment.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
             <topic id="adding-participation">
                 <name>I also participate in...</name>
@@ -351,31 +387,35 @@
                     <description>Based on your user privileges or current participation, other assignments in the
                         collaboration plan's organization may be available to you.
 
-                        First select an organization where the desired agent would be listed and then select the agent.
+                        First select an organization where the desired agent would be listed and then select an agent.
+
                         Your selection may be subject to confirmation by users participating as agents that supervise
                         the agent you selected to participate as.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
             <topic id="my-to-be-confirmed">
                 <name>I await confirmation to be...</name>
                 <item>
-                    <description>This a list of agents in which your participation awaits confirmation by supervisors.
-                        You can withdraw your request by unchecking the box next to the agent.
+                    <description>This is a list of agents your participation as await confirmation by your supervisors.
+
+                        You can withdraw your participation request by un-checking the box next to the agent.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
         </section>
         <section id="requirements-page">
             <name>Requirements page</name>
             <topic id="about-requirements-page">
-                <name>Collaboration requirements</name>
+                <name>Collaboration Requirements page</name>
                 <item>
-                    <description>As a collaboration planner you can define information sharing requirements between
-                        organizations.
+                    <description>As a collaboration planner, the ''Collaboration Requirements'' page enables you to define
+                        information sharing requirements between organizations participating in the plan.
 
                         You can then examine to what extent each requirement can be satisfied by the applicable pairs of
-                        organizations, should they follow the adopted collaboration template.
+                        organizations (information source-sink pairs), should they follow the adopted collaboration template.
 
                         You can add a new requirement definition by pressing the New button in the Definitions tab.
 
@@ -383,78 +423,96 @@
                         requirements.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-requirement"/>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="plan-concepts" topic="plan-participation"/>
             </topic>
         </section>
         <section id="participation-page">
             <name>Plan participation page</name>
             <topic id="about-participation-page">
-                <name>Plan participation</name>
+                <name>Plan Participation page</name>
                 <item>
-                    <description>If so authorized, you can
-
+                    <description>The ''Plan Participation'' page enables you to:
                         * browse a registry of all organizations participating or eligible to participate in the plan,
-                        * register organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
-                        * assign users to template-defined agents who are assigned agents in organizations,
+                        * register, as authorized, organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
+                        * assign, as authorized, users to template-defined agents employed by organizations,
                         * confirm the participation of users into agents you supervise,
-                        * review participation issues detected by Channels,
-                        * resign your status as collaboration planner (if you are not the only one) and bestow your authority on another user.
+                        * review, you are planner, the participation issues detected by Channels,
+                        * resign your status as collaboration planner (if you are not the only one) and bestow your planner privileges on another user.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-participation"/>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="plan-concepts" topic="plan-template"/>
             </topic>
         </section>
-        <section id="all-protocols-page">
-            <name>All checklists page</name>
+        <section id="all-checklists-page">
+            <name>All Checklists page</name>
             <topic id="about-all-protocols-page">
-                <name>All collaboration checklists</name>
+                <name>All Checklists page</name>
                 <item>
-                    <description>If you are a planner, you can access the collaboration checklists of all participants
-                        and all agents, assigned or not, in the collaboration plan; otherwise, you only have access to
-                        your own checklists and to those of the people you supervise in the plan.
+                    <description>The ''All Checklists'' page let's you access all your collaboration checklists and those of all participants you are allowed to see.
+
+                        If you are a planner, you can see the personalized checklists of all users and the generic checklists of all agents.
+
+                        If you participate as an agent that supervises other agents, you can see the personalized checklists of all users participating as the agents you supervise.
 
                         By clicking on an agent, you access the checklists for that agent. By clicking on a
                         participant's name, you access the combined checklists for all the agents assigned to the
                         participant in the plan.
+
+                        Note that for a user who participates as only one agent, this page is skipped and the user will be taken directly to the Participant Checklist page.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="plan-participation"/>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="checklists-page" topic="about-checklists-page"/>
             </topic>
         </section>
-        <section id="protocols-page">
-            <name>Collaboration checklists page</name>
-            <topic id="about-protocols-page">
-                <name>Collaboration checklists</name>
+        <section id="checklists-page">
+            <name>Participation Checklists page</name>
+            <topic id="about-checklists-page">
+                <name>Participation Checklists page</name>
                 <item>
-                    <description>The report lists the collaboration checklists from participation in a template-based
-                        collaboration plan.
+                    <description>The ''Participation Checklists'' page displays the combined collaboration checklists:
 
-                        The checklists describe
+                        * received by a user from participation as one specific agent (personalized checklists)
+                        * received by a user from full participation as many agents (personalized checklists)
+                        * of an agent based on that agent's assigned tasks and required communications (generic checklists)
 
-                        * expected tasks
-                        * what events or communications trigger them (if any)
-                        * the steps, with or without constraints, by which tasks are executed, including
+                        A checklist describes
+
+                        * a task
+                        * what events or communications trigger it (if any)
+                        * the steps, with or without constraints, by which the task is executed, including
                         ** actions to be taken
                         ** queries, notifications and receipt confirmations to be made
                         ** self-assigned "research" sub-tasks
-                        ** self-assigned follow up tasks
+                        ** self-assigned "follow up" tasks
 
-                        A contacts directory concludes the report.
+                        A contacts directory, at the bottom of the page, details the contacts of all communications in the checklist.
                     </description>
                 </item>
-                <next section="concepts" topic="checklist"/>
+                <next section="plan-concepts" topic="plan-participation"/>
+                <next section="plan-concepts" topic="collaboration-plan"/>
             </topic>
         </section>
     </role>
     <role id="planner" glossarySection="concepts" glossaryTopic="glossary">
         <name>For developers of collaboration templates</name>
-        <section id="about-channels-planner">
+        <section id="about-template-developer">
             <name>About Channels</name>
-            <topic id="channels-planner">
+            <topic id="template-developer">
                 <name>Building collaboration templates</name>
                 <item>
                     <description>As a template developer, you use Channels to design and build collaboration templates
-                        from which robust collaboration checklists are generated in the collaboration plans that adopt
-                        these templates.
+                        from which robust checklists are generated that implement robust collaborations.
 
-                        A collaboration template sets how various types of organizations share or ought to share
+                        A collaboration templates forms the basis of collaboration plans where the identities of ''placeholder'
+                        organizations are given and where users are assigned to the agents defined in the templates.
+
+                        A collaboration template specifies how various kinds of organizations ought to communicate and share
                         information to collaboratively prevent, respond to, or recover from a number of anticipated
                         events that test their missions.
 
@@ -469,9 +527,9 @@
                         produce collaboration checklists.
                     </description>
                 </item>
-                <next section="about-channels-planner" topic="protocols"/>
-                <next section="about-channels-planner" topic="development-team"/>
-                <next section="about-channels-planner" topic="attributions"/>
+                <next section="about-template-developer" topic="protocols"/>
+                <next section="about-template-developer" topic="development-team"/>
+                <next section="about-template-developer" topic="attributions"/>
             </topic>
             <topic id="protocols">
                 <name>Generating collaboration checklists</name>
@@ -571,7 +629,7 @@
                 <name>Collaboration template</name>
                 <item>
                     <description>A collaboration template is defined by
-                        * the planning scenarios that cause organizations to collaborate and share information
+                        * the planning scenarios that will cause organizations to collaborate and share information
                         * the organizations and agents (stand-ins for people or systems) employed by them that involved in the collaborations
                         * assignable tasks, connected by information flows, that achieve organizational goals in planning scenarios
 
@@ -744,7 +802,7 @@
                 <name>Issue</name>
                 <item>
                     <description>A problem with the template that is either detected automatically by Channels or, upon
-                        review, by planners. An issue is either one of
+                        review, by template developers. An issue is either one of
                         * validity (something is inherently wrong in the template)
                         * completeness (something is obviously missing from the template)
                         * robustness (something is making a plan based on the template likely to fail)
@@ -800,7 +858,7 @@
             <topic id="role">
                 <name>Role</name>
                 <item>
-                    <description>A role is an eneity representing a standard set of responsibilities that one or more
+                    <description>A role is an entity representing a standard set of responsibilities that one or more
                         organizations can assign to some of its members. A role, such as Manager, is different from a
                         job title, such as Senior VP Sales.
                     </description>
@@ -959,7 +1017,7 @@
             <topic id="survey">
                 <name>Survey</name>
                 <item>
-                    <description>Planners can define surveys for various kinds of template elements (surveys about
+                    <description>Template developers can define surveys for various kinds of template elements (surveys about
                         tasks, about events, about the collaboration template as a whole etc.).
 
                         A survey is a questionnaire composed of required and optional questions. Questions can have
@@ -1064,10 +1122,10 @@
             <topic id="about-plans-page">
                 <name>Collaboration template</name>
                 <item>
-                    <description>As a domain planner, you can access collaboration template editor and a summary report
+                    <description>As a template developer, you can access collaboration template editor and a summary report
                         on all issues found in the template.
 
-                        As a planner or authorized user you can access the planning surveys you participate in and the
+                        As a developer or authorized user you can access the planning surveys you participate in and the
                         feedback you provided.
 
                         Documents that have been attached to the template are directly accessible. New ones can be
@@ -1079,7 +1137,7 @@
                         plan-adopted collaboration template are accessible.
                     </description>
                 </item>
-                <next section="about-channels-planner" topic="channels-planner"/>
+                <next section="about-template-developer" topic="template-developer"/>
                 <next section="plan-editor" topic="about-plan-editor"/>
             </topic>
         </section>
@@ -1088,7 +1146,7 @@
             <topic id="about-plan-editor">
                 <name>Collaboration template editor</name>
                 <item>
-                    <description>As a collaboration planner, you use the template editor to
+                    <description>As a template developer, you use the template editor to
 
                         * define the scope of the template in terms of risk/opportunity-causing events and of the organizations involved,
                         * compose the template from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
@@ -1098,7 +1156,7 @@
                         * view analytics to better understand the consequences, strengths and weaknesses of the template
                     </description>
                 </item>
-                <next section="about-channels-planner" topic="channels-planner"/>
+                <next section="about-template-developer" topic="template-developer"/>
             </topic>
         </section>
         <section id="menus">
@@ -1107,9 +1165,9 @@
                 <name>Template editor show menu</name>
                 <item>
                     <description>The options are
-                        * Planners/Hide planners - Hide or show the planners presence, activities and messages panel
-                        * About Collaboration Template - Open the template details panel
-                        * About Segment - Open the segment details panel
+                        * Presence/Hide Presence - Hide or show the developers presence, activities and messages panel
+                        * About Template - Open the template details panel
+                        * About Template Segment - Open the segment details panel
                     </description>
                 </item>
             </topic>
@@ -1117,7 +1175,7 @@
                 <name>Template editor actions menu</name>
                 <item>
                     <description>The options are
-                        * Send message - Send a message to planners about this template as a whole
+                        * Send message - Send a message about this template as a whole
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Paste task - Insert the copied task, if any, into the current segment
@@ -1145,9 +1203,9 @@
                 <name>Scoping menu</name>
                 <item>
                     <description>The options are
-                        * Events in Scope - Open the panel with the editable list of all events in the scope of this template
-                        * Goals in Scope - Open the panel showing all goals defined in this template
-                        * Organizations in Scope - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this template
+                        * All Events and Phases - Open the panel with the editable list of all events event phases in the scope of this template
+                        * All Goals - Open the panel showing all goals defined in this template
+                        * Organizations involved - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this template
                         * Classification Systems - Open the panel used to define the security classifications used in this template
                     </description>
                 </item>
@@ -1156,11 +1214,12 @@
                 <name>Improving menu</name>
                 <item>
                     <description>The options are
-                        * Task Mover - Open the panel used to easily move tasks from the current segment to another
-                        * Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and committed to share information (as reflected in their task checklists)
+                        * All Checklists - open the panel where all checklists in the template can be browsed
+                        * Task Mover - Open the panel used to easily move tasks from the current segment to another (only visible to developers)
+                        * Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and commit to share information - as reflected in their checklists
                         * Template Evaluation - Open a panel containing metrics of all issues found in this template
                         * All Issues - Open a panel listing all the issues found in this template
-                        * Template versions - Open a panel identifying the current version of this template and allowing planners to vote on moving it to production
+                        * Template versions - Open a panel identifying the current version of this template and allowing developers to vote on moving it to production
                     </description>
                 </item>
             </topic>
@@ -1177,7 +1236,7 @@
                 <name>Segment actions menu</name>
                 <item>
                     <description>The options are
-                        * Send message - Send a message to planners about this segment
+                        * Send message - Send a message about this template segment
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Paste attachment - Add the copied attachment, if any, to this segment
@@ -1194,7 +1253,7 @@
                         * Assignments - Show the list of agents in scope that are assignable to the task given its definition
                         * Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
                         * Failure impacts - Open a panel showing the potential impacts of this task failing
-                        * Dissemination - Open a panel showing how elements of informations acquired for this tasks disseminate to other tasks
+                        * Dissemination - Open a panel showing how elements of information acquired for this tasks disseminate to other tasks
                         * Surveys - Open a panel to launch or access surveys about this task
                         * Agent - Open the profile panel for the agent referenced by the task (hidden if N/A)
                         * Role - Open the profile panel for the role referenced by the task (hidden if N/A)
@@ -1209,7 +1268,7 @@
                 <name>Task actions menu</name>
                 <item>
                     <description>The options are
-                        * Send message - Send a message to planners about this task
+                        * Send message - Send a message about this task
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Copy task - Copy this task
@@ -1220,7 +1279,7 @@
                         * New issue - Report a new issue about this task
                         * Implement function - Add goals, information needs and capabilities to implement the task's function
                         * Duplicate task - Add new task as a copy of this one
-                        * Satisfy info needs - Create all possible flows that satify this task's info needs, based on existing info capabilities
+                        * Satisfy info needs - Create all possible flows that satisfy this task's info needs, based on existing info capabilities
                         * Disintermediate - Disconnect this task from all flows where it acts as an intermediary
                     </description>
                 </item>
@@ -1236,7 +1295,7 @@
                         * Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A)
                         * Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
                         * Surveys - Open a panel to launch or access surveys about this info need/capability/flow
-                        * Send message - Send a message to planners about this info need/capability/flow
+                        * Send message - Send a message about this info need/capability/flow
                     </description>
                 </item>
             </topic>
@@ -1260,7 +1319,7 @@
                 <name>Issue menu</name>
                 <item>
                     <description>The options are
-                        * Show/Hide details - Show or hide the details of this issue reported by a planner
+                        * Show/Hide details - Show or hide the details of this issue reported by a template developer
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Remove issue - Remove this issue (hidden if details not shown)
@@ -1272,7 +1331,7 @@
                 <name>Template details actions menu</name>
                 <item>
                     <description>The options are
-                        * Send message - Send a message to planners about this template as a whole
+                        * Send message - Send a message about this template as a whole
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Paste attachment - Add the copied attachment, if any, to this plan
@@ -1284,7 +1343,7 @@
                 <name>Entity actions menu</name>
                 <item>
                     <description>The options are
-                        * Send message - Send a message to planners about this entity
+                        * Send message - Send a message about this entity
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Paste attachment - Add the copied attachment, if any, to this entity
@@ -1308,17 +1367,16 @@
             <topic id="my-messages">
                 <name>My messages</name>
                 <item>
-                    <description>You can see the messages you sent to fellow collaboration planners and the messages
-                        they sent you.
+                    <description>You can see the messages you sent and the messages sent to you.
 
-                        You can filter out the messages you broadcasted to all planners
+                        You can filter out the messages you broadcasted.
                     </description>
                 </item>
             </topic>
             <topic id="new-message">
                 <name>Sending a message</name>
                 <item>
-                    <description>You can send a message to one planner or broadcast it to all planners.
+                    <description>You can send a message to all developers, one developer, or all users.
 
                         The message can be sent internally within Channels or it can also be sent by email. Note that
                         messages sent only internally can be later deleted by the sender.
@@ -1331,10 +1389,10 @@
             <topic id="presence">
                 <name>Presence</name>
                 <item>
-                    <description>This shows the list of all domain planners currently working on this collaboration
+                    <description>This shows the list of all template developers currently working on this collaboration
                         template.
 
-                        You can also see the list of all authorized planners for this template, whether they are online
+                        You can also see the list of all authorized developers for this template, whether they are online
                         or not.
                     </description>
                 </item>
@@ -1343,7 +1401,7 @@
                 <name>Activities</name>
                 <item>
                     <description>This gives you the list of the most recent changes made to the template by yourself and
-                        other planners. You can hide your own activities.
+                        other developers. You can hide your own activities.
 
                         You can click on the name of the template element that was changed to quickly navigate to it.
                     </description>
@@ -1428,7 +1486,7 @@ The list is part of the template's ''details''.]]></description>
                 <next section="profiling" topic="profiling-phase"/>
             </topic>
             <topic id="organizations">
-                <name>Identify participating organizations</name>
+                <name>All organizations involved</name>
                 <item>
                     <description>
                         <![CDATA[Name all the (actual) '''organizations''' in scope and indicate which ones are expected to participate &ndash; <small>that is, those who are expected to have agents they employ assigned to tasks</small>. &ndash; .]]></description>
@@ -2309,7 +2367,7 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>Issues may have been detected or reported about this entity's profile. You can include
                         issues about other template elements that relate to the entity. You can also filter out issues
-                        that have been waived by planners (the default).
+                        that have been waived by template developers (the default).
 
                         You can browse a paginated table of these issues, filter them, sort them and drill down on them.
 
@@ -2354,9 +2412,9 @@ Note that all profile attributes are optional.]]>
                 <name>Issues</name>
                 <item>
                     <description>Channels automatically detected issues about this template element. You or other
-                        planners may also have reported issues about it.
+                        developers may also have reported issues about it.
 
-                        All issues about the template element are listed. The planner-reported issues can be opened up
+                        All issues about the template element are listed. The developer-reported issues can be opened up
                         to edit their names, description, severity and remediation options. When editing remediation
                         options, start each one on a new line.
 
@@ -2379,7 +2437,7 @@ Note that all profile attributes are optional.]]>
                     <description>The current production and development versions for this template are identified.
 
                         You can vote to move the current development version of this in production if you believe it is
-                        ready. You can see the votes of other planners and send them messages. Note that only an
+                        ready. You can see the votes of other template developers and send them messages. Note that only an
                         administrator can actually put the current development version into production.
                     </description>
                 </item>
@@ -2693,7 +2751,7 @@ Note that all profile attributes are optional.]]>
                         A participant can
                         *accept the invitation by answering questions,
                         *decline the invitation
-                        *forward the survey to others (if it was marked as forwardable by planners).
+                        *forward the survey to others (if it was marked as forwardable).
 
                         Note that anyone who is forwarded a survey and who is not yet a user of Channels is
                         automatically given a login, password and limited access to the template as a participant.
@@ -2717,7 +2775,7 @@ Note that all profile attributes are optional.]]>
                 <name>Lookup the results of a survey</name>
                 <item>
                     <description>As participants in a survey answer the questionnaire, results are compiled and made
-                        available to all planners.
+                        available to all template developers.
 
                         Results can be viewed by opening the survey and selecting the Results tabs.
                     </description>
@@ -2913,7 +2971,7 @@ Note that all profile attributes are optional.]]>
                         * Deleting a template - permitted only if not yet adopted by a collaboration plan
                         * Putting the current development version of a template into production
                         * Naming the owner of the template
-                        * Changing the default email addresses at which participant or planner feedback is sent
+                        * Changing the default email addresses at which user or developer feedback is sent
 
                         User management consists of:
 
@@ -2921,7 +2979,7 @@ Note that all profile attributes are optional.]]>
                         * Giving a user a full name, email address and password - the user can later modify all of these
                         * Making the user as an admin
                         * Disabling the user - this can be later reversed
-                        * Giving the user planner vs guest (view-only) status for specific templates.
+                        * Giving the user developer vs guest (view-only) status for specific collaboration templates.
 
                         Make sure to press the Apply button for changes to take effect.
                     </description>

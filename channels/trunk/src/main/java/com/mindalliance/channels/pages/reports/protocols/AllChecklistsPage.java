@@ -35,19 +35,19 @@ public class AllChecklistsPage extends AbstractAllParticipantsPage {
 
     @Override
     protected String getHelpSectionId() {
-        return "all-protocols-page";
+        return "all-checklists-page";
     }
 
     @Override
     protected String getHelpTopicId() {
-        return "about-all-protocols-page";
+        return "about-all-checklists-page";
     }
 
 
 
     @Override
     public String getPageName() {
-        return "All Participants' Checklists";
+        return "All Checklists";
     }
 
     @Override
