@@ -286,10 +286,8 @@
 
                         You can:
 
-                        * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is
-                        to be based and then pressing the "Start it" button - you will be the founding planner for this plan,
-                        * access an existing collaboration plan (select the Go button next to its name in the list of
-                        plans).
+                        * create a new collaboration plan by first selecting the production version of a collaboration template on which the plan is to be based and then pressing the "Start it" button - you will be the founding planner for this plan,
+                        * access an existing collaboration plan (select the Go button next to its name in the list of plans).
                     </description>
                 </item>
             </topic>
@@ -395,13 +393,11 @@
                     <description>If so authorized, you can
 
                         * browse a registry of all organizations participating or eligible to participate in the plan,
-                        * register organizations for participation into the plan (or all plans) as placeholder
-                        organizations defined in the collaboration template adopted by the plan,
+                        * register organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
                         * assign users to template-defined agents who are assigned agents in organizations,
                         * confirm the participation of users into agents you supervise,
                         * review participation issues detected by Channels,
-                        * resign your status as collaboration planner (if you are not the only one) and bestow your
-                        authority on another user.
+                        * resign your status as collaboration planner (if you are not the only one) and bestow your authority on another user.
                     </description>
                 </item>
             </topic>
@@ -576,10 +572,8 @@
                 <item>
                     <description>A collaboration template is defined by
                         * the planning scenarios that cause organizations to collaborate and share information
-                        * the organizations and agents (stand-ins for people or systems) employed by them that involved
-                        in the collaborations
-                        * assignable tasks, connected by information flows, that achieve organizational goals in
-                        planning scenarios
+                        * the organizations and agents (stand-ins for people or systems) employed by them that involved in the collaborations
+                        * assignable tasks, connected by information flows, that achieve organizational goals in planning scenarios
 
                         Applying a scope to a collaboration template produces visualizations, analytics, diagnostics,
                         reports and, crucially, collaboration checklists.
@@ -1096,14 +1090,10 @@
                 <item>
                     <description>As a collaboration planner, you use the template editor to
 
-                        * define the scope of the template in terms of risk/opportunity-causing events and of the
-                        organizations involved,
-                        * compose the template from segments, each one addressing one phase (before, during, after) of
-                        one event, and some of the attendant risks/opportunities
-                        * define for each segment the information sharing and tasks required to deal with these risks
-                        and opportunities
-                        * profile the "entities" (events, phases, organizations, roles etc.) referenced in the
-                        collaboration template
+                        * define the scope of the template in terms of risk/opportunity-causing events and of the organizations involved,
+                        * compose the template from segments, each one addressing one phase (before, during, after) of one event, and some of the attendant risks/opportunities
+                        * define for each segment the information sharing and tasks required to deal with these risks and opportunities
+                        * profile the "entities" (events, phases, organizations, roles etc.) referenced in the collaboration template
                         * report issues in addition to those automatically detected by Channels
                         * view analytics to better understand the consequences, strengths and weaknesses of the template
                     </description>
@@ -1146,8 +1136,7 @@
                         * Index - Open the index of all named elements in this template
                         * Tags - Open the panel with all the tags used in this template
                         * Taxonomies - Open the panel showing all entity taxonomies defined in this template
-                        * Who's who - Open the panel listing all agents (people and systems) represented in this
-                        template
+                        * Who's who - Open the panel listing all agents (people and systems) represented in this template
                         * All attachments - Open the panel listing all file and Web page attachments in this template
                     </description>
                 </item>
@@ -1156,13 +1145,10 @@
                 <name>Scoping menu</name>
                 <item>
                     <description>The options are
-                        * Events in Scope - Open the panel with the editable list of all events in the scope of this
-                        template
+                        * Events in Scope - Open the panel with the editable list of all events in the scope of this template
                         * Goals in Scope - Open the panel showing all goals defined in this template
-                        * Organizations in Scope - Open the panel used to name the organizations (real or placeholders)
-                        that are expected to be assigned tasks in this template
-                        * Classification Systems - Open the panel used to define the security classifications used in
-                        this template
+                        * Organizations in Scope - Open the panel used to name the organizations (real or placeholders) that are expected to be assigned tasks in this template
+                        * Classification Systems - Open the panel used to define the security classifications used in this template
                     </description>
                 </item>
             </topic>
@@ -1171,12 +1157,10 @@
                 <item>
                     <description>The options are
                         * Task Mover - Open the panel used to easily move tasks from the current segment to another
-                        * Checklists Map - Open a visualization of how agents and organizations are being assigned to
-                        tasks and committed to share information (as reflected in their task checklists)
+                        * Checklists Map - Open a visualization of how agents and organizations are being assigned to tasks and committed to share information (as reflected in their task checklists)
                         * Template Evaluation - Open a panel containing metrics of all issues found in this template
                         * All Issues - Open a panel listing all the issues found in this template
-                        * Template versions - Open a panel identifying the current version of this template and allowing
-                        planners to vote on moving it to production
+                        * Template versions - Open a panel identifying the current version of this template and allowing planners to vote on moving it to production
                     </description>
                 </item>
             </topic>
@@ -1184,8 +1168,7 @@
                 <name>Learning menu</name>
                 <item>
                     <description>The options are
-                        * All feedback - Open a panel where all feedback sent about this template is listed and can be
-                        responded to
+                        * All feedback - Open a panel where all feedback sent about this template is listed and can be responded to
                         * All surveys - Open a panel from where surveys can be defined, launched and managed
                     </description>
                 </item>
@@ -1208,21 +1191,16 @@
                 <item>
                     <description>The options are
                         * Details/Hide details - Show or hide the task definition form
-                        * Assignments - Show the list of agents in scope that are assignable to the task given its
-                        definition
+                        * Assignments - Show the list of agents in scope that are assignable to the task given its definition
                         * Overrides - Show how this task overrides or is overridden by other tasks (hidden if N/A)
                         * Failure impacts - Open a panel showing the potential impacts of this task failing
-                        * Dissemination - Open a panel showing how elements of informations acquired for this tasks
-                        disseminate to other tasks
+                        * Dissemination - Open a panel showing how elements of informations acquired for this tasks disseminate to other tasks
                         * Surveys - Open a panel to launch or access surveys about this task
                         * Agent - Open the profile panel for the agent referenced by the task (hidden if N/A)
                         * Role - Open the profile panel for the role referenced by the task (hidden if N/A)
-                        * Organization - Open the profile panel for the organization referenced by the task (hidden if
-                        N/A)
-                        * Jurisdiction - Open the profile panel for the jurisdiction ( a place) referenced by the task
-                        (hidden if N/A)
-                        * Location - Open the profile panel for the location (a place) referenced by the task (hidden if
-                        N/A)
+                        * Organization - Open the profile panel for the organization referenced by the task (hidden if N/A)
+                        * Jurisdiction - Open the profile panel for the jurisdiction ( a place) referenced by the task (hidden if N/A)
+                        * Location - Open the profile panel for the location (a place) referenced by the task (hidden if N/A)
                         * Event - Open the profile panel for the event referenced by the task (hidden if N/A)
                     </description>
                 </item>
@@ -1240,11 +1218,9 @@
                         * Paste attachment - Add the copied attachment, if any, to this task
                         * Paste flow - Add copied info need or capability to this task
                         * New issue - Report a new issue about this task
-                        * Implement function - Add goals, information needs and capabilities to implement the task's
-                        function
+                        * Implement function - Add goals, information needs and capabilities to implement the task's function
                         * Duplicate task - Add new task as a copy of this one
-                        * Satisfy info needs - Create all possible flows that satify this task's info needs, based on
-                        existing info capabilities
+                        * Satisfy info needs - Create all possible flows that satify this task's info needs, based on existing info capabilities
                         * Disintermediate - Disconnect this task from all flows where it acts as an intermediary
                     </description>
                 </item>
@@ -1258,8 +1234,7 @@
                         * Elements - Open the elements of information edit panel (hidden if definition form is closed)
                         * Commitments - Open a panel with all computed info sharing commitments (hidden if N/A)
                         * Failure - Open a panel showing the potential impacts of this flow failing (hidden if N/A)
-                        * Dissemination - Open a panel showing how elements of informations in this flow disseminate to
-                        tasks (hidden if N/A)
+                        * Dissemination - Open a panel showing how elements of informations in this flow disseminate to tasks (hidden if N/A)
                         * Surveys - Open a panel to launch or access surveys about this info need/capability/flow
                         * Send message - Send a message to planners about this info need/capability/flow
                     </description>
@@ -1276,10 +1251,8 @@
                         * Remove need/capability/flow - Remove from the task
                         * New issue - Report a new issue about this info need/capability/flow
                         * Paste attachment - Add the copied attachment, if any, to this info need/capability/flow
-                        * Intermediate flow - Add a "middle man task" between the flow's source and target (hidden if
-                        N/A)
-                        * Breakup flow - Disconnect the source and target, adding capability and need if implied by the
-                        flow (hidden if N/A)
+                        * Intermediate flow - Add a "middle man task" between the flow's source and target (hidden if N/A)
+                        * Breakup flow - Disconnect the source and target, adding capability and need if implied by the flow (hidden if N/A)
                     </description>
                 </item>
             </topic>
@@ -1291,8 +1264,7 @@
                         * Undo ... - Undo the last change made anywhere in this template
                         * Redo ... - Redo the last undone change
                         * Remove issue - Remove this issue (hidden if details not shown)
-                        * Paste attachment - Add the copied attachment, if any, to this reported issue (hidden if
-                        details not shown)
+                        * Paste attachment - Add the copied attachment, if any, to this reported issue (hidden if details not shown)
                     </description>
                 </item>
             </topic>
@@ -1543,6 +1515,7 @@ The list is part of the template's ''details''.]]></description>
 * set the type of goal,
 * the organization, type or actual, whose goal it is,
 * the severity/importance of the risk to be mitigated or gain to be achieved.
+
 Naming the goal is optional.]]></description>
                     <script>
                         <action>Set segment goals</action>
@@ -1687,12 +1660,9 @@ Naming the goal is optional.]]></description>
                         * requiring the information to be compliant with a named information product
                         * listing its elements
                         * indicating whether it is ''pushed'' (a notification) or ''pulled' (a requested answer)
-                        * whether the need, capability or sharing is private or can be made known to parties other than
-                        those who need, can share, share or receive the information.
-                        * setting restrictions based on the relationships (employment, location, authority, identity)
-                        between sources and targets
-                        * the communication channels to use, each including transmission medium and, optionally, a
-                        required format
+                        * whether the need, capability or sharing is private or can be made known to parties other than those who need, can share, share or receive the information.
+                        * setting restrictions based on the relationships (employment, location, authority, identity) between sources and targets
+                        * the communication channels to use, each including transmission medium and, optionally, a required format
                         * timeliness constraints
                         * and more
                     </description>
@@ -1785,8 +1755,7 @@ Naming the goal is optional.]]></description>
                         * Events triggered or terminated by the task
                         * Information needs of the task
                         * The task having failed (a non-optional condition for "on-failure notification steps)
-                        * Conditions ''local'' to the execution of the task added to the checklist - they can also be
-                        removed
+                        * Conditions ''local'' to the execution of the task added to the checklist - they can also be removed
 
                         Outcomes of a steps can be:
                         * Goals, if any, achieved by the task
@@ -2081,8 +2050,7 @@ Note that all profile attributes are optional.]]>
 
                         Furthermore, who can participate as the agent can be set to
                         * any user whatsoever (open participation)
-                        * or users confirmed in their participation by other users participating as the agent's
-                        supervisors
+                        * or users confirmed in their participation by other users participating as the agent's supervisors
                         * or users already participating as agents employed by one of the agent's organizations
 
                         Participation can be anonymous, in which case the names and contact information of participating
@@ -2521,8 +2489,7 @@ Note that all profile attributes are optional.]]>
                 <item>
                     <description>Exactly what sharing commitments are generated for a flow depends on
                         * what agents are assigned to the producing task and consuming task connected by the flow
-                        * what restrictions are put on pairing agents into commitments (the committer and beneficiary
-                        must be in the same organization etc.)
+                        * what restrictions are put on pairing agents into commitments (the committer and beneficiary must be in the same organization etc.)
                         * whether an overriding flow prohibits a pairing of agents
                     </description>
                     <script>
@@ -2950,8 +2917,7 @@ Note that all profile attributes are optional.]]>
 
                         User management consists of:
 
-                        * Adding a new user with a unique username - be aware that users can not be deleted, only
-                        disabled
+                        * Adding a new user with a unique username - be aware that users can not be deleted, only disabled
                         * Giving a user a full name, email address and password - the user can later modify all of these
                         * Making the user as an admin
                         * Disabling the user - this can be later reversed
