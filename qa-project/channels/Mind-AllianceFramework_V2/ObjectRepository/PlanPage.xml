@@ -65,7 +65,7 @@
 	
 	<Element>
 		<GivenName>Events In Scope Window Title</GivenName>
-		<Title>Events In Scope</Title>
+		<Title>All Events And Phases</Title>
 	</Element>
 
 	<Element>
@@ -341,26 +341,45 @@
 	
 	<Element>
 		<GivenName>Default Event</GivenName>
-		<Xpath>/html/body/form/div[15]/div/span/div/div[2]/div/span/div/table/tbody/tr/td/span/a/span</Xpath>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/span/div/table/tbody/tr/td/span/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>unnamed</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
 	
+	
+//	<Element>
+	//	<GivenName>Analytics Tab</GivenName>
+	//	<Xpath>//a[contains(@class,'active')]/span</Xpath>
+	//	<Name></Name>
+	//	<Id></Id>
+	//	<PartialLinkText></PartialLinkText>
+	//	<LinkText>unnamed</LinkText>
+	//	<ClassName></ClassName>
+//	</Element>
 	
 	<Element>
 		<GivenName>Analytics Tab</GivenName>
-		<Xpath>//a[contains(@class,'active')]/span</Xpath>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[2]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>unnamed</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
+	<Element>
+		<GivenName>Issues Tab For Event</GivenName>
+		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[3]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
 	
 	<Element>
 		<GivenName>Participation Tab in Organization</GivenName>
@@ -383,15 +402,13 @@
 		<ClassName></ClassName>
 	</Element>
 	
-	
-	
 	<Element>
 		<GivenName>Where this event is referenced</GivenName>
-		<Xpath>//div[contains(@class,'aspect')]/h3</Xpath>
+		<Xpath>/html/body/form/div[3]/div/div[3]/div/div/h3</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
-		<LinkText>unnamed</LinkText>
+		<LinkText></LinkText>
 		<ClassName></ClassName>
 	</Element>
 	
@@ -593,7 +610,7 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Agreements Tab</GivenName>
+		<GivenName>Participation Tab</GivenName>
 		<Xpath>/html/body/form/div[3]/div/div[2]/div/span[4]/a/span</Xpath>
 		<Name></Name>
 		<Id></Id>
@@ -1462,7 +1479,7 @@
  	
  	<Element>
  		<GivenName>Close Unnamed Events Window</GivenName>
- 		<Xpath>//div[contains(@class,'fp-close')]/a/img</Xpath>
+ 		<Xpath>/html/body/form/div[3]/div/div/div[4]/a/img</Xpath>
  		<Name></Name>
  		<Id></Id>
     	<PartialLinkText></PartialLinkText>
@@ -3250,8 +3267,28 @@
 	</Element>
 	
 	<Element>
-		<GivenName>Events In Scope</GivenName>
+		<GivenName>All Events And Phases</GivenName>
 		<Xpath>/html/body/form/div[30]/div/div[2]/span[2]/span/ul/li/ul/li/span/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+
+	<Element>
+		<GivenName>Event Phases Tab</GivenName>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div/ul/li[2]/a/span</Xpath>
+		<Name></Name>
+		<Id></Id>
+		<PartialLinkText></PartialLinkText>
+		<LinkText></LinkText>
+		<ClassName></ClassName>
+	</Element>
+	
+	<Element>
+		<GivenName>Phase In All Events And Phases</GivenName>
+		<Xpath>/html/body/form/div[16]/div/span/div/div[2]/div/div[2]/div/ul/li[2]/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
