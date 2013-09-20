@@ -44,7 +44,7 @@ public class MAV0274_ViewEventAnalyticsTab extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -129,6 +129,7 @@ public class MAV0274_ViewEventAnalyticsTab extends TestCase{
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			 							
 			// Click on 'Events In Scope' under 'Scoping' pop up menu
+ 			//'Events in Scope' has been renamed to 'All Events and phases'
  			stepNo++;
 			description="Event in Scope";
 			PlanPage planPage=new PlanPage();
@@ -158,6 +159,7 @@ public class MAV0274_ViewEventAnalyticsTab extends TestCase{
  			stepNo++;
 			description="Close Event Window";
 			planPage.closeUnamedEventsWindow();
+			planPage.closeEventsWindow();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);

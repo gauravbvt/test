@@ -26,11 +26,11 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.DomainPlanPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
 import com.mindalliance.pages.PlanPage;
-
 
 public class MAV0275_ViewEventIssueTab extends TestCase{
 	public Hashtable<String, String> testData;
@@ -44,7 +44,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 	public String browser="";
 	
 	/*
-	 * This method will initilize the setup required for every test case
+	 * This method will initialize the setup required for every test case
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
@@ -56,7 +56,8 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			if(GlobalVariables.configuration.getAttrSearchList() == null){
 				new ElementController();
 			}
-			DataController dataController= new DataController();
+			
+			DataController dataController = new DataController();
 			dataController.createResultFiles();
 			
 			GlobalVariables.configuration.addTestCaseIdToJList(testCaseId);	
@@ -109,20 +110,20 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
+ 		    // Domain Plans
+ 		    stepNo++;
+ 			description="Domain Plans";
+ 			DomainPlanPage domainPlanPage= new DomainPlanPage();
+ 			domainPlanPage.clickDomainPlans();	
+ 			// Write log			
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
+ 			
+			// Plan Page
+		    stepNo++;
+			description="Domain Plan Editor";
+			HomePage homePage=new HomePage();
+			homePage.clickDomainPlanEditor();	
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -130,6 +131,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 			// Click on 'Events In Scope' under 'Scoping' pop up menu
  			stepNo++;
 			description="Event in Scope";
+			PlanPage planPage=new PlanPage();
 			planPage.clickPopupMenu(testData.get("Scoping"));
 			planPage.clickSubmenu(testData.get("EventsInScope"));
 			// Write log
@@ -147,7 +149,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
  			// Click Event's Analytics Tab
  			stepNo++;
  			description="Analytics Tab";
- 			planPage.clickAnalyticsTab();
+ 			planPage.clickIssuesTabForEvent();
  			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -156,6 +158,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
  			stepNo++;
 			description="Close Event Window";
 			planPage.closeUnamedEventsWindow();
+			planPage.closeEventsWindow();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
@@ -234,11 +237,7 @@ public class MAV0275_ViewEventIssueTab extends TestCase{
 	        this.testData.put("EventsInScope",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("eventsInScope").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("ChannelsURL",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("channelsURL").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("Title",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-	        
 	        this.testData.put("Actions",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("actions").item(0).getChildNodes().item(0).getNodeValue());
-	        this.testData.put("AddNewSegment",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("addNewSegment").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("SegmentForAddEvent",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("segmentForAddEvent").item(0).getChildNodes().item(0).getNodeValue());
-			this.testData.put("RemoveThisSegment",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("removeThisSegment").item(0).getChildNodes().item(0).getNodeValue());
 			this.testData.put("Event",oXmlEleMAV0275_ViewEventIssueTab.getElementsByTagName("event").item(0).getChildNodes().item(0).getNodeValue());
 			
 		}
