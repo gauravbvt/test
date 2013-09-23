@@ -167,7 +167,7 @@ public class MAC0045_RedoAddIssue extends TestCase {
 			description="Add Info Sends";
 			planPage.clickAddInfoSendsPanel();
 			
-			// Click on Strench up form
+			// Click on Stretch up form
 			planPage.clickStrenchUpForm();
 			// Write log
  			LogFunctions.writeLogs(description);
