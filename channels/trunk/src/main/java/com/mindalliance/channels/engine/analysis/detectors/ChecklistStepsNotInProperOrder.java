@@ -52,7 +52,9 @@ public class ChecklistStepsNotInProperOrder extends AbstractIssueDetector {
                         if ( condition.matches( outcome ) ) {
                             Step outcomeStep = checklist.derefStep( stepOutcome.getStepRef() );
                             Step conditionStep = checklist.derefStep( stepGuard.getStepRef() );
-                            if ( !outcomeStep.equals( conditionStep )
+                            if ( outcomeStep != null
+                                    && conditionStep != null
+                                    && !outcomeStep.equals( conditionStep )
                                     && !checklist.listPrerequisiteStepsFor( conditionStep ).contains( outcomeStep ) ) {
                                 Issue issue = makeIssue( queryService, Issue.VALIDITY, part );
                                 issue.setDescription( "Step \""
