@@ -581,6 +581,7 @@ public class PlanPage {
 			case "Menu In Flow Issues In Sends Panel":
 				elementController.requireElementSmart(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
 				xPathForPopup=dataController.getPageDataElements(fileName, popUpName, "Xpath");
+				UIActions.scrollDown();
 				UIActions.click(fileName,popUpName, GlobalVariables.configuration.getAttrSearchList(), popUpName);
 				
 				Actions builder26 = new Actions(GlobalVariables.configuration.getWebDriver());
