@@ -78,7 +78,7 @@ public class HomePage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getDefaultUserRoleId() {
-        return "user";
+        return "participant";
     }
 
 

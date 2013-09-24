@@ -435,7 +435,7 @@ public class UserPage extends AbstractChannelsBasicPage {
 
     @Override
     protected String getDefaultUserRoleId() {
-        return "user";
+        return "participant";
     }
 
     @Override

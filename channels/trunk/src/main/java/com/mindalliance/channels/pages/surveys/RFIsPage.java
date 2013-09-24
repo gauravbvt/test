@@ -93,7 +93,7 @@ public class RFIsPage extends AbstractChannelsBasicPage implements Modalable {
 
     @Override
     protected String getDefaultUserRoleId() {
-        return "user";
+        return "participant";
     }
 
 

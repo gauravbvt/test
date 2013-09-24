@@ -3,8 +3,8 @@
        xsi:noNamespaceSchemaLocation="guide.xsd">
     <name>Channels Guide</name>
     <description>A guide for users of Channels</description>
-    <role id="user">
-        <name>For all users of Channels</name>
+    <role id="participant" glossarySection="plan-glossary" glossaryTopic="plan-glossary-items">
+        <name>For all participants in collaboration plans</name>
         <section id="about-channels">
             <name>User interface</name>
             <topic id="intro">
@@ -23,7 +23,7 @@
                 <next section="plan-concepts" topic="collaboration-plan"/>
                 <next section="plan-concepts" topic="plan-template"/>
                 <next section="plan-concepts" topic="plan-checklist"/>
-                <next section="plan-concepts" topic="plan-participation"/>
+                <next section="plan-concepts" topic="collaboration-vs-process"/>
             </topic>
         </section>
         <section id="about-me">
@@ -114,9 +114,6 @@
                 </item>
             </topic>
         </section>
-    </role>
-    <role id="participant" glossarySection="plan-glossary" glossaryTopic="plan-glossary-items">
-        <name>For participants in collaboration plans</name>
         <section id="plan-glossary">
             <name>Key concepts</name>
             <topic id="plan-glossary-items">
@@ -152,6 +149,7 @@
                         A collaboration plan is based on a collaboration template that defines the planning scenarios, the kinds of collaborators, the tasks, the communications that coordinate them, and the checklists for executing the collaboration.
                     </description>
                 </item>
+                <next section="plan-concepts" topic="collaboration-vs-process"/>
             </topic>
             <topic id="plan-template">
                 <name>Collaboration template</name>
@@ -300,6 +298,49 @@
                         * the number of alternate source-agents for each sink-agent
 
                         A collaboration requirement may or may not apply to a pair of organizations in the plan. If it does then, whether or not it can be realized according to the template-defined collaboration is examined and reported.
+                    </description>
+                </item>
+            </topic>
+            <topic id="collaboration-vs-process">
+                <name>Collaborations vs. business processes</name>
+                <item>
+                    <description>
+                        Business processes (aka workflows) and collaborations are very different concepts, and a collaboration
+                        is not necessarily a business process. In fact, bona fide business processes represent the
+                        exception rather than the rule.
+
+                        A ''business process'' is a close orchestration of agents within an (extended) organization,
+                        all working harmoniously according to a known and repeatable script in order to accomplish a common goal.
+
+                        A ''collaboration'', as understood in Channels, is the coordination of interdependent work done
+                        by multiple agents, from one or more organizations, each trying to achieve their own, possibly conflicting,
+                        goals.
+
+                        The goals of organizations, namely risk mitigation and opportunity captures, are
+                        instantiated by events to be caused, prevented, responded to, recovered from etc.
+                        These events, it is assumed, affect, in some ways or other, all the participants in the collaboration,
+                        driving them to collaborate and share information.
+
+                        Collaboration planning focuses on information as the source of task inter-dependencies.
+                        Information dependencies are satisfied by communications that either coordinate (start, stop) tasks
+                        or inform them so they can succeed.
+
+                        Unlike business processes, a collaboration plan does not necessarily script the tasks; it only attempts to resolve their
+                        information and coordination inter-dependencies via information flows.
+                        The collaboration plan assumes that tasks and communications can fail,
+                        which is why Channels encourages information flow redundancies in collaboration plans.
+
+                        Most endeavors involving multiple organizations (each bringing its own agenda) can '''not''' be represented
+                        realistically or usefully as business processes. However, most and possibly all multi-organization
+                        endeavors can be represented, analyzed and improved upon as collaborations.
+
+                        It is easy to understand the allure of seeing the work of organizations primarily as business processes.
+                        If only we always knew exactly how to work together and always did it predictably and in complete harmony!
+                        However, the reality is that only a small percentage of all the work we do with others can be
+                        represented as business processes.
+
+                        So, this is why most of the efficiencies to be gained from planning how we work together will
+                        come from improving the flow of information in collaborations, not in business processes.
                     </description>
                 </item>
             </topic>
