@@ -47,7 +47,7 @@ public class CommunitiesPage {
 	}
 	
 	/**
-	 * 'clickPlanParticipationLink' method clicks on 'Go' button
+	 * 'clickPlanParticipationLink' method clicks on 'Plan Participation' link
 	 * @throws UIAutomationException 
 	*/
 	public void clickPlanParticipationLink() throws UIAutomationException{
@@ -58,4 +58,44 @@ public class CommunitiesPage {
     	String title=dataController.getPageDataElements(fileName, "Community participation", "PlanTitle");
        	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
 	}
+	
+	/**
+	 * 'clickCollaborationRequirementsLink' method clicks on 'Collaboration requirements' link
+	 * @throws UIAutomationException 
+	*/
+	public void clickCollaborationRequirementsLink() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Collaboration Requirements Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Requirements Link");
+		UIActions.click(fileName,"Collaboration Requirements Link",GlobalVariables.configuration.getAttrSearchList(), "Collaboration Requirements Link");
+				
+		// Assertion : Check Title of Page
+    	String title=dataController.getPageDataElements(fileName, "Collaboration requirements", "PlanTitle");
+       	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	/**
+	 * 'clickNewRequirementButton' method clicks on 'New' button on the 'Collaboration Requirements' page
+	 * @throws UIAutomationException 
+	*/
+	public void clickNewRequirementButton() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"New Requirement Button",GlobalVariables.configuration.getAttrSearchList(), "New Requirement Button");
+		UIActions.click(fileName,"New Requirement Button",GlobalVariables.configuration.getAttrSearchList(), "New Requirement Button");
+				
+	//Assertion : Check Title of Page
+    //	String title=dataController.getPageDataElements(fileName, "Unnamed", "cTitle");
+    //   	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
+	/**
+	 * 'clickNewRequirementButton' method clicks on 'New' button on the 'Collaboration Requirements' page
+	 * @throws UIAutomationException 
+	*/
+	public void clickRemoveRequirementButton() throws UIAutomationException{
+		elementController.requireElementSmart(fileName,"Remove Requirement Button",GlobalVariables.configuration.getAttrSearchList(), "Remove Requirement Button");
+		UIActions.click(fileName,"Remove Requirement Button",GlobalVariables.configuration.getAttrSearchList(), "Remove Requirement Button");
+				
+	//Assertion : Check Title of Page
+    //	String title=dataController.getPageDataElements(fileName, "Unnamed", "cTitle");
+    //   	UIActions.waitForTitle(title,Integer.parseInt(GlobalVariables.configuration.getConfigData().get("TimeOutForFindingElementSeconds")));
+	}
+	
 }
