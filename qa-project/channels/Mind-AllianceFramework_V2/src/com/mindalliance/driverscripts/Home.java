@@ -171,7 +171,7 @@ public class Home {
 //		suite.addTestSuite(MAV0254_ViewRequirementAtAnyEvent.class);
 		suite.addTestSuite(MAV0269_ViewOrganizationsNetworkTab.class);
 		suite.addTestSuite(MAV0270_ViewOrganizationStructureTab.class);
-//		suite.addTestSuite(MAV0271_ViewOrganizationParticipationTab.class);
+//	//	suite.addTestSuite(MAV0271_ViewOrganizationParticipationTab.class);
 		suite.addTestSuite(MAV0272_ViewOrganizationAnalyticsTab.class);
 		suite.addTestSuite(MAV0273_ViewOrganizationIssueTab.class);
 		suite.addTestSuite(MAV0274_ViewEventAnalyticsTab.class);
