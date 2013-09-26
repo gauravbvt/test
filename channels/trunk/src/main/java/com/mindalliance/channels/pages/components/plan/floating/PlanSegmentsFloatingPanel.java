@@ -53,7 +53,7 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
     private void addHeading() {
         getContentContainer().add( new Label(
                 "heading",
-                "All segments of " + getPlan().getName() ) );
+                "All segments of template " + getPlan().getName() ) );
     }
 
     private void addPlanName() {
@@ -62,15 +62,19 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
 
     private void addPlanImage() {
         WebMarkupContainer planImage = new WebMarkupContainer( "planImage" );
-        planImage.add( new AttributeModifier( "src", getPlanImagePath() ) );
+        String path =  getPlanImagePath();
+        planImage.add( new AttributeModifier( "src", path == null ? "images/plan.png" : path  ) );
+        makeVisible( planImage, path != null );
         getContentContainer().add( planImage );
     }
 
     private void addPlanDescription() {
         String description = getPlan().getDescription().trim();
-        getContentContainer().add( new Label(
+        Label descriptionLabel = new Label(
                 "planDescription",
-                description.isEmpty() ? "No description" : description ) );
+                description.isEmpty() ? "No description" : description );
+        makeVisible( descriptionLabel, !description.isEmpty() );
+        getContentContainer().add( descriptionLabel );
     }
 
     private void addPlanSegmentsPanel() {
@@ -94,8 +98,7 @@ public class PlanSegmentsFloatingPanel extends AbstractFloatingCommandablePanel 
 
     private String getPlanImagePath() {
         Plan plan = getPlan();
-        String path = imagingService.getSquareIconUrl( getCommunityService(), plan );
-        return path == null ? "images/plan.png" : path;
+        return imagingService.getSquareIconUrl( getCommunityService(), plan );
     }
 
     @Override

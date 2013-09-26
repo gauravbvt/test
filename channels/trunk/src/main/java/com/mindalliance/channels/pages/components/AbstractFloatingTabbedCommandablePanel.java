@@ -217,7 +217,7 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
         target.appendJavaScript( minimizeNormalizeScript );
     }
 
-    private void addHeader() {
+    protected void addHeader() {
         // move
         header = new WebMarkupContainer( "header" );
         header.setOutputMarkupId( true );
@@ -287,7 +287,11 @@ public abstract class AbstractFloatingTabbedCommandablePanel extends AbstractCom
                 item.add( tabLink );
             }
         };
-        header.add( tabListView );
+        header.addOrReplace( tabListView );
+    }
+
+    protected void resetTabs() {
+        tabs = null;
     }
 
     private List<Tab> getTabs() {

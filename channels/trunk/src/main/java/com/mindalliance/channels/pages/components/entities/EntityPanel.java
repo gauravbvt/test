@@ -124,7 +124,9 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
                                AjaxRequestTarget target,
                                Change change ) {
         ModelEntity previous = getEntity();
-        if ( previous != null && !change.hasQualifier( BACK ) )
+        if ( previous != null
+                && !change.hasQualifier( BACK )
+                && !previous.equals( entity ) )
             getEntityHistory().add( previous.getId() );
         setModel( new Model<ModelEntity>( entity ) );
         setExpansions( expansions );
@@ -518,6 +520,9 @@ public class EntityPanel extends AbstractFloatingMultiAspectPanel {
     @Override
     protected void refresh( AjaxRequestTarget target, Change change, String aspect ) {
         getCommander().requestLockOn( getUser().getUsername(), change.getSubject( getCommunityService() ) );
+        addTitle();
+        resetTabs();
+        addHeader();
         super.refresh( target, change, aspect );
     }
 
