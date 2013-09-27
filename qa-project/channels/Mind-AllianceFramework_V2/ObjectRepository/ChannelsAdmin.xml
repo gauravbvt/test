@@ -7,7 +7,7 @@
 	
 	<Element>
  		<GivenName>Alert Window Title Of Productize Plan</GivenName>
- 		<Title>Put in production the current version even though validity issues are unresolved and even though not all planners have voted to move into production?</Title>
+ 		<Title>Put in production the current version even though validity issues are unresolved and even though not all developers have voted to move into production?</Title>
  	</Element>
  	
  	<Element>
@@ -133,7 +133,7 @@
  	</Element>
  	
  	<Element>
-    	<GivenName>Productize Plan</GivenName>
+    	<GivenName>Put In Production</GivenName>
     	<Xpath>/html/body/form/div[2]/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div/a</Xpath>
     	<Name></Name>
     	<Id></Id>
