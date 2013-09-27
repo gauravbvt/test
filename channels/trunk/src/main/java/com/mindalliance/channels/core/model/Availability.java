@@ -82,12 +82,20 @@ public class Availability implements Serializable {
         return timePeriod.contains( calendar );
     }
 
-    public Availability overlap( Availability other ) {
+    public Availability computeOverlap( Availability other ) {
         Availability overlap = new Availability();
         for ( int i = 0; i < 7; i++ ) {
             overlap.setTimePeriod( i, getTimePeriod( i ).overlap( other.getTimePeriod( i ) ) );
         }
         return overlap;
+    }
+
+    public boolean includes( Availability other ) {
+        for ( int i = 0; i <7; i++ ) {
+            if ( !getTimePeriod( i ).includesTimePeriod( other.getTimePeriod( i ) ) )
+                return false;
+        }
+        return true;
     }
 
     public boolean isEmpty() {

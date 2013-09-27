@@ -285,7 +285,7 @@ public interface ParticipationManager {
     /**
      * Get user participation given db key.
      *
-     * @param uid              a db key
+     * @param uid a db key
      * @return a user participation
      */
     UserParticipation getUserParticipation( String uid );
@@ -293,7 +293,7 @@ public interface ParticipationManager {
     /**
      * Whether the agency is referenced anywhere (in template, in participation, as parent).
      *
-     * @param agency an agency
+     * @param agency           an agency
      * @param communityService a community service
      * @return a boolean
      */
@@ -301,6 +301,7 @@ public interface ParticipationManager {
 
     /**
      * Can an agency that is not local be made local?
+     *
      * @param agency an agency
      * @return a boolean
      */
@@ -308,8 +309,39 @@ public interface ParticipationManager {
 
     /**
      * Can an agency that is not global be made global?
+     *
      * @param agency an agency
      * @return a boolean
      */
     Boolean canBeMadeLocal( Agency agency, CommunityService communityService );
+
+    /**
+     * Whether users can directly participate as a given agent in a given agency.
+     *
+     * @param agent   an agent
+     * @param agency   an agency
+     * @param communityService a community service
+     * @return a boolean
+     */
+    Boolean isDirectParticipationAllowed( Agent agent,
+                                          Agency agency,
+                                          CommunityService communityService );
+
+    /**
+     * Find the position to participate as to indirectly participate as a given agent in an agency
+     *
+     * @param agent   an agent
+     * @param communityService a community service
+     * @return a community employment
+     */
+    CommunityEmployment findDirectParticipationEmploymentForParticipationAs( Agent agent,
+                                                                             CommunityService communityService );
+
+    /**
+     * Find all users participating directly or implicitly as a given agent.
+     * @param agent an agent
+     * @param communityService a community service
+     * @return a list of users
+     */
+    List<ChannelsUser> findAllUsersParticipatingAs( Agent agent, CommunityService communityService );
 }

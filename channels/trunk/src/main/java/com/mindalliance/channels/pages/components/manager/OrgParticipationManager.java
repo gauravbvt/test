@@ -140,6 +140,9 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                 int count = getParticipatingAgencies( placeholder ).size();
                 String metrics = count
                         + ( count > 1 ? " organizations" : " organization" );
+                if ( placeholder.isSingleParticipation() ) {
+                    metrics = metrics + ", 1 max";
+                }
                 item.add( new Label(
                         "metrics",
                         metrics ) );
@@ -227,10 +230,15 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
                         target.add( summaryLabel );
                     }
                 };
-                participatingAsCheckBox.setEnabled( canManageAnAgency() );
+                participatingAsCheckBox.setEnabled( canChangeAgencyParticipationFor( agency) );
                 item.add( participatingAsCheckBox );
                 // name
-                item.add( new Label( "agency", agency.getName() ) );
+                Label agencyLabel = new Label( "agency", agency.getName() );
+                item.add( agencyLabel );
+                String tip = getAgencyChangeTip( agency );
+                if ( !tip.isEmpty() ) {
+                    addTipTitle( agencyLabel, tip );
+                }
                 // profile button
                 AjaxLink<String> profileLink = new AjaxLink<String>( "profile" ) {
                     @Override
@@ -244,6 +252,25 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         };
         participatingAgencyList.setOutputMarkupId( true );
         participationContainer.addOrReplace( participatingAgencyList );
+    }
+
+    private String getAgencyChangeTip( Agency agency ) {
+        StringBuilder sb = new StringBuilder(  );
+        boolean authorized = isParticipationChangeAuthorized();
+        if ( !authorized ) {
+            sb.append( "You are not authorized to change organization participation as " )
+                    .append( selectedPlaceholder.getName() ).append(". ");
+        }
+        boolean acceptable = isParticipationChangeWithinConstraints( agency );
+        if ( !acceptable ) {
+            sb.append( "Adding a participation would exceed the maximum allowed. ");
+        }
+        boolean usersParticipate = areUsersParticipatingIn( agency );
+        if ( usersParticipate ) {
+            sb.append( "Participation can not be changed because users already participate in " )
+                    .append( agency.getName() );
+        }
+        return sb.toString();
     }
 
     private void addNoPlaceholderSelected() {
@@ -271,15 +298,38 @@ public class OrgParticipationManager extends AbstractUpdatablePanel {
         }
     }
 
-     private boolean canManageAnAgency() {
-        return selectedPlaceholder != null
-                && getCommunityService().isCustodianOf( getUser(), selectedPlaceholder );
+    private boolean canChangeAgencyParticipationFor( Agency agency ) {
+        if ( selectedPlaceholder == null ) {
+            return false;
+        } else {
+            boolean authorized = isParticipationChangeAuthorized();
+            boolean acceptable = isParticipationChangeWithinConstraints( agency );
+            boolean usersParticipate = areUsersParticipatingIn( agency );
+            return authorized && acceptable && !usersParticipate;
+        }
+    }
+
+    private boolean isParticipationChangeAuthorized( ) {
+        return getCommunityService().isCustodianOf( getUser(), selectedPlaceholder );
+    }
+
+    private boolean isParticipationChangeWithinConstraints( Agency agency ) {
+        List<Agency> participatingAgencies = getParticipatingAgencies( selectedPlaceholder );
+        return  participatingAgencies.contains( agency )
+                || participatingAgencies.isEmpty()
+                || !selectedPlaceholder.isSingleParticipation();
+    }
+
+    private boolean areUsersParticipatingIn( Agency agency ) {
+        return organizationParticipationService.isUsersParticipatingInOrganizationParticipation(
+                agency.getRegisteredOrganization(),
+                selectedPlaceholder,
+                getCommunityService()
+        );
     }
 
 
-
-
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<String> getAgencyNames() {
         List<String> agencyNames = (List<String>) CollectionUtils.collect(
                 participationManager.getAllKnownAgencies( getCommunityService() ),

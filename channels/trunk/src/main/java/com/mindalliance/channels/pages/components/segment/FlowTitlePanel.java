@@ -156,7 +156,7 @@ public class FlowTitlePanel extends AbstractUpdatablePanel {
                                 flow.getShortName( part, false ),
                                 Flow.getOrganizationString( part ),
                                 Flow.getJurisdictionString( part ),
-                                ( flow.isRestricted() ? "if " + flow.getRestrictionString( isSend ) : "" ) );
+                                ( flow.isRestricted() ? " if " + flow.getRestrictionString( isSend ) : "" ) );
             }
         }
 

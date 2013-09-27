@@ -61,11 +61,10 @@ public class PlanManagerImpl implements PlanManager {
                     new HashMap<Version, PlanDao>() );
 
     /**
-     * For each plan uri, usernames of users who not in sync with its current version.
+     * For each plan uri, usernames of users who are not in sync with its current version.
      * {uri => username}
      */
-    private final Map<String, List<String>> outOfSyncUsers =
-            Collections.synchronizedMap( new HashMap<String, List<String>>() );
+    private final Map<String, List<String>> outOfSyncUsers = new HashMap<String, List<String>>();
 
     /**
      * Pre-defined and immutable transmission media.
@@ -468,8 +467,6 @@ public class PlanManagerImpl implements PlanManager {
         for ( ChannelsUser user : userRecordService.getAllEnabledUsers() )
             if ( user.isPlannerOrAdmin( plan.getUri() ) && !producers.contains( user.getUsername() ) )
                 return false;
-// TODO reenable production voting
-//        productize( plan );
         return true;
     }
 

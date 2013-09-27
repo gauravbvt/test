@@ -83,7 +83,7 @@ import java.util.List;
                     "sharing.name",
                     EMPTY ) );
             columns.add( this.makeFilterableLinkColumn(
-                    "with actor",
+                    "with agent",
                     "beneficiary.actor",
                     "beneficiary.actor.normalizedName",
                     EMPTY,

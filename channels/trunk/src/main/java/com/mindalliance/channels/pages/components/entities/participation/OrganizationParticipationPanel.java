@@ -35,6 +35,8 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
     private WebMarkupContainer custodianContainer;
     private AutoCompleteTextField<String> custodianField;
     private AjaxCheckBox placeHolderCheckbox;
+    private AjaxCheckBox singleParticipationCheckbox;
+    private WebMarkupContainer singleParticipationContainer;
 
 
     public OrganizationParticipationPanel( String id, IModel<Organization> organizationModel, Set<Long> expansions ) {
@@ -62,6 +64,13 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
         participationContainer = new WebMarkupContainer( "participationContainer" );
         participationContainer.setOutputMarkupId( true );
         participationContainer.setVisible( getOrganization().isActual() );
+        addPlaceholderField();
+        addSingleParticipationField();
+        addCustodian();
+        add( participationContainer );
+    }
+
+    private void addPlaceholderField() {
         placeHolderCheckbox = new AjaxCheckBox(
                 "placeHolder",
                 new PropertyModel<Boolean>( this, "placeHolder" ) ) {
@@ -73,8 +82,23 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
             }
         };
         participationContainer.add( placeHolderCheckbox );
-        addCustodian();
-        add( participationContainer );
+    }
+
+    private void addSingleParticipationField() {
+        singleParticipationContainer = new WebMarkupContainer( "singleParticipationContainer" );
+        singleParticipationContainer.setOutputMarkupId( true );
+        participationContainer.addOrReplace( singleParticipationContainer );
+        singleParticipationCheckbox = new AjaxCheckBox(
+                "singleParticipation",
+                new PropertyModel<Boolean>( this, "singleParticipation" ) ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                adjustFields();
+                target.add( participationContainer );
+                update( target, new Change( Change.Type.Updated, getOrganization() ) );
+            }
+        };
+        singleParticipationContainer.add( singleParticipationCheckbox );
     }
 
     private void addCustodian() {
@@ -116,6 +140,8 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
         placeHolderCheckbox.setEnabled( isLockedByUser( org ) );
         makeVisible( custodianContainer, org.isPlaceHolder() );
         custodianField.setEnabled(  isLockedByUser( org ) );
+        makeVisible( singleParticipationContainer, org.isPlaceHolder() );
+        singleParticipationCheckbox.setEnabled(  isLockedByUser( org ) );
     }
 
     public boolean isPlaceHolder() {
@@ -126,6 +152,19 @@ public class OrganizationParticipationPanel extends AbstractCommandablePanel imp
         doCommand(
                 new UpdatePlanObject( getUser().getUsername(), getOrganization(),
                         "placeHolder",
+                        val,
+                        UpdateObject.Action.Set ) );
+    }
+
+
+    public boolean isSingleParticipation() {
+        return getOrganization().isSingleParticipation();
+    }
+
+    public void setSingleParticipation( boolean val ) {
+        doCommand(
+                new UpdatePlanObject( getUser().getUsername(), getOrganization(),
+                        "singleParticipation",
                         val,
                         UpdateObject.Action.Set ) );
     }

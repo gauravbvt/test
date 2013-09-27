@@ -61,19 +61,18 @@ public class OrganizationParticipationServiceImpl
 
     @Override
     public OrganizationParticipation assignOrganizationAs( ChannelsUser user, RegisteredOrganization registeredOrganization, Organization placeholder, CommunityService communityService ) {
-        if ( communityService.isCustodianOf( user, placeholder ) ) {
-            if ( !isAgencyRegisteredAs( registeredOrganization, placeholder, communityService ) ) {
-                OrganizationParticipation registration = new OrganizationParticipation(
-                        user.getUsername(),
-                        registeredOrganization,
-                        placeholder,
-                        communityService.getPlanCommunity() );
-                save( registration );
-                communityService.clearCache();
-                return registration;
-            } else {
-                return null;
-            }
+        if ( !isAgencyRegisteredAs( registeredOrganization, placeholder, communityService )
+                && communityService.isCustodianOf( user, placeholder )
+                && ( !placeholder.isSingleParticipation()
+                || findAllParticipationBy( registeredOrganization, communityService ).isEmpty() ) ) {
+            OrganizationParticipation registration = new OrganizationParticipation(
+                    user.getUsername(),
+                    registeredOrganization,
+                    placeholder,
+                    communityService.getPlanCommunity() );
+            save( registration );
+            communityService.clearCache();
+            return registration;
         } else {
             return null;
         }
@@ -198,6 +197,20 @@ public class OrganizationParticipationServiceImpl
         }
     }
 
+    public Boolean isUsersParticipatingInOrganizationParticipation(RegisteredOrganization registeredOrg,
+                                                                   Organization placeholder,
+                                                                   CommunityService communityService ) {
+        if ( registeredOrg == null ) return false;
+        OrganizationParticipation organizationParticipation = findOrganizationParticipation(
+                registeredOrg.getName( communityService ),
+                placeholder,
+                communityService );
+        return organizationParticipation != null
+                && !userParticipationService.listUserParticipationIn(
+                organizationParticipation,
+                communityService ).isEmpty();
+    }
+
     @Override
     public List<OrganizationParticipation> findAllParticipationByGlobal( RegisteredOrganization registeredOrganization ) {
         assert !registeredOrganization.isLocal();
@@ -228,7 +241,7 @@ public class OrganizationParticipationServiceImpl
     public List<OrganizationParticipation> findAllParticipationBy( Organization fixedOrganization, CommunityService communityService ) {
         RegisteredOrganization registeredOrganization = registeredOrganizationService.find( fixedOrganization.getName(), communityService );
         return registeredOrganization == null
-                ? new ArrayList<OrganizationParticipation>(  )
+                ? new ArrayList<OrganizationParticipation>()
                 : findAllParticipationBy( registeredOrganization, communityService );
     }
 

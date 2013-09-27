@@ -36,11 +36,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     Boolean isParticipationNotFull( Agent agent, CommunityService communityService );
 
-    Boolean isParticipatedAs( Agent agent, CommunityService communityService );
-
-    List<Agent> listAgentsParticipatedAs( CommunityService communityService );
-
-    void removeParticipation( String username, UserParticipation participation, CommunityService communityService );
+     void removeParticipation( String username, UserParticipation participation, CommunityService communityService );
 
     List<UserParticipation> getAllParticipations( CommunityService communityService );
 
@@ -56,11 +52,7 @@ public interface UserParticipationService extends DataService<UserParticipation>
      */
     void deleteAllParticipations( ChannelsUser user, String username );
 
-    List<UserParticipation> validParticipations(
-            List<UserParticipation> userParticipations,
-            CommunityService communityService );
-
-    List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, CommunityService communityService );
+     List<Agent> listAgentsUserParticipatesAs( ChannelsUser user, CommunityService communityService );
 
     List<UserParticipation> getParticipationsSupervisedByUser( ChannelsUser user, CommunityService communityService );
 

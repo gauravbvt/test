@@ -40,6 +40,11 @@ public class Job implements Serializable, Mappable, GeoLocatable {
     private Actor supervisor;
 
     /**
+     * The job is assigned de facto from being hired in another job.
+     */
+    private boolean linked; // default is false i.e. it is a primary job, one to which users can be explicitly assigned.
+
+    /**
      * Primary key for persistence.
      */
     private long id;
@@ -53,6 +58,7 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         jurisdiction = job.getJurisdiction();
         title = job.getTitle();
         supervisor = job.getSupervisor();
+        linked = job.isLinked();
     }
 
     public Job( Actor actor, Role role, Place jurisdiction ) {
@@ -98,6 +104,10 @@ public class Job implements Serializable, Mappable, GeoLocatable {
         return title == null ? getRoleName() : title;
     }
 
+    public String getRawTitle() {
+        return title == null ? "" : title;
+    }
+
     public void setTitle( String title ) {
         this.title = ( title == null ? "" : title );
     }
@@ -120,6 +130,18 @@ public class Job implements Serializable, Mappable, GeoLocatable {
 
     public void setSupervisor( Actor supervisor ) {
         this.supervisor = supervisor;
+    }
+
+    public boolean isLinked() {
+        return linked;
+    }
+
+    public void setLinked( boolean linked ) {
+        this.linked = linked;
+    }
+
+    public boolean isPrimary() {
+        return !isLinked();
     }
 
     /**

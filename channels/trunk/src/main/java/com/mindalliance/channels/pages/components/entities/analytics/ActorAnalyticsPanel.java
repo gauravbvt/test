@@ -301,47 +301,47 @@ public class ActorAnalyticsPanel
     @SuppressWarnings( "unchecked" )
     public List<String> getIndexedNames() {
         List<Employment> employments = getQueryService().findAllEmploymentsForActor( getActor() );
-            if ( indexedOn.equals( ROLES ) ) {
-                return (List<String>) CollectionUtils.collect(
-                        employments,
-                        new Transformer() {
-                            public Object transform( Object obj ) {
-                                return ( (Employment) obj ).getRole().getName();
-                            }
-                        } );
-            } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
-                return (List<String>) CollectionUtils.collect(
-                        CollectionUtils.select(
-                                employments,
-                                new Predicate() {
-                                    public boolean evaluate( Object obj ) {
-                                        return ( (Employment) obj ).getOrganization() != null;
-                                    }
-                                } ),
-                        new Transformer() {
-                            public Object transform( Object obj ) {
-                                return ( (Employment) obj ).getOrganization().getName();
-                            }
+        if ( indexedOn.equals( ROLES ) ) {
+            return (List<String>) CollectionUtils.collect(
+                    employments,
+                    new Transformer() {
+                        public Object transform( Object obj ) {
+                            return ( (Employment) obj ).getRole().getName();
+                        }
+                    } );
+        } else if ( indexedOn.equals( ORGANIZATIONS ) ) {
+            return (List<String>) CollectionUtils.collect(
+                    CollectionUtils.select(
+                            employments,
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    return ( (Employment) obj ).getOrganization() != null;
+                                }
+                            } ),
+                    new Transformer() {
+                        public Object transform( Object obj ) {
+                            return ( (Employment) obj ).getOrganization().getName();
+                        }
 
-                        } );
-            } else if ( indexedOn.equals( LOCATIONS ) ) {
-                return (List<String>) CollectionUtils.collect(
-                        CollectionUtils.select(
-                                employments,
-                                new Predicate() {
-                                    public boolean evaluate( Object obj ) {
-                                        return ( (Employment) obj ).getLocation() != null;
-                                    }
-                                } ),
-                        new Transformer() {
-                            public Object transform( Object obj ) {
-                                return ( (Employment) obj ).getLocation().getName();
-                            }
+                    } );
+        } else if ( indexedOn.equals( LOCATIONS ) ) {
+            return (List<String>) CollectionUtils.collect(
+                    CollectionUtils.select(
+                            employments,
+                            new Predicate() {
+                                public boolean evaluate( Object obj ) {
+                                    return ( (Employment) obj ).getLocation() != null;
+                                }
+                            } ),
+                    new Transformer() {
+                        public Object transform( Object obj ) {
+                            return ( (Employment) obj ).getLocation().getName();
+                        }
 
-                        } );
-            } else {
-                throw new IllegalStateException( "Can't index on " + indexedOn );
-            }
+                    } );
+        } else {
+            throw new IllegalStateException( "Can't index on " + indexedOn );
+        }
     }
 
     /**
@@ -389,7 +389,7 @@ public class ActorAnalyticsPanel
 
 
     private Actor getActor() {
-        return (Actor)getModel().getObject();
+        return (Actor) getModel().getObject();
     }
 
     /**
@@ -415,10 +415,21 @@ public class ActorAnalyticsPanel
         private void init() {
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
+            columns.add( makeColumn(
+                    "Title",
+                    "title",
+                    EMPTY
+            ) );
             columns.add( makeFilterableLinkColumn(
                     "Role",
                     "role",
                     "role.name",
+                    EMPTY,
+                    ActorAnalyticsPanel.this ) );
+            columns.add( makeFilterableLinkColumn(
+                    "Jurisdiction",
+                    "jurisdiction",
+                    "jurisdiction.name",
                     EMPTY,
                     ActorAnalyticsPanel.this ) );
             columns.add( makeFilterableLinkColumn(
@@ -427,19 +438,13 @@ public class ActorAnalyticsPanel
                     "organization.name",
                     EMPTY,
                     ActorAnalyticsPanel.this ) );
-            columns.add( makeFilterableLinkColumn(
-                    "Location",
-                    "organization.location",
-                    "organization.location.name",
-                    EMPTY,
-                    ActorAnalyticsPanel.this ) );
             // provider and table
             add( new AjaxFallbackDefaultDataTable(
                     "employments",
                     columns,
                     new SortableBeanProvider<Employment>(
                             employmentsModel.getObject(),
-                            "actor.lastName" ),
+                            "title" ),
                     getPageSize() ) );
         }
     }
@@ -482,6 +487,12 @@ public class ActorAnalyticsPanel
                     "Task",
                     "part",
                     "part.task",
+                    EMPTY,
+                    AssignmentsTablePanel.this ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "Segment",
+                    "part.segment",
+                    "part.segment.name",
                     EMPTY,
                     AssignmentsTablePanel.this ) );
             columns.add( makeColumn(
@@ -564,16 +575,18 @@ public class ActorAnalyticsPanel
             List<IColumn<?>> columns = new ArrayList<IColumn<?>>();
             // columns
             columns.add( this.makeFilterableLinkColumn(
-                    "From task",
+                    "From doing task",
                     "sharing.source",
                     "sharing.source.task",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( this.makeColumn(
-                    "at location",
-                    "sharing.source.location.displayName",
-                    EMPTY ) );
-            columns.add( makeLinkColumn(
+            columns.add( this.makeFilterableLinkColumn(
+                    "in segment",
+                    "sharing.source.segment",
+                    "sharing.source.segment.name",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
+             columns.add( makeLinkColumn(
                     "commits to share",
                     "sharing",
                     "sharing.name",
@@ -584,21 +597,23 @@ public class ActorAnalyticsPanel
                     EMPTY
             ) );
             columns.add( this.makeFilterableLinkColumn(
-                    "with actor",
+                    "with agent",
                     "beneficiary.actor",
                     "beneficiary.actor.normalizedName",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
             columns.add( this.makeFilterableLinkColumn(
-                    "for task",
+                    "to do task",
                     "sharing.target",
                     "sharing.target.task",
                     EMPTY,
                     CommitmentsTablePanel.this ) );
-            columns.add( this.makeColumn(
-                    "at location",
-                    "sharing.target.location.displayName",
-                    EMPTY ) );
+            columns.add( this.makeFilterableLinkColumn(
+                    "in segment",
+                    "sharing.target.segment",
+                    "sharing.target.segment.name",
+                    EMPTY,
+                    CommitmentsTablePanel.this ) );
             // provider and table
             addOrReplace( new AjaxFallbackDefaultDataTable(
                     "commitments",
@@ -650,7 +665,6 @@ public class ActorAnalyticsPanel
                     getPageSize() ) );
         }
     }
-
 
 
 }

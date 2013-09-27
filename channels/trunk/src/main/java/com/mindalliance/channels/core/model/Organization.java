@@ -67,6 +67,11 @@ public class Organization extends AbstractUnicastChannelable
     public Actor custodian;
 
     /**
+     * If placeholder, whether only one known organization can participate as it.
+     */
+    public boolean singleParticipation;
+
+    /**
      * Name of unknown organization.
      */
     public static String UnknownName = "(unknown)";
@@ -229,6 +234,14 @@ public class Organization extends AbstractUnicastChannelable
         this.placeHolder = placeHolder;
     }
 
+    public boolean isSingleParticipation() {
+        return singleParticipation;
+    }
+
+    public void setSingleParticipation( boolean singleParticipation ) {
+        this.singleParticipation = singleParticipation;
+    }
+
     /**
      * Whether this organization has an ancestor that narrows or equals a given organization.
      *
@@ -333,6 +346,16 @@ public class Organization extends AbstractUnicastChannelable
             }
         } );
         return jobs;
+    }
+
+    public List<Job> getEffectiveJobs() {
+        List<Job> effectiveJobs = new ArrayList<Job>();
+        for ( Job job : getJobs() ) {
+            Job copy = new Job( job );
+            copy.setLinked( job.isLinked() && ( !isPlaceHolder() || isSingleParticipation() ) );
+            effectiveJobs.add( job );
+        }
+        return effectiveJobs;
     }
 
     public void setJobs( List<Job> jobs ) {
@@ -543,6 +566,10 @@ public class Organization extends AbstractUnicastChannelable
     @Override
     public boolean hasAddresses() {
         return !isType() && !isPlaceHolder();
+    }
+
+    public boolean isLinkable() {
+        return !isPlaceHolder() || isSingleParticipation();
     }
 
     /**

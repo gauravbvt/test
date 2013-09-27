@@ -221,28 +221,12 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public List<Agent> listAgentsParticipatedAs( CommunityService communityService ) {
-        Set<Agent> agents = new HashSet<Agent>();
-        for ( UserParticipation userParticipation : list() ) {
-            Agent agent = userParticipation.getAgent( communityService );
-            if ( agent != null )
-                agents.add( agent );
-        }
-        return new ArrayList<Agent>( agents );
-    }
-
-    @Override
      public Boolean isParticipationNotFull( Agent agent, CommunityService communityService ) {
         if ( agent.isAnyNumberOfParticipants() ) return true;
         else {
             int count = getParticipationsAsAgent( agent, communityService ).size();
             return count < agent.getMaxParticipation();
         }
-    }
-
-    @Override
-    public Boolean isParticipatedAs( Agent agent, CommunityService communityService ) {
-        return !getParticipationsAsAgent( agent, communityService ).isEmpty();
     }
 
     @Override
@@ -300,13 +284,6 @@ public class UserParticipationServiceImpl
         for ( UserParticipation participation : getUserParticipations( user, null ) ) {
             removeParticipation( username, participation, null );
         }
-    }
-
-
-    public List<UserParticipation> validParticipations(
-            List<UserParticipation> userParticipations,
-            CommunityService communityService ) {
-        return validate( userParticipations, communityService );
     }
 
     // User already participates as an agent that has an employer in common with the agent of given participation of his/hers.

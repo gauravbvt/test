@@ -562,6 +562,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         private boolean isCanBeMadeGlobal() {
             if ( canBeMadeGlobal == null )
                 canBeMadeGlobal = agency != null
+                        && isPlanner()
                         && getCommunityService().getParticipationManager().canBeMadeGlobal( agency, getCommunityService() );
             return canBeMadeGlobal;
         }
@@ -569,12 +570,14 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         private boolean isCanBeMadeLocal() {
             if ( canBeMadeLocal == null )
                 canBeMadeLocal = agency != null
+                        && isPlanner()
                         && getCommunityService().getParticipationManager().canBeMadeLocal( agency, getCommunityService() );
             return canBeMadeLocal;
         }
 
          private boolean canBeRemoved() {
             return agency != null
+                    && isPlanner()
                     && !getCommunityService().getParticipationManager().isAgencyReferenced( agency, getCommunityService() );
         }
 

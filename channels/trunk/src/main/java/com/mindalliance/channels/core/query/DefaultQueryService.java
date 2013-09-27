@@ -1070,7 +1070,7 @@ public abstract class DefaultQueryService implements QueryService {
         List<Job> jobs = new ArrayList<Job>();
         Place locale = getPlanLocale();
         for ( Organization org : listActualEntities( Organization.class ) )
-            for ( Job job : org.getJobs() )
+            for ( Job job : org.getEffectiveJobs() )
                 if ( job.resourceSpec( org ).narrowsOrEquals( specable, locale ) )
                     jobs.add( job );
 
@@ -1357,7 +1357,7 @@ public abstract class DefaultQueryService implements QueryService {
         Set<Employment> employments = new HashSet<Employment>();
         // From confirmed jobs matching the part
         for ( Organization org : listActualEntities( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
+            for ( Job job : org.getEffectiveJobs() ) {
                 if ( ModelEntity.implies( job.getActor(), part.getActor(), locale )
                         && ModelEntity.implies( job.getRole(), part.getRole(), locale )
                         && ModelEntity.implies( org, part.getOrganization(), locale )
@@ -1414,7 +1414,7 @@ public abstract class DefaultQueryService implements QueryService {
         List<Employment> employments = new ArrayList<Employment>();
         List<Organization> orgs = listEntitiesNarrowingOrEqualTo( organization );
         for ( Organization org : orgs ) {
-            for ( Job job : org.getJobs() ) {
+            for ( Job job : org.getEffectiveJobs() ) {
                 employments.add( new Employment( job.getActor(), org, job ) );
             }
             for ( Job job : findUnconfirmedJobs( org ) ) {
@@ -1429,7 +1429,7 @@ public abstract class DefaultQueryService implements QueryService {
         Set<Actor> employed = new HashSet<Actor>();
         List<Employment> employments = new ArrayList<Employment>();
         for ( Organization org : listActualEntities( Organization.class ) ) {
-            for ( Job job : org.getJobs() ) {
+            for ( Job job : org.getEffectiveJobs() ) {
                 employments.add( new Employment( job.getActor(), org, job ) );
                 employed.add( job.getActor() );
             }
@@ -1644,7 +1644,7 @@ public abstract class DefaultQueryService implements QueryService {
         }
 
         for ( Organization org : orgs ) {
-            for ( Job job : org.getJobs() ) {
+            for ( Job job : org.getEffectiveJobs() ) {
                 if ( actor.equals( job.getActor() ) ) {
                     jobs.add( job );
                 }
@@ -2733,7 +2733,7 @@ public abstract class DefaultQueryService implements QueryService {
     public List<Job> findUnconfirmedJobs( Organization organization ) {
         Place locale = getPlanLocale();
         Set<Job> unconfirmedJobs = new HashSet<Job>();
-        List<Job> confirmedJobs = organization.getJobs();
+        List<Job> confirmedJobs = organization.getEffectiveJobs();
         for ( Segment segment : list( Segment.class ) ) {
             Iterator<Part> parts = segment.parts();
             while ( parts.hasNext() ) {

@@ -110,7 +110,7 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
     public List<Job> getPlaceholderJobs( CommunityService communityService ) {
         Organization placeholder = getPlaceholderOrganization( communityService );
         if ( placeholder != null ) {
-            return placeholder.getJobs();
+            return placeholder.getEffectiveJobs();
         } else {
             return new ArrayList<Job>();
         }
@@ -129,13 +129,14 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
         }
     }
 
+    @SuppressWarnings( "unchecked" )
     public String getJobTitle( final Actor actor, CommunityService communityService ) {
         RegisteredOrganization registeredOrganization = getRegisteredOrganization( communityService );
         if ( registeredOrganization != null ) {
-            List<Job> jobs = getRegisteredOrganization( communityService ).isFixedOrganization()
+            List<Job> jobs = registeredOrganization.isFixedOrganization()
                     ? getFixedJobs( communityService )
                     : getPlaceholderJobs( communityService );
-            Job job = (Job) CollectionUtils.find(
+            List<Job> actorJobs = (List<Job>) CollectionUtils.select(
                     jobs,
                     new Predicate() {
                         @Override
@@ -144,7 +145,30 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
                         }
                     }
             );
-            return job == null ? "" : job.getTitle();
+            if ( actorJobs.isEmpty() ) {
+                return "";
+            } else {
+                Job job = (Job)CollectionUtils.find(
+                        actorJobs,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return ((Job)object).isPrimary();
+                            }
+                        }
+                );
+                if ( job == null ) {
+                    job = (Job)CollectionUtils.find(
+                            actorJobs,
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return !((Job)object).getRawTitle().isEmpty();
+                                }
+                            } );
+                }
+                return job == null ? actorJobs.get(0).getTitle() : job.getTitle();
+            }
         } else {
             return "?";
         }

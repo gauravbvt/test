@@ -185,13 +185,30 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
         planUriLabel.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( planUriLabel );
         // community count
-        Label communitiesCountLabel = new Label( "communitiesCount", Integer.toString( getCommunitiesCount() ) );
+        int count = getCommunitiesCount();
+        Label communitiesCountLabel = new Label( "communitiesCount", Integer.toString( count ) );
         communitiesCountLabel.setOutputMarkupId( true );
+        addTipTitle(
+                communitiesCountLabel,
+                count == 0
+                    ? "No plan is based on this template. It can be deleted"
+                    : "The template can not be deleted if one or more plans are based on it."
+        );
         planPropertiesContainer.addOrReplace( communitiesCountLabel );
         // dev version
         Label devVersionLabel = new Label( "devVersion", Integer.toString( getSelectedPlan().getVersion() ) );
         devVersionLabel.setOutputMarkupId( true );
         planPropertiesContainer.addOrReplace( devVersionLabel );
+        // validity
+        Label validityLabel = new Label( "validity", isDevelopmentVersionInvalid() ? "not valid" : "valid" );
+        boolean invalid = isDevelopmentVersionInvalid();
+        validityLabel.setOutputMarkupId( true );
+        addTipTitle(
+                validityLabel,
+                invalid
+                        ? "Validity issues remain. The development version should not be put in production."
+                        : "There are no outstanding validity issues. The development version can be put into production.");
+        planPropertiesContainer.addOrReplace( validityLabel );
     }
 
     private int getCommunitiesCount() {
@@ -210,7 +227,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
             }
         } );
         planNameField.setOutputMarkupId( true );
-        addInputHint( planNameField, "One or more words");
+        addInputHint( planNameField, "One or more words" );
         planPropertiesContainer.addOrReplace( planNameField );
         // owner
         TextField<String> planOwnerField = new TextField<String>(
@@ -293,7 +310,25 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
     private String getProductizeConfirmationMessage() {
         StringBuilder sb = new StringBuilder();
         boolean plannersOkToProductize = getPlanManager().revalidateProducers( getSelectedPlan() );
-        boolean invalid = CollectionUtils.exists(
+        boolean invalid = isDevelopmentVersionInvalid();
+        sb.append( "Put in production the current version" );
+        if ( invalid || !plannersOkToProductize ) {
+            sb.append( " even though");
+        }
+        if ( invalid ) {
+            sb.append( " there are outstanding validity issues");
+        }
+        if ( !plannersOkToProductize ) {
+            if ( invalid )
+                sb.append( " and");
+            sb.append( " not all developers have voted in favor of it" );
+        }
+        sb.append( "?" );
+        return sb.toString();
+    }
+
+    private boolean isDevelopmentVersionInvalid() {
+        return CollectionUtils.exists(
                 getAnalyst().findAllUnwaivedIssues( getQueryService() ),
                 new Predicate() {
                     @Override
@@ -302,18 +337,6 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
                     }
                 }
         );
-        sb.append( "Put in production the current version" );
-        if ( invalid || !plannersOkToProductize ) {
-            if ( invalid ) {
-                sb.append( " even though validity issues are unresolved" );
-            }
-            if ( !plannersOkToProductize ) {
-                if ( invalid ) sb.append( " and" );
-                sb.append( " even though not all developers have voted to move into production" );
-            }
-        }
-        sb.append( "?" );
-        return sb.toString();
     }
 
     private boolean canBeDeletedPlan( Plan plan ) {

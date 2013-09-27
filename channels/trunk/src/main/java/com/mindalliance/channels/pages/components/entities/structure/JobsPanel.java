@@ -155,6 +155,15 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 this,
                 "All last names" );
         jobsDiv.add( rangePanel );
+        boolean isLinkable = getOrganization().isLinkable();
+        String linkedHeader = isLinkable
+                ? "Is linked"
+                : "";
+        Label linkedLabel = new Label( "linkedHeader", linkedHeader );
+        if ( isLinkable ) {
+            addTipTitle( linkedLabel, "The job is linked to another job. One gets this one by being hired for the other."  );
+        }
+        jobsDiv.add( linkedLabel );
         jobsDiv.addOrReplace( makeJobsTable() );
     }
 
@@ -173,6 +182,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 addEntityCell( item, "role" );
                 addEntityCell( item, "jurisdiction" );
                 addEntityCell( item, "supervisor" );
+                addBooleanCell( item, "linked", "linked" );
                 addShowFlowsCell( item );
                 item.add( new AttributeModifier(
                         "class",
@@ -380,7 +390,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 "confirmed",
                 new PropertyModel<Boolean>( jobWrapper, "confirmed" ) );
         makeVisible( confirmedCheckBox, jobWrapper.canBeConfirmed() );
-        item.addOrReplace( confirmedCheckBox );
+        item.add( confirmedCheckBox );
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
@@ -397,6 +407,28 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             }
         } );
         confirmedCheckBox.setEnabled( isLockedByUser( getOrganization() ) );
+    }
+
+    private void addBooleanCell( ListItem<JobWrapper> item, String id, String property ) {
+        final JobWrapper jobWrapper = item.getModel().getObject();
+        final CheckBox aCheckBox = new CheckBox(
+                id,
+                new PropertyModel<Boolean>( jobWrapper, property ) );
+        item.add( aCheckBox );
+        aCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
+            protected void onUpdate( AjaxRequestTarget target ) {
+                jobsDiv.addOrReplace( makeJobsTable() );
+                target.add( jobsDiv );
+                update( target, new Change(
+                        Change.Type.Updated,
+                        getOrganization(),
+                        "jobs"
+                ) );
+            }
+        } );
+        Organization org = getOrganization();
+        makeVisible( aCheckBox, !org.isPlaceHolder() || org.isSingleParticipation() );
+        aCheckBox.setEnabled( isLockedByUser( org ) );
     }
 
     private void addEntityCell( ListItem<JobWrapper> item, final String property ) {
@@ -617,6 +649,26 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 if ( job.getSupervisor() != null )
                     getCommander().cleanup( Actor.class, job.getSupervisor().getName() );
 
+            }
+        }
+
+        public boolean isLinked() {
+            return job.isLinked();
+        }
+
+        public void setLinked( boolean val ) {
+            if ( markedForCreation || !confirmed ) {
+                job.setLinked( val );
+            } else {
+                int index = getOrganization().getJobs().indexOf( job );
+                    if ( index >= 0 ) {
+                        doCommand( new UpdatePlanObject(
+                                getUser().getUsername(),
+                                getOrganization(),
+                                "jobs[" + index + "].linked",
+                                val,
+                                UpdateObject.Action.Set ) );
+                    }
             }
         }
 

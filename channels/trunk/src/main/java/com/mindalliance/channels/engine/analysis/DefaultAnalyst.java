@@ -960,7 +960,8 @@ public class DefaultAnalyst implements Analyst, Lifecycle {
                                                        final Place planLocale ) {
         Actor committer = commitment.getCommitter().getActor();
         Actor beneficiary = commitment.getBeneficiary().getActor();
-        boolean coincide = committer.getAvailability().equals( beneficiary.getAvailability() );
+//        boolean coincide = committer.getAvailability().equals( beneficiary.getAvailability() );
+        boolean coincide = beneficiary.getAvailability().includes( committer.getAvailability() );
         // agent availabilities coincide or there is at least one medium used that is not synchronous
         return !mediaUsed.isEmpty() && ( coincide || CollectionUtils.exists( mediaUsed, new Predicate() {
             @Override

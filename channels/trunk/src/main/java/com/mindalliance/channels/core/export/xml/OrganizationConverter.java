@@ -59,6 +59,11 @@ public class OrganizationConverter extends EntityConverter {
             writer.startNode( "placeHolder" );
             writer.setValue( "true" );
             writer.endNode();
+         }
+        if ( org.isSingleParticipation() ) {
+            writer.startNode( "singleParticipation" );
+            writer.setValue( "true" );
+            writer.endNode();
         }
         Actor custodian = org.getCustodian();
         if ( custodian != null && !custodian.getName().trim().isEmpty() ) {
@@ -140,6 +145,8 @@ public class OrganizationConverter extends EntityConverter {
         Plan plan = getPlan();
         if ( nodeName.equals( "placeHolder" ) ) {
             org.setPlaceHolder( reader.getValue().equals( "true" ) );
+        } else if ( nodeName.equals( "singleParticipation" ) ) {
+            org.setSingleParticipation( reader.getValue().equals( "true" ) );
         } else if ( nodeName.equals( "custodian" ) ) {
             String id = reader.getAttribute( "id");
             org.setCustodian( findOrCreate( Actor.class, reader.getValue(), id ) );

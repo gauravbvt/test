@@ -215,7 +215,7 @@ public class DefaultCommander implements Commander {
     private Change executeCommand( Command command, boolean safe ) {
         try {
             if ( safe && !isCommandExecutionAllowed() )
-                throw new CommandException( "This version is no longer current. You need to refresh. " );
+                throw new CommandException( "This version has been put into production. You need to go to the current development version." );
 
             if ( command instanceof MultiCommand )
                 LOG.info( "*** START multicommand ***" );
@@ -234,7 +234,7 @@ public class DefaultCommander implements Commander {
 
             return change;
         } catch ( CommandException e ) {
-            LOG.warn( "Command failed " + command, e );
+            LOG.warn( "Command failed " + command );
             return Change.failed( e.getMessage() );
         }
     }

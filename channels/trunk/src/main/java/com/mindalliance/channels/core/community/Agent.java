@@ -26,7 +26,9 @@ public class Agent implements Nameable, Identifiable {
         name = actor.getName();
     }
 
-    public Agent( Actor actor, OrganizationParticipation organizationParticipation, CommunityService communityService ) {
+    public Agent( Actor actor,
+                  OrganizationParticipation organizationParticipation,
+                  CommunityService communityService ) {
         this.actor = actor;
         this.organizationParticipation = organizationParticipation;
         if ( organizationParticipation != null ) {
@@ -38,7 +40,6 @@ public class Agent implements Nameable, Identifiable {
             name = actor.getName();
         }
     }
-
     public Actor getActor() {
         return actor;
     }
@@ -59,7 +60,6 @@ public class Agent implements Nameable, Identifiable {
     public boolean isFromOrganizationParticipation() {
         return organizationParticipation != null;
     }
-
 
     @Override
     public String getName() {

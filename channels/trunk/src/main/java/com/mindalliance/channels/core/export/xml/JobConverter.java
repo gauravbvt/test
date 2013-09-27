@@ -67,6 +67,9 @@ public class JobConverter extends AbstractChannelsConverter {
             writer.setValue( job.getSupervisorName() );
             writer.endNode();
         }
+        writer.startNode( "linked" );
+        writer.setValue( Boolean.toString( job.isLinked() ) );
+        writer.endNode();
     }
 
     public Object unmarshal(
@@ -127,6 +130,8 @@ public class JobConverter extends AbstractChannelsConverter {
                         importingPlan,
                         idMap );
                 job.setSupervisor( supervisor );
+            } else if ( nodeName.equals( "linked" ) ) {
+                job.setLinked( Boolean.parseBoolean( reader.getValue() ) );
             } else {
                 LOG.debug( "Unknown element " + nodeName );
             }

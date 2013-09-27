@@ -410,7 +410,7 @@ public class ResourceSpec extends ModelObject implements Specable {
      */
     public Job getJob( Place locale ) {
         if ( organization != null )
-            for ( Job job : organization.getJobs() )
+            for ( Job job : organization.getEffectiveJobs() )
                 if ( narrowsOrEquals( job.resourceSpec( organization ), locale ) )
                     return job;
 

@@ -588,7 +588,7 @@ public class ParticipationManagerImpl implements ParticipationManager {
     @Override
     public Boolean canBeMadeGlobal( Agency agency, CommunityService communityService ) {
         if ( agency.isFixedOrganization() || agency.isGlobal() ) return false;
-        Agency parentAgency =  agency.getParent( communityService );
+        Agency parentAgency = agency.getParent( communityService );
         return parentAgency == null || parentAgency.isGlobal();
     }
 
@@ -608,4 +608,41 @@ public class ParticipationManagerImpl implements ParticipationManager {
         );
     }
 
-}
+    @Override
+    // Whether the actor mapped to by the agent has a primary job in the organization mapped to by the agency.
+    // Assumed: If an agent has one or more jobs, it must have exactly one primary job.
+    public Boolean isDirectParticipationAllowed( Agent agent, final Agency agency, CommunityService communityService ) {
+        return CollectionUtils.exists(
+                agency.getAllJobsFor( agent, communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Job) object ).isPrimary();
+                    }
+                } );
+    }
+
+    @Override
+    public CommunityEmployment findDirectParticipationEmploymentForParticipationAs( Agent agent, CommunityService communityService ) {
+        return (CommunityEmployment) CollectionUtils.find(
+                findAllEmploymentsForAgent(
+                        agent,
+                        communityService ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (CommunityEmployment) object ).getEmployment().getJob().isPrimary();
+                    }
+                } );
+    }
+
+    @Override
+    public List<ChannelsUser> findAllUsersParticipatingAs( Agent agent, CommunityService communityService ) {
+        Set<ChannelsUser> participants = new HashSet<ChannelsUser>();
+        for ( UserParticipation userParticipation : userParticipationService.getParticipationsAsAgent( agent, communityService ) ) {
+            participants.add( new ChannelsUser( userParticipation.getParticipant( communityService ) ) );
+        }
+        return new ArrayList<ChannelsUser>( participants );
+    }
+
+ }

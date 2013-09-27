@@ -8,12 +8,16 @@
 <body>
 <wicket:panel>
     <span wicket:id="participationContainer">
-        <input wicket:id="placeHolder" type="checkbox"/>This organization is a placeholder for known organizations in collaboration plans
+        <input wicket:id="placeHolder" type="checkbox"/>This organization is a placeholder for participation by known organizations
+        <div wicket:id="singleParticipationContainer">
+            <input wicket:id="singleParticipation" type="checkbox"/>At most one organization can participate as this placeholder
+        </div>
         <br/><br/>
         <div wicket:id="custodianContainer">
-         Participation as this placeholder organization is managed by <input class="entity-name" type="text" wicket:id="custodian" value=""/>
+            Participation as this placeholder organization is managed by <input class="entity-name" type="text"
+                                                                                wicket:id="custodian" value=""/>
         </div>
     </span>
- </wicket:panel>
+</wicket:panel>
 </body>
 </html>

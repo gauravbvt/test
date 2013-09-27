@@ -67,4 +67,8 @@ public interface OrganizationParticipationService extends DataService<Organizati
             Organization placeholder,
             CommunityService communityService );
 
+    Boolean isUsersParticipatingInOrganizationParticipation(RegisteredOrganization registeredOrg,
+                                                            Organization placeholder,
+                                                            CommunityService communityService );
+
 }

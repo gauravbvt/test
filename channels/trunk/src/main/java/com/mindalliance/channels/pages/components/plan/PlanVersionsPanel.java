@@ -6,11 +6,15 @@ import com.mindalliance.channels.core.command.commands.AddProducer;
 import com.mindalliance.channels.core.command.commands.RemoveProducer;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Issue;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import com.mindalliance.channels.pages.PlanPage;
 import com.mindalliance.channels.pages.Updatable;
 import com.mindalliance.channels.pages.components.AbstractCommandablePanel;
+import com.mindalliance.channels.pages.components.ConfirmedAjaxFallbackLink;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -55,6 +59,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
 
     @SpringBean
     private UserRecordService userInfoService;
+    private ConfirmedAjaxFallbackLink productizeLink;
 
     public PlanVersionsPanel(
             String id,
@@ -76,6 +81,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         addProductionVersion();
         addDevelopmentVersion();
         addVotes();
+        addProductionButton();
     }
 
     private void addCurrentVersion() {
@@ -136,6 +142,8 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
                 CheckBox voteCheckBox = new CheckBox( "plannerVote", new PropertyModel<Boolean>( vote, "inFavor" ) );
                 voteCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
                     protected void onUpdate( AjaxRequestTarget target ) {
+                        addProductionButton();
+                        target.add( productizeLink );
                         Change change = vote.getChange();
                         update( target, change );
                     }
@@ -151,6 +159,44 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
         prodVotesContainer.add( voteList );
         prodVotesContainer.setVisible( isLockedByUser( getPlan() ) );
     }
+
+    private void addProductionButton() {
+        productizeLink = new ConfirmedAjaxFallbackLink(
+                "productize",
+                getProductizeConfirmationMessage() ) {
+            @Override
+            public void onClick( AjaxRequestTarget target ) {
+                Plan selectedDevPlan = getPlan();
+                getPlanManager().productize( selectedDevPlan );
+                Plan newDevPlan = getPlanManager().getPlan( selectedDevPlan.getUri(), selectedDevPlan.getVersion() + 1 );
+                getUser().setPlan( newDevPlan );
+                setResponsePage( PlanPage.class );
+            }
+        };
+        productizeLink.setOutputMarkupId( true );
+        boolean plannersOkToProductize = getPlanManager().revalidateProducers( getPlan() );
+        makeVisible( productizeLink, plannersOkToProductize && !isDevelopmentVersionInvalid() );
+        addOrReplace( productizeLink );
+    }
+
+    private boolean isDevelopmentVersionInvalid() {
+        return CollectionUtils.exists(
+                getAnalyst().findAllUnwaivedIssues( getQueryService() ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ( (Issue) object ).isValidity();
+                    }
+                }
+        );
+    }
+
+    private String getProductizeConfirmationMessage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "Put in production the development version?" );
+        return sb.toString();
+    }
+
 
     private String itemCssClasses( int index, int count ) {
         String classes = index % 2 == 0 ? "even" : "odd";
