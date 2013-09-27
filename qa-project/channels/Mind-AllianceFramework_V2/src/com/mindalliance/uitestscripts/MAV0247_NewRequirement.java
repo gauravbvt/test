@@ -23,6 +23,8 @@ import com.mindalliance.configuration.GlobalVariables;
 import com.mindalliance.configuration.LogFunctions;
 import com.mindalliance.configuration.Reporting;
 import com.mindalliance.configuration.UIAutomationException;
+import com.mindalliance.pages.ChannelsAdmin;
+import com.mindalliance.pages.CommunitiesPage;
 import com.mindalliance.pages.HeaderController;
 import com.mindalliance.pages.HomePage;
 import com.mindalliance.pages.LoginPage;
@@ -88,6 +90,7 @@ public class MAV0247_NewRequirement extends TestCase{
 		try{
 			stepNo++;
 			description="URL Entered";
+			
 			// Enter URL of Channels
 			BrowserController browserController=new BrowserController();
 			browserController.enterURL(testData.get("ChannelsURL"),testData.get("Title"));
@@ -102,58 +105,67 @@ public class MAV0247_NewRequirement extends TestCase{
 		    loginPage.Login(GlobalVariables.configuration.getConfigData().get("UserName"),GlobalVariables.configuration.getConfigData().get("PassWord"));
 		    // Write log
  			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 							
-			// Plan Page
-		    stepNo++;
-			description="Collaboration Plan";
-			HomePage homePage=new HomePage();
-			homePage.clickCollaborationPlanLink();	
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
- 						
-			// Close Plan Map window
-			stepNo++;
-			description="Close Plan Map Window";
-			PlanPage planPage=new PlanPage();
-			planPage.closePlanMap();
-			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);					
 							
-			// Click on 'Plan Requirements' under 'Scoping' pop up menu
+ 		    // Click on Channels Admin
  			stepNo++;
-			description="Plan Requirement";
-			planPage.clickPopupMenu(testData.get("Scoping"));
-			planPage.clickSubmenu(testData.get("Planrequirement"));
-			// Write log
+ 			description="Channels Admin Page";
+ 			HomePage homePage=new HomePage();
+ 			homePage.clickChannelsAdminLink();
+ 			// Write log
  			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
-			
-			// Click on 'New' button in requirement definition
-			stepNo++;
-			description="New Requirement";
-			planPage.clickNewButtonInPlanRequirement(testData.get("RequirementDefinitions"));
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+ 					
+ 			// Enter Plan name
+ 			stepNo++;
+ 			description="Plan Created";
+ 			ChannelsAdmin channelsAdmin=new ChannelsAdmin();
+ 			channelsAdmin.enterPlanName(testData.get("AutomationTestPlan"),testData.get("AuthorAutomationTestPlan"));
+ 					
+ 			channelsAdmin.clickSavePlanButton();
+ 			channelsAdmin.clickProductizePlanButton();
+ 			channelsAdmin.clickHomeLink();			
+ 					
+ 			// Write log
+ 			LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+ 								
+ 		    homePage.clickCommunitiesLink();
+ 		    homePage.selectPlanFromDropDown(testData.get("plan"));
+ 				    
+ 		    // Write log
+ 		    LogFunctions.writeLogs(description);
+ 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);	
+ 				
+ 		    CommunitiesPage communitiesPage=new CommunitiesPage();
+ 		    //Click Start it button
+		    communitiesPage.clickStartItButton();
+ 		    //Click Go button
+ 		    communitiesPage.clickGoButton();
+ 			
+ 		    //Click on 'Collaboration Requirements' link
+			communitiesPage.clickCollaborationRequirementsLink();
+			communitiesPage.clickNewRequirementButton();
 			// Write log
  			LogFunctions.writeLogs(description);
  			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 			
 			// Remove requirement
-			stepNo++;
-			description="Remove Requirement";
-			planPage.clickRemoveRequirementInPlanRequirement();
+			//stepNo++;
+			//description="Remove Requirement";
+			//PlanPage planPage =new PlanPage();
+			//planPage.clickRemoveRequirementInPlanRequirement();
 			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			//LogFunctions.writeLogs(description);
+ 			//LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
 						
 			// Close Requirements window
- 			stepNo++;
-			description="Close Requirement Window";
-			planPage.closeRequirementWindow();
+ 			//stepNo++;
+			//description="Close Requirement Window";
+			//planPage.closeRequirementWindow();
 			// Write log
- 			LogFunctions.writeLogs(description);
- 			LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
+ 			//LogFunctions.writeLogs(description);
+ 			//LogFunctions.writeResults(testCaseId,stepNo, description,passed,blank,blank);
  			
 			//Sign Out from 'Plan' page
  			stepNo++;
@@ -230,6 +242,11 @@ public class MAV0247_NewRequirement extends TestCase{
 	        this.testData.put("Title",oXmlEleMAV0247_NewRequirement.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
 	        this.testData.put("RequirementDefinitions",oXmlEleMAV0247_NewRequirement.getElementsByTagName("requirementDefinitions").item(0).getChildNodes().item(0).getNodeValue());
 	        
+	        
+	        this.testData.put("AutomationTestPlan",oXmlEleMAV0247_NewRequirement.getElementsByTagName("automationTestPlan").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("AuthorAutomationTestPlan",oXmlEleMAV0247_NewRequirement.getElementsByTagName("authorAutomationTestPlan").item(0).getChildNodes().item(0).getNodeValue()); 
+	        this.testData.put("PlanName",oXmlEleMAV0247_NewRequirement.getElementsByTagName("planName").item(0).getChildNodes().item(0).getNodeValue());
+	        this.testData.put("plan",oXmlEleMAV0247_NewRequirement.getElementsByTagName("plan").item(0).getChildNodes().item(0).getNodeValue());
 	        
 		}
 		catch(SAXException se){
