@@ -5,4 +5,9 @@
 <channelsURL>http://192.168.31.144:8080/channels/login.html</channelsURL>
 <title>Channels - Sign in</title>
 <requirementDefinitions>REQUIREMENT DEFINITION</requirementDefinitions>
+<automationTestPlan>Automation Test Plan</automationTestPlan>
+<authorAutomationTestPlan>Afourtech</authorAutomationTestPlan>
+<planName>Afourtech's New Plan v.1 (dev)</planName>
+<plan>New Unnamed Plan v.1(prod)</plan>
+<cTitle>Unnamed</cTitle>
 </elements>
