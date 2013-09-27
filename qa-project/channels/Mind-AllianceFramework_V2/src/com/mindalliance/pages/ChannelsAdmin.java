@@ -80,8 +80,8 @@ public class ChannelsAdmin {
 	public void clickProductizePlanButton() throws UIAutomationException
 	{
 		String headingOfWindowInXML=null;
-		elementController.requireElementSmart(fileName,"Productize Plan",GlobalVariables.configuration.getAttrSearchList(), "Productize Plan");
-		UIActions.click(fileName,"Productize Plan",GlobalVariables.configuration.getAttrSearchList(), "Productize Plan");
+		elementController.requireElementSmart(fileName,"Put In Production",GlobalVariables.configuration.getAttrSearchList(), "Put In Production");
+		UIActions.click(fileName,"Put In Production",GlobalVariables.configuration.getAttrSearchList(), "Put In Production");
 		headingOfWindowInXML=dataController.getPageDataElements(fileName, "Alert Window Title Of Productize Plan", "Title");
 		UIActions.assertAlert(headingOfWindowInXML);
 	}
