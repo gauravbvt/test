@@ -1696,7 +1696,7 @@ public class PlanPage {
 		elementController.requireElementSmart(fileName,"Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab");
 		UIActions.click(fileName,"Issues Tab",GlobalVariables.configuration.getAttrSearchList(), "Issues Tab");
 		
-		// Assertion: Verify if the Structre Tab is clicked
+		// Assertion: Verify if the Structure Tab is clicked
 		elementController.requireElementSmart(fileName,"Kind",GlobalVariables.configuration.getAttrSearchList(), "Kind");
 		String networkTab=UIActions.getText(fileName,"Kind",GlobalVariables.configuration.getAttrSearchList(), "Kind");
 		
