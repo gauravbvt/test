@@ -1621,7 +1621,7 @@ public class PlanPage {
 	 * Click on Participation Tab under Organizations
 	 * @throws UIAutomationException
 	 */
-	public void clickOrganizationsParticipationTab() throws UIAutomationException{
+	public void clickOrganizationsAgreementTab() throws UIAutomationException{
 		elementController.requireElementSmart(fileName,"Participation Tab",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab");
 		UIActions.click(fileName,"Participation Tab",GlobalVariables.configuration.getAttrSearchList(), "Participation Tab");
 		
