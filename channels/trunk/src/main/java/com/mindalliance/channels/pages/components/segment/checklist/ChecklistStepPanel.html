@@ -9,42 +9,41 @@
 <wicket:panel>
     <table wicket:id="stepContainer" class="step">
         <tbody>
-        <tr>
+        <tr class="checklist-step-cont">
             <td>
                 <span wicket:id="act">do something</span>
                 <!-- CSS classes: "even-step" or "odd-step" + "required-step" (or nothing) + "action-step" or "notification-step" or "request-step"   -->
             </td>
-            <td class="delete-button">
-                <a class="delete" wicket:id="deleteStep" href="#">
-                    <img src="images/delete.png" alt="Delete step"/>
-                </a>
+            <td class="step-req" wicket:id="requiredContainer">
+            	<input wicket:id="required" type="checkbox"/> Required
             </td>
-            <td class="edit-button">
-                <a class="edit-step" wicket:id="editDoneButton" href="#"><span wicket:id="editDone">Edit/Done</span>
-                </a>
+            <td class="step-buttons">
+                <a class="delete less" wicket:id="deleteStep" href="#"><span>Delete Step</span></a>
+                <a class="edit-step" wicket:id="editDoneButton" href="#"><span wicket:id="editDone">Edit/Done</span></a>
             </td>
         </tr>
-        <tr wicket:id="requiredContainer">
+        <!--
+        <tr class="checklist-required-cont" wicket:id="requiredContainer">
             <th>
                 <input wicket:id="required" type="checkbox"/> Required
             </th>
             <td colspan="2">&nbsp;</td>
         </tr>
-
-        <tr wicket:id="constraintsContainer">
-            <td>
+		-->
+        <tr class="checklist-contraints-cont" wicket:id="constraintsContainer">
+            <td colspan="3">
                 <table>
                     <tbody>
                     <tr class="step-constraint" wicket:id="aftersContainer">
                         <th align="right">After</th>
-                        <td>
+                        <td class="step-constraint-list">
                             <table>
                                 <tbody>
                                 <tr wicket:id="afters">
                                     <td><span wicket:id="after">other step</span></td>
-                                    <td>
+                                    <td class="condition-delete">
                                         <a class="delete" wicket:id="deleteAfter" href="#">
-                                            <img src="images/delete.png" alt="Delete prerequisite step"/>
+                                            <img src="images/step-cond-close.png" alt="Delete prerequisite step"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -61,14 +60,14 @@
                     </tr>
                     <tr class="step-constraint" wicket:id="ifsContainer">
                         <th align="right">If</th>
-                        <td>
+                        <td class="step-constraint-list">
                             <table>
                                 <tbody>
                                 <tr wicket:id="ifs">
                                     <td><span wicket:id="if">condition</span></td>
-                                    <td>
+                                    <td class="condition-delete">
                                         <a class="delete" wicket:id="deleteIf" href="#">
-                                            <img src="images/delete.png" alt="Delete if"/>
+                                            <img src="images/step-cond-close.png" alt="Delete if"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -83,14 +82,14 @@
                     </tr>
                     <tr class="step-constraint" wicket:id="unlessesContainer">
                         <th align="right">Unless</th>
-                        <td>
+                        <td class="step-constraint-list">
                             <table>
                                 <tbody>
                                 <tr wicket:id="unlesses">
                                     <td><span wicket:id="unless">condition</span></td>
-                                    <td>
+                                    <td class="condition-delete">
                                         <a class="delete" wicket:id="deleteUnless" href="#">
-                                            <img src="images/delete.png" alt="Delete unless"/>
+                                            <img src="images/step-cond-close.png" alt="Delete unless"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -106,14 +105,14 @@
 
                     <tr class="step-constraint" wicket:id="outcomesContainer">
                         <th wicket:id="expectedOutcomes" align="right">Expected outcomes</th>
-                        <td>
+                        <td class="step-constraint-list">
                             <table>
                                 <tbody>
                                 <tr wicket:id="outcomes">
                                     <td><span wicket:id="outcome">outcome</span></td>
-                                    <td>
+                                    <td class="condition-delete">
                                         <a class="delete" wicket:id="deleteOutcome" href="#">
-                                            <img src="images/delete.png" alt="Delete outcome"/>
+                                            <img src="images/step-cond-close.png" alt="Delete outcome"/>
                                         </a>
                                     </td>
                                 </tr>

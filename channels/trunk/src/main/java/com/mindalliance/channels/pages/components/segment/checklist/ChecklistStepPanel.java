@@ -138,7 +138,7 @@ public class ChecklistStepPanel extends AbstractCommandablePanel {
             String stepClass;
             if ( communicationStep.isNotification() ) {
                 stepClass = communicationStep.isTerminatingNotification()
-                        ? "terminating-notification-step"
+                        ? " terminating-notification-step"
                         : " notification-step";
             } else {
                 stepClass = communicationStep.isAnswer()

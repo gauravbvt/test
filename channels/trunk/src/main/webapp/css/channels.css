@@ -3285,22 +3285,10 @@ a.less,
 a.window {
     border: 1px solid #C7C8CA;
     color: #666666;
-    padding: 0 3px 0 14px;
+    padding: 0 3px 0 3px;
     font-size: 10px;
     font-family: Verdana, Geneva, sans-serif;
     text-transform: uppercase;
-}
-
-a.more {
-    background: url('../images/link.more.png') no-repeat 2px 3px #DCDDDE;
-}
-
-a.less {
-    background: url('../images/link.less.png') no-repeat 2px 3px #DCDDDE;
-}
-
-a.window {
-    background: url('../images/link.window.png') no-repeat 2px 3px #DCDDDE;
 }
 
 a.more:hover, a.less:hover,
@@ -3785,27 +3773,86 @@ ul.attach li.controls {
 
 /* --------- Checklist ---------*/
 
+.checklist {
+	border-top: 1px solid #cccccc;
+}
+
 .checklist ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.checklist .step {
-    margin-bottom: 6px;
+.checklist ul li:hover .checklist-step-cont {
+	background: #feefba;
 }
 
+.aspect .checklist table.data-table.step {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid #cccccc;
+}
+
+.aspect .checklist table.data-table.step select {
+	background: #ffffff;
+	width: 250px;
+}
+
+.aspect .checklist table.data-table.step td {
+    letter-spacing: 0.01em;
+    padding: 10px;
+}
+
+.aspect .checklist table.data-table.step td td,
+.aspect .checklist table.data-table.step td td td {
+    letter-spacing: 0;
+    padding: 0 0 0 5px;
+}
+
+/*
 .checklist .even-step {
     background: #e8e8e8;
 }
-
+*/
 .checklist .step .edit-step {
 
 }
 
+.checklist .checklist-step-cont {
+	border-bottom: 1px solid #CCCCCC;
+	background: #e8e8e8;
+}
+
+.checklist .step-req {
+	font-size: 10px;
+	text-transform: uppercase;
+	width: 75px;
+}
+
+.checklist .step-buttons {
+	text-align: right;
+	width: 125px;
+}
+
+.checklist .step-buttons .delete:hover {
+    background: #F04C3E;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+}
+
+.checklist .step-buttons .edit-step:hover {
+    background: #2e9ca9;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+}
+
+.checklist .condition-delete {
+	text-align: right;
+} 
+
 .checklist .data-table.expanded-step {
-    border: 5px solid #CCCCCC;
-    background: #ffffff;
+    background: #e8e8e8;
 }
 
 .checklist .data-table td.delete-button,
@@ -3818,70 +3865,88 @@ ul.attach li.controls {
 	padding: 15px;
 }
 
-
-.checklist .step .delete {
-    float: right;
-}
-
 .checklist .step th {
-    padding-top: 0px;
-    padding-right: 5px;
+    border-right: 1px solid #CCCCCC;
+    color: #666666;
     font-weight: bold;
+    padding-right: 10px;
+    padding-top: 5px;
+    text-transform: uppercase;
+    width: 110px;
 }
 
-.checklist .step .step-constraint {
-    height: 2em;
+.checklist .checklist table.data-table.step td.step-constraint-list {
+	padding: 5px 0px 5px 5px;
 }
+
+.checklist .step .action-step,
+.checklist .step .notification-step,
+.checklist .step .request-step,
+.checklist .step .answer-step,
+.checklist .step .receipt-confirmation-step,
+.checklist .step .terminating-notification-step,
+.checklist .step .research-step,
+.checklist .step .followup-step,
+.checklist .step .terminating-followup-step {
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 25px;
+    text-transform: uppercase;
+    display: block;
+}
+
+.checklist ul li:hover .step .action-step,
+.checklist ul li:hover .step .notification-step,
+.checklist ul li:hover .request-step,
+.checklist ul li:hover .step .answer-step,
+.checklist ul li:hover .receipt-confirmation-step,
+.checklist ul li:hover .step .terminating-notification-step,
+.checklist ul li:hover .step .research-step,
+.checklist ul li:hover .step .followup-step,
+.checklist ul li:hover .step .terminating-followup-step {
+	color: #333333;
+}
+
 
 .checklist .step .action-step {
-    background: transparent url('../images/step_action.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_action.png') no-repeat 0 0;
 }
 
 .checklist .step .notification-step {
-    background: transparent url('../images/step_notification.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_notification.png') no-repeat 0 0;
 }
 
 .checklist .step .request-step {
-    background: transparent url('../images/step_request.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_request.png') no-repeat 0 0;
 }
 
 .checklist .step .answer-step {
-    background: transparent url('../images/step_answer.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_answer.png') no-repeat 0 0;
 }
 
 .checklist .step .receipt-confirmation-step {
-    background: transparent url('../images/step_receipt_confirmation.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_receipt_confirmation.png') no-repeat 0 0;
 }
 
 .checklist .step .terminating-notification-step {
-    background: transparent url('../images/step_terminating_notification.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_terminating_notification.png') no-repeat 0 0;
 }
 
 .checklist .step .research-step {
-    background: transparent url('../images/step_research.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_research.png') no-repeat 0 0;
 }
 
 .checklist .step .followup-step {
-    background: transparent url('../images/step_followup.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_followup.png') no-repeat 0 0;
 }
 
 .checklist .step .terminating-followup-step {
-    background: transparent url('../images/step_terminating_followup.png') no-repeat 0 -2px;
-    padding-left: 20px;
+    background: transparent url('../images/step_terminating_followup.png') no-repeat 0 0;
 }
 
 .checklist .step .edited-step {
-    display: block;
-    font-weight: bold;
-    padding: 10px 10px 10px 40px;
+	color: #333333;
 }
 
 .checklist div.new-step {
