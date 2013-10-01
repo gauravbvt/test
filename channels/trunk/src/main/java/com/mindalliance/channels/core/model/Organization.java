@@ -337,7 +337,7 @@ public class Organization extends AbstractUnicastChannelable
 
     @SuppressWarnings( "unchecked" )
     public List<Job> getJobs() {
-        // Filter out incomplete jobs (actor
+        // Filter out incomplete jobs
         jobs = (List<Job>) CollectionUtils.select( jobs, new Predicate() {
             @Override
             public boolean evaluate( Object obj ) {
@@ -346,16 +346,6 @@ public class Organization extends AbstractUnicastChannelable
             }
         } );
         return jobs;
-    }
-
-    public List<Job> getEffectiveJobs() {
-        List<Job> effectiveJobs = new ArrayList<Job>();
-        for ( Job job : getJobs() ) {
-            Job copy = new Job( job );
-            copy.setLinked( job.isLinked() && ( !isPlaceHolder() || isSingleParticipation() ) );
-            effectiveJobs.add( job );
-        }
-        return effectiveJobs;
     }
 
     public void setJobs( List<Job> jobs ) {
@@ -566,10 +556,6 @@ public class Organization extends AbstractUnicastChannelable
     @Override
     public boolean hasAddresses() {
         return !isType() && !isPlaceHolder();
-    }
-
-    public boolean isLinkable() {
-        return !isPlaceHolder() || isSingleParticipation();
     }
 
     /**

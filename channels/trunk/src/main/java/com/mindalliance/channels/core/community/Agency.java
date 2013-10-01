@@ -353,7 +353,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
             jobs.addAll( organizationParticipation.getFixedJobs( communityService ) );
         }
         if ( fixedOrganization != null ) {
-            jobs.addAll( fixedOrganization.getEffectiveJobs() );
+            jobs.addAll( fixedOrganization.getJobs() );
         }
         return jobs;
     }

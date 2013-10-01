@@ -18,9 +18,9 @@ import java.util.List;
  * Date: 1/4/13
  * Time: 3:01 PM
  */
-public class OrganizationHasPlaceholderParent extends AbstractIssueDetector {
+public class NonPlaceholderOrganizationHasPlaceholderParent extends AbstractIssueDetector {
 
-    public OrganizationHasPlaceholderParent() {
+    public NonPlaceholderOrganizationHasPlaceholderParent() {
     }
 
     @Override
@@ -33,11 +33,11 @@ public class OrganizationHasPlaceholderParent extends AbstractIssueDetector {
         Organization org = (Organization)modelObject;
         List<Issue> issues = new ArrayList<Issue>(  );
         Organization parent = org.getParent();
-        if ( org.isActual() && parent != null && parent.isPlaceHolder() ) {
+        if ( org.isActual() && !org.isPlaceHolder() && parent != null && parent.isPlaceHolder() ) {
             Issue issue = makeIssue( queryService, Issue.VALIDITY, org );
             issue.setDescription( "The parent \"" + parent.getName() + "\" is a placeholder." );
             issue.setRemediation( "Remove the placeholder parent organization" +
-                    "\nor change the parent to a non-placeholder organization" +
+                    "\nor change the organization a placeholder organization" +
                     "\nor make \"" + parent.getName() + "\" a non-placeholder organization." );
             issue.setSeverity( Level.High );
             issues.add( issue );
@@ -52,6 +52,6 @@ public class OrganizationHasPlaceholderParent extends AbstractIssueDetector {
 
     @Override
     protected String getKindLabel() {
-        return "Organization has a placeholder as a parent";
+        return "Non-placeholder organization has a placeholder as a parent";
     }
 }

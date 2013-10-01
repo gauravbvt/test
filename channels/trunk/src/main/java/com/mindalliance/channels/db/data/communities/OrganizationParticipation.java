@@ -110,7 +110,7 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
     public List<Job> getPlaceholderJobs( CommunityService communityService ) {
         Organization placeholder = getPlaceholderOrganization( communityService );
         if ( placeholder != null ) {
-            return placeholder.getEffectiveJobs();
+            return placeholder.getJobs();
         } else {
             return new ArrayList<Job>();
         }

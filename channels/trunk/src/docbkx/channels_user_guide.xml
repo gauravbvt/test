@@ -10025,7 +10025,7 @@
               </row>
 
               <row>
-                <entry><para>Organization has a placeholder as parent</para></entry>
+                <entry><para>Non-placeholder organization has a placeholder as parent</para></entry>
                 
                 <entry><para>High</para></entry>
                 
@@ -10034,7 +10034,7 @@
                     <para>Remove the placeholder parent</para>
                   </listitem>
                   <listitem>
-                    <para>or change the parent to a different, non-placeholder organization</para>
+                    <para>or make the organization a placeholder</para>
                   </listitem>
                   <listitem>
                     <para>or make the parent a non-placeholder organization.</para>
@@ -10107,7 +10107,7 @@
                 </row>
 
                 <row>
-                    <entry><para>A step in the checklist should be pre-requisite to another but is nott</para></entry>
+                    <entry><para>A step in the checklist should be pre-requisite to another but is not</para></entry>
 
                     <entry><para>Medium</para></entry>
 
@@ -10124,6 +10124,51 @@
                     </itemizedlist></entry>
 
                     <entry><para>Yes</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Organization has more than one primary (hiring) job for a given agent</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Mark all but one of the agent's jobs as linked jobs.</para>
+                        </listitem>
+                     </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Agent has multiple primary jobs spread across many organizations</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make all jobs but one linked jobs</para>
+                        </listitem>
+                        <listitem>
+                            <para> or assign all but one job to other agent</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Agent only has linked jobs</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make one of the agent's jobs a non-linked job.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>No</para></entry>
                 </row>
 
 

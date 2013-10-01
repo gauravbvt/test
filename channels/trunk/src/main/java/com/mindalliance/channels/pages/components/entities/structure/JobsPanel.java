@@ -155,14 +155,8 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                 this,
                 "All last names" );
         jobsDiv.add( rangePanel );
-        boolean isLinkable = getOrganization().isLinkable();
-        String linkedHeader = isLinkable
-                ? "Is linked"
-                : "";
-        Label linkedLabel = new Label( "linkedHeader", linkedHeader );
-        if ( isLinkable ) {
-            addTipTitle( linkedLabel, "The job is linked to another job. One gets this one by being hired for the other."  );
-        }
+        Label linkedLabel = new Label( "linkedHeader", "Is linked" );
+        addTipTitle( linkedLabel, "A job is linked (to another, primary job for the same agent) when one automatically gets the linked job when hired in the primary job" );
         jobsDiv.add( linkedLabel );
         jobsDiv.addOrReplace( makeJobsTable() );
     }
@@ -427,7 +421,6 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             }
         } );
         Organization org = getOrganization();
-        makeVisible( aCheckBox, !org.isPlaceHolder() || org.isSingleParticipation() );
         aCheckBox.setEnabled( isLockedByUser( org ) );
     }
 

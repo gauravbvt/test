@@ -302,7 +302,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.SupervisedParticipationActorWithoutSupervisors"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.InfoProductWithoutEOIs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.PlaceholderOrganizationWithoutCustodian"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationHasPlaceholderParent"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.NonPlaceholderOrganizationHasPlaceholderParent"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistIsEmpty"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasCircularPrerequisites"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistHasContradictoryConditions"/>
@@ -315,6 +315,9 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CriticalNotificationNotTriggering"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistNotFullyConnectedToTaskContext"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistStepsNotInProperOrder"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationHasManyPrimaryJobsForSameActor"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorHasPrimaryJobsWithManyOrgs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorOnlyHasLinkedJobs"/>
             </list>
         </property>
     </bean>

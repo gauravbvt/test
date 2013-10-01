@@ -234,7 +234,7 @@ public class RegisteredOrganization extends AbstractChannelsDocument {
         if ( isFixedOrganization() ) {
             Organization org = getFixedOrganization( communityService );
             if ( org != null )
-                return Collections.unmodifiableList( org.getEffectiveJobs() );
+                return Collections.unmodifiableList( org.getJobs() );
             else
                 return new ArrayList<Job>();
         } else {
