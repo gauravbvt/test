@@ -134,7 +134,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         addPlanPrivilegesResetAndApply();
         makeVisible( privilegesContainer, !isDisabled()
                 // && !isAdmin()
-                && !userRecord.getUsername().equals( getUsername() ) );
+                && ( isAdmin() || !userRecord.getUsername().equals( getUsername() ) ) );
         userRecordContainer.addOrReplace( privilegesContainer );
     }
 
@@ -190,7 +190,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         } );
         adminChoice.setOutputMarkupId( true );
         userIdentityContainer.addOrReplace( adminChoice );
-        adminChoice.setEnabled( !userRecordUpdate.isDisabled() && !userRecord.getUsername().equals( getUsername() ) );
+        adminChoice.setEnabled( !userRecordUpdate.isDisabled() && ( isAdmin() || !userRecord.getUsername().equals( getUsername() ) ) );
         // disabled
         DropDownChoice<String> disabledChoice = new DropDownChoice<String>(
                 "isDisabled",
@@ -206,7 +206,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         } );
         disabledChoice.setOutputMarkupId( true );
         userIdentityContainer.addOrReplace( disabledChoice );
-        disabledChoice.setEnabled( !userRecord.getUsername().equals( getUsername() ) );
+        disabledChoice.setEnabled( isAdmin() || !userRecord.getUsername().equals( getUsername() ) );
 
     }
 
@@ -258,7 +258,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
                 // Do nothing
             }
         } );
-        userRoleDropDownChoice.setEnabled( !userRecord.getUsername().equals( getUsername() ) );
+        userRoleDropDownChoice.setEnabled( isAdmin() || !userRecord.getUsername().equals( getUsername() ) );
         item.add( userRoleDropDownChoice );
     }
 
