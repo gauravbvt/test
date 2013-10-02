@@ -34,10 +34,10 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
 
     public static final Agency UNKNOWN = new Agency();
     // Only one of fixedOrganization or registeredOrganization must be set.
-    private Organization fixedOrganization;
-    private RegisteredOrganization registeredOrganization; // registered into community, not from plan
+    private Organization fixedOrganization; // known organization defined in the template
+    private RegisteredOrganization registeredOrganization; // registered into collaboration plan, not from the template
 
-    private List<OrganizationParticipation> organizationParticipationList; // how the agency participates in the community
+    private List<OrganizationParticipation> organizationParticipationList; // how the agency participates in the collaboration plan
     // computed and cached
     private String name;
     private String description;
@@ -45,7 +45,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     private String parentName;
     private String address;
     private boolean editable = false;
-    private List<Organization> planOrganizations; // can have multiple plan organizations from participation
+    private List<Organization> planOrganizations; // can be multiple template organizations from participation
 
     public Agency() {
         name = "?";
@@ -240,6 +240,10 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
     }
 
     public List<Agent> getAgents( CommunityService communityService ) {
+        // There's an agent in an agency if the agency for each actor that has one or more jobs in fixed org
+        // the agency represents (each agent represents an actor)
+        // or that has one or more jobs in a placeholder org the agency participates as
+        // (each agent represents a copy of the actor)
         Set<Agent> agents = new HashSet<Agent>();
         for ( OrganizationParticipation organizationParticipation : getOrganizationParticipationList() ) {
             for ( Job job : getPlaceholderJobs( organizationParticipation, communityService ) ) {
@@ -247,7 +251,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
                 agents.add( agent );
             }
         }
-        for ( Job job : getFixedJobs( communityService ) ) {   // if any
+        for ( Job job : getFixedJobs( communityService ) ) {   // if actor in known organizations from template
             Agent agent = new Agent( job.getActor() );
             agents.add( agent );
         }
@@ -515,5 +519,12 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         );
     }
 
+    public String getJobTitleOf( Agent agent, CommunityService communityService ) { // Assumes agent works for the agency
+        if ( getRegisteredOrganization() != null ) {
+            return agent.getName();
+        } else {
+            return Agent.selectJobTitleFrom( getAllJobsFor( agent, communityService ) );
+        }
+    }
 }
 

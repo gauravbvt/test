@@ -2166,7 +2166,7 @@ div.participation h4 {
 .participation input[type='text'] {
     background: none repeat scroll 0 0 #E8E8E8;
     border: 1px solid #999999;
-    float: left;
+    float: right;
     font-size: 11px;
     padding: 3px;
     width: 280px;
@@ -2769,7 +2769,7 @@ div.participation table th {
     font-weight: normal;
     height: 21px;
     margin: 0;
-    padding: 0;
+    padding: 0 20px 0 0;
     text-transform: uppercase;
 }
 
@@ -2835,7 +2835,7 @@ div.participationManager div.participation h3 {
 div.participationManager div.participation h3 input {
     height: 11px;
     padding: 1px;
-    width: 75px;
+    width: 175px;
 }
 
 div.participation div.participation-table-cont a {

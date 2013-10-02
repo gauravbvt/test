@@ -278,7 +278,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 } );
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
                 // name
-                item.add( new Label( "agentName", agent.getName() ) );
+                item.add( new Label( "agentName", selectedAgency.getJobTitleOf( agent, getCommunityService() ) ) );
                 // metrics
                 Label metricsLabel = new Label( "metrics", getAgentMetrics( agent ) );
                  boolean isDirectParticipation = participationManager.isDirectParticipationAllowed(
@@ -482,9 +482,11 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 Label userNameLabel = new Label( "fullName", user.getSimpleNormalizedFullName() );
                 String tooltip = "";
                 if ( selectedAgent != null && !participationAvailable )
-                    tooltip += "Participation as " + selectedAgent.getName() + " is not available to this user. ";
+                    tooltip = "Participation as " + selectedAgent.getName() + " is not available to this user. ";
                 if ( selectedAgent != null && !userHasAuthority )
-                    tooltip += "You are not authorized to assign this user as " + selectedAgent.getName();
+                    tooltip = "You are not authorized to assign this user as " + selectedAgent.getName();
+                if ( selectedAgent != null && !isDirectParticipation )
+                    tooltip = "Participation is linked to participation in another position";
                 if ( !tooltip.isEmpty() ) addTipTitle( userNameLabel, tooltip );
                 item.add( userNameLabel );
                 item.add( new Label( "username", user.getUsername() ) );
@@ -498,12 +500,12 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         participantsContainer.addOrReplace( participantsListView );
     }
 
-    private boolean isAcceptedParticipation( ChannelsUser user ) { // todo - if linked, use confirmation of primary
+    private boolean isAcceptedParticipation( ChannelsUser user ) {
         return selectedAgent != null
                 && userParticipationService.isUserParticipatingAs( user, selectedAgent, getCommunityService() );
     }
 
-    private boolean isConfirmedParticipation( ChannelsUser user ) { // todo - if linked, use confirmation of primary
+    private boolean isConfirmedParticipation( ChannelsUser user ) {
         if ( selectedAgent == null ) return false;
         UserParticipation userParticipation = userParticipationService.getParticipation(
                 user,

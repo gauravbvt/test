@@ -1,5 +1,6 @@
 package com.mindalliance.channels.db.data.communities;
 
+import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.model.Actor;
@@ -24,7 +25,7 @@ import java.util.List;
  * Date: 6/19/13
  * Time: 2:30 PM
  */
-@Document( collection = "communities" )
+@Document(collection = "communities")
 public class OrganizationParticipation extends AbstractChannelsDocument {
 
     /**
@@ -130,6 +131,7 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
     }
 
     @SuppressWarnings( "unchecked" )
+    // An agent can have many jobs -
     public String getJobTitle( final Actor actor, CommunityService communityService ) {
         RegisteredOrganization registeredOrganization = getRegisteredOrganization( communityService );
         if ( registeredOrganization != null ) {
@@ -145,30 +147,7 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
                         }
                     }
             );
-            if ( actorJobs.isEmpty() ) {
-                return "";
-            } else {
-                Job job = (Job)CollectionUtils.find(
-                        actorJobs,
-                        new Predicate() {
-                            @Override
-                            public boolean evaluate( Object object ) {
-                                return ((Job)object).isPrimary();
-                            }
-                        }
-                );
-                if ( job == null ) {
-                    job = (Job)CollectionUtils.find(
-                            actorJobs,
-                            new Predicate() {
-                                @Override
-                                public boolean evaluate( Object object ) {
-                                    return !((Job)object).getRawTitle().isEmpty();
-                                }
-                            } );
-                }
-                return job == null ? actorJobs.get(0).getTitle() : job.getTitle();
-            }
+            return Agent.selectJobTitleFrom( actorJobs );
         } else {
             return "?";
         }

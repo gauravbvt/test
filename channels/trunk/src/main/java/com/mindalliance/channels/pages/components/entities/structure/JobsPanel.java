@@ -383,8 +383,9 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
         final CheckBox confirmedCheckBox = new CheckBox(
                 "confirmed",
                 new PropertyModel<Boolean>( jobWrapper, "confirmed" ) );
+        confirmedCheckBox.setOutputMarkupId( true );
         makeVisible( confirmedCheckBox, jobWrapper.canBeConfirmed() );
-        item.add( confirmedCheckBox );
+        item.addOrReplace( confirmedCheckBox );
         confirmedCheckBox.add( new AjaxFormComponentUpdatingBehavior( "onclick" ) {
             protected void onUpdate( AjaxRequestTarget target ) {
                 if ( !getOrganization().getJobs().contains( jobWrapper.getJob() ) ) {
@@ -761,8 +762,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
          */
         public boolean canBeConfirmed() {
             return !job.getActorName().isEmpty()
-                    && !job.getRoleName().isEmpty()
-                    && !job.getTitle().isEmpty();
+                    && !job.getRoleName().isEmpty();
         }
 
         /**
@@ -878,11 +878,16 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                             ? Place.class
                             // supervisor
                             : Actor.class;
-            final List<String> choices = getQueryService().findAllEntityNames(
-                    moClass,
-                    moClass == Role.class
-                            ? ModelEntity.Kind.Type
-                            : ModelEntity.Kind.Actual );
+            final List<String> choices;
+            if ( property.equals( "supervisor" ) ) {
+               choices = findNamesOfAllActorsEmployedBy( getOrganization() );
+            } else {
+                choices = getQueryService().findAllEntityNames(
+                        moClass,
+                        moClass == Role.class
+                                ? ModelEntity.Kind.Type
+                                : ModelEntity.Kind.Actual );
+            }
             // text field
             AutoCompleteTextField<String> entityField = new AutoCompleteTextField<String>(
                     "entity-field",
@@ -894,8 +899,7 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
                         if ( property.equals( "role" ) ) {
                              if ( getQueryService().likelyRelated( s, choice ) )
                             candidates.add( choice );
-                        }
-                        else if ( Matcher.matches( s, choice ) )
+                        } else if ( Matcher.matches( s, choice ) )
                             candidates.add( choice );
                     }
                     return candidates.iterator();
@@ -931,6 +935,21 @@ public class JobsPanel extends AbstractCommandablePanel implements NameRangeable
             makeVisible( entityField, jobWrapper.isMarkedForCreation() );
         }
 
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private List<String> findNamesOfAllActorsEmployedBy( Organization organization ) {
+        List<String> names = (List<String>)CollectionUtils.collect(
+                getQueryService().findAllActorsEmployedBy( organization ),
+                new Transformer() {
+                    @Override
+                    public Object transform( Object input ) {
+                        return ((Actor)input).getName();
+                    }
+                }
+        );
+        Collections.sort( names );
+        return names;
     }
 
     /**

@@ -114,8 +114,8 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public List<UserParticipation> getUserParticipations(
+    @SuppressWarnings("unchecked")
+    public List<UserParticipation> getUserParticipations( // todo - add indirect user participations
             ChannelsUser user,
             CommunityService communityService ) {
         QUserParticipation qUserParticipation = QUserParticipation.userParticipation;
@@ -134,7 +134,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getActiveUserParticipations(
             ChannelsUser user,
             final CommunityService communityService ) {
@@ -150,7 +150,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getActiveSupervisedParticipations( ChannelsUser user, final CommunityService communityService ) {
         return (List<UserParticipation>) CollectionUtils.select(
                 getParticipationsSupervisedByUser( user, communityService ),
@@ -175,7 +175,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getParticipationsAsAgent( Agent agent, CommunityService communityService ) {
         QUserParticipation qUserParticipation = QUserParticipation.userParticipation;
         OrganizationParticipation organizationParticipation = agent.getOrganizationParticipation();
@@ -196,7 +196,7 @@ public class UserParticipationServiceImpl
 
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public UserParticipation getParticipation(
             ChannelsUser user,
             Agent agent,
@@ -221,7 +221,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-     public Boolean isParticipationNotFull( Agent agent, CommunityService communityService ) {
+    public Boolean isParticipationNotFull( Agent agent, CommunityService communityService ) {
         if ( agent.isAnyNumberOfParticipants() ) return true;
         else {
             int count = getParticipationsAsAgent( agent, communityService ).size();
@@ -230,7 +230,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void removeParticipation( String username, UserParticipation participation, CommunityService communityService ) {
         QUserParticipation qUserParticipation = QUserParticipation.userParticipation;
         BooleanBuilder bb = new BooleanBuilder();
@@ -250,7 +250,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getAllParticipations( CommunityService communityService ) {
         QUserParticipation qUserParticipation = QUserParticipation.userParticipation;
         return validate(
@@ -263,7 +263,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getAllActiveParticipations( final CommunityService communityService ) {
         return (List<UserParticipation>) CollectionUtils.select(
                 getAllParticipations( communityService ),
@@ -325,7 +325,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> getParticipationsSupervisedByUser(
             final ChannelsUser user,
             final CommunityService communityService ) {
@@ -349,7 +349,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Agent> listSupervisorsUserParticipatesAs(
             UserParticipation userParticipation,
             ChannelsUser user,
@@ -390,7 +390,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService ) {
         QUserParticipation qUserParticipation = QUserParticipation.userParticipation;
         OrganizationParticipation organizationParticipation = agent.getOrganizationParticipation();
@@ -433,7 +433,7 @@ public class UserParticipationServiceImpl
         return success;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> listMatching( UserParticipation participation, CommunityService communityService ) {
         QUserParticipation qUserParticipation = QUserParticipation.userParticipation;
         OrganizationParticipation organizationParticipation
@@ -491,7 +491,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> listUserParticipationIn( OrganizationParticipation organizationParticipation,
                                                             CommunityService communityService ) {
         OrganizationParticipation orgParticipation = organizationParticipationService
@@ -515,7 +515,7 @@ public class UserParticipationServiceImpl
 
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<UserParticipation> listUserParticipationsAwaitingConfirmationBy(
             ChannelsUser user,
             final CommunityService communityService ) {
@@ -558,7 +558,7 @@ public class UserParticipationServiceImpl
                 || organizationParticipationService.isValid( userParticipation.getOrganizationParticipation( communityService ), communityService ) );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private List<UserParticipation> validate(
             List<UserParticipation> userParticipations,
             final CommunityService communityService ) {

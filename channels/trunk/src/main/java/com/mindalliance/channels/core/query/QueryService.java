@@ -1636,4 +1636,11 @@ public interface QueryService {
      * @return whether caused by a task
      */
     Boolean isEventCausedByATask( Event event );
+
+    /**
+     * Find all actors employed by a given organziation.
+     * @param organization an organization
+     * @return a list of actors
+     */
+    List<Actor> findAllActorsEmployedBy( Organization organization );
 }

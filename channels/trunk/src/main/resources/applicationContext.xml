@@ -315,9 +315,9 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.CriticalNotificationNotTriggering"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistNotFullyConnectedToTaskContext"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ChecklistStepsNotInProperOrder"/>
-                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationHasManyPrimaryJobsForSameActor"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorHasPrimaryJobsWithManyOrgs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorOnlyHasLinkedJobs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithMultiParticipationHasLinkedJobs"/>
             </list>
         </property>
     </bean>

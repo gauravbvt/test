@@ -2,10 +2,15 @@ package com.mindalliance.channels.core.community;
 
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Nameable;
 import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+
+import java.util.List;
 
 /**
  * What a user participates as.
@@ -18,14 +23,15 @@ import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 public class Agent implements Nameable, Identifiable {
 
     private Actor actor;
-    private OrganizationParticipation organizationParticipation;  // can be null
+    private OrganizationParticipation organizationParticipation;  // can be null // todo - needs to be agency
     private String name;
 
+    // if is an actor in known organization from template
     public Agent( Actor actor ) {
         this.actor = actor;
         name = actor.getName();
     }
-
+    // if is an actor in plan organization participating as placeholder from template
     public Agent( Actor actor,
                   OrganizationParticipation organizationParticipation,
                   CommunityService communityService ) {
@@ -40,6 +46,7 @@ public class Agent implements Nameable, Identifiable {
             name = actor.getName();
         }
     }
+
     public Actor getActor() {
         return actor;
     }
@@ -179,5 +186,34 @@ public class Agent implements Nameable, Identifiable {
         return organizationParticipation != null
                 ? organizationParticipation.getUid()
                 : null;
+    }
+
+    public static String selectJobTitleFrom( List<Job> actorJobs ) {
+        if ( actorJobs.isEmpty() ) {
+            return "";
+        } else {
+            Job job = (Job) CollectionUtils.find(
+                    actorJobs,
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Job) object ).isPrimary();
+                        }
+                    } // pick the primary job, if any, to provide the title
+            );
+            if ( job == null ) { // pick first job with an explicit job title
+                job = (Job)CollectionUtils.find(
+                        actorJobs,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return !((Job)object).getRawTitle().isEmpty();
+                            }
+                        } );
+            }
+            return job == null
+                    ? actorJobs.get(0).getTitle() // last resort: pick role-as-tile from first job (all linked)
+                    : job.getTitle();
+        }
     }
 }

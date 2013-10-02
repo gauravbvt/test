@@ -35,7 +35,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
 
     private String participantUsername;
     private long actorId;
-    private String organizationParticipationUid; // can be null if participating as plan-defined actor
+    private String organizationParticipationUid; // can be null if participating as plan-defined actor // todo - WRONG - needs to be RegisteredOrganization
     private String supervisorsNotified;
     private boolean accepted;
     private Date whenAccepted;
@@ -55,7 +55,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
                               PlanCommunity planCommunity ) {
         this( username, participatingUser, planCommunity );
         this.actorId = agent.getActorId();
-        organizationParticipationUid = agent.getOrganizationParticipationUid(); // can be null if agent is plan-defined
+        organizationParticipationUid = agent.getOrganizationParticipationUid(); // can be null if agent is actor in known organization
     }
 
     public UserParticipation( UserParticipation participation ) {
@@ -187,7 +187,8 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
             sb.append( participant.getFullName() )
                     .append( " (" )
                     .append( participant.getEmail() )
-                    .append( ") participating as " )
+                    .append( ") participating")
+                    .append(" as " )
                     .append( agent == null ? "?" : agent.getName() );
             return sb.toString();
         }

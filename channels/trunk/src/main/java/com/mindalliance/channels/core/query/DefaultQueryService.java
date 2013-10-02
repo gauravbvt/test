@@ -3505,5 +3505,16 @@ public abstract class DefaultQueryService implements QueryService {
         );
     }
 
+    @Override
+    public List<Actor> findAllActorsEmployedBy( Organization organization ) {
+        Set<Actor> actors = new HashSet<Actor>(  );
+        for ( Organization org : organization.selfAndAncestors() ) {
+            for ( Employment employment : findAllEmploymentsIn( org ) ) {
+                actors.add( employment.getActor() );
+            }
+        }
+        return new ArrayList<Actor>( actors );
+    }
+
 }
 

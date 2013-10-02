@@ -10127,20 +10127,6 @@
                 </row>
 
                 <row>
-                    <entry><para>Organization has more than one primary (hiring) job for a given agent</para></entry>
-
-                    <entry><para>Medium</para></entry>
-
-                    <entry><itemizedlist>
-                        <listitem>
-                            <para>Mark all but one of the agent's jobs as linked jobs.</para>
-                        </listitem>
-                     </itemizedlist></entry>
-
-                    <entry><para>No</para></entry>
-                </row>
-
-                <row>
                     <entry><para>Agent has multiple primary jobs spread across many organizations</para></entry>
 
                     <entry><para>Medium</para></entry>
@@ -10169,6 +10155,26 @@
                     </itemizedlist></entry>
 
                     <entry><para>No</para></entry>
+                </row>
+
+                <row>
+                    <entry><para>Placeholder organization has linked jobs even though it allows more than one participation. This may lead to unintended participation by users as the agents with the linked jobs.</para></entry>
+
+                    <entry><para>Medium</para></entry>
+
+                    <entry><itemizedlist>
+                        <listitem>
+                            <para>Make the linked jobs non-linked (primary/hiring) jobs</para>
+                        </listitem>
+                        <listitem>
+                            <para>or make the organization a known organization (not a placeholder)</para>
+                        </listitem>
+                        <listitem>
+                            <para>or remove all linked jobs from the organization.</para>
+                        </listitem>
+                    </itemizedlist></entry>
+
+                    <entry><para>Yes</para></entry>
                 </row>
 
 
