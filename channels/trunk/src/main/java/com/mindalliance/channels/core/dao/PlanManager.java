@@ -167,7 +167,7 @@ public interface PlanManager extends CommandListener {
 
     /**
      * Add a producer to the plan.
-     * Returns whether the plan was put into production as a result.
+     * Returns whether all developers voted to put into production.
      *
      * @param producer     user name of planner voting to put plan in production
      * @param plan         a plan
@@ -181,7 +181,7 @@ public interface PlanManager extends CommandListener {
      * @param plan the plan
      * @return true if the plan was productized as a result
      */
-    boolean revalidateProducers( Plan plan );
+    boolean allDevelopersInFavorToPutInProduction( Plan plan );
 
     /**
      * Signal that the plan with given uri was versioned.

@@ -58,7 +58,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
     private SimpleDateFormat dateFormat;
 
     @SpringBean
-    private UserRecordService userInfoService;
+    private UserRecordService userRecordService;
     private ConfirmedAjaxFallbackLink productizeLink;
 
     public PlanVersionsPanel(
@@ -174,7 +174,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
             }
         };
         productizeLink.setOutputMarkupId( true );
-        boolean plannersOkToProductize = getPlanManager().revalidateProducers( getPlan() );
+        boolean plannersOkToProductize = getPlanManager().allDevelopersInFavorToPutInProduction( getPlan() );
         makeVisible( productizeLink, plannersOkToProductize && !isDevelopmentVersionInvalid() );
         addOrReplace( productizeLink );
     }
@@ -206,7 +206,7 @@ public class PlanVersionsPanel extends AbstractCommandablePanel {
 
     public List<Vote> getVotes() {
         List<Vote> votes = new ArrayList<Vote>();
-        for ( ChannelsUser planner : userInfoService.getPlanners( getPlan().getUri() ) )
+        for ( ChannelsUser planner : userRecordService.getStrictlyPlanners( getPlan().getUri() ) )
             votes.add( new Vote( planner ) );
 
         return votes;

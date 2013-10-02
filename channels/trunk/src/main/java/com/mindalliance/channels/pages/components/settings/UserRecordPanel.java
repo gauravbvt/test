@@ -133,7 +133,7 @@ public class UserRecordPanel extends AbstractUpdatablePanel {
         addPlanPrivileges();
         addPlanPrivilegesResetAndApply();
         makeVisible( privilegesContainer, !isDisabled()
-                && !isAdmin()
+                // && !isAdmin()
                 && !userRecord.getUsername().equals( getUsername() ) );
         userRecordContainer.addOrReplace( privilegesContainer );
     }

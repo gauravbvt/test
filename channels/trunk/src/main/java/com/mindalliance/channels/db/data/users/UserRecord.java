@@ -374,7 +374,7 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
         );
     }
 
-    private boolean hasPlannerAccess( final String uri ) {
+    public boolean hasPlannerAccess( final String uri ) {
         return !isDisabled()
                 && CollectionUtils.exists(
                 getAccessList(),

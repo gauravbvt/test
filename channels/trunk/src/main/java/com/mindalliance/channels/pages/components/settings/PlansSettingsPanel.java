@@ -309,7 +309,7 @@ public class PlansSettingsPanel extends AbstractCommandablePanel {
 
     private String getProductizeConfirmationMessage() {
         StringBuilder sb = new StringBuilder();
-        boolean plannersOkToProductize = getPlanManager().revalidateProducers( getSelectedPlan() );
+        boolean plannersOkToProductize = getPlanManager().allDevelopersInFavorToPutInProduction( getSelectedPlan() );
         boolean invalid = isDevelopmentVersionInvalid();
         sb.append( "Put in production the current version" );
         if ( invalid || !plannersOkToProductize ) {

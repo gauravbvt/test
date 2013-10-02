@@ -272,12 +272,12 @@ public class PlanManagerImpl implements PlanManager {
 
     @Override
     public Plan getDevelopmentPlan( String planUri ) {
-        return (Plan)CollectionUtils.find(
+        return (Plan) CollectionUtils.find(
                 getPlansWithUri( planUri ),
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return ((Plan)object).isDevelopment();
+                        return ( (Plan) object ).isDevelopment();
                     }
                 }
         );
@@ -458,16 +458,23 @@ public class PlanManagerImpl implements PlanManager {
 
         plan.addProducer( producer );
 
-        return revalidateProducers( plan );
+        return allDevelopersInFavorToPutInProduction( plan );
     }
 
     @Override
-    public boolean revalidateProducers( Plan plan ) {
-        List<String> producers = plan.getProducers();
-        for ( ChannelsUser user : userRecordService.getAllEnabledUsers() )
-            if ( user.isPlannerOrAdmin( plan.getUri() ) && !producers.contains( user.getUsername() ) )
-                return false;
-        return true;
+    public boolean allDevelopersInFavorToPutInProduction( Plan plan ) {
+        final List<String> producers = plan.getProducers();
+        List<ChannelsUser> planners = userRecordService.getStrictlyPlanners( plan.getUri() );
+        return !planners.isEmpty() &&
+                !CollectionUtils.exists(
+                        planners,
+                        new Predicate() {
+                            @Override
+                            public boolean evaluate( Object object ) {
+                                return !producers.contains( ( (ChannelsUser) object ).getUsername() );
+                            }
+                        }
+                );
     }
 
     @Override
@@ -568,7 +575,7 @@ public class PlanManagerImpl implements PlanManager {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Plan> getDevelopmentPlans() {
         return (List<Plan>) CollectionUtils.select(
                 getPlans(),

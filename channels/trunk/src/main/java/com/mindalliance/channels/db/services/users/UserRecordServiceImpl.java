@@ -241,6 +241,17 @@ public class UserRecordServiceImpl
     }
 
     @Override
+    public List<ChannelsUser> getStrictlyPlanners( String uri ) {
+        Collection<ChannelsUser> userList = getAllEnabledUsers();
+        List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );
+        for ( ChannelsUser user : userList )
+            if ( user.isPlanner( uri ) )
+                result.add( user );
+
+        return result;
+    }
+
+    @Override
     public List<ChannelsUser> getCommunityPlanners( String communityUri ) {
         Collection<ChannelsUser> userList = getAllEnabledUsers();
         List<ChannelsUser> result = new ArrayList<ChannelsUser>( userList.size() );

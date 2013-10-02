@@ -79,6 +79,14 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
     List<ChannelsUser> getPlanners( String uri );
 
     /**
+     * Get all user who are explicitly planners for a given plan (not because of being an admin).
+     *
+     * @param uri the plan uri
+     * @return a list of users
+     */
+    List<ChannelsUser> getStrictlyPlanners( String uri );
+
+    /**
      * Get all users who are explicitly planners for a community given its uri.
      *
      * @param communityUri a community uri
@@ -252,5 +260,4 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param planCommunity a plan community
      */
     void addFounder( ChannelsUser founder, PlanCommunity planCommunity );
-
 }

@@ -263,6 +263,10 @@ public class ChannelsUser implements UserDetails {
         return userRecord.isPlannerOrAdmin( uri );
     }
 
+    public boolean isPlanner( String uri ) {
+        return userRecord.hasPlannerAccess( uri );
+    }
+
     /**
      * Test if this user is a community planner..
      *

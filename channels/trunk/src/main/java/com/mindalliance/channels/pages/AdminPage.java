@@ -379,7 +379,7 @@ public class AdminPage extends AbstractChannelsWebPage {
             }
         }
 
-        getPlanManager().revalidateProducers( getPlan() );
+        getPlanManager().allDevelopersInFavorToPutInProduction( getPlan() );
         getPlanManager().save( getPlan() );
 /*
         try {

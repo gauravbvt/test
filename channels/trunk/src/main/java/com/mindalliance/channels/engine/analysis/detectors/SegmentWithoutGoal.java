@@ -31,7 +31,7 @@ public class SegmentWithoutGoal extends AbstractIssueDetector {
         List<Issue> issues = new ArrayList<Issue>();
         Segment segment = (Segment) modelObject;
         if ( segment.getGoals().isEmpty() ) {
-            DetectedIssue issue = makeIssue( queryService, Issue.VALIDITY, segment );
+            DetectedIssue issue = makeIssue( queryService, Issue.COMPLETENESS, segment );
             issue.setSeverity( Level.Medium );
             issue.setDescription( "The segment does not have any goal." );
             issue.setRemediation( "Add a goal to the segment"
