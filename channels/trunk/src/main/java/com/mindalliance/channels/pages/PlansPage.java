@@ -114,7 +114,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
         planSelector.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
             protected void onUpdate( AjaxRequestTarget target ) {
-                setResponsePage( PlansPage.class );
+                setResponsePage( PlansPage.class, makePlanParameters() );
             }
         } );
         planSelector.setOutputMarkupId( true );
