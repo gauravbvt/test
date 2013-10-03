@@ -55,8 +55,16 @@
                     <tr>
                         <th>&nbsp;</th>
                         <th class="name">Name <!-- Named: <input wicket:id="userNameFilter" type="text"/> --> </th>
-                        <th class="accepted">Accepted</th>
-                        <th class="confirmed">Confirmed</th>
+                        <th class="accepted">
+                            <div class="participation-filtering">
+                                <input wicket:id="acceptedFilter" type="checkbox"/><span>Accepted</span>
+                            </div>
+                        </th>
+                        <th class="confirmed">
+                            <div class="participation-filtering">
+                                <input wicket:id="confirmedFilter" type="checkbox"/><span>Confirmed</span>
+                            </div>
+                        </th>
                     </tr>
                     <tr wicket:id="participants"> <!-- repeated -->
                         <td class="check">

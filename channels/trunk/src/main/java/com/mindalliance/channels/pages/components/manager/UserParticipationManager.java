@@ -1,6 +1,5 @@
 package com.mindalliance.channels.pages.components.manager;
 
-import com.mindalliance.channels.core.Matcher;
 import com.mindalliance.channels.core.command.Change;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.Agent;
@@ -72,7 +71,9 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     private Set<ChannelsUser> removedParticipants;
     private WebMarkupContainer agenciesListContainer;
     private WebMarkupContainer agentsListContainer;
-    private String participantsFilter;
+    private String userIdentifierFilter;
+    private boolean acceptedFilter;
+    private boolean confirmedFilter;
 
     public UserParticipationManager( String id ) {
         super( id );
@@ -391,16 +392,56 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         participantsContainer.setOutputMarkupId( true );
         addOrReplace( participantsContainer );
         participantsContainer.add( new Label( "agentName", selectedAgent == null ? "" : selectedAgent.getName() ) );
-        addParticipantsFilter();
+        addParticipantsFilters();
         addParticipantsList();
         addNoAgentSelected();
     }
 
-    private void addParticipantsFilter() {
-        participantsFilter = null;
+    private void addParticipantsFilters() {
+        addUserIdentityFilter();
+        addAcceptedFilter();
+        addConfirmedFilter();
+    }
+
+    private void addAcceptedFilter() {
+        AjaxCheckBox acceptedFilterCheckBox = new AjaxCheckBox(
+                "acceptedFilter",
+                new PropertyModel<Boolean>( this, "acceptedFilter" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addParticipantsList();
+                target.add( participantsContainer );
+            }
+        };
+        acceptedFilterCheckBox.setOutputMarkupId( true );
+        makeVisible( acceptedFilterCheckBox, selectedAgent != null );
+        addTipTitle( acceptedFilterCheckBox, "Only show users who accepted the position" );
+        participantsContainer.addOrReplace( acceptedFilterCheckBox );
+    }
+
+    private void addConfirmedFilter() {
+        AjaxCheckBox confirmedFilterCheckBox = new AjaxCheckBox(
+                "confirmedFilter",
+                new PropertyModel<Boolean>( this, "confirmedFilter" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                addParticipantsList();
+                target.add( participantsContainer );
+            }
+        };
+        confirmedFilterCheckBox.setOutputMarkupId( true );
+        makeVisible( confirmedFilterCheckBox, selectedAgent != null );
+        addTipTitle( confirmedFilterCheckBox, "Only show users who are confirmed in the position" );
+        participantsContainer.addOrReplace( confirmedFilterCheckBox );
+    }
+
+    private void addUserIdentityFilter() {
+        userIdentifierFilter = null;
         TextField<String> userNameFilter = new TextField<String>(
                 "userNameFilter",
-                new PropertyModel<String>( this, "participantsFilter" )
+                new PropertyModel<String>( this, "userIdentifierFilter" )
         );
         userNameFilter.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
             @Override
@@ -411,6 +452,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         } );
         userNameFilter.setOutputMarkupId( true );
         makeVisible( userNameFilter, selectedAgent != null );
+        addInputHint( userNameFilter, "A filter on name or email (press enter)" );
         participantsContainer.addOrReplace( userNameFilter );
     }
 
@@ -429,12 +471,28 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
 
-    public String getParticipantsFilter() {
-        return participantsFilter;
+    public String getUserIdentifierFilter() {
+        return userIdentifierFilter;
     }
 
-    public void setParticipantsFilter( String participantsFilter ) {
-        this.participantsFilter = participantsFilter;
+    public void setUserIdentifierFilter( String userIdentifierFilter ) {
+        this.userIdentifierFilter = userIdentifierFilter;
+    }
+
+    public boolean isAcceptedFilter() {
+        return acceptedFilter;
+    }
+
+    public void setAcceptedFilter( boolean val ) {
+        acceptedFilter = val;
+    }
+
+    public boolean isConfirmedFilter() {
+        return confirmedFilter;
+    }
+
+    public void setConfirmedFilter( boolean val ) {
+        confirmedFilter = val;
     }
 
     private void addParticipantsList() {
@@ -562,9 +620,13 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
     private boolean isFilteredOut( ChannelsUser user ) {
-        return participantsFilter != null
-                && !participantsFilter.isEmpty()
-                && !Matcher.matches( user.getNormalizedFullName(), participantsFilter );
+        return ( userIdentifierFilter != null
+                && !userIdentifierFilter.isEmpty()
+                && !user.getUsername().toLowerCase().contains( userIdentifierFilter.toLowerCase() )
+                && !user.getNormalizedFullName().toLowerCase().contains( userIdentifierFilter.toLowerCase() )
+                && !user.getEmail().toLowerCase().contains( userIdentifierFilter.toLowerCase() ) )
+                || ( acceptedFilter && !isAcceptedParticipation( user ) )
+                || ( confirmedFilter && !isConfirmedParticipation( user ) );
     }
 
     private void addSummary() {

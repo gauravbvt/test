@@ -523,7 +523,8 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         if ( getRegisteredOrganization() != null ) {
             return agent.getName();
         } else {
-            return Agent.selectJobTitleFrom( getAllJobsFor( agent, communityService ) );
+            String jobTitle = Agent.selectJobTitleFrom( getAllJobsFor( agent, communityService ) );
+            return jobTitle.isEmpty() ? agent.getName() : jobTitle;
         }
     }
 }

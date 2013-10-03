@@ -2835,7 +2835,7 @@ div.participationManager div.participation h3 {
 div.participationManager div.participation h3 input {
     height: 11px;
     padding: 1px;
-    width: 175px;
+    width: 200px;
 }
 
 div.participation div.participation-table-cont a {
@@ -2881,6 +2881,10 @@ div.participation-table-cont div {
 	float: left;
     padding: 0;
     width: inherit;
+}
+
+table div.participation-filtering {
+    border-bottom: 0;
 }
 
 div.participation-filtering {
