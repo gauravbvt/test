@@ -939,7 +939,7 @@
 	
 	<Element>
 		<GivenName>Repeats Every In Task</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[5]/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[4]/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -948,7 +948,7 @@
 	</Element>
 	<Element>
 		<GivenName>Repeats Every Textbox</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[5]/span/input</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[4]/span/input</Xpath>
 		<Name></Name>
 		<Id></Id>
 		<PartialLinkText></PartialLinkText>
@@ -957,7 +957,7 @@
 	</Element>
 	<Element>
 		<GivenName>Repeats Every Dropdown</GivenName>
-		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[12]/td/span[5]/span/select</Xpath>
+		<Xpath>/html/body/form/span[2]/div/div[3]/div/div[2]/table[2]/tbody/tr[13]/td/span[4]/span/select</Xpath>
 		<Name></Name>
 	</Element>
 	//<Element>
