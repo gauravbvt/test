@@ -17,11 +17,15 @@ import com.mindalliance.channels.pages.reports.issues.IssuesPage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -86,11 +90,44 @@ public class PlansPage extends AbstractChannelsBasicPage {
 
     @Override
     protected void addContent() {
+        addPlanSelector();
         addPlanName();
         addPlanClient();
         addAttachments();
         addGotoLinks( getCommunityService(), getUser() );
         addSocial();
+    }
+
+    private void addPlanSelector() {
+        List<Plan> allPlans = getPlanManager().getReadablePlans( getUser() );
+        DropDownChoice<Plan> planSelector = new DropDownChoice<Plan>(
+                "planChoice",
+                new PropertyModel<Plan>( this, "selectedPlan" ),
+                allPlans,
+                new ChoiceRenderer<Plan>() {
+                    @Override
+                    public Object getDisplayValue( Plan p ) {
+                        return p.getShortVersionName();
+                    }
+                }
+        );
+        planSelector.add( new AjaxFormComponentUpdatingBehavior( "onchange" ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                setResponsePage( PlansPage.class );
+            }
+        } );
+        planSelector.setOutputMarkupId( true );
+        planSelector.setVisible( allPlans.size() > 1 );
+        getContainer().addOrReplace( planSelector );
+    }
+
+    public Plan getSelectedPlan() {
+        return getPlan();
+    }
+
+    public void setSelectedPlan( Plan plan ) {
+        setPlan( plan );
     }
 
     @Override
@@ -194,7 +231,7 @@ public class PlansPage extends AbstractChannelsBasicPage {
                 new Model<String>( getGotoModelDescription( user, plan ) )
         );
         //Issues
-       BookmarkablePageLink gotoIssuesLink = newTargetedLink(
+        BookmarkablePageLink gotoIssuesLink = newTargetedLink(
                 "gotoIssues",
                 "",
                 IssuesPage.class,

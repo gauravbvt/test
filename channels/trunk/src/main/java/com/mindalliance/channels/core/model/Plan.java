@@ -6,6 +6,7 @@ import com.mindalliance.channels.core.model.Phase.Timing;
 import com.mindalliance.channels.core.util.ChannelsUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,7 +47,10 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
      * Default default spoken language.
      */
     public static final String DEFAULT_LANGUAGE = "English";
-
+    /**
+     * Max length of short plan name.
+     */
+    private static final int SHORT_NAME_LENGTH = 30;
     /**
      * Whether the plan is meant as a template.
      */
@@ -336,6 +340,15 @@ public class Plan extends ModelObject implements ModelObjectContext, Comparable<
     public String getSimpleVersionedName() {
         return getName() + " v." + version;
     }
+
+    public String getShortVersionName() {
+        return StringUtils.abbreviate( getName(), SHORT_NAME_LENGTH )
+                + " v." 
+                + version 
+                + " (" + getStatusString() + ')';
+    }
+
+
 
 
     public Set<Segment> getSegments() {

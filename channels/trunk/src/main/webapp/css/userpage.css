@@ -3196,3 +3196,7 @@ div.manage-plan.admin div.select-plan select {
     right: 10px;
     z-index: 1000000;  /* added */
 }
+
+.plan-selector {
+    margin: 13px 0 20px 0;
+}
