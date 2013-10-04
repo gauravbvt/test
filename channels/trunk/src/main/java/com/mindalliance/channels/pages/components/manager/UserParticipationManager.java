@@ -551,7 +551,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 // accepted
                 item.add( new Label( "accepted", isAcceptedParticipation( user ) ? "Yes" : "No" ) );
                 // confirmed
-                item.add( new Label( "confirmed", isConfirmedParticipation( user ) ? "Yes" : "No" ) );
+                item.add( new Label( "confirmed", confirmationStatus( user ) ) );
             }
         };
         participantsListView.setOutputMarkupId( true );
@@ -579,6 +579,23 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
         return userParticipation != null &&
                 userParticipationConfirmationService
                         .isConfirmedByAllSupervisors( userParticipation, getCommunityService() );
+    }
+
+    private String confirmationStatus( ChannelsUser user ) {
+        if ( selectedAgent == null ) return "?";
+        UserParticipation userParticipation = userParticipationService.getParticipation(
+                user,
+                selectedAgent,
+                getCommunityService() );
+        if ( userParticipation == null ) return "?";
+        if ( userParticipation.isSupervised( getCommunityService() ) ) {
+            return userParticipationConfirmationService
+                    .isConfirmedByAllSupervisors( userParticipation, getCommunityService() )
+                    ? "Yes"
+                    : "No";
+        } else {
+            return "N/A";
+        }
     }
 
     private void toggleParticipationsAs( ChannelsUser user ) {

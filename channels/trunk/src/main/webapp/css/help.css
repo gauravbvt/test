@@ -176,10 +176,10 @@ h2.attachment-panel-add img.help-icon {
 
 
 #quick-help a.quick-help-glossary {
-    padding: 15px 12px 12px;
+    padding: 15px 12px 0;
     border-left: 5px solid #1F7F5C;
 }
 
 #quick-help a.quick-help-back {
-    padding: 15px 0 12px;
+    padding: 15px 0 0;
 }

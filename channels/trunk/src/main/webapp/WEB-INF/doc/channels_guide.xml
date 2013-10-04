@@ -125,7 +125,7 @@
                 <definition section="plan-concepts" topic="plan-template"/>
                 <definition section="plan-concepts" topic="plan-organization"/>
                 <definition section="plan-concepts" topic="plan-placeholder"/>
-                <definition section="plan-concepts" topic="plan-agent"/>
+                <definition section="plan-concepts" topic="plan-position"/>
                 <definition section="plan-concepts" topic="plan-participant"/>
                 <definition section="plan-concepts" topic="plan-planner"/>
                 <definition section="plan-concepts" topic="plan-custodian"/>
@@ -158,12 +158,12 @@
 
                         * tasks required to achieve objectives in identified planning scenarios,
                         * the communications that coordinate and inform these tasks,
-                        * how to assign tasks to agents within organizations
+                        * how to assign tasks to individuals assigned on the basis of their positions in organizations
                         * checklists detailing how to execute each task and how to coordinate and inform their execution via communication and information sharing
 
                     A template identifies the organizations it involves either as ''known organizations'' - real-life organizations - or as ''placeholder'' - organizations which real identities are to be given in the collaboration plans that adopt the template.
 
-                        A template also identifies the agents (aka organizational roles) that make up the collaborating organizations. Users participate in the collaboration plans based on a template by being assigned to one or more agents defined in the template.
+                        A template also identifies the positions (aka organizational roles) that make up the collaborating organizations. Users participate in the collaboration plans based on a template by being assigned to one or more positions defined in the template.
 
                         A collaboration template has versions. The most current version is the development version, accessible only to its developers and guests (who can only look but not touch). A development version can be put into production. Plans can only adopt the latest production version of a template.
                     </description>
@@ -172,7 +172,7 @@
             <topic id="plan-organization">
                 <name>Plan organization</name>
                 <item>
-                    <description>A collaboration plan involves organizations and their agents (organizational roles) to which users are assigned.
+                    <description>A collaboration plan involves organizations and individuals holding positions in them (organizational roles).
 
                         The organizations known to a plan consist of:
 
@@ -180,54 +180,87 @@
                         * All (known) organizations registered in the plan only
                         * All (known) organizations registered in all plans hosted by the Channels service
 
-                        An organization lists the agents that are relevant to the collaboration and to which it has given roles of responsibility.
+                        An organization lists the positions that are relevant to the collaboration and to which it has given roles of responsibility.
                     </description>
                 </item>
             </topic>
             <topic id="plan-placeholder">
                 <name>Organization placeholder</name>
                 <item>
-                    <description>The collaboration template upon which a collaboration plan is based identifies all the organizations that are involved in the collaboration it defines. Because each collaboration plan may involve its own, local organizations, template developers will often keep the identity of organizations ''to be determined'' by making them ''placeholder'' organizations.
+                    <description>The collaboration template upon which a collaboration plan is based identifies all the
+                        organizations that are involved in the collaboration it defines. Because each collaboration plan
+                        may involve its own, local organizations, template developers will often keep the identity of
+                        organizations ''to be determined'' by making them ''placeholder'' organizations.
 
-                        A placeholder organization from a collaboration template, for example "The Municipal Police Department", can be associated to one or more organizations known to a collaboration plan, for example, "Gotham Police Department".
+                        A placeholder organization from a collaboration template, for example "The Municipal Police Department",
+                        can be associated to one or more organizations known to a collaboration plan, for example, "Gotham Police Department".
 
-                        A collaboration template may identify one of the template's agents as a ''custodian'' for a placeholder organization. If so, any user participating in a plan as this agent is authorized to associate an organization known to the plan with the template' placeholder organization, in effect, involving the known organization in the collaboration defined for the placeholder organization by the template. Note that a planner can act as a custodian for all placeholder organizations.
+                        A collaboration template may identify one of the positions in organizations it defines as
+                        a ''custodian'' for a placeholder organization. If so, any user participating in a plan in this
+                        position is authorized to associate an organization known to the plan with the template' placeholder
+                        organization, in effect, involving the known organization in the collaboration defined for the placeholder
+                        organization by the template.
+
+                        Note that a planner acts as the default custodian for all placeholder organizations.
                     </description>
                 </item>
             </topic>
-            <topic id="plan-agent">
-                <name>Agent</name>
+            <topic id="plan-position">
+                <name>Position</name>
                 <item>
-                    <description>An agent represents one or more functionally indistinguishable individuals in a collaboration. An agent is usually given a role of responsibility (and a title) in one organization. While an agent usually has one primary employer organization, it is possible for an agent to be member of multiple organizations.
+                    <description>A position in an organization can be filled one individual and, sometimes, by or more functionally indistinguishable
+                        individuals.
 
-                        Users participate in a collaboration plan by being assigned to one or more agents defined in the collaboration template on which the plan is based.
+                        A position in an organization usually translates to a job title (e.g. Senior VP Sales) and one
+                        or more roles and responsibilities (a.k.a. jobs) on the basis of which task checklists are assigned.
 
-                        How many and which users can be assigned to an agent (and by who) depends on how the agent was defined by the developers of the template. Some agents allow unrestricted self-assignment by users, others require confirmation by supervisors or planners, yet others require some prior, confirmed employment. An agent might allow only one user being assigned to it, another might allow any number.
+                        It is possible that by holding a (primary) position in an organization, a user will automatically
+                        be assigned to ''linked'' positions in other organizations.
 
-                        The collaboration checklists a user receives are those assigned in the collaboration template to the agents to which the user is assigned. The checklists assigned to the user are personalized with the contact names and information of other users participating as the agents this user collaborates with according to the plan.
+                        For example, a "Chief of Police" at some municipal police department (primary position) could,
+                        according to a template, be automatically assigned to a position of "Member" of the county's
+                        "Emergency Operations Center" (linked position). Thus a Chief of Police would have not only the jobs of a chief of police
+                        but also all the jobs of a member of the county's emergency operations center.
+
+                        Users participate in a collaboration plan by being assigned to one or more positions.
+
+                        How many and which users can be assigned to a given position (and by who) depends on how
+                        the position was defined by the developers of the template.
+
+                        Some positions allow unrestricted self-assignment by users, others require confirmation by supervisors or planners,
+                        yet others require some prior, confirmed employment. A position might allow only one user being assigned to it, another might allow any number.
+
+                        The checklists collaboration checklists a user gets depends on the (accepted and confirmed) positions the user has.
+                        The checklists are personalized with the contact names and information of other users participating
+                        in positions this user will collaborate with according to the plan.
                     </description>
                 </item>
             </topic>
             <topic id="plan-participant">
                 <name>Plan participant</name>
                 <item>
-                    <description>A plan participant is any user who has accepted to be assigned to to at least one agent in a collaboration plan, with supervisor confirmation if required.</description>
+                    <description>A plan participant is any user who has accepted to join a collaboration plan, with the
+                        intent of being assigned one or more positions in participating organizations</description>
                 </item>
             </topic>
             <topic id="plan-planner">
                 <name>Collaboration planner</name>
                 <item>
-                    <description>A planner in a collaboration plan is either the user who created the plan or an other user who has been authorized as planner by another planner.
+                    <description>A planner in a collaboration plan is either the user who created the plan or an other
+                        user who has been authorized as planner by another planner.
 
-                        A user can resign as planner (or be resigned by a Channels administrator) but only if he or she is not the sole planner.</description>
+                        A user can resign as planner (or be resigned by a Channels administrator) but only if he or
+                        she is not the sole planner.</description>
                 </item>
              </topic>
             <topic id="plan-custodian">
                 <name>Placeholder custodian</name>
                 <item>
-                    <description>If a user is the custodian of a placeholder organization in a collaboration plan, he or she is authorized to manage the association of any number of known organizations to that placeholder.
+                    <description>If a user is the custodian of a placeholder organization in a collaboration plan, he or
+                        she is authorized to manage the association of any number of known organizations to that placeholder.
 
-                    A user is the custodian of a placeholder organization if he or she is a planner or is assigned to the agent (or copy thereof) that is identified as the custodian by the developers of the template where the placeholder organization is defined.
+                    A user is the custodian of a placeholder organization if he or she is a planner or is assigned to
+                    a position that is identified as the custodian by the developers of the template where the placeholder organization is defined.
                     </description>
                 </item>
             </topic>
@@ -236,15 +269,26 @@
                 <item>
                     <description>Organizations and users participate in a collaboration plan.
 
-                        A known organization defined in the collaboration template upon which the collaboration plan is based automatically participates (as itself) in the plan.
+                        A known organization defined in the collaboration template upon which the collaboration plan is
+                        based automatically participates (as itself) in the plan.
 
-                        When an organization is registered in a plan, it does not yet participate in the collaboration defined by the template on which the plan is based. Participation by an organization registered in a plan is realized by associating the organization with a placeholder in the template.
+                        When an organization is registered in a plan, it does not yet participate in the collaboration
+                        defined by the template on which the plan is based. Participation by an organization registered
+                        in a plan happens when the organization is associated with a placeholder in the template.
 
-                        When a registered organization is associated with a placeholder organization in the template, the registered organization gets a ''copy'' of all the agents employed by the placeholder organization, and the copied agents get the task assignments of the placeholder agents in the template.
+                        When a registered organization is associated with a placeholder organization in the template,
+                        the registered organization gets a ''copy'' of all the positions in the placeholder organization.
 
-                        For example, when "Gotham Police Department" in the plan is associated with "Municipal Police department" in the template, the agent "Chief at Gotham Police Department" is created as a copy of the template agent "Chief of Municipal Police Department" working with title of Chief for the "Municipal Police Department" placeholder also in the template.
+                        For example, when "Gotham Police Department" in the plan is associated with "Municipal Police department"
+                        in the template, the position of "Chief at Gotham Police Department" is created as a copy of the
+                        template-defined position of "Chief of Municipal Police Department".
 
-                        Users participate in a plan by assigning themselves or by being assigned to one or more agents working for participating organizations. When assigned to an agent by someone else, a user must accept the assignment before it becomes active. Assignment to an agent may require confirmation by all users participating as the agents that supervise the agent being assigned to.
+                        Users participate in a plan by assigning themselves or by being assigned to one or more positions
+                        in participating organizations.
+
+                        When assigned to a position in an organization by someone else, a user must accept the assignment
+                        before it becomes active. Assignment to a position may require confirmation by all users participating
+                        in supervisory positions.
 
                     </description>
                 </item>
@@ -252,9 +296,12 @@
             <topic id="plan-checklist">
                 <name>Collaboration checklist</name>
                 <item>
-                    <description>Each task in a collaboration has an associated checklist that details how to execute the task. The checklist is defined in the collaboration template of the plan based on the nature of the task, its context and impacts and the communications in and out of the task.
+                    <description>Each task in a collaboration has an associated checklist that details how to execute the task.
+                        The checklist is defined in the collaboration template of the plan based on the nature of the task,
+                        its context and impacts and the communications in and out of the task.
 
-                        When a user receives checklists from being assigned to agents assigned to tasks, the checklists are personalized with contact names and information of other users who participate as agents the user collaborates with.
+                        When a user receives checklists from being assigned to positions assigned to tasks, the checklists
+                        are personalized with contact names and information of other users who participate in positions the user collaborates with.
 
                     A checklist is defined by the nature of the task, what triggers it and by the steps by which the task is best executed.
 
@@ -294,8 +341,8 @@
                         * the ''source'' and ''sink'' organizations,
                         * the information to be communicated
                         * the planning scenario in which this communication is to happen
-                        * the number of agents in each organization sending and receiving the information
-                        * the number of alternate source-agents for each sink-agent
+                        * the number of positions in each organization sending and receiving the information
+                        * the number of alternate source-positions for each sink-positions
 
                         A collaboration requirement may or may not apply to a pair of organizations in the plan. If it does then, whether or not it can be realized according to the template-defined collaboration is examined and reported.
                     </description>
@@ -309,11 +356,11 @@
                         is not necessarily a business process. In fact, bona fide business processes represent the
                         exception rather than the rule.
 
-                        A ''business process'' is a close orchestration of agents within an (extended) organization,
+                        A ''business process'' is a close orchestration of people and systems within an (extended) organization,
                         all working harmoniously according to a known and repeatable script in order to accomplish a common goal.
 
                         A ''collaboration'', as understood in Channels, is the coordination of interdependent work done
-                        by multiple agents, from one or more organizations, each trying to achieve their own, possibly conflicting,
+                        by multiple individuals, from one or more organizations, each trying to achieve their own, possibly conflicting,
                         goals.
 
                         The goals of organizations, namely risk mitigation and opportunity captures, are
@@ -371,7 +418,7 @@
                     <description>As a user you can see and all collaboration plans in which you are a planner or that have been opened for
                         participation by their planners.
 
-                        As a user, you can decide to participate as agents (roughly, organizational roles) that are open to participation by all.
+                        As a user, you can decide to participate in positions (roughly, organizational roles) that are open to participation by all.
 
                         If you created the collaboration plan, you are the initial collaboration planner for this plan.
                         As such, you can authorize other users as planners and, if you wish and are not the only one, resign your planner privileges.
@@ -382,10 +429,10 @@
 
                         As a planner, you can register organizations for potential participation into the plan (or in
                         all plans), in addition to the known organizations defined by the plan's template (they automatically participate). You can also
-                        assign users to agents (roughly, generic individuals or organizational roles) known to the plan.
+                        assign users to positions known to the plan.
 
-                        If, as a participant, you are assigned to an agent that supervises other agents, you can assign
-                        users to these agents, subject to some constraints, and subject to they accepting the
+                        If, as a participant, you are assigned to a position where you supervise other positions, you can assign
+                        users to these positions, subject to some constraints, and subject to they accepting the
                         assignment. You are also responsible for confirming these assignments in order to activate them.
 
                         As a participant, you can access your collaboration checklists, the surveys you take part in,
@@ -401,6 +448,23 @@
         </section>
         <section id="what-i-do">
             <name>What I do</name>
+            <topic id="participating-in-plan">
+                <name>I participate in this plan</name>
+                <item>
+                    <description>You decide whether or not you want to participate in this plan.
+
+                    If you do, then you can assign yourself or be assigned to positions in organizations participating in the plan.
+
+                    Assignments to positions will be subject to you accepting and, where appropriate, to being confirmed by supervisors.
+
+                    Once you participate in a plan, you can withdraw from participation, but only if you are not a planner
+                    and if you have not accepted any position. </description>
+                </item>
+                <next section="plan-concepts" topic="collaboration-plan"/>
+                <next section="plan-concepts" topic="plan-participant"/>
+                <next section="plan-concepts" topic="plan-participation"/>
+                <next section="plan-concepts" topic="plan-position"/>
+            </topic>
             <topic id="my-privileges">
                 <name>My user privileges</name>
                 <item>
@@ -413,11 +477,11 @@
             <topic id="my-participation">
                 <name>I participate as...</name>
                 <item>
-                    <description>You can accept to participate as agents that are open to all users or as agents that have
+                    <description>You can accept to participate in positions that are open to all users or in positions that have
                         been assigned to you by authorized users (planners or your supervisors).
 
-                        By check a box next to an agent (e.g. "A Metropolis bus driver"), you accept to participate as
-                        this agent. By un-checking an already checked box, you unilaterally resign the assignment.
+                        By check a box next to a position (e.g. "Bus driver at Metropolis Transit Operations"), you accept to participate in
+                        this position. By un-checking an already checked box, you unilaterally resign the assignment.
                     </description>
                 </item>
                 <next section="plan-concepts" topic="plan-participation"/>
@@ -428,10 +492,10 @@
                     <description>Based on your user privileges or current participation, other assignments in the
                         collaboration plan's organization may be available to you.
 
-                        First select an organization where the desired agent would be listed and then select an agent.
+                        First select an organization where a desired position would be listed and then select the position.
 
-                        Your selection may be subject to confirmation by users participating as agents that supervise
-                        the agent you selected to participate as.
+                        Your selection may be subject to confirmation by users participating in positions where they supervise
+                        the position in which you selected to participate.
                     </description>
                 </item>
                 <next section="plan-concepts" topic="plan-participation"/>
@@ -439,9 +503,9 @@
             <topic id="my-to-be-confirmed">
                 <name>I await confirmation to be...</name>
                 <item>
-                    <description>This is a list of agents your participation as await confirmation by your supervisors.
+                    <description>This is a list of positions your participation as await confirmation by your supervisors.
 
-                        You can withdraw your participation request by un-checking the box next to the agent.
+                        You can withdraw your participation request by un-checking the box next to the position.
                     </description>
                 </item>
                 <next section="plan-concepts" topic="plan-participation"/>
@@ -477,8 +541,8 @@
                     <description>The ''Plan Participation'' page enables you to:
                         * browse a registry of all organizations participating or eligible to participate in the plan,
                         * register, as authorized, organizations for participation into the plan (or all plans) as placeholder organizations defined in the collaboration template adopted by the plan,
-                        * assign, as authorized, users to template-defined agents employed by organizations,
-                        * confirm the participation of users into agents you supervise,
+                        * assign, as authorized, users to template-defined positions in organizations,
+                        * confirm the participation of users in positions you supervise,
                         * review, you are planner, the participation issues detected by Channels,
                         * resign your status as collaboration planner (if you are not the only one) and bestow your planner privileges on another user.
                     </description>
@@ -495,15 +559,15 @@
                 <item>
                     <description>The ''All Checklists'' page let's you access all your collaboration checklists and those of all participants you are allowed to see.
 
-                        If you are a planner, you can see the personalized checklists of all users and the generic checklists of all agents.
+                        If you are a planner, you can see the personalized checklists of all users and the generic checklists for all positions.
 
-                        If you participate as an agent that supervises other agents, you can see the personalized checklists of all users participating as the agents you supervise.
+                        If you participate in a supervisory position, you can see the personalized checklists of all users participating in positions you supervise.
 
-                        By clicking on an agent, you access the checklists for that agent. By clicking on a
-                        participant's name, you access the combined checklists for all the agents assigned to the
+                        By clicking on a position, you access the checklists for those in that position. By clicking on a
+                        participant's name, you access the combined checklists for all the positions assigned to the
                         participant in the plan.
 
-                        Note that for a user who participates as only one agent, this page is skipped and the user will be taken directly to the Participant Checklist page.
+                        Note that for a user who participates in only one position, this page is skipped and the user will be taken directly to the Participant Checklist page.
                     </description>
                 </item>
                 <next section="plan-concepts" topic="plan-participation"/>
@@ -518,9 +582,9 @@
                 <item>
                     <description>The ''Participation Checklists'' page displays the combined collaboration checklists:
 
-                        * received by a user from participation as one specific agent (personalized checklists)
-                        * received by a user from full participation as many agents (personalized checklists)
-                        * of an agent based on that agent's assigned tasks and required communications (generic checklists)
+                        * given to a user for participation in a position (personalized checklists)
+                        * given to a user for all the positions the user participated in (personalized checklists)
+                        * for a position based solely on the assigned tasks and required communications (generic checklists - no contact information)
 
                         A checklist describes
 
@@ -551,7 +615,8 @@
                         from which robust checklists are generated that implement robust collaborations.
 
                         A collaboration templates forms the basis of collaboration plans where the identities of ''placeholder'
-                        organizations are given and where users are assigned to the agents defined in the templates.
+                        organizations are given and where users are assigned to the positions defined in the templates in terms of
+                        jobs given to agents in organizations.
 
                         A collaboration template specifies how various kinds of organizations ought to communicate and share
                         information to collaboratively prevent, respond to, or recover from a number of anticipated
