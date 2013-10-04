@@ -17,6 +17,7 @@ import com.mindalliance.channels.db.data.users.UserRecord;
 import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
+import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class ParticipationManagerImpl implements ParticipationManager {
 
     @Autowired
     private ParticipationAnalyst participationAnalyst;
+
+    @Autowired
+    private UserRecordService userRecordService;
 
 
     public ParticipationManagerImpl() {
@@ -645,4 +649,37 @@ public class ParticipationManagerImpl implements ParticipationManager {
         return new ArrayList<ChannelsUser>( participants );
     }
 
- }
+    @Override
+    public Boolean userHasJoinedCommunity( ChannelsUser user, CommunityService communityService ) {
+        String uri = communityService.getPlanCommunity().getUri();
+        return user.getUserRecord().getCommunitiesJoined().contains( uri ) // legacy - implied participation if planner
+                || user.isCommunityPlanner( uri )
+                || isUserParticipatingAsAgents( user, communityService ); // legacy - implied participation in plan when already participating as agent(s)
+    }
+
+    @Override
+    public boolean joinCommunity( ChannelsUser user, CommunityService communityService ) {
+        if ( userHasJoinedCommunity( user, communityService ) ) {
+            return false;
+        } else {
+            userRecordService.joinCommunity( user, communityService.getPlanCommunity() );
+            communityService.clearCache();
+            return true;
+        }
+    }
+
+    @Override
+    public boolean leaveCommunity( ChannelsUser user, CommunityService communityService ) {
+        if ( !userParticipationService.getUserParticipations( user, communityService ).isEmpty() ) {
+            return false;
+        } else {
+            userRecordService.leaveCommunity( user, communityService.getPlanCommunity() );
+            return true;
+        }
+    }
+
+    @Override
+    public Boolean isUserParticipatingAsAgents( ChannelsUser user, CommunityService communityService ) {
+        return !userParticipationService.getUserParticipations( user, communityService ).isEmpty();
+    }
+}

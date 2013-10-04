@@ -279,16 +279,16 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 } );
                 if ( selected ) item.add( new AttributeModifier( "class", "selected" ) );
                 // name
-                item.add( new Label( "agentName", selectedAgency.getJobTitleOf( agent, getCommunityService() ) ) );
+                item.add( new Label( "agentName", selectedAgency.getJobTitleOf( agent, true, getCommunityService() ) ) );
                 // metrics
                 Label metricsLabel = new Label( "metrics", getAgentMetrics( agent ) );
-                 boolean isDirectParticipation = participationManager.isDirectParticipationAllowed(
-                         agent,
-                         selectedAgency,
-                         getCommunityService() );
+                boolean isDirectParticipation = participationManager.isDirectParticipationAllowed(
+                        agent,
+                        selectedAgency,
+                        getCommunityService() );
                 if ( !isDirectParticipation ) {
                     CommunityEmployment employment =
-                            participationManager .findDirectParticipationEmploymentForParticipationAs(
+                            participationManager.findDirectParticipationEmploymentForParticipationAs(
                                     agent,
                                     getCommunityService() );
                     if ( employment != null ) {
@@ -360,7 +360,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 selectedAgency,
                 getCommunityService() );
         if ( !isDirectParticipation ) {
-            sb.append( ", linked");
+            sb.append( ", linked" );
         }
         return sb.toString();
     }
@@ -559,8 +559,15 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
     }
 
     private boolean isAcceptedParticipation( ChannelsUser user ) {
-        return selectedAgent != null
-                && userParticipationService.isUserParticipatingAs( user, selectedAgent, getCommunityService() );
+        if ( selectedAgent != null ) {
+            UserParticipation userParticipation = userParticipationService.getParticipation(
+                    user,
+                    selectedAgent,
+                    getCommunityService() );
+            return userParticipation != null && userParticipation.isAccepted();
+        } else {
+            return false;
+        }
     }
 
     private boolean isConfirmedParticipation( ChannelsUser user ) {
@@ -604,8 +611,11 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 }
             }
             List<ChannelsUser> nonParticipants = new ArrayList<ChannelsUser>();
+            CommunityService communityService = getCommunityService();
             for ( ChannelsUser user : userInfoService.getAllEnabledUsers() ) {
-                if ( !participants.contains( user ) && !isFilteredOut( user ) )
+                if ( !participants.contains( user )
+                        && participationManager.userHasJoinedCommunity( user, communityService )
+                        && !isFilteredOut( user ) )
                     nonParticipants.add( user );
             }
             Collections.sort( nonParticipants, new Comparator<ChannelsUser>() {

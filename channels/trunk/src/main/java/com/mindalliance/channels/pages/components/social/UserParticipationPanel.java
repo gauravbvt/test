@@ -85,6 +85,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
     private void resetAll() {
         addUserParticipationContainer();
         addUserRole();
+        addParticipatesInPlan();
         addOpenAndConfirmedParticipation();
         addNewParticipation();
         addToBeConfirmedParticipation();
@@ -103,6 +104,38 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         addOrReplace( userParticipationContainer );
     }
 
+    private void addParticipatesInPlan() {
+        String uri = getPlanCommunity().getUri();
+        boolean isPlanner = getUser().isCommunityPlanner( uri );
+        boolean participatesAsAgents = participationManager.isUserParticipatingAsAgents( getUser(), getCommunityService() );
+        WebMarkupContainer participatesInPlanContainer = new WebMarkupContainer( "participatesInPlanContainer" );
+        userParticipationContainer.add( participatesInPlanContainer );
+        String whyDisabled = isPlanner
+                ? "You can not leave this plan while you are a planner"
+                : participatesAsAgents
+                ? "You can not leave this plan while you participate in one or more positions"
+                : "";
+        if ( !whyDisabled.isEmpty() ) addTipTitle( participatesInPlanContainer, whyDisabled );
+        AjaxCheckBox participatesCheckBox = new AjaxCheckBox(
+                "participatesInPlan",
+                new PropertyModel<Boolean>( this, "participatesInPlan" )
+        ) {
+            @Override
+            protected void onUpdate( AjaxRequestTarget target ) {
+                resetAll();
+                target.add( userParticipationContainer );
+                update( target, new Change( Change.Type.Updated, getPlanCommunity(), "participation" ) );
+            }
+        };
+        participatesCheckBox.setEnabled( !isParticipatesInPlan() || !isPlanner && !participatesAsAgents );
+        participatesInPlanContainer.add(
+                makeHelpIcon(
+                        "helpParticipatesInPlan",
+                        "what-i-do",
+                        "participating-in-plan",
+                        "images/help_guide_gray.png" ) );
+        participatesInPlanContainer.add( participatesCheckBox );
+    }
 
     private void addOpenAndConfirmedParticipation() {
         List<ParticipationWrapper> participationWrappers = openAndConfirmedParticipationWrappers();
@@ -144,20 +177,20 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         };
         openAndConfirmedParticipationContainer.add( participationList );
         openAndConfirmedParticipationContainer.add( makeHelpIcon( "helpParticipateAs", "what-i-do", "my-participation", "images/help_guide_gray.png" ) );
-        openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
+        openAndConfirmedParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() && isUserParticipating() );
     }
 
     private void addNewParticipation() {
         List<ParticipationWrapper> participationWrappers = openAndConfirmedParticipationWrappers();
         WebMarkupContainer newParticipationContainer = new WebMarkupContainer( "newParticipationContainer" );
-        newParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
+        newParticipationContainer.setVisible( !getPlanCommunity().isDomainCommunity() && isUserParticipating() );
         userParticipationContainer.add( newParticipationContainer );
         newParticipationContainer.add(
                 new Label(
                         "newParticipationLabel",
                         participationWrappers.isEmpty()
-                                ? "I participate in"
-                                : "I also participate in" )
+                                ? "I participate"
+                                : "I also participate" )
         );
         WebMarkupContainer newParticipationControls = new WebMarkupContainer( "newParticipation" );
         newParticipationControls.setOutputMarkupId( true );
@@ -208,7 +241,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         if ( !planCommunity.isDomainCommunity() ) {
             for ( Agent agent : participationManager.findSelfAssignableOpenAgents( getCommunityService(), getUser() ) ) {
                 if ( agent.isUnconstrainedParticipation() ) {
-                    if ( !getCommunityService().getUserParticipationService().isUserParticipatingAs(
+                    if ( !getCommunityService().getUserParticipationService().isUserActivelyParticipatingAs(
                             getUser(),
                             agent,
                             getCommunityService() ) )
@@ -219,7 +252,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         return new ArrayList<UserParticipation>( participations );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<UserParticipation> unsupervisedParticipations() {
         return (List<UserParticipation>) CollectionUtils.select(
                 getCommunityService().getUserParticipationService().getUserParticipations(
@@ -233,7 +266,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 } );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private List<UserParticipation> confirmedSupervisedParticipations() {
         final UserParticipationConfirmationService userParticipationConfirmationService
                 = getCommunityService().getUserParticipationConfirmationService();
@@ -266,7 +299,9 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
         } else { // context is a plan community
             userRole = getCommunityService().isCommunityPlanner( user )
                     ? "collaboration planner"
-                    : "participant";
+                    : getCommunityService().getParticipationManager().userHasJoinedCommunity( user, getCommunityService() )
+                    ? "participant"
+                    : "potential participant";
         }
         return ( ChannelsUtils.startsWithVowel( userRole ) ? " an " : " a " ) + userRole + ".";
     }
@@ -368,7 +403,9 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                 new ChoiceRenderer<Agent>() {
                     @Override
                     public Object getDisplayValue( Agent agent ) {
-                        return agent.getActorName();
+                        return selectedAvailableParticipationAgency == null // should never happen
+                                ? agent.getActorName()
+                                : selectedAvailableParticipationAgency.getJobTitleOf( agent, false, getCommunityService() );
                     }
 
                     @Override
@@ -404,13 +441,15 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                     agents.add( agent );
                 }
             }
+            final CommunityService communityService = getCommunityService();
+            Collections.sort( agents, new Comparator<Agent>() {
+                @Override
+                public int compare( Agent a1, Agent a2 ) {
+                    return selectedAvailableParticipationAgency.getJobTitleOf( a1, true, communityService )
+                            .compareToIgnoreCase( selectedAvailableParticipationAgency.getJobTitleOf( a2, true, communityService ) );
+                }
+            } );
         }
-        Collections.sort( agents, new Comparator<Agent>() {
-            @Override
-            public int compare( Agent a1, Agent a2 ) {
-                return a1.getName().compareToIgnoreCase( a2.getName() );
-            }
-        } );
         return agents;
     }
 
@@ -518,6 +557,24 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
 
     private boolean isAgentAvailableForParticipation( Agent agent ) {
         return participationManager.isParticipationSelfAssignable( agent, getUser(), getCommunityService() );
+    }
+
+    public boolean isParticipatesInPlan() {
+        return getCommunityService().getParticipationManager()
+                .userHasJoinedCommunity( getUser(), getCommunityService() );
+    }
+
+    public void setParticipatesInPlan( boolean val ) {
+        if ( val ) {
+            getCommunityService().getParticipationManager().joinCommunity( getUser(), getCommunityService() );
+        } else {
+            getCommunityService().getParticipationManager().leaveCommunity( getUser(), getCommunityService() );
+        }
+    }
+
+    private boolean isUserParticipating() {
+        return getCommunityService().getParticipationManager()
+                .userHasJoinedCommunity( getUser(), getCommunityService() );
     }
 
     public class ParticipationWrapper implements Serializable {

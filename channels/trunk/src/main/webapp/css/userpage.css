@@ -2848,6 +2848,12 @@ div.participation div.participation-table-cont a {
     width: 200px;
 }
 
+div.participation div.participation-table-cont a span,
+div.participationManager div.participation-table-cont a span { /* Account for vertical scrollbar */
+    display: block;
+    width: 183px;
+}
+
 div.participation.org div.participation-table-cont a {
 	width: 362px;
 }

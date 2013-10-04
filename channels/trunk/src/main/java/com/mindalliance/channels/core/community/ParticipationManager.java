@@ -344,4 +344,36 @@ public interface ParticipationManager {
      * @return a list of users
      */
     List<ChannelsUser> findAllUsersParticipatingAs( Agent agent, CommunityService communityService );
+
+    /**
+     * Whether a given user has joined a given plan community.
+     * @param user a channels user
+     * @param communityService a community service
+     * @return a boolean
+     */
+    Boolean userHasJoinedCommunity( ChannelsUser user, CommunityService communityService );
+
+    /**
+     * Have a given user join a given community.
+     * @param user a channels user
+     * @param communityService a community service
+     * @return whether successful
+     */
+    boolean joinCommunity( ChannelsUser user, CommunityService communityService );
+
+    /**
+     * Have a given user leave a given community (if not participating yet).
+     * @param user a channels user
+     * @param communityService a community service
+     * @return whether successful
+     */
+    boolean leaveCommunity( ChannelsUser user, CommunityService communityService );
+
+    /**
+     * Whether a given user is participating in a community as one or more agents.
+     * @param user a channels user
+     * @param communityService a community service
+     * @return a boolean
+     */
+    Boolean isUserParticipatingAsAgents( ChannelsUser user, CommunityService communityService );
 }

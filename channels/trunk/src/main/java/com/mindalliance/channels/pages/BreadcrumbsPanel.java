@@ -1,8 +1,7 @@
 package com.mindalliance.channels.pages;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -38,12 +37,16 @@ public class BreadcrumbsPanel extends Panel {
     }
 
     private void addHomeInPath() {
-        AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
+        BookmarkablePageLink<String> homeLink = new BookmarkablePageLink<String>(
+                "homeLink",
+                HomePage.class,
+                new PageParameters()  );
+       /* AjaxLink<String> homeLink = new AjaxLink<String>( "homeLink" ) {
             @Override
             public void onClick( AjaxRequestTarget target ) {
                 setResponsePage( HomePage.class, new PageParameters() );
             }
-        };
+        };*/
         add( homeLink );
     }
 

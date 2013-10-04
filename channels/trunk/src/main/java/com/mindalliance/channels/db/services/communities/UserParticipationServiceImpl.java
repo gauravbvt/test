@@ -486,7 +486,7 @@ public class UserParticipationServiceImpl
     }
 
     @Override
-    public Boolean isUserParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService ) {
+    public Boolean isUserActivelyParticipatingAs( ChannelsUser user, Agent agent, CommunityService communityService ) {
         return listAgentsUserParticipatesAs( user, communityService ).contains( agent );
     }
 

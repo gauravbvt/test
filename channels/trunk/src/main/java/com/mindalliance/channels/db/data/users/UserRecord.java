@@ -94,6 +94,8 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
 
     private List<ContactInfo> contactInfoList = new ArrayList<ContactInfo>();
 
+    private List<String> communitiesJoined = new ArrayList<String>();
+
     public UserRecord() {
     }
 
@@ -217,6 +219,14 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
 
     public void setContactInfoList( List<ContactInfo> contactInfoList ) {
         this.contactInfoList = contactInfoList;
+    }
+
+    public List<String> getCommunitiesJoined() {
+        return communitiesJoined == null ? new ArrayList<String>(  ) : communitiesJoined;
+    }
+
+    public void setCommunitiesJoined( List<String> communitiesJoined ) {
+        this.communitiesJoined = communitiesJoined;
     }
 
     static public String digestPassword( String password ) {
@@ -565,5 +575,13 @@ public class UserRecord extends AbstractChannelsDocument implements Messageable 
                 && CollectionUtils.isEqualCollection( getContactInfoList(), other.getContactInfoList() );
     }
 
+    public void leaveCommunity( String uri ) {
+        communitiesJoined.remove( uri );
+    }
+
+    public void joinCommunity( String uri ) {
+        if ( !communitiesJoined.contains( uri ) )
+            communitiesJoined.add( uri );
+    }
 }
 

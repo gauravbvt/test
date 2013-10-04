@@ -505,7 +505,7 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         return !isFixedOrganization() && !getRegisteredOrganization().isLocal();
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<Job> getAllJobsFor( Agent agent, CommunityService communityService ) {
         final Actor actor = agent.getActor();
         return (List<Job>) CollectionUtils.select(
@@ -519,13 +519,14 @@ public class Agency extends AbstractUnicastChannelable implements Nameable, Iden
         );
     }
 
-    public String getJobTitleOf( Agent agent, CommunityService communityService ) { // Assumes agent works for the agency
-        if ( getRegisteredOrganization() != null ) {
-            return agent.getName();
-        } else {
-            String jobTitle = Agent.selectJobTitleFrom( getAllJobsFor( agent, communityService ) );
-            return jobTitle.isEmpty() ? agent.getName() : jobTitle;
-        }
+    public String getJobTitleOf( Agent agent, boolean includeEmployer, CommunityService communityService ) { // Assumes agent works for the agency
+        String jobTitle = Agent.selectJobTitleFrom( getAllJobsFor( agent, communityService ) );
+        return jobTitle.isEmpty()
+                ? agent.getName()
+                : includeEmployer
+                ? ( jobTitle + " at " + getName() )
+                : jobTitle;
     }
+
 }
 

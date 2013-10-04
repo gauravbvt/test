@@ -260,4 +260,18 @@ public interface UserRecordService extends DataService<UserRecord>, UserDetailsS
      * @param planCommunity a plan community
      */
     void addFounder( ChannelsUser founder, PlanCommunity planCommunity );
+
+    /**
+     * Have user join a given community.
+     * @param user a channels user
+     * @param planCommunity a plan community
+     */
+    void joinCommunity( ChannelsUser user, PlanCommunity planCommunity );
+
+    /**
+     * Have user leave a given community.
+     * @param user a channels user
+     * @param planCommunity a plan community
+     */
+    void leaveCommunity( ChannelsUser user,  PlanCommunity planCommunity );
 }

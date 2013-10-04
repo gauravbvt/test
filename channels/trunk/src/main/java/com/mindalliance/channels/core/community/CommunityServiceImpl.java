@@ -431,7 +431,7 @@ public class CommunityServiceImpl implements CommunityService {
         if ( user.isPlannerOrAdmin( getPlan().getUri() ) ) return true;
         Actor custodian = placeholder.getCustodian();
         return custodian != null
-                && getUserParticipationService().isUserParticipatingAs( user, new Agent( custodian ), this );
+                && getUserParticipationService().isUserActivelyParticipatingAs( user, new Agent( custodian ), this );
     }
 
 

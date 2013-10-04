@@ -8,6 +8,13 @@
 <body>
 <wicket:panel>
     <div class="userInfo" wicket:id="userParticipation">
+        <div wicket:id="participatesInPlanContainer" class="tabcontent-group">
+            <h3>
+                <input wicket:id="participatesInPlan" type="checkbox"/>
+                I participate in this plan
+                <img wicket:id = "helpParticipatesInPlan" class="help-icon"/>
+            </h3>
+        </div>
         <div wicket:id="myPrivileges" class="tabcontent-group">
             <h3>
                 My user privileges
@@ -40,7 +47,7 @@
                 <img wicket:id = "helpNewParticipation" class="help-icon"/>
             </h3>
             <div class="tabcontent-content" wicket:id="newParticipation">
-                <select wicket:id="agencies">
+                in <select wicket:id="agencies">
                     <option>org</option>
                 </select>
                 <div wicket:id="asAgent">

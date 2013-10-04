@@ -1,5 +1,6 @@
 package com.mindalliance.channels.pages.components.community;
 
+import com.mindalliance.channels.core.community.CommunityServiceFactory;
 import com.mindalliance.channels.core.community.PlanCommunity;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
@@ -42,6 +43,8 @@ public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
     private PlanCommunityManager planCommunityManager;
     @SpringBean
     private UserParticipationService userParticipationManager;
+    @SpringBean
+    private CommunityServiceFactory communityServiceFactory;
 
     private AllCollaborationPlansTable collaborationPlansTable;
     private Plan selectedProductionTemplate;
@@ -159,8 +162,8 @@ public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
 
         private PlanCommunity collaborationPlan;
 
-        public CollaborationPlanWrapper( PlanCommunity CollaborationPlan ) {
-            this.collaborationPlan = CollaborationPlan;
+        public CollaborationPlanWrapper( PlanCommunity collaborationPlan ) {
+            this.collaborationPlan = collaborationPlan;
         }
 
         public PlanCommunity getCollaborationPlan() {
@@ -177,12 +180,11 @@ public class AllCollaborationPlansPanel extends AbstractCommandablePanel {
             return getPlanManager().getPlan( collaborationPlan.getPlanUri(), collaborationPlan.getPlanVersion() );
         }
 
-        public String getUserParticipates() {
-            return userParticipationManager.getUserParticipations(
-                    getUser(),
-                    getCommunityService( collaborationPlan ) ).isEmpty()
-                    ? "No"
-                    : "Yes";
+        public String getUserParticipates(  ) {
+            return getCommunityService().getParticipationManager()
+                    .userHasJoinedCommunity( getUser(), communityServiceFactory.getService( collaborationPlan ) )
+                    ? "Yes"
+                    : "No";
         }
 
         public String getCollaborationPlanUrl() {

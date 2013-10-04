@@ -212,8 +212,9 @@ public class Agent implements Nameable, Identifiable {
                         } );
             }
             return job == null
-                    ? actorJobs.get(0).getTitle() // last resort: pick role-as-tile from first job (all linked)
-                    : job.getTitle();
+                    ? actorJobs.get(0).getTitle( ) // last resort: pick role-as-tile from first job (all linked)
+                    : job.getTitle( );
         }
     }
+
 }

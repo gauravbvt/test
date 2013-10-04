@@ -78,7 +78,7 @@ public class UserRecordServiceImpl
 
     @Override
     public ChannelsUser createUser( String username, String name, String email, CommunityService communityService ) throws DuplicateKeyException {
-        if (  !getAllUserRecordsOf( name ).isEmpty() || ( !email.isEmpty() &&  !getAllUserRecordsOf( email ).isEmpty() ) )
+        if ( !getAllUserRecordsOf( name ).isEmpty() || ( !email.isEmpty() && !getAllUserRecordsOf( email ).isEmpty() ) )
             throw new DuplicateKeyException();
         else
             return new ChannelsUser( createUserRecord( username, name, "", name, email, communityService ) );
@@ -143,7 +143,7 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public ChannelsUser getUserWithIdentity( String identifier ) {
         if ( identifier == null ) return null;
         List<UserRecord> userRecords = (List<UserRecord>) CollectionUtils.select(
@@ -199,7 +199,7 @@ public class UserRecordServiceImpl
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public List<ChannelsUser> findAllUsersWithFullName( final String name, String uri ) {
         return (List<ChannelsUser>) CollectionUtils.select(
                 getUsers( uri ),
@@ -487,6 +487,7 @@ public class UserRecordServiceImpl
             // List<ChannelsUser> planners = getCommunityPlanners( planCommunity.getUri() );
             UserRecord userRecord = founder.getUserRecord();
             userRecord.makePlannerOf( planCommunity.getUri() );
+            userRecord.joinCommunity( planCommunity.getPlanUri() );
             userRecord.makeParticipantOf( planCommunity.getPlanUri() );
             save( userRecord );
             CommunityService communityService = communityServiceFactory.getService( planCommunity );
@@ -494,6 +495,25 @@ public class UserRecordServiceImpl
         }
     }
 
+    @Override
+    public void joinCommunity( ChannelsUser user, PlanCommunity planCommunity  ) {
+        synchronized ( planCommunity ) {
+            UserRecord userRecord = user.getUserRecord();
+            String uri = planCommunity.getUri();
+            userRecord.joinCommunity( uri );
+            save( userRecord );
+        }
+    }
+
+    @Override
+    public void leaveCommunity( ChannelsUser user, PlanCommunity planCommunity ) {
+        synchronized ( planCommunity ) {
+            UserRecord userRecord = user.getUserRecord();
+            String uri = planCommunity.getUri();
+            userRecord.leaveCommunity( uri );
+            save( userRecord );
+        }
+    }
 
     ///////// MESSAGEABLE
 
