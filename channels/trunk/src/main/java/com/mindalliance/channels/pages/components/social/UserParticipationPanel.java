@@ -134,6 +134,7 @@ public class UserParticipationPanel extends AbstractSocialListPanel {
                         "what-i-do",
                         "participating-in-plan",
                         "images/help_guide_gray.png" ) );
+        participatesInPlanContainer.setVisible( !getPlanCommunity().isDomainCommunity() );
         participatesInPlanContainer.add( participatesCheckBox );
     }
 

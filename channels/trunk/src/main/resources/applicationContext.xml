@@ -318,6 +318,7 @@ CONFIGURATION NOTES:
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorHasPrimaryJobsWithManyOrgs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.ActorOnlyHasLinkedJobs"/>
                 <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationWithMultiParticipationHasLinkedJobs"/>
+                <bean class="com.mindalliance.channels.engine.analysis.detectors.OrganizationGivesActorMultipleTitles"/>
             </list>
         </property>
     </bean>

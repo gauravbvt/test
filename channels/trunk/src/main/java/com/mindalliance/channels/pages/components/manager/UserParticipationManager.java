@@ -587,7 +587,7 @@ public class UserParticipationManager extends AbstractUpdatablePanel {
                 user,
                 selectedAgent,
                 getCommunityService() );
-        if ( userParticipation == null ) return "?";
+        if ( userParticipation == null ) return "-";
         if ( userParticipation.isSupervised( getCommunityService() ) ) {
             return userParticipationConfirmationService
                     .isConfirmedByAllSupervisors( userParticipation, getCommunityService() )
