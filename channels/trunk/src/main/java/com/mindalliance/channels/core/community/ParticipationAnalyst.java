@@ -127,12 +127,13 @@ public interface ParticipationAnalyst {
 
     /**
      * Diagnostic about whether a commitment can be realized or is conceptual.
+     * Analysis based entirely on plan definition.
      *
-     * @param commitment    an info sharing commitment in a plan community
+     * @param communityCommitment    an info sharing commitment in a plan community
      * @param communityService a plan community service
      * @return a string
      */
-    String realizability( CommunityCommitment commitment, CommunityService communityService );
+    String realizability( CommunityCommitment communityCommitment, CommunityService communityService );
 
 
 }

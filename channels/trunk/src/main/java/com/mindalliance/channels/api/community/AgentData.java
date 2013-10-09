@@ -3,7 +3,6 @@ package com.mindalliance.channels.api.community;
 import com.mindalliance.channels.api.entities.ActorData;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
-import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
@@ -39,10 +38,7 @@ public class AgentData implements Serializable {
         singular = agent.isSingularParticipation();
         supervised = agent.isSupervisedParticipation();
         actor = new ActorData( serverUrl, agent.getActor(), communityService );
-        OrganizationParticipation orgParticipation = agent.getOrganizationParticipation();
-        if ( orgParticipation != null ) {
-            agencyName = orgParticipation.getRegisteredOrganization( communityService ).getName( communityService );
-        }
+        agencyName = agent.getAgency().getName();
     }
 
     @XmlElement

@@ -25,7 +25,7 @@ import java.util.Set;
  * Date: 4/5/13
  * Time: 9:14 AM
  */
-@XmlType(propOrder = {"name", "registeredByCommunity", "registeredGlobally", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationIds", "documentation"})
+@XmlType(propOrder = {"name", "local", "registeredGlobally", "description", "mission", "address", "channels", "parentName", "employments", "planOrganizationIds", "documentation"})
 public class AgencyData implements Serializable {
 
     private Agency agency;
@@ -34,7 +34,7 @@ public class AgencyData implements Serializable {
     private List<ChannelData> channelDataList;
     private List<Long> planOrganizationIds;
     private AgencyData parentData;
-    private boolean registeredByCommunity;
+    private boolean local;
     private boolean registeredGlobally;
     private DocumentationData documentationData;
 
@@ -44,13 +44,13 @@ public class AgencyData implements Serializable {
 
     public AgencyData( String serverUrl, Agency agency, CommunityService communityService ) {
         this.agency = agency;
-        registeredByCommunity = agency.isRegisteredByCommunity(  );
+        local = agency.isLocal(  );
         initPlanOrganization( serverUrl, communityService );
         initChannels( serverUrl, communityService );
         initParent( serverUrl, communityService );
         initEmployments( serverUrl, communityService );
         if ( agency.isFixedOrganization() ) { // todo - always use agency documentation data?
-            documentationData = new DocumentationData( serverUrl, agency.getFixedOrganization() );
+            documentationData = new DocumentationData( serverUrl, agency.getRegisteredOrganization().getFixedOrganization( communityService ) );
         } else {
             documentationData = new DocumentationData( serverUrl, agency );
         }
@@ -95,8 +95,8 @@ public class AgencyData implements Serializable {
     }
 
     @XmlElement
-    public boolean getRegisteredByCommunity() {
-        return registeredByCommunity;
+    public boolean getLocal() {
+        return local;
     }
 
     @XmlElement

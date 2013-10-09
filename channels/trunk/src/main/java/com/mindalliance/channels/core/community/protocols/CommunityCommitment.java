@@ -40,15 +40,6 @@ public class CommunityCommitment implements Serializable {
         return sharing;
     }
 
-    public Commitment getCommitment() {
-        return new Commitment(
-                committer.getAssignment(),
-                beneficiary.getAssignment(),
-                sharing
-        );
-    }
-
-
     public boolean isToSelf() {
         return committer.getAgent().equals( beneficiary.getAgent() );
     }
@@ -86,5 +77,11 @@ public class CommunityCommitment implements Serializable {
 
     public boolean isInSituation( Phase.Timing timing, Event event, Place locale ) {
         return sharing.getSegment().isInSituation( timing, event, locale );
+    }
+
+    public Commitment getCommitment() {
+        return new Commitment( getCommitter().getAssignment(),
+                getBeneficiary().getAssignment(),
+                sharing );
     }
 }

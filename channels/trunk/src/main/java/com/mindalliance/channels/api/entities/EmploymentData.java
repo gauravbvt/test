@@ -18,7 +18,7 @@ import java.util.Set;
  * Time: 10:27 AM
  */
 @XmlType( propOrder = {"agentName", "agencyName", "supervisorName", "actorId", "organizationIds", "title",
-        "roleId", "jurisdictionId", "supervisorId", "confirmed"} )
+        "roleId", "jurisdictionId", "supervisorId"} )
 public class EmploymentData implements Serializable {
 
     private CommunityEmployment employment;
@@ -80,11 +80,6 @@ public class EmploymentData implements Serializable {
                 : null;
     }
 
-    @XmlElement
-    public Boolean getConfirmed() {
-        return employment.isConfirmed();
-    }
-
     @XmlElement( name="organizationId")
     public List<Long> getOrganizationIds() {
         return employment.getEmployer().getOrganizationIds();
@@ -104,11 +99,7 @@ public class EmploymentData implements Serializable {
 
     public String getLabel() {
         Agent agent = employment.getAgent();
-        if ( agent.isFromOrganizationParticipation() ) {
-            return agent.getName();
-        } else {
-            return agent.getName() + " for " + employment.getEmployer().getName();
-        }
+        return agent.getName();
     }
 
    @Override

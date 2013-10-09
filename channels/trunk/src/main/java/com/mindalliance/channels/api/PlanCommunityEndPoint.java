@@ -205,14 +205,16 @@ public interface PlanCommunityEndPoint {
                             @PathParam( "address" ) String address );
 
     @PUT
-    @Path( "community/{uri}/agent/{agentId}/participation" )
+    @Path( "community/{uri}/agent/{agentId}/agency/{orgId}/participation" )
     void acceptParticipation( @PathParam( "uri" ) String communityUri,
-                              @PathParam( "agentId" ) String agentId );
+                              @PathParam( "agentId" ) String agentId,
+                              @PathParam( "orgId") String orgId );
 
     @DELETE
-    @Path( "community/{uri}/agent/{agentId}/participation" )
+    @Path( "community/{uri}/agent/{agentId}/agency/{orgId}/participation" )
     void refuseParticipation( @PathParam( "uri" ) String communityUri,
-                              @PathParam( "agentId" ) String agentId );
+                              @PathParam( "agentId" ) String agentId,
+                              @PathParam( "orgId") String orgId );
 
 
     /////////

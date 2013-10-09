@@ -38,7 +38,7 @@ public class CommunityAssignments implements Iterable<CommunityAssignment>, Seri
     public CommunityAssignments with( Agent agent ) {
         CommunityAssignments result = new CommunityAssignments( locale );
         for ( CommunityAssignment assignment : this ) {
-            if ( assignment.getEmployment().getAgent().equals( agent ) ) {
+            if ( assignment.getCommunityEmployment().getAgent().equals( agent ) ) {
                 result.add( assignment );
             }
         }

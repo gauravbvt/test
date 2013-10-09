@@ -309,13 +309,13 @@ public class ContactData implements Serializable {
                 communityService.findAllBypassCommitments( commitment.getSharing() );
         for ( CommunityCommitment bypassCommitment : bypassCommitments ) {
             if ( commitment().getSharing().isNotification() ) {
-                if ( bypassCommitment.getCommitter().getEmployment().equals( contactedEmployment() ) ) {
-                    bypassEmployments.add( bypassCommitment.getBeneficiary().getEmployment() );
+                if ( bypassCommitment.getCommitter().getCommunityEmployment().equals( contactedEmployment() ) ) {
+                    bypassEmployments.add( bypassCommitment.getBeneficiary().getCommunityEmployment() );
                     bypassToAll = bypassToAll || bypassCommitment.getSharing().isAll();
                 }
             } else { // a request
-                if ( bypassCommitment.getBeneficiary().getEmployment().equals( contactedEmployment() ) ) {
-                    bypassEmployments.add( bypassCommitment.getCommitter().getEmployment() );
+                if ( bypassCommitment.getBeneficiary().getCommunityEmployment().equals( contactedEmployment() ) ) {
+                    bypassEmployments.add( bypassCommitment.getCommitter().getCommunityEmployment() );
                     bypassToAll = bypassToAll || bypassCommitment.getSharing().isAll();
                 }
             }

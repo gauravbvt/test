@@ -78,7 +78,7 @@ public class AssignmentData extends AbstractProcedureElementData {
                     for ( ContactData contactData :
                             ContactData.findContactsFromEmployment(
                                     serverUrl,
-                                    teamAssignment.getEmployment(),
+                                    teamAssignment.getCommunityEmployment(),
                                     communityService ) ) {
                         teamContacts.add( contactData );
                     }
@@ -165,17 +165,17 @@ public class AssignmentData extends AbstractProcedureElementData {
         StringBuilder sb = new StringBuilder();
         sb.append( getAssignment().getPart().getTask() );
         sb.append( "\" as " );
-        sb.append( getAssignment().getEmployment().getLabel() );
+        sb.append( getAssignment().getCommunityEmployment().getLabel() );
         return sb.toString();
     }
 
 
     public String getTitle() {
-        return getAssignment().getEmployment().getTitle();
+        return getAssignment().getCommunityEmployment().getTitle();
     }
 
     public String getAgencyLabel() {
-        return getAssignment().getEmployment().getEmployer().getName();
+        return getAssignment().getCommunityEmployment().getEmployer().getName();
     }
 
     @XmlElement

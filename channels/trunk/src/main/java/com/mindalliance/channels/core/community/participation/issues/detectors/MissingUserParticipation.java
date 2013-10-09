@@ -1,12 +1,12 @@
 package com.mindalliance.channels.core.community.participation.issues.detectors;
 
-import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssue;
 import com.mindalliance.channels.core.community.participation.issues.ParticipationIssueDetector;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
 import com.mindalliance.channels.core.model.Identifiable;
+import com.mindalliance.channels.db.data.communities.UserParticipation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -38,13 +38,17 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
 
     @Override
     public List<ParticipationIssue> detectIssues( Identifiable identifiable, CommunityService communityService ) {
-        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>(  );
-        Actor actor = (Actor)identifiable;
+        List<ParticipationIssue> issues = new ArrayList<ParticipationIssue>();
+        final Actor actor = (Actor) identifiable;
         if ( isEmployedByFixedOrganization( actor, communityService ) ) {
-            int count = communityService.getUserParticipationService().findUsersParticipatingAs(
-                    new Agent( actor ),
-                    communityService
-            ).size();
+            int count = CollectionUtils.select(
+                    communityService.getUserParticipationService().getAllParticipations( communityService ),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (UserParticipation) object ).getActorId() == actor.getId();
+                        }
+                    } ).size();
             if ( count == 0 ) {
                 ParticipationIssue issue = new ParticipationIssue( actor, this );
                 issue.setDescription( "No user participates as " + actor.getName() );
@@ -61,7 +65,7 @@ public class MissingUserParticipation implements ParticipationIssueDetector {
                 new Predicate() {
                     @Override
                     public boolean evaluate( Object object ) {
-                        return !( (Employment)object ).getOrganization().isPlaceHolder();
+                        return !( (Employment) object ).getOrganization().isPlaceHolder();
                     }
                 } );
     }

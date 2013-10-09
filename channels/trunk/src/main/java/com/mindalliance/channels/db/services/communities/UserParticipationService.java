@@ -63,6 +63,8 @@ public interface UserParticipationService extends DataService<UserParticipation>
 
     List<String> listSupervisorsToNotify( UserParticipation userParticipation, CommunityService communityService );
 
+    List<UserRecord> findUsersActivelyParticipatingAs( Agent agent, CommunityService communityService );
+
     List<UserRecord> findUsersParticipatingAs( Agent agent, CommunityService communityService );
 
     Boolean deleteParticipation( ChannelsUser user, Agent agent, CommunityService communityService );

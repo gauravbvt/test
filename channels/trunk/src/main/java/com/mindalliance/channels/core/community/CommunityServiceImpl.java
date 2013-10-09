@@ -335,7 +335,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public List<Issue> listUserIssues( final ModelObject modelObject ) {
         return (List<Issue>) CollectionUtils.select(
                 list( UserIssue.class ),
@@ -396,29 +396,21 @@ public class CommunityServiceImpl implements CommunityService {
     public CommunityAssignments getAllAssignments() {
         CommunityAssignments assignments = new CommunityAssignments( getCommunityLocale() );
         List<Agent> allAgents = getParticipationManager().getAllKnownAgents( this );
-        for ( Assignment planAssignment : getPlanService().getAssignments( false, false ) ) {
-            Actor actor = planAssignment.getActor();
-            Organization employer = planAssignment.getOrganization();
+        for ( Assignment assignment : getPlanService().getAssignments( false, false ) ) {
+            Actor assignmentActor = assignment.getActor();
+            Organization employerOrganization = assignment.getOrganization();
             for ( Agent agent : allAgents ) {
-                if ( agent.getActor().equals( actor ) ) {
-                    CommunityEmployment employment;
-                    if ( agent.isRegisteredInPlaceholder( employer, this ) ) {
-                        employment = new CommunityEmployment(
-                                planAssignment.getEmployment(),
+                if ( agent.getActor().equals( assignmentActor ) ) {
+                    if ( agent.getAgency().participatesAs( employerOrganization ) ) {
+                        CommunityEmployment employment = new CommunityEmployment(
+                                assignment.getEmployment().getJob(),
                                 agent,
-                                new Agency( agent.getOrganizationParticipation(), this ),
                                 this );
-                    } else {
-                        employment = new CommunityEmployment(
-                                planAssignment.getEmployment(),
-                                agent,
-                                new Agency( employer, this ),
-                                this );
+                        CommunityAssignment communityAssignment = new CommunityAssignment(
+                                employment,
+                                assignment.getPart() );
+                        assignments.add( communityAssignment );
                     }
-                    CommunityAssignment assignment = new CommunityAssignment(
-                            employment,
-                            planAssignment.getPart() );
-                    assignments.add( assignment );
                 }
             }
         }
@@ -429,13 +421,20 @@ public class CommunityServiceImpl implements CommunityService {
     public boolean isCustodianOf( ChannelsUser user, Organization placeholder ) {
         if ( !placeholder.isPlaceHolder() ) return false;
         if ( user.isPlannerOrAdmin( getPlan().getUri() ) ) return true;
-        Actor custodian = placeholder.getCustodian();
+        final Actor custodian = placeholder.getCustodian();
         return custodian != null
-                && getUserParticipationService().isUserActivelyParticipatingAs( user, new Agent( custodian ), this );
+                && CollectionUtils.exists(
+                getUserParticipationService().listAgentsUserParticipatesAs( user, this ),
+                new Predicate() {
+                    @Override
+                    public boolean evaluate( Object object ) {
+                        return ((Agent)object).getActor().equals( custodian );
+                    }
+                } );
     }
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     @Override
     public CommunityCommitments findAllBypassCommitments( final Flow flow ) {
         assert flow.isSharing();
@@ -474,7 +473,8 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public void clearCache() {
-        // do nothing - AOP advice does the work.
+        //  AOP advice does some work.
+        getParticipationManager().clearCache();
     }
 
     @Override

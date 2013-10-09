@@ -3,6 +3,7 @@ package com.mindalliance.channels.core.community.protocols;
 import com.mindalliance.channels.core.community.Agency;
 import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
+import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.AssignedLocation;
 import com.mindalliance.channels.core.model.Assignment;
 import com.mindalliance.channels.core.model.EventPhase;
@@ -25,16 +26,16 @@ import java.util.List;
  */
 public class CommunityAssignment implements Serializable {
 
-    private CommunityEmployment employment;
+    private CommunityEmployment communityEmployment;
     private Part part;
 
-    public CommunityAssignment( CommunityEmployment employment, Part part ) {
-        this.employment = employment;
+    public CommunityAssignment( CommunityEmployment communityEmployment, Part part ) {
+        this.communityEmployment = communityEmployment;
         this.part = part;
     }
 
-    public CommunityEmployment getEmployment() {
-        return employment;
+    public CommunityEmployment getCommunityEmployment() {
+        return communityEmployment;
     }
 
     public Part getPart() {
@@ -42,7 +43,7 @@ public class CommunityAssignment implements Serializable {
     }
 
     public Agency getAgency() {
-        return employment.getEmployer();
+        return communityEmployment.getEmployer();
     }
 
     /**
@@ -55,9 +56,9 @@ public class CommunityAssignment implements Serializable {
         if ( assignedLocation.isNamed() )
             return assignedLocation.getNamedPlace();
         else if ( assignedLocation.isAgentJurisdiction() )
-            return getEmployment().getJurisdiction();
+            return getCommunityEmployment().getJurisdiction();
         else if ( assignedLocation.isOrganizationJurisdiction() )
-            return getAgency().getJurisdiction( getAgent().getOrganizationParticipation(), communityService );
+            return getAgency().getJurisdiction( communityService );
         else
             return null;
     }
@@ -80,19 +81,19 @@ public class CommunityAssignment implements Serializable {
 
 
     public Agent getAgent() {
-        return employment.getAgent();
+        return communityEmployment.getAgent();
     }
 
     public Agent getSupervisor() {
-        return employment.getSupervisor();
+        return communityEmployment.getSupervisor();
     }
 
     public Role getRole() {
-        return employment.getRole();
+        return communityEmployment.getRole();
     }
 
     public Place getJurisdiction() {
-        return employment.getJurisdiction();
+        return communityEmployment.getJurisdiction();
     }
 
     public Subject getCommunicatedLocation() {
@@ -107,7 +108,7 @@ public class CommunityAssignment implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( employment.toString() );
+        sb.append( communityEmployment.toString() );
         sb.append( ", doing task \"" );
         sb.append( part.getTask() );
         sb.append( '\"' );
@@ -119,21 +120,26 @@ public class CommunityAssignment implements Serializable {
     public boolean equals( Object obj ) {
         if ( !( obj instanceof CommunityAssignment ) ) return false;
         CommunityAssignment other = (CommunityAssignment) obj;
-        return employment.equals( other.getEmployment() )
+        return communityEmployment.equals( other.getCommunityEmployment() )
                 && part.equals( other.getPart() );
     }
 
     @Override
     public int hashCode() {
         int hash = 1;
-        hash = hash * 31 + employment.hashCode();
+        hash = hash * 31 + communityEmployment.hashCode();
         hash = hash * 31 + part.hashCode();
         return hash;
     }
 
-    public Assignment getAssignment() {
-        return new Assignment( employment.getEmployment(), part );
+    public Actor getActor() {
+        return communityEmployment.getAgent().getActor();
     }
+
+    public Assignment getAssignment() {
+        return new Assignment( communityEmployment.getEmployment(), part );
+    }
+
 
     //////////////////
 }

@@ -98,7 +98,7 @@ public class CommunityDefinitionManager implements InitializingBean, Iterable<Co
             try {
                 save();
             } catch ( IOException e ) {
-                LOG.error( "Unable to save definitions", e );
+                LOG.error( "Unable to save definition", e );
             }
         }
     };

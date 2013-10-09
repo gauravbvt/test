@@ -166,7 +166,7 @@ public class CommunityCommitments implements Iterable<CommunityCommitment>, Seri
     public CommunityCommitments inSituation( Phase.Timing timing, Event event, Place planLocale ) {
         CommunityCommitments result = new CommunityCommitments( locale );
         for ( CommunityCommitment communityCommitment : this ) {
-            if ( communityCommitment.getCommitment().isInSituation( timing, event, planLocale ) )
+            if ( communityCommitment.isInSituation( timing, event, planLocale ) )
                 result.add( communityCommitment );
         }
         return result;

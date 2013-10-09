@@ -715,8 +715,7 @@ public abstract class AbstractChannelsWebPage extends WebPage implements Updatab
         parameters.set( COLLAB_PLAN_PARM, getPlanCommunityUri() );
         parameters.set( USER, username );
         parameters.set( AGENT, agent.getId() );
-        if ( agent.getOrganizationParticipation() != null )
-            parameters.set( ORG, agent.getOrganizationParticipation().getUid() );
+        parameters.set( ORG, agent.getAgency().getRegisteredOrganizationUid() );
         return parameters;
     }
 

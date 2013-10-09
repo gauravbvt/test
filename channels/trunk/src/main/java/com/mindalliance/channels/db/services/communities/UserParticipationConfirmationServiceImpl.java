@@ -4,8 +4,8 @@ import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
-import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.QUserParticipationConfirmation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.communities.UserParticipationConfirmation;
 import com.mindalliance.channels.db.repositories.UserParticipationConfirmationRepository;
@@ -16,6 +16,7 @@ import org.apache.commons.collections.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class UserParticipationConfirmationServiceImpl
     private ParticipationManager participationManager;
 
     @Autowired
-    private OrganizationParticipationService organizationParticipationService;
+    private RegisteredOrganizationService registeredOrganizationService;
 
     public UserParticipationConfirmationServiceImpl() {
     }
@@ -96,23 +97,26 @@ public class UserParticipationConfirmationServiceImpl
     public List<UserParticipationConfirmation> getParticipationConfirmations(
             Agent supervisor,
             CommunityService communityService ) {
-        OrganizationParticipation supervisorParticipation = supervisor.getOrganizationParticipation();
-        QUserParticipationConfirmation qUserParticipationConfirmation
-                = QUserParticipationConfirmation.userParticipationConfirmation;
-        BooleanBuilder bb = new BooleanBuilder();
-        bb.and( qUserParticipationConfirmation.classLabel.eq( UserParticipationConfirmation.class.getSimpleName() ) )
-                .and( qUserParticipationConfirmation.communityUri.eq( communityService.getPlanCommunity().getUri() ) );
-        if ( supervisorParticipation == null ) {
-            bb.and( qUserParticipationConfirmation.organizationParticipationUid.isNull() );
+        RegisteredOrganization supervisorRegisteredOrg = communityService.getParticipationManager()
+                .getRegisteredOrganization( supervisor.getRegisteredOrganizationUid() );
+        if ( supervisorRegisteredOrg != null ) {
+            QUserParticipationConfirmation qUserParticipationConfirmation
+                    = QUserParticipationConfirmation.userParticipationConfirmation;
+            BooleanBuilder bb = new BooleanBuilder();
+            bb.and( qUserParticipationConfirmation.classLabel.eq( UserParticipationConfirmation.class.getSimpleName() ) )
+                    .and( qUserParticipationConfirmation.communityUri.eq( communityService.getPlanCommunity().getUri() ) );
+
+            bb.and( qUserParticipationConfirmation.registeredOrganizationUid.eq( supervisorRegisteredOrg.getUid() ) );
+            bb.and( qUserParticipationConfirmation.supervisorId.eq( supervisor.getActorId() ) );
+            return toList(
+                    repository.findAll(
+                            bb,
+                            qUserParticipationConfirmation.created.desc()
+                    )
+            );
         } else {
-            bb.and( qUserParticipationConfirmation.organizationParticipationUid.eq( supervisorParticipation.getUid() ) );
+            return new ArrayList<UserParticipationConfirmation>();
         }
-        return toList(
-                repository.findAll(
-                        bb,
-                        qUserParticipationConfirmation.created.desc()
-                )
-        );
     }
 
     @Override
@@ -133,7 +137,7 @@ public class UserParticipationConfirmationServiceImpl
     public void removeParticipationConfirmation( UserParticipation userParticipation,
                                                  Agent supervisor,
                                                  CommunityService communityService ) {
-         for ( UserParticipationConfirmation confirmation : getConfirmations( userParticipation, supervisor ) ) {
+        for ( UserParticipationConfirmation confirmation : getConfirmations( userParticipation, supervisor ) ) {
             delete( confirmation );
         }
         communityService.clearCache();
@@ -142,23 +146,19 @@ public class UserParticipationConfirmationServiceImpl
 
     @Override
     public Boolean isConfirmedBy( UserParticipation userParticipation, Agent supervisor ) {
-         return !getConfirmations( userParticipation, supervisor ).isEmpty();
+        return !getConfirmations( userParticipation, supervisor ).isEmpty();
     }
 
     private List<UserParticipationConfirmation> getConfirmations( UserParticipation userParticipation,
                                                                   Agent supervisor ) {
-        OrganizationParticipation supervisorParticipation = supervisor.getOrganizationParticipation();
+        String supervisorRegisteredOrgUid = supervisor.getRegisteredOrganizationUid();
         QUserParticipationConfirmation qUserParticipationConfirmation
                 = QUserParticipationConfirmation.userParticipationConfirmation;
         BooleanBuilder bb = new BooleanBuilder();
         bb.and( qUserParticipationConfirmation.classLabel.eq( UserParticipationConfirmation.class.getSimpleName() ) )
                 .and( qUserParticipationConfirmation.userParticipationUid.eq( userParticipation.getUid() ) )
-                .and( qUserParticipationConfirmation.supervisorId.eq( supervisor.getActorId() ) );
-        if ( supervisorParticipation == null ) {
-            bb.and( qUserParticipationConfirmation.organizationParticipationUid.isNull() );
-        } else {
-            bb.and( qUserParticipationConfirmation.organizationParticipationUid.eq( supervisorParticipation.getUid() ) );
-        }
+                .and( qUserParticipationConfirmation.supervisorId.eq( supervisor.getActorId() ) )
+                .and( qUserParticipationConfirmation.registeredOrganizationUid.eq( supervisorRegisteredOrgUid ) );
         return toList(
                 repository.findAll(
                         bb,
@@ -258,7 +258,7 @@ public class UserParticipationConfirmationServiceImpl
         return confirmation != null &&
                 userParticipationService.isValid( confirmation.getUserParticipation( communityService ), communityService )
                 && confirmation.getSupervisor( communityService ) != null
-                && organizationParticipationService.isValid( confirmation.getOrganizationParticipation( communityService ), communityService );
+                && registeredOrganizationService.isValid( confirmation.getRegisteredOrganizationn( communityService ), communityService );
     }
 
 

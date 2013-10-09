@@ -9,7 +9,6 @@ import com.mindalliance.channels.core.community.protocols.CommunityCommitment;
 import com.mindalliance.channels.core.community.protocols.CommunityCommitments;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
 import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import org.apache.commons.collections.CollectionUtils;
@@ -232,9 +231,9 @@ public class Requirement extends ModelObject implements Countable {
 
     public boolean equals( Object object ) {
         if ( object instanceof Requirement ) {
-            Requirement other = (Requirement)object;
+            Requirement other = (Requirement) object;
             return getName().equals( other.getName() )
-                    && getDescription().equals(  other.getDescription() )
+                    && getDescription().equals( other.getDescription() )
                     && information.equals( other.getInformation() )
                     && cardinality.equals( other.getCardinality() )
                     && Matcher.matchesAll( infoTags, other.getInfoTags() )
@@ -307,8 +306,8 @@ public class Requirement extends ModelObject implements Countable {
     /**
      * Evaluate the satisfaction of the requirement in a given situation.
      *
-     * @param timing        a phase timing
-     * @param event         an event
+     * @param timing           a phase timing
+     * @param event            an event
      * @param communityService a plan community service
      * @return a satisfaction rating
      */
@@ -389,8 +388,8 @@ public class Requirement extends ModelObject implements Countable {
     /**
      * Return the reason a requirement is not satisfied by an organization as committer or beneficiary.
      *
-     * @param timing        a phase timing
-     * @param event         an event
+     * @param timing           a phase timing
+     * @param event            an event
      * @param communityService a plan community service
      * @return a string
      */
@@ -472,7 +471,7 @@ public class Requirement extends ModelObject implements Countable {
                 && matchesEois( flow );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     private boolean matchesEois( Flow flow ) {
         if ( eois.isEmpty() ) return true;
         final List<String> flowEoiNames = (List<String>) CollectionUtils.collect(
@@ -500,7 +499,7 @@ public class Requirement extends ModelObject implements Countable {
     /**
      * Whether a commitment satisfies this requirement.
      *
-     * @param commitment    a commitment
+     * @param commitment       a commitment
      * @param communityService a plan community service
      * @return a boolean
      */
@@ -525,7 +524,7 @@ public class Requirement extends ModelObject implements Countable {
         return state;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public void initFromMap( Map<String, Object> state, CommunityService communityService ) {
         super.initFromMap( state, communityService );
         setInformation( (String) state.get( "information" ) );
@@ -882,10 +881,6 @@ public class Requirement extends ModelObject implements Countable {
             return agentSpec.getAgent();
         }
 
-        public void makeApplyToAgentIfPossible( Agent agent ) {
-            agentSpec.makeApplyToAgentIfPossible( agent );
-        }
-
         public Place getJurisdiction() {
             return agentSpec.getJurisdiction();
         }
@@ -996,12 +991,11 @@ public class Requirement extends ModelObject implements Countable {
         // Placeholder is either given or implied via specified/implied agency.
 
         private boolean initialized = false;
-        private Actor actor;
-        private String orgParticipationId;  // of agent
-        private String registeredOrgId; // of agency  if agency not already specified by agent
-        private Long fixedOrgId; // of agency, if agency not already specified by agent
+        private Actor actor; // an agent is to participate as
+        private String registeredOrgId; // of agency if directly identified
+        private Long fixedOrgId; // of agency, if agency of agent is to participate as fixed org
         private Place jurisdiction;
-        private Organization placeholder; // meaningful only if fixedOrgId or registeredOrgId or orgParticipationId  not set
+        private Organization placeholder; // if agency is to participate as placeholder
         private Agent agent; // computed and cached
         private Agency agency; // computed and cached
 
@@ -1011,7 +1005,6 @@ public class Requirement extends ModelObject implements Countable {
         public AgentSpec( AgentSpec agentSpec ) {
             actor = agentSpec.getActor();
             jurisdiction = agentSpec.getJurisdiction();
-            orgParticipationId = agentSpec.getOrgParticipationId();
             registeredOrgId = agentSpec.getRegisteredOrgId();
             fixedOrgId = agentSpec.getFixedOrgId();
             placeholder = agentSpec.getPlaceholder();
@@ -1040,7 +1033,8 @@ public class Requirement extends ModelObject implements Countable {
             if ( !initialized ) {
                 agent = null;
                 agency = null;
-                if ( actor != null ) {   // verify actor still valid
+                // verify actor still valid
+                if ( actor != null ) {
                     try {
                         actor = communityService.getPlanService().find( Actor.class, actor.getId() );
                         assert actor.isActual();
@@ -1049,33 +1043,7 @@ public class Requirement extends ModelObject implements Countable {
                         actor = null;
                     }
                 }
-                if ( actor != null ) {
-                    if ( orgParticipationId != null ) {
-                        OrganizationParticipation orgParticipation = communityService
-                                .getOrganizationParticipationService().load( orgParticipationId );
-                        if ( orgParticipation != null ) {
-                            agent = new Agent( actor, orgParticipation, communityService );
-                            placeholder = orgParticipation.getPlaceholderOrganization( communityService );
-                        } else {
-                            LOG.warn( "Invalid organization participation " + orgParticipationId );
-                        }
-                    } else {
-                        agent = new Agent( actor );
-                    }
-                }
-                if ( fixedOrgId != null ) {
-                    assert registeredOrgId == null;
-                    try {
-                        Organization org = communityService.getPlanService().find( Organization.class, fixedOrgId );
-                        if ( org != null && !org.isUnknown() ) {
-                            agency = new Agency( org, communityService );
-                        }
-                        placeholder = null;
-                    } catch ( NotFoundException e ) {
-                        LOG.warn( "Failed to find organization " + fixedOrgId );
-                        fixedOrgId = null;
-                    }
-                }
+                // if agency directly identified
                 if ( registeredOrgId != null ) {
                     assert fixedOrgId == null;
                     RegisteredOrganizationService registeredOrganizationService
@@ -1089,10 +1057,38 @@ public class Requirement extends ModelObject implements Countable {
                         registeredOrgId = null;
                     }
                 }
+                if ( fixedOrgId != null ) {
+                    assert registeredOrgId == null;
+                    try {
+                        Organization org = communityService.getPlanService().find( Organization.class, fixedOrgId );
+                        if ( org != null && !org.isUnknown() ) {
+                            RegisteredOrganization registeredOrganization = communityService
+                                    .getRegisteredOrganizationService().find( org.getName(), communityService );
+                            if ( registeredOrganization != null )
+                                agency = new Agency( registeredOrganization, communityService );
+                        }
+                        placeholder = null;
+                    } catch ( NotFoundException e ) {
+                        LOG.warn( "Failed to find organization " + fixedOrgId );
+                        fixedOrgId = null;
+                    }
+                }
                 if ( placeholder != null && !placeholder.isPlaceHolder() ) {
                     LOG.warn( placeholder.getName() + " no longer a placeholder" );
                     placeholder = null;
                 }
+                if ( actor != null && agency != null ) {
+                    agent = (Agent) CollectionUtils.find(
+                            agency.getAgents( communityService ),
+                            new Predicate() {
+                                @Override
+                                public boolean evaluate( Object object ) {
+                                    return ( (Agent) object ).getActor().equals( actor );
+                                }
+                            }
+                    );
+                }
+
             }
             initialized = true;
         }
@@ -1104,24 +1100,19 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public void makeApplyToAgencyIfPossible( Agency agency ) {
-            if ( agency.isFixedOrganization() && fixedOrgId == null && registeredOrgId == null ) {
-                setFixedOrgId( agency.getFixedOrganization().getId() );
-            } else if ( registeredOrgId == null && agency.isRegistered(  ) ) {
-                setRegisteredOrgId( agency.getRegisteredOrganization().getUid() );
+            RegisteredOrganization registeredOrganization = agency.getRegisteredOrganization();
+            if ( registeredOrganization.isFixedOrganization()
+                    && fixedOrgId == null // todo - really?
+                    && registeredOrgId == null ) {
+                setFixedOrgId( registeredOrganization.getFixedOrganizationId() );
+            } else if ( registeredOrgId == null && !registeredOrganization.isFixedOrganization() ) {
+                setRegisteredOrgId( registeredOrganization.getUid() );
             }
         }
 
         public Agent getAgent() {
             assert initialized;
             return agent;
-        }
-
-        public void makeApplyToAgentIfPossible( Agent agent ) {
-            if ( actor == null ) {
-                actor = agent.getActor();
-                if ( agent.isFromOrganizationParticipation() && orgParticipationId == null )
-                    setOrgParticipationId( agent.getOrganizationParticipation().getUid() );
-            }
         }
 
         public Place getJurisdiction() {
@@ -1160,21 +1151,6 @@ public class Requirement extends ModelObject implements Countable {
         public void setFixedOrgId( Long fixedOrgId ) {
             this.fixedOrgId = fixedOrgId;
             if ( fixedOrgId != null ) {
-                orgParticipationId = null;
-                registeredOrgId = null;
-                placeholder = null;
-            }
-            initialized = false;
-        }
-
-        public String getOrgParticipationId() {
-            return orgParticipationId;
-        }
-
-        public void setOrgParticipationId( String orgParticipationId ) {
-            this.orgParticipationId = orgParticipationId;
-            if ( orgParticipationId != null ) {
-                fixedOrgId = null;
                 registeredOrgId = null;
                 placeholder = null;
             }
@@ -1189,7 +1165,6 @@ public class Requirement extends ModelObject implements Countable {
             this.registeredOrgId = registeredOrgId;
             if ( registeredOrgId != null ) {
                 fixedOrgId = null;
-                orgParticipationId = null;
                 placeholder = null;
             }
             initialized = false;
@@ -1203,7 +1178,6 @@ public class Requirement extends ModelObject implements Countable {
                 AgentSpec other = (AgentSpec) object;
                 return ChannelsUtils.areEqualOrNull( actor, other.getActor() )
                         && ChannelsUtils.areEqualOrNull( jurisdiction, other.getJurisdiction() )
-                        && ChannelsUtils.areEqualOrNull( orgParticipationId, other.getOrgParticipationId() )
                         && ChannelsUtils.areEqualOrNull( fixedOrgId, other.getFixedOrgId() )
                         && ChannelsUtils.areEqualOrNull( registeredOrgId, other.getRegisteredOrgId() )
                         && ChannelsUtils.areEqualOrNull( placeholder, other.getPlaceholder() );
@@ -1220,8 +1194,6 @@ public class Requirement extends ModelObject implements Countable {
                 hash = hash + 31 * actor.hashCode();
             if ( jurisdiction != null )
                 hash = hash + 31 * jurisdiction.hashCode();
-            if ( orgParticipationId != null )
-                hash = hash + 31 * orgParticipationId.hashCode();
             if ( fixedOrgId != null )
                 hash = hash + 31 * fixedOrgId.hashCode();
             if ( registeredOrgId != null )
@@ -1235,7 +1207,6 @@ public class Requirement extends ModelObject implements Countable {
             Map<String, Object> state = new HashMap<String, Object>();
             if ( actor != null ) state.put( "actor", actor.getId() );
             if ( jurisdiction != null ) state.put( "jurisdiction", jurisdiction.getId() );
-            if ( orgParticipationId != null ) state.put( "orgParticipationId", orgParticipationId );
             if ( fixedOrgId != null ) state.put( "fixedOrgId", fixedOrgId );
             if ( registeredOrgId != null ) state.put( "registeredOrgId", registeredOrgId );
             if ( placeholder != null ) state.put( "placeholder", placeholder.getId() );
@@ -1251,9 +1222,6 @@ public class Requirement extends ModelObject implements Countable {
                 } catch ( NotFoundException e ) {
                     LOG.warn( "Actor not found at " + id );
                 }
-            }
-            if ( state.containsKey( "orgParticipationId" ) ) {
-                orgParticipationId = (String) state.get( "orgParticipationId" );
             }
             if ( state.containsKey( "jurisdiction" ) ) {
                 Long id = (Long) state.get( "jurisdiction" );
@@ -1289,7 +1257,6 @@ public class Requirement extends ModelObject implements Countable {
         public boolean isAnyone() {
             return actor == null
                     && jurisdiction == null
-                    && orgParticipationId == null
                     && fixedOrgId == null
                     && registeredOrgId == null
                     && placeholder == null;
@@ -1308,7 +1275,7 @@ public class Requirement extends ModelObject implements Countable {
         }
 
         public boolean isAgencyImplied() {
-            return getAgent() != null && getAgent().isFromOrganizationParticipation();
+            return getAgent() != null;
         }
 
         public boolean isPlaceholderImplied() {
@@ -1318,7 +1285,7 @@ public class Requirement extends ModelObject implements Countable {
         public boolean appliesToAssignment( CommunityAssignment assignment, CommunityService communityService ) {
             return isAnyone()
                     || ( appliesToAgent( assignment.getAgent() )      // todo - deal with jurisdiction matching when re-enabled
-                            && appliesToAgency( assignment.getAgency(), communityService ) );
+                    && appliesToAgency( assignment.getAgency(), communityService ) );
         }
 
         private boolean appliesToAgent( Agent anAgent ) {
@@ -1335,13 +1302,13 @@ public class Requirement extends ModelObject implements Countable {
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                Organization otherPlaceHolder = (Organization)object;
+                                Organization otherPlaceHolder = (Organization) object;
                                 return getPlaceholder().equals( otherPlaceHolder )
                                         || anAgency.hasAncestorWithPlaceholder( getPlaceholder(), communityService );
                             }
                         }
                 );
-             }
+            }
             return true;
         }
     }

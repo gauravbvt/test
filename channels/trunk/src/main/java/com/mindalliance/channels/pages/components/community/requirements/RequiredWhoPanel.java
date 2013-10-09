@@ -219,7 +219,7 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         List<String> names = new ArrayList<String>();
         for ( Agency agency :
                 getCommunityService().getParticipationManager().getAllKnownAgencies( getCommunityService() ) ) {
-            if ( agency.isFixedOrganization() || agency.isParticipatingAsAPlaceholder() ) {
+            if ( agency.getRegisteredOrganization().isFixedOrganization() || agency.isParticipatingAsAPlaceholder() ) {
                 names.add( agency.getName() );
             }
         }
@@ -269,19 +269,11 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
                         requirement,
                         getAgentSpecPath( "actor" ),
                         agent.getActor() ) );
-                if ( agent.isFromOrganizationParticipation() ) {
-                    multiCommand.addCommand( new UpdatePlanObject(
+               multiCommand.addCommand( new UpdatePlanObject(
                             getUsername(),
                             requirement,
-                            getAgentSpecPath( "orgParticipationId" ),
-                            agent.getOrganizationParticipation().getUid() ) );
-                } else {
-                    multiCommand.addCommand( new UpdatePlanObject(
-                            getUsername(),
-                            requirement,
-                            getAgentSpecPath( "orgParticipationId" ),
-                            null ) );
-                }
+                            getAgentSpecPath( "registeredOrgId" ),
+                            agent.getAgency().getRegisteredOrganizationUid() ) );
                 doCommand( multiCommand );
             }
         } else {
@@ -305,14 +297,14 @@ public class RequiredWhoPanel extends AbstractCommandablePanel {
         if ( name != null && !name.isEmpty() ) {
             Agency agency = communityService.getParticipationManager().findAgencyNamed( name, communityService );
             if ( agency != null ) {
-                if ( agency.isFixedOrganization() ) {
+                if ( agency.getRegisteredOrganization().isFixedOrganization() ) {
                     doCommand( new UpdatePlanObject(
                             getUsername(),
                             requirement,
                             getAgentSpecPath( "fixedOrgId" ),
-                            agency.getFixedOrganization().getId()
+                            agency.getRegisteredOrganization().getFixedOrganizationId()
                     ) );
-                } else if ( agency.isRegistered() ) {
+                } else {
                     doCommand( new UpdatePlanObject(
                             getUsername(),
                             requirement,

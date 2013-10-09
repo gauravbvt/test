@@ -25,8 +25,6 @@ public interface OrganizationParticipationService extends DataService<Organizati
 
     Boolean isValid( OrganizationParticipation registration, CommunityService communityService );
 
-    List<Agency> listParticipatingAgencies( CommunityService communityService );
-
     List<Agency> listAgenciesParticipatingAs( Organization placeholder, CommunityService communityService );
 
     OrganizationParticipation findOrganizationParticipation(

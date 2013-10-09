@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
@@ -99,18 +96,6 @@ public class OrganizationParticipationServiceImpl
     }
 
     @Override
-    public List<Agency> listParticipatingAgencies( CommunityService communityService ) {
-        Set<Agency> agencies = new HashSet<Agency>();
-        for ( OrganizationParticipation orgParticipation : getAllOrganizationParticipations( communityService ) ) {
-            if ( isValid( orgParticipation, communityService ) ) {
-                Agency agency = new Agency( orgParticipation, communityService );
-                agencies.add( agency );
-            }
-        }
-        return Collections.unmodifiableList( new ArrayList<Agency>( agencies ) );
-    }
-
-    @Override
     public List<Agency> listAgenciesParticipatingAs( Organization placeholder, CommunityService communityService ) {
         if ( placeholder.isPlaceHolder() ) {
             QOrganizationParticipation qOrganizationParticipation = QOrganizationParticipation.organizationParticipation;
@@ -124,7 +109,9 @@ public class OrganizationParticipationServiceImpl
                     ), communityService );
             List<Agency> agencies = new ArrayList<Agency>();
             for ( OrganizationParticipation orgParticipation : organizationParticipations ) {
-                agencies.add( new Agency( orgParticipation, communityService ) );
+                RegisteredOrganization registeredOrganization = orgParticipation.getRegisteredOrganization( communityService );
+                if ( registeredOrganization != null )
+                    agencies.add( new Agency( registeredOrganization, communityService ) );
             }
             return agencies;
         } else {

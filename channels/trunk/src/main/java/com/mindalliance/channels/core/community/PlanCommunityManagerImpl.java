@@ -11,10 +11,12 @@ import com.mindalliance.channels.core.dao.JournalCommand;
 import com.mindalliance.channels.core.dao.PlanDao;
 import com.mindalliance.channels.core.dao.PlanManager;
 import com.mindalliance.channels.core.dao.user.ChannelsUser;
+import com.mindalliance.channels.core.model.Organization;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.query.PlanService;
 import com.mindalliance.channels.core.query.PlanServiceFactory;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
 import org.apache.commons.collections.CollectionUtils;
@@ -63,6 +65,9 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
 
     @Autowired
     private UserRecordService userRecordService;
+
+    @Autowired
+    private RegisteredOrganizationService registeredOrganizationService;
 
     /**
      * All the plans, indexed by version uri (uri:version).
@@ -355,7 +360,16 @@ public class PlanCommunityManagerImpl implements PlanCommunityManager, Applicati
         userRecordService.addFounder( founder, planCommunity );
         planCommunity.setClosed( true );
         planCommunity.setDateCreated( new Date() );
+        registerFixedOrganizations( founder, communityServiceFactory.getService( planCommunity ) );
         return planCommunity;
+    }
+
+    private void registerFixedOrganizations( ChannelsUser founder, CommunityService communityService ) {
+        for ( Organization org : communityService.getPlanService().listActualEntities( Organization.class ) ) {
+            if ( !org.isPlaceHolder() ) {
+                registeredOrganizationService.findOrAdd( founder, org.getName(), true, communityService );
+            }
+        }
     }
 
     @Override

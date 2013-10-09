@@ -23,11 +23,11 @@ import com.mindalliance.channels.core.model.Channel;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.model.Plan;
 import com.mindalliance.channels.core.model.TransmissionMedium;
-import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.communities.UserParticipation;
 import com.mindalliance.channels.db.data.messages.Feedback;
 import com.mindalliance.channels.db.data.users.UserRecord;
-import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.db.services.communities.UserParticipationService;
 import com.mindalliance.channels.db.services.messages.FeedbackService;
 import com.mindalliance.channels.db.services.users.UserRecordService;
@@ -80,7 +80,7 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Autowired
     private ParticipationManager participationManager;
     @Autowired
-    private OrganizationParticipationService organizationParticipationService;
+    private RegisteredOrganizationService registeredOrganizationService;
 
     private String serverUrl;
 
@@ -412,22 +412,22 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     @Override
     public ProtocolsData getAgentProtocols( String communityUri,
                                             String actorId,
-                                            String orgParticipationId ) {
+                                            String registeredOrganizationId ) {
         ChannelsUser user = ChannelsUser.current( userRecordService );
         LOG.info( "Getting protocols of agent " + actorId
-                + " for organization participation" + orgParticipationId
+                + " for organization participation" + registeredOrganizationId
                 + " in community " + communityUri );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
             Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
-            OrganizationParticipation organizationParticipation =
-                    organizationParticipationService.load( orgParticipationId );
-            if ( organizationParticipation == null ) throw new NotFoundException();
+            RegisteredOrganization registeredOrganization =
+                    registeredOrganizationService.load( registeredOrganizationId );
+            if ( registeredOrganization == null ) throw new NotFoundException();
             return new ProtocolsData(
                     serverUrl,
                     communityService,
-                    new Agent( actor, organizationParticipation, communityService ),
+                    new Agent( actor, registeredOrganization, communityService ),
                     user );
         } catch ( Exception e ) {
             LOG.warn( "No protocols available for agent " + actorId, e );
@@ -523,18 +523,22 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public void acceptParticipation( String communityUri, String agentId ) {
+    public void acceptParticipation( String communityUri, String actorId, String orgId ) {
         LOG.info( "Adding user participation in community " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = getCommunityService( planCommunity ).getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo = agents
-            if ( participationManager.isParticipationSelfAssignable( new Agent( actor ), user, communityService ) ) {
+            Actor actor = getCommunityService( planCommunity ).getPlanService().find( Actor.class, Long.parseLong( actorId ) );
+            RegisteredOrganization registeredOrganization = registeredOrganizationService.load( orgId );
+            if ( actor == null || registeredOrganization == null )
+                throw new IllegalArgumentException();
+            Agent agent = new Agent( actor, registeredOrganization, communityService );
+            if ( participationManager.isParticipationSelfAssignable( agent, user, communityService ) ) {
                 UserParticipation participation = new UserParticipation(
                         user.getUsername(),
                         user,
-                        new Agent( actor ),
+                        agent,
                         planCommunity );
                 userParticipationService.accept( participation, communityService );
             } else {
@@ -550,16 +554,20 @@ public class PlanCommunityEndPointImpl implements PlanCommunityEndPoint {
     }
 
     @Override
-    public void refuseParticipation( String communityUri, String agentId ) {
+    public void refuseParticipation( String communityUri, String actorId, String orgId ) {
         LOG.info( "Refusing user participation in community " + communityUri );
         ChannelsUser user = ChannelsUser.current( userRecordService );
         try {
             PlanCommunity planCommunity = authorizeParticipant( user, communityUri );
             CommunityService communityService = getCommunityService( planCommunity );
-            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( agentId ) ); // todo - COMMUNITY - agents!
+            Actor actor = communityService.getPlanService().find( Actor.class, Long.parseLong( actorId ) );
+            RegisteredOrganization registeredOrganization = registeredOrganizationService.load( orgId );
+            if ( actor == null || registeredOrganization == null )
+                throw new IllegalArgumentException();
+            Agent agent = new Agent( actor, registeredOrganization, communityService );
             UserParticipation userParticipation = userParticipationService.getParticipation(
                     user,
-                    new Agent( actor ),
+                    agent,
                     communityService
             );
             if ( userParticipation != null ) {

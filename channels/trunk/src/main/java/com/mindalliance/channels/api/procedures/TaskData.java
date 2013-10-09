@@ -200,7 +200,7 @@ public class TaskData extends AbstractProcedureElementData {
     public List<CommunityEmployment> getTeamEmployments() {
         List<CommunityEmployment> employments = new ArrayList<CommunityEmployment>();
         for ( CommunityAssignment assignment : otherTeamAssignments() ) {
-            employments.add( assignment.getEmployment() );
+            employments.add( assignment.getCommunityEmployment() );
         }
         return employments;
     }

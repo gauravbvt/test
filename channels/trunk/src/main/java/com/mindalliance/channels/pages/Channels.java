@@ -5,6 +5,7 @@ import com.google.code.jqwicket.JQContributionConfig;
 import com.mindalliance.channels.core.AttachmentManager;
 import com.mindalliance.channels.core.CommanderFactory;
 import com.mindalliance.channels.core.community.CommunityServiceFactory;
+import com.mindalliance.channels.core.community.ParticipationManager;
 import com.mindalliance.channels.core.community.PlanCommunityManager;
 import com.mindalliance.channels.core.dao.ImportExportFactory;
 import com.mindalliance.channels.core.dao.PlanManager;
@@ -29,8 +30,6 @@ import com.mindalliance.channels.pages.png.ProceduresPng;
 import com.mindalliance.channels.pages.png.RequiredNetworkingPng;
 import com.mindalliance.channels.pages.png.UploadedReference;
 import com.mindalliance.channels.pages.png.UserPhotoPng;
-import com.mindalliance.channels.pages.reports.infoNeeds.AllInfoNeedsPage;
-import com.mindalliance.channels.pages.reports.infoNeeds.InfoNeedsPage;
 import com.mindalliance.channels.pages.reports.protocols.AllChecklistsPage;
 import com.mindalliance.channels.pages.reports.protocols.ChecklistsPage;
 import com.mindalliance.channels.pages.surveys.RFIsPage;
@@ -140,6 +139,8 @@ public class Channels extends WebApplication
 
     private PlanCommunityManager planCommunityManager;
 
+    private ParticipationManager participationManager;
+
     private Exception exception = null;
     private String serverUrl;
 
@@ -233,9 +234,7 @@ public class Channels extends WebApplication
         getMarkupSettings().setStripWicketTags( true );
 
         mountPage( "allChecklists", AllChecklistsPage.class );
-        mountPage( "allInfoNeeds", AllInfoNeedsPage.class );
         mountPage( "checklists", ChecklistsPage.class );
-        mountPage( "infoNeeds", InfoNeedsPage.class );
         mountPage( "template", PlanPage.class );
         mountPage( "admin", SettingsPage.class );
         mountPage( "nosops.html", NoAccessPage.class );
@@ -348,7 +347,7 @@ public class Channels extends WebApplication
         ) );
 
         userUploadService.cleanUpPhotos();
-
+        participationManager.registerAllFixedOrganizations();
     }
 
     @Override
@@ -483,6 +482,14 @@ public class Channels extends WebApplication
 
     public void setPlanCommunityManager( PlanCommunityManager planCommunityManager ) {
         this.planCommunityManager = planCommunityManager;
+    }
+
+    public ParticipationManager getParticipationManager() {
+        return participationManager;
+    }
+
+    public void setParticipationManager( ParticipationManager participationManager ) {
+        this.participationManager = participationManager;
     }
 
     // FOR TESTING ONLY

@@ -4,9 +4,7 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Identifiable;
 import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Nameable;
-import com.mindalliance.channels.core.model.Organization;
-import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -23,28 +21,22 @@ import java.util.List;
 public class Agent implements Nameable, Identifiable {
 
     private Actor actor;
-    private OrganizationParticipation organizationParticipation;  // can be null // todo - needs to be agency
+    private Agency agency;
     private String name;
 
-    // if is an actor in known organization from template
-    public Agent( Actor actor ) {
-        this.actor = actor;
-        name = actor.getName();
-    }
     // if is an actor in plan organization participating as placeholder from template
     public Agent( Actor actor,
-                  OrganizationParticipation organizationParticipation,
+                  RegisteredOrganization registeredOrganization,
                   CommunityService communityService ) {
         this.actor = actor;
-        this.organizationParticipation = organizationParticipation;
-        if ( organizationParticipation != null ) {
-            String jobTitle = organizationParticipation.getJobTitle( actor, communityService );
-            name = (jobTitle.isEmpty() ? actor.getName() : jobTitle)
-                    + " at "
-                    + new Agency( organizationParticipation, communityService ).getName();
-        } else {
-            name = actor.getName();
-        }
+        agency = new Agency( registeredOrganization, communityService );
+        name = agency.getJobTitleOf( this, true, communityService );
+    }
+
+    public Agent( Actor actor, String registeredOrganizationUid, CommunityService communityService ) {
+        this( actor,
+                communityService.getRegisteredOrganizationService().load( registeredOrganizationUid ),
+                communityService );
     }
 
     public Actor getActor() {
@@ -55,17 +47,8 @@ public class Agent implements Nameable, Identifiable {
         return actor.getId();
     }
 
-    public OrganizationParticipation getOrganizationParticipation() {
-        return organizationParticipation;
-    }
-
-    /**
-     * Is agent in registered organization.
-     *
-     * @return a boolean
-     */
-    public boolean isFromOrganizationParticipation() {
-        return organizationParticipation != null;
+    public Agency getAgency() {
+        return agency;
     }
 
     @Override
@@ -100,7 +83,7 @@ public class Agent implements Nameable, Identifiable {
 
     public boolean isValid( CommunityService communityService ) {
         return actor != null
-                && ( communityService.getPlanService().listActualEntities( Actor.class ).contains(  actor ))/*
+                && ( communityService.getPlanService().listActualEntities( Actor.class ).contains( actor ) )/*
                 && ( organizationParticipation == null || organizationParticipation.isValidAgent( this, planCommunity ) )*/;
     }
 
@@ -129,7 +112,7 @@ public class Agent implements Nameable, Identifiable {
         if ( object instanceof Agent ) {
             Agent other = (Agent) object;
             return actor.equals( other.getActor() )
-                    && ChannelsUtils.areEqualOrNull( organizationParticipation, other.getOrganizationParticipation() );
+                    && agency.equals( other.getAgency() );
         } else {
             return false;
         }
@@ -139,7 +122,7 @@ public class Agent implements Nameable, Identifiable {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + actor.hashCode();
-        if ( organizationParticipation != null ) hash = hash * 31 + organizationParticipation.hashCode();
+        hash = hash * 31 + agency.hashCode();
         return hash;
     }
 
@@ -165,13 +148,6 @@ public class Agent implements Nameable, Identifiable {
 
     public String getRequirementsDescription( CommunityService communityService ) {
         return getActor().getRequirementsDescription( communityService.getPlan() );   // todo - COMMUNITY - move to community
-     }
-
-    public boolean isRegisteredInPlaceholder( Organization organization, CommunityService communityService ) {
-        return organization.isPlaceHolder()
-                && isFromOrganizationParticipation()
-                && getOrganizationParticipation().getPlaceholderOrganization( communityService )
-                .equals( organization );
     }
 
     public boolean isAnonymousParticipation() {
@@ -180,12 +156,6 @@ public class Agent implements Nameable, Identifiable {
 
     public boolean isAnyNumberOfParticipants() {
         return actor != null && actor.isAnyNumberOfParticipants();
-    }
-
-    public String getOrganizationParticipationUid() {
-        return organizationParticipation != null
-                ? organizationParticipation.getUid()
-                : null;
     }
 
     public static String selectJobTitleFrom( List<Job> actorJobs ) {
@@ -202,19 +172,22 @@ public class Agent implements Nameable, Identifiable {
                     } // pick the primary job, if any, to provide the title
             );
             if ( job == null ) { // pick first job with an explicit job title
-                job = (Job)CollectionUtils.find(
+                job = (Job) CollectionUtils.find(
                         actorJobs,
                         new Predicate() {
                             @Override
                             public boolean evaluate( Object object ) {
-                                return !((Job)object).getRawTitle().isEmpty();
+                                return !( (Job) object ).getRawTitle().isEmpty();
                             }
                         } );
             }
             return job == null
-                    ? actorJobs.get(0).getTitle( ) // last resort: pick role-as-tile from first job (all linked)
-                    : job.getTitle( );
+                    ? actorJobs.get( 0 ).getTitle() // last resort: pick role-as-tile from first job (all linked)
+                    : job.getTitle();
         }
     }
 
+    public String getRegisteredOrganizationUid() {
+        return getAgency().getRegisteredOrganizationUid();
+    }
 }

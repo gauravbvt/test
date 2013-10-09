@@ -268,7 +268,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
             }
         };
         applyButton.setOutputMarkupId( true );
-        applyButton.setVisible( !agency.isFixedOrganization() );
+        applyButton.setVisible( !agency.getRegisteredOrganization().isFixedOrganization() );
         add( applyButton );
     }
 
@@ -337,7 +337,7 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
     private boolean canBeEdited() {
         CommunityService communityService = getCommunityService();
         return !isFixedOrganization()
-                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegistration( ), communityService );
+                && getPlanCommunity().isOrganizationLead( getUser(), agency.getRegisteredOrganization( ), communityService );
     }
 
     public String getName() {
@@ -390,11 +390,11 @@ public class AgencyProfilePanel extends AbstractUpdatablePanel {
     }
 
     private Organization getFixedOrganization() {
-        return tempAgency.getFixedOrganization();
+        return tempAgency.getRegisteredOrganization().getFixedOrganization( getCommunityService() );
     }
 
     private boolean isFixedOrganization() {
-        return tempAgency.isFixedOrganization();
+        return tempAgency.getRegisteredOrganization().isFixedOrganization();
     }
 
     public void updateWith( AjaxRequestTarget target, Change change, List<Updatable> updatables ) {

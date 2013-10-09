@@ -38,7 +38,7 @@ public class TooManyUsersParticipatingAsAgent implements ParticipationIssueDetec
         Agent agent = (Agent) identifiable;
         int maxParticipation = agent.getMaxParticipation();
         if ( maxParticipation != -1 ) {
-            int count = communityService.getUserParticipationService().findUsersParticipatingAs( agent, communityService ).size();
+            int count = communityService.getUserParticipationService().findUsersActivelyParticipatingAs( agent, communityService ).size();
             if ( count > maxParticipation ) {
                 ParticipationIssue issue = new ParticipationIssue( agent, this );
                 issue.setDescription( count + " users participate as " + agent.getName()

@@ -207,18 +207,13 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         for ( Agency agency : participationManager.getAllKnownAgencies( communityService ) ) {
             if ( nameRange.contains( agency.getName() )
                     && !isFilteredOut( agency ) ) {
-                RegisteredOrganization registeredAgency = registeredOrganizationService.find( agency.getName(), communityService );
-                if ( registeredAgency != null ) {
-                    boolean participating = false;
-                    for ( OrganizationParticipation orgParticipation
-                            : organizationParticipationService.findAllParticipationBy( registeredAgency, communityService ) ) {
-                        agencyParticipationWrappers.add( new AgencyParticipationWrapper( orgParticipation ) );
-                        participating = true;
-                    }
-                    if ( !participating ) {
-                        agencyParticipationWrappers.add( new AgencyParticipationWrapper( agency ) );
-                    }
-                } else {
+                boolean participating = false;
+                for ( OrganizationParticipation orgParticipation
+                        : organizationParticipationService.findAllParticipationBy( agency.getRegisteredOrganization(), communityService ) ) {
+                    agencyParticipationWrappers.add( new AgencyParticipationWrapper( agency, orgParticipation ) );
+                    participating = true;
+                }
+                if ( !participating ) {
                     agencyParticipationWrappers.add( new AgencyParticipationWrapper( agency ) );
                 }
             }
@@ -226,8 +221,8 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
     }
 
     private boolean isFilteredOut( Agency agency ) {
-        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return agency.isRegistered();
-        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && !agency.isRegistered();
+        if ( agenciesFilter.equals( FIXED_AGENCIES ) ) return !agency.isFixedOrganization();
+        else return agenciesFilter.equals( REGISTERED_AGENCIES ) && agency.isFixedOrganization();
     }
 
     private void addRegistering() {
@@ -456,10 +451,10 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         private Boolean canBeMadeGlobal;
         private Boolean canBeMadeLocal;
 
-        public AgencyParticipationWrapper( OrganizationParticipation organizationParticipation ) {
+        public AgencyParticipationWrapper( Agency agency, OrganizationParticipation organizationParticipation ) {
             CommunityService communityService = getCommunityService();
+            this.agency = agency;
             this.organizationParticipation = organizationParticipation;
-            agency = new Agency( organizationParticipation, communityService );
             placeholder = organizationParticipation.getPlaceholderOrganization( communityService );
             registrar = communityService.getUserRecordService().getUserWithIdentity( organizationParticipation.getUsername() );
             registrationDate = organizationParticipation.getCreated();
@@ -467,10 +462,6 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
 
         public AgencyParticipationWrapper( Agency agency ) {
             this.agency = agency;
-        }
-
-        public AgencyParticipationWrapper( Organization placeholder ) {
-            this.placeholder = placeholder;
         }
 
         public Agency getAgency() {
@@ -484,15 +475,12 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
         public String getStatus() {
             if ( agency == null ) {
                 return null;
-            } else if ( agency.isRegisteredByCommunity() ) {
+            } else if ( agency.isLocal() ) {
                 return "This plan only";
-            } else if ( agency.isGlobal() ) {
+            } else if ( !agency.isFixedOrganization() ) {
                 return "All plans";
             } else {
-                if ( agency.getFixedOrganization().isPlaceHolder() )
-                    return "The template, as placeholder";
-                else
-                    return "The template";
+                return "The template";
             }
         }
 
@@ -575,7 +563,7 @@ public class OrganizationsRegistryPanel extends AbstractUpdatablePanel implement
             return canBeMadeLocal;
         }
 
-         private boolean canBeRemoved() {
+        private boolean canBeRemoved() {
             return agency != null
                     && isPlanner()
                     && !getCommunityService().getParticipationManager().isAgencyReferenced( agency, getCommunityService() );

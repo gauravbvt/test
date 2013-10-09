@@ -20,7 +20,7 @@ public class UserParticipationConfirmation extends AbstractChannelsDocument {
 
     private String userParticipationUid;
     private long supervisorId;
-    private String organizationParticipationUid;  // for supervisor
+    private String registeredOrganizationUid; // for supervisor
 
     public UserParticipationConfirmation() {
     }
@@ -35,7 +35,7 @@ public class UserParticipationConfirmation extends AbstractChannelsDocument {
                 username );
         userParticipationUid = userParticipation.getUid();
         this.supervisorId = supervisor != null ? supervisor.getActorId() : -1;
-        organizationParticipationUid = supervisor != null ? supervisor.getOrganizationParticipationUid() : null;
+        registeredOrganizationUid = supervisor != null ? supervisor.getRegisteredOrganizationUid() : null;
     }
 
     public UserParticipation getUserParticipation( CommunityService communityService ) {
@@ -43,20 +43,20 @@ public class UserParticipationConfirmation extends AbstractChannelsDocument {
     }
 
 
-    public OrganizationParticipation getOrganizationParticipation( CommunityService communityService ) {
-        return organizationParticipationUid != null
-                ? communityService.getParticipationManager().getOrganizationParticipation( organizationParticipationUid )
+    public RegisteredOrganization getRegisteredOrganizationn( CommunityService communityService ) {
+        return registeredOrganizationUid != null
+                ? communityService.getParticipationManager().getRegisteredOrganization( registeredOrganizationUid )
                 : null;
     }
 
     public Agent getSupervisor( CommunityService communityService ) {
         Actor actor = getSupervisorActor( communityService );
         if ( actor == null ) return null;
-        OrganizationParticipation organizationParticipation = getOrganizationParticipation( communityService );
-        if ( organizationParticipation == null ) {
-            return new Agent( actor );
+        RegisteredOrganization registeredOrganization = getRegisteredOrganizationn( communityService );
+        if ( registeredOrganization == null ) {
+            return null;
         } else {
-            return new Agent( actor, organizationParticipation, communityService );
+            return new Agent( actor, registeredOrganization, communityService );
         }
     }
 

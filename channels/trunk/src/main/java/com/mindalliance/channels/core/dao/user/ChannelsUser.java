@@ -268,13 +268,13 @@ public class ChannelsUser implements UserDetails {
     }
 
     /**
-     * Test if this user is a community planner..
+     * Test if this user is a community planner.
      *
      * @param communityUri a plan uri
      * @return a boolean
      */
     public boolean isCommunityPlanner( String communityUri ) {
-        return /*isAdmin() || */userRecord.isCommunityPlanner( communityUri );
+        return isAdmin() || userRecord.isCommunityPlanner( communityUri );
     }
 
 

@@ -2961,7 +2961,7 @@ Note that all profile attributes are optional.]]>
                 <next section="concepts" topic="agent"/>
             </topic>
             <topic id="documents">
-                <name>Search for attachements</name>
+                <name>Search for attachments</name>
                 <item>
                     <description>Documents and Web pages of various types (policy, reference, picture etc.) can be
                         attached to the template and any element in it.

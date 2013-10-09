@@ -558,6 +558,10 @@ public class Organization extends AbstractUnicastChannelable
         return !isType() && !isPlaceHolder();
     }
 
+    public boolean isFixedOrganization() {
+        return isActual() && !isPlaceHolder();
+    }
+
     /**
      * Family relationships between organizations.
      */

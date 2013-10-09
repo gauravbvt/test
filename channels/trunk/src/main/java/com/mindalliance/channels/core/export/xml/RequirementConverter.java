@@ -153,11 +153,6 @@ public class RequirementConverter extends AbstractChannelsConverter {
             writer.setValue( spec.getActor().getName() );
             writer.endNode();
         }
-        if ( spec.getOrgParticipationId() != null ) {
-            writer.startNode( "orgParticipation" );
-            writer.addAttribute( "id",  spec.getOrgParticipationId() );
-            writer.endNode();
-        }
         if ( spec.getJurisdiction() != null ) {
             writer.startNode( "jurisdiction" );
             writer.addAttribute( "id", Long.toString( spec.getJurisdiction().getId() ) );
@@ -259,9 +254,6 @@ public class RequirementConverter extends AbstractChannelsConverter {
                         Long.parseLong( idString ),
                         ModelEntity.Kind.Actual,
                         context ) );
-            } else if ( nodeName.equals( "orgParticipation" ) ) {
-                String idString = reader.getAttribute( "id" );
-                agentSpec.setOrgParticipationId( idString  );
             } else if ( nodeName.equals( "fixedOrg" ) ) {
                 String idString = reader.getAttribute( "id" );
                 agentSpec.setFixedOrgId( Long.parseLong( idString ) );

@@ -23,9 +23,9 @@ import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.ModelObject;
 import com.mindalliance.channels.core.model.NotFoundException;
 import com.mindalliance.channels.core.util.ChannelsUtils;
-import com.mindalliance.channels.db.data.communities.OrganizationParticipation;
+import com.mindalliance.channels.db.data.communities.RegisteredOrganization;
 import com.mindalliance.channels.db.data.messages.Feedback;
-import com.mindalliance.channels.db.services.communities.OrganizationParticipationService;
+import com.mindalliance.channels.db.services.communities.RegisteredOrganizationService;
 import com.mindalliance.channels.pages.AbstractChannelsBasicPage;
 import com.mindalliance.channels.pages.PagePathItem;
 import com.mindalliance.channels.pages.Updatable;
@@ -65,7 +65,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private ProtocolsFinder finder;
     private String username;
     private Long agentId;
-    private String organizationParticipationId;
+    private String registeredOrganizationId;
     private Agent agent;
     private ChannelsUser protocolsUser;
 
@@ -76,7 +76,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
     private PlanCommunityManager planCommunityManager;
 
     @SpringBean
-    private OrganizationParticipationService organizationParticipationService;
+    private RegisteredOrganizationService registeredOrganizationService;
 
     private WebMarkupContainer aboutContainer;
     private WebMarkupContainer finderContainer;
@@ -93,8 +93,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
         PageParameters result = new PageParameters();
         result.set( AbstractAllParticipantsPage.COLLAB_PLAN_PARM, communityUri );
         result.set( AbstractAllParticipantsPage.AGENT, agent.getId() );
-        if ( agent.getOrganizationParticipation() != null )
-            result.set( AbstractAllParticipantsPage.ORG, agent.getOrganizationParticipation().getUid() );
+        result.set( AbstractAllParticipantsPage.ORG, agent.getAgency().getRegisteredOrganizationUid() );
         return result;
     }
 
@@ -131,7 +130,7 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
             if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.AGENT ) )
                 agentId = parameters.get( AbstractAllParticipantsPage.AGENT ).toLong( -1 );
             if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.ORG ) )
-                organizationParticipationId = parameters.get( AbstractAllParticipantsPage.ORG ).toString();
+                registeredOrganizationId = parameters.get( AbstractAllParticipantsPage.ORG ).toString();
             if ( parameters.getNamedKeys().contains( AbstractAllParticipantsPage.USER ) )
                 username = parameters.get( AbstractAllParticipantsPage.USER ).toString();
             initData();
@@ -171,15 +170,15 @@ public class ChecklistsPage extends AbstractChannelsBasicPage {
                 Integer.toString( planCommunity.getPlanVersion() ) );
         if ( agentId != null ) {
             Actor actor = getQueryService().find( Actor.class, agentId );
-            if ( organizationParticipationId != null ) {
-                OrganizationParticipation organizationParticipation
-                        = organizationParticipationService.load( organizationParticipationId );
-                if ( organizationParticipation == null ) throw new NotFoundException();
-                agent = new Agent( actor, organizationParticipation, getCommunityService() );
+            if ( registeredOrganizationId != null ) {
+                RegisteredOrganization registeredOrganization
+                        = registeredOrganizationService.load( registeredOrganizationId );
+                if ( registeredOrganization == null ) throw new NotFoundException();
+                agent = new Agent( actor, registeredOrganization, getCommunityService() );
                 protocolsData = planCommunityEndPoint.getAgentProtocols(
                         planCommunity.getUri(),
                         Long.toString( agentId ),
-                         organizationParticipationId );
+                        registeredOrganizationId );
             } else {
                 throw new Exception( "Failed to retrieve protocols" );
             }

@@ -5,8 +5,11 @@ import com.mindalliance.channels.core.community.Agent;
 import com.mindalliance.channels.core.community.CommunityService;
 import com.mindalliance.channels.core.model.Actor;
 import com.mindalliance.channels.core.model.Employment;
+import com.mindalliance.channels.core.model.Job;
 import com.mindalliance.channels.core.model.Place;
 import com.mindalliance.channels.core.model.Role;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.io.Serializable;
 
@@ -21,28 +24,29 @@ import java.io.Serializable;
 public class CommunityEmployment implements Serializable {
 
     private Agent agent;
-    private Employment employment;
+    private Job job;
     private Agent supervisor;
-    private Agency employer;
 
-    public CommunityEmployment( Employment employment,
+    public CommunityEmployment( Job job,
                                 Agent agent,
-                                Agency employer,
                                 CommunityService communityService ) {
-        this.employment = employment;
+        this.job = job;
         this.agent = agent;
-        this.employer = employer;
         init( communityService );
     }
 
     private void init( CommunityService communityService ) {
-        Actor supervisorActor = employment.getSupervisor();
+        Actor supervisorActor = job.getSupervisor();
         if ( supervisorActor != null ) {
-            if ( employer.isFixedOrganization() ) {
-                supervisor = new Agent( supervisorActor );
-            } else {
-                supervisor = new Agent( supervisorActor, agent.getOrganizationParticipation(), communityService );
-            }
+            supervisor = (Agent) CollectionUtils.find(
+                    communityService.getParticipationManager().findAllSupervisorsOf( agent, communityService ),
+                    new Predicate() {
+                        @Override
+                        public boolean evaluate( Object object ) {
+                            return ( (Agent) object ).getActor().equals( job.getSupervisor().getActor() );
+                        }
+                    }
+            );
         }
     }
 
@@ -50,8 +54,8 @@ public class CommunityEmployment implements Serializable {
         return agent;
     }
 
-    public Employment getEmployment() {
-        return employment;
+    public Job getJob() {
+        return job;
     }
 
     public Agent getSupervisor() {
@@ -59,23 +63,19 @@ public class CommunityEmployment implements Serializable {
     }
 
     public String getTitle() {
-        return employment.getTitle();
+        return job.getTitle();
     }
 
     public Agency getEmployer() {
-        return employer;
+        return agent.getAgency();
     }
 
     public Place getJurisdiction() {
-        return employment.getJurisdiction();
+        return job.getJurisdiction();
     }
 
     public Role getRole() {
-        return employment.getRole();
-    }
-
-    public Boolean isConfirmed() {
-        return employment.isConfirmed();
+        return job.getRole();
     }
 
     public String getLabel() {
@@ -111,9 +111,8 @@ public class CommunityEmployment implements Serializable {
     public boolean equals( Object obj ) {
         if ( obj instanceof CommunityEmployment ) {
             CommunityEmployment other = (CommunityEmployment) obj;
-            return employment.equals( other.getEmployment() )
-                    && agent.equals( other.getAgent() )
-                    && employer.equals( other.getEmployer() );
+            return job.equals( other.getJob() )
+                    && agent.equals( other.getAgent() );
         } else {
             return false;
         }
@@ -122,9 +121,11 @@ public class CommunityEmployment implements Serializable {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + agent.hashCode();
-        hash = hash * 31 + employer.hashCode();
-        hash = hash * 31 + employment.hashCode();
+        hash = hash * 31 + job.hashCode();
         return hash;
     }
 
+    public Employment getEmployment() {
+        return new Employment( agent.getActor(), agent.getAgency().findParticipatedAsOrganizationWithJob( job ), job );
+    }
 }

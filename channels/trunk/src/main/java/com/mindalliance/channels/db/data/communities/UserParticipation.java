@@ -19,14 +19,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Community plan participation by a user.
+ * Community plan participation by a user as an actor in a registered organization (i.e. "position").
  * Copyright (C) 2008-2013 Mind-Alliance Systems. All Rights Reserved.
  * Proprietary and Confidential.
  * User: jf
  * Date: 6/19/13
  * Time: 2:31 PM
  */
-@Document( collection = "communities" )
+@Document(collection = "communities")
 public class UserParticipation extends AbstractChannelsDocument implements Messageable {
 
     public static final String VALIDATION_REQUESTED = "validation requested";
@@ -35,7 +35,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
 
     private String participantUsername;
     private long actorId;
-    private String organizationParticipationUid; // can be null if participating as plan-defined actor // todo - WRONG - needs to be RegisteredOrganization
+    private String registeredOrganizationUid;
     private String supervisorsNotified;
     private boolean accepted;
     private Date whenAccepted;
@@ -55,7 +55,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
                               PlanCommunity planCommunity ) {
         this( username, participatingUser, planCommunity );
         this.actorId = agent.getActorId();
-        organizationParticipationUid = agent.getOrganizationParticipationUid(); // can be null if agent is actor in known organization
+        registeredOrganizationUid = agent.getRegisteredOrganizationUid(); // can be null if agent is actor in known organization
     }
 
     public UserParticipation( UserParticipation participation ) {
@@ -63,14 +63,18 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
                 participation.getPlanUri(),
                 participation.getPlanVersion(),
                 participation.getUsername() );
-        this.participantUsername = participation.getParticipantUsername();
-        this.actorId = participation.getActorId();
-        this.organizationParticipationUid = participation.getOrganizationParticipationUid();
+        participantUsername = participation.getParticipantUsername();
+        actorId = participation.getActorId();
+        registeredOrganizationUid = participation.getRegisteredOrganizationUid();
     }
 
-    public String getOrganizationParticipationUid() {
-        return organizationParticipationUid;
+    public String getRegisteredOrganizationUid() {
+        return registeredOrganizationUid;
     }
+
+    /*public String getOrganizationParticipationUid() {
+        return organizationParticipationUid;
+    }*/
 
 
     public UserRecord getParticipant( CommunityService communityService ) {
@@ -93,16 +97,20 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
 
     public Agent getAgent( CommunityService communityService ) {
         Actor actor = getActor( communityService );
-        if ( actor == null ) return null;
-        if ( organizationParticipationUid == null ) {
+        if ( actor == null || registeredOrganizationUid == null ) return null;
+        RegisteredOrganization registeredOrganization = getRegisteredOrganization( communityService );
+        return registeredOrganization != null
+                ? new Agent( actor, registeredOrganizationUid, communityService )
+                : null;
+        /*if ( registeredOrganizationUid == null )  {
             return new Agent( actor );
         } else {
             OrganizationParticipation organizationParticipation =
                     getOrganizationParticipation( communityService );
             return organizationParticipation != null
                     ? new Agent( actor, organizationParticipation, communityService )
-                    : null; // todo check usage for null
-        }
+                    : null;
+        }*/
     }
 
     public String getSupervisorsNotified() {
@@ -150,19 +158,16 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
         this.whenAccepted = whenAccepted;
     }
 
-    public OrganizationParticipation getOrganizationParticipation( CommunityService communityService ) {
-        return organizationParticipationUid == null
-            ? null
-            : communityService.getParticipationManager().getOrganizationParticipation( organizationParticipationUid );
+    public RegisteredOrganization getRegisteredOrganization( CommunityService communityService ) {
+        return registeredOrganizationUid == null
+                ? null
+                : communityService.getParticipationManager().getRegisteredOrganization( registeredOrganizationUid );
     }
 
-    public void setOrganizationParticipation( OrganizationParticipation organizationParticipation ) {
-        organizationParticipationUid = organizationParticipation.getUid();
-    }
 
     public boolean isForAgent( Agent agent ) {
         return actorId == agent.getActorId()
-                && ( ChannelsUtils.areEqualOrNull( organizationParticipationUid, agent.getOrganizationParticipationUid() ) );
+                && ( ChannelsUtils.areEqualOrNull( registeredOrganizationUid, agent.getRegisteredOrganizationUid() ) );
     }
 
     public List<String> usersNotifiedToValidate() {
@@ -187,8 +192,8 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
             sb.append( participant.getFullName() )
                     .append( " (" )
                     .append( participant.getEmail() )
-                    .append( ") participating")
-                    .append(" as " )
+                    .append( ") participating" )
+                    .append( " as " )
                     .append( agent == null ? "?" : agent.getName() );
             return sb.toString();
         }
@@ -259,7 +264,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
             UserParticipation other = (UserParticipation) object;
             return participantUsername.equals( other.getParticipantUsername() )
                     && actorId == other.getActorId()
-                    && ChannelsUtils.areEqualOrNull( organizationParticipationUid, other.getOrganizationParticipationUid() );
+                    && ChannelsUtils.areEqualOrNull( registeredOrganizationUid, other.getRegisteredOrganizationUid() );
         } else {
             return false;
         }
@@ -270,7 +275,7 @@ public class UserParticipation extends AbstractChannelsDocument implements Messa
         int hash = 1;
         hash = hash * 31 + participantUsername.hashCode();
         hash = hash * 31 + Long.valueOf( actorId ).hashCode();
-        if ( organizationParticipationUid != null ) hash = hash * 31 + organizationParticipationUid.hashCode();
+        if ( registeredOrganizationUid != null ) hash = hash * 31 + registeredOrganizationUid.hashCode();
         return hash;
     }
 

@@ -15,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Registration of an organization as an organization placeholder.
@@ -153,4 +155,23 @@ public class OrganizationParticipation extends AbstractChannelsDocument {
         }
     }
 
+    public List<Actor> getAllActors( CommunityService communityService ) {
+        Set<Actor> actors = new HashSet<Actor>(  );
+        for (Job job : getAllJobs( communityService ) ) {
+            actors.add( job.getActor() );
+        }
+        return new ArrayList<Actor>( actors );
+    }
+
+    private List<Job> getAllJobs( CommunityService communityService ) {
+        RegisteredOrganization registeredOrganization = getRegisteredOrganization( communityService );
+        if ( registeredOrganization != null ) {
+            return registeredOrganization.isFixedOrganization()
+                ? getFixedJobs( communityService )
+                : getPlaceholderJobs( communityService );
+        } else {
+            return new ArrayList<Job>(  );
+        }
+
+    }
 }

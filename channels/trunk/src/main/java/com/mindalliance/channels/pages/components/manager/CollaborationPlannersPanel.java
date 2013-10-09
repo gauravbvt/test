@@ -231,12 +231,16 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
         }
 
         public String getAuthorizedBy() {
-            ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( collaborationPlanner.getUsername() );
-            return authorizedBy != null
-                    ? authorizedBy.getUserRecord().equals( collaborationPlanner )
-                    ? "(Founder)"
-                    : authorizedBy.getNormalizedFullName()
-                    : null;
+            if ( collaborationPlanner.isAdmin() )
+                return "(Administrator)";
+              else {
+                ChannelsUser authorizedBy = userInfoService.getUserWithIdentity( collaborationPlanner.getUsername() );
+                return authorizedBy != null
+                        ? authorizedBy.getUserRecord().equals( collaborationPlanner )
+                        ? "(Founder)"
+                        : authorizedBy.getNormalizedFullName()
+                        : null;
+            }
         }
 
         public String getAuthorizationDate() {
@@ -250,7 +254,8 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
 
         public UserRecord getCollaborationPlannerIfCanResign() {
             ChannelsUser planner = getPlannerUser();
-            if ( ( getUser().isAdmin() || ( planner != null && planner.equals( getUser() ) ) )
+            if ( !planner.isAdmin()
+                    && ( getUser().isAdmin() || ( planner != null && planner.equals( getUser() ) ) )
                     && userRecordService.getCommunityPlanners( getCommunityService().getPlanCommunity().getUri() ).size() > 1 )
                 return collaborationPlanner;
             else
@@ -272,7 +277,7 @@ public class CollaborationPlannersPanel extends AbstractUpdatablePanel {
             initTable();
         }
 
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         private void initTable() {
             final List<IColumn<CollaborationPlannerWrapper>> columns = new ArrayList<IColumn<CollaborationPlannerWrapper>>();
             columns.add( makeColumn( "Name", "normalizedFullName", EMPTY ) );

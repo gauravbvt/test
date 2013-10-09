@@ -338,7 +338,7 @@ public interface ParticipationManager {
                                                                              CommunityService communityService );
 
     /**
-     * Find all users participating directly or implicitly as a given agent.
+     * Find all users participating as a given agent.
      * @param agent an agent
      * @param communityService a community service
      * @return a list of users
@@ -376,4 +376,14 @@ public interface ParticipationManager {
      * @return a boolean
      */
     Boolean isUserParticipatingAsAgents( ChannelsUser user, CommunityService communityService );
+
+    /**
+     * Clear cache of all agencies.
+     */
+    void clearCache();
+
+    /**
+     * Register if needed the fixed organizations in all plan communities.
+     */
+    void registerAllFixedOrganizations();
 }
